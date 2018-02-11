@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/04cvpwo6t3bbt7vh?svg=true)](https://ci.appveyor.com/project/PawelGerr/thinktecture-runtime-extensions)
+
 Provides commonly-used types like enum-like class.
 
 # Enum-like Class
