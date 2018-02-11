@@ -8,7 +8,7 @@ Provides commonly-used types like enum-like class.
 * The key of the enumeration can be of any type (not just a number)
 * The enumeration can have arbitrary properties and methods
 * An item has an indication whether it is valid or not.
-* Quering for all enumeration items
+* Easy querying for all enumeration items
 * Easy lookup for an enumeration item having the key
 * The enumeration can be converted to the type of the key and vice versa by libraries that are using the [TypeConverter](https://msdn.microsoft.com/en-us/library/system.componentmodel.typeconverter) internally (like [Newtonsoft.Json](https://www.newtonsoft.com/json))
 
@@ -82,7 +82,7 @@ var unknownCategory = ProductCategory.Get("Grains");
 // unknownCategory.isValid -> false
 ```
 
-* No special handling is required as soon as the key is serializable to json
+* No special handling is required for json (de)serialization as soon as the key is json-serializable
 
 ```
 // "Fruits"
@@ -96,8 +96,8 @@ var deserializedCategory = JsonConvert.DeserializeObject<ProductCategory>(json);
 * All items must be `public static readonly` fields.
 * The constructur should not be `public`.
 * The method `CreateInvalid` must not return `null`.
-* The `KeyEqualityComparer` may be changed once and in static constructor only. The default comparer of `EnumClass<TEnum, TKey>` is `EqualityComparer<TKey>.Default` and of `EnumClass<TEnum>` is `StringComparer.OrdinalIgnoreCase`.
+* The `KeyEqualityComparer` may be changed once and in static constructor only. The default comparer of `EnumClass<TEnum, TKey>` is `EqualityComparer<TKey>.Default` and `StringComparer.OrdinalIgnoreCase` of `EnumClass<TEnum>`.
 * The generic parameter `TEnum` must be the type of currently implementing enumeration, i.e. `class MyEnum : EnumClass<MyEnum>`.
-* The enumeration items must be immutable, i.e. all properties/fields must be initialized in constructor
+* The enumeration items should be immutable, i.e. all properties/fields must be initialized in constructor
 * All data required by the constructor must be known during compile time, i.e. no database lookups, http request etc. should be necessary to initialize an enumeration item.
   * If some logic requires an external dependency known at runtime only then make a method and provide it as a parameter.
