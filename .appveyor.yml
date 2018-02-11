@@ -1,0 +1,35 @@
+version: 0.1.0.{build}-{branch}
+image: Visual Studio 2017
+configuration: Release
+
+clone_depth: 1
+pull_requests:
+  do_not_increment_build_number: true
+
+install:
+- ps: . ./ci/appveyor.ps1
+before_build:
+- ps: >-
+    dotnet --info
+
+    Set-VersionSuffixOnTag("src")
+
+    dotnet restore ./Thinktecture.Runtime.Extensions.sln
+build:
+  project: Thinktecture.Runtime.Extensions.sln
+  verbosity: minimal
+after_build:
+- ps: >-
+    Dotnet-Pack("src")
+test_script:
+- ps: Dotnet-Test("test")
+
+artifacts:
+- path: '**/*.nupkg'
+  name: Nuget Package
+
+deploy:
+- provider: Environment
+  name: Nuget.org
+  on:
+    appveyor_repo_tag: true

@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thinktecture.Runtime.Extensions", "src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj", "{D1AECC45-5CE8-4318-B3E9-DCE328F26A20}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F117684-7943-4DCE-8861-F2B854924837}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{21EB22DE-2518-4F09-B0CE-9B5C9DCE4CF9}"
+	ProjectSection(SolutionItems) = preProject
+		LICENCE.md = LICENCE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E6F200ED-86D2-4D5C-9D5F-34592908B107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Samples", "samples\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj", "{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AE711F89-41F2-4519-B20D-BA1FAB0EB364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Tests", "test\Thinktecture.Runtime.Extensions.Tests\Thinktecture.Runtime.Extensions.Tests.csproj", "{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1AECC45-5CE8-4318-B3E9-DCE328F26A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1AECC45-5CE8-4318-B3E9-DCE328F26A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1AECC45-5CE8-4318-B3E9-DCE328F26A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1AECC45-5CE8-4318-B3E9-DCE328F26A20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D1AECC45-5CE8-4318-B3E9-DCE328F26A20} = {8F117684-7943-4DCE-8861-F2B854924837}
+		{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
+		{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C34F508-A60B-4C0E-AFA0-0F4CFFB23603}
+	EndGlobalSection
+EndGlobal
