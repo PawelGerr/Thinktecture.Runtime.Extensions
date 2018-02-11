@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace Thinktecture
 {
@@ -50,6 +51,7 @@ namespace Thinktecture
 		/// Equality comparer for keys. Default is <see cref="EqualityComparer{TKey}.Default"/>.
 		/// Important: This property may be changed once and in static constructor only!
 		/// </summary>
+		[NotNull]
 		protected static IEqualityComparer<TKey> KeyEqualityComparer
 		{
 			get => _keyEqualityComparer ?? _defaultKeyEqualityComparer;
@@ -62,6 +64,7 @@ namespace Thinktecture
 		// do not initialize items in static ctor
 		// because the static fields of the derived class may not be initialized yet.
 		private static List<TEnum> _items;
+		[NotNull]
 		private static List<TEnum> Items => _items ?? (_items = GetItems());
 
 		// because this value should not be shared among instances of different close constructed types.
@@ -77,6 +80,7 @@ namespace Thinktecture
 			_invalidEnumFactory = GetInvalidEnumerationFactory();
 		}
 
+		[NotNull]
 		private static Func<TKey, TEnum> GetInvalidEnumerationFactory()
 		{
 			var method = typeof(TEnum).GetTypeInfo().GetMethod(nameof(CreateInvalid), BindingFlags.Instance | BindingFlags.NonPublic);
@@ -87,6 +91,7 @@ namespace Thinktecture
 			return (Func<TKey, TEnum>)method.CreateDelegate(typeof(Func<TKey, TEnum>), null);
 		}
 
+		[NotNull]
 		private static List<TEnum> GetItems()
 		{
 			var type = typeof(TEnum);
@@ -134,12 +139,14 @@ namespace Thinktecture
 		/// </remarks>
 		/// <param name="key">Key of invalid item.</param>
 		/// <returns>An invalid enumeration item.</returns>
+		[NotNull]
 		protected abstract TEnum CreateInvalid(TKey key);
 
 		/// <summary>
 		/// Gets all valid items.
 		/// </summary>
 		/// <returns></returns>
+		[NotNull]
 		public static List<TEnum> GetAll()
 		{
 			return Items.ToList();
@@ -150,6 +157,7 @@ namespace Thinktecture
 		/// </summary>
 		/// <param name="key">The key to return an enumeration item for.</param>
 		/// <returns>An instance of <typeparamref name="TEnum"/>.</returns>
+		[NotNull]
 		public static TEnum Get(TKey key)
 		{
 			var item = Items.Find(e => KeyEqualityComparer.Equals(e.Key, key));

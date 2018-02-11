@@ -1,8 +1,10 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/04cvpwo6t3bbt7vh?svg=true)](https://ci.appveyor.com/project/PawelGerr/thinktecture-runtime-extensions)
 
-Provides commonly-used types like enum-like class.
+Provides some base classes like enum-like class.
 
 # Enum-like Class
+
+A base class for types that are easy to implement and easy to use like .NET enumerations but more flexible.
 
 ## Features
 * The key of the enumeration can be of any type (not just a number)
@@ -92,7 +94,7 @@ var json = JsonConvert.SerializeObject(category);
 var deserializedCategory = JsonConvert.DeserializeObject<ProductCategory>(json);
 ```
 
-## Implimentation Guidelines
+## Implementation Guidelines
 * All items must be `public static readonly` fields.
 * The constructur should not be `public`.
 * The method `CreateInvalid` must not return `null`.
