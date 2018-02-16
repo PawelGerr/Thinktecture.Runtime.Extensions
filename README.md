@@ -84,6 +84,19 @@ var unknownCategory = ProductCategory.Get("Grains");
 // unknownCategory.isValid -> false
 ```
 
+* Implicit conversion to the type of the key
+
+```
+string keyOfTheCategory = category;
+```
+
+* Ensure validity
+
+```
+// Throws "InvalidOperationException" if not valid
+category.EnsureValid();
+```
+
 * No special handling is required for json (de)serialization as soon as the key is json-serializable
 
 ```
@@ -94,7 +107,7 @@ var json = JsonConvert.SerializeObject(category);
 var deserializedCategory = JsonConvert.DeserializeObject<ProductCategory>(json);
 ```
 
-## Implementation Guidelines
+## Implementation Guidelines and Recommendations
 * All items must be `public static readonly` fields.
 * The constructur should not be `public`.
 * The method `CreateInvalid` must not return `null`.
