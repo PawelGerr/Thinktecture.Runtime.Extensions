@@ -37,7 +37,7 @@ namespace Thinktecture
 	/// Base class for enum-like classes.
 	/// </summary>
 	/// <remarks>
-	/// Derived classes must have a default constructor for creation of "invalid" enumeration items. 
+	/// Derived classes must have a default constructor for creation of "invalid" enumeration items.
 	/// The default constructor should not be public.
 	/// </remarks>
 	/// <typeparam name="TEnum">Concrete type of the enumeration.</typeparam>
@@ -173,6 +173,16 @@ namespace Thinktecture
 			}
 
 			return item;
+		}
+
+		/// <summary>
+		/// Checks whether current enumeration item is valid.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">The enumeration item is not valid.</exception>
+		public void EnsureValid()
+		{
+			if (!IsValid)
+				throw new InvalidOperationException($"The current enumeration item of type {typeof(TEnum).FullName} with key {Key} is not valid.");
 		}
 
 		/// <inheritdoc />
