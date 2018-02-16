@@ -64,6 +64,7 @@ namespace Thinktecture
 		// do not initialize items in static ctor
 		// because the static fields of the derived class may not be initialized yet.
 		private static List<TEnum> _items;
+
 		[NotNull]
 		private static List<TEnum> Items => _items ?? (_items = GetItems());
 
@@ -98,16 +99,16 @@ namespace Thinktecture
 			var fields = type.GetTypeInfo().GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
 			return fields.Where(f => f.FieldType == typeof(TEnum))
-						.Select(f =>
-						{
-							var item = (TEnum)f.GetValue(null);
+			             .Select(f =>
+			             {
+				             var item = (TEnum)f.GetValue(null);
 
-							if (item == null)
-								throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not initialized.");
+				             if (item == null)
+					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not initialized.");
 
-							return item;
-						})
-						.ToList();
+				             return item;
+			             })
+			             .ToList();
 		}
 
 		/// <summary>
@@ -216,6 +217,16 @@ namespace Thinktecture
 		public override string ToString()
 		{
 			return Key?.ToString() ?? String.Empty;
+		}
+
+		/// <summary>
+		/// Implicit conversion to the type of <typeparamref name="TKey"/>.
+		/// </summary>
+		/// <param name="item">Item to covert.</param>
+		/// <returns>The <see cref="Key"/> of provided <paramref name="item"/> or <c>null</c> if a<paramref name="item"/> is <c>null</c>.</returns>
+		public static implicit operator TKey(EnumClass<TEnum, TKey> item)
+		{
+			return item == null ? default : item.Key;
 		}
 	}
 }
