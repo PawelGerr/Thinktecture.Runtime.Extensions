@@ -42,6 +42,7 @@ namespace Thinktecture
 	/// </remarks>
 	/// <typeparam name="TEnum">Concrete type of the enumeration.</typeparam>
 	/// <typeparam name="TKey">Type of the key.</typeparam>
+	[TypeDescriptionProvider(typeof(EnumClassTypeDescriptionProvider))]
 	public abstract class EnumClass<TEnum, TKey> : IEquatable<EnumClass<TEnum, TKey>>
 		where TEnum : EnumClass<TEnum, TKey>
 	{
@@ -74,8 +75,6 @@ namespace Thinktecture
 
 		static EnumClass()
 		{
-			TypeDescriptor.AddAttributes(typeof(TEnum), new TypeConverterAttribute(typeof(EnumClassTypeConverter<TEnum, TKey>)));
-
 			_defaultKeyEqualityComparer = EqualityComparer<TKey>.Default;
 			_typeHashCode = typeof(TEnum).GetHashCode() * 397;
 			_invalidEnumFactory = GetInvalidEnumerationFactory();

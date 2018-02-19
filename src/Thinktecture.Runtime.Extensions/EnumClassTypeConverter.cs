@@ -5,15 +5,6 @@ using System.Globalization;
 namespace Thinktecture
 {
 	/// <summary>
-	/// Type converter to convert an <see cref="EnumClass{TEnum}"/> to <see cref="string"/> and vice versa.
-	/// </summary>
-	/// <typeparam name="TEnum">Type of the concrete enumeration.</typeparam>
-	public class EnumClassTypeConverter<TEnum> : EnumClassTypeConverter<TEnum, string>
-		where TEnum : EnumClass<TEnum>
-	{
-	}
-
-	/// <summary>
 	/// Type converter to convert an <see cref="EnumClass{TEnum,TKey}"/> to <typeparamref name="TKey"/> and vice versa.
 	/// </summary>
 	/// <typeparam name="TEnum">Type of the concrete enumeration.</typeparam>
