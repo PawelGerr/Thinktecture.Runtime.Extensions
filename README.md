@@ -2,6 +2,8 @@
 
 Provides some base classes like enum-like class.
 
+[Nuget: `Install-Package Thinktecture.Runtime.Extensions`](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions/)
+
 # Enum-like Class
 
 A base class for types that are easy to implement and easy to use like .NET enumerations but more flexible.
