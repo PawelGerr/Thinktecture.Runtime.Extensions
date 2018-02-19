@@ -1,10 +1,11 @@
-namespace Thinktecture.EnumClassTests.Enums
+namespace Thinktecture.TestEnums
 {
 	public class IntegerEnum : EnumClass<IntegerEnum, int>
 	{
 		public static readonly IntegerEnum Item1 = new IntegerEnum(1);
 
-		public IntegerEnum(int key) : base(key)
+		public IntegerEnum(int key)
+			: base(key)
 		{
 		}
 

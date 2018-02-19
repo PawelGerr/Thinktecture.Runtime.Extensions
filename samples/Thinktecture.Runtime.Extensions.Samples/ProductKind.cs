@@ -1,5 +1,3 @@
-using System;
-
 namespace Thinktecture.Runtime.Extensions.Samples
 {
 	public class ProductKind : EnumClass<ProductKind, int>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Description>Provides commonly-used types like enum-like class.</Description>
 		<Copyright>(c) 2018, Pawel Gerr. All rights reserved.</Copyright>
@@ -18,14 +18,14 @@
 		<CodeAnalysisRuleSet>..\..\Visual Studio.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0"/>
 	</ItemGroup>
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-		<Reference Include="System" />
-		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System"/>
+		<Reference Include="Microsoft.CSharp"/>
 	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-		<Reference Include="System" />
-		<Reference Include="Microsoft.CSharp" />
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+		<Reference Include="System"/>
+		<Reference Include="Microsoft.CSharp"/>
 	</ItemGroup>
 </Project>

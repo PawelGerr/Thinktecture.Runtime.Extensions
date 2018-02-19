@@ -1,6 +1,6 @@
 using System;
 using FluentAssertions;
-using Thinktecture.EnumClassTests.Enums;
+using Thinktecture.TestEnums;
 using Xunit;
 
 namespace Thinktecture.EnumClassTests

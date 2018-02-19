@@ -1,18 +1,18 @@
 using System;
 using FluentAssertions;
-using Thinktecture.EnumClassTests.Enums;
+using Thinktecture.TestEnums;
 using Xunit;
 
 namespace Thinktecture.EnumClassTypeConverterTests
 {
 	public class CanConvertTo
 	{
-		private readonly EnumClassTypeConverter<TestEnum> _converter;
+		private readonly EnumClassTypeConverter<TestEnum, string> _converter;
 		private readonly EnumClassTypeConverter<IntegerEnum, int> _intEnumConverter;
 
 		public CanConvertTo()
 		{
-			_converter = new EnumClassTypeConverter<TestEnum>();
+			_converter = new EnumClassTypeConverter<TestEnum, string>();
 			_intEnumConverter = new EnumClassTypeConverter<IntegerEnum, int>();
 		}
 

@@ -59,8 +59,8 @@ namespace Thinktecture.Runtime.Extensions.Samples
 		private static ILogger GetLogger()
 		{
 			return new LoggerConfiguration()
-					.WriteTo.Console()
-					.CreateLogger();
+			       .WriteTo.Console()
+			       .CreateLogger();
 		}
 	}
 }

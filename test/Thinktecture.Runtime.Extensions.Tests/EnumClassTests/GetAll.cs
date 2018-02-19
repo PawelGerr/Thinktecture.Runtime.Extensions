@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using FluentAssertions;
-using Thinktecture.EnumClassTests.Enums;
+using Thinktecture.TestEnums;
 using Xunit;
 
 namespace Thinktecture.EnumClassTests

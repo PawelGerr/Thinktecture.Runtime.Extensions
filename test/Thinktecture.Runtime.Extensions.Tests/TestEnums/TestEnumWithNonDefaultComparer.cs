@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Thinktecture.EnumClassTests.Enums
+namespace Thinktecture.TestEnums
 {
 	public class TestEnumWithNonDefaultComparer : EnumClass<TestEnumWithNonDefaultComparer>
 	{
