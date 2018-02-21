@@ -8,12 +8,11 @@ namespace Thinktecture.EnumClassTests
 	public class Get
 	{
 		[Fact]
-		public void Should_return_invalid_item_if_enum_dont_have_item_with_null_key()
+		public void Should_return_null_if_null_is_provided()
 		{
 			var item = EmptyEnum.Get(null);
 
-			item.IsValid.Should().BeFalse();
-			item.Key.Should().BeNull();
+			item.Should().BeNull();
 		}
 
 		[Fact]
@@ -38,6 +37,13 @@ namespace Thinktecture.EnumClassTests
 		public void Should_return_item_with_provided_key()
 		{
 			var item = TestEnum.Get("Item2");
+			item.Should().Be(TestEnum.Item2);
+		}
+
+		[Fact]
+		public void Should_return_item_with_provided_key_ignoring_casing()
+		{
+			var item = TestEnum.Get("item2");
 			item.Should().Be(TestEnum.Item2);
 		}
 

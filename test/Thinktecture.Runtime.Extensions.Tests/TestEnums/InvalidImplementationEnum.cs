@@ -1,3 +1,5 @@
+using System;
+
 namespace Thinktecture.TestEnums
 {
 	public class InvalidImplementationEnum : EnumClass<TestEnum>
@@ -9,8 +11,7 @@ namespace Thinktecture.TestEnums
 
 		protected override TestEnum CreateInvalid(string key)
 		{
-			// ReSharper disable once AssignNullToNotNullAttribute
-			return null;
+			throw new NotImplementedException();
 		}
 	}
 }

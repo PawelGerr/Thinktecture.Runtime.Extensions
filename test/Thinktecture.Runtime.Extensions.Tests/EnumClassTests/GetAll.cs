@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using Thinktecture.TestEnums;
 using Xunit;
@@ -10,6 +11,14 @@ namespace Thinktecture.EnumClassTests
 		public void Should_return_empty_collection_if_enum_has_no_items()
 		{
 			EmptyEnum.GetAll().Should().BeEmpty();
+		}
+
+		[Fact]
+		public void Should_throw_if_public_static_field_is_not_readonly()
+		{
+			Action action = () => EnumWithNonReadOnlyField.GetAll();
+			action.Should().Throw<Exception>()
+			      .WithMessage($"The field \"{nameof(EnumWithNonReadOnlyField.Item)}\" of enumeration type \"{typeof(EnumWithNonReadOnlyField).FullName}\" must be read-only.");
 		}
 
 		[Fact]

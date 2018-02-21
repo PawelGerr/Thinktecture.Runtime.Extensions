@@ -17,6 +17,24 @@ namespace Thinktecture.EnumClassTypeConverterTests
 		}
 
 		[Fact]
+		public void Should_return_default_of_provided_destinationtype_if_null_is_provided_and_type_is_valuetype()
+		{
+			_intEnumConverter.ConvertTo(null, null, null, typeof(int)).Should().Be(0);
+		}
+
+		[Fact]
+		public void Should_return_default_of_provided_destinationtype_if_null_is_provided_and_type_is_referencetype()
+		{
+			_intEnumConverter.ConvertTo(null, null, null, typeof(string)).Should().BeNull();
+		}
+
+		[Fact]
+		public void Should_return_default_of_the_key_if_null_is_provided()
+		{
+			_intEnumConverter.ConvertTo(null, null, null, typeof(TestEnum)).Should().BeNull();
+		}
+
+		[Fact]
 		public void Should_return_key_if_type_matches_the_key()
 		{
 			_converter.ConvertTo(null, null, TestEnum.Item1, typeof(string)).Should().Be("item1");

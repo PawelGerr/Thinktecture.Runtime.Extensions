@@ -19,6 +19,12 @@ namespace Thinktecture.EnumClassTypeConverterTests
 		}
 
 		[Fact]
+		public void Should_return_null_if_key_is_null()
+		{
+			_converter.ConvertFrom(null, null, null).Should().BeNull();
+		}
+
+		[Fact]
 		public void Should_return_item_if_parameter_matches_the_key_type_and_item_exists()
 		{
 			_converter.ConvertFrom(null, null, "item1").Should().Be(TestEnum.Item1);

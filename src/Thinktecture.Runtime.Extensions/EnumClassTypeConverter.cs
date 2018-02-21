@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
 
 namespace Thinktecture
 {
@@ -45,6 +46,9 @@ namespace Thinktecture
 		/// <inheritdoc />
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
+			if (value == null)
+				return default(TEnum);
+
 			if (value is TKey key)
 				return EnumClass<TEnum, TKey>.Get(key);
 			if (value is TEnum item)
@@ -64,6 +68,9 @@ namespace Thinktecture
 		/// <inheritdoc />
 		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
+			if (value == null)
+				return destinationType.GetTypeInfo().IsValueType ? Activator.CreateInstance(destinationType) : null;
+
 			if (value is TEnum item)
 			{
 				if (destinationType == typeof(TKey))

@@ -64,53 +64,64 @@ namespace Thinktecture
 
 		// do not initialize items in static ctor
 		// because the static fields of the derived class may not be initialized yet.
-		private static List<TEnum> _items;
+		private static Dictionary<TKey, TEnum> _itemsLookup;
+		private static IReadOnlyList<TEnum> _items;
 
 		[NotNull]
-		private static List<TEnum> Items => _items ?? (_items = GetItems());
+		private static Dictionary<TKey, TEnum> ItemsLookup => _itemsLookup ?? (_itemsLookup = GetItems());
 
-		// because this value should not be shared among instances of different close constructed types.
+		[NotNull]
+		private static IReadOnlyList<TEnum> Items => _items ?? (_items = ItemsLookup.Values.ToList().AsReadOnly());
+
 		// ReSharper disable once StaticMemberInGenericType
+		// because this value should not be shared among instances of different close constructed types.
+		private static readonly Type _type;
+
+		// ReSharper disable once StaticMemberInGenericType
+		// because this value should not be shared among instances of different close constructed types.
 		private static readonly int _typeHashCode;
 
 		static EnumClass()
 		{
 			_defaultKeyEqualityComparer = EqualityComparer<TKey>.Default;
-			_typeHashCode = typeof(TEnum).GetHashCode() * 397;
+			_type = typeof(TEnum);
+			_typeHashCode = _type.GetHashCode() * 397;
 			_invalidEnumFactory = GetInvalidEnumerationFactory();
 		}
 
 		[NotNull]
 		private static Func<TKey, TEnum> GetInvalidEnumerationFactory()
 		{
-			var method = typeof(TEnum).GetTypeInfo().GetMethod(nameof(CreateInvalid), BindingFlags.Instance | BindingFlags.NonPublic);
+			var method = _type.GetTypeInfo().GetMethod(nameof(CreateInvalid), BindingFlags.Instance | BindingFlags.NonPublic);
 
 			if (method == null)
-				throw new Exception($"The method {nameof(CreateInvalid)} hasn't been found in enumeration of type {typeof(TEnum).FullName}.");
+				throw new Exception($"The method {nameof(CreateInvalid)} hasn't been found in enumeration of type {_type.FullName}.");
 
 			return (Func<TKey, TEnum>)method.CreateDelegate(typeof(Func<TKey, TEnum>), null);
 		}
 
 		[NotNull]
-		private static List<TEnum> GetItems()
+		private static Dictionary<TKey, TEnum> GetItems()
 		{
-			var type = typeof(TEnum);
-			var fields = type.GetTypeInfo().GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+			var fields = _type.GetTypeInfo().GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
-			return fields.Where(f => f.FieldType == typeof(TEnum))
+			return fields.Where(f => f.FieldType == _type)
 			             .Select(f =>
 			             {
+				             if (!f.IsInitOnly)
+					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" must be read-only.");
+
 				             var item = (TEnum)f.GetValue(null);
 
 				             if (item == null)
-					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not initialized.");
+					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" is not initialized.");
 
 				             if (!item.IsValid)
-					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not valid.");
+					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" is not valid.");
 
 				             return item;
 			             })
-			             .ToList();
+			             .ToDictionary(i => i.Key, KeyEqualityComparer);
 		}
 
 		/// <summary>
@@ -127,8 +138,11 @@ namespace Thinktecture
 		/// Initializes new valid instance of <see cref="EnumClass{TEnum,TKey}"/>.
 		/// </summary>
 		/// <param name="key">The key of the enumeration item.</param>
-		protected EnumClass(TKey key)
+		protected EnumClass([NotNull] TKey key)
 		{
+			if (key == null)
+				throw new ArgumentNullException(nameof(key));
+
 			Key = key;
 			IsValid = true;
 		}
@@ -148,29 +162,31 @@ namespace Thinktecture
 		/// <summary>
 		/// Gets all valid items.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A collection with all valid items.</returns>
 		[NotNull]
-		public static List<TEnum> GetAll()
+		public static IReadOnlyList<TEnum> GetAll()
 		{
-			return Items.ToList();
+			return Items;
 		}
 
 		/// <summary>
 		/// Gets an enumeration item for provided <paramref name="key"/>.
 		/// </summary>
 		/// <param name="key">The key to return an enumeration item for.</param>
-		/// <returns>An instance of <typeparamref name="TEnum"/>.</returns>
-		[NotNull]
+		/// <returns>An instance of <typeparamref name="TEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
 		public static TEnum Get(TKey key)
 		{
-			var item = Items.Find(e => KeyEqualityComparer.Equals(e.Key, key));
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+			// ReSharper disable once HeuristicUnreachableCode
+			if (key == null)
+				return null;
 
-			if (item == null)
+			if (!ItemsLookup.TryGetValue(key, out var item))
 			{
 				item = _invalidEnumFactory(key);
 
 				if (item == null)
-					throw new Exception($"The method {nameof(CreateInvalid)} of enumeration type {typeof(TEnum).FullName} returned null.");
+					throw new Exception($"The method {nameof(CreateInvalid)} of enumeration type {_type.FullName} returned null.");
 
 				item.IsValid = false;
 			}
@@ -185,7 +201,7 @@ namespace Thinktecture
 		public void EnsureValid()
 		{
 			if (!IsValid)
-				throw new InvalidOperationException($"The current enumeration item of type {typeof(TEnum).FullName} with key {Key} is not valid.");
+				throw new InvalidOperationException($"The current enumeration item of type {_type.FullName} with key {Key} is not valid.");
 		}
 
 		/// <inheritdoc />
