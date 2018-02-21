@@ -9,6 +9,7 @@ namespace Thinktecture.TestEnums
 
 		protected override TestEnum CreateInvalid(string key)
 		{
+			// ReSharper disable once AssignNullToNotNullAttribute
 			return null;
 		}
 	}

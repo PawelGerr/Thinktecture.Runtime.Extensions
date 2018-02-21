@@ -5,6 +5,8 @@ using Xunit;
 
 namespace Thinktecture.EnumClassTypeConverterTests
 {
+	// ReSharper disable AssignNullToNotNullAttribute
+	// ReSharper disable PossibleNullReferenceException
 	public class ConvertFrom
 	{
 		private readonly EnumClassTypeConverter<TestEnum, string> _converter;

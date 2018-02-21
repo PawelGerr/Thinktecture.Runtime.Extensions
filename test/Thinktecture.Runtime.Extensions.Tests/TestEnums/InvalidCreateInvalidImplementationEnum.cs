@@ -9,6 +9,7 @@
 
 		protected override InvalidCreateInvalidImplementationEnum CreateInvalid(string key)
 		{
+			// ReSharper disable once AssignNullToNotNullAttribute
 			return null;
 		}
 	}

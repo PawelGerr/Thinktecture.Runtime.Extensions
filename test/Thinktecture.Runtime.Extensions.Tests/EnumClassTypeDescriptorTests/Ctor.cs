@@ -5,6 +5,8 @@ using Xunit;
 
 namespace Thinktecture.EnumClassTypeDescriptorTests
 {
+	// ReSharper disable ObjectCreationAsStatement
+	// ReSharper disable AssignNullToNotNullAttribute
 	public class Ctor
 	{
 		[Fact]

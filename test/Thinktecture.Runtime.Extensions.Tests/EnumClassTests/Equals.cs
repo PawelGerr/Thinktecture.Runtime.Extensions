@@ -15,6 +15,7 @@ namespace Thinktecture.EnumClassTests
 		[Fact]
 		public void Should_return_false_if_item_is_of_different_type()
 		{
+			// ReSharper disable once SuspiciousTypeConversion.Global
 			TestEnum.Item1.Equals(TestEnumWithNonDefaultComparer.Item1).Should().BeFalse();
 		}
 

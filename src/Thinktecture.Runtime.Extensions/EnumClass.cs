@@ -105,6 +105,9 @@ namespace Thinktecture
 				             if (item == null)
 					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not initialized.");
 
+				             if (!item.IsValid)
+					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not valid.");
+
 				             return item;
 			             })
 			             .ToList();
