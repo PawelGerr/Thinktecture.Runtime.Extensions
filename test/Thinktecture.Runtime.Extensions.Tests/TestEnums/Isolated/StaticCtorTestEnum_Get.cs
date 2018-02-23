@@ -4,6 +4,7 @@
 	/// This enum may be used in 1 test only.
 	/// Otherwise it is initialized and the test is invalid.
 	/// </summary>
+	// ReSharper disable once InconsistentNaming
 	public class StaticCtorTestEnum_Get : Enum<StaticCtorTestEnum_Get>
 	{
 		// ReSharper disable once UnusedMember.Global

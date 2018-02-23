@@ -11,8 +11,9 @@ A base class for types that are easy to implement and easy to use like .NET enum
 ## Features
 * The key of the enumeration can be of any type (not just a number or string)
 * The enumeration can have arbitrary properties and methods
-* An item has an indication whether it is valid.
+* An item has an indication whether it is valid or not.
 	* Especially useful when fetching (invalid) data from a database or external data provider (like web services)
+ 	* Alternative way would be to throw an exception when trying to *deserialize* an invalid item but it turned out to be inpractical in real-worlds projects.
 * Easy querying for all (valid) enumeration items
 * Fast lookup for an enumeration item having the key
 * The enumeration can be converted to the type of the key and vice versa by libraries that are using the [TypeConverter](https://msdn.microsoft.com/en-us/library/system.componentmodel.typeconverter) internally like [Newtonsoft.Json](https://www.newtonsoft.com/json) or model binder of [ASP.NET Core MVC / Web API](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding) (see [samples](samples))
@@ -38,7 +39,7 @@ public class ProductCategory : Enum<ProductCategory>
 }
 ```
 
-The enumeration `ProductGroup` has a key of type `int` and 2 custom properties.
+The enumeration `ProductGroup` has a key of type `int`, 2 custom properties and 1 method.
 
 ```
 public class ProductGroup : Enum<ProductGroup, int>
@@ -56,8 +57,19 @@ public class ProductGroup : Enum<ProductGroup, int>
 		Category = category;
 	}
 
+	public SomeResult Do(SomeDependency dependency)
+	{
+		EnsureValid(); // "Do()" is not allowed for invalid items
+
+		// do something
+	
+		return new SomeResult();
+	}
+
 	protected override ProductGroup CreateInvalid(int key)
 	{
+		// the values can be anything besides the key,
+		// the key must not be null
 		return new ProductGroup(key, "Unknown product group", ProductCategory.Get("Unknown"));
 	}
 }
@@ -87,6 +99,13 @@ var unknownCategory = ProductCategory.Get("Grains");
 // unknownCategory.isValid -> false
 ```
 
+* Getting specific enumeration item if a valid one exists
+
+```
+if (ProductCategory.TryGet("Fruits", out var fruits))
+	logger.Information("Category {category} with TryGet found", fruits);
+```
+
 * Implicit conversion to the type of the key
 
 ```
@@ -110,10 +129,27 @@ var json = JsonConvert.SerializeObject(category);
 var deserializedCategory = JsonConvert.DeserializeObject<ProductCategory>(json);
 ```
 
+* ... the same goes for MVC controllers. The `ProductCategory` is (de)serialized as it is.
+
+```
+[Route("api")]
+public class DemoController : Controller
+{
+	//  http://localhost:5000/api/fruits
+	
+	[HttpGet("{category}")]
+	public IActionResult RoundTrip(ProductCategory category)
+	{
+		return Json(new { ProvidedCategory = category, category.IsValid });
+	}
+}
+```
+
 ## Implementation Guidelines and Recommendations
 * All items must be `public static readonly` fields.
 * The constructur should not be `public`.
 * The method `CreateInvalid` must not return `null`.
+* The method `CreateInvalid` should be considered as a `static` method, i.e. the keyword `this` will be `null`. 
 * The `KeyEqualityComparer` may be changed once and in static constructor only. The default comparer of `Enum<TEnum, TKey>` is `EqualityComparer<TKey>.Default` and `StringComparer.OrdinalIgnoreCase` of `Enum<TEnum>`.
 * The generic parameter `TEnum` must be the type of currently implementing enumeration, i.e. `class MyEnum : Enum<MyEnum>`.
 * The enumeration items should be immutable, i.e. all properties/fields must be initialized in constructor

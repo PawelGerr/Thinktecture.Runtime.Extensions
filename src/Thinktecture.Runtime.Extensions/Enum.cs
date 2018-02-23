@@ -200,6 +200,25 @@ namespace Thinktecture
 		}
 
 		/// <summary>
+		/// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+		/// </summary>
+		/// <param name="key">The key to return an enumeration item for.</param>
+		/// <param name="item">A valid instance of <typeparamref name="TEnum"/>; otherwise <c>null</c>.</param>
+		/// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+		public static bool TryGet(TKey key, out TEnum item)
+		{
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+			// ReSharper disable once HeuristicUnreachableCode
+			if (key == null)
+			{
+				item = default;
+				return false;
+			}
+
+			return ItemsLookup.TryGetValue(key, out item);
+		}
+
+		/// <summary>
 		/// Checks whether current enumeration item is valid.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">The enumeration item is not valid.</exception>

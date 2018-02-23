@@ -44,8 +44,8 @@ namespace Thinktecture.EnumTests
 		[Fact]
 		public void Should_return_item_with_provided_key_ignoring_casing()
 		{
-			var item = StaticCtorTestEnum.Get("Item");
-			item.Should().Be(StaticCtorTestEnum.Item);
+			var item = StaticCtorTestEnum_Get.Get("Item");
+			item.Should().Be(StaticCtorTestEnum_Get.Item);
 		}
 
 		[Fact]

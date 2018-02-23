@@ -16,11 +16,14 @@ namespace Thinktecture.Runtime.Extensions.Samples
 			var category = ProductCategory.Get("Fruits");
 			logger.Information("Category: {category}", category);
 
-			string keyOfTheCategory = category;
-			logger.Information("Implicit conversion of Category -> string: {key}", keyOfTheCategory);
-
 			// Throws "InvalidOperationException" if not valid
 			category.EnsureValid();
+
+			if (ProductCategory.TryGet("fruits", out var fruits))
+				logger.Information("Category {category} with TryGet found", fruits);
+
+			string keyOfTheCategory = category;
+			logger.Information("Implicit conversion of Category -> string: {key}", keyOfTheCategory);
 
 			var unknownCategory = ProductCategory.Get("Grains");
 			logger.Information("unknownCategory.Key: {categoryKey}", unknownCategory.Key);
