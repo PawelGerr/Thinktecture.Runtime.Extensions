@@ -105,6 +105,11 @@ namespace Thinktecture
 		{
 			var fields = _type.GetTypeInfo().GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
+			// access to static field triggers the static ctors of derived classes
+			// so the class gets initialized properly and we get a valid KeyEqualityComparer
+			if (fields.Any())
+				fields.First().GetValue(null);
+
 			return fields.Where(f => f.FieldType == _type)
 			             .Select(f =>
 			             {

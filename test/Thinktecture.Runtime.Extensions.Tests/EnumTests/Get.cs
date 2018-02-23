@@ -1,6 +1,7 @@
 using System;
 using FluentAssertions;
 using Thinktecture.TestEnums;
+using Thinktecture.TestEnums.Isolated;
 using Xunit;
 
 namespace Thinktecture.EnumTests
@@ -36,15 +37,15 @@ namespace Thinktecture.EnumTests
 		[Fact]
 		public void Should_return_item_with_provided_key()
 		{
-			var item = TestEnum.Get("Item2");
+			var item = TestEnum.Get("item2");
 			item.Should().Be(TestEnum.Item2);
 		}
 
 		[Fact]
 		public void Should_return_item_with_provided_key_ignoring_casing()
 		{
-			var item = TestEnum.Get("item2");
-			item.Should().Be(TestEnum.Item2);
+			var item = StaticCtorTestEnum.Get("Item");
+			item.Should().Be(StaticCtorTestEnum.Item);
 		}
 
 		[Fact]
