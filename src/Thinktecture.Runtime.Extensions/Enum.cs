@@ -15,19 +15,19 @@ namespace Thinktecture
 	/// The default constructor should not be public.
 	/// </remarks>
 	/// <typeparam name="TEnum">Concrete type of the enumeration.</typeparam>
-	public abstract class EnumClass<TEnum> : EnumClass<TEnum, string>
-		where TEnum : EnumClass<TEnum, string>
+	public abstract class Enum<TEnum> : Enum<TEnum, string>
+		where TEnum : Enum<TEnum, string>
 	{
-		static EnumClass()
+		static Enum()
 		{
 			KeyEqualityComparer = StringComparer.OrdinalIgnoreCase;
 		}
 
 		/// <summary>
-		/// Initializes new instance of <see cref="EnumClass{TEnum,TKey}"/>.
+		/// Initializes new instance of <see cref="Enum{TEnum,TKey}"/>.
 		/// </summary>
 		/// <param name="key">The key of the enumeration item.</param>
-		protected EnumClass(string key)
+		protected Enum(string key)
 			: base(key)
 		{
 		}
@@ -42,9 +42,9 @@ namespace Thinktecture
 	/// </remarks>
 	/// <typeparam name="TEnum">Concrete type of the enumeration.</typeparam>
 	/// <typeparam name="TKey">Type of the key.</typeparam>
-	[TypeDescriptionProvider(typeof(EnumClassTypeDescriptionProvider))]
-	public abstract class EnumClass<TEnum, TKey> : IEquatable<EnumClass<TEnum, TKey>>
-		where TEnum : EnumClass<TEnum, TKey>
+	[TypeDescriptionProvider(typeof(EnumTypeDescriptionProvider))]
+	public abstract class Enum<TEnum, TKey> : IEquatable<Enum<TEnum, TKey>>
+		where TEnum : Enum<TEnum, TKey>
 	{
 		private static IEqualityComparer<TKey> _keyEqualityComparer;
 
@@ -81,7 +81,7 @@ namespace Thinktecture
 		// because this value should not be shared among instances of different close constructed types.
 		private static readonly int _typeHashCode;
 
-		static EnumClass()
+		static Enum()
 		{
 			_defaultKeyEqualityComparer = EqualityComparer<TKey>.Default;
 			_type = typeof(TEnum);
@@ -135,10 +135,10 @@ namespace Thinktecture
 		public bool IsValid { get; private set; }
 
 		/// <summary>
-		/// Initializes new valid instance of <see cref="EnumClass{TEnum,TKey}"/>.
+		/// Initializes new valid instance of <see cref="Enum{TEnum,TKey}"/>.
 		/// </summary>
 		/// <param name="key">The key of the enumeration item.</param>
-		protected EnumClass([NotNull] TKey key)
+		protected Enum([NotNull] TKey key)
 		{
 			if (key == null)
 				throw new ArgumentNullException(nameof(key));
@@ -205,7 +205,7 @@ namespace Thinktecture
 		}
 
 		/// <inheritdoc />
-		public bool Equals(EnumClass<TEnum, TKey> other)
+		public bool Equals(Enum<TEnum, TKey> other)
 		{
 			if (other == null)
 				return false;
@@ -222,7 +222,7 @@ namespace Thinktecture
 		/// <inheritdoc />
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as EnumClass<TEnum, TKey>);
+			return Equals(obj as Enum<TEnum, TKey>);
 		}
 
 		/// <inheritdoc />
@@ -242,7 +242,7 @@ namespace Thinktecture
 		/// </summary>
 		/// <param name="item">Item to covert.</param>
 		/// <returns>The <see cref="Key"/> of provided <paramref name="item"/> or <c>null</c> if a<paramref name="item"/> is <c>null</c>.</returns>
-		public static implicit operator TKey(EnumClass<TEnum, TKey> item)
+		public static implicit operator TKey(Enum<TEnum, TKey> item)
 		{
 			return item == null ? default : item.Key;
 		}

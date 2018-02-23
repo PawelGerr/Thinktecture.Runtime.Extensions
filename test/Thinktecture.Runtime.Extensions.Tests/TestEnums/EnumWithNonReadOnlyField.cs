@@ -1,6 +1,6 @@
 ﻿namespace Thinktecture.TestEnums
 {
-	public class EnumWithNonReadOnlyField : EnumClass<EnumWithNonReadOnlyField>
+	public class EnumWithNonReadOnlyField : Enum<EnumWithNonReadOnlyField>
 	{
 		public static EnumWithNonReadOnlyField Item = new EnumWithNonReadOnlyField("Item");
 

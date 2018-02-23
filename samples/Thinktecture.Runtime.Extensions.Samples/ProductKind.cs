@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Extensions.Samples
 {
-	public class ProductKind : EnumClass<ProductKind, int>
+	public class ProductKind : Enum<ProductKind, int>
 	{
 		public static readonly ProductKind Apple = new ProductKind(1, "Apple", ProductCategory.Fruits);
 		public static readonly ProductKind Orange = new ProductKind(2, "Orange", ProductCategory.Fruits);

@@ -3,19 +3,19 @@ using FluentAssertions;
 using Thinktecture.TestEnums;
 using Xunit;
 
-namespace Thinktecture.EnumClassTypeConverterTests
+namespace Thinktecture.EnumTypeConverterTests
 {
 	// ReSharper disable AssignNullToNotNullAttribute
 	// ReSharper disable PossibleNullReferenceException
 	public class ConvertFrom
 	{
-		private readonly EnumClassTypeConverter<TestEnum, string> _converter;
-		private readonly EnumClassTypeConverter<IntegerEnum, int> _intEnumConverter;
+		private readonly EnumTypeConverter<TestEnum, string> _converter;
+		private readonly EnumTypeConverter<IntegerEnum, int> _intEnumConverter;
 
 		public ConvertFrom()
 		{
-			_converter = new EnumClassTypeConverter<TestEnum, string>();
-			_intEnumConverter = new EnumClassTypeConverter<IntegerEnum, int>();
+			_converter = new EnumTypeConverter<TestEnum, string>();
+			_intEnumConverter = new EnumTypeConverter<IntegerEnum, int>();
 		}
 
 		[Fact]

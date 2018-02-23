@@ -20,7 +20,7 @@ A base class for types that are easy to implement and easy to use like .NET enum
 The enumeration `ProductCategory` has a key of type `string` and has no custom members.
 
 ```
-public class ProductCategory : EnumClass<ProductCategory>
+public class ProductCategory : Enum<ProductCategory>
 {
 	public static readonly ProductCategory Fruits = new ProductCategory("Fruits");
 	public static readonly ProductCategory Dairy = new ProductCategory("Dairy");
@@ -40,7 +40,7 @@ public class ProductCategory : EnumClass<ProductCategory>
 The enumeration `ProductKind` has a key of type `int` and 2 custom properties.
 
 ```
-public class ProductKind : EnumClass<ProductKind, int>
+public class ProductKind : Enum<ProductKind, int>
 {
 	public static readonly ProductKind Apple = new ProductKind(1, "Apple", ProductCategory.Fruits);
 	public static readonly ProductKind Orange = new ProductKind(2, "Orange", ProductCategory.Fruits);
@@ -113,8 +113,8 @@ var deserializedCategory = JsonConvert.DeserializeObject<ProductCategory>(json);
 * All items must be `public static readonly` fields.
 * The constructur should not be `public`.
 * The method `CreateInvalid` must not return `null`.
-* The `KeyEqualityComparer` may be changed once and in static constructor only. The default comparer of `EnumClass<TEnum, TKey>` is `EqualityComparer<TKey>.Default` and `StringComparer.OrdinalIgnoreCase` of `EnumClass<TEnum>`.
-* The generic parameter `TEnum` must be the type of currently implementing enumeration, i.e. `class MyEnum : EnumClass<MyEnum>`.
+* The `KeyEqualityComparer` may be changed once and in static constructor only. The default comparer of `Enum<TEnum, TKey>` is `EqualityComparer<TKey>.Default` and `StringComparer.OrdinalIgnoreCase` of `Enum<TEnum>`.
+* The generic parameter `TEnum` must be the type of currently implementing enumeration, i.e. `class MyEnum : Enum<MyEnum>`.
 * The enumeration items should be immutable, i.e. all properties/fields must be initialized in constructor
 * All data required by the constructor must be known during compile time, i.e. no database lookups, http request etc. should be necessary to initialize an enumeration item.
   * If some logic requires an external dependency known at runtime only then make a method and provide it as a parameter.

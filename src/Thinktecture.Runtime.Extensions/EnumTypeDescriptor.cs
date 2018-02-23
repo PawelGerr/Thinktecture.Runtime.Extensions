@@ -7,20 +7,20 @@ using JetBrains.Annotations;
 namespace Thinktecture
 {
 	/// <summary>
-	/// Type descriptor for <see cref="EnumClass{TEnum,TKey}"/>.
+	/// Type descriptor for <see cref="Enum{TEnum,TKey}"/>.
 	/// </summary>
-	public class EnumClassTypeDescriptor : CustomTypeDescriptor
+	public class EnumTypeDescriptor : CustomTypeDescriptor
 	{
 		private static readonly ConcurrentDictionary<Type, TypeConverter> _converterLookup = new ConcurrentDictionary<Type, TypeConverter>();
 
 		private readonly Type _objectType;
 
 		/// <summary>
-		/// Initializes new instance of <see cref="EnumClassTypeDescriptor"/>.
+		/// Initializes new instance of <see cref="EnumTypeDescriptor"/>.
 		/// </summary>
 		/// <param name="parent">Parent type descriptor.</param>
 		/// <param name="objectType">Type of an enumeration.</param>
-		public EnumClassTypeDescriptor(ICustomTypeDescriptor parent, [NotNull] Type objectType)
+		public EnumTypeDescriptor(ICustomTypeDescriptor parent, [NotNull] Type objectType)
 			: base(parent)
 		{
 			_objectType = objectType ?? throw new ArgumentNullException(nameof(objectType));
@@ -39,13 +39,13 @@ namespace Thinktecture
 
 		private static TypeConverter CreateTypeConverter(Type type)
 		{
-			var enumTypes = GetEnumClassTypesArguments(type);
-			var converterType = typeof(EnumClassTypeConverter<,>).MakeGenericType(enumTypes);
+			var enumTypes = GetEnumTypesArguments(type);
+			var converterType = typeof(EnumTypeConverter<,>).MakeGenericType(enumTypes);
 
 			return (TypeConverter)Activator.CreateInstance(converterType);
 		}
 
-		private static Type[] GetEnumClassTypesArguments([NotNull] Type type)
+		private static Type[] GetEnumTypesArguments([NotNull] Type type)
 		{
 			if (type == null)
 				throw new ArgumentNullException(nameof(type));
@@ -58,14 +58,14 @@ namespace Thinktecture
 				{
 					var genericType = typeInfo.GetGenericTypeDefinition();
 
-					if (genericType == typeof(EnumClass<,>))
+					if (genericType == typeof(Enum<,>))
 						return typeInfo.GenericTypeArguments;
 				}
 
 				type = typeInfo.BaseType;
 			}
 
-			throw new ArgumentException($"The provided type {type.FullName} does not inherit the type EnumClass<,>");
+			throw new ArgumentException($"The provided type {type.FullName} does not inherit the type Enum<,>");
 		}
 	}
 }

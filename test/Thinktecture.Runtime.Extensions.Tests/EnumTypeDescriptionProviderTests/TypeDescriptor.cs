@@ -3,17 +3,17 @@ using FluentAssertions;
 using Thinktecture.TestEnums;
 using Xunit;
 
-namespace Thinktecture.EnumClassTypeDescriptionProviderTests
+namespace Thinktecture.EnumTypeDescriptionProviderTests
 {
 	public class GetConverter
 	{
 		[Fact]
-		public void Should_return_enumclass_typeconverter_via_typedescriptor()
+		public void Should_return_enum_typeconverter_via_typedescriptor()
 		{
 			var type = typeof(TestEnum);
 			var converter = TypeDescriptor.GetConverter(type);
 
-			converter.Should().BeOfType(typeof(EnumClassTypeConverter<TestEnum, string>));
+			converter.Should().BeOfType(typeof(EnumTypeConverter<TestEnum, string>));
 		}
 	}
 }

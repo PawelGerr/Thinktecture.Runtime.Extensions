@@ -2,7 +2,7 @@
 using Thinktecture.TestEnums;
 using Xunit;
 
-namespace Thinktecture.EnumClassTests
+namespace Thinktecture.EnumTests
 {
 	public class ImplicitConversionToKey
 	{

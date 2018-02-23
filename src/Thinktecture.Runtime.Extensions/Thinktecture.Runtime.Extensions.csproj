@@ -6,7 +6,7 @@
 		<Authors>Pawel Gerr</Authors>
 		<TargetFrameworks>netstandard1.5;net45;net462</TargetFrameworks>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageTags>abstraction</PackageTags>
+		<PackageTags>common</PackageTags>
 		<PackageIconUrl>http://thinktecture.com/images/Logo_T_Nontransparent.png</PackageIconUrl>
 		<PackageProjectUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions</PackageProjectUrl>
 		<PackageLicenseUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/blob/master/LICENCE.md</PackageLicenseUrl>

@@ -1,6 +1,6 @@
 ﻿namespace Thinktecture.TestEnums
 {
-	public class InvalidCreateInvalidImplementationEnum : EnumClass<InvalidCreateInvalidImplementationEnum>
+	public class InvalidCreateInvalidImplementationEnum : Enum<InvalidCreateInvalidImplementationEnum>
 	{
 		public InvalidCreateInvalidImplementationEnum(string key)
 			: base(key)
