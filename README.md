@@ -9,12 +9,13 @@ Provides some base classes like enum-like class.
 A base class for types that are easy to implement and easy to use like .NET enumerations but more flexible.
 
 ## Features
-* The key of the enumeration can be of any type (not just a number)
+* The key of the enumeration can be of any type (not just a number or string)
 * The enumeration can have arbitrary properties and methods
-* An item has an indication whether it is valid or not.
-* Easy querying for all enumeration items
-* Easy lookup for an enumeration item having the key
-* The enumeration can be converted to the type of the key and vice versa by libraries that are using the [TypeConverter](https://msdn.microsoft.com/en-us/library/system.componentmodel.typeconverter) internally (like [Newtonsoft.Json](https://www.newtonsoft.com/json))
+* An item has an indication whether it is valid.
+	* Especially useful when fetching (invalid) data from a database or external data provider (like web services)
+* Easy querying for all (valid) enumeration items
+* Fast lookup for an enumeration item having the key
+* The enumeration can be converted to the type of the key and vice versa by libraries that are using the [TypeConverter](https://msdn.microsoft.com/en-us/library/system.componentmodel.typeconverter) internally like [Newtonsoft.Json](https://www.newtonsoft.com/json) or model binder of [ASP.NET Core MVC / Web API](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding) (see [samples](samples))
 
 ## Example
 The enumeration `ProductCategory` has a key of type `string` and has no custom members.
@@ -37,27 +38,27 @@ public class ProductCategory : Enum<ProductCategory>
 }
 ```
 
-The enumeration `ProductKind` has a key of type `int` and 2 custom properties.
+The enumeration `ProductGroup` has a key of type `int` and 2 custom properties.
 
 ```
-public class ProductKind : Enum<ProductKind, int>
+public class ProductGroup : Enum<ProductGroup, int>
 {
-	public static readonly ProductKind Apple = new ProductKind(1, "Apple", ProductCategory.Fruits);
-	public static readonly ProductKind Orange = new ProductKind(2, "Orange", ProductCategory.Fruits);
+	public static readonly ProductGroup Apple = new ProductGroup(1, "Apple", ProductCategory.Fruits);
+	public static readonly ProductGroup Orange = new ProductGroup(2, "Orange", ProductCategory.Fruits);
 
 	public string DisplayName { get; }
 	public ProductCategory Category { get; }
 
-	private ProductKind(int key, string displayName, ProductCategory category)
+	private ProductGroup(int key, string displayName, ProductCategory category)
 		: base(key)
 	{
 		DisplayName = displayName;
 		Category = category;
 	}
 
-	protected override ProductKind CreateInvalid(int key)
+	protected override ProductGroup CreateInvalid(int key)
 	{
-		return new ProductKind(key, "Unknown product kind", ProductCategory.Get("Unknown"));
+		return new ProductGroup(key, "Unknown product group", ProductCategory.Get("Unknown"));
 	}
 }
 ```

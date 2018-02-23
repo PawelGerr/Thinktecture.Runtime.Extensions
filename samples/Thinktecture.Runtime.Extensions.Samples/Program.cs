@@ -27,7 +27,7 @@ namespace Thinktecture.Runtime.Extensions.Samples
 			logger.Information("unknownCategory.isValid: {IsValid}", unknownCategory.IsValid);
 
 			DoJsonSerialization(logger, ProductCategory.Fruits);
-			DoJsonSerialization(logger, ProductKind.Apple);
+			DoJsonSerialization(logger, ProductGroup.Apple);
 
 			logger.Information("Press ENTER to exit");
 			Console.ReadLine();
@@ -43,17 +43,17 @@ namespace Thinktecture.Runtime.Extensions.Samples
 
 			logger.Information("Category == Deserialized Category: {bool}", ReferenceEquals(deserializedCategory, category));
 
-			var invalidItem = JsonConvert.DeserializeObject<ProductCategory>("\"invalid item\"");
+			var invalidItem = JsonConvert.DeserializeObject<ProductCategory>("\"invalid category\"");
 			logger.Information("Invalid category: {invalid}", invalidItem);
 		}
 
-		private static void DoJsonSerialization(ILogger logger, ProductKind kind)
+		private static void DoJsonSerialization(ILogger logger, ProductGroup productGroup)
 		{
-			var json = JsonConvert.SerializeObject(kind);
-			logger.Information("ProductKind -> json: {json}", json);
+			var json = JsonConvert.SerializeObject(productGroup);
+			logger.Information("ProductGroup -> json: {json}", json);
 
-			var deserializedKind = JsonConvert.DeserializeObject<ProductKind>(json);
-			logger.Information("json -> ProductKind: {kind}", deserializedKind);
+			var deserializedGroup = JsonConvert.DeserializeObject<ProductGroup>(json);
+			logger.Information("json -> ProductGroup: {group}", deserializedGroup);
 		}
 
 		private static ILogger GetLogger()
