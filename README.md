@@ -1,8 +1,9 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/04cvpwo6t3bbt7vh?svg=true)](https://ci.appveyor.com/project/PawelGerr/thinktecture-runtime-extensions)
+[![Thinktecture.Runtime.Extensions](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.svg?maxAge=3600)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions/)
 
 Provides some base classes like enum-like class.
 
-[Nuget: `Install-Package Thinktecture.Runtime.Extensions`](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions/)
+Nuget: `Install-Package Thinktecture.Runtime.Extensions`
 
 # Enum-like Class
 
