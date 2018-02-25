@@ -15,6 +15,7 @@ A base class for types that are easy to implement and easy to use like .NET enum
 * An item has an indication whether it is valid or not.
 	* Especially useful when fetching (invalid) data from a database or external data provider (like web services)
  	* Alternative way would be to throw an exception when trying to *deserialize* an invalid item but it turned out to be inpractical in real-worlds projects.
+* Control over creation of invalid items
 * Easy querying for all (valid) enumeration items
 * Fast lookup for an enumeration item having the key
 * The enumeration can be converted to the type of the key and vice versa by libraries that are using the [TypeConverter](https://msdn.microsoft.com/en-us/library/system.componentmodel.typeconverter) internally like [Newtonsoft.Json](https://www.newtonsoft.com/json) or model binder of [ASP.NET Core MVC / Web API](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding) (see [samples](samples))
@@ -150,9 +151,10 @@ public class DemoController : Controller
 * All items must be `public static readonly` fields.
 * The constructur should not be `public`.
 * The method `CreateInvalid` must not return `null`.
-* The method `CreateInvalid` should be considered as a `static` method, i.e. the keyword `this` will be `null`. 
+* The method `CreateInvalid` should be considered as a `static` method because the keyword `this` will be `null`. 
 * The `KeyEqualityComparer` may be changed once and in static constructor only. The default comparer of `Enum<TEnum, TKey>` is `EqualityComparer<TKey>.Default` and `StringComparer.OrdinalIgnoreCase` of `Enum<TEnum>`.
 * The generic parameter `TEnum` must be the type of currently implementing enumeration, i.e. `class MyEnum : Enum<MyEnum>`.
 * The enumeration items should be immutable, i.e. all properties/fields must be initialized in constructor
 * All data required by the constructor must be known during compile time, i.e. no database lookups, http request etc. should be necessary to initialize an enumeration item.
   * If some logic requires an external dependency known at runtime only then make a method and provide it as a parameter.
+  * The implementation should be as simple as possible, complex logic should be moved to its own class
