@@ -11,11 +11,13 @@ A base class for types that are easy to implement and easy to use like .NET enum
 
 ## Features
 * The key of the enumeration can be of any type (not just a number or string)
+* The enumeration can provide custom key equality comparer
 * The enumeration can have arbitrary properties and methods
+* No public nor default constructor required
+* Control over creation of *invalid* items
 * An item has an indication whether it is valid or not.
 	* Especially useful when fetching (invalid) data from a database or external data provider (like web services)
  	* Alternative way would be to throw an exception when trying to *deserialize* an invalid item but it turned out to be inpractical in real-worlds projects.
-* Control over creation of invalid items
 * Easy querying for all (valid) enumeration items
 * Fast lookup for an enumeration item having the key
 * The enumeration can be converted to the type of the key and vice versa by libraries that are using the [TypeConverter](https://msdn.microsoft.com/en-us/library/system.componentmodel.typeconverter) internally like [Newtonsoft.Json](https://www.newtonsoft.com/json) or model binder of [ASP.NET Core MVC / Web API](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding) (see [samples](samples))
@@ -59,6 +61,7 @@ public class ProductGroup : Enum<ProductGroup, int>
 		Category = category;
 	}
 
+	// custom method
 	public SomeResult Do(SomeDependency dependency)
 	{
 		EnsureValid(); // "Do()" is not allowed for invalid items
@@ -70,7 +73,7 @@ public class ProductGroup : Enum<ProductGroup, int>
 
 	protected override ProductGroup CreateInvalid(int key)
 	{
-		// the values can be anything besides the key,
+		// the values can be anything you like except for the key,
 		// the key must not be null
 		return new ProductGroup(key, "Unknown product group", ProductCategory.Get("Unknown"));
 	}
@@ -114,7 +117,7 @@ if (ProductCategory.TryGet("Fruits", out var fruits))
 string keyOfTheCategory = category;
 ```
 
-* Ensure validity
+* Ensure validity (convenience method)
 
 ```
 // Throws "InvalidOperationException" if not valid
