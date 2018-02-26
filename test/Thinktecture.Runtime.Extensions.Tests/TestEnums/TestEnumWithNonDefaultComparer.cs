@@ -4,7 +4,8 @@ namespace Thinktecture.TestEnums
 {
 	public class TestEnumWithNonDefaultComparer : Enum<TestEnumWithNonDefaultComparer>
 	{
-		public static readonly TestEnumWithNonDefaultComparer Item1 = new TestEnumWithNonDefaultComparer("item1");
+		public static readonly TestEnumWithNonDefaultComparer Item = new TestEnumWithNonDefaultComparer("item");
+		public static readonly TestEnumWithNonDefaultComparer AnotherItem = new TestEnumWithNonDefaultComparer("Item");
 
 		static TestEnumWithNonDefaultComparer()
 		{

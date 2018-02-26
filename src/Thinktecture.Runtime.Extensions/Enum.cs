@@ -116,23 +116,34 @@ namespace Thinktecture
 			if (fields.Any())
 				fields.First().GetValue(null);
 
-			return fields.Where(f => f.FieldType == _type)
-			             .Select(f =>
-			             {
-				             if (!f.IsInitOnly)
-					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" must be read-only.");
+			var items = fields.Where(f => f.FieldType == _type)
+			                  .Select(f =>
+			                  {
+				                  if (!f.IsInitOnly)
+					                  throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" must be read-only.");
 
-				             var item = (TEnum)f.GetValue(null);
+				                  var item = (TEnum)f.GetValue(null);
 
-				             if (item == null)
-					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" is not initialized.");
+				                  if (item == null)
+					                  throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" is not initialized.");
 
-				             if (!item.IsValid)
-					             throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" is not valid.");
+				                  if (!item.IsValid)
+					                  throw new Exception($"The field \"{f.Name}\" of enumeration type \"{_type.FullName}\" is not valid.");
 
-				             return item;
-			             })
-			             .ToDictionary(i => i.Key, KeyEqualityComparer);
+				                  return item;
+			                  });
+
+			var lookup = new Dictionary<TKey, TEnum>(KeyEqualityComparer);
+
+			foreach (var item in items)
+			{
+				if (lookup.ContainsKey(item.Key))
+					throw new ArgumentException($"The enumeration of type \"{_type.FullName}\" has multiple items with the key \"{item.Key}\".");
+
+				lookup.Add(item.Key, item);
+			}
+
+			return lookup;
 		}
 
 		/// <summary>
