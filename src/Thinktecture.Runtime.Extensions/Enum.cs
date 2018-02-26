@@ -56,7 +56,13 @@ namespace Thinktecture
 		protected static IEqualityComparer<TKey> KeyEqualityComparer
 		{
 			get => _keyEqualityComparer ?? _defaultKeyEqualityComparer;
-			set => _keyEqualityComparer = value;
+			set
+			{
+				if (_items?.Count > 0)
+					throw new InvalidOperationException($"Setting the {KeyEqualityComparer} must be done in static constructor of {typeof(TEnum).FullName}.");
+
+				_keyEqualityComparer = value;
+			}
 		}
 
 		private static readonly EqualityComparer<TKey> _defaultKeyEqualityComparer;

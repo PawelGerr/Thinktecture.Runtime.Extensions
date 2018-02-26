@@ -150,6 +150,7 @@ public class DemoController : Controller
 ## Implementation Guidelines and Recommendations
 * All items must be `public static readonly` fields.
 * The constructur should not be `public`.
+* The class should be `sealed`.
 * The method `CreateInvalid` must not return `null`.
 * The method `CreateInvalid` should be considered as a `static` method because the keyword `this` will be `null`. 
 * The `KeyEqualityComparer` may be changed once and in static constructor only. The default comparer of `Enum<TEnum, TKey>` is `EqualityComparer<TKey>.Default` and `StringComparer.OrdinalIgnoreCase` of `Enum<TEnum>`.

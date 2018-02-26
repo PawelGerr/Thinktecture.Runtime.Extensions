@@ -2,7 +2,7 @@ using Thinktecture.Runtime.Extensions.Samples.Dummy;
 
 namespace Thinktecture.Runtime.Extensions.Samples
 {
-	public class ProductGroup : Enum<ProductGroup, int>
+	public sealed class ProductGroup : Enum<ProductGroup, int>
 	{
 		public static readonly ProductGroup Apple = new ProductGroup(1, "Apple", ProductCategory.Fruits);
 		public static readonly ProductGroup Orange = new ProductGroup(2, "Orange", ProductCategory.Fruits);
