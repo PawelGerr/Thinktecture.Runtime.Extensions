@@ -1,6 +1,4 @@
-using Thinktecture.Runtime.Extensions.Samples.Dummy;
-
-namespace Thinktecture.Runtime.Extensions.Samples
+namespace Thinktecture.Runtime.Extensions.Samples.EnumLikeClass
 {
 	public sealed class ProductGroup : Enum<ProductGroup, int>
 	{
@@ -17,13 +15,13 @@ namespace Thinktecture.Runtime.Extensions.Samples
 			Category = category;
 		}
 
-		public SomeResult Do(SomeDependency dependency)
+		public int Do(string foo)
 		{
 			EnsureValid(); // "Do()" is not allowed for invalid items
 
 			// do something
 
-			return new SomeResult();
+			return 42;
 		}
 
 		protected override ProductGroup CreateInvalid(int key)
