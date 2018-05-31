@@ -1,4 +1,4 @@
-version: 1.0.0.{build}-{branch}
+version: 1.0.0.{build}-{branch} 
 image: Visual Studio 2017
 configuration: Release
 
@@ -7,7 +7,11 @@ pull_requests:
   do_not_increment_build_number: true
 
 install:
-- ps: . ./ci/appveyor.ps1
+- ps: >-
+    choco install dotnetcore-sdk -y --version 2.1.300
+
+    . ./ci/appveyor.ps1
+    
 before_build:
 - ps: >-
     dotnet --info
@@ -15,12 +19,15 @@ before_build:
     Set-VersionSuffixOnTag("src")
 
     dotnet restore ./Thinktecture.Runtime.Extensions.sln
+
 build:
   project: Thinktecture.Runtime.Extensions.sln
   verbosity: minimal
+
 after_build:
 - ps: >-
     Dotnet-Pack("src")
+
 test_script:
 - ps: Dotnet-Test("test")
 
