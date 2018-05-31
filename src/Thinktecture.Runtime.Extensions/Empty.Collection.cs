@@ -79,7 +79,7 @@ namespace Thinktecture
 			public static readonly IReadOnlyList<T> Instance = new ReadOnlyList<T>();
 
 			public int Count => 0;
-			public T this[int index] => throw new ArgumentOutOfRangeException();
+			public T this[int index] => throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
 
 			public IEnumerator<T> GetEnumerator()
 			{
