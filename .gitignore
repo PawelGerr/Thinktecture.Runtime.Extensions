@@ -5,3 +5,4 @@
 **/packages/**
 
 *\.sln\.DotSettings\.user
+samples/Thinktecture\.Runtime\.Extensions\.EntityFrameworkSamples/products\.db

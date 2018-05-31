@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Thinktecture.Runtime.Extensions.Samples;
+using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
 namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
 {
@@ -25,7 +25,6 @@ namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
 				{
 					Id = Guid.NewGuid(),
 					Name = "Pear",
-					// checking for valid enumeration items is application logic
 					Category = ProductCategory.Get("Invalid Category")
 				});
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Thinktecture.Runtime.Extensions.Samples;
+using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
 namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
 {

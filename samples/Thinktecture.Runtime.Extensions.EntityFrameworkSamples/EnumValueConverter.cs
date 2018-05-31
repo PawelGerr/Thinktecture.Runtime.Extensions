@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.Converters;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
 {
@@ -6,12 +7,7 @@ namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
 		where TEnum : Enum<TEnum, TKey>
 	{
 		public EnumValueConverter()
-			: this(default(ConverterMappingHints))
-		{
-		}
-
-		public EnumValueConverter(ConverterMappingHints hints)
-			: base(item => item.Key, key => Enum<TEnum, TKey>.Get(key), hints)
+			: base(item => item.Key, key => Enum<TEnum, TKey>.Get(key))
 		{
 		}
 	}
