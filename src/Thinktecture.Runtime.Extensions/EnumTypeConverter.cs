@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace Thinktecture
 {
@@ -66,7 +67,7 @@ namespace Thinktecture
 		}
 
 		/// <inheritdoc />
-		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, [CanBeNull] object value, Type destinationType)
 		{
 			if (value == null)
 				return destinationType.GetTypeInfo().IsValueType ? Activator.CreateInstance(destinationType) : null;

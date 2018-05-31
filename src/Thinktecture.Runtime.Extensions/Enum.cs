@@ -27,7 +27,7 @@ namespace Thinktecture
 		/// Initializes new instance of <see cref="Enum{TEnum,TKey}"/>.
 		/// </summary>
 		/// <param name="key">The key of the enumeration item.</param>
-		protected Enum(string key)
+		protected Enum([NotNull] string key)
 			: base(key)
 		{
 		}
@@ -200,6 +200,7 @@ namespace Thinktecture
 		{
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			// ReSharper disable once HeuristicUnreachableCode
+			// ReSharper disable once CompareNonConstrainedGenericWithNull
 			if (key == null)
 				return null;
 
@@ -226,6 +227,7 @@ namespace Thinktecture
 		{
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			// ReSharper disable once HeuristicUnreachableCode
+			// ReSharper disable once CompareNonConstrainedGenericWithNull
 			if (key == null)
 			{
 				item = default;

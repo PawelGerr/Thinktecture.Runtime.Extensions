@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace Thinktecture
 {
@@ -25,6 +26,7 @@ namespace Thinktecture
 		}
 
 		/// <inheritdoc />
+		[NotNull]
 		public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance)
 		{
 			var baseDescriptor = base.GetTypeDescriptor(objectType, instance);

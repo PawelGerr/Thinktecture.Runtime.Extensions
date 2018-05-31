@@ -32,12 +32,13 @@ namespace Thinktecture
 			return GetCachedConverter(_objectType);
 		}
 
-		private TypeConverter GetCachedConverter(Type type)
+		private TypeConverter GetCachedConverter([NotNull] Type type)
 		{
 			return _converterLookup.GetOrAdd(type, CreateTypeConverter);
 		}
 
-		private static TypeConverter CreateTypeConverter(Type type)
+		[NotNull]
+		private static TypeConverter CreateTypeConverter([NotNull] Type type)
 		{
 			var enumTypes = GetEnumTypesArguments(type);
 			var converterType = typeof(EnumTypeConverter<,>).MakeGenericType(enumTypes);

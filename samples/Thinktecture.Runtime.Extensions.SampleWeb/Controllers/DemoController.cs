@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Thinktecture.Runtime.Extensions.Samples;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
 namespace Thinktecture.Runtime.Extensions.SampleWeb.Controllers

@@ -8,12 +8,20 @@ namespace Thinktecture
 {
 	public partial class Empty
 	{
+		/// <summary>
+		/// Returns empty non-generic collection of type <see cref="IEnumerable"/>.
+		/// </summary>
+		/// <returns>An empty collection.</returns>
 		[NotNull]
 		public static IEnumerable Collection()
 		{
 			return Enumerable.Empty<object>();
 		}
 
+		/// <summary>
+		/// Returns empty generic collection of type <see cref="IReadOnlyList{T}"/>.
+		/// </summary>
+		/// <returns>An empty collection.</returns>
 		[NotNull]
 		public static IReadOnlyList<T> Collection<T>()
 		{
@@ -24,6 +32,10 @@ namespace Thinktecture
 #endif
 		}
 
+		/// <summary>
+		/// Returns empty dictionary.
+		/// </summary>
+		/// <returns>An empty dictionary.</returns>
 		[NotNull]
 		public static IReadOnlyDictionary<TKey, TValue> Dictionary<TKey, TValue>()
 		{
@@ -36,11 +48,7 @@ namespace Thinktecture
 
 			public int Count => 0;
 			public TValue this[TKey key] => throw new KeyNotFoundException();
-
-			[NotNull]
 			public IEnumerable<TKey> Keys => Enumerable.Empty<TKey>();
-
-			[NotNull]
 			public IEnumerable<TValue> Values => Enumerable.Empty<TValue>();
 
 			public bool ContainsKey(TKey key)

@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,17 +18,17 @@ namespace Thinktecture.Runtime.Extensions.SampleWeb
 			var loggerFactory = CreateLoggerFactory();
 			var server = StartServerAsync(loggerFactory);
 
-			await DoHttpRequestAsync(); // calls http://localhost:5000/api/fruits
+			await DoHttpRequestAsync().ConfigureAwait(false); // calls http://localhost:5000/api/fruits
 
-			await server;
+			await server.ConfigureAwait(false);
 		}
 
 		private static async Task DoHttpRequestAsync()
 		{
 			using (var client = new HttpClient())
-			using (var response = await client.GetAsync("http://localhost:5000/api/fruits"))
+			using (var response = await client.GetAsync("http://localhost:5000/api/fruits").ConfigureAwait(false))
 			{
-				var content = await response.Content.ReadAsStringAsync();
+				var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 				Console.WriteLine($"Server responded with: {content}");
 			}
 		}
