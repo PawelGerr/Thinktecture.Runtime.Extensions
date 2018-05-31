@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.SampleWeb", "samples\Thinktecture.Runtime.Extensions.SampleWeb\Thinktecture.Runtime.Extensions.SampleWeb.csproj", "{D11269A2-39C5-4303-9ADE-43B6DE24D901}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkSamples", "samples\Thinktecture.Runtime.Extensions.EntityFrameworkSamples\Thinktecture.Runtime.Extensions.EntityFrameworkSamples.csproj", "{8663F6FA-AC39-4D1D-A0A0-226E574A5202}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{D11269A2-39C5-4303-9ADE-43B6DE24D901}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D11269A2-39C5-4303-9ADE-43B6DE24D901}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D11269A2-39C5-4303-9ADE-43B6DE24D901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8663F6FA-AC39-4D1D-A0A0-226E574A5202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8663F6FA-AC39-4D1D-A0A0-226E574A5202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8663F6FA-AC39-4D1D-A0A0-226E574A5202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8663F6FA-AC39-4D1D-A0A0-226E574A5202}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
 		{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{D11269A2-39C5-4303-9ADE-43B6DE24D901} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
+		{8663F6FA-AC39-4D1D-A0A0-226E574A5202} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C34F508-A60B-4C0E-AFA0-0F4CFFB23603}
