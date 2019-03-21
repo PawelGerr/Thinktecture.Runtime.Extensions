@@ -1,31 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<Description>Provides commonly-used types like enum-like class.</Description>
-		<Copyright>(c) 2018, Pawel Gerr. All rights reserved.</Copyright>
-		<VersionPrefix>1.1.0</VersionPrefix>
-		<Authors>Pawel Gerr</Authors>
-		<TargetFrameworks>netstandard1.5;netstandard2.0;net45;net462</TargetFrameworks>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageTags>common</PackageTags>
-		<PackageIconUrl>http://thinktecture.com/images/Logo_T_Nontransparent.png</PackageIconUrl>
-		<PackageProjectUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions</PackageProjectUrl>
-		<PackageLicenseUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/blob/master/LICENCE.md</PackageLicenseUrl>
-		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>git@github.com:PawelGerr/Thinktecture.Runtime.Extensions.git</RepositoryUrl>
-		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-		<RootNamespace>Thinktecture</RootNamespace>
-		<LangVersion>7.3</LangVersion>
-		<CodeAnalysisRuleSet>..\..\Visual Studio.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
-		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0"/>
-	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-		<Reference Include="System"/>
-		<Reference Include="Microsoft.CSharp"/>
-	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-		<Reference Include="System"/>
-		<Reference Include="Microsoft.CSharp"/>
-	</ItemGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Description>Provides commonly-used types like enum-like class.</Description>
+        <TargetFrameworks>netstandard1.5;netstandard2.0</TargetFrameworks>
+        <PackageTags>common</PackageTags>
+    </PropertyGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
+        <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0"/>
+    </ItemGroup>
 </Project>

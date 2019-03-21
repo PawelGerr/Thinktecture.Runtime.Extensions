@@ -1,0 +1,18 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Copyright>(c) 2019, Pawel Gerr. All rights reserved.</Copyright>
+    <VersionPrefix>1.1.0</VersionPrefix>
+    <Authors>Pawel Gerr</Authors>    
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageIconUrl>http://thinktecture.com/images/Logo_T_Nontransparent.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/PawelGerr/Thinktecture.Abstractions</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/PawelGerr/Thinktecture.Abstractions/blob/master/LICENCE.md</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git@github.com:PawelGerr/Thinktecture.Abstractions.git</RepositoryUrl>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <RootNamespace>Thinktecture</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+</Project>
