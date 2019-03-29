@@ -40,33 +40,10 @@ namespace Thinktecture
 		[NotNull]
 		private static TypeConverter CreateTypeConverter([NotNull] Type type)
 		{
-			var enumTypes = GetEnumTypesArguments(type);
+			var enumTypes = type.GetEnumTypesArguments();
 			var converterType = typeof(EnumTypeConverter<,>).MakeGenericType(enumTypes);
 
 			return (TypeConverter)Activator.CreateInstance(converterType);
-		}
-
-		private static Type[] GetEnumTypesArguments([NotNull] Type type)
-		{
-			if (type == null)
-				throw new ArgumentNullException(nameof(type));
-
-			while (type != typeof(object))
-			{
-				var typeInfo = type.GetTypeInfo();
-
-				if (typeInfo.IsGenericType)
-				{
-					var genericType = typeInfo.GetGenericTypeDefinition();
-
-					if (genericType == typeof(Enum<,>))
-						return typeInfo.GenericTypeArguments;
-				}
-
-				type = typeInfo.BaseType;
-			}
-
-			throw new ArgumentException($"The provided type {type.FullName} does not inherit the type Enum<,>");
 		}
 	}
 }
