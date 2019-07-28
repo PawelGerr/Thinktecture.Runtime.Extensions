@@ -1,72 +1,79 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Serilog;
+using Thinktecture.Runtime.Extensions.EntityFrameworkSamples;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
-namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
+namespace Thinktecture
 {
-	public class Program
-	{
-		public static void Main()
-		{
-			var logger = GetLogger();
+   public class Program
+   {
+      public static void Main()
+      {
+         var loggerFactory = GetLoggerFactory();
+         var logger = loggerFactory.CreateLogger<Program>();
 
-			using (var ctx = CreateContext())
-			{
-				InsertProduct(ctx, new Product
-				{
-					Id = Guid.NewGuid(),
-					Name = "Apple",
-					Category = ProductCategory.Fruits
-				});
+         using (var ctx = CreateContext(loggerFactory))
+         {
+            InsertProduct(ctx, new Product
+                               {
+                                  Id = Guid.NewGuid(),
+                                  Name = "Apple",
+                                  Category = ProductCategory.Fruits
+                               });
 
-				InsertProduct(ctx, new Product
-				{
-					Id = Guid.NewGuid(),
-					Name = "Pear",
-					Category = ProductCategory.Get("Invalid Category")
-				});
+            InsertProduct(ctx, new Product
+                               {
+                                  Id = Guid.NewGuid(),
+                                  Name = "Pear",
+                                  Category = ProductCategory.Get("Invalid Category")
+                               });
 
-				var products = ctx.Products.ToList();
-				logger.Information("Loaded products: {@products}", products);
-			}
+            var products = ctx.Products.ToList();
+            logger.LogInformation("Loaded products: {@products}", products);
+         }
 
-			logger.Information("Press ENTER to exit.");
-			Console.ReadLine();
-		}
+         logger.LogInformation("Press ENTER to exit.");
+         Console.ReadLine();
+      }
 
-		private static void InsertProduct(ProductsDbContext ctx, Product apple)
-		{
-			ctx.Products.Add(apple);
-			ctx.SaveChanges();
-		}
+      private static void InsertProduct(ProductsDbContext ctx, Product apple)
+      {
+         ctx.Products.Add(apple);
+         ctx.SaveChanges();
+      }
 
-		private static void DeleteAllProducts(ProductsDbContext ctx)
-		{
-			ctx.Products.RemoveRange(ctx.Products.ToList());
-			ctx.SaveChanges();
-		}
+      private static void DeleteAllProducts(ProductsDbContext ctx)
+      {
+         ctx.Products.RemoveRange(ctx.Products.ToList());
+         ctx.SaveChanges();
+      }
 
-		private static ProductsDbContext CreateContext()
-		{
-			var options = new DbContextOptionsBuilder<ProductsDbContext>()
-			              .UseSqlite("Data source=./products.db")
-			              .Options;
+      private static ProductsDbContext CreateContext(ILoggerFactory loggerFactory)
+      {
+         var options = new DbContextOptionsBuilder<ProductsDbContext>()
+                       .UseSqlite("Data source=./products.db")
+                       .UseLoggerFactory(loggerFactory)
+                       .Options;
 
-			var ctx = new ProductsDbContext(options);
-			ctx.Database.EnsureCreated();
-			DeleteAllProducts(ctx);
+         var ctx = new ProductsDbContext(options);
+         ctx.Database.EnsureCreated();
+         DeleteAllProducts(ctx);
 
-			return ctx;
-		}
+         return ctx;
+      }
 
-		private static ILogger GetLogger()
-		{
-			return new LoggerConfiguration()
-			       .WriteTo.Console()
-			       .Destructure.AsScalar<ProductCategory>()
-			       .CreateLogger();
-		}
-	}
+      private static ILoggerFactory GetLoggerFactory()
+      {
+         var serilog = new LoggerConfiguration()
+                       .WriteTo.Console()
+                       .Destructure.AsScalar<ProductCategory>()
+                       .CreateLogger();
+
+         return new LoggerFactory()
+            .AddSerilog(serilog);
+      }
+   }
 }
