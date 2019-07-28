@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <PackageTags>common;EntityFrameworkCore</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Thinktecture.EntityFrameworkCore.Relational" Version="1.0.0-rc2" />
+    </ItemGroup>
+
+</Project>

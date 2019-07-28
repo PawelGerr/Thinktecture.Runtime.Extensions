@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -31,7 +31,7 @@ namespace Thinktecture
                                   Category = ProductCategory.Get("Invalid Category")
                                });
 
-            var products = ctx.Products.ToList();
+            var products = ctx.Products.Where(p => p.Category == ProductCategory.Fruits).ToList();
             logger.LogInformation("Loaded products: {@products}", products);
          }
 
@@ -54,8 +54,9 @@ namespace Thinktecture
       private static ProductsDbContext CreateContext(ILoggerFactory loggerFactory)
       {
          var options = new DbContextOptionsBuilder<ProductsDbContext>()
-                       .UseSqlite("Data source=./products.db")
+                       .UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true")
                        .UseLoggerFactory(loggerFactory)
+                       .AddEnumSupport()
                        .Options;
 
          var ctx = new ProductsDbContext(options);
