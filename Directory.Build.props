@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Copyright>(c) 2019, Pawel Gerr. All rights reserved.</Copyright>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <Authors>Pawel Gerr</Authors>    
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageIconUrl>http://thinktecture.com/images/Logo_T_Nontransparent.png</PackageIconUrl>

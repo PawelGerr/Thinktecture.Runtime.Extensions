@@ -3,6 +3,4 @@
 
 Provides some base classes like enum-like class and convenience methods like empty actions and read-only collections/dictionary.
 
-Nuget: `Install-Package Thinktecture.Runtime.Extensions`
-
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for documentation
