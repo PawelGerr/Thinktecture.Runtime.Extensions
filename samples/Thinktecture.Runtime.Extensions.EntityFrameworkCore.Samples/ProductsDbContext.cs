@@ -1,18 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
-namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
+namespace Thinktecture
 {
 	public class ProductsDbContext : DbContext
 	{
 		public DbSet<Product> Products { get; set; }
 
-		public ProductsDbContext(DbContextOptions<ProductsDbContext> options)
+		public ProductsDbContext([NotNull] DbContextOptions<ProductsDbContext> options)
 			: base(options)
 		{
 		}
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating([NotNull] ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 

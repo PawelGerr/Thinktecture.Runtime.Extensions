@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.SampleWeb", "samples\Thinktecture.Runtime.Extensions.SampleWeb\Thinktecture.Runtime.Extensions.SampleWeb.csproj", "{D11269A2-39C5-4303-9ADE-43B6DE24D901}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkSamples", "samples\Thinktecture.Runtime.Extensions.EntityFrameworkSamples\Thinktecture.Runtime.Extensions.EntityFrameworkSamples.csproj", "{8663F6FA-AC39-4D1D-A0A0-226E574A5202}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples", "samples\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples.csproj", "{8663F6FA-AC39-4D1D-A0A0-226E574A5202}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore\Thinktecture.Runtime.Extensions.EntityFrameworkCore.csproj", "{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}"
 EndProject

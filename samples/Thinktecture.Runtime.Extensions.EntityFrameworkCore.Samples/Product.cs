@@ -1,7 +1,7 @@
 ﻿using System;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
-namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
+namespace Thinktecture
 {
 	public class Product
 	{

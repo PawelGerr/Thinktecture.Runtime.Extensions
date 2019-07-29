@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Thinktecture.Runtime.Extensions.EntityFrameworkSamples
+namespace Thinktecture
 {
 	public class EnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
 		where TEnum : Enum<TEnum, TKey>

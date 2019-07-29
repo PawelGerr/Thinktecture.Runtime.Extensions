@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Thinktecture.Runtime.Extensions.EntityFrameworkSamples;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
 namespace Thinktecture
