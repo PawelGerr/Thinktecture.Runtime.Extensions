@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
 namespace Thinktecture
@@ -19,7 +20,7 @@ namespace Thinktecture
 
 			modelBuilder.Entity<Product>()
 			            .Property(p => p.Category)
-			            .HasConversion(new EnumValueConverter<ProductCategory, string>());
+			            .HasConversion(new EnumValueConverter<ProductCategory>());
 		}
 	}
 }

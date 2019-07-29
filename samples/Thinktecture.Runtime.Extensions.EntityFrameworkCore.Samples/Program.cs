@@ -33,9 +33,6 @@ namespace Thinktecture
             var products = ctx.Products.Where(p => p.Category == ProductCategory.Fruits).ToList();
             logger.LogInformation("Loaded products: {@products}", products);
          }
-
-         logger.LogInformation("Press ENTER to exit.");
-         Console.ReadLine();
       }
 
       private static void InsertProduct(ProductsDbContext ctx, Product apple)
