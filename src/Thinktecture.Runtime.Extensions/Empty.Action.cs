@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Thinktecture
@@ -7,6 +8,8 @@ namespace Thinktecture
 	/// <summary>
 	/// Partial class containing convenience members.
 	/// </summary>
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
+	[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 	public partial class Empty
 	{
 		/// <summary>

@@ -31,7 +31,8 @@ namespace Thinktecture.EmptyCollectionTests
 		[Fact]
 		public void Should_throw_if_using_indexer()
 		{
-			Action action = () => { var item = SUT[0]; };
+			// ReSharper disable once AssignmentIsFullyDiscarded
+			Action action = () => _ = SUT[0];
 			action.Should().Throw<ArgumentOutOfRangeException>();
 		}
 	}

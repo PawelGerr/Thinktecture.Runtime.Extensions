@@ -10,17 +10,6 @@ namespace Thinktecture
    /// </summary>
    public static class TypeExtensions
    {
-      [NotNull]
-      internal static Type[] GetEnumTypesArguments([NotNull] this Type type)
-      {
-         var typeDef = type.FindGenericEnumTypeDefinition();
-
-         if (typeDef != null)
-            return typeDef.GenericTypeArguments;
-
-         throw new ArgumentException($"The provided type {type.FullName} does not inherit the type Enum<,>");
-      }
-
       /// <summary>
       /// Searches for the (base) type implementing <see cref="Enum{TEnum,TKey}"/>
       /// </summary>

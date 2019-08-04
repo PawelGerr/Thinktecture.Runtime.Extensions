@@ -35,10 +35,10 @@ namespace Thinktecture.Collections.EnumerableExtensionsTests
 
       [Theory]
       [InlineData(new int[0])]
-      [InlineData(0)]
-      [InlineData(1, 2)]
-      [InlineData(40, 41, 42)]
-      public void Shoud_return_collection_returning_provided_items(params int[] items)
+      [InlineData(new[] { 0 })]
+      [InlineData(new[] { 1, 2 })]
+      [InlineData(new[] { 40, 41, 42 })]
+      public void Should_return_collection_returning_provided_items(int[] items)
       {
          var collection = items.ToReadOnlyCollection(0);
 

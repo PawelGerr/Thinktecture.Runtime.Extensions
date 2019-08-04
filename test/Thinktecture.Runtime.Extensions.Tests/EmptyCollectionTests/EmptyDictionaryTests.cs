@@ -30,7 +30,8 @@ namespace Thinktecture.EmptyCollectionTests
 		[Fact]
 		public void Should_throw_if_using_indexer()
 		{
-			Action action = () => { var item = SUT[new object()]; };
+			// ReSharper disable once AssignmentIsFullyDiscarded
+			Action action = () => _ = SUT[new object()];
 			action.Should().Throw<KeyNotFoundException>();
 		}
 	}
