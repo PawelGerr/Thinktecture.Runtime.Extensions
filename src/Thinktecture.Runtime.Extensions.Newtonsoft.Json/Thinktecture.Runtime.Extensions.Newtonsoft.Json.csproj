@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Description>Adds better JSON support some components from Thinktecture.Runtime.Extensions.</Description>
+        <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions.</Description>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageTags>common;json</PackageTags>
     </PropertyGroup>
