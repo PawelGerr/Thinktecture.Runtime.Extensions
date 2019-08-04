@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
-using Thinktecture.EntityFrameworkCore.Query.ExpressionTranslators;
+using Thinktecture.EntityFrameworkCore.Storage;
 
 // ReSharper disable once CheckNamespace
 namespace Thinktecture
@@ -38,7 +38,7 @@ namespace Thinktecture
          if (builder == null)
             throw new ArgumentNullException(nameof(builder));
 
-         return builder.AddExpressionFragmentTranslator(new EnumTranslator());
+         return builder.AddRelationalTypeMappingSourcePlugin<EnumTypeMappingPlugin>();
       }
    }
 }
