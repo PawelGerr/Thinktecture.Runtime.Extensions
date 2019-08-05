@@ -5,10 +5,9 @@ using Xunit;
 
 namespace Thinktecture.EmptyCollectionTests
 {
-	public class EmptyCollectionTests
+	public class Empty_Dictionary
 	{
-		private IReadOnlyList<object> SUT => Empty.Collection<object>();
-
+		private IReadOnlyDictionary<object, object> SUT => Empty.Dictionary<object, object>();
 
 		[Fact]
 		public void Should_not_be_null()
@@ -32,8 +31,8 @@ namespace Thinktecture.EmptyCollectionTests
 		public void Should_throw_if_using_indexer()
 		{
 			// ReSharper disable once AssignmentIsFullyDiscarded
-			Action action = () => _ = SUT[0];
-			action.Should().Throw<ArgumentOutOfRangeException>();
+			Action action = () => _ = SUT[new object()];
+			action.Should().Throw<KeyNotFoundException>();
 		}
 	}
 }

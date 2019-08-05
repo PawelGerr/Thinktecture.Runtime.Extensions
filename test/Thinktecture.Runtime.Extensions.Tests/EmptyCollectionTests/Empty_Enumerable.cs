@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Thinktecture.EmptyCollectionTests
 {
-	public class EmptyEnumerableTests
+	public class Empty_Enumerable
 	{
 		private IEnumerable SUT => Empty.Collection();
 
