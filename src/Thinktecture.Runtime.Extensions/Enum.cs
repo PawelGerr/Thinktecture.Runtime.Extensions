@@ -249,12 +249,15 @@ namespace Thinktecture
       /// <inheritdoc />
       public bool Equals([CanBeNull] Enum<TEnum, TKey> other)
       {
-         if (other == null)
+         if (ReferenceEquals(other, null))
             return false;
          if (!ReferenceEquals(GetType(), other.GetType()))
             return false;
          if (ReferenceEquals(this, other))
             return true;
+
+         // valid items are "ReferenceEquals" so if we are here
+         // then one of the items are valid the other is not.
          if (IsValid || other.IsValid)
             return false;
 
@@ -289,6 +292,31 @@ namespace Thinktecture
       public static implicit operator TKey([CanBeNull] Enum<TEnum, TKey> item)
       {
          return item == null ? default : item.Key;
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref="Enum{TEnum,TKey}"/>.
+      /// </summary>
+      /// <param name="item1">Instance to compare.</param>
+      /// <param name="item2">Another instance to compare.</param>
+      /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==([CanBeNull] Enum<TEnum, TKey> item1, [CanBeNull] Enum<TEnum, TKey> item2)
+      {
+         if (ReferenceEquals(item1, null))
+            return ReferenceEquals(item2, null);
+
+         return item1.Equals(item2);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref="Enum{TEnum,TKey}"/>.
+      /// </summary>
+      /// <param name="item1">Instance to compare.</param>
+      /// <param name="item2">Another instance to compare.</param>
+      /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=([CanBeNull] Enum<TEnum, TKey> item1, [CanBeNull] Enum<TEnum, TKey> item2)
+      {
+         return !(item1 == item2);
       }
    }
 }
