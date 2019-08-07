@@ -4,7 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Xunit;
 
-namespace Thinktecture.Collections.EnumerableExtensionsTests
+namespace Thinktecture.Extensions.EnumerableExtensionsTests
 {
    public class ToReadOnlyCollection
    {
