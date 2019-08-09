@@ -247,9 +247,9 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public bool Equals([CanBeNull] Enum<TEnum, TKey> other)
+      public bool Equals(Enum<TEnum, TKey> other)
       {
-         if (ReferenceEquals(other, null))
+         if (other is null)
             return false;
          if (!ReferenceEquals(GetType(), other.GetType()))
             return false;
@@ -277,7 +277,6 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      [NotNull]
       public override string ToString()
       {
          return _toString;
@@ -302,8 +301,8 @@ namespace Thinktecture
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
       public static bool operator ==([CanBeNull] Enum<TEnum, TKey> item1, [CanBeNull] Enum<TEnum, TKey> item2)
       {
-         if (ReferenceEquals(item1, null))
-            return ReferenceEquals(item2, null);
+         if (item1 is null)
+            return item2 is null;
 
          return item1.Equals(item2);
       }

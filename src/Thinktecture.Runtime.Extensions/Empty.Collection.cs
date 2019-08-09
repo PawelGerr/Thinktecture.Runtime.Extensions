@@ -50,11 +50,7 @@ namespace Thinktecture
 
          public int Count => 0;
          public TValue this[TKey key] => throw new KeyNotFoundException();
-
-         [NotNull]
          public IEnumerable<TKey> Keys => Enumerable.Empty<TKey>();
-
-         [NotNull]
          public IEnumerable<TValue> Values => Enumerable.Empty<TValue>();
 
          public bool ContainsKey(TKey key)
