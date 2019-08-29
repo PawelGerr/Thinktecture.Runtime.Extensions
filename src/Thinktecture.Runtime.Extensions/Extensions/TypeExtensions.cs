@@ -22,7 +22,7 @@ namespace Thinktecture
          if (type == null)
             throw new ArgumentNullException(nameof(type));
 
-         while (type != typeof(object))
+         while (type != null && type != typeof(object))
          {
             var typeInfo = type.GetTypeInfo();
 
