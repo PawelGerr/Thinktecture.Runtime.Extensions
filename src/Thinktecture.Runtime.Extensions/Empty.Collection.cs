@@ -30,7 +30,7 @@ namespace Thinktecture
 #if NET45
          return ReadOnlyList<T>.Instance;
 #else
-			return Array.Empty<T>();
+         return Array.Empty<T>();
 #endif
       }
 
@@ -42,6 +42,39 @@ namespace Thinktecture
       public static IReadOnlyDictionary<TKey, TValue> Dictionary<TKey, TValue>()
       {
          return ReadOnlyDictionary<TKey, TValue>.Instance;
+      }
+
+      /// <summary>
+      /// Returns empty lookup.
+      /// </summary>
+      /// <returns>An empty lookup.</returns>
+      [NotNull]
+      public static ILookup<TKey, TValue> Lookup<TKey, TValue>()
+      {
+         return ReadOnlyLookup<TKey, TValue>.Instance;
+      }
+
+      private class ReadOnlyLookup<TKey, TValue> : ILookup<TKey, TValue>
+      {
+         public static readonly ILookup<TKey, TValue> Instance = new ReadOnlyLookup<TKey, TValue>();
+
+         public int Count => 0;
+         public IEnumerable<TValue> this[TKey key] => Enumerable.Empty<TValue>();
+
+         public bool Contains(TKey key)
+         {
+            return false;
+         }
+
+         public IEnumerator<IGrouping<TKey, TValue>> GetEnumerator()
+         {
+            return Enumerable.Empty<IGrouping<TKey, TValue>>().GetEnumerator();
+         }
+
+         IEnumerator IEnumerable.GetEnumerator()
+         {
+            return GetEnumerator();
+         }
       }
 
       private class ReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
