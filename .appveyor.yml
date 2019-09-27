@@ -1,5 +1,5 @@
-version: 1.1.0.{build}-{branch} 
-image: Visual Studio 2017
+version: 2.0.0.{build}-{branch} 
+image: Visual Studio 2019
 configuration: Release
 
 clone_depth: 1
@@ -8,8 +8,6 @@ pull_requests:
 
 install:
 - ps: >-
-    choco install dotnetcore-sdk -y --version 2.1.300
-
     . ./ci/appveyor.ps1
     
 before_build:
