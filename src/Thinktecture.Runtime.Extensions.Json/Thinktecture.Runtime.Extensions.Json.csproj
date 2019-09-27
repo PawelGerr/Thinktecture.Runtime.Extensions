@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using System.Text.Json.</Description>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.0</TargetFrameworks>
+        <PackageTags>common;json</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Text.Json" Version="4.6.0" />
+    </ItemGroup>
+    
+</Project>

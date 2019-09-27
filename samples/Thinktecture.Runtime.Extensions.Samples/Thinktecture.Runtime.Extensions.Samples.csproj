@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <NoWarn>$(NoWarn);CS1591;CA1052;CA1801;CA1052;CA1707;CA1062</NoWarn>
   </PropertyGroup>
@@ -8,7 +8,6 @@
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
 </Project>

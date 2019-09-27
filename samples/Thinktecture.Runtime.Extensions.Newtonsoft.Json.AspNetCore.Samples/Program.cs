@@ -3,11 +3,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Thinktecture.Text.Json.Serialization;
+using Serilog.Context;
+using Thinktecture.Json;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Thinktecture
@@ -67,8 +69,7 @@ namespace Thinktecture
                                           {
                                              collection.AddSingleton(loggerFactory);
                                              collection.AddControllers()
-                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new EnumJsonConverterFactory()))
-                                                ;
+                                                       .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new EnumJsonConverter()));
                                           })
                        .Build();
 

@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
-using Thinktecture.Json;
+using System.Text.Json.Serialization;
+using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture
 {
