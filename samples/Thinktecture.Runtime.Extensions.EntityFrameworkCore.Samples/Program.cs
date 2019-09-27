@@ -54,7 +54,7 @@ namespace Thinktecture
          var options = new DbContextOptionsBuilder<ProductsDbContext>()
                        .UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true")
                        .UseLoggerFactory(loggerFactory)
-                       .AddEnumSupport()
+                       .EnableSensitiveDataLogging()
                        .Options;
 
          var ctx = new ProductsDbContext(options);
