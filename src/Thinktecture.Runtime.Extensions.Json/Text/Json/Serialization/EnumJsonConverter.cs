@@ -51,14 +51,7 @@ namespace Thinktecture.Text.Json.Serialization
       /// <inheritdoc />
       public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
       {
-         if (value is null)
-         {
-            writer.WriteNullValue();
-         }
-         else
-         {
-            GetKeyConverter(options).Write(writer, value.Key, options);
-         }
+         GetKeyConverter(options).Write(writer, value.Key, options);
       }
 
       [NotNull]
