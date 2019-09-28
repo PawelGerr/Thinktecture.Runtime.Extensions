@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 
 namespace Thinktecture
 {
@@ -22,7 +21,6 @@ namespace Thinktecture
       /// <summary>
       /// The key of the enumeration item.
       /// </summary>
-      [NotNull]
       object Key { get; }
    }
 }

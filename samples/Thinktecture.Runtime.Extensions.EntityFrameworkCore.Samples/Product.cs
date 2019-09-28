@@ -1,6 +1,8 @@
 ﻿using System;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
+#nullable disable
+
 namespace Thinktecture
 {
 	public class Product

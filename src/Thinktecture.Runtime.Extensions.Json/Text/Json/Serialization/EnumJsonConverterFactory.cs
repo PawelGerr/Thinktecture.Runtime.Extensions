@@ -1,7 +1,6 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 
 namespace Thinktecture.Text.Json.Serialization
 {
@@ -11,15 +10,19 @@ namespace Thinktecture.Text.Json.Serialization
    public class EnumJsonConverterFactory : JsonConverterFactory
    {
       /// <inheritdoc />
-      public override bool CanConvert([NotNull] Type typeToConvert)
+      public override bool CanConvert(Type typeToConvert)
       {
          return typeof(IEnum).IsAssignableFrom(typeToConvert);
       }
 
       /// <inheritdoc />
-      [NotNull]
-      public override JsonConverter CreateConverter([NotNull] Type typeToConvert, [NotNull] JsonSerializerOptions options)
+      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
       {
+         if (typeToConvert == null)
+            throw new ArgumentNullException(nameof(typeToConvert));
+         if (options == null)
+            throw new ArgumentNullException(nameof(options));
+
          var enumType = typeToConvert.FindGenericEnumTypeDefinition();
 
          if (enumType == null)
@@ -32,7 +35,7 @@ namespace Thinktecture.Text.Json.Serialization
 
          var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumType.GenericTypeArguments);
 
-         return (JsonConverter)Activator.CreateInstance(converterType, keyConverter);
+         return (JsonConverter)Activator.CreateInstance(converterType, keyConverter)!;
       }
    }
 }

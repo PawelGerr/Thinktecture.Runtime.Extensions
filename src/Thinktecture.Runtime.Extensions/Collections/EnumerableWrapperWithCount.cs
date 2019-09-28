@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Thinktecture.Collections
 {
@@ -11,7 +10,7 @@ namespace Thinktecture.Collections
 
       public int Count { get; }
 
-      public EnumerableWrapperWithCount([NotNull] IEnumerable<T> items, int count)
+      public EnumerableWrapperWithCount(IEnumerable<T> items, int count)
       {
          if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count), "The count cannot be negative.");

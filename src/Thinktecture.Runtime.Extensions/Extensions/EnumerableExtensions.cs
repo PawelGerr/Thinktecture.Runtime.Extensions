@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Thinktecture.Collections;
 
 // ReSharper disable once CheckNamespace
@@ -20,8 +19,7 @@ namespace Thinktecture
       /// <returns>A wrapper around <paramref name="items"/> that implements <see cref="IReadOnlyCollection{T}"/>.</returns>
       /// <exception cref="ArgumentNullException"><paramref name="items"/> is <c>null</c>.</exception>
       /// <exception cref="ArgumentException"><paramref name="count"/> is negative.</exception>
-      [NotNull]
-      public static IReadOnlyCollection<T> ToReadOnlyCollection<T>([NotNull] this IEnumerable<T> items, int count)
+      public static IReadOnlyCollection<T> ToReadOnlyCollection<T>(this IEnumerable<T> items, int count)
       {
          return new EnumerableWrapperWithCount<T>(items, count);
       }

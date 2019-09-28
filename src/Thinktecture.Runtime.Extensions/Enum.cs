@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
-using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace Thinktecture
 {
@@ -31,7 +29,7 @@ namespace Thinktecture
       /// Initializes new instance of <see cref="Enum{TEnum,TKey}"/>.
       /// </summary>
       /// <param name="key">The key of the enumeration item.</param>
-      protected Enum([NotNull] string key)
+      protected Enum(string key)
          : base(key)
       {
       }
@@ -54,13 +52,12 @@ namespace Thinktecture
    public abstract class Enum<TEnum, TKey> : IEquatable<Enum<TEnum, TKey>>, IEnum
       where TEnum : Enum<TEnum, TKey>
    {
-      private static IEqualityComparer<TKey> _keyEqualityComparer;
+      private static IEqualityComparer<TKey>? _keyEqualityComparer;
 
       /// <summary>
       /// Equality comparer for keys. Default is <see cref="EqualityComparer{TKey}.Default"/>.
       /// Important: This property may be changed once and in static constructor only!
       /// </summary>
-      [NotNull]
       protected static IEqualityComparer<TKey> KeyEqualityComparer
       {
          get => _keyEqualityComparer ?? _defaultKeyEqualityComparer;
@@ -79,16 +76,12 @@ namespace Thinktecture
 
       // do not initialize items in static ctor
       // because the static fields of the derived class may not be initialized yet.
-      private static Dictionary<TKey, TEnum> _itemsLookup;
-      private static IReadOnlyList<TEnum> _items;
+      private static Dictionary<TKey, TEnum>? _itemsLookup;
+      private static IReadOnlyList<TEnum>? _items;
 
-      [NotNull]
-      private static Dictionary<TKey, TEnum> ItemsLookup => _itemsLookup ?? (_itemsLookup = GetItems());
+      private static Dictionary<TKey, TEnum> ItemsLookup => _itemsLookup ??= GetItems();
+      private static IReadOnlyList<TEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
 
-      [NotNull]
-      private static IReadOnlyList<TEnum> Items => _items ?? (_items = ItemsLookup.Values.ToList().AsReadOnly());
-
-      [NotNull]
       private static Func<TKey, TEnum> GetInvalidEnumerationFactory()
       {
          var type = typeof(TEnum);
@@ -100,7 +93,6 @@ namespace Thinktecture
          return (Func<TKey, TEnum>)method.CreateDelegate(typeof(Func<TKey, TEnum>), null);
       }
 
-      [NotNull]
       private static Dictionary<TKey, TEnum> GetItems()
       {
          var type = typeof(TEnum);
@@ -119,7 +111,7 @@ namespace Thinktecture
 
                                       var item = (TEnum)f.GetValue(null);
 
-                                      if (item == null)
+                                      if (item is null)
                                          throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not initialized.");
 
                                       if (!item.IsValid)
@@ -147,6 +139,7 @@ namespace Thinktecture
       /// <summary>
       /// The key of the enumeration item.
       /// </summary>
+      [NotNull]
       public TKey Key { get; }
 
       /// <inheritdoc />
@@ -161,14 +154,14 @@ namespace Thinktecture
       /// <param name="key">The key of the enumeration item.</param>
       protected Enum([NotNull] TKey key)
       {
-         if (key == null)
+         if (key is null)
             throw new ArgumentNullException(nameof(key));
 
          Key = key;
          IsValid = true;
 
          _hashCode = _typeHashCode ^ KeyEqualityComparer.GetHashCode(Key);
-         _toString = Key?.ToString() ?? String.Empty;
+         _toString = Key.ToString();
       }
 
       /// <summary>
@@ -180,14 +173,12 @@ namespace Thinktecture
       /// </remarks>
       /// <param name="key">Key of invalid item.</param>
       /// <returns>An invalid enumeration item.</returns>
-      [NotNull]
       protected abstract TEnum CreateInvalid(TKey key);
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
       /// <returns>A collection with all valid items.</returns>
-      [NotNull]
       [SuppressMessage("ReSharper", "CA1024")]
       public static IReadOnlyList<TEnum> GetAll()
       {
@@ -199,19 +190,17 @@ namespace Thinktecture
       /// </summary>
       /// <param name="key">The key to return an enumeration item for.</param>
       /// <returns>An instance of <typeparamref name="TEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      public static TEnum Get([CanBeNull] TKey key)
+      [return: NotNullIfNotNull("key")]
+      public static TEnum? Get([AllowNull] TKey key)
       {
-         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-         // ReSharper disable once HeuristicUnreachableCode
-         // ReSharper disable once CompareNonConstrainedGenericWithNull
-         if (key == null)
+         if (key is null)
             return null;
 
          if (!ItemsLookup.TryGetValue(key, out var item))
          {
             item = _invalidEnumFactory(key);
 
-            if (item == null)
+            if (item is null)
                throw new Exception($"The method {nameof(CreateInvalid)} of enumeration type {typeof(TEnum).FullName} returned null.");
 
             item.IsValid = false;
@@ -226,12 +215,9 @@ namespace Thinktecture
       /// <param name="key">The key to return an enumeration item for.</param>
       /// <param name="item">A valid instance of <typeparamref name="TEnum"/>; otherwise <c>null</c>.</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-      public static bool TryGet([CanBeNull] TKey key, out TEnum item)
+      public static bool TryGet([AllowNull] TKey key, [NotNullWhen(true)] out TEnum? item)
       {
-         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-         // ReSharper disable once HeuristicUnreachableCode
-         // ReSharper disable once CompareNonConstrainedGenericWithNull
-         if (key == null)
+         if (key is null)
          {
             item = default;
             return false;
@@ -248,7 +234,7 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public bool Equals(Enum<TEnum, TKey> other)
+      public bool Equals(Enum<TEnum, TKey>? other)
       {
          if (other is null)
             return false;
@@ -266,7 +252,7 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public override bool Equals(object obj)
+      public override bool Equals(object? obj)
       {
          return Equals(obj as Enum<TEnum, TKey>);
       }
@@ -289,7 +275,8 @@ namespace Thinktecture
       /// <param name="item">Item to covert.</param>
       /// <returns>The <see cref="Key"/> of provided <paramref name="item"/> or <c>null</c> if a<paramref name="item"/> is <c>null</c>.</returns>
       [SuppressMessage("ReSharper", "CA2225")]
-      public static implicit operator TKey([CanBeNull] Enum<TEnum, TKey> item)
+      [return: NotNullIfNotNull("item")]
+      public static implicit operator TKey(Enum<TEnum, TKey>? item)
       {
          return item == null ? default : item.Key;
       }
@@ -300,7 +287,7 @@ namespace Thinktecture
       /// <param name="item1">Instance to compare.</param>
       /// <param name="item2">Another instance to compare.</param>
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==([CanBeNull] Enum<TEnum, TKey> item1, [CanBeNull] Enum<TEnum, TKey> item2)
+      public static bool operator ==(Enum<TEnum, TKey>? item1, Enum<TEnum, TKey>? item2)
       {
          if (item1 is null)
             return item2 is null;
@@ -314,7 +301,7 @@ namespace Thinktecture
       /// <param name="item1">Instance to compare.</param>
       /// <param name="item2">Another instance to compare.</param>
       /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=([CanBeNull] Enum<TEnum, TKey> item1, [CanBeNull] Enum<TEnum, TKey> item2)
+      public static bool operator !=(Enum<TEnum, TKey>? item1, Enum<TEnum, TKey>? item2)
       {
          return !(item1 == item2);
       }

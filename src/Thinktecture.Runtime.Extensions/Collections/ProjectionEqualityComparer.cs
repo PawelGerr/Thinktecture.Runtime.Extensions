@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Thinktecture.Collections
 {
@@ -19,7 +18,7 @@ namespace Thinktecture.Collections
       /// <remarks>The comparer <see cref="EqualityComparer{TItem}.Default"/> is being used for comparison.</remarks>
       /// </summary>
       /// <param name="selector">Selector returning an instance of type <typeparamref name="TItem"/> to use for comparison.</param>
-      public ProjectionEqualityComparer([NotNull] Func<T, TItem> selector)
+      public ProjectionEqualityComparer(Func<T, TItem> selector)
          : this(selector, EqualityComparer<TItem>.Default)
       {
       }
@@ -29,7 +28,7 @@ namespace Thinktecture.Collections
       /// </summary>
       /// <param name="selector">Selector.</param>
       /// <param name="comparer">Comparer to use.</param>
-      public ProjectionEqualityComparer([NotNull] Func<T, TItem> selector, [NotNull] IEqualityComparer<TItem> comparer)
+      public ProjectionEqualityComparer(Func<T, TItem> selector, IEqualityComparer<TItem> comparer)
       {
          _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
          _selector = selector ?? throw new ArgumentNullException(nameof(selector));

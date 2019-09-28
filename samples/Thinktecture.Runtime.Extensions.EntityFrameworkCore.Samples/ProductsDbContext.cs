@@ -1,26 +1,27 @@
-﻿using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
 namespace Thinktecture
 {
-	public class ProductsDbContext : DbContext
-	{
-		public DbSet<Product> Products { get; set; }
+   public class ProductsDbContext : DbContext
+   {
+#nullable disable
+      public DbSet<Product> Products { get; set; }
+#nullable enable
 
-		public ProductsDbContext([NotNull] DbContextOptions<ProductsDbContext> options)
-			: base(options)
-		{
-		}
+      public ProductsDbContext(DbContextOptions<ProductsDbContext> options)
+         : base(options)
+      {
+      }
 
-		protected override void OnModelCreating([NotNull] ModelBuilder modelBuilder)
-		{
-			base.OnModelCreating(modelBuilder);
+      protected override void OnModelCreating(ModelBuilder modelBuilder)
+      {
+         base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<Product>()
-			            .Property(p => p.Category)
-			            .HasConversion(new EnumValueConverter<ProductCategory>());
-		}
-	}
+         modelBuilder.Entity<Product>()
+                     .Property(p => p.Category)
+                     .HasConversion(new EnumValueConverter<ProductCategory>());
+      }
+   }
 }

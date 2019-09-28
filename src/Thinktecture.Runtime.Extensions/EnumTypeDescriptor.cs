@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
-using JetBrains.Annotations;
 
 namespace Thinktecture
 {
@@ -19,7 +18,7 @@ namespace Thinktecture
       /// </summary>
       /// <param name="parent">Parent type descriptor.</param>
       /// <param name="objectType">Type of an enumeration.</param>
-      public EnumTypeDescriptor(ICustomTypeDescriptor parent, [NotNull] Type objectType)
+      public EnumTypeDescriptor(ICustomTypeDescriptor parent, Type objectType)
          : base(parent)
       {
          _objectType = objectType ?? throw new ArgumentNullException(nameof(objectType));
@@ -31,13 +30,12 @@ namespace Thinktecture
          return GetCachedConverter(_objectType);
       }
 
-      private static TypeConverter GetCachedConverter([NotNull] Type type)
+      private static TypeConverter GetCachedConverter(Type type)
       {
          return _converterLookup.GetOrAdd(type, CreateTypeConverter);
       }
 
-      [NotNull]
-      private static TypeConverter CreateTypeConverter([NotNull] Type type)
+      private static TypeConverter CreateTypeConverter(Type type)
       {
          var enumTypes = GetEnumTypesArguments(type);
          var converterType = typeof(EnumTypeConverter<,>).MakeGenericType(enumTypes);
@@ -45,8 +43,7 @@ namespace Thinktecture
          return (TypeConverter)Activator.CreateInstance(converterType);
       }
 
-      [NotNull]
-      private static Type[] GetEnumTypesArguments([NotNull] Type type)
+      private static Type[] GetEnumTypesArguments(Type type)
       {
          var typeDef = type.FindGenericEnumTypeDefinition();
 

@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using JetBrains.Annotations;
-using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace Thinktecture
 {
@@ -15,7 +13,6 @@ namespace Thinktecture
       /// Returns empty non-generic collection of type <see cref="IEnumerable"/>.
       /// </summary>
       /// <returns>An empty collection.</returns>
-      [NotNull]
       public static IEnumerable Collection()
       {
          return Enumerable.Empty<object>();
@@ -25,7 +22,6 @@ namespace Thinktecture
       /// Returns empty generic collection of type <see cref="IReadOnlyList{T}"/>.
       /// </summary>
       /// <returns>An empty collection.</returns>
-      [NotNull]
       public static IReadOnlyList<T> Collection<T>()
       {
 #if NET45
@@ -39,7 +35,6 @@ namespace Thinktecture
       /// Returns empty dictionary.
       /// </summary>
       /// <returns>An empty dictionary.</returns>
-      [NotNull]
       public static IReadOnlyDictionary<TKey, TValue> Dictionary<TKey, TValue>()
       {
          return ReadOnlyDictionary<TKey, TValue>.Instance;
@@ -49,7 +44,6 @@ namespace Thinktecture
       /// Returns empty lookup.
       /// </summary>
       /// <returns>An empty lookup.</returns>
-      [NotNull]
       public static ILookup<TKey, TValue> Lookup<TKey, TValue>()
       {
          return ReadOnlyLookup<TKey, TValue>.Instance;
@@ -92,9 +86,9 @@ namespace Thinktecture
             return false;
          }
 
-         public bool TryGetValue(TKey key, [CanBeNull] out TValue value)
+         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
          {
-            value = default;
+            value = default!;
             return false;
          }
 

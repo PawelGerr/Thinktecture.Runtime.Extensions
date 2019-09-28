@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -36,19 +35,18 @@ namespace Thinktecture
          }
       }
 
-      private static void InsertProduct([NotNull] ProductsDbContext ctx, [NotNull] Product apple)
+      private static void InsertProduct(ProductsDbContext ctx, Product apple)
       {
          ctx.Products.Add(apple);
          ctx.SaveChanges();
       }
 
-      private static void DeleteAllProducts([NotNull] ProductsDbContext ctx)
+      private static void DeleteAllProducts(ProductsDbContext ctx)
       {
          ctx.Products.RemoveRange(ctx.Products.ToList());
          ctx.SaveChanges();
       }
 
-      [NotNull]
       private static ProductsDbContext CreateContext(ILoggerFactory loggerFactory)
       {
          var options = new DbContextOptionsBuilder<ProductsDbContext>()
