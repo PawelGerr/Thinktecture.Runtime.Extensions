@@ -9,10 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F117684-794
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{21EB22DE-2518-4F09-B0CE-9B5C9DCE4CF9}"
 	ProjectSection(SolutionItems) = preProject
-		LICENCE.md = LICENCE.md
+		LICENSE.md = LICENSE.md
 		README.md = README.md
 		Directory.Build.props = Directory.Build.props
 		.appveyor.yml = .appveyor.yml
+		ci\appveyor.ps1 = ci\appveyor.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E6F200ED-86D2-4D5C-9D5F-34592908B107}"
