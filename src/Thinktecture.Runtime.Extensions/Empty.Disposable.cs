@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Thinktecture
 {
@@ -19,5 +20,24 @@ namespace Thinktecture
          {
          }
       }
+
+#if NETSTANDARD2_1
+      /// <summary>
+      /// Creates a new new <see cref="IAsyncDisposable"/> with empty method body.
+      /// </summary>
+      /// <returns>An <see cref="IAsyncDisposable"/> with empty method body.</returns>
+      public static IAsyncDisposable AsyncDisposable()
+      {
+         return new EmptyAsyncDisposable();
+      }
+
+      private struct EmptyAsyncDisposable : IAsyncDisposable
+      {
+         public ValueTask DisposeAsync()
+         {
+            return default;
+         }
+      }
+#endif
    }
 }
