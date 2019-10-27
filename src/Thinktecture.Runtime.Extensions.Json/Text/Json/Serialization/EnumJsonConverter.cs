@@ -28,6 +28,7 @@ namespace Thinktecture.Text.Json.Serialization
    /// <typeparam name="TKey">Type of the key.</typeparam>
    public class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum>
       where TEnum : Enum<TEnum, TKey>
+      where TKey : notnull
    {
       private JsonConverter<TKey>? _keyConverter;
 

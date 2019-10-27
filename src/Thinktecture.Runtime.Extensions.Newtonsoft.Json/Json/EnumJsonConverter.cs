@@ -70,11 +70,12 @@ namespace Thinktecture.Json
    /// </summary>
    /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public class EnumJsonConverter<TEnum, TKey> : JsonConverter<Enum<TEnum, TKey>>
+   public class EnumJsonConverter<TEnum, TKey> : JsonConverter<Enum<TEnum, TKey>?>
       where TEnum : Enum<TEnum, TKey>
+      where TKey : notnull
    {
       /// <inheritdoc />
-      public override void WriteJson(JsonWriter writer, Enum<TEnum, TKey> value, JsonSerializer serializer)
+      public override void WriteJson(JsonWriter writer, Enum<TEnum, TKey>? value, JsonSerializer serializer)
       {
          if (writer == null)
             throw new ArgumentNullException(nameof(writer));
@@ -92,7 +93,7 @@ namespace Thinktecture.Json
       }
 
       /// <inheritdoc />
-      public override Enum<TEnum, TKey>? ReadJson(JsonReader reader, Type objectType, Enum<TEnum, TKey> existingValue, bool hasExistingValue, JsonSerializer serializer)
+      public override Enum<TEnum, TKey>? ReadJson(JsonReader reader, Type objectType, Enum<TEnum, TKey>? existingValue, bool hasExistingValue, JsonSerializer serializer)
       {
          if (reader == null)
             throw new ArgumentNullException(nameof(reader));

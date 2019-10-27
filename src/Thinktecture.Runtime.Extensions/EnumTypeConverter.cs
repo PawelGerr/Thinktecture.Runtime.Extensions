@@ -12,6 +12,7 @@ namespace Thinktecture
    /// <typeparam name="TKey">Type of the key.</typeparam>
    public class EnumTypeConverter<TEnum, TKey> : TypeConverter
       where TEnum : Enum<TEnum, TKey>
+      where TKey : notnull
    {
       /// <inheritdoc />
       public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)

@@ -19,6 +19,7 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
    /// <typeparam name="TKey">Type of the key.</typeparam>
    public class EnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
       where TEnum : Enum<TEnum, TKey>
+      where TKey : notnull
    {
       /// <summary>
       /// Initializes new instance <see cref="EnumValueConverter{TEnum,TKey}"/>.

@@ -49,8 +49,9 @@ namespace Thinktecture
    [SuppressMessage("ReSharper", "CA1000")]
    [SuppressMessage("ReSharper", "CA2201")]
    [TypeDescriptionProvider(typeof(EnumTypeDescriptionProvider))]
-   public abstract class Enum<TEnum, TKey> : IEquatable<Enum<TEnum, TKey>>, IEnum
+   public abstract class Enum<TEnum, TKey> : IEquatable<Enum<TEnum, TKey>?>, IEnum
       where TEnum : Enum<TEnum, TKey>
+      where TKey : notnull
    {
       private static IEqualityComparer<TKey>? _keyEqualityComparer;
 
@@ -252,9 +253,9 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public override bool Equals(object? obj)
+      public override bool Equals(object? otherEnum)
       {
-         return Equals(obj as Enum<TEnum, TKey>);
+         return Equals(otherEnum as Enum<TEnum, TKey>);
       }
 
       /// <inheritdoc />
