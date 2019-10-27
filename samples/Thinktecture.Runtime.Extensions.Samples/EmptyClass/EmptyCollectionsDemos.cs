@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Thinktecture.Runtime.Extensions.Samples.EmptyClass
+namespace Thinktecture.EmptyClass
 {
 	public class EmptyCollectionsDemos
 	{

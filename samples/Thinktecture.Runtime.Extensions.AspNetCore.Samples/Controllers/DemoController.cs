@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
+using Thinktecture.EnumLikeClass;
 
 namespace Thinktecture.Controllers
 {

@@ -1,4 +1,4 @@
-namespace Thinktecture.Runtime.Extensions.Samples.EnumLikeClass
+namespace Thinktecture.EnumLikeClass
 {
 	public sealed class ProductCategory : Enum<ProductCategory>
 	{

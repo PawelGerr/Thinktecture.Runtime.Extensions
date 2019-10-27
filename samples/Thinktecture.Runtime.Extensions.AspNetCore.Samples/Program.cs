@@ -14,6 +14,7 @@ namespace Thinktecture
 {
    public class Program
    {
+      // ReSharper disable once InconsistentNaming
       public static async Task Main()
       {
          var loggerFactory = CreateLoggerFactory();

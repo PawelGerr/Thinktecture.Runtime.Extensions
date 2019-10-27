@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
+using Thinktecture.EnumLikeClass;
 using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture

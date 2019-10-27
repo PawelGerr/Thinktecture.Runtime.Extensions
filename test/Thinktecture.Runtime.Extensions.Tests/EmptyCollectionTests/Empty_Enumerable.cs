@@ -4,7 +4,8 @@ using Xunit;
 
 namespace Thinktecture.EmptyCollectionTests
 {
-	public class Empty_Enumerable
+   // ReSharper disable once InconsistentNaming
+   public class Empty_Enumerable
 	{
 		private IEnumerable SUT => Empty.Collection();
 

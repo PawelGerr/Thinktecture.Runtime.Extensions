@@ -5,7 +5,8 @@ using Xunit;
 
 namespace Thinktecture.EmptyCollectionTests
 {
-	public class Empty_Dictionary
+   // ReSharper disable once InconsistentNaming
+   public class Empty_Dictionary
 	{
 		private IReadOnlyDictionary<object, object> SUT => Empty.Dictionary<object, object>();
 

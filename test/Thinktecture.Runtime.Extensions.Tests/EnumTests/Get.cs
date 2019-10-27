@@ -31,7 +31,7 @@ namespace Thinktecture.EnumTests
       {
          // ReSharper disable once PossibleNullReferenceException
          var item = (IEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
-                                            .Invoke(null, new[] { "unknown" });
+                                            .Invoke(null, new object[] { "unknown" });
 
          item.IsValid.Should().BeFalse();
          item.Key.Should().Be("unknown");

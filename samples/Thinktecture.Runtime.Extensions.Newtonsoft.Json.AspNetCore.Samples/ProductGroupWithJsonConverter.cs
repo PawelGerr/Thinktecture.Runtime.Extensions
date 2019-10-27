@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
+using Thinktecture.EnumLikeClass;
 using Thinktecture.Json;
-using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
 
 namespace Thinktecture
 {

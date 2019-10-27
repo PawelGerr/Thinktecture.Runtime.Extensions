@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
-using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
+using Thinktecture.EnumLikeClass;
 
 namespace Thinktecture
 {

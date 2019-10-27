@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Thinktecture.Runtime.Extensions.Samples.EmptyClass
+namespace Thinktecture.EmptyClass
 {
+   // ReSharper disable UnusedParameter.Local
 	public class EmptyActionDemos
 	{
 		public static void Demo()
@@ -13,7 +14,7 @@ namespace Thinktecture.Runtime.Extensions.Samples.EmptyClass
 			Method_4(Empty.Action);
 		}
 
-		private static void Method_1(Action action)
+      private static void Method_1(Action action)
 		{
 		}
 

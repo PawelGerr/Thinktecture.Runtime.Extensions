@@ -1,5 +1,5 @@
 ﻿using System;
-using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
+using Thinktecture.EnumLikeClass;
 
 #nullable disable
 

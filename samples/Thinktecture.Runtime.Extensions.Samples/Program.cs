@@ -1,12 +1,12 @@
 using System;
 using System.Text;
 using Serilog;
-using Thinktecture.Runtime.Extensions.Samples.EmptyClass;
-using Thinktecture.Runtime.Extensions.Samples.EnumLikeClass;
+using Thinktecture.EmptyClass;
+using Thinktecture.EnumLikeClass;
 
-namespace Thinktecture.Runtime.Extensions.Samples
+namespace Thinktecture
 {
-   public class Program
+   internal class Program
    {
       public static void Main()
       {

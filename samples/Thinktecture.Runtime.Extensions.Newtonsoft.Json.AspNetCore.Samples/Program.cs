@@ -3,12 +3,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Context;
 using Thinktecture.Json;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -16,6 +14,7 @@ namespace Thinktecture
 {
    public class Program
    {
+      // ReSharper disable once InconsistentNaming
       public static async Task Main()
       {
          var loggerFactory = CreateLoggerFactory();

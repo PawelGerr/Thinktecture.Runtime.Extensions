@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Thinktecture.EmptyCollectionTests
 {
+   // ReSharper disable once InconsistentNaming
    public class Empty_Lookup
    {
       private ILookup<object, object> SUT => Empty.Lookup<object, object>();
