@@ -17,7 +17,7 @@ namespace Thinktecture
       /// <exception cref="ArgumentNullException">Type is <c>null</c>.</exception>
       public static TypeInfo? FindGenericEnumTypeDefinition(this Type type)
       {
-         if (type == null)
+         if (type is null)
             throw new ArgumentNullException(nameof(type));
 
          while (type != null && type != typeof(object))

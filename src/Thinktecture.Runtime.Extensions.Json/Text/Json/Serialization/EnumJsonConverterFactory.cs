@@ -18,14 +18,14 @@ namespace Thinktecture.Text.Json.Serialization
       /// <inheritdoc />
       public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
       {
-         if (typeToConvert == null)
+         if (typeToConvert is null)
             throw new ArgumentNullException(nameof(typeToConvert));
-         if (options == null)
+         if (options is null)
             throw new ArgumentNullException(nameof(options));
 
          var enumType = typeToConvert.FindGenericEnumTypeDefinition();
 
-         if (enumType == null)
+         if (enumType is null)
             throw new InvalidOperationException($"The provided type does not derive from 'Enum<,>'. Type: {typeToConvert.Name}");
 
          var keyConverter = options.GetConverter(enumType.GenericTypeArguments[1]);

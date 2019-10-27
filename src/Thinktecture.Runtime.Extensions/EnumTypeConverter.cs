@@ -70,7 +70,7 @@ namespace Thinktecture
       /// <inheritdoc />
       public override object? ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object? value, Type destinationType)
       {
-         if (value == null)
+         if (value is null)
             return destinationType.GetTypeInfo().IsValueType ? Activator.CreateInstance(destinationType) : null;
 
          if (value is TEnum item)

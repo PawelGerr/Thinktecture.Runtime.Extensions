@@ -88,7 +88,7 @@ namespace Thinktecture
          var type = typeof(TEnum);
          var method = type.GetTypeInfo().GetMethod(nameof(CreateInvalid), BindingFlags.Instance | BindingFlags.NonPublic);
 
-         if (method == null)
+         if (method is null)
             throw new Exception($"The method {nameof(CreateInvalid)} hasn't been found in enumeration of type {type.FullName}.");
 
          return (Func<TKey, TEnum>)method.CreateDelegate(typeof(Func<TKey, TEnum>), null);
@@ -279,7 +279,7 @@ namespace Thinktecture
       [return: NotNullIfNotNull("item")]
       public static implicit operator TKey(Enum<TEnum, TKey>? item)
       {
-         return item == null ? default : item.Key;
+         return item is null ? default : item.Key;
       }
 
       /// <summary>

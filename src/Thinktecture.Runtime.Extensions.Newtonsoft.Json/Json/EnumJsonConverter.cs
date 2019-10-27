@@ -21,10 +21,10 @@ namespace Thinktecture.Json
       /// <inheritdoc />
       public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
       {
-         if (writer == null)
+         if (writer is null)
             throw new ArgumentNullException(nameof(writer));
 
-         if (value == null)
+         if (value is null)
          {
             writer.WriteNull();
          }
@@ -47,7 +47,7 @@ namespace Thinktecture.Json
       {
          var enumType = type.FindGenericEnumTypeDefinition();
 
-         if (enumType == null)
+         if (enumType is null)
             throw new InvalidOperationException($"The provided type does not derive from 'Enum<,>'. Type: {type.Name}");
 
          var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumType.GenericTypeArguments);
@@ -77,12 +77,12 @@ namespace Thinktecture.Json
       /// <inheritdoc />
       public override void WriteJson(JsonWriter writer, Enum<TEnum, TKey>? value, JsonSerializer serializer)
       {
-         if (writer == null)
+         if (writer is null)
             throw new ArgumentNullException(nameof(writer));
-         if (serializer == null)
+         if (serializer is null)
             throw new ArgumentNullException(nameof(serializer));
 
-         if (value == null)
+         if (value is null)
          {
             writer.WriteNull();
          }
@@ -95,9 +95,9 @@ namespace Thinktecture.Json
       /// <inheritdoc />
       public override Enum<TEnum, TKey>? ReadJson(JsonReader reader, Type objectType, Enum<TEnum, TKey>? existingValue, bool hasExistingValue, JsonSerializer serializer)
       {
-         if (reader == null)
+         if (reader is null)
             throw new ArgumentNullException(nameof(reader));
-         if (serializer == null)
+         if (serializer is null)
             throw new ArgumentNullException(nameof(serializer));
 
          if (reader.TokenType == JsonToken.Null)

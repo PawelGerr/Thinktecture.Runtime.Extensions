@@ -58,7 +58,7 @@ namespace Thinktecture.Text.Json.Serialization
       {
          if (_keyConverter is null)
          {
-            if (options == null)
+            if (options is null)
                throw new ArgumentNullException(nameof(options));
 
             var converter = options.GetConverter(typeof(TKey));
