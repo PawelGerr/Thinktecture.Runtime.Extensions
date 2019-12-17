@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <PackageTags>common;EntityFrameworkCore</PackageTags>
     </PropertyGroup>
 
