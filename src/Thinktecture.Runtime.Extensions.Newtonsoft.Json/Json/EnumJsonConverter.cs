@@ -19,7 +19,7 @@ namespace Thinktecture.Json
       }
 
       /// <inheritdoc />
-      public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+      public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
       {
          if (writer is null)
             throw new ArgumentNullException(nameof(writer));
@@ -36,7 +36,7 @@ namespace Thinktecture.Json
       }
 
       /// <inheritdoc />
-      public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+      public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
       {
          var converter = _cache.GetOrAdd(objectType, CreateConverter);
 
