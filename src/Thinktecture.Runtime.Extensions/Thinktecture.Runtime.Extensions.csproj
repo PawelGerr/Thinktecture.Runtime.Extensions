@@ -11,4 +11,9 @@
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Include="..\..\NullableAttributes.cs">
+        <Link>NullableAttributes.cs</Link>
+      </Compile>
+    </ItemGroup>
 </Project>
