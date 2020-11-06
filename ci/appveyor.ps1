@@ -5,7 +5,7 @@ function Dotnet-Pack([string]$dir)
 
     foreach($projDir in $projDirs)
     {
-        dotnet pack --configuration Release --no-build --include-symbols --output ./output $projDir.FullName;
+        dotnet pack --configuration Release --no-build --output ./output $projDir.FullName;
     }
 }
 

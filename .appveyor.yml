@@ -32,6 +32,9 @@ test_script:
 artifacts:
 - path: '**/*.nupkg'
   name: Nuget Package
+  
+- path: '**/*.snupkg'
+  name: Symbols
 
 deploy:
 - provider: Environment

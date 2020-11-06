@@ -9,21 +9,12 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git@github.com:PawelGerr/Thinktecture.Runtime.Extensions.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions</RepositoryUrl>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <RootNamespace>Thinktecture</RootNamespace>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);CA1303</NoWarn>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="./../../icon.png" Pack="true" PackagePath="" />
-    <None Include="./../../LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
-      
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
 
 </Project>
