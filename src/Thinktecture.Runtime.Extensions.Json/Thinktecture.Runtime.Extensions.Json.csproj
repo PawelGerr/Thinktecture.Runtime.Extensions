@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using System.Text.Json.</Description>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;netcoreapp5.0</TargetFrameworks>
         <PackageTags>common;json</PackageTags>
     </PropertyGroup>
 
@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+      <PackageReference Include="System.Text.Json" Version="5.0.0" />
     </ItemGroup>
     
 </Project>

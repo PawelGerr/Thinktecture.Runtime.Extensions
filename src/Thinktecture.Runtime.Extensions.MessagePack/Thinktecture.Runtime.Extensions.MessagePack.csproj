@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Description>Adds MessagePack formatter for components from Thinktecture.Runtime.Extensions.</Description>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp5.0</TargetFrameworks>
         <PackageTags>common;MessagePack</PackageTags>
     </PropertyGroup>
 
