@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+                    
+      - name: install .NET 5 SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+
+      - name: .NET info
+        run: dotnet --info
+        shell: powershell
+        
+      - uses: actions/checkout@v2
+        
+      - name: set version
+        run: |
+          . ./.github/workflows/ci.ps1          
+          Set-VersionSuffixOnTag "$Env:GITHUB_WORKSPACE" "$Env:GITHUB_REF"
+        shell: powershell
+
+      - name: dotnet restore
+        run: dotnet restore ./Thinktecture.Runtime.Extensions.sln
+        
+      - name: build
+        run: dotnet build --configuration Release --no-restore
+    
+      - name: test
+        run: dotnet test --configuration Release --no-build
+      
+      - name: pack
+        run: dotnet pack -- configuration Release
