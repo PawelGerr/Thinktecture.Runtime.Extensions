@@ -32,7 +32,7 @@ jobs:
         shell: powershell
 
       - name: dotnet restore
-        run: dotnet restore ./Thinktecture.Runtime.Extensions.sln
+        run: dotnet restore
         
       - name: build
         run: dotnet build --configuration Release --no-restore
@@ -41,4 +41,11 @@ jobs:
         run: dotnet test --configuration Release --no-build
       
       - name: pack
-        run: dotnet pack -- configuration Release
+        run: dotnet pack --configuration Release --no-build --output out
+        
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nuget-packages
+          path: |
+            out/*.nupkg
+            out/*.snupkg
