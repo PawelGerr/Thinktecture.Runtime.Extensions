@@ -1,4 +1,5 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/04cvpwo6t3bbt7vh?svg=true)](https://ci.appveyor.com/project/PawelGerr/thinktecture-runtime-extensions)  
+![Build](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/workflows/CI/badge.svg?branch=master)
+
 [![Thinktecture.Runtime.Extensions](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.svg?maxAge=60&label=Thinktecture.Runtime.Extensions)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore/)  
 [![Thinktecture.Runtime.Extensions.Json](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.Json.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.Json)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.Newtonsoft.Json/)   
