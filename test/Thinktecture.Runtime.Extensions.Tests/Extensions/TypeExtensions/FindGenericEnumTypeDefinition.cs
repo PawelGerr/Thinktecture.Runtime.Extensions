@@ -22,10 +22,10 @@ namespace Thinktecture.Extensions.TypeExtensions
       }
 
       [Fact]
-      public void Should_throw_if_type_is_null()
+      public void Should_return_null_if_type_is_null()
       {
-         ((Type)null).Invoking(t => t.FindGenericEnumTypeDefinition())
-                     .Should().Throw<ArgumentNullException>();
+         ((Type)null).FindGenericEnumTypeDefinition()
+                     .Should().BeNull();
       }
 
       [Fact]
