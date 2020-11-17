@@ -110,7 +110,10 @@ namespace Thinktecture
                                       if (!f.IsInitOnly)
                                          throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" must be read-only.");
 
-                                      var item = (TEnum)f.GetValue(null);
+                                      var value = f.GetValue(null)
+                                         ?? throw new Exception($"The field '{f.Name}' of type '{type.Name}' returned 'null'.");
+
+                                      var item = (TEnum) value;
 
                                       if (item is null)
                                          throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not initialized.");
@@ -147,7 +150,7 @@ namespace Thinktecture
       public bool IsValid { get; private set; }
 
       private readonly int _hashCode;
-      private readonly string _toString;
+      private readonly string? _toString;
 
       /// <summary>
       /// Initializes new valid instance of <see cref="Enum{TEnum,TKey}"/>.
@@ -265,7 +268,7 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public override string ToString()
+      public override string? ToString()
       {
          return _toString;
       }
@@ -277,7 +280,7 @@ namespace Thinktecture
       /// <returns>The <see cref="Key"/> of provided <paramref name="item"/> or <c>null</c> if a<paramref name="item"/> is <c>null</c>.</returns>
       [SuppressMessage("ReSharper", "CA2225")]
       [return: NotNullIfNotNull("item")]
-      public static implicit operator TKey(Enum<TEnum, TKey>? item)
+      public static implicit operator TKey?(Enum<TEnum, TKey>? item)
       {
          return item is null ? default : item.Key;
       }

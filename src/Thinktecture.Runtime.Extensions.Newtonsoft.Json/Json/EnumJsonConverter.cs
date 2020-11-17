@@ -36,7 +36,7 @@ namespace Thinktecture.Json
       }
 
       /// <inheritdoc />
-      public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+      public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
       {
          var converter = _cache.GetOrAdd(objectType, CreateConverter);
 
@@ -51,8 +51,10 @@ namespace Thinktecture.Json
             throw new InvalidOperationException($"The provided type does not derive from 'Enum<,>'. Type: {type.Name}");
 
          var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumType.GenericTypeArguments);
+         var converter = Activator.CreateInstance(converterType)
+            ?? throw new Exception($"Could not create a converter of type '{converterType.Name}'.");
 
-         return (JsonConverter)Activator.CreateInstance(converterType);
+         return (JsonConverter)converter;
       }
    }
 
@@ -105,7 +107,7 @@ namespace Thinktecture.Json
 
          var token = serializer.Deserialize<JToken>(reader);
 
-         if (token.Type == JTokenType.Null)
+         if (token is null || token.Type == JTokenType.Null)
             return null;
 
          var key = token.ToObject<TKey>(serializer);

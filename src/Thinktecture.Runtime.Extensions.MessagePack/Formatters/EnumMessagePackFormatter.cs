@@ -23,10 +23,10 @@ namespace Thinktecture.Formatters
       where T : Enum<T, TKey>
       where TKey : notnull
    {
-      private IMessagePackFormatter<TKey> _keyFormatter;
+      private IMessagePackFormatter<TKey>? _keyFormatter;
 
       /// <inheritdoc />
-      public void Serialize(ref MessagePackWriter writer, [MaybeNull] T value, MessagePackSerializerOptions options)
+      public void Serialize(ref MessagePackWriter writer, T? value, MessagePackSerializerOptions options)
       {
          if (value is null)
          {
@@ -39,8 +39,9 @@ namespace Thinktecture.Formatters
       }
 
       /// <inheritdoc />
-      [return: MaybeNull]
-      public T Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+#pragma warning disable CS8766
+      public T? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+#pragma warning restore CS8766
       {
          if (reader.TryReadNil())
             return default;

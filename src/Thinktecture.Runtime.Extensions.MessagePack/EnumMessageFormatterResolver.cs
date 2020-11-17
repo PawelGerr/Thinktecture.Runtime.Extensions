@@ -19,13 +19,17 @@ namespace Thinktecture
       /// <inheritdoc />
       public IMessagePackFormatter<T> GetFormatter<T>()
       {
-         return Cache<T>.Formatter;
+         return Cache<T>.Formatter ?? throw new Exception(Cache<T>.InitError);
       }
 
       private static class Cache<T>
       {
-         public static readonly IMessagePackFormatter<T> Formatter;
+         public static readonly IMessagePackFormatter<T>? Formatter;
 
+         // ReSharper disable once StaticMemberInGenericType
+         public static readonly string? InitError;
+
+#pragma warning disable CA1810
          static Cache()
          {
             var type = typeof(T);
@@ -33,8 +37,23 @@ namespace Thinktecture
             if (typeof(IEnum).IsAssignableFrom(type))
             {
                var genericTypeDef = type.FindGenericEnumTypeDefinition();
+
+               if (genericTypeDef is null)
+               {
+                  InitError = $"The type '{type.Name}' implements '{nameof(IEnum)}' but not the base class 'Enum<>' or 'Enum<,>'.";
+                  return;
+               }
+
                var formatterType = typeof(EnumMessagePackFormatter<,>).MakeGenericType(genericTypeDef.GenericTypeArguments);
-               Formatter = (IMessagePackFormatter<T>)Activator.CreateInstance(formatterType);
+               var formatter = Activator.CreateInstance(formatterType);
+
+               if(formatter is null)
+               {
+                  InitError = $"The formatter of '{formatterType.Name}' could not be instantiated.";
+                  return;
+               }
+
+               Formatter = (IMessagePackFormatter<T>)formatter;
                return;
             }
 

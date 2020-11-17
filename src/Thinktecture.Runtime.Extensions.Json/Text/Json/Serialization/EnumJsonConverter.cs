@@ -42,15 +42,18 @@ namespace Thinktecture.Text.Json.Serialization
       }
 
       /// <inheritdoc />
-      public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+      public override TEnum? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
       {
          var key = GetKeyConverter(options).Read(ref reader, typeof(TKey), options);
-         return Enum<TEnum, TKey>.Get(key)!;
+         return Enum<TEnum, TKey>.Get(key);
       }
 
       /// <inheritdoc />
       public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
       {
+         if (value is null)
+            throw new ArgumentNullException(nameof(value));
+
          GetKeyConverter(options).Write(writer, value.Key, options);
       }
 

@@ -40,7 +40,10 @@ namespace Thinktecture
          var enumTypes = GetEnumTypesArguments(type);
          var converterType = typeof(EnumTypeConverter<,>).MakeGenericType(enumTypes);
 
-         return (TypeConverter)Activator.CreateInstance(converterType);
+         var converter = Activator.CreateInstance(converterType)
+            ?? throw new Exception($"Could not create an instance of type '{converterType.Name}'");
+
+         return (TypeConverter)converter;
       }
 
       private static Type[] GetEnumTypesArguments(Type type)

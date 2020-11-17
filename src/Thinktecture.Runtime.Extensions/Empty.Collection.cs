@@ -86,9 +86,11 @@ namespace Thinktecture
             return false;
          }
 
+#pragma warning disable CS8767
          public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+#pragma warning restore CS8767
          {
-            value = default!;
+            value = default;
             return false;
          }
 

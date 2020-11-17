@@ -35,15 +35,23 @@ namespace Thinktecture.Collections
       }
 
       /// <inheritdoc />
-      public bool Equals(T x, T y)
+      public bool Equals(T? x, T? y)
       {
+         if (x is null)
+            return y is null;
+
+         if (y is null)
+            return false;
+
          return _comparer.Equals(_selector(x), _selector(y));
       }
 
       /// <inheritdoc />
       public int GetHashCode(T obj)
       {
-         return _comparer.GetHashCode(_selector(obj));
+         var item = _selector(obj);
+
+         return item is null ? 0 : _comparer.GetHashCode(item);
       }
    }
 }
