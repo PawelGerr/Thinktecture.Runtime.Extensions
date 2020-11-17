@@ -10,9 +10,8 @@ namespace Thinktecture
 	/// </summary>
 	[SuppressMessage("ReSharper", "UnusedMember.Global")]
 	[SuppressMessage("ReSharper", "UnusedParameter.Global")]
-	[SuppressMessage("ReSharper", "CA1052")]
-	[SuppressMessage("ReSharper", "CA1801")]
-	public partial class Empty
+#pragma warning disable CA1801
+   public sealed partial class Empty
 	{
 		/// <summary>
 		/// Action with empty body.

@@ -18,7 +18,7 @@ namespace Thinktecture
       /// </summary>
       /// <param name="parent">Parent type descriptor.</param>
       /// <param name="objectType">Type of an enumeration.</param>
-      public EnumTypeDescriptor(ICustomTypeDescriptor parent, Type objectType)
+      public EnumTypeDescriptor(ICustomTypeDescriptor? parent, Type objectType)
          : base(parent)
       {
          _objectType = objectType ?? throw new ArgumentNullException(nameof(objectType));

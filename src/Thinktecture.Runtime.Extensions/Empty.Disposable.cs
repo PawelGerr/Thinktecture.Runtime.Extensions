@@ -21,7 +21,7 @@ namespace Thinktecture
          }
       }
 
-#if NETSTANDARD2_1
+#if NETSTANDARD2_1 || NET5_0
       /// <summary>
       /// Creates a new new <see cref="IAsyncDisposable"/> with empty method body.
       /// </summary>

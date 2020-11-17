@@ -41,8 +41,8 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_public_fields_only_via_reflection()
       {
-         var enums = (IEnumerable<IEnum>)typeof(TestEnum).GetMethod("GetAll", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
-                                                         .Invoke(null, new object[0]);
+         var enums = (IReadOnlyList<IEnum>)typeof(TestEnum).GetMethod("GetAll", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                                                           ?.Invoke(null, new object[0]);
 
          enums.Should().HaveCount(2);
          enums.Should().Contain(TestEnum.Item1);

@@ -15,9 +15,9 @@ namespace Thinktecture
    /// The default constructor should not be public.
    /// </remarks>
    /// <typeparam name="TEnum">Concrete type of the enumeration.</typeparam>
-   [SuppressMessage("ReSharper", "CA1711")]
-   [SuppressMessage("ReSharper", "CA1716")]
+#pragma warning disable CA1716
    public abstract class Enum<TEnum> : Enum<TEnum, string>
+#pragma warning restore CA1716
       where TEnum : Enum<TEnum, string>
    {
       static Enum()
@@ -44,12 +44,10 @@ namespace Thinktecture
    /// </remarks>
    /// <typeparam name="TEnum">Concrete type of the enumeration.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   [SuppressMessage("ReSharper", "CA1711")]
-   [SuppressMessage("ReSharper", "CA1716")]
-   [SuppressMessage("ReSharper", "CA1000")]
-   [SuppressMessage("ReSharper", "CA2201")]
    [TypeDescriptionProvider(typeof(EnumTypeDescriptionProvider))]
+#pragma warning disable CA1716, CA1000
    public abstract class Enum<TEnum, TKey> : IEquatable<Enum<TEnum, TKey>?>, IEnum
+#pragma warning restore CA1716
       where TEnum : Enum<TEnum, TKey>
       where TKey : notnull
    {
@@ -111,9 +109,9 @@ namespace Thinktecture
                                          throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" must be read-only.");
 
                                       var value = f.GetValue(null)
-                                         ?? throw new Exception($"The field '{f.Name}' of type '{type.Name}' returned 'null'.");
+                                                  ?? throw new Exception($"The field '{f.Name}' of type '{type.Name}' returned 'null'.");
 
-                                      var item = (TEnum) value;
+                                      var item = (TEnum)value;
 
                                       if (item is null)
                                          throw new Exception($"The field \"{f.Name}\" of enumeration type \"{type.FullName}\" is not initialized.");

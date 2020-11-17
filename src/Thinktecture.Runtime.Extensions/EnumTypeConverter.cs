@@ -59,7 +59,7 @@ namespace Thinktecture
          if (typeof(TKey) != typeof(TEnum))
          {
             var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-            key = (TKey)keyConverter.ConvertFrom(context, culture, value);
+            key = (TKey?)keyConverter.ConvertFrom(context, culture, value);
 
             return Enum<TEnum, TKey>.Get(key);
          }

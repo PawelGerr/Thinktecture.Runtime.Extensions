@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Thinktecture.Collections
 {
-   internal class EnumerableWrapperWithCount<T> : IReadOnlyCollection<T>
+   internal readonly struct EnumerableWrapperWithCount<T> : IReadOnlyCollection<T>
    {
       private readonly IEnumerable<T> _items;
 
