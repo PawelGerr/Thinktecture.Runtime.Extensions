@@ -9,7 +9,7 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_true_if_item_is_null()
       {
-         (TestEnum.Item1 != null).Should().BeTrue();
+         (TestEnum.Item1 is not null).Should().BeTrue();
       }
 
       [Fact]

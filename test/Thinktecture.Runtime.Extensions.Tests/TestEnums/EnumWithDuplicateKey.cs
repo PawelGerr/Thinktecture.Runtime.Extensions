@@ -2,8 +2,8 @@ namespace Thinktecture.TestEnums
 {
 	public class EnumWithDuplicateKey : Enum<EnumWithDuplicateKey>
 	{
-		public static readonly EnumWithDuplicateKey Item = new EnumWithDuplicateKey("Item");
-		public static readonly EnumWithDuplicateKey Duplicate = new EnumWithDuplicateKey("item");
+		public static readonly EnumWithDuplicateKey Item = new("Item");
+		public static readonly EnumWithDuplicateKey Duplicate = new("item");
 
 		public EnumWithDuplicateKey(string key)
 			: base(key)
@@ -12,7 +12,7 @@ namespace Thinktecture.TestEnums
 
 		protected override EnumWithDuplicateKey CreateInvalid(string key)
 		{
-			return new EnumWithDuplicateKey(key);
+			return new(key);
 		}
 	}
 }

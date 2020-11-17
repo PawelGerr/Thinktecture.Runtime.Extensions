@@ -9,7 +9,7 @@ namespace Thinktecture.TestEnums
 
 		protected override EmptyEnum CreateInvalid(string key)
 		{
-			return new EmptyEnum(key);
+			return new(key);
 		}
 	}
 }

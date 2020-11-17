@@ -10,12 +10,12 @@ namespace Thinktecture.Json
    /// </summary>
    public class EnumJsonConverter : JsonConverter
    {
-      private static readonly ConcurrentDictionary<Type, JsonConverter> _cache = new ConcurrentDictionary<Type, JsonConverter>();
+      private static readonly ConcurrentDictionary<Type, JsonConverter> _cache = new();
 
       /// <inheritdoc />
       public override bool CanConvert(Type objectType)
       {
-         return _cache.ContainsKey(objectType) || objectType.FindGenericEnumTypeDefinition() != null;
+         return _cache.ContainsKey(objectType) || objectType.FindGenericEnumTypeDefinition() is not null;
       }
 
       /// <inheritdoc />

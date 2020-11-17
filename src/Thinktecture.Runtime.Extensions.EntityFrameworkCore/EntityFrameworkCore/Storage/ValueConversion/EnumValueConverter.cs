@@ -26,7 +26,7 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
       /// </summary>
       // ReSharper disable once MemberCanBeProtected.Global
       public EnumValueConverter()
-         : base(item => item.Key, key => Enum<TEnum, TKey>.Get(key)!)
+         : base(item => item.Key, key => Enum<TEnum, TKey>.Get(key))
       {
       }
    }

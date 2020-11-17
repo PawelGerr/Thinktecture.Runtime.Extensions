@@ -2,7 +2,7 @@ namespace Thinktecture.TestEnums
 {
 	public class IntegerEnum : Enum<IntegerEnum, int>
 	{
-		public static readonly IntegerEnum Item1 = new IntegerEnum(1);
+		public static readonly IntegerEnum Item1 = new(1);
 
 		public IntegerEnum(int key)
 			: base(key)
@@ -11,7 +11,7 @@ namespace Thinktecture.TestEnums
 
 		protected override IntegerEnum CreateInvalid(int key)
 		{
-			return new IntegerEnum(key);
+			return new(key);
 		}
 	}
 }

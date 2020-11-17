@@ -2,8 +2,8 @@ namespace Thinktecture.EnumLikeClass
 {
 	public sealed class ProductCategory : Enum<ProductCategory>
 	{
-		public static readonly ProductCategory Fruits = new ProductCategory("Fruits");
-		public static readonly ProductCategory Dairy = new ProductCategory("Dairy");
+		public static readonly ProductCategory Fruits = new("Fruits");
+		public static readonly ProductCategory Dairy = new("Dairy");
 
 		private ProductCategory(string key)
 			: base(key)
@@ -12,7 +12,7 @@ namespace Thinktecture.EnumLikeClass
 
 		protected override ProductCategory CreateInvalid(string key)
 		{
-			return new ProductCategory(key);
+			return new(key);
 		}
 	}
 }

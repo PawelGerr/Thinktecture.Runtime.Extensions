@@ -34,8 +34,10 @@ namespace Thinktecture.Text.Json.Serialization
             throw new ArgumentException($"The enum '{typeToConvert.Name}' is not JSON-serializable because there is no {nameof(JsonConverter)} for its key of type '{enumType.GenericTypeArguments[1].Name}'.", nameof(typeToConvert));
 
          var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumType.GenericTypeArguments);
+         var converter = Activator.CreateInstance(converterType, keyConverter)
+                         ?? throw new Exception($"Could not create converter of type '{converterType.Name}'.");
 
-         return (JsonConverter)Activator.CreateInstance(converterType, keyConverter)!;
+         return (JsonConverter)converter;
       }
    }
 }

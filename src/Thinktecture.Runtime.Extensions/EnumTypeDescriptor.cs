@@ -9,7 +9,7 @@ namespace Thinktecture
    /// </summary>
    public class EnumTypeDescriptor : CustomTypeDescriptor
    {
-      private static readonly ConcurrentDictionary<Type, TypeConverter> _converterLookup = new ConcurrentDictionary<Type, TypeConverter>();
+      private static readonly ConcurrentDictionary<Type, TypeConverter> _converterLookup = new();
 
       private readonly Type _objectType;
 
@@ -50,7 +50,7 @@ namespace Thinktecture
       {
          var typeDef = type.FindGenericEnumTypeDefinition();
 
-         if (typeDef != null)
+         if (typeDef is not null)
             return typeDef.GenericTypeArguments;
 
          throw new ArgumentException($"The provided type {type.FullName} does not inherit the type Enum<,>");

@@ -2,8 +2,8 @@ namespace Thinktecture.EnumLikeClass
 {
 	public sealed class ProductGroup : Enum<ProductGroup, int>
 	{
-		public static readonly ProductGroup Apple = new ProductGroup(1, "Apple", ProductCategory.Fruits);
-		public static readonly ProductGroup Orange = new ProductGroup(2, "Orange", ProductCategory.Fruits);
+		public static readonly ProductGroup Apple = new(1, "Apple", ProductCategory.Fruits);
+		public static readonly ProductGroup Orange = new(2, "Orange", ProductCategory.Fruits);
 
 		public string DisplayName { get; }
 		public ProductCategory Category { get; }
@@ -28,7 +28,7 @@ namespace Thinktecture.EnumLikeClass
 		{
 			// the values can be anything besides the key,
 			// the key must not be null
-			return new ProductGroup(key, "Unknown product group", ProductCategory.Get("Unknown"));
+			return new(key, "Unknown product group", ProductCategory.Get("Unknown"));
 		}
 	}
 }

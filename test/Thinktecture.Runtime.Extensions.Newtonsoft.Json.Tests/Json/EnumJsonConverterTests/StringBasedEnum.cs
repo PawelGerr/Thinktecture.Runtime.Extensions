@@ -2,8 +2,8 @@ namespace Thinktecture.Json.EnumJsonConverterTests
 {
    public class StringBasedEnum : Enum<StringBasedEnum>
    {
-      public static readonly StringBasedEnum ValueA = new StringBasedEnum("A");
-      public static readonly StringBasedEnum ValueB = new StringBasedEnum("B");
+      public static readonly StringBasedEnum ValueA = new("A");
+      public static readonly StringBasedEnum ValueB = new("B");
 
       private StringBasedEnum(string key)
          : base(key)
@@ -12,7 +12,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
 
       protected override StringBasedEnum CreateInvalid(string key)
       {
-         return new StringBasedEnum(key);
+         return new(key);
       }
    }
 }

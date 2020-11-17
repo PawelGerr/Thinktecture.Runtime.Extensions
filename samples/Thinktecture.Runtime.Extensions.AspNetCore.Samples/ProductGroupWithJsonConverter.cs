@@ -7,8 +7,8 @@ namespace Thinktecture
    [JsonConverter(typeof(EnumJsonConverter<ProductGroupWithJsonConverter, int>))]
    public sealed class ProductGroupWithJsonConverter : Enum<ProductGroupWithJsonConverter, int>
    {
-      public static readonly ProductGroupWithJsonConverter Apple = new ProductGroupWithJsonConverter(1, "Apple", ProductCategory.Fruits);
-      public static readonly ProductGroupWithJsonConverter Orange = new ProductGroupWithJsonConverter(2, "Orange", ProductCategory.Fruits);
+      public static readonly ProductGroupWithJsonConverter Apple = new(1, "Apple", ProductCategory.Fruits);
+      public static readonly ProductGroupWithJsonConverter Orange = new(2, "Orange", ProductCategory.Fruits);
 
       public string DisplayName { get; }
       public ProductCategory Category { get; }
@@ -33,7 +33,7 @@ namespace Thinktecture
       {
          // the values can be anything besides the key,
          // the key must not be null
-         return new ProductGroupWithJsonConverter(key, "Unknown product group", ProductCategory.Get("Unknown"));
+         return new(key, "Unknown product group", ProductCategory.Get("Unknown"));
       }
    }
 }

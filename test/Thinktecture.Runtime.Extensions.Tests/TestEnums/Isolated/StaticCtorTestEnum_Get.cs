@@ -8,7 +8,7 @@
 	public class StaticCtorTestEnum_Get : Enum<StaticCtorTestEnum_Get>
 	{
 		// ReSharper disable once UnusedMember.Global
-		public static readonly StaticCtorTestEnum_Get Item = new StaticCtorTestEnum_Get("item");
+		public static readonly StaticCtorTestEnum_Get Item = new("item");
 
 		private StaticCtorTestEnum_Get(string key)
 			: base(key)
@@ -17,7 +17,7 @@
 
 		protected override StaticCtorTestEnum_Get CreateInvalid(string key)
 		{
-			return new StaticCtorTestEnum_Get(key);
+			return new(key);
 		}
 	}
 }

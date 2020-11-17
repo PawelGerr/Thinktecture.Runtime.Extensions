@@ -5,7 +5,7 @@ namespace Thinktecture.TestEnums
 	public class EnumWithNonReadOnlyField : Enum<EnumWithNonReadOnlyField>
 	{
 		[SuppressMessage("ReSharper", "CA2211")]
-		public static EnumWithNonReadOnlyField Item = new EnumWithNonReadOnlyField("Item");
+		public static EnumWithNonReadOnlyField Item = new("Item");
 
 		private EnumWithNonReadOnlyField(string key)
 			: base(key)
@@ -14,7 +14,7 @@ namespace Thinktecture.TestEnums
 
 		protected override EnumWithNonReadOnlyField CreateInvalid(string key)
 		{
-			return new EnumWithNonReadOnlyField(key);
+			return new(key);
 		}
 	}
 }

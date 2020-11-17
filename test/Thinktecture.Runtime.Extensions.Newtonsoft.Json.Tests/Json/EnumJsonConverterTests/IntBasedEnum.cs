@@ -2,8 +2,8 @@ namespace Thinktecture.Json.EnumJsonConverterTests
 {
    public class IntBasedEnum : Enum<IntBasedEnum, int>
    {
-      public static readonly IntBasedEnum Value1 = new IntBasedEnum(1);
-      public static readonly IntBasedEnum Value2 = new IntBasedEnum(2);
+      public static readonly IntBasedEnum Value1 = new(1);
+      public static readonly IntBasedEnum Value2 = new(2);
 
       private IntBasedEnum(int key)
          : base(key)
@@ -12,7 +12,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
 
       protected override IntBasedEnum CreateInvalid(int key)
       {
-         return new IntBasedEnum(key);
+         return new(key);
       }
    }
 }
