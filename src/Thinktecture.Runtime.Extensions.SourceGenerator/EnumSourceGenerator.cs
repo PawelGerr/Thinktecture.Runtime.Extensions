@@ -15,7 +15,8 @@ namespace Thinktecture
    [Generator]
    public class EnumSourceGenerator : ISourceGenerator
    {
-      private const string _ERROR_ENUM_MUST_BE_PARTIAL = "TTREGEN001";
+      private static readonly DiagnosticDescriptor _classMustBePartial = new("TTRE001", "Class must be partial", "The class '{0}' must be partial", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      private static readonly DiagnosticDescriptor _fieldMustBeReadOnly = new("TTRE002", "Field must be read-only", "The field '{0}' of the class '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Warning, true);
 
       /// <inheritdoc />
       public void Initialize(GeneratorInitializationContext context)
@@ -34,7 +35,7 @@ namespace Thinktecture
 
             if (IsValid(enumDeclaration, context, model))
             {
-               var generatedCode = GenerateCode(enumDeclaration, model);
+               var generatedCode = GenerateCode(enumDeclaration, context, model);
                context.AddSource($"{enumDeclaration.ClassDeclarationSyntax.Identifier}_Generated.cs", generatedCode);
             }
          }
@@ -55,34 +56,90 @@ namespace Thinktecture
 
          if (!enumDeclaration.ClassDeclarationSyntax.IsPartial())
          {
-            context.ReportDiagnostic(Diagnostic.Create(_ERROR_ENUM_MUST_BE_PARTIAL,
-                                                       nameof(EnumSourceGenerator),
-                                                       $"The class '{enumDeclaration.ClassDeclarationSyntax.Identifier}' must be partial.",
-                                                       DiagnosticSeverity.Error, DiagnosticSeverity.Error, true, 0, false,
-                                                       location: enumDeclaration.ClassDeclarationSyntax.GetLocation()));
+            context.ReportDiagnostic(Diagnostic.Create(_classMustBePartial,
+                                                       enumDeclaration.ClassDeclarationSyntax.GetLocation(),
+                                                       enumDeclaration.ClassDeclarationSyntax.Identifier));
             return false;
          }
 
          return true;
       }
 
-      private static string GenerateCode(EnumDeclaration enumDeclaration, SemanticModel model)
+      private static string GenerateCode(
+         EnumDeclaration enumDeclaration,
+         GeneratorExecutionContext context,
+         SemanticModel model)
       {
-         var ns = enumDeclaration.ClassDeclarationSyntax.FirstAncestorOrSelf<NamespaceDeclarationSyntax>()?.Name.ToString();
-         var keyType = GetKeyType(enumDeclaration.BaseType, model);
+         var classTypeInfo = model.GetDeclaredSymbol(enumDeclaration.ClassDeclarationSyntax);
+
+         if (classTypeInfo is null)
+            return String.Empty;
+
+         var ns = classTypeInfo.ContainingNamespace.ToString();
+         var keyType = GetKeyType(enumDeclaration.BaseType);
          var enumType = GetEnumType(enumDeclaration, model);
+         var items = GetItems(enumDeclaration, context, model, classTypeInfo);
+
          var sb = new StringBuilder($@"
+using System.Collections.Generic;
+
 {(String.IsNullOrWhiteSpace(ns) ? null : $"namespace {ns}")}
 {{
    [System.ComponentModel.TypeConverter(typeof(Thinktecture.EnumTypeConverter<{enumType}, {keyType}>))]
    partial class {enumDeclaration.ClassDeclarationSyntax.Identifier}
    {{
+      private static IReadOnlyList<{enumDeclaration.ClassDeclarationSyntax.Identifier}> _items = new List<{enumDeclaration.ClassDeclarationSyntax.Identifier}>
+      {{
+");
 
+         foreach (var item in items)
+         {
+            sb.Append("\t\t").Append(item.Declaration.Variables[0].Identifier.ToString()).AppendLine(",");
+         }
+
+         sb.Append($@"
+      }}.AsReadOnly();
+
+      public static System.Collections.Generic.IReadOnlyList<{enumDeclaration.ClassDeclarationSyntax.Identifier}> GetAll()
+      {{
+         return _items;
+      }}
    }}
 }}
 ");
 
          return sb.ToString();
+      }
+
+      private static IReadOnlyList<FieldDeclarationSyntax> GetItems(
+         EnumDeclaration enumDeclaration,
+         GeneratorExecutionContext context,
+         SemanticModel model,
+         INamedTypeSymbol classTypeInfo)
+      {
+         return enumDeclaration.ClassDeclarationSyntax.Members
+                               .Select(m =>
+                                       {
+                                          if (m.IsStatic() && m.IsPublic() && m is FieldDeclarationSyntax fds)
+                                          {
+                                             var fieldTypeInfo = model.GetTypeInfo(fds.Declaration.Type).Type;
+
+                                             if (SymbolEqualityComparer.Default.Equals(fieldTypeInfo, classTypeInfo))
+                                             {
+                                                if (m.IsReadOnly())
+                                                   return fds;
+
+                                                context.ReportDiagnostic(Diagnostic.Create(_fieldMustBeReadOnly,
+                                                                                           fds.GetLocation(),
+                                                                                           fds.Declaration.Variables[0].Identifier,
+                                                                                           enumDeclaration.ClassDeclarationSyntax.Identifier));
+                                             }
+                                          }
+
+                                          return null;
+                                       })
+                               .Where(fds => fds is not null)
+                               .ToList()!;
       }
 
       private static string GetEnumType(EnumDeclaration enumDeclaration, SemanticModel model)
@@ -95,7 +152,7 @@ namespace Thinktecture
          return typeInfo.ToString();
       }
 
-      private static string GetKeyType(GenericNameSyntax enumBaseType, SemanticModel model)
+      private static string GetKeyType(GenericNameSyntax enumBaseType)
       {
          if (enumBaseType.TypeArgumentList.Arguments.Count == 1)
             return "string";

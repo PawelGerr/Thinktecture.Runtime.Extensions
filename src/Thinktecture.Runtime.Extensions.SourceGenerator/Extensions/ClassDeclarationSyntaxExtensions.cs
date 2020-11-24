@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 // ReSharper disable once CheckNamespace
 namespace Thinktecture
 {
-   public static class ClassDeclarationSyntaxExtensions
+   internal static class ClassDeclarationSyntaxExtensions
    {
       public static bool IsAbstract(this ClassDeclarationSyntax cds)
       {
