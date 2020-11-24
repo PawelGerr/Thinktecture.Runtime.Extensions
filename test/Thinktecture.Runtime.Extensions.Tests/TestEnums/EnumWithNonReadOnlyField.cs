@@ -2,7 +2,7 @@
 
 namespace Thinktecture.TestEnums
 {
-	public class EnumWithNonReadOnlyField : Enum<EnumWithNonReadOnlyField>
+	public partial class EnumWithNonReadOnlyField : Enum<EnumWithNonReadOnlyField>
 	{
 		[SuppressMessage("ReSharper", "CA2211")]
 		public static EnumWithNonReadOnlyField Item = new("Item");

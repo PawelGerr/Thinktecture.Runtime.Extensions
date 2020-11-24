@@ -24,11 +24,7 @@ namespace Thinktecture
       /// <returns>An empty collection.</returns>
       public static IReadOnlyList<T> Collection<T>()
       {
-#if NET45
-         return ReadOnlyList<T>.Instance;
-#else
          return Array.Empty<T>();
-#endif
       }
 
       /// <summary>
@@ -36,6 +32,7 @@ namespace Thinktecture
       /// </summary>
       /// <returns>An empty dictionary.</returns>
       public static IReadOnlyDictionary<TKey, TValue> Dictionary<TKey, TValue>()
+         where TKey : notnull
       {
          return ReadOnlyDictionary<TKey, TValue>.Instance;
       }
@@ -73,6 +70,7 @@ namespace Thinktecture
       }
 
       private class ReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+         where TKey : notnull
       {
          public static readonly IReadOnlyDictionary<TKey, TValue> Instance = new ReadOnlyDictionary<TKey, TValue>();
 
@@ -104,25 +102,5 @@ namespace Thinktecture
             return GetEnumerator();
          }
       }
-
-#if NET45
-      private class ReadOnlyList<T> : IReadOnlyList<T>
-      {
-         public static readonly IReadOnlyList<T> Instance = new ReadOnlyList<T>();
-
-         public int Count => 0;
-         public T this[int index] => throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range. Must be non-negative and less than the size of the collection.");
-
-         public IEnumerator<T> GetEnumerator()
-         {
-            return Enumerable.Empty<T>().GetEnumerator();
-         }
-
-         IEnumerator IEnumerable.GetEnumerator()
-         {
-            return GetEnumerator();
-         }
-      }
-#endif
    }
 }

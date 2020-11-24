@@ -2,7 +2,7 @@
 
 namespace Thinktecture.TestEnums
 {
-	public class TestEnumWithNonDefaultComparer : Enum<TestEnumWithNonDefaultComparer>
+	public partial class TestEnumWithNonDefaultComparer : Enum<TestEnumWithNonDefaultComparer>
 	{
 		public static readonly TestEnumWithNonDefaultComparer Item = new("item");
 		public static readonly TestEnumWithNonDefaultComparer AnotherItem = new("Item");

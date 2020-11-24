@@ -1,6 +1,6 @@
 namespace Thinktecture.TestEnums
 {
-	public class EnumWithDuplicateKey : Enum<EnumWithDuplicateKey>
+	public partial class EnumWithDuplicateKey : Enum<EnumWithDuplicateKey>
 	{
 		public static readonly EnumWithDuplicateKey Item = new("Item");
 		public static readonly EnumWithDuplicateKey Duplicate = new("item");

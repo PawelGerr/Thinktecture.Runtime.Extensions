@@ -1,6 +1,6 @@
 namespace Thinktecture.TestEnums
 {
-	public class IntegerEnum : Enum<IntegerEnum, int>
+	public partial class IntegerEnum : Enum<IntegerEnum, int>
 	{
 		public static readonly IntegerEnum Item1 = new(1);
 

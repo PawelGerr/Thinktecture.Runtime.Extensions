@@ -2,7 +2,7 @@ using System;
 
 namespace Thinktecture.TestEnums
 {
-	public class InvalidImplementationEnum : Enum<TestEnum>
+	public partial class InvalidImplementationEnum : Enum<TestEnum>
 	{
 		public InvalidImplementationEnum(string key)
 			: base(key)

@@ -1,6 +1,6 @@
 namespace Thinktecture.TestEnums
 {
-	public class EmptyEnum : Enum<EmptyEnum>
+	public partial class EmptyEnum : Enum<EmptyEnum>
 	{
 		private EmptyEnum(string key)
 			: base(key)

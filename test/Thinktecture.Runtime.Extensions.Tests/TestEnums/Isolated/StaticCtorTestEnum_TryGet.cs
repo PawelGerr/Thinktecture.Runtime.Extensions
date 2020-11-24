@@ -5,7 +5,7 @@
 	/// Otherwise it is initialized and the test is invalid.
 	/// </summary>
 	// ReSharper disable once InconsistentNaming
-	public class StaticCtorTestEnum_TryGet : Enum<StaticCtorTestEnum_TryGet>
+	public partial class StaticCtorTestEnum_TryGet : Enum<StaticCtorTestEnum_TryGet>
 	{
 		// ReSharper disable once UnusedMember.Global
 		public static readonly StaticCtorTestEnum_TryGet Item = new("item");

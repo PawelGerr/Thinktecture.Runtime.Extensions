@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -44,7 +43,6 @@ namespace Thinktecture
    /// </remarks>
    /// <typeparam name="TEnum">Concrete type of the enumeration.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   [TypeDescriptionProvider(typeof(EnumTypeDescriptionProvider))]
 #pragma warning disable CA1716, CA1000
    public abstract class Enum<TEnum, TKey> : IEquatable<Enum<TEnum, TKey>?>, IEnum
 #pragma warning restore CA1716

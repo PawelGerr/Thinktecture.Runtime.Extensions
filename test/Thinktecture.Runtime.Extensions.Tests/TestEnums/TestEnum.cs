@@ -4,7 +4,7 @@
 
 namespace Thinktecture.TestEnums
 {
-	public class TestEnum : Enum<TestEnum>
+	public partial class TestEnum : Enum<TestEnum>
 	{
 		public static readonly TestEnum Item1 = new("item1");
 		public static readonly TestEnum Item2 = new("item2");

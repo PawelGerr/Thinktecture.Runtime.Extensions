@@ -1,4 +1,4 @@
-#if !NETSTANDARD2_1 && !NET5_0
+#if !NETSTANDARD2_1 && !NETCOREAPP && !NET5_0
 
 // ReSharper disable All
 
