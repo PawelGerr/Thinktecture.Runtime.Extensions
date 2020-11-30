@@ -12,7 +12,7 @@ namespace Thinktecture.EnumTests
 		{
 			Action action = () => EnumWithDuplicateKey.GetAll();
 			action.Should().Throw<ArgumentException>()
-			      .WithMessage($"The enumeration of type \"{typeof(EnumWithDuplicateKey).FullName}\" has multiple items with the key \"item\".");
+			      .WithMessage($"The type \"{nameof(EnumWithDuplicateKey)}\" has multiple items with the key \"item\".");
 		}
 
 		[Fact]

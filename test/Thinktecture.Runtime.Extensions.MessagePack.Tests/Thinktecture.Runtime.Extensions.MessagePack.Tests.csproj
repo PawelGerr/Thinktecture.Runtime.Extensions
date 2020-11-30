@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack\Thinktecture.Runtime.Extensions.MessagePack.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     </ItemGroup>
 
 </Project>

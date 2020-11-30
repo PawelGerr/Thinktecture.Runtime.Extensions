@@ -18,7 +18,7 @@ namespace Thinktecture.EnumTests
 		{
 			Action action = () => TestEnum.Get("invalid").EnsureValid();
 
-			action.Should().Throw<InvalidOperationException>().WithMessage($"The current enumeration item of type {typeof(TestEnum).FullName} with key invalid is not valid.");
+			action.Should().Throw<InvalidOperationException>().WithMessage($"The current enumeration item of type '{nameof(TestEnum)}' with key invalid is not valid.");
 		}
 	}
 }

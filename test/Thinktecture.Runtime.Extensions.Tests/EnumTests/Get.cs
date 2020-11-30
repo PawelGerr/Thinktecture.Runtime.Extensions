@@ -67,19 +67,5 @@ namespace Thinktecture.EnumTests
          item.Key.Should().Be("Item2");
          item.IsValid.Should().BeFalse();
       }
-
-      [Fact]
-      public void Should_return_item_with_provided_key_of_type_provided_to_baseclass()
-      {
-         var item = InvalidImplementationEnum.Get(TestEnum.Item2.Key);
-         item.Should().Be(TestEnum.Item2);
-      }
-
-      [Fact]
-      public void Should_throw_if_createInvalid_is_returning_null()
-      {
-         Action action = () => InvalidCreateInvalidImplementationEnum.Get("unknown");
-         action.Should().Throw<Exception>().WithMessage($"The method CreateInvalid of enumeration type {typeof(InvalidCreateInvalidImplementationEnum).FullName} returned null.");
-      }
    }
 }

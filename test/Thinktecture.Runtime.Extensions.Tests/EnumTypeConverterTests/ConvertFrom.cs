@@ -14,8 +14,8 @@ namespace Thinktecture.EnumTypeConverterTests
 
 		public ConvertFrom()
 		{
-			_converter = new EnumTypeConverter<TestEnum, string>();
-			_intEnumConverter = new EnumTypeConverter<IntegerEnum, int>();
+			_converter = new TestEnum_EnumTypeConverter();
+			_intEnumConverter = new IntegerEnum_EnumTypeConverter();
 		}
 
 		[Fact]

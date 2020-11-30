@@ -1,19 +1,28 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
 namespace Thinktecture
 {
    /// <summary>
-   /// Type converter to convert an <see cref="Enum{TEnum,TKey}"/> to <typeparamref name="TKey"/> and vice versa.
+   /// Type converter to convert an <see cref="IEnum{TKey}"/> to <typeparamref name="TKey"/> and vice versa.
    /// </summary>
    /// <typeparam name="TEnum">Type of the concrete enumeration.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public class EnumTypeConverter<TEnum, TKey> : TypeConverter
-      where TEnum : Enum<TEnum, TKey>
+   public abstract class EnumTypeConverter<TEnum, TKey> : TypeConverter
+      where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      /// <summary>
+      /// Converts <paramref name="key"/> to an instance of <typeparamref name="TEnum"/>.
+      /// </summary>
+      /// <param name="key">Key to convert.</param>
+      /// <returns>An instance of <typeparamref name="TEnum"/>.</returns>
+      [return: NotNullIfNotNull("key")]
+      protected abstract TEnum? ConvertFrom(TKey? key);
+
       /// <inheritdoc />
       public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
       {
@@ -51,7 +60,7 @@ namespace Thinktecture
             return default(TEnum);
 
          if (value is TKey key)
-            return Enum<TEnum, TKey>.Get(key);
+            return ConvertFrom(key);
 
          if (value is TEnum item)
             return item;
@@ -61,7 +70,7 @@ namespace Thinktecture
             var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
             key = (TKey?)keyConverter.ConvertFrom(context, culture, value);
 
-            return Enum<TEnum, TKey>.Get(key);
+            return ConvertFrom(key);
          }
 
          return base.ConvertFrom(context, culture, value);

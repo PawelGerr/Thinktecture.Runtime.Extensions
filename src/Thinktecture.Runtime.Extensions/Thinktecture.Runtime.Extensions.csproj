@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Description>Provides commonly-used types like enum-like class.</Description>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;netcoreapp5.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
         <PackageTags>common</PackageTags>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\..\NullableAttributes.cs">
-            <Link>NullableAttributes.cs</Link>
-      </Compile>
+        <Compile Include="..\..\IsExternalInit.cs">
+            <Link>IsExternalInit.cs</Link>
+        </Compile>
     </ItemGroup>
 </Project>

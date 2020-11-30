@@ -1,28 +1,28 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 using MessagePack.Formatters;
 
 namespace Thinktecture.Formatters
 {
    /// <summary>
-   /// MessagePack formatter for <see cref="Enum{TEnum}"/>.
-   /// </summary>
-   /// <typeparam name="T">Type of the enum.</typeparam>
-   public class EnumMessagePackFormatter<T> : EnumMessagePackFormatter<T, string>
-      where T : Enum<T>
-   {
-   }
-
-   /// <summary>
-   /// MessagePack formatter for <see cref="Enum{TEnum,TKey}"/>.
+   /// MessagePack formatter for <see cref="IEnum{TKey}"/>.
    /// </summary>
    /// <typeparam name="T">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public class EnumMessagePackFormatter<T, TKey> : IMessagePackFormatter<T>
-      where T : Enum<T, TKey>
+   public abstract class EnumMessagePackFormatter<T, TKey> : IMessagePackFormatter<T>
+      where T : IEnum<TKey>
       where TKey : notnull
    {
       private IMessagePackFormatter<TKey>? _keyFormatter;
+
+      /// <summary>
+      /// Converts <paramref name="key"/> to an instance of <typeparamref name="T"/>.
+      /// </summary>
+      /// <param name="key">Key to convert.</param>
+      /// <returns>An instance of <typeparamref name="T"/>.</returns>
+      [return: NotNullIfNotNull("key")]
+      protected abstract T? ConvertFrom(TKey? key);
 
       /// <inheritdoc />
       public void Serialize(ref MessagePackWriter writer, T? value, MessagePackSerializerOptions options)
@@ -47,7 +47,7 @@ namespace Thinktecture.Formatters
 
          var key = GetKeyConverter(options).Deserialize(ref reader, options);
 
-         return Enum<T, TKey>.Get(key);
+         return ConvertFrom(key);
       }
 
       private IMessagePackFormatter<TKey> GetKeyConverter(MessagePackSerializerOptions options)

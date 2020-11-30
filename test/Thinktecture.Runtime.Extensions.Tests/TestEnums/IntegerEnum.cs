@@ -1,17 +1,7 @@
 namespace Thinktecture.TestEnums
 {
-	public partial class IntegerEnum : Enum<IntegerEnum, int>
-	{
-		public static readonly IntegerEnum Item1 = new(1);
-
-		public IntegerEnum(int key)
-			: base(key)
-		{
-		}
-
-		protected override IntegerEnum CreateInvalid(int key)
-		{
-			return new(key);
-		}
-	}
+   public partial class IntegerEnum : IEnum<int>
+   {
+      public static readonly IntegerEnum Item1 = new(1);
+   }
 }

@@ -2,20 +2,15 @@ using MessagePack;
 
 namespace Thinktecture.Formatters.EnumMessagePackFormatterTests.TestClasses
 {
-   [MessagePackFormatter(typeof(EnumMessagePackFormatter<StringBasedEnumWithFormatter>))]
-   public class StringBasedEnumWithFormatter : Enum<StringBasedEnumWithFormatter>
+   [MessagePackFormatter(typeof(EnumMessagePackFormatter<StringBasedEnumWithFormatter, string>))]
+   public partial class StringBasedEnumWithFormatter : IEnum<string>
    {
       public static readonly StringBasedEnumWithFormatter ValueA = new("A");
       public static readonly StringBasedEnumWithFormatter ValueB = new("B");
 
-      private StringBasedEnumWithFormatter(string key)
-         : base(key)
+      IEnum<string> IEnum<string>.CreateInvalid(string key)
       {
-      }
-
-      protected override StringBasedEnumWithFormatter CreateInvalid(string key)
-      {
-         return new(key);
+         return new StringBasedEnumWithFormatter(key);
       }
    }
 }

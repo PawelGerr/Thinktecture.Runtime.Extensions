@@ -13,7 +13,7 @@ namespace Thinktecture.EnumTypeConverterTests
 			var type = typeof(TestEnum);
 			var converter = TypeDescriptor.GetConverter(type);
 
-			converter.Should().BeOfType(typeof(EnumTypeConverter<TestEnum, string>));
+			converter.Should().BeOfType(typeof(TestEnum_EnumTypeConverter));
 		}
 	}
 }

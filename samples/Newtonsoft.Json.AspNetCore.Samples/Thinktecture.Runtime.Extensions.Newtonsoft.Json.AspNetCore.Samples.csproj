@@ -13,5 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Newtonsoft.Json\Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj" />
     <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
   </ItemGroup>
 </Project>

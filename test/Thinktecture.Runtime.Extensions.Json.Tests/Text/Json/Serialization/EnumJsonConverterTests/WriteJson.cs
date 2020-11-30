@@ -78,13 +78,13 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       }
 
       private static string Serialize<T, TKey>(T value)
-         where T : Enum<T, TKey>
+         where T : IEnum<TKey>
       {
          return Serialize<T, T, TKey>(value);
       }
 
       private static string Serialize<T, TEnum, TKey>(T value)
-         where TEnum : Enum<TEnum, TKey>
+         where TEnum : IEnum<TKey>
       {
          var sut = new EnumJsonConverter<TEnum, TKey>();
          var options = new JsonSerializerOptions { Converters = { sut } };

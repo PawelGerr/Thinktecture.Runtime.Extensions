@@ -7,10 +7,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="FluentAssertions" Version="5.10.3" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0" />
       <PackageReference Include="xunit" Version="2.4.1" />
     </ItemGroup>

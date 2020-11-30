@@ -3,20 +3,15 @@ using Thinktecture.Json;
 
 namespace Thinktecture
 {
-   [JsonConverter(typeof(EnumJsonConverter<ProductCategoryWithJsonConverter>))]
-   public sealed class ProductCategoryWithJsonConverter : Enum<ProductCategoryWithJsonConverter>
+   [JsonConverter(typeof(EnumJsonConverter<ProductCategoryWithJsonConverter, string>))]
+   public sealed class ProductCategoryWithJsonConverter : IEnum<string>
    {
       public static readonly ProductCategoryWithJsonConverter Fruits = new("Fruits");
       public static readonly ProductCategoryWithJsonConverter Dairy = new("Dairy");
 
-      private ProductCategoryWithJsonConverter(string key)
-         : base(key)
+      IEnum<string> IEnum<string>.CreateInvalid(string key)
       {
-      }
-
-      protected override ProductCategoryWithJsonConverter CreateInvalid(string key)
-      {
-         return new(key);
+         return new ProductCategoryWithJsonConverter(key);
       }
    }
 }

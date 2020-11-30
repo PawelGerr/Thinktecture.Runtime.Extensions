@@ -1,18 +1,13 @@
 namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests.TestClasses
 {
-   public class StringBasedEnum : Enum<StringBasedEnum>
+   public partial class StringBasedEnum : IEnum<string>
    {
       public static readonly StringBasedEnum ValueA = new("A");
       public static readonly StringBasedEnum ValueB = new("B");
 
-      private StringBasedEnum(string key)
-         : base(key)
+      IEnum<string> IEnum<string>.CreateInvalid(string key)
       {
-      }
-
-      protected override StringBasedEnum CreateInvalid(string key)
-      {
-         return new(key);
+         return new StringBasedEnum(key, false);
       }
    }
 }

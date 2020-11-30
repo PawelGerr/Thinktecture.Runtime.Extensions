@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Thinktecture.Json
 {
    /// <summary>
-   /// Non-generic converter for <see cref="Enum{TEnum, TKey}"/> and <see cref="Enum{TEnum}"/>.
+   /// Non-generic converter for <see cref="IEnum{TKey}"/>.
    /// </summary>
    public class EnumJsonConverter : JsonConverter
    {
@@ -59,25 +60,24 @@ namespace Thinktecture.Json
    }
 
    /// <summary>
-   /// <see cref="JsonConverter"/> for <see cref="Enum{TEnum}"/>
-   /// </summary>
-   /// <typeparam name="TEnum">Type of the enum.</typeparam>
-   public class EnumJsonConverter<TEnum> : EnumJsonConverter<TEnum, string>
-      where TEnum : Enum<TEnum>
-   {
-   }
-
-   /// <summary>
-   /// <see cref="JsonConverter"/> for <see cref="Enum{TEnum, TKey}"/>
+   /// <see cref="JsonConverter"/> for <see cref="Enum{TKey}"/>
    /// </summary>
    /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public class EnumJsonConverter<TEnum, TKey> : JsonConverter<Enum<TEnum, TKey>?>
-      where TEnum : Enum<TEnum, TKey>
+   public abstract class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum?>
+      where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      /// <summary>
+      /// Converts <paramref name="key"/> to an instance of <typeparamref name="TEnum"/>.
+      /// </summary>
+      /// <param name="key">Key to convert.</param>
+      /// <returns>An instance of <typeparamref name="TEnum"/>.</returns>
+      [return: NotNullIfNotNull("key")]
+      protected abstract TEnum? ConvertFrom(TKey? key);
+
       /// <inheritdoc />
-      public override void WriteJson(JsonWriter writer, Enum<TEnum, TKey>? value, JsonSerializer serializer)
+      public override void WriteJson(JsonWriter writer, TEnum? value, JsonSerializer serializer)
       {
          if (writer is null)
             throw new ArgumentNullException(nameof(writer));
@@ -95,7 +95,7 @@ namespace Thinktecture.Json
       }
 
       /// <inheritdoc />
-      public override Enum<TEnum, TKey>? ReadJson(JsonReader reader, Type objectType, Enum<TEnum, TKey>? existingValue, bool hasExistingValue, JsonSerializer serializer)
+      public override TEnum? ReadJson(JsonReader reader, Type objectType, TEnum? existingValue, bool hasExistingValue, JsonSerializer serializer)
       {
          if (reader is null)
             throw new ArgumentNullException(nameof(reader));
@@ -103,15 +103,15 @@ namespace Thinktecture.Json
             throw new ArgumentNullException(nameof(serializer));
 
          if (reader.TokenType == JsonToken.Null)
-            return null;
+            return default;
 
          var token = serializer.Deserialize<JToken>(reader);
 
          if (token is null || token.Type == JTokenType.Null)
-            return null;
+            return default;
 
          var key = token.ToObject<TKey>(serializer);
-         return Enum<TEnum, TKey>.Get(key);
+         return ConvertFrom(key);
       }
    }
 }

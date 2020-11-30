@@ -41,7 +41,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       }
 
       private static string Serialize<T, TKey>(T value)
-         where T : Enum<T, TKey>
+         where T : IEnum<TKey>
       {
          var sut = new EnumJsonConverter<T, TKey>();
 

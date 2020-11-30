@@ -10,10 +10,10 @@ namespace Thinktecture
    public static class TypeExtensions
    {
       /// <summary>
-      /// Searches for the (base) type implementing <see cref="Enum{TEnum,TKey}"/>
+      /// Searches for the (base) type implementing <see cref="IEnum{TKey}"/>
       /// </summary>
       /// <param name="type">Type to search in.</param>
-      /// <returns>A generic type created from generic <see cref="Enum{TEnum,TKey}"/> or <c>null</c> if the <paramref name="type"/> is not a generic enum.</returns>
+      /// <returns>A generic type created from generic <see cref="IEnum{TKey}"/> or <c>null</c> if the <paramref name="type"/> is not a generic enum.</returns>
       /// <exception cref="ArgumentNullException">Type is <c>null</c>.</exception>
       public static TypeInfo? FindGenericEnumTypeDefinition(this Type? type)
       {
@@ -25,7 +25,7 @@ namespace Thinktecture
             {
                var genericType = typeInfo.GetGenericTypeDefinition();
 
-               if (genericType == typeof(Enum<,>))
+               if (genericType == typeof(IEnum<>))
                   return typeInfo;
             }
 

@@ -5,7 +5,7 @@ using Thinktecture.Text.Json.Serialization;
 namespace Thinktecture
 {
    [JsonConverter(typeof(EnumJsonConverter<ProductGroupWithJsonConverter, int>))]
-   public sealed class ProductGroupWithJsonConverter : Enum<ProductGroupWithJsonConverter, int>
+   public sealed partial class ProductGroupWithJsonConverter : IEnum<int>
    {
       public static readonly ProductGroupWithJsonConverter Apple = new(1, "Apple", ProductCategory.Fruits);
       public static readonly ProductGroupWithJsonConverter Orange = new(2, "Orange", ProductCategory.Fruits);
@@ -14,7 +14,7 @@ namespace Thinktecture
       public ProductCategory Category { get; }
 
       private ProductGroupWithJsonConverter(int key, string displayName, ProductCategory category)
-         : base(key)
+         : this(key)
       {
          DisplayName = displayName;
          Category = category;
@@ -29,11 +29,11 @@ namespace Thinktecture
          return 42;
       }
 
-      protected override ProductGroupWithJsonConverter CreateInvalid(int key)
+      IEnum<int> IEnum<int>.CreateInvalid(int key)
       {
          // the values can be anything besides the key,
          // the key must not be null
-         return new(key, "Unknown product group", ProductCategory.Get("Unknown"));
+         return new ProductGroupWithJsonConverter(key, "Unknown product group", ProductCategory.Get("Unknown"));
       }
    }
 }

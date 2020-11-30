@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture
 {
    /// <summary>
-   /// Non-generic interface implemented by <see cref="Enum{TEnum,TKey}"/>.
+   /// Non-generic interface implemented by <see cref="IEnum{TKey}"/>.
    /// </summary>
    public interface IEnum
    {

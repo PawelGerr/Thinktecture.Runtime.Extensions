@@ -16,20 +16,6 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
-      public void Should_throw_if_public_static_field_is_not_readonly()
-      {
-         Action action = () => EnumWithNonReadOnlyField.GetAll();
-         action.Should().Throw<Exception>()
-               .WithMessage($"The field \"{nameof(EnumWithNonReadOnlyField.Item)}\" of enumeration type \"{typeof(EnumWithNonReadOnlyField).FullName}\" must be read-only.");
-      }
-
-      [Fact]
-      public void Should_behave_like_the_enum_given_to_baseclass()
-      {
-         InvalidImplementationEnum.GetAll().Should().HaveCount(2);
-      }
-
-      [Fact]
       public void Should_return_public_fields_only()
       {
          var enums = TestEnum.GetAll();
