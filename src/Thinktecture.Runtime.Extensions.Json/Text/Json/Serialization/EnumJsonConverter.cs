@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,26 +9,24 @@ namespace Thinktecture.Text.Json.Serialization
    /// </summary>
    /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public abstract class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum>
+   public class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum>
       where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      private readonly Func<TKey?, TEnum?> _convert;
+
       private JsonConverter<TKey>? _keyConverter;
 
       /// <summary>
-      /// Converts <paramref name="key"/> to an instance of <typeparamref name="TEnum"/>.
+      /// Initializes a new instance of <see cref="EnumJsonConverter{TEnum,TKey}"/>.
       /// </summary>
-      /// <param name="key">Key to convert.</param>
-      /// <returns>An instance of <typeparamref name="TEnum"/>.</returns>
-      [return: NotNullIfNotNull("key")]
-      protected abstract TEnum? ConvertFrom(TKey? key);
-
-      /// <summary>
-      /// Initializes new instance of type <see cref="EnumJsonConverter{TEnum,Tkey}"/>.
-      /// </summary>
+      /// <param name="convert">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="TEnum"/>.</param>
       /// <param name="keyConverter">JSON converter for the key.</param>
-      protected EnumJsonConverter(JsonConverter<TKey>? keyConverter = null)
+      public EnumJsonConverter(
+         Func<TKey?, TEnum?> convert,
+         JsonConverter<TKey>? keyConverter = null)
       {
+         _convert = convert ?? throw new ArgumentNullException(nameof(convert));
          _keyConverter = keyConverter;
       }
 
@@ -37,7 +34,7 @@ namespace Thinktecture.Text.Json.Serialization
       public override TEnum? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
       {
          var key = GetKeyConverter(options).Read(ref reader, typeof(TKey), options);
-         return ConvertFrom(key);
+         return _convert(key);
       }
 
       /// <inheritdoc />

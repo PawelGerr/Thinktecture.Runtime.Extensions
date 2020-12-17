@@ -21,16 +21,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
    public class {state.EnumType}_EnumJsonConverter : Thinktecture.Text.Json.Serialization.EnumJsonConverter<{state.EnumType}, {state.KeyType}>
    {{
-      [return: NotNullIfNotNull(""key"")]
-      protected override {state.EnumType}{state.NullableQuestionMark} ConvertFrom({state.KeyType}{state.NullableQuestionMarkKey} key)
+      public {state.EnumType}_EnumJsonConverter()
+         : this(null)
       {{
-         return {state.EnumType}.Get(key);
+      }}
+
+      public {state.EnumType}_EnumJsonConverter(
+         JsonConverter<{state.KeyType}>? keyConverter)
+         : base({state.EnumType}.Get, keyConverter)
+      {{
       }}
    }}
 ");

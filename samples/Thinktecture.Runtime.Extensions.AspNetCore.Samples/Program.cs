@@ -68,8 +68,7 @@ namespace Thinktecture
                                           {
                                              collection.AddSingleton(loggerFactory);
                                              collection.AddControllers()
-                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new EnumJsonConverterFactory()))
-                                                ;
+                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new EnumJsonConverterFactory()));
                                           })
                        .Build();
 

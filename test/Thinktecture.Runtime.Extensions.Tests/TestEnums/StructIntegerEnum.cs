@@ -1,3 +1,5 @@
+using System;
+
 namespace Thinktecture.TestEnums
 {
    public readonly partial struct StructIntegerEnum : IEnum<int>

@@ -24,6 +24,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Samples", "samples\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj", "{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AE711F89-41F2-4519-B20D-BA1FAB0EB364}"
+ProjectSection(SolutionItems) = preProject
+	test\Directory.Build.props = test\Directory.Build.props
+EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Tests", "test\Thinktecture.Runtime.Extensions.Tests\Thinktecture.Runtime.Extensions.Tests.csproj", "{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9}"
 EndProject

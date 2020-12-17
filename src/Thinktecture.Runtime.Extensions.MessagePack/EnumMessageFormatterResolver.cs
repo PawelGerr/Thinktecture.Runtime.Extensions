@@ -37,16 +37,16 @@ namespace Thinktecture
 
             if (typeof(IEnum<>).IsAssignableFrom(type))
             {
-               var genericTypeDef = type.FindGenericEnumTypeDefinition();
+               var enumMetadata = EnumMetadataLookup.FindEnum(type);
 
-               if (genericTypeDef is null)
+               if (enumMetadata is null)
                {
                   InitError = $"The type '{type.Name}' implements '{typeof(IEnum<>)}' but not the base class 'IEnum<>' or 'Enum<,>'.";
                   return;
                }
 
-               var formatterType = typeof(EnumMessagePackFormatter<,>).MakeGenericType(genericTypeDef.GenericTypeArguments);
-               var formatter = Activator.CreateInstance(formatterType);
+               var formatterType = typeof(EnumMessagePackFormatter<,>).MakeGenericType(enumMetadata.EnumType, enumMetadata.KeyType);
+               var formatter = Activator.CreateInstance(formatterType, enumMetadata.ConvertFromKey);
 
                if (formatter is null)
                {

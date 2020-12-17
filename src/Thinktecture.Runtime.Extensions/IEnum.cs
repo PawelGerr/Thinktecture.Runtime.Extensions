@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture
 {
@@ -31,7 +30,6 @@ namespace Thinktecture
       /// <summary>
       /// Gets the key of the item.
       /// </summary>
-      [return: NotNull]
       TKey GetKey();
    }
 }

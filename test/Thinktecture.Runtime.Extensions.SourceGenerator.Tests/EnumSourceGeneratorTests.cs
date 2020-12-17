@@ -179,34 +179,22 @@ namespace Thinktecture.EnumLikeClass
       }
 
       [Fact]
-      public void Should_generate_TypeConverterAttribute_to_enum_with_different_enum_type()
+      public void Should_generate_enum_with_derivedType()
       {
          string source = @"
 namespace Thinktecture.EnumLikeClass
 {
-	public sealed partial class TestEnum : IEnum<TestEnum>
-	{
-      private TestEnum(string key)
-         : base(key)
-      {
-      }
+	public partial class EnumWithDerivedType : IEnum<int>
+   {
+      public static readonly EnumWithDerivedType Item1 = new(1);
+      public static readonly EnumWithDerivedType ItemOfDerivedType = new DerivedEnum(2);
 
-      protected override TestEnum CreateInvalid(string key)
+      private class DerivedEnum : EnumWithDerivedType
       {
-         return new(key);
-      }
-   }
-
-	public sealed partial class InvalidEnum : IEnum<TestEnum>
-	{
-      private InvalidEnum(string key)
-         : base(key)
-      {
-      }
-
-      protected override TestEnum CreateInvalid(string key)
-      {
-         throw new System.NotImplementedException();
+         public DerivedEnum(int key)
+            : base(key)
+         {
+         }
       }
    }
 }

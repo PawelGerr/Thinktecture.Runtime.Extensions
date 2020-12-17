@@ -17,9 +17,19 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
       /// Initializes new instance <see cref="EnumValueConverter{TEnum,TKey}"/>.
       /// </summary>
       // ReSharper disable once MemberCanBeProtected.Global
-      public EnumValueConverter(Expression<Func<TKey, TEnum>> convertFromProvider)
-         : base(item => item.GetKey(), convertFromProvider)
+      public EnumValueConverter()
+         : base(item => item.GetKey(), GetConverter())
       {
+      }
+
+      private static Expression<Func<TKey, TEnum>> GetConverter()
+      {
+         var enumMetadata = EnumMetadataLookup.FindEnum(typeof(TEnum));
+
+         if (enumMetadata is null)
+            throw new InvalidOperationException($"No metadata for provided type '{typeof(TEnum).Name}' found.");
+
+         return (Expression<Func<TKey, TEnum>>)enumMetadata.ConvertFromKeyExpression;
       }
    }
 }

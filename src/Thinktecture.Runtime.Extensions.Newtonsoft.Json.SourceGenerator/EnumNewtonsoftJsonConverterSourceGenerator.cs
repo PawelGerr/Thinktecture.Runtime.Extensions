@@ -27,10 +27,9 @@ using Thinktecture;
 {{
    public class {state.EnumType}_EnumNewtonsoftJsonConverter : Thinktecture.Json.EnumJsonConverter<{state.EnumType}, {state.KeyType}>
    {{
-      [return: NotNullIfNotNull(""key"")]
-      protected override {state.EnumType}{state.NullableQuestionMark} ConvertFrom({state.KeyType}{state.NullableQuestionMarkKey} key)
+      public {state.EnumType}_EnumNewtonsoftJsonConverter()
+         : base({state.EnumType}.Get)
       {{
-         return {state.EnumType}.Get(key);
       }}
    }}
 ");

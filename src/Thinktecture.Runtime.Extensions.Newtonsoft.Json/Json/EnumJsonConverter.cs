@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -16,7 +15,7 @@ namespace Thinktecture.Json
       /// <inheritdoc />
       public override bool CanConvert(Type objectType)
       {
-         return _cache.ContainsKey(objectType) || objectType.FindGenericEnumTypeDefinition() is not null;
+         return _cache.ContainsKey(objectType) || EnumMetadataLookup.FindEnum(objectType) is not null;
       }
 
       /// <inheritdoc />
@@ -46,14 +45,14 @@ namespace Thinktecture.Json
 
       private static JsonConverter CreateConverter(Type type)
       {
-         var enumType = type.FindGenericEnumTypeDefinition();
+         var enumMetadata = EnumMetadataLookup.FindEnum(type);
 
-         if (enumType is null)
+         if (enumMetadata is null)
             throw new InvalidOperationException($"The provided type does not derive from 'Enum<,>'. Type: {type.Name}");
 
-         var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumType.GenericTypeArguments);
-         var converter = Activator.CreateInstance(converterType)
-            ?? throw new Exception($"Could not create a converter of type '{converterType.Name}'.");
+         var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumMetadata.EnumType, enumMetadata.KeyType);
+         var converter = Activator.CreateInstance(converterType, enumMetadata.ConvertFromKey)
+                         ?? throw new Exception($"Could not create a converter of type '{converterType.Name}'.");
 
          return (JsonConverter)converter;
       }
@@ -64,17 +63,20 @@ namespace Thinktecture.Json
    /// </summary>
    /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public abstract class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum?>
+   public class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum?>
       where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      private readonly Func<TKey?, TEnum?> _convert;
+
       /// <summary>
-      /// Converts <paramref name="key"/> to an instance of <typeparamref name="TEnum"/>.
+      /// Initializes a new instance of <see cref="EnumJsonConverter{TEnum,TKey}"/>.
       /// </summary>
-      /// <param name="key">Key to convert.</param>
-      /// <returns>An instance of <typeparamref name="TEnum"/>.</returns>
-      [return: NotNullIfNotNull("key")]
-      protected abstract TEnum? ConvertFrom(TKey? key);
+      /// <param name="convert">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="TEnum"/>.</param>
+      public EnumJsonConverter(Func<TKey?, TEnum?> convert)
+      {
+         _convert = convert ?? throw new ArgumentNullException(nameof(convert));
+      }
 
       /// <inheritdoc />
       public override void WriteJson(JsonWriter writer, TEnum? value, JsonSerializer serializer)
@@ -111,7 +113,7 @@ namespace Thinktecture.Json
             return default;
 
          var key = token.ToObject<TKey>(serializer);
-         return ConvertFrom(key);
+         return _convert(key);
       }
    }
 }

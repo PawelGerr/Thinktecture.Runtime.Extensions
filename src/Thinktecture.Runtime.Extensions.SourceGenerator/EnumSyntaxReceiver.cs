@@ -28,26 +28,38 @@ namespace Thinktecture
       }
 
       private static bool IsEnum(
-         TypeDeclarationSyntax cds,
+         TypeDeclarationSyntax tds,
          [MaybeNullWhen(false)] out EnumDeclaration enumDeclaration)
       {
-         if (cds.BaseList?.Types.Count > 0)
+         if (tds.BaseList?.Types.Count > 0)
          {
-            foreach (var type in cds.BaseList.Types)
+            foreach (var baseType in tds.BaseList.Types)
             {
-               if (type.Type is GenericNameSyntax genNameSyntax)
+               if (IsEnumInterface(baseType, out var genericNameSyntax))
                {
-                  if (genNameSyntax.Identifier.Text == "IEnum" &&
-                      genNameSyntax.TypeArgumentList.Arguments.Count == 1)
-                  {
-                     enumDeclaration = new EnumDeclaration(cds, genNameSyntax);
-                     return true;
-                  }
+                  enumDeclaration = new EnumDeclaration(tds, genericNameSyntax);
+                  return true;
                }
             }
          }
 
          enumDeclaration = null;
+         return false;
+      }
+
+      private static bool IsEnumInterface(BaseTypeSyntax? type, out GenericNameSyntax genNameSyntax)
+      {
+         if (type?.Type is GenericNameSyntax genericNameSyntax)
+         {
+            if (genericNameSyntax.Identifier.Text == "IEnum" &&
+                genericNameSyntax.TypeArgumentList.Arguments.Count == 1)
+            {
+               genNameSyntax = genericNameSyntax;
+               return true;
+            }
+         }
+
+         genNameSyntax = null;
          return false;
       }
    }

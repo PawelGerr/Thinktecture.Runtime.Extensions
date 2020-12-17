@@ -20,9 +20,4 @@
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Json.SourceGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     </ItemGroup>
-    <ItemGroup>
-        <Compile Include="..\..\IsExternalInit.cs">
-            <Link>IsExternalInit.cs</Link>
-        </Compile>
-    </ItemGroup>
 </Project>
