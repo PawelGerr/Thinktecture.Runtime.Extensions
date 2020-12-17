@@ -5,7 +5,7 @@ using Thinktecture.Json;
 namespace Thinktecture
 {
    [JsonConverter(typeof(EnumJsonConverter<ProductGroupWithJsonConverter, int>))]
-   public sealed class ProductGroupWithJsonConverter : IEnum<int>
+   public sealed partial class ProductGroupWithJsonConverter : IEnum<int>
    {
       public static readonly ProductGroupWithJsonConverter Apple = new(1, "Apple", ProductCategory.Fruits);
       public static readonly ProductGroupWithJsonConverter Orange = new(2, "Orange", ProductCategory.Fruits);
@@ -29,11 +29,11 @@ namespace Thinktecture
          return 42;
       }
 
-      IEnum<int> IEnum<int>.CreateInvalid(int key)
+      private static ProductGroupWithJsonConverter CreateInvalid(int key)
       {
          // the values can be anything besides the key,
          // the key must not be null
-         return new ProductGroupWithJsonConverter(key, "Unknown product group", ProductCategory.Get("Unknown"));
+         return new(key, "Unknown product group", ProductCategory.Get("Unknown"));
       }
    }
 }

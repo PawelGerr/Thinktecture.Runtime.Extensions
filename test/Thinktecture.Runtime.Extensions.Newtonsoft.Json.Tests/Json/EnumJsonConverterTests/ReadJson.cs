@@ -26,7 +26,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_deserialize_string_based_enum(StringBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<StringBasedEnum, string>(json);
+         var value = Deserialize<StringBasedEnum, string, StringBasedEnum_EnumNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -35,15 +35,16 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_deserialize_int_based_enum(IntBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<IntBasedEnum, int>(json);
+         var value = Deserialize<IntBasedEnum, int, IntBasedEnum_EnumNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
 
-      private static T Deserialize<T, TKey>(string json)
+      private static T Deserialize<T, TKey, TConverter>(string json)
          where T : IEnum<TKey>
+         where TConverter : EnumJsonConverter<T, TKey>, new()
       {
-         var sut = new EnumJsonConverter<T, TKey>();
+         var sut = new TConverter();
 
          using (var reader = new StringReader(json))
          using (var jsonWriter = new JsonTextReader(reader))

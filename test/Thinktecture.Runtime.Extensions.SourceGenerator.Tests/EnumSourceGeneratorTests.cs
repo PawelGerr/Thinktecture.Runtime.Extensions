@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
+using MessagePack;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
@@ -33,14 +34,97 @@ namespace Thinktecture.EnumLikeClass
 		public static readonly ProductCategory Fruits = new(""Fruits"");
       public static readonly ProductCategory Dairy = new(""Dairy"");
 
-      protected IEnum<string> CreateInvalid(string key)
+      private static ProductCategory CreateInvalidItem(string key)
       {
-         return new ProductCategory(key);
+         return new(key)
+                {
+                   IsValid = false
+                };
       }
    }
 }
 ";
          string output = GetGeneratedOutput<EnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      }
+
+      [Fact]
+      public void Should_generate()
+      {
+         string source = @"
+using System;
+
+namespace Thinktecture.EnumLikeClass
+{
+	public sealed partial class ProductCategory : IEnum<int>
+	{
+		public static readonly ProductCategory Fruits = new(1);
+      public static readonly ProductCategory Dairy = new(2);
+
+      private static ProductCategory CreateInvalidItem(int key)
+      {
+         return new(key)
+                {
+                   IsValid = false
+                };
+      }
+   }
+}
+";
+         string output = GetGeneratedOutput<EnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      }
+
+      [Fact]
+      public void Should_generate2()
+      {
+         string source = @"
+using System;
+
+namespace Thinktecture.EnumLikeClass
+{
+	public sealed partial class ProductCategory : IEnum<int>
+	{
+		public static readonly ProductCategory Fruits = new(1);
+      public static readonly ProductCategory Dairy = new(2);
+
+      private static ProductCategory CreateInvalidItem(int key)
+      {
+         return new(key)
+                {
+                   IsValid = false
+                };
+      }
+   }
+}
+";
+         string output = GetGeneratedOutput<EnumJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      }
+
+      [Fact]
+      public void Should_generate3()
+      {
+         string source = @"
+using System;
+using MessagePack;
+
+namespace Thinktecture.EnumLikeClass
+{
+   [MessagePackFormatter(typeof(ProductCategory_EnumMessagePackFormatter))]
+	public sealed partial class ProductCategory : IEnum<int>
+	{
+		public static readonly ProductCategory Fruits = new(1);
+      public static readonly ProductCategory Dairy = new(2);
+
+      private static ProductCategory CreateInvalidItem(int key)
+      {
+         return new(key)
+                {
+                   IsValid = false
+                };
+      }
+   }
+}
+";
+         string output = GetGeneratedOutput<EnumMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
       }
 
       [Fact]

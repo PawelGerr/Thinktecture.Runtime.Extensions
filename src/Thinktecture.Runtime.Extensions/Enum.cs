@@ -14,7 +14,7 @@ namespace Thinktecture
    /// </remarks>
    /// <typeparam name="TKey">Type of the key.</typeparam>
 #pragma warning disable CA1716, CA1000
-   public interface IEnum<TKey> : IEnum
+   public interface IEnum<out TKey> : IEnum
 #pragma warning restore CA1716
       where TKey : notnull
    {

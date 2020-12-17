@@ -7,7 +7,7 @@ using Thinktecture.Formatters;
 namespace Thinktecture
 {
    /// <summary>
-   /// MessagePack formatter resolver for <see cref="Enum{TEnum,TKey}"/>.
+   /// MessagePack formatter resolver for <see cref="IEnum{TKey}"/>.
    /// </summary>
    public class EnumMessageFormatterResolver : IFormatterResolver
    {

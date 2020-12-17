@@ -4,14 +4,9 @@ using Thinktecture.Json;
 namespace Thinktecture
 {
    [JsonConverter(typeof(EnumJsonConverter<ProductCategoryWithJsonConverter, string>))]
-   public sealed class ProductCategoryWithJsonConverter : IEnum<string>
+   public sealed partial class ProductCategoryWithJsonConverter : IEnum<string>
    {
       public static readonly ProductCategoryWithJsonConverter Fruits = new("Fruits");
       public static readonly ProductCategoryWithJsonConverter Dairy = new("Dairy");
-
-      IEnum<string> IEnum<string>.CreateInvalid(string key)
-      {
-         return new ProductCategoryWithJsonConverter(key);
-      }
    }
 }

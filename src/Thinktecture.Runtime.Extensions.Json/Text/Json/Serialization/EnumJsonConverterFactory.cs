@@ -28,7 +28,7 @@ namespace Thinktecture.Text.Json.Serialization
          if (enumType is null)
             throw new InvalidOperationException($"The provided type does not derive from 'Enum<,>'. Type: {typeToConvert.Name}");
 
-         var keyConverter = options.GetConverter(enumType.GenericTypeArguments[1]);
+         var keyConverter = options.GetConverter(enumType.GenericTypeArguments[0]);
 
          if (keyConverter is null)
             throw new ArgumentException($"The enum '{typeToConvert.Name}' is not JSON-serializable because there is no {nameof(JsonConverter)} for its key of type '{enumType.GenericTypeArguments[1].Name}'.", nameof(typeToConvert));

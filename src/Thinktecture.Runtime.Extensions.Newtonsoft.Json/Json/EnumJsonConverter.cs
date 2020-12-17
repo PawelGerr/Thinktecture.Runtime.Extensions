@@ -60,7 +60,7 @@ namespace Thinktecture.Json
    }
 
    /// <summary>
-   /// <see cref="JsonConverter"/> for <see cref="Enum{TKey}"/>
+   /// <see cref="JsonConverter"/> for <see cref="IEnum{TKey}"/>
    /// </summary>
    /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>

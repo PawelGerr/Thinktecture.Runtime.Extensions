@@ -17,19 +17,20 @@ namespace Thinktecture
       /// <exception cref="ArgumentNullException">Type is <c>null</c>.</exception>
       public static TypeInfo? FindGenericEnumTypeDefinition(this Type? type)
       {
-         while (type is not null && type != typeof(object))
-         {
-            var typeInfo = type.GetTypeInfo();
+         if (type is null)
+            return null;
 
-            if (typeInfo.IsGenericType)
+         var interfaces = type.GetTypeInfo().ImplementedInterfaces;
+
+         foreach (var baseType in interfaces)
+         {
+            if (baseType.IsGenericType)
             {
-               var genericType = typeInfo.GetGenericTypeDefinition();
+               var genericType = baseType.GetGenericTypeDefinition();
 
                if (genericType == typeof(IEnum<>))
-                  return typeInfo;
+                  return baseType.GetTypeInfo();
             }
-
-            type = typeInfo.BaseType;
          }
 
          return null;

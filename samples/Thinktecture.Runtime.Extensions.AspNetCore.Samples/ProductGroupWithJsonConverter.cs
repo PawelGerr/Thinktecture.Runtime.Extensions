@@ -29,11 +29,11 @@ namespace Thinktecture
          return 42;
       }
 
-      IEnum<int> IEnum<int>.CreateInvalid(int key)
+      private static ProductGroupWithJsonConverter CreateInvalid(int key)
       {
          // the values can be anything besides the key,
          // the key must not be null
-         return new ProductGroupWithJsonConverter(key, "Unknown product group", ProductCategory.Get("Unknown"));
+         return new(key, "Unknown product group", ProductCategory.Get("Unknown"));
       }
    }
 }
