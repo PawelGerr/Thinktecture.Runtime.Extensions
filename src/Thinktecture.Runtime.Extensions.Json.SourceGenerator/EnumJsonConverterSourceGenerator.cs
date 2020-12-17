@@ -38,7 +38,7 @@ using Thinktecture;
          if (!HasJsonConverterAttribute(state))
          {
             sb.Append($@"
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof({state.ClassDeclarationSyntax.Identifier}_EnumJsonConverter))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof({state.TypeDeclarationSyntax.Identifier}_EnumJsonConverter))]
    partial class {state.EnumType}
    {{
    }}
@@ -54,7 +54,7 @@ using Thinktecture;
 
       private static bool HasJsonConverterAttribute(EnumSourceGeneratorState state)
       {
-         return state.ClassDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "System.Text.Json.Serialization.JsonConverterAttribute");
+         return state.TypeDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "System.Text.Json.Serialization.JsonConverterAttribute");
       }
    }
 }

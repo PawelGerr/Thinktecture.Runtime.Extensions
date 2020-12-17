@@ -27,6 +27,34 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
+      public void Should_return_true_on_struct_equality()
+      {
+         // ReSharper disable once EqualExpressionComparison
+         (StructIntegerEnum.Item1 == StructIntegerEnum.Item1).Should().BeTrue();
+      }
+
+      [Fact]
+      public void Should_return_false_on_struct_inequality()
+      {
+         // ReSharper disable once EqualExpressionComparison
+         (StructIntegerEnum.Item1 == StructIntegerEnum.Item2).Should().BeFalse();
+      }
+
+      [Fact]
+      public void Should_return_true_for_invalid__structs_on_equality()
+      {
+         // ReSharper disable once EqualExpressionComparison
+         (StructIntegerEnum.Get(42) == StructIntegerEnum.Get(42)).Should().BeTrue();
+      }
+
+      [Fact]
+      public void Should_return_false_for_invalid_structs_on_inequality()
+      {
+         // ReSharper disable once EqualExpressionComparison
+         (StructIntegerEnum.Get(42) == StructIntegerEnum.Get(43)).Should().BeFalse();
+      }
+
+      [Fact]
       public void Should_return_true_if_both_items_are_invalid_and_have_same_key()
       {
          (TestEnum.Get("unknown") == TestEnum.Get("Unknown")).Should().BeTrue();

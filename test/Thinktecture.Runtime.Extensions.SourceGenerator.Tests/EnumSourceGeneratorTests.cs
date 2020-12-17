@@ -48,6 +48,24 @@ namespace Thinktecture.EnumLikeClass
       }
 
       [Fact]
+      public void Should_generate_struct()
+      {
+         string source = @"
+using System;
+
+namespace Thinktecture.EnumLikeClass
+{
+   public partial struct EnumWithDerivedType : IEnum<int>
+   {
+      public static readonly EnumWithDerivedType Item1 = new(1);
+      public static readonly EnumWithDerivedType ItemOfDerivedType = new DerivedEnum(2);
+   }
+}
+";
+         string output = GetGeneratedOutput<EnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      }
+
+      [Fact]
       public void Should_generate()
       {
          string source = @"

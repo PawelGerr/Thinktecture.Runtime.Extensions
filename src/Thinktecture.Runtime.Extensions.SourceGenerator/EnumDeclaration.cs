@@ -5,14 +5,14 @@ namespace Thinktecture
 {
    public class EnumDeclaration
    {
-      public ClassDeclarationSyntax ClassDeclarationSyntax { get; }
+      public TypeDeclarationSyntax TypeDeclarationSyntax { get; }
       public GenericNameSyntax BaseType { get; }
 
       public EnumDeclaration(
-         ClassDeclarationSyntax cds,
+         TypeDeclarationSyntax cds,
          GenericNameSyntax baseType)
       {
-         ClassDeclarationSyntax = cds ?? throw new ArgumentNullException(nameof(cds));
+         TypeDeclarationSyntax = cds ?? throw new ArgumentNullException(nameof(cds));
          BaseType = baseType ?? throw new ArgumentNullException(nameof(baseType));
       }
    }

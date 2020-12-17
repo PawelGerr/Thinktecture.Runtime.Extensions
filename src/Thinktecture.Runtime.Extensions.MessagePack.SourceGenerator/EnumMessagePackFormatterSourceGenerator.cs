@@ -38,7 +38,7 @@ using Thinktecture;
          if (!HasMessagePackFormatterAttribute(state))
          {
             sb.Append($@"
-   [MessagePack.MessagePackFormatter(typeof({state.ClassDeclarationSyntax.Identifier}_EnumMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof({state.TypeDeclarationSyntax.Identifier}_EnumMessagePackFormatter))]
    partial class {state.EnumType}
    {{
    }}
@@ -54,7 +54,7 @@ using Thinktecture;
 
       private static bool HasMessagePackFormatterAttribute(EnumSourceGeneratorState state)
       {
-         return state.ClassDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "MessagePack.MessagePackFormatterAttribute");
+         return state.TypeDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "MessagePack.MessagePackFormatterAttribute");
       }
    }
 }

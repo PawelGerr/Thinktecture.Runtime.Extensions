@@ -1,10 +1,7 @@
-using System.Text.Json.Serialization;
 using Thinktecture.EnumLikeClass;
-using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture
 {
-   [JsonConverter(typeof(EnumJsonConverter<ProductGroupWithJsonConverter, int>))]
    public sealed partial class ProductGroupWithJsonConverter : IEnum<int>
    {
       public static readonly ProductGroupWithJsonConverter Apple = new(1, "Apple", ProductCategory.Fruits);

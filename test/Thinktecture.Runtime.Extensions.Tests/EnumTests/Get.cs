@@ -67,5 +67,12 @@ namespace Thinktecture.EnumTests
          item.Key.Should().Be("Item2");
          item.IsValid.Should().BeFalse();
       }
+
+      [Fact]
+      public void Should_return_derived_type()
+      {
+         var item = EnumWithDerivedType.Get(2);
+         item.Should().Be(EnumWithDerivedType.ItemOfDerivedType);
+      }
    }
 }

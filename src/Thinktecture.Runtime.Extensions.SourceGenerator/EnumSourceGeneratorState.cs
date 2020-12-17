@@ -11,7 +11,7 @@ namespace Thinktecture
       public GeneratorExecutionContext Context { get; }
       public SemanticModel Model { get; }
 
-      public ClassDeclarationSyntax ClassDeclarationSyntax { get; }
+      public TypeDeclarationSyntax TypeDeclarationSyntax { get; }
       public GenericNameSyntax BaseType { get; }
 
       public string Namespace { get; }
@@ -43,7 +43,7 @@ namespace Thinktecture
          if (enumDeclaration is null)
             throw new ArgumentNullException(nameof(enumDeclaration));
 
-         ClassDeclarationSyntax = enumDeclaration.ClassDeclarationSyntax;
+         TypeDeclarationSyntax = enumDeclaration.TypeDeclarationSyntax;
          BaseType = enumDeclaration.BaseType;
 
          ClassTypeInfo = classTypeInfo ?? throw new ArgumentNullException(nameof(classTypeInfo));
@@ -52,13 +52,13 @@ namespace Thinktecture
          Model = model ?? throw new ArgumentNullException(nameof(model));
          KeyType = keyType;
          IsKeyARefType = isKeyARefType;
-         EnumType = enumDeclaration.ClassDeclarationSyntax.Identifier;
+         EnumType = enumDeclaration.TypeDeclarationSyntax.Identifier;
 
          NullableQuestionMark = context.Compilation.Options.NullableContextOptions == NullableContextOptions.Disable ? null : "?";
          NullableQuestionMarkKey = isKeyARefType ? NullableQuestionMark : null;
 
          Items = items;
-         EnumSettings = enumDeclaration.ClassDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).FirstOrDefault(a => model.GetTypeInfo(a).Type?.ToString() == "Thinktecture.EnumGenerationAttribute");
+         EnumSettings = enumDeclaration.TypeDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).FirstOrDefault(a => model.GetTypeInfo(a).Type?.ToString() == "Thinktecture.EnumGenerationAttribute");
 
          KeyComparerMember = GetKeyComparerMember(model, EnumSettings, out var needsDefaultComparer);
          KeyPropetyName = GetKeyPropertyName(model, EnumSettings);

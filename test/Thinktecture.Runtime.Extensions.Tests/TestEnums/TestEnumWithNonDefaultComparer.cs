@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Thinktecture.TestEnums
 {
-   [EnumGeneration(KeyComparerProvidingMember = "_equalityComparer")]
+   [EnumGeneration(KeyComparerProvidingMember = nameof(_equalityComparer))]
    public partial class TestEnumWithNonDefaultComparer : IEnum<string>
    {
       private static readonly IEqualityComparer<string> _equalityComparer = StringComparer.Ordinal;

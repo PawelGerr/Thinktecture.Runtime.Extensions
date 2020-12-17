@@ -26,6 +26,15 @@ namespace Thinktecture.EnumTests
 		}
 
 		[Fact]
+		public void Should_return_false_if_struct_dont_have_any_items()
+		{
+         StructIntegerEnum.TryGet(42, out var item)
+                          .Should().BeFalse();
+
+			item.Should().Be(new StructIntegerEnum());
+		}
+
+		[Fact]
 		public void Should_return_false_if_enum_dont_have_item_with_provided_key()
 		{
 			TestEnum.TryGet("unknown", out var item)

@@ -27,12 +27,12 @@ namespace Thinktecture
 
          foreach (var enumDeclaration in receiver.Enums)
          {
-            var model = context.Compilation.GetSemanticModel(enumDeclaration.ClassDeclarationSyntax.SyntaxTree, true);
+            var model = context.Compilation.GetSemanticModel(enumDeclaration.TypeDeclarationSyntax.SyntaxTree, true);
 
             if (IsValid(enumDeclaration, context, model))
             {
                var generatedCode = GenerateCode(enumDeclaration, context, model);
-               context.AddSource($"{enumDeclaration.ClassDeclarationSyntax.Identifier}_Generated.cs", generatedCode);
+               context.AddSource($"{enumDeclaration.TypeDeclarationSyntax.Identifier}_Generated.cs", generatedCode);
             }
          }
       }
@@ -60,7 +60,7 @@ namespace Thinktecture
          GeneratorExecutionContext context,
          SemanticModel model)
       {
-         var classTypeInfo = model.GetDeclaredSymbol(enumDeclaration.ClassDeclarationSyntax);
+         var classTypeInfo = model.GetDeclaredSymbol(enumDeclaration.TypeDeclarationSyntax);
 
          if (classTypeInfo is null)
             return String.Empty;
@@ -82,7 +82,7 @@ namespace Thinktecture
          SemanticModel model,
          INamedTypeSymbol classTypeInfo)
       {
-         return enumDeclaration.ClassDeclarationSyntax.Members
+         return enumDeclaration.TypeDeclarationSyntax.Members
                                .Select(m =>
                                        {
                                           if (m.IsStatic() && m.IsPublic() && m is FieldDeclarationSyntax fds)
@@ -97,7 +97,7 @@ namespace Thinktecture
                                                 context.ReportDiagnostic(Diagnostic.Create(_fieldMustBeReadOnly,
                                                                                            fds.GetLocation(),
                                                                                            fds.Declaration.Variables[0].Identifier,
-                                                                                           enumDeclaration.ClassDeclarationSyntax.Identifier));
+                                                                                           enumDeclaration.TypeDeclarationSyntax.Identifier));
                                              }
                                           }
 
