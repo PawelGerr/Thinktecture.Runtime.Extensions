@@ -23,7 +23,7 @@ namespace Thinktecture.EnumLikeClass
          logger.Information("Implicit conversion of Category -> string: {key}", keyOfTheCategory);
 
          var unknownCategory = ProductCategory.Get("Grains");
-         logger.Information("unknownCategory.Key: {categoryKey}", unknownCategory.Key);
+         logger.Information("unknownCategory.Key: {categoryKey}", unknownCategory.Name);
          logger.Information("unknownCategory.isValid: {IsValid}", unknownCategory.IsValid);
 
          logger.Information("Press ENTER to exit");

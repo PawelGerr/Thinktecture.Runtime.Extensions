@@ -7,12 +7,13 @@ namespace Thinktecture.Text.Json.Serialization
    /// <summary>
    /// Factory for creation of <see cref="EnumJsonConverter{TEnum,TKey}"/>.
    /// </summary>
+   // TODO:
    public class EnumJsonConverterFactory : JsonConverterFactory
    {
       /// <inheritdoc />
       public override bool CanConvert(Type typeToConvert)
       {
-         return typeof(IEnum).IsAssignableFrom(typeToConvert);
+         return typeof(IEnum<>).IsAssignableFrom(typeToConvert);
       }
 
       /// <inheritdoc />

@@ -85,14 +85,14 @@ namespace Thinktecture
          if (value is TEnum item)
          {
             if (destinationType == typeof(TKey))
-               return item.Key;
+               return item.GetKey();
             if (destinationType == typeof(TEnum))
                return value;
 
             if (typeof(TKey) != typeof(TEnum))
             {
                var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-               return keyConverter.ConvertTo(context, culture, item.Key, destinationType);
+               return keyConverter.ConvertTo(context, culture, item.GetKey(), destinationType);
             }
          }
 

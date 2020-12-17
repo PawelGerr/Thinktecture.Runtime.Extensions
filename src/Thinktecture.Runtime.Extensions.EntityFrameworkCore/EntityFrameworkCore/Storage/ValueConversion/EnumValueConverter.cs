@@ -18,7 +18,7 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
       /// </summary>
       // ReSharper disable once MemberCanBeProtected.Global
       public EnumValueConverter(Expression<Func<TKey, TEnum>> convertFromProvider)
-         : base(item => item.Key, convertFromProvider)
+         : base(item => item.GetKey(), convertFromProvider)
       {
       }
    }

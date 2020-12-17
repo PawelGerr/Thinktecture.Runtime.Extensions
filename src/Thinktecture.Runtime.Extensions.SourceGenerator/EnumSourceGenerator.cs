@@ -32,6 +32,7 @@ using Thinktecture;
 {{
    public class {state.EnumType}_EnumTypeConverter : Thinktecture.EnumTypeConverter<{state.EnumType}, {state.KeyType}>
    {{
+      /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
       protected override {state.EnumType}{state.NullableQuestionMark} ConvertFrom({state.KeyType}{state.NullableQuestionMarkKey} key)
       {{
@@ -59,14 +60,11 @@ using Thinktecture;
       private static IReadOnlyList<{state.EnumType}>{state.NullableQuestionMark} _items;
       private static IReadOnlyList<{state.EnumType}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
 
-      /// <inheritdoc />
-      object IEnum.Key => Key;
-
       /// <summary>
       /// The key of the enumeration item.
       /// </summary>
       [NotNull]
-      public {state.KeyType} Key {{ get; }}
+      public {state.KeyType} {state.KeyPropetyName} {{ get; }}
 
       /// <inheritdoc />
       public bool IsValid {{ get; init; }}
@@ -83,7 +81,7 @@ using Thinktecture;
          }
 
          sb.Append($@"
-         Key = key;
+         {state.KeyPropetyName} = key;
          IsValid = true;
       }}
 
@@ -96,7 +94,16 @@ using Thinktecture;
       public void EnsureValid()
       {{
          if (!IsValid)
-            throw new InvalidOperationException($""The current enumeration item of type '{state.EnumType}' with key {{Key}} is not valid."");
+            throw new InvalidOperationException($""The current enumeration item of type '{state.EnumType}' with key {{{state.KeyPropetyName}}} is not valid."");
+      }}
+
+      /// <summary>
+      /// Gets the key of the item.
+      /// </summary>
+      [return: NotNull]
+      {state.KeyType} IEnum<{state.KeyType}>.GetKey()
+      {{
+         return {state.KeyPropetyName};
       }}
 
       /// <summary>
@@ -179,14 +186,14 @@ using Thinktecture;
       }}
 
       /// <summary>
-      /// Implicit conversion to the type of <typeparamref name=""TKey""/>.
+      /// Implicit conversion to the type of <see cref=""{state.KeyType}""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""{state.KeyPropetyName}""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator {state.KeyType}{state.NullableQuestionMarkKey}({state.EnumType}{state.NullableQuestionMark} item)
       {{
-         return item is null ? default : item.Key;
+         return item is null ? default : item.{state.KeyPropetyName};
       }}
 
       /// <summary>
@@ -229,7 +236,7 @@ using Thinktecture;
          if (IsValid || other.IsValid)
             return false;
 
-         return {state.KeyComparerMember}.Equals(Key, other.Key);
+         return {state.KeyComparerMember}.Equals({state.KeyPropetyName}, other.{state.KeyPropetyName});
       }}
 
       /// <inheritdoc />
@@ -241,13 +248,13 @@ using Thinktecture;
       /// <inheritdoc />
       public override int GetHashCode()
       {{
-         return GetType().GetHashCode() * 397 ^ {state.KeyComparerMember}.GetHashCode(Key);
+         return GetType().GetHashCode() * 397 ^ {state.KeyComparerMember}.GetHashCode({state.KeyPropetyName});
       }}
 
       /// <inheritdoc />
       public override string{state.NullableQuestionMark} ToString()
       {{
-         return Key.ToString();
+         return {state.KeyPropetyName}.ToString();
       }}
 
       private static IReadOnlyDictionary<{state.KeyType}, {state.EnumType}> GetLookup()
@@ -260,10 +267,10 @@ using Thinktecture;
             if(!item.IsValid)
                throw new ArgumentException(""All 'public static readonly' fields of type \""{state.EnumType}\"" must be valid but the item with the key \""{{item.Key}}\"" is not."");
 
-            if (lookup.ContainsKey(item.Key))
-               throw new ArgumentException($""The type \""{state.EnumType}\"" has multiple items with the key \""{{item.Key}}\""."");
+            if (lookup.ContainsKey(item.{state.KeyPropetyName}))
+               throw new ArgumentException($""The type \""{state.EnumType}\"" has multiple items with the key \""{{item.{state.KeyPropetyName}}}\""."");
 
-            lookup.Add(item.Key, item);
+            lookup.Add(item.{state.KeyPropetyName}, item);
          }}
 
          return lookup;

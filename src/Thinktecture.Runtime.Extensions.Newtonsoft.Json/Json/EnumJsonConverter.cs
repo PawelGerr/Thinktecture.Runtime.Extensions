@@ -90,7 +90,7 @@ namespace Thinktecture.Json
          }
          else
          {
-            serializer.Serialize(writer, value.Key);
+            serializer.Serialize(writer, value.GetKey());
          }
       }
 

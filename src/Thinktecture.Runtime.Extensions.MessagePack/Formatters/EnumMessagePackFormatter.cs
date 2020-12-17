@@ -33,7 +33,7 @@ namespace Thinktecture.Formatters
          }
          else
          {
-            GetKeyConverter(options).Serialize(ref writer, value.Key, options);
+            GetKeyConverter(options).Serialize(ref writer, value.GetKey(), options);
          }
       }
 

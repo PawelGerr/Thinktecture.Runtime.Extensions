@@ -30,8 +30,8 @@ namespace Thinktecture.EnumTests
       public void Should_return_invalid_item_via_reflection_if_enum_dont_have_any_items()
       {
          // ReSharper disable once PossibleNullReferenceException
-         var item = (IEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
-                                            .Invoke(null, new object[] { "unknown" });
+         var item = (EmptyEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                                                .Invoke(null, new object[] { "unknown" });
 
          item.IsValid.Should().BeFalse();
          item.Key.Should().Be("unknown");

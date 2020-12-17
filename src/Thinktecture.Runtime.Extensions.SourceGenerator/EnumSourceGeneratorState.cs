@@ -20,6 +20,7 @@ namespace Thinktecture
       public bool IsKeyARefType { get; }
       public SyntaxToken EnumType { get; }
 
+      public string KeyPropetyName { get; }
       public string KeyComparerMember { get; }
       public bool NeedsDefaultComparer { get; }
 
@@ -41,16 +42,14 @@ namespace Thinktecture
       {
          if (enumDeclaration is null)
             throw new ArgumentNullException(nameof(enumDeclaration));
-         if (classTypeInfo is null)
-            throw new ArgumentNullException(nameof(classTypeInfo));
 
          ClassDeclarationSyntax = enumDeclaration.ClassDeclarationSyntax;
          BaseType = enumDeclaration.BaseType;
 
-         ClassTypeInfo = classTypeInfo;
+         ClassTypeInfo = classTypeInfo ?? throw new ArgumentNullException(nameof(classTypeInfo));
          Namespace = classTypeInfo.ContainingNamespace.ToString();
          Context = context;
-         Model = model;
+         Model = model ?? throw new ArgumentNullException(nameof(model));
          KeyType = keyType;
          IsKeyARefType = isKeyARefType;
          EnumType = enumDeclaration.ClassDeclarationSyntax.Identifier;
@@ -61,25 +60,37 @@ namespace Thinktecture
          Items = items;
          EnumSettings = enumDeclaration.ClassDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).FirstOrDefault(a => model.GetTypeInfo(a).Type?.ToString() == "Thinktecture.EnumGenerationAttribute");
 
-         KeyComparerMember = GetKeyComparerMember(EnumSettings, out var needsDefaultComparer);
+         KeyComparerMember = GetKeyComparerMember(model, EnumSettings, out var needsDefaultComparer);
+         KeyPropetyName = GetKeyPropertyName(model, EnumSettings);
          NeedsDefaultComparer = needsDefaultComparer;
       }
 
-      private static string GetKeyComparerMember(AttributeSyntax? enumSettingsAttribute, out bool needsDefaultComparer)
+      private static string GetKeyComparerMember(SemanticModel model, AttributeSyntax? enumSettingsAttribute, out bool needsDefaultComparer)
       {
-         var keyComparer = enumSettingsAttribute?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.ToString() == "KeyComparerProvidingMember");
+         var comparerMemberName = GetParameterValue(model, enumSettingsAttribute, "KeyComparerProvidingMember");
 
-         if (keyComparer is { Expression: LiteralExpressionSyntax les })
+         needsDefaultComparer = comparerMemberName is null;
+         return comparerMemberName ?? "_defaultKeyComparerMember";
+      }
+
+      private static string GetKeyPropertyName(SemanticModel model, AttributeSyntax? enumSettingsAttribute)
+      {
+         return GetParameterValue(model, enumSettingsAttribute, "KeyPropertyName") ?? "Key";
+      }
+
+      private static string? GetParameterValue(SemanticModel model, AttributeSyntax? enumSettingsAttribute, string parameterName)
+      {
+         var keyName = enumSettingsAttribute?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.ToString() == parameterName);
+
+         if (keyName is not null)
          {
-            if (!String.IsNullOrWhiteSpace(les.Token.ValueText))
-            {
-               needsDefaultComparer = false;
-               return les.Token.ValueText;
-            }
+            var value = model.GetConstantValue(keyName.Expression);
+
+            if (value.HasValue && value.Value is string name && !String.IsNullOrWhiteSpace(name))
+               return name.Trim();
          }
 
-         needsDefaultComparer = true;
-         return "_defaultKeyComparerMember";
+         return null;
       }
    }
 }

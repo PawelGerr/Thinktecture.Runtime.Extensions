@@ -28,7 +28,7 @@ using System;
 
 namespace Thinktecture.EnumLikeClass
 {
-   //[EnumSettings(KeyComparerProvidingMember = ""_equalityComparer"")]
+   //[EnumGeneration(KeyComparerProvidingMember = ""_equalityComparer"")]
 	public sealed partial class ProductCategory : IEnum<string>
 	{
 		public static readonly ProductCategory Fruits = new(""Fruits"");
@@ -55,6 +55,7 @@ using System;
 
 namespace Thinktecture.EnumLikeClass
 {
+   [EnumGeneration(KeyPropertyName = ""Name"")]
 	public sealed partial class ProductCategory : IEnum<int>
 	{
 		public static readonly ProductCategory Fruits = new(1);

@@ -9,6 +9,7 @@ namespace Thinktecture
    /// <summary>
    /// MessagePack formatter resolver for <see cref="IEnum{TKey}"/>.
    /// </summary>
+   // TODO:
    public class EnumMessageFormatterResolver : IFormatterResolver
    {
       /// <summary>
@@ -34,20 +35,20 @@ namespace Thinktecture
          {
             var type = typeof(T);
 
-            if (typeof(IEnum).IsAssignableFrom(type))
+            if (typeof(IEnum<>).IsAssignableFrom(type))
             {
                var genericTypeDef = type.FindGenericEnumTypeDefinition();
 
                if (genericTypeDef is null)
                {
-                  InitError = $"The type '{type.Name}' implements '{nameof(IEnum)}' but not the base class 'Enum<>' or 'Enum<,>'.";
+                  InitError = $"The type '{type.Name}' implements '{typeof(IEnum<>)}' but not the base class 'IEnum<>' or 'Enum<,>'.";
                   return;
                }
 
                var formatterType = typeof(EnumMessagePackFormatter<,>).MakeGenericType(genericTypeDef.GenericTypeArguments);
                var formatter = Activator.CreateInstance(formatterType);
 
-               if(formatter is null)
+               if (formatter is null)
                {
                   InitError = $"The formatter of '{formatterType.Name}' could not be instantiated.";
                   return;

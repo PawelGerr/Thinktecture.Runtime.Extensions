@@ -18,29 +18,30 @@ namespace Thinktecture.Controllers
       [HttpGet("category/{category}")]
       public IActionResult RoundTrip(ProductCategory category)
       {
-         return RoundTrip<ProductCategory>(category);
+         return RoundTrip<ProductCategory, string>(category);
       }
 
       [HttpGet("categoryWithConverter/{category}")]
       public IActionResult RoundTrip(ProductCategoryWithJsonConverter category)
       {
-         return RoundTrip<ProductCategoryWithJsonConverter>(category);
+         return RoundTrip<ProductCategoryWithJsonConverter, string>(category);
       }
 
       [HttpGet("group/{group}")]
       public IActionResult RoundTrip(ProductGroup group)
       {
-         return RoundTrip<ProductGroup>(group);
+         return RoundTrip<ProductGroup, int>(group);
       }
 
       [HttpGet("groupWithConverter/{group}")]
       public IActionResult RoundTrip(ProductGroupWithJsonConverter group)
       {
-         return RoundTrip<ProductGroupWithJsonConverter>(group);
+         return RoundTrip<ProductGroupWithJsonConverter, int>(group);
       }
 
-      private IActionResult RoundTrip<T>(T value)
-         where T : IEnum
+      private IActionResult RoundTrip<T, TKey>(T value)
+         where T : IEnum<TKey>
+         where TKey : notnull
       {
          _logger.LogInformation($"Round trip test with {value.GetType().Name}", value);
 

@@ -46,7 +46,7 @@ namespace Thinktecture.Text.Json.Serialization
          if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-         GetKeyConverter(options).Write(writer, value.Key, options);
+         GetKeyConverter(options).Write(writer, value.GetKey(), options);
       }
 
       private JsonConverter<TKey> GetKeyConverter(JsonSerializerOptions options)
