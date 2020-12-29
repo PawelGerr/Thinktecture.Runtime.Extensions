@@ -5,6 +5,7 @@
         <PackageTags>sourcegenerator</PackageTags>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <BuildOutputTargetFolder>analyzers/dotnet/cs</BuildOutputTargetFolder>
+        <NoWarn>$(NoWarn);CS1591;RS2008</NoWarn>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" PrivateAssets="all" />

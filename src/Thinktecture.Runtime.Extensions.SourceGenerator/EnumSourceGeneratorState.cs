@@ -18,13 +18,14 @@ namespace Thinktecture
       public INamedTypeSymbol ClassTypeInfo { get; }
       public ITypeSymbol KeyType { get; }
       public bool IsKeyARefType { get; }
+      public bool IsEnumARefType { get; }
       public SyntaxToken EnumType { get; }
 
-      public string KeyPropetyName { get; }
+      public string KeyPropertyName { get; }
       public string KeyComparerMember { get; }
       public bool NeedsDefaultComparer { get; }
 
-      public string? NullableQuestionMark { get; }
+      public string? NullableQuestionMarkEnum { get; }
       public string? NullableQuestionMarkKey { get; }
 
       public IReadOnlyList<FieldDeclarationSyntax> Items { get; }
@@ -37,7 +38,6 @@ namespace Thinktecture
          EnumDeclaration enumDeclaration,
          INamedTypeSymbol classTypeInfo,
          ITypeSymbol keyType,
-         bool isKeyARefType,
          IReadOnlyList<FieldDeclarationSyntax> items)
       {
          if (enumDeclaration is null)
@@ -50,18 +50,19 @@ namespace Thinktecture
          Namespace = classTypeInfo.ContainingNamespace.ToString();
          Context = context;
          Model = model ?? throw new ArgumentNullException(nameof(model));
-         KeyType = keyType;
-         IsKeyARefType = isKeyARefType;
+         KeyType = keyType ?? throw new ArgumentNullException(nameof(keyType));
+         IsKeyARefType = keyType.TypeKind != TypeKind.Struct;
          EnumType = enumDeclaration.TypeDeclarationSyntax.Identifier;
+         IsEnumARefType = classTypeInfo.TypeKind != TypeKind.Struct;
 
-         NullableQuestionMark = context.Compilation.Options.NullableContextOptions == NullableContextOptions.Disable ? null : "?";
-         NullableQuestionMarkKey = isKeyARefType ? NullableQuestionMark : null;
+         NullableQuestionMarkEnum = IsEnumARefType ? "?" : null;
+         NullableQuestionMarkKey = IsKeyARefType ? "?" : null;
 
          Items = items;
          EnumSettings = enumDeclaration.TypeDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).FirstOrDefault(a => model.GetTypeInfo(a).Type?.ToString() == "Thinktecture.EnumGenerationAttribute");
 
          KeyComparerMember = GetKeyComparerMember(model, EnumSettings, out var needsDefaultComparer);
-         KeyPropetyName = GetKeyPropertyName(model, EnumSettings);
+         KeyPropertyName = GetKeyPropertyName(model, EnumSettings);
          NeedsDefaultComparer = needsDefaultComparer;
       }
 

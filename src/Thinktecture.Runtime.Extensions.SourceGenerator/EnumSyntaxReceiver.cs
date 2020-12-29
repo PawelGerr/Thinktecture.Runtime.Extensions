@@ -47,7 +47,7 @@ namespace Thinktecture
          return false;
       }
 
-      private static bool IsEnumInterface(BaseTypeSyntax? type, out GenericNameSyntax genNameSyntax)
+      private static bool IsEnumInterface(BaseTypeSyntax? type, [MaybeNullWhen(false)] out GenericNameSyntax genNameSyntax)
       {
          if (type?.Type is GenericNameSyntax genericNameSyntax)
          {
