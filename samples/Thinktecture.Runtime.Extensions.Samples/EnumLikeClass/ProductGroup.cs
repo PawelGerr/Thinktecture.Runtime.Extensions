@@ -1,6 +1,6 @@
 namespace Thinktecture.EnumLikeClass
 {
-   public sealed partial class ProductGroup : IEnum<int>
+   public sealed partial class ProductGroup : IValidatableEnum<int>
    {
       public static readonly ProductGroup Apple = new(1, "Apple", ProductCategory.Fruits);
       public static readonly ProductGroup Orange = new(2, "Orange", ProductCategory.Fruits);

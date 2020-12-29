@@ -1,6 +1,6 @@
 namespace Thinktecture.TestEnums
 {
-   public partial class EmptyEnum : IEnum<string>
+   public partial class EmptyEnum : IValidatableEnum<string>
    {
    }
 }

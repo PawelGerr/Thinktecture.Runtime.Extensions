@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Thinktecture.TestEnums;
 using Xunit;
@@ -59,6 +60,13 @@ namespace Thinktecture.EnumTypeConverterTests
       {
          IntBasedStructEnumConverter.Invoking(c => c.ConvertFrom(null, null, null))
                                     .Should().Throw<NotSupportedException>().WithMessage("StructIntegerEnum_EnumTypeConverter cannot convert from 'null'.");
+      }
+
+      [Fact]
+      public void Should_throw_trying_to_convert_unknown_key_of_non_validatable_enum()
+      {
+         ValidEnumConverter.Invoking(c => c.ConvertFrom(null, null, "invalid"))
+                           .Should().Throw<NotSupportedException>().WithMessage("There is no item of type 'ValidTestEnum' with the key 'invalid'.");
       }
    }
 }

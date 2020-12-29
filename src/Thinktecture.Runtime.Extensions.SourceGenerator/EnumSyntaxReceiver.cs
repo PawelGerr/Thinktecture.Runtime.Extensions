@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
@@ -17,7 +18,8 @@ namespace Thinktecture
       /// <inheritdoc />
       public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
       {
-         if (syntaxNode is TypeDeclarationSyntax tds)
+         if (syntaxNode is TypeDeclarationSyntax tds
+             && (tds is ClassDeclarationSyntax || tds is StructDeclarationSyntax))
          {
             if (IsEnum(tds, out var enumDeclaration))
                Enums.Add(enumDeclaration);
@@ -32,9 +34,11 @@ namespace Thinktecture
          {
             foreach (var baseType in tds.BaseList.Types)
             {
-               if (IsEnumInterface(baseType, out var genericNameSyntax))
+               var enumInterfaces = GetEnumInterfaces(baseType);
+
+               if (enumInterfaces.Count > 0)
                {
-                  enumDeclaration = new EnumDeclaration(tds, genericNameSyntax);
+                  enumDeclaration = new EnumDeclaration(tds, enumInterfaces);
                   return true;
                }
             }
@@ -44,20 +48,20 @@ namespace Thinktecture
          return false;
       }
 
-      private static bool IsEnumInterface(BaseTypeSyntax? type, [MaybeNullWhen(false)] out GenericNameSyntax genNameSyntax)
+      private static IReadOnlyList<GenericNameSyntax> GetEnumInterfaces(BaseTypeSyntax? type)
       {
+         List<GenericNameSyntax>? enumInterfaces = null;
+
          if (type?.Type is GenericNameSyntax genericNameSyntax)
          {
-            if (genericNameSyntax.Identifier.Text == "IEnum" &&
+            if ((genericNameSyntax.Identifier.Text == "IEnum" || genericNameSyntax.Identifier.Text == "IValidatableEnum") &&
                 genericNameSyntax.TypeArgumentList.Arguments.Count == 1)
             {
-               genNameSyntax = genericNameSyntax;
-               return true;
+               (enumInterfaces ??= new List<GenericNameSyntax>()).Add(genericNameSyntax);
             }
          }
 
-         genNameSyntax = null;
-         return false;
+         return enumInterfaces ?? (IReadOnlyList<GenericNameSyntax>)Array.Empty<GenericNameSyntax>();
       }
    }
 }

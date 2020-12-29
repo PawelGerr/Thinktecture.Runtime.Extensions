@@ -5,7 +5,7 @@
    /// Otherwise it is initialized and the test is invalid.
    /// </summary>
    // ReSharper disable once InconsistentNaming
-   public partial class StaticCtorTestEnum_Get : IEnum<string>
+   public partial class StaticCtorTestEnum_Get : IValidatableEnum<string>
    {
       // ReSharper disable once UnusedMember.Global
       public static readonly StaticCtorTestEnum_Get Item = new("item");

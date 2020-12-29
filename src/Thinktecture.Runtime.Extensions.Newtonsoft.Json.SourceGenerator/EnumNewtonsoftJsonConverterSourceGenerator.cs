@@ -28,10 +28,10 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   public class {state.EnumType}_EnumNewtonsoftJsonConverter : Thinktecture.Json.EnumJsonConverter<{state.EnumType}, {state.KeyType}>
+   public class {state.EnumIdentifier}_EnumNewtonsoftJsonConverter : Thinktecture.Json.EnumJsonConverter<{state.EnumIdentifier}, {state.KeyType}>
    {{
-      public {state.EnumType}_EnumNewtonsoftJsonConverter()
-         : base({state.EnumType}.Get)
+      public {state.EnumIdentifier}_EnumNewtonsoftJsonConverter()
+         : base({state.EnumIdentifier}.Get)
       {{
       }}
    }}
@@ -41,7 +41,7 @@ using Thinktecture;
          {
             sb.Append($@"
    [Newtonsoft.Json.JsonConverterAttribute(typeof({state.TypeDeclarationSyntax.Identifier}_EnumNewtonsoftJsonConverter))]
-   partial class {state.EnumType}
+   partial class {state.EnumIdentifier}
    {{
    }}
 ");

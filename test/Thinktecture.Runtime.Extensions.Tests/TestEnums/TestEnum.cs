@@ -6,7 +6,7 @@ using System;
 
 namespace Thinktecture.TestEnums
 {
-   public partial class TestEnum : IEnum<String>
+   public partial class TestEnum : IValidatableEnum<string>
    {
       public static readonly TestEnum Item1 = new("item1");
       public static readonly TestEnum Item2 = new("item2");

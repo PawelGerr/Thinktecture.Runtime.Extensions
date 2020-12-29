@@ -15,15 +15,16 @@ namespace Thinktecture
       public GenericNameSyntax BaseType { get; }
 
       public string Namespace { get; }
-      public INamedTypeSymbol ClassTypeInfo { get; }
+      public INamedTypeSymbol EnumTypeInfo { get; }
       public ITypeSymbol KeyType { get; }
       public bool IsKeyARefType { get; }
       public bool IsEnumARefType { get; }
-      public SyntaxToken EnumType { get; }
+      public SyntaxToken EnumIdentifier { get; }
 
       public string KeyPropertyName { get; }
       public string KeyComparerMember { get; }
       public bool NeedsDefaultComparer { get; }
+      public bool IsValidatable { get; }
 
       public string? NullableQuestionMarkEnum { get; }
       public string? NullableQuestionMarkKey { get; }
@@ -36,24 +37,27 @@ namespace Thinktecture
          GeneratorExecutionContext context,
          SemanticModel model,
          EnumDeclaration enumDeclaration,
-         INamedTypeSymbol classTypeInfo,
-         ITypeSymbol keyType,
+         INamedTypeSymbol enumType,
+         EnumInterfaceInfo enumInterfaceInfo,
          IReadOnlyList<FieldDeclarationSyntax> items)
       {
          if (enumDeclaration is null)
             throw new ArgumentNullException(nameof(enumDeclaration));
+         if (enumInterfaceInfo is null)
+            throw new ArgumentNullException(nameof(enumInterfaceInfo));
 
          TypeDeclarationSyntax = enumDeclaration.TypeDeclarationSyntax;
-         BaseType = enumDeclaration.BaseType;
+         BaseType = enumInterfaceInfo.Syntax;
 
-         ClassTypeInfo = classTypeInfo ?? throw new ArgumentNullException(nameof(classTypeInfo));
-         Namespace = classTypeInfo.ContainingNamespace.ToString();
+         EnumTypeInfo = enumType ?? throw new ArgumentNullException(nameof(enumType));
+         Namespace = enumType.ContainingNamespace.ToString();
          Context = context;
          Model = model ?? throw new ArgumentNullException(nameof(model));
-         KeyType = keyType ?? throw new ArgumentNullException(nameof(keyType));
-         IsKeyARefType = keyType.TypeKind != TypeKind.Struct;
-         EnumType = enumDeclaration.TypeDeclarationSyntax.Identifier;
-         IsEnumARefType = classTypeInfo.TypeKind != TypeKind.Struct;
+         KeyType = enumInterfaceInfo.KeyType;
+         IsKeyARefType = KeyType.TypeKind != TypeKind.Struct;
+         EnumIdentifier = enumDeclaration.TypeDeclarationSyntax.Identifier;
+         IsEnumARefType = enumType.TypeKind != TypeKind.Struct;
+         IsValidatable = enumInterfaceInfo.IsValidatable;
 
          NullableQuestionMarkEnum = IsEnumARefType ? "?" : null;
          NullableQuestionMarkKey = IsKeyARefType ? "?" : null;
@@ -117,7 +121,7 @@ namespace Thinktecture
                   {
                      var baseTypeInfo = Model.GetTypeInfo(baseType.Type).Type;
 
-                     if (SymbolEqualityComparer.Default.Equals(baseTypeInfo, ClassTypeInfo))
+                     if (SymbolEqualityComparer.Default.Equals(baseTypeInfo, EnumTypeInfo))
                         types.Add(innerClass);
                   }
                }

@@ -2,7 +2,7 @@ using Thinktecture.EnumLikeClass;
 
 namespace Thinktecture
 {
-   public sealed partial class ProductGroupWithJsonConverter : IEnum<int>
+   public sealed partial class ProductGroupWithJsonConverter : IValidatableEnum<int>
    {
       public static readonly ProductGroupWithJsonConverter Apple = new(1, "Apple", ProductCategory.Fruits);
       public static readonly ProductGroupWithJsonConverter Orange = new(2, "Orange", ProductCategory.Fruits);

@@ -34,6 +34,15 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
+      public void Should_return_fields_of_a_valid_enum()
+      {
+         var enums = ValidTestEnum.GetAll();
+         enums.Should().HaveCount(2);
+         enums.Should().Contain(ValidTestEnum.Item1);
+         enums.Should().Contain(ValidTestEnum.Item2);
+      }
+
+      [Fact]
       public void Should_return_public_fields_only_via_reflection()
       {
          var enums = (IReadOnlyList<IEnum<string>>)typeof(TestEnum).GetMethod("GetAll", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)

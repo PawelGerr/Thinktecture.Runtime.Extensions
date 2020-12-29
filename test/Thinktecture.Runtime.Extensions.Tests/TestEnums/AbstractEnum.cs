@@ -1,6 +1,6 @@
 namespace Thinktecture.TestEnums
 {
-   public abstract partial class AbstractEnum : IEnum<int>
+   public abstract partial class AbstractEnum : IValidatableEnum<int>
    {
       public static readonly AbstractEnum Item = new ValidItem(1);
 

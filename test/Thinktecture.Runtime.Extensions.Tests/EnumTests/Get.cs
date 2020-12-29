@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using FluentAssertions;
 using Thinktecture.TestEnums;
@@ -12,9 +13,8 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_null_if_null_is_provided()
       {
-         var item = TestEnum.Get(null);
-
-         item.Should().BeNull();
+         TestEnum.Get(null).Should().BeNull();
+         ValidTestEnum.Get(null).Should().BeNull();
       }
 
       [Fact]
@@ -49,15 +49,13 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_item_with_provided_key()
       {
-         var item = TestEnum.Get("item2");
-         item.Should().Be(TestEnum.Item2);
+         TestEnum.Get("item2").Should().Be(TestEnum.Item2);
       }
 
       [Fact]
       public void Should_return_item_with_provided_key_ignoring_casing()
       {
-         var item = StaticCtorTestEnum_Get.Get("Item");
-         item.Should().Be(StaticCtorTestEnum_Get.Item);
+         StaticCtorTestEnum_Get.Get("Item").Should().Be(StaticCtorTestEnum_Get.Item);
       }
 
       [Fact]
@@ -74,6 +72,19 @@ namespace Thinktecture.EnumTests
          EnumWithDerivedType.Get(2).Should().Be(EnumWithDerivedType.ItemOfDerivedType);
 
          AbstractEnum.Get(1).Should().Be(AbstractEnum.Item);
+      }
+
+      [Fact]
+      public void Should_return_valid_item_of_non_validatable_enum()
+      {
+         ValidTestEnum.Get("item1").Should().Be(ValidTestEnum.Item1);
+      }
+
+      [Fact]
+      public void Should_throw_if_key_is_unknown_to_non_validatable_enum()
+      {
+         Action action = () => ValidTestEnum.Get("invalid");
+         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ValidTestEnum' with the key 'invalid'.");
       }
    }
 }

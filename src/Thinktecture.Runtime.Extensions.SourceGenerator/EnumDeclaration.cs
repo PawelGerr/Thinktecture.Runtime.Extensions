@@ -7,14 +7,14 @@ namespace Thinktecture
    public class EnumDeclaration
    {
       public TypeDeclarationSyntax TypeDeclarationSyntax { get; }
-      public GenericNameSyntax BaseType { get; }
+      public IReadOnlyList<GenericNameSyntax> EnumInterfaces { get; }
 
       public EnumDeclaration(
          TypeDeclarationSyntax cds,
-         GenericNameSyntax baseType)
+         IReadOnlyList<GenericNameSyntax> enumInterfaces)
       {
          TypeDeclarationSyntax = cds ?? throw new ArgumentNullException(nameof(cds));
-         BaseType = baseType ?? throw new ArgumentNullException(nameof(baseType));
+         EnumInterfaces = enumInterfaces ?? throw new ArgumentNullException(nameof(enumInterfaces));
       }
    }
 }

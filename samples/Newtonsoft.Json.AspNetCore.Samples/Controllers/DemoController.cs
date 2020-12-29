@@ -40,7 +40,7 @@ namespace Thinktecture.Controllers
       }
 
       private IActionResult RoundTrip<T, TKey>(T value)
-         where T : IEnum<TKey>
+         where T : IValidatableEnum<TKey>
          where TKey : notnull
       {
          _logger.LogInformation($"Round trip test with {value.GetType().Name}", value);

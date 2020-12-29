@@ -55,7 +55,7 @@ using System;
 
 namespace Thinktecture.EnumLikeClass
 {
-   public partial struct EnumWithDerivedType : IEnum<int>
+   public partial struct EnumWithDerivedType : IValidatableEnum<int>
    {
       public static readonly EnumWithDerivedType Item1 = new(1);
       public static readonly EnumWithDerivedType ItemOfDerivedType = new DerivedEnum(2);

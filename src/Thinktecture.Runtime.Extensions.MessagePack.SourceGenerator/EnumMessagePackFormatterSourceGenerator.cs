@@ -28,10 +28,10 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   public class {state.EnumType}_EnumMessagePackFormatter : Thinktecture.Formatters.EnumMessagePackFormatter<{state.EnumType}, {state.KeyType}>
+   public class {state.EnumIdentifier}_EnumMessagePackFormatter : Thinktecture.Formatters.EnumMessagePackFormatter<{state.EnumIdentifier}, {state.KeyType}>
    {{
-      public {state.EnumType}_EnumMessagePackFormatter()
-         : base({state.EnumType}.Get)
+      public {state.EnumIdentifier}_EnumMessagePackFormatter()
+         : base({state.EnumIdentifier}.Get)
       {{
       }}
    }}
@@ -41,7 +41,7 @@ using Thinktecture;
          {
             sb.Append($@"
    [MessagePack.MessagePackFormatter(typeof({state.TypeDeclarationSyntax.Identifier}_EnumMessagePackFormatter))]
-   partial class {state.EnumType}
+   partial class {state.EnumIdentifier}
    {{
    }}
 ");

@@ -29,16 +29,16 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   public class {state.EnumType}_EnumJsonConverter : Thinktecture.Text.Json.Serialization.EnumJsonConverter<{state.EnumType}, {state.KeyType}>
+   public class {state.EnumIdentifier}_EnumJsonConverter : Thinktecture.Text.Json.Serialization.EnumJsonConverter<{state.EnumIdentifier}, {state.KeyType}>
    {{
-      public {state.EnumType}_EnumJsonConverter()
+      public {state.EnumIdentifier}_EnumJsonConverter()
          : this(null)
       {{
       }}
 
-      public {state.EnumType}_EnumJsonConverter(
+      public {state.EnumIdentifier}_EnumJsonConverter(
          JsonConverter<{state.KeyType}>? keyConverter)
-         : base({state.EnumType}.Get, keyConverter)
+         : base({state.EnumIdentifier}.Get, keyConverter)
       {{
       }}
    }}
@@ -48,7 +48,7 @@ using Thinktecture;
          {
             sb.Append($@"
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof({state.TypeDeclarationSyntax.Identifier}_EnumJsonConverter))]
-   partial class {state.EnumType}
+   partial class {state.EnumIdentifier}
    {{
    }}
 ");
