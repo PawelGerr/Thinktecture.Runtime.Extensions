@@ -16,7 +16,7 @@ namespace Thinktecture.EnumTests
 		}
 
 		[Fact]
-		public void Should_not_throw_if_enum_has_2_keys_that_differs_in_casing_only_if_comparer_honors_casing()
+		public void Should_not_throw_if_enum_has_2_keys_that_differ_in_casing_only_if_comparer_honors_casing()
 		{
 			Action action = () => TestEnumWithNonDefaultComparer.GetAll();
 			action.Should().NotThrow<Exception>();

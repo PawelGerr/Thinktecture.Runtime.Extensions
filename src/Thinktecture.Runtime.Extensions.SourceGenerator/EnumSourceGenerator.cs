@@ -14,8 +14,12 @@ namespace Thinktecture
    [Generator]
    public class EnumSourceGenerator : EnumSourceGeneratorBase
    {
-      private static readonly DiagnosticDescriptor _classMustBePartial = new("TTRE002", "Class must be partial", "The class '{0}' must be partial", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-      private static readonly DiagnosticDescriptor _invalidImplementationOfCreateInvalidItem = new("TTRE003", "Incorrect implementation of the method 'CreateInvalidItem'", "The signature of the method 'CreateInvalidItem' must be 'private static {0} CreateInvalidItem({1} key)'", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      private static readonly DiagnosticDescriptor _classMustBePartial = new("TTRESG020", "Class must be partial", "The class '{0}' must be partial", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      private static readonly DiagnosticDescriptor _invalidImplementationOfCreateInvalidItem = new("TTRESG021", "Incorrect implementation of the method 'CreateInvalidItem'", "The signature of the method 'CreateInvalidItem' must be 'private static {0} CreateInvalidItem({1} key)'", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      private static readonly DiagnosticDescriptor _abstractEnumNeedsCreateInvalidItemImplementation = new("TTRESG022", "An abstract class needs an implementation of the method 'CreateInvalidItem'", "An abstract class needs an implementation of the method 'CreateInvalidItem', the signature should be 'private static {0} CreateInvalidItem({1} key)'", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      private static readonly DiagnosticDescriptor _constructorsMustBePrivate = new("TTRESG023", "An enumeration must have private constructors only", "All constructors of the enumeration '{0}' must be private", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+
+      private static readonly DiagnosticDescriptor _noItemsWarning = new("TTRESG100", "The enumeration has no items", "The enumeration '{0}' has no items", nameof(EnumSourceGenerator), DiagnosticSeverity.Warning, true);
 
       /// <inheritdoc />
       protected override string GenerateCode(EnumSourceGeneratorState state)
@@ -23,8 +27,18 @@ namespace Thinktecture
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
+         if (state.Items.Count == 0)
+         {
+            state.Context.ReportDiagnostic(Diagnostic.Create(_noItemsWarning,
+                                                             state.TypeDeclarationSyntax.GetLocation(),
+                                                             state.TypeDeclarationSyntax.Identifier));
+         }
+
+         CheckConstructors(state);
+
          var isEnumARefType = state.TypeDeclarationSyntax is ClassDeclarationSyntax;
          var derivedTypes = state.FindDerivedTypes();
+         var needCreateInvalidImplementation = NeedCreateInvalidImplementation(state);
 
          var sb = new StringBuilder($@"
 using System;
@@ -163,10 +177,10 @@ using Thinktecture;
 ");
          }
 
-         sb.Append(@"
+         sb.Append($@"
          if (!ItemsLookup.TryGetValue(key, out var item))
-         {
-            item = CreateInvalidItem(key);
+         {{
+            item = {(needCreateInvalidImplementation && state.ClassTypeInfo.IsAbstract ? "null" : "CreateInvalidItem(key)")};
 ");
 
          if (isEnumARefType)
@@ -188,14 +202,24 @@ using Thinktecture;
       }
 ");
 
-         if (NeedCreateInvalidImplementation(state))
+         if (needCreateInvalidImplementation)
          {
-            sb.Append($@"
+            if (state.ClassTypeInfo.IsAbstract)
+            {
+               state.Context.ReportDiagnostic(Diagnostic.Create(_abstractEnumNeedsCreateInvalidItemImplementation,
+                                                                state.TypeDeclarationSyntax.GetLocation(),
+                                                                state.TypeDeclarationSyntax.Identifier,
+                                                                state.KeyType));
+            }
+            else
+            {
+               sb.Append($@"
       private static {state.EnumType} CreateInvalidItem({state.KeyType} key)
       {{
          return new {state.EnumType}(key) {{ IsValid = false }};
       }}
 ");
+            }
          }
 
          sb.Append($@"
@@ -333,7 +357,7 @@ using Thinktecture;
          foreach (var item in items)
          {{
             if(!item.IsValid)
-               throw new ArgumentException(""All 'public static readonly' fields of type \""{state.EnumType}\"" must be valid but the item with the key \""{{item.Key}}\"" is not."");
+               throw new ArgumentException($""All 'public static readonly' fields of type \""{state.EnumType}\"" must be valid but the item with the key \""{{item.{state.KeyPropertyName}}}\"" is not."");
 
             if (lookup.ContainsKey(item.{state.KeyPropertyName}))
                throw new ArgumentException($""The type \""{state.EnumType}\"" has multiple items with the key \""{{item.{state.KeyPropertyName}}}\""."");
@@ -348,6 +372,44 @@ using Thinktecture;
 ");
 
          return sb.ToString();
+      }
+
+      private static void CheckConstructors(EnumSourceGeneratorState state)
+      {
+         foreach (var declarationSyntax in state.TypeDeclarationSyntax.Members)
+         {
+            if (declarationSyntax is ConstructorDeclarationSyntax constructor)
+            {
+               if (!IsPrivate(constructor))
+               {
+                  state.Context.ReportDiagnostic(Diagnostic.Create(_constructorsMustBePrivate,
+                                                                   constructor.GetLocation(),
+                                                                   state.TypeDeclarationSyntax.Identifier));
+               }
+            }
+         }
+      }
+
+      private static bool IsPrivate(MemberDeclarationSyntax constructor)
+      {
+         var isPrivate = false;
+
+         foreach (var modifier in constructor.Modifiers)
+         {
+            switch ((SyntaxKind)modifier.RawKind)
+            {
+               case SyntaxKind.PrivateKeyword:
+                  isPrivate = true;
+                  break;
+
+               case SyntaxKind.ProtectedKeyword:
+               case SyntaxKind.InternalKeyword:
+               case SyntaxKind.PublicKeyword:
+                  return false;
+            }
+         }
+
+         return isPrivate;
       }
 
       /// <inheritdoc />

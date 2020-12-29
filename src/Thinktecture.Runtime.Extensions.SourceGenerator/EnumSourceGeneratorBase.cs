@@ -12,7 +12,8 @@ namespace Thinktecture
    /// </summary>
    public abstract class EnumSourceGeneratorBase : ISourceGenerator
    {
-      private static readonly DiagnosticDescriptor _fieldMustBeReadOnly = new("TTRE001", "Field must be read-only", "The field '{0}' of the class '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      private static readonly DiagnosticDescriptor _fieldMustBeReadOnly = new("TTRESG001", "Field must be read-only", "The field '{0}' of the class '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      private static readonly DiagnosticDescriptor _fieldMustBePublic = new("TTRESG002", "Field must be public", "The field '{0}' of the class '{1}' must be public", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
 
       /// <inheritdoc />
       public void Initialize(GeneratorInitializationContext context)
@@ -73,7 +74,7 @@ namespace Thinktecture
          if (classTypeInfo is null)
             return String.Empty;
 
-         var keyType = GetKeyType(enumDeclaration.BaseType, model, out var isKeyARefType);
+         var keyType = GetKeyType(enumDeclaration.BaseType, model);
 
          if (keyType is null)
             return String.Empty;
@@ -93,19 +94,32 @@ namespace Thinktecture
          return enumDeclaration.TypeDeclarationSyntax.Members
                                .Select(m =>
                                        {
-                                          if (m.IsStatic() && m.IsPublic() && m is FieldDeclarationSyntax fds)
+                                          if (m.IsStatic() && m is FieldDeclarationSyntax fds)
                                           {
                                              var fieldTypeInfo = model.GetTypeInfo(fds.Declaration.Type).Type;
 
                                              if (SymbolEqualityComparer.Default.Equals(fieldTypeInfo, classTypeInfo))
                                              {
-                                                if (m.IsReadOnly())
-                                                   return fds;
+                                                if (!m.IsPublic())
+                                                {
+                                                   context.ReportDiagnostic(Diagnostic.Create(_fieldMustBePublic,
+                                                                                              fds.GetLocation(),
+                                                                                              fds.Declaration.Variables[0].Identifier,
+                                                                                              enumDeclaration.TypeDeclarationSyntax.Identifier));
+                                                   return null;
+                                                }
 
-                                                context.ReportDiagnostic(Diagnostic.Create(_fieldMustBeReadOnly,
-                                                                                           fds.GetLocation(),
-                                                                                           fds.Declaration.Variables[0].Identifier,
-                                                                                           enumDeclaration.TypeDeclarationSyntax.Identifier));
+                                                if (!m.IsReadOnly())
+                                                {
+                                                   context.ReportDiagnostic(Diagnostic.Create(_fieldMustBeReadOnly,
+                                                                                              fds.GetLocation(),
+                                                                                              fds.Declaration.Variables[0].Identifier,
+                                                                                              enumDeclaration.TypeDeclarationSyntax.Identifier));
+
+                                                   return null;
+                                                }
+
+                                                return fds;
                                              }
                                           }
 
@@ -115,13 +129,10 @@ namespace Thinktecture
                                .ToList()!;
       }
 
-      private static ITypeSymbol? GetKeyType(GenericNameSyntax enumBaseType, SemanticModel model, out bool isRefType)
+      private static ITypeSymbol? GetKeyType(GenericNameSyntax enumBaseType, SemanticModel model)
       {
          var type = enumBaseType.TypeArgumentList.Arguments[0];
-         var typeInfo = model.GetTypeInfo(type).Type;
-         isRefType = typeInfo?.TypeKind != TypeKind.Struct;
-
-         return typeInfo;
+         return model.GetTypeInfo(type).Type;
       }
    }
 }

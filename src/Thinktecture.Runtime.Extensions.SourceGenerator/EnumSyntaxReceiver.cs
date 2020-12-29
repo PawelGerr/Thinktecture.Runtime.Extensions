@@ -19,9 +19,6 @@ namespace Thinktecture
       {
          if (syntaxNode is TypeDeclarationSyntax tds)
          {
-            if (tds.IsAbstract())
-               return;
-
             if (IsEnum(tds, out var enumDeclaration))
                Enums.Add(enumDeclaration);
          }

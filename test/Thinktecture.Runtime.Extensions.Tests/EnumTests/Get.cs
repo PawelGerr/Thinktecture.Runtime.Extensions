@@ -12,13 +12,13 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_null_if_null_is_provided()
       {
-         var item = EmptyEnum.Get(null);
+         var item = TestEnum.Get(null);
 
          item.Should().BeNull();
       }
 
       [Fact]
-      public void Should_return_invalid_item_if_enum_dont_have_any_items()
+      public void Should_return_invalid_item_if_enum_doesnt_have_any_items()
       {
          var item = EmptyEnum.Get("unknown");
 
@@ -27,7 +27,7 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
-      public void Should_return_invalid_item_via_reflection_if_enum_dont_have_any_items()
+      public void Should_return_invalid_item_via_reflection_if_enum_doesnt_have_any_items()
       {
          // ReSharper disable once PossibleNullReferenceException
          var item = (EmptyEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
@@ -38,7 +38,7 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
-      public void Should_return_invalid_item_if_enum_dont_have_item_with_provided_key()
+      public void Should_return_invalid_item_if_enum_doesnt_have_item_with_provided_key()
       {
          var item = TestEnum.Get("unknown");
 
@@ -61,7 +61,7 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
-      public void Should_return_invalid_item_if_the_casing_does_not_match_accoring_to_comparer()
+      public void Should_return_invalid_item_if_the_casing_does_not_match_according_to_comparer()
       {
          var item = TestEnumWithNonDefaultComparer.Get("Item2");
          item.Key.Should().Be("Item2");
@@ -71,8 +71,9 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_derived_type()
       {
-         var item = EnumWithDerivedType.Get(2);
-         item.Should().Be(EnumWithDerivedType.ItemOfDerivedType);
+         EnumWithDerivedType.Get(2).Should().Be(EnumWithDerivedType.ItemOfDerivedType);
+
+         AbstractEnum.Get(1).Should().Be(AbstractEnum.Item);
       }
    }
 }

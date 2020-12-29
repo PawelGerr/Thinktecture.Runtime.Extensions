@@ -31,6 +31,9 @@ namespace Thinktecture.EnumTests
       {
          // ReSharper disable once EqualExpressionComparison
          (StructIntegerEnum.Item1 == StructIntegerEnum.Item1).Should().BeTrue();
+
+         // ReSharper disable once EqualExpressionComparison
+         (StructIntegerEnumWithZero.Item0 == StructIntegerEnumWithZero.Item0).Should().BeTrue();
       }
 
       [Fact]
@@ -38,13 +41,18 @@ namespace Thinktecture.EnumTests
       {
          // ReSharper disable once EqualExpressionComparison
          (StructIntegerEnum.Item1 == StructIntegerEnum.Item2).Should().BeFalse();
+
+         (StructIntegerEnumWithZero.Item0 == new StructIntegerEnumWithZero()).Should().BeFalse();
       }
 
       [Fact]
-      public void Should_return_true_for_invalid__structs_on_equality()
+      public void Should_return_true_for_invalid_structs_on_equality()
       {
          // ReSharper disable once EqualExpressionComparison
          (StructIntegerEnum.Get(42) == StructIntegerEnum.Get(42)).Should().BeTrue();
+
+         // ReSharper disable once EqualExpressionComparison
+         (new StructIntegerEnumWithZero() == new StructIntegerEnumWithZero()).Should().BeTrue();
       }
 
       [Fact]

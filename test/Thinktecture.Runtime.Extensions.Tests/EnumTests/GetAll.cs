@@ -25,7 +25,7 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
-      public void Should_return_fields_of_an_struct()
+      public void Should_return_fields_of_a_struct()
       {
          var enums = StructIntegerEnum.GetAll();
          enums.Should().HaveCount(2);
