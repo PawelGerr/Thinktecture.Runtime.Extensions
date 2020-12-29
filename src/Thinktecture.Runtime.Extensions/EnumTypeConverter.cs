@@ -15,6 +15,9 @@ namespace Thinktecture
       where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      private static readonly Type _enumType = typeof(TEnum);
+      private static readonly Type _keyType = typeof(TKey);
+
       /// <summary>
       /// Converts <paramref name="key"/> to an instance of <typeparamref name="TEnum"/>.
       /// </summary>
@@ -30,10 +33,7 @@ namespace Thinktecture
             return true;
 
          if (typeof(TKey) != typeof(TEnum))
-         {
-            var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-            return keyConverter.CanConvertFrom(context, sourceType);
-         }
+            return GetKeyConverter().CanConvertFrom(context, sourceType);
 
          return base.CanConvertFrom(context, sourceType);
       }
@@ -41,14 +41,16 @@ namespace Thinktecture
       /// <inheritdoc />
       public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
       {
-         if (destinationType == typeof(TKey) || destinationType == typeof(TEnum))
+         if (destinationType == _keyType || destinationType == _enumType)
             return true;
 
-         if (typeof(TKey) != typeof(TEnum))
-         {
-            var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-            return keyConverter.CanConvertTo(context, destinationType);
-         }
+         var underlyingType = Nullable.GetUnderlyingType(destinationType);
+
+         if (underlyingType == _keyType || underlyingType == _enumType)
+            return true;
+
+         if (_keyType != _enumType)
+            return GetKeyConverter().CanConvertTo(context, destinationType);
 
          return base.CanConvertTo(context, destinationType);
       }
@@ -57,18 +59,22 @@ namespace Thinktecture
       public override object? ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object? value)
       {
          if (value is null)
-            return default(TEnum);
+         {
+            if (!_enumType.IsClass)
+               throw new NotSupportedException($"{GetType().Name} cannot convert from 'null'.");
 
-         if (value is TKey key)
-            return ConvertFrom(key);
+            return default(TEnum);
+         }
 
          if (value is TEnum item)
             return item;
 
-         if (typeof(TKey) != typeof(TEnum))
+         if (value is TKey key)
+            return ConvertFrom(key);
+
+         if (_keyType != _enumType)
          {
-            var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-            key = (TKey?)keyConverter.ConvertFrom(context, culture, value);
+            key = (TKey?)GetKeyConverter().ConvertFrom(context, culture, value);
 
             return ConvertFrom(key);
          }
@@ -84,19 +90,23 @@ namespace Thinktecture
 
          if (value is TEnum item)
          {
-            if (destinationType == typeof(TKey))
+            var underlyingType = Nullable.GetUnderlyingType(destinationType);
+
+            if (destinationType == _keyType || underlyingType == _keyType)
                return item.GetKey();
-            if (destinationType == typeof(TEnum))
+            if (destinationType == _enumType || underlyingType == _enumType)
                return value;
 
-            if (typeof(TKey) != typeof(TEnum))
-            {
-               var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-               return keyConverter.ConvertTo(context, culture, item.GetKey(), destinationType);
-            }
+            if (_keyType != _enumType)
+               return GetKeyConverter().ConvertTo(context, culture, item.GetKey(), destinationType);
          }
 
          return base.ConvertTo(context, culture, value, destinationType);
+      }
+
+      private static TypeConverter GetKeyConverter()
+      {
+         return TypeDescriptor.GetConverter(_keyType);
       }
    }
 }
