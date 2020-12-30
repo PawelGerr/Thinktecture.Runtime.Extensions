@@ -8,13 +8,6 @@ namespace Thinktecture.EnumLikeClass
       public string DisplayName { get; }
       public ProductCategory Category { get; }
 
-      private ProductGroup(int key, string displayName, ProductCategory category)
-         : this(key)
-      {
-         DisplayName = displayName;
-         Category = category;
-      }
-
       public int Do(string foo)
       {
          EnsureValid(); // "Do()" is not allowed for invalid items

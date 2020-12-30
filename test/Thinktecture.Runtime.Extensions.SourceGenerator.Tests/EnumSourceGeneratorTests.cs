@@ -55,10 +55,21 @@ using System;
 
 namespace Thinktecture.EnumLikeClass
 {
-   public partial struct EnumWithDerivedType : IValidatableEnum<int>
+   [EnumGeneration(KeyPropertyName = ""Name"")]
+   public readonly partial struct EnumWithDerivedType : IValidatableEnum<int>
    {
       public static readonly EnumWithDerivedType Item1 = new(1);
       public static readonly EnumWithDerivedType ItemOfDerivedType = new DerivedEnum(2);
+
+      public int Property1 => Field;
+
+      public int Property2
+      {
+         get { return Field; }
+      }
+
+      public int Property3 { get; }
+      public readonly int Field;
    }
 }
 ";
@@ -232,7 +243,7 @@ namespace Thinktecture.EnumLikeClass
          var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
          errors.Should().BeEmpty();
 
-         string output = outputCompilation.SyntaxTrees.Last().ToString();
+         var output = outputCompilation.SyntaxTrees.Last().ToString();
 
          _output.WriteLine(output);
 

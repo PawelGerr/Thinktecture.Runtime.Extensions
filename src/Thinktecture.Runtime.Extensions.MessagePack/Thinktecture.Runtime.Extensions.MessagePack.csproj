@@ -7,11 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"/>
+        <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
+                          Include="..\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator.csproj"
+                          PrivateAssets="contentfiles;build"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MessagePack" Version="2.2.85" />
+        <PackageReference Include="MessagePack" Version="2.2.85"/>
     </ItemGroup>
 
 </Project>

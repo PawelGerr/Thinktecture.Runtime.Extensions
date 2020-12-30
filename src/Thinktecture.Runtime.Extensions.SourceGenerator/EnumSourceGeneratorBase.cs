@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture
 {
@@ -12,11 +11,6 @@ namespace Thinktecture
    /// </summary>
    public abstract class EnumSourceGeneratorBase : ISourceGenerator
    {
-      private static readonly DiagnosticDescriptor _fieldMustBeReadOnly = new("TTRESG001", "Field must be read-only", "The field '{0}' of the class '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-      private static readonly DiagnosticDescriptor _fieldMustBePublic = new("TTRESG002", "Field must be public", "The field '{0}' of the class '{1}' must be public", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-      private static readonly DiagnosticDescriptor _typeCouldNotBeResolved = new("TTRESG003", "Type could not be resolved", "The type '{0}' could not be resolved", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-      private static readonly DiagnosticDescriptor _multipleIncompatibleEnumInterfaces = new("TTRESG004", "Multiple interfaces with different key types", "The type '{0}' implements multiple interfaces with different key types", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-
       /// <inheritdoc />
       public void Initialize(GeneratorInitializationContext context)
       {
@@ -73,7 +67,7 @@ namespace Thinktecture
 
             if (keyType is null)
             {
-               context.ReportDiagnostic(Diagnostic.Create(_typeCouldNotBeResolved,
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeCouldNotBeResolved,
                                                           type.GetLocation(),
                                                           type));
 
@@ -90,10 +84,7 @@ namespace Thinktecture
             {
                if (!SymbolEqualityComparer.Default.Equals(validInterface.KeyType, candicate.KeyType))
                {
-                  context.ReportDiagnostic(Diagnostic.Create(_multipleIncompatibleEnumInterfaces,
-                                                             enumDeclaration.TypeDeclarationSyntax.GetLocation(),
-                                                             enumDeclaration.TypeDeclarationSyntax.Identifier));
-
+                  context.ReportTypeCouldNotBeResolved(enumDeclaration.TypeDeclarationSyntax);
                   return null;
                }
 
@@ -116,54 +107,9 @@ namespace Thinktecture
          if (classTypeInfo is null)
             return String.Empty;
 
-         var items = GetItems(enumDeclaration, context, model, classTypeInfo);
-         var state = new EnumSourceGeneratorState(context, model, enumDeclaration, classTypeInfo, enumInterfaceInfo, items);
+         var state = new EnumSourceGeneratorState(context, model, enumDeclaration, classTypeInfo, enumInterfaceInfo);
 
          return GenerateCode(state);
-      }
-
-      private static IReadOnlyList<FieldDeclarationSyntax> GetItems(
-         EnumDeclaration enumDeclaration,
-         GeneratorExecutionContext context,
-         SemanticModel model,
-         INamedTypeSymbol classTypeInfo)
-      {
-         return enumDeclaration.TypeDeclarationSyntax.Members
-                               .Select(m =>
-                                       {
-                                          if (m.IsStatic() && m is FieldDeclarationSyntax fds)
-                                          {
-                                             var fieldTypeInfo = model.GetTypeInfo(fds.Declaration.Type).Type;
-
-                                             if (SymbolEqualityComparer.Default.Equals(fieldTypeInfo, classTypeInfo))
-                                             {
-                                                if (!m.IsPublic())
-                                                {
-                                                   context.ReportDiagnostic(Diagnostic.Create(_fieldMustBePublic,
-                                                                                              fds.GetLocation(),
-                                                                                              fds.Declaration.Variables[0].Identifier,
-                                                                                              enumDeclaration.TypeDeclarationSyntax.Identifier));
-                                                   return null;
-                                                }
-
-                                                if (!m.IsReadOnly())
-                                                {
-                                                   context.ReportDiagnostic(Diagnostic.Create(_fieldMustBeReadOnly,
-                                                                                              fds.GetLocation(),
-                                                                                              fds.Declaration.Variables[0].Identifier,
-                                                                                              enumDeclaration.TypeDeclarationSyntax.Identifier));
-
-                                                   return null;
-                                                }
-
-                                                return fds;
-                                             }
-                                          }
-
-                                          return null;
-                                       })
-                               .Where(fds => fds is not null)
-                               .ToList()!;
       }
    }
 }

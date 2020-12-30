@@ -13,6 +13,10 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    
     <ItemGroup>
         <None Include="./../../icon.png" Pack="true" PackagePath=""/>
         <None Include="./../../LICENSE.md" Pack="true" PackagePath="$(PackageLicenseFile)"/>

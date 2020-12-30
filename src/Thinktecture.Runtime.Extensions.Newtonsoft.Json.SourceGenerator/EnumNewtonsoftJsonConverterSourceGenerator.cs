@@ -40,7 +40,7 @@ using Thinktecture;
          if (!HasJsonConverterAttribute(state))
          {
             sb.Append($@"
-   [Newtonsoft.Json.JsonConverterAttribute(typeof({state.TypeDeclarationSyntax.Identifier}_EnumNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof({state.EnumSyntax.Identifier}_EnumNewtonsoftJsonConverter))]
    partial class {state.EnumIdentifier}
    {{
    }}
@@ -56,7 +56,7 @@ using Thinktecture;
 
       private static bool HasJsonConverterAttribute(EnumSourceGeneratorState state)
       {
-         return state.TypeDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "Newtonsoft.Json.JsonConverterAttribute");
+         return state.EnumSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "Newtonsoft.Json.JsonConverterAttribute");
       }
    }
 }

@@ -66,7 +66,7 @@ namespace Thinktecture.EnumTypeConverterTests
       public void Should_throw_trying_to_convert_unknown_key_of_non_validatable_enum()
       {
          ValidEnumConverter.Invoking(c => c.ConvertFrom(null, null, "invalid"))
-                           .Should().Throw<NotSupportedException>().WithMessage("There is no item of type 'ValidTestEnum' with the key 'invalid'.");
+                           .Should().Throw<NotSupportedException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
       }
    }
 }

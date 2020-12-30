@@ -14,7 +14,7 @@ namespace Thinktecture
          if (mds is null)
             throw new ArgumentNullException(nameof(mds));
 
-         return mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword));
+         return mds.Modifiers.Any(SyntaxKind.StaticKeyword);
       }
 
       public static bool IsPublic(this MemberDeclarationSyntax mds)
@@ -22,7 +22,7 @@ namespace Thinktecture
          if (mds is null)
             throw new ArgumentNullException(nameof(mds));
 
-         return mds.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword));
+         return mds.Modifiers.Any(SyntaxKind.PublicKeyword);
       }
 
       public static bool IsReadOnly(this MemberDeclarationSyntax mds)
@@ -30,7 +30,7 @@ namespace Thinktecture
          if (mds is null)
             throw new ArgumentNullException(nameof(mds));
 
-         return mds.Modifiers.Any(m => m.IsKind(SyntaxKind.ReadOnlyKeyword));
+         return mds.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
       }
    }
 }

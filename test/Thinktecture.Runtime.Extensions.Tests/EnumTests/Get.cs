@@ -84,7 +84,7 @@ namespace Thinktecture.EnumTests
       public void Should_throw_if_key_is_unknown_to_non_validatable_enum()
       {
          Action action = () => ValidTestEnum.Get("invalid");
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ValidTestEnum' with the key 'invalid'.");
+         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
       }
    }
 }

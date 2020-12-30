@@ -28,7 +28,7 @@ namespace Thinktecture
 
       private static bool IsEnum(
          TypeDeclarationSyntax tds,
-         [MaybeNullWhen(false)] out EnumDeclaration enumDeclaration)
+         out EnumDeclaration enumDeclaration)
       {
          if (tds.BaseList?.Types.Count > 0)
          {
@@ -44,7 +44,7 @@ namespace Thinktecture
             }
          }
 
-         enumDeclaration = null;
+         enumDeclaration = null!;
          return false;
       }
 
