@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
-                          Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
+                          Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
                           PrivateAssets="contentfiles;build"/>
 
         <Compile Include="..\..\IsExternalInit.cs">

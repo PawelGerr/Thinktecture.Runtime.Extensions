@@ -3,8 +3,6 @@
         <Description>Source generators for Thinktecture.Runtime.Extensions.</Description>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageTags>sourcegenerator</PackageTags>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <IncludeSymbols>false</IncludeSymbols>
         <NoWarn>$(NoWarn);CS1591;RS2008</NoWarn>
     </PropertyGroup>
     <ItemGroup>

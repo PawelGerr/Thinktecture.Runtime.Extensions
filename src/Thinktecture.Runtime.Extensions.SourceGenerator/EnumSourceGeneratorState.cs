@@ -15,7 +15,7 @@ namespace Thinktecture
       public TypeDeclarationSyntax EnumSyntax { get; }
       public GenericNameSyntax EnumInterfaceSyntax { get; }
 
-      public string Namespace { get; }
+      public string? Namespace { get; }
       public INamedTypeSymbol EnumType { get; }
       public ITypeSymbol KeyType { get; }
       public bool IsKeyARefType => KeyType.TypeKind != TypeKind.Struct;
