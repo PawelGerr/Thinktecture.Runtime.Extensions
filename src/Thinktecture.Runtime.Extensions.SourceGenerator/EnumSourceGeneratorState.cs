@@ -2,22 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture
 {
    public class EnumSourceGeneratorState
    {
+      private readonly TypeDeclarationSyntax _enumSyntax;
+
       public GeneratorExecutionContext Context { get; }
       public SemanticModel Model { get; }
-
-      public TypeDeclarationSyntax EnumSyntax { get; }
 
       public string? Namespace { get; }
       public INamedTypeSymbol EnumType { get; }
       public ITypeSymbol KeyType { get; }
-      public SyntaxToken EnumIdentifier => EnumSyntax.Identifier;
+      public SyntaxToken EnumIdentifier => _enumSyntax.Identifier;
 
       public string KeyPropertyName { get; }
       public string KeyArgumentName { get; }
@@ -32,7 +31,7 @@ namespace Thinktecture
       public IReadOnlyList<IFieldSymbol> Items => _items ??= EnumType.GetValidItems();
 
       private IReadOnlyList<EnumMemberInfo>? _assignableInstanceFieldsAndProperties;
-      public IReadOnlyList<EnumMemberInfo> AssignableInstanceFieldsAndProperties => _assignableInstanceFieldsAndProperties ??= GetAssignableInstanceFieldsAndProperties();
+      public IReadOnlyList<EnumMemberInfo> AssignableInstanceFieldsAndProperties => _assignableInstanceFieldsAndProperties ??= EnumType.GetAssignableInstanceFieldsAndProperties();
 
       public AttributeSyntax? EnumSettings { get; }
 
@@ -51,7 +50,7 @@ namespace Thinktecture
          Context = context;
          Model = model ?? throw new ArgumentNullException(nameof(model));
 
-         EnumSyntax = enumDeclaration.TypeDeclarationSyntax;
+         _enumSyntax = enumDeclaration.TypeDeclarationSyntax;
 
          EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
          Namespace = enumType.ContainingNamespace.ToString();
@@ -65,77 +64,13 @@ namespace Thinktecture
 
          KeyComparerMember = GetKeyComparerMember(model, EnumSettings, out var needsDefaultComparer);
          KeyPropertyName = GetKeyPropertyName(model, EnumSettings);
-         KeyArgumentName = MakeArgumentName(KeyPropertyName);
+         KeyArgumentName = KeyPropertyName.MakeArgumentName();
          NeedsDefaultComparer = needsDefaultComparer;
       }
 
-      private static string MakeArgumentName(string name)
+      public bool HasAttribute(string fullAttributeType)
       {
-         return $"{Char.ToLowerInvariant(name[0])}{name.Substring(1)}";
-      }
-
-      private IReadOnlyList<EnumMemberInfo> GetAssignableInstanceFieldsAndProperties()
-      {
-         return EnumSyntax.Members
-                          .Select(m =>
-                                  {
-                                     if (m.IsStatic())
-                                        return null;
-
-                                     EnumMemberInfo? member = null;
-
-                                     if (m is FieldDeclarationSyntax fds)
-                                     {
-                                        if (!m.IsReadOnly())
-                                        {
-                                           Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
-                                                                                      fds.GetLocation(),
-                                                                                      fds.Declaration.Variables[0].Identifier,
-                                                                                      EnumIdentifier));
-                                        }
-
-                                        var identifier = fds.Declaration.Variables[0].Identifier;
-                                        var type = Model.GetTypeInfo(fds.Declaration.Type).Type;
-
-                                        if (type is null)
-                                        {
-                                           Context.ReportTypeCouldNotBeResolved(fds.Declaration.Type, identifier);
-                                           return null;
-                                        }
-
-                                        member = new EnumMemberInfo(fds, type, identifier, MakeArgumentName(identifier.ToString()));
-                                     }
-
-                                     if (m is PropertyDeclarationSyntax pds && pds.AccessorList is not null)
-                                     {
-                                        var getter = pds.AccessorList.Accessors.FirstOrDefault(a => a.Keyword.IsKind(SyntaxKind.GetKeyword));
-
-                                        if (getter?.Body is not null)
-                                           return null;
-
-                                        if (pds.AccessorList.Accessors.Any(a => a.Keyword.IsKind(SyntaxKind.SetKeyword)))
-                                        {
-                                           Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
-                                                                                      pds.GetLocation(),
-                                                                                      pds.Identifier,
-                                                                                      EnumIdentifier));
-                                        }
-
-                                        var type = Model.GetTypeInfo(pds.Type).Type;
-
-                                        if (type is null)
-                                        {
-                                           Context.ReportTypeCouldNotBeResolved(pds.Type, pds.Identifier);
-                                           return null;
-                                        }
-
-                                        member = new EnumMemberInfo(pds, type, pds.Identifier, MakeArgumentName(pds.Identifier.ToString()));
-                                     }
-
-                                     return member;
-                                  })
-                          .Where(m => m is not null)
-                          .ToList()!;
+         return _enumSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => Model.GetTypeInfo(a).Type?.ToString() == fullAttributeType);
       }
 
       private static string GetKeyComparerMember(SemanticModel model, AttributeSyntax? enumSettingsAttribute, out bool needsDefaultComparer)
@@ -156,7 +91,7 @@ namespace Thinktecture
                return name;
 
             Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
-                                                       EnumSyntax.GetLocation(),
+                                                       enumSettingsAttribute?.GetLocation() ?? _enumSyntax.GetLocation(),
                                                        name));
          }
 
@@ -182,7 +117,7 @@ namespace Thinktecture
       {
          var types = new List<TypeDeclarationSyntax>();
 
-         FindDerivedTypes(types, EnumSyntax);
+         FindDerivedTypes(types, _enumSyntax);
 
          return types;
       }
@@ -199,7 +134,7 @@ namespace Thinktecture
                {
                   foreach (var baseType in innerClass.BaseList.Types)
                   {
-                     var baseTypeInfo = ModelExtensions.GetTypeInfo(Model, baseType.Type).Type;
+                     var baseTypeInfo = Model.GetTypeInfo(baseType.Type).Type;
 
                      if (SymbolEqualityComparer.Default.Equals(baseTypeInfo, EnumType))
                         types.Add(innerClass);

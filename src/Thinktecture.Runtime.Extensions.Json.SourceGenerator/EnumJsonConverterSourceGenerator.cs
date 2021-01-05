@@ -44,10 +44,10 @@ using Thinktecture;
    }}
 ");
 
-         if (!HasJsonConverterAttribute(state))
+         if (!state.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
          {
             sb.Append($@"
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof({state.EnumSyntax.Identifier}_EnumJsonConverter))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof({state.EnumIdentifier}_EnumJsonConverter))]
    partial class {state.EnumIdentifier}
    {{
    }}
@@ -59,11 +59,6 @@ using Thinktecture;
 ");
 
          return sb.ToString();
-      }
-
-      private static bool HasJsonConverterAttribute(EnumSourceGeneratorState state)
-      {
-         return state.EnumSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "System.Text.Json.Serialization.JsonConverterAttribute");
       }
    }
 }

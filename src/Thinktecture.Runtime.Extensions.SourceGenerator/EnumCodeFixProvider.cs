@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -16,11 +18,13 @@ namespace Thinktecture
       private const string _MAKE_PARTIAL = "Make the enumeration partial";
       private const string _MAKE_STRUCT_READONLY = "Make the enumeration read-only";
       private const string _MAKE_FIELD_READONLY = "Make the enumeration item read-only";
+      private const string _IMPLEMENT_CREATE_INVALID = "Implement 'CreateInvalidItem'";
 
       /// <inheritdoc />
       public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
                                                                                                    DiagnosticsDescriptors.StructMustBeReadOnly.Id,
-                                                                                                   DiagnosticsDescriptors.FieldMustBeReadOnly.Id);
+                                                                                                   DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
+                                                                                                   DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id);
 
       /// <inheritdoc />
       public override FixAllProvider GetFixAllProvider()
@@ -58,6 +62,11 @@ namespace Thinktecture
                   if (fieldDeclaration is not null)
                      context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_READONLY, _ => AddTypeModifierAsync(context.Document, root, fieldDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_FIELD_READONLY), makeFieldReadOnlyDiagnostic);
                }
+
+               var needsCreateInvalidDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation);
+
+               if (needsCreateInvalidDiagnostic is not null)
+                  context.RegisterCodeFix(CodeAction.Create(_IMPLEMENT_CREATE_INVALID, t => AddCreateInvalidItemAsync(context.Document, root, enumDeclaration, t), _IMPLEMENT_CREATE_INVALID), needsCreateInvalidDiagnostic);
             }
          }
       }
@@ -87,6 +96,52 @@ namespace Thinktecture
          var newDoc = document.WithSyntaxRoot(newRoot);
 
          return Task.FromResult(newDoc);
+      }
+
+      private async Task<Document> AddCreateInvalidItemAsync(
+         Document document,
+         SyntaxNode root,
+         TypeDeclarationSyntax declaration,
+         CancellationToken cancellationToken)
+      {
+         var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+         if (model is null)
+            return document;
+
+         var enumType = model.GetDeclaredSymbol(declaration);
+
+         if (enumType is null || !enumType.IsEnum(out var enumInterfaces))
+            return document;
+
+         var enumInterface = enumInterfaces.GetValidEnumInterface(enumType);
+
+         if (enumInterface is null)
+            return document;
+
+         var keyType = enumInterface.TypeArguments[0];
+
+         var parameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("key"))
+                                      .WithType(SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.End)));
+
+         var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(enumType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.End)), "CreateInvalidItem")
+                                   .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword))
+                                   .AddParameterListParameters(parameter)
+                                   .WithBody(SyntaxFactory.Block(BuildThrowNotImplementedException()));
+
+         var newDeclaration = declaration.AddMembers(method);
+         var newRoot = root.ReplaceNode(declaration, newDeclaration);
+         var newDoc = document.WithSyntaxRoot(newRoot);
+
+         return newDoc;
+      }
+
+      private static ThrowStatementSyntax BuildThrowNotImplementedException()
+      {
+         var notImplementedExceptionType = SyntaxFactory.ParseTypeName(typeof(NotImplementedException).FullName);
+         var newNotImplementedException = SyntaxFactory.ObjectCreationExpression(notImplementedExceptionType, SyntaxFactory.ArgumentList(), null);
+         var throwStatement = SyntaxFactory.ThrowStatement(newNotImplementedException);
+         return throwStatement;
       }
    }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 // ReSharper disable once CheckNamespace
@@ -114,6 +115,60 @@ namespace Thinktecture
                         .ToList()!;
       }
 
+      public static IReadOnlyList<EnumMemberInfo> GetAssignableInstanceFieldsAndProperties(
+         this ITypeSymbol enumType,
+         Action<Diagnostic>? reportDiagnostic = null)
+      {
+         return enumType.GetMembers()
+                        .Select(m =>
+                                {
+                                   if (m.IsStatic || !m.CanBeReferencedByName)
+                                      return null;
+
+                                   EnumMemberInfo? member = null;
+
+                                   if (m is IFieldSymbol fds)
+                                   {
+                                      if (!fds.IsReadOnly)
+                                      {
+                                         reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
+                                                                                    GetLocation(fds),
+                                                                                    fds.Name,
+                                                                                    enumType.Name));
+                                      }
+
+                                      member = new EnumMemberInfo(fds, fds.Type);
+                                   }
+
+                                   if (m is IPropertySymbol pds)
+                                   {
+                                      var syntax = (PropertyDeclarationSyntax)pds.DeclaringSyntaxReferences.First().GetSyntax();
+
+                                      if (syntax.ExpressionBody is not null) // public int Foo => 42;
+                                         return null;
+
+                                      var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.Keyword.IsKind(SyntaxKind.GetKeyword));
+
+                                      if (getter?.Body is not null) // public int Foo { get => 42; }
+                                         return null;
+
+                                      if (pds.SetMethod is not null)
+                                      {
+                                         reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
+                                                                                    GetLocation(pds),
+                                                                                    pds.Name,
+                                                                                    enumType.Name));
+                                      }
+
+                                      member = new EnumMemberInfo(pds, pds.Type);
+                                   }
+
+                                   return member;
+                                })
+                        .Where(m => m is not null)
+                        .ToList()!;
+      }
+
       public static bool HasCreateInvalidImplementation(
          this ITypeSymbol enumType,
          ITypeSymbol keyType,
@@ -155,6 +210,12 @@ namespace Thinktecture
       private static Location GetLocation(IFieldSymbol field)
       {
          var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.First().GetSyntax();
+         return syntax.Identifier.GetLocation();
+      }
+
+      private static Location GetLocation(IPropertySymbol field)
+      {
+         var syntax = (PropertyDeclarationSyntax)field.DeclaringSyntaxReferences.First().GetSyntax();
          return syntax.Identifier.GetLocation();
       }
 

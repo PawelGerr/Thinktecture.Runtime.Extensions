@@ -43,16 +43,16 @@ using Thinktecture;
       private static void GenerateEnum(StringBuilder sb, EnumSourceGeneratorState state)
       {
          var derivedTypes = state.FindDerivedTypes();
-         var needCreateInvalidImplementation = NeedCreateInvalidImplementation(state);
+         var needCreateInvalidImplementation = state.IsValidatable && !state.EnumType.HasCreateInvalidImplementation(state.KeyType);
 
-         if (state.EnumType.IsValueType && !HasStructLayoutAttribute(state))
+         if (state.EnumType.IsValueType && !state.HasAttribute("System.Runtime.InteropServices.StructLayoutAttribute"))
          {
             sb.Append($@"
    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]");
          }
 
          sb.Append($@"
-   [System.ComponentModel.TypeConverter(typeof({state.EnumSyntax.Identifier}_EnumTypeConverter))]
+   [System.ComponentModel.TypeConverter(typeof({state.EnumIdentifier}_EnumTypeConverter))]
    partial {(state.EnumType.IsValueType ? "struct" : "class")} {state.EnumIdentifier} : IEquatable<{state.EnumIdentifier}{state.NullableQuestionMarkEnum}>
    {{
       [System.Runtime.CompilerServices.ModuleInitializer]
@@ -418,7 +418,7 @@ using Thinktecture;
          foreach (var memberInfo in fieldsAndProperties)
          {
             sb.Append($@"
-         this.{memberInfo.Identifier} = {memberInfo.ArgumentName};");
+         this.{memberInfo.Symbol.Name} = {memberInfo.ArgumentName};");
          }
 
          if (state.IsValidatable)
@@ -461,16 +461,6 @@ using Thinktecture;
       }}
    }}
 ");
-      }
-
-      private static bool HasStructLayoutAttribute(EnumSourceGeneratorState state)
-      {
-         return state.EnumSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "System.Runtime.InteropServices.StructLayoutAttribute");
-      }
-
-      private static bool NeedCreateInvalidImplementation(EnumSourceGeneratorState state)
-      {
-         return state.IsValidatable && !state.EnumType.HasCreateInvalidImplementation(state.KeyType);
       }
    }
 }

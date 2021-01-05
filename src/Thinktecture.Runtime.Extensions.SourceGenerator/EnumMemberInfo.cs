@@ -5,17 +5,15 @@ namespace Thinktecture
 {
    public class EnumMemberInfo
    {
-      public MemberDeclarationSyntax Syntax { get; }
+      public ISymbol Symbol { get; }
       public ITypeSymbol Type { get; }
-      public SyntaxToken Identifier { get; }
       public string ArgumentName { get; }
 
-      public EnumMemberInfo(MemberDeclarationSyntax syntax, ITypeSymbol type, SyntaxToken identifier, string argumentName)
+      public EnumMemberInfo(ISymbol symbol, ITypeSymbol type)
       {
-         Syntax = syntax;
+         Symbol = symbol;
          Type = type;
-         Identifier = identifier;
-         ArgumentName = argumentName;
+         ArgumentName = symbol.Name.MakeArgumentName();
       }
    }
 }

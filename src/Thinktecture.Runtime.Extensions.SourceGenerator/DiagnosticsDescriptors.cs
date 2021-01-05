@@ -7,7 +7,7 @@ namespace Thinktecture
       public static readonly DiagnosticDescriptor FieldMustBeReadOnly = new("TTRESG001", "Field must be read-only", "The field '{0}' of the type '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor FieldMustBePublic = new("TTRESG002", "Field must be public", "The field '{0}' of the type '{1}' must be public", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor PropertyMustBeReadOnly = new("TTRESG003", "Property must be read-only", "The Property '{0}' of the type '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-      public static readonly DiagnosticDescriptor TypeCouldNotBeResolved = new("TTRESG004", "Type could not be resolved", "The type '{0}' could not be resolved", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor EnumMustBeClassOrStruct = new("TTRESG004", "The enumeration must be a class or a struct", "The type '{0}' must be a class or a struct", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor MultipleIncompatibleEnumInterfaces = new("TTRESG005", "Multiple interfaces with different key types", "The type '{0}' implements multiple interfaces with different key types", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
 
       public static readonly DiagnosticDescriptor TypeMustBePartial = new("TTRESG020", "Type must be partial", "The type '{0}' must be partial", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);

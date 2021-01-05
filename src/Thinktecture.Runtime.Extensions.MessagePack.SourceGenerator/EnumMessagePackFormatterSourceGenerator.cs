@@ -37,10 +37,10 @@ using Thinktecture;
    }}
 ");
 
-         if (!HasMessagePackFormatterAttribute(state))
+         if (!state.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
          {
             sb.Append($@"
-   [MessagePack.MessagePackFormatter(typeof({state.EnumSyntax.Identifier}_EnumMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof({state.EnumIdentifier}_EnumMessagePackFormatter))]
    partial class {state.EnumIdentifier}
    {{
    }}
@@ -52,11 +52,6 @@ using Thinktecture;
 ");
 
          return sb.ToString();
-      }
-
-      private static bool HasMessagePackFormatterAttribute(EnumSourceGeneratorState state)
-      {
-         return state.EnumSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "MessagePack.MessagePackFormatterAttribute");
       }
    }
 }

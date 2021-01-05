@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -12,11 +13,13 @@ namespace Thinktecture
       /// <inheritdoc />
       public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial,
                                                                                                                  DiagnosticsDescriptors.StructMustBeReadOnly,
+                                                                                                                 DiagnosticsDescriptors.EnumMustBeClassOrStruct,
                                                                                                                  DiagnosticsDescriptors.NonValidatableEnumsMustBeClass,
                                                                                                                  DiagnosticsDescriptors.ConstructorsMustBePrivate,
                                                                                                                  DiagnosticsDescriptors.NoItemsWarning,
                                                                                                                  DiagnosticsDescriptors.FieldMustBePublic,
                                                                                                                  DiagnosticsDescriptors.FieldMustBeReadOnly,
+                                                                                                                 DiagnosticsDescriptors.PropertyMustBeReadOnly,
                                                                                                                  DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
                                                                                                                  DiagnosticsDescriptors.InvalidImplementationOfCreateInvalidItem);
 
@@ -36,6 +39,12 @@ namespace Thinktecture
 
          if (declaration is not TypeDeclarationSyntax tds)
             return;
+
+         if (!declaration.IsKind(SyntaxKind.ClassDeclaration) && !declaration.IsKind(SyntaxKind.StructDeclaration))
+         {
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.EnumMustBeClassOrStruct, tds.Identifier.GetLocation(), tds.Identifier));
+            return;
+         }
 
          if (!enumType.IsEnum(out var enumInterfaces))
             return;
@@ -86,6 +95,8 @@ namespace Thinktecture
                                                           keyType.Name));
             }
          }
+
+         enumType.GetAssignableInstanceFieldsAndProperties(context.ReportDiagnostic);
       }
    }
 }
