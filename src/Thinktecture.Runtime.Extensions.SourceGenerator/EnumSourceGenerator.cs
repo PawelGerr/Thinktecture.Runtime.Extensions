@@ -545,25 +545,6 @@ using Thinktecture;
          return isPrivate;
       }
 
-      /// <inheritdoc />
-      protected override EnumInterfaceInfo? GetValidEnumInterface(EnumDeclaration enumDeclaration, GeneratorExecutionContext context, SemanticModel model)
-      {
-         if (enumDeclaration is null)
-            throw new ArgumentNullException(nameof(enumDeclaration));
-
-         var enumInterface = base.GetValidEnumInterface(enumDeclaration, context, model);
-
-         if (enumInterface != null && !enumDeclaration.TypeDeclarationSyntax.IsPartial())
-         {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ClassMustBePartial,
-                                                       enumDeclaration.TypeDeclarationSyntax.GetLocation(),
-                                                       enumDeclaration.TypeDeclarationSyntax.Identifier));
-            return null;
-         }
-
-         return enumInterface;
-      }
-
       private static bool NeedCreateInvalidImplementation(EnumSourceGeneratorState state)
       {
          if (!state.IsValidatable)

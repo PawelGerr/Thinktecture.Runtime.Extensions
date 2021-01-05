@@ -4,13 +4,13 @@ namespace Thinktecture
 {
    internal static class DiagnosticsDescriptors
    {
-      public static readonly DiagnosticDescriptor FieldMustBeReadOnly = new("TTRESG001", "Field must be read-only", "The field '{0}' of the class '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-      public static readonly DiagnosticDescriptor FieldMustBePublic = new("TTRESG002", "Field must be public", "The field '{0}' of the class '{1}' must be public", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
-      public static readonly DiagnosticDescriptor PropertyMustBeReadOnly = new("TTRESG003", "Property must be read-only", "The Property '{0}' of the class '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor FieldMustBeReadOnly = new("TTRESG001", "Field must be read-only", "The field '{0}' of the type '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor FieldMustBePublic = new("TTRESG002", "Field must be public", "The field '{0}' of the type '{1}' must be public", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor PropertyMustBeReadOnly = new("TTRESG003", "Property must be read-only", "The Property '{0}' of the type '{1}' must be read-only", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor TypeCouldNotBeResolved = new("TTRESG004", "Type could not be resolved", "The type '{0}' could not be resolved", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor MultipleIncompatibleEnumInterfaces = new("TTRESG005", "Multiple interfaces with different key types", "The type '{0}' implements multiple interfaces with different key types", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
 
-      public static readonly DiagnosticDescriptor ClassMustBePartial = new("TTRESG020", "Class must be partial", "The class '{0}' must be partial", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor TypeMustBePartial = new("TTRESG020", "Type must be partial", "The type '{0}' must be partial", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor InvalidImplementationOfCreateInvalidItem = new("TTRESG021", "Incorrect implementation of the method 'CreateInvalidItem'", "The signature of the method 'CreateInvalidItem' must be 'private static {0} CreateInvalidItem({1} key)'", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor AbstractEnumNeedsCreateInvalidItemImplementation = new("TTRESG022", "An abstract class needs an implementation of the method 'CreateInvalidItem'", "An abstract class needs an implementation of the method 'CreateInvalidItem', the signature should be 'private static {0} CreateInvalidItem({1} key)'", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor ConstructorsMustBePrivate = new("TTRESG023", "An enumeration must have private constructors only", "All constructors of the enumeration '{0}' must be private", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);

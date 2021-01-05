@@ -15,6 +15,9 @@ namespace Thinktecture
       /// <summary>
       /// Gets the key of the item.
       /// </summary>
-      TKey GetKey();
+      TKey GetKey()
+      {
+         throw new NotImplementedException("This method will be implemented by the source generator.");
+      }
    }
 }
