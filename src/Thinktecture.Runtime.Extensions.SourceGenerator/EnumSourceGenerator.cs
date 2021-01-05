@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture
 {
@@ -19,8 +18,6 @@ namespace Thinktecture
       {
          if (state is null)
             throw new ArgumentNullException(nameof(state));
-
-         ValidateImplementation(state);
 
          var sb = new StringBuilder($@"
 using System;
@@ -43,57 +40,12 @@ using Thinktecture;
          return sb.ToString();
       }
 
-      private static void ValidateImplementation(EnumSourceGeneratorState state)
-      {
-         if (state.Items.Count == 0)
-         {
-            state.Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NoItemsWarning,
-                                                             state.EnumSyntax.GetLocation(),
-                                                             state.EnumIdentifier));
-         }
-
-         if (!state.IsEnumARefType)
-         {
-            if (!state.IsValidatable)
-            {
-               state.Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NonValidatableEnumsMustBeClass,
-                                                                state.EnumIdentifier.GetLocation(),
-                                                                state.EnumIdentifier));
-            }
-
-            if (!state.EnumSyntax.IsReadOnly())
-            {
-               state.Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.StructMustBeReadOnly,
-                                                                state.EnumIdentifier.GetLocation(),
-                                                                state.EnumIdentifier));
-            }
-         }
-
-         ValidateConstructors(state);
-      }
-
-      private static void ValidateConstructors(EnumSourceGeneratorState state)
-      {
-         foreach (var declarationSyntax in state.EnumSyntax.Members)
-         {
-            if (declarationSyntax is ConstructorDeclarationSyntax constructor)
-            {
-               if (!IsPrivate(constructor))
-               {
-                  state.Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ConstructorsMustBePrivate,
-                                                                   constructor.GetLocation(),
-                                                                   state.EnumSyntax.Identifier));
-               }
-            }
-         }
-      }
-
       private static void GenerateEnum(StringBuilder sb, EnumSourceGeneratorState state)
       {
          var derivedTypes = state.FindDerivedTypes();
          var needCreateInvalidImplementation = NeedCreateInvalidImplementation(state);
 
-         if (!state.IsEnumARefType && !HasStructLayoutAttribute(state))
+         if (state.EnumType.IsValueType && !HasStructLayoutAttribute(state))
          {
             sb.Append($@"
    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]");
@@ -101,7 +53,7 @@ using Thinktecture;
 
          sb.Append($@"
    [System.ComponentModel.TypeConverter(typeof({state.EnumSyntax.Identifier}_EnumTypeConverter))]
-   partial {(state.IsEnumARefType ? "class" : "struct")} {state.EnumIdentifier} : IEquatable<{state.EnumIdentifier}{state.NullableQuestionMarkEnum}>
+   partial {(state.EnumType.IsValueType ? "struct" : "class")} {state.EnumIdentifier} : IEquatable<{state.EnumIdentifier}{state.NullableQuestionMarkEnum}>
    {{
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -204,10 +156,10 @@ using Thinktecture;
 
          sb.Append($@"
       [return: NotNullIfNotNull(""{state.KeyArgumentName}"")]
-      public static {state.EnumIdentifier}{(state.IsKeyARefType ? state.NullableQuestionMarkEnum : null)} Get({state.KeyType}{state.NullableQuestionMarkKey} {state.KeyArgumentName})
+      public static {state.EnumIdentifier}{(state.KeyType.IsReferenceType ? state.NullableQuestionMarkEnum : null)} Get({state.KeyType}{state.NullableQuestionMarkKey} {state.KeyArgumentName})
       {{");
 
-         if (state.IsKeyARefType)
+         if (state.KeyType.IsReferenceType)
          {
             sb.Append($@"
         if ({state.KeyArgumentName} is null)
@@ -226,7 +178,7 @@ using Thinktecture;
             item = {(needCreateInvalidImplementation && state.EnumType.IsAbstract ? "null" : $"CreateInvalidItem({state.KeyArgumentName})")};
 ");
 
-            if (state.IsEnumARefType)
+            if (state.EnumType.IsReferenceType)
             {
                sb.Append(@"
             if (item is null)
@@ -257,14 +209,7 @@ using Thinktecture;
 
          if (needCreateInvalidImplementation)
          {
-            if (state.EnumType.IsAbstract)
-            {
-               state.Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
-                                                                state.EnumSyntax.GetLocation(),
-                                                                state.EnumSyntax.Identifier,
-                                                                state.KeyType));
-            }
-            else
+            if (!state.EnumType.IsAbstract)
             {
                sb.Append($@"
       private static {state.EnumIdentifier} CreateInvalidItem({state.KeyType} {state.KeyArgumentName})
@@ -293,7 +238,7 @@ using Thinktecture;
       public static bool TryGet([AllowNull] {state.KeyType} {state.KeyArgumentName}, [MaybeNullWhen(false)] out {state.EnumIdentifier} item)
       {{");
 
-         if (state.IsKeyARefType)
+         if (state.KeyType.IsReferenceType)
          {
             sb.Append($@"
          if ({state.KeyArgumentName} is null)
@@ -317,7 +262,7 @@ using Thinktecture;
       public static implicit operator {state.KeyType}{state.NullableQuestionMarkKey}({state.EnumIdentifier}{state.NullableQuestionMarkEnum} item)
       {{");
 
-         if (state.IsEnumARefType)
+         if (state.EnumType.IsReferenceType)
          {
             sb.Append($@"
          return item is null ? default : item.{state.KeyPropertyName};
@@ -342,7 +287,7 @@ using Thinktecture;
       public static bool operator ==({state.EnumIdentifier}{state.NullableQuestionMarkEnum} item1, {state.EnumIdentifier}{state.NullableQuestionMarkEnum} item2)
       {{");
 
-         if (state.IsEnumARefType)
+         if (state.EnumType.IsReferenceType)
          {
             sb.Append(@"
          if (item1 is null)
@@ -370,7 +315,7 @@ using Thinktecture;
       public bool Equals({state.EnumIdentifier}{state.NullableQuestionMarkEnum} other)
       {{");
 
-         if (state.IsEnumARefType)
+         if (state.EnumType.IsReferenceType)
          {
             sb.Append(@"
          if (other is null)
@@ -416,7 +361,7 @@ using Thinktecture;
 
       private static IReadOnlyDictionary<{state.KeyType}, {state.EnumIdentifier}> GetLookup()
       {{
-         var items = new {state.EnumIdentifier}[] {{ {String.Join(", ", state.Items.Select(i => i.Declaration.Variables[0].Identifier))} }};
+         var items = new {state.EnumIdentifier}[] {{ {String.Join(", ", state.Items.Select(i => i.Name))} }};
          var lookup = new Dictionary<{state.KeyType}, {state.EnumIdentifier}>({state.KeyComparerMember});
 
          foreach (var item in items)
@@ -459,7 +404,7 @@ using Thinktecture;
          sb.Append($@")
       {{");
 
-         if (state.IsKeyARefType)
+         if (state.KeyType.IsReferenceType)
          {
             sb.Append($@"
         if ({state.KeyArgumentName} is null)
@@ -495,7 +440,7 @@ using Thinktecture;
    {{
       /// <inheritdoc />
       [return: NotNullIfNotNull(""{state.KeyArgumentName}"")]
-      protected override {state.EnumIdentifier}{(state.IsKeyARefType ? state.NullableQuestionMarkEnum : null)} ConvertFrom({state.KeyType}{state.NullableQuestionMarkKey} {state.KeyArgumentName})
+      protected override {state.EnumIdentifier}{(state.KeyType.IsReferenceType ? state.NullableQuestionMarkEnum : null)} ConvertFrom({state.KeyType}{state.NullableQuestionMarkKey} {state.KeyArgumentName})
       {{");
 
          if (state.IsValidatable)
@@ -523,62 +468,9 @@ using Thinktecture;
          return state.EnumSyntax.AttributeLists.SelectMany(a => a.Attributes).Any(a => state.Model.GetTypeInfo(a).Type?.ToString() == "System.Runtime.InteropServices.StructLayoutAttribute");
       }
 
-      private static bool IsPrivate(MemberDeclarationSyntax constructor)
-      {
-         var isPrivate = false;
-
-         foreach (var modifier in constructor.Modifiers)
-         {
-            switch ((SyntaxKind)modifier.RawKind)
-            {
-               case SyntaxKind.PrivateKeyword:
-                  isPrivate = true;
-                  break;
-
-               case SyntaxKind.ProtectedKeyword:
-               case SyntaxKind.InternalKeyword:
-               case SyntaxKind.PublicKeyword:
-                  return false;
-            }
-         }
-
-         return isPrivate;
-      }
-
       private static bool NeedCreateInvalidImplementation(EnumSourceGeneratorState state)
       {
-         if (!state.IsValidatable)
-            return false;
-
-         foreach (var member in state.EnumSyntax.Members)
-         {
-            if (member is MethodDeclarationSyntax method)
-            {
-               if (method.Identifier.Text == "CreateInvalidItem")
-               {
-                  if (method.ParameterList.Parameters.Count == 1)
-                  {
-                     var paramTypeSyntax = method.ParameterList.Parameters[0].Type;
-                     var parameterType = paramTypeSyntax is not null ? state.Model.GetTypeInfo(paramTypeSyntax).Type : null;
-                     var returnType = state.Model.GetTypeInfo(method.ReturnType).Type;
-
-                     if (member.IsStatic() &&
-                         SymbolEqualityComparer.Default.Equals(parameterType, state.KeyType) &&
-                         SymbolEqualityComparer.Default.Equals(returnType, state.EnumType))
-                     {
-                        return false;
-                     }
-                  }
-
-                  state.Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.InvalidImplementationOfCreateInvalidItem,
-                                                                   method.GetLocation(),
-                                                                   state.EnumSyntax.Identifier,
-                                                                   state.KeyType));
-               }
-            }
-         }
-
-         return true;
+         return state.IsValidatable && !state.EnumType.HasCreateInvalidImplementation(state.KeyType);
       }
    }
 }

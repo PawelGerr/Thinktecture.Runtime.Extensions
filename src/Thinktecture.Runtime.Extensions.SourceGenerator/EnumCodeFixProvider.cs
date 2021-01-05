@@ -14,9 +14,13 @@ namespace Thinktecture
    public class EnumCodeFixProvider : CodeFixProvider
    {
       private const string _MAKE_PARTIAL = "Make the enumeration partial";
+      private const string _MAKE_STRUCT_READONLY = "Make the enumeration read-only";
+      private const string _MAKE_FIELD_READONLY = "Make the enumeration item read-only";
 
       /// <inheritdoc />
-      public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id);
+      public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
+                                                                                                   DiagnosticsDescriptors.StructMustBeReadOnly.Id,
+                                                                                                   DiagnosticsDescriptors.FieldMustBeReadOnly.Id);
 
       /// <inheritdoc />
       public override FixAllProvider GetFixAllProvider()
@@ -31,25 +35,54 @@ namespace Thinktecture
 
          if (root is not null)
          {
-            var makePartialDiagnostic = context.Diagnostics.FirstOrDefault(d => d.Id == DiagnosticsDescriptors.TypeMustBePartial.Id);
+            var enumDeclaration = GetDeclaration<TypeDeclarationSyntax>(context, root);
 
-            if (makePartialDiagnostic is not null)
+            if (enumDeclaration is not null)
             {
-               var diagnosticSpan = makePartialDiagnostic.Location.SourceSpan;
-               var declaration = root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().First();
+               var makePartialDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.TypeMustBePartial);
 
-               if (declaration is not null)
-                  context.RegisterCodeFix(CodeAction.Create(_MAKE_PARTIAL, _ => MakePartialAsync(context.Document, root, declaration), _MAKE_PARTIAL), makePartialDiagnostic);
+               if (makePartialDiagnostic is not null)
+                  context.RegisterCodeFix(CodeAction.Create(_MAKE_PARTIAL, _ => AddTypeModifierAsync(context.Document, root, enumDeclaration, SyntaxKind.PartialKeyword), _MAKE_PARTIAL), makePartialDiagnostic);
+
+               var makeStructReadOnlyDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.StructMustBeReadOnly);
+
+               if (makeStructReadOnlyDiagnostic is not null)
+                  context.RegisterCodeFix(CodeAction.Create(_MAKE_STRUCT_READONLY, _ => AddTypeModifierAsync(context.Document, root, enumDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_STRUCT_READONLY), makeStructReadOnlyDiagnostic);
+
+               var makeFieldReadOnlyDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.FieldMustBeReadOnly);
+
+               if (makeFieldReadOnlyDiagnostic is not null)
+               {
+                  var fieldDeclaration = GetDeclaration<FieldDeclarationSyntax>(context, root);
+
+                  if (fieldDeclaration is not null)
+                     context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_READONLY, _ => AddTypeModifierAsync(context.Document, root, fieldDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_FIELD_READONLY), makeFieldReadOnlyDiagnostic);
+               }
             }
          }
       }
 
-      private static Task<Document> MakePartialAsync(
+      private static Diagnostic? FindDiagnostics(CodeFixContext context, DiagnosticDescriptor diagnostic)
+      {
+         return context.Diagnostics.FirstOrDefault(d => d.Id == diagnostic.Id);
+      }
+
+      private static T? GetDeclaration<T>(CodeFixContext context, SyntaxNode root)
+         where T : MemberDeclarationSyntax
+      {
+         var diagnosticSpan = context.Diagnostics.First().Location.SourceSpan;
+         return root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<T>().First();
+      }
+
+      private static Task<Document> AddTypeModifierAsync(
          Document document,
          SyntaxNode root,
-         TypeDeclarationSyntax declaration)
+         MemberDeclarationSyntax declaration,
+         SyntaxKind modifier)
       {
-         var newDeclaration = declaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.PartialKeyword));
+         var newModifier = SyntaxFactory.Token(modifier);
+         var indexOfPartialKeyword = declaration.Modifiers.IndexOf(SyntaxKind.PartialKeyword);
+         var newDeclaration = indexOfPartialKeyword < 0 ? declaration.AddModifiers(newModifier) : declaration.WithModifiers(declaration.Modifiers.Insert(indexOfPartialKeyword, newModifier));
          var newRoot = root.ReplaceNode(declaration, newDeclaration);
          var newDoc = document.WithSyntaxRoot(newRoot);
 

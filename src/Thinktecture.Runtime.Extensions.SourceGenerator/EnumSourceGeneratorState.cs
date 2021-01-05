@@ -13,13 +13,10 @@ namespace Thinktecture
       public SemanticModel Model { get; }
 
       public TypeDeclarationSyntax EnumSyntax { get; }
-      public GenericNameSyntax EnumInterfaceSyntax { get; }
 
       public string? Namespace { get; }
       public INamedTypeSymbol EnumType { get; }
       public ITypeSymbol KeyType { get; }
-      public bool IsKeyARefType => KeyType.TypeKind != TypeKind.Struct;
-      public bool IsEnumARefType => EnumType.TypeKind != TypeKind.Struct;
       public SyntaxToken EnumIdentifier => EnumSyntax.Identifier;
 
       public string KeyPropertyName { get; }
@@ -31,8 +28,8 @@ namespace Thinktecture
       public string? NullableQuestionMarkEnum { get; }
       public string? NullableQuestionMarkKey { get; }
 
-      private IReadOnlyList<FieldDeclarationSyntax>? _items;
-      public IReadOnlyList<FieldDeclarationSyntax> Items => _items ??= GetItems();
+      private IReadOnlyList<IFieldSymbol>? _items;
+      public IReadOnlyList<IFieldSymbol> Items => _items ??= EnumType.GetValidItems();
 
       private IReadOnlyList<EnumMemberInfo>? _assignableInstanceFieldsAndProperties;
       public IReadOnlyList<EnumMemberInfo> AssignableInstanceFieldsAndProperties => _assignableInstanceFieldsAndProperties ??= GetAssignableInstanceFieldsAndProperties();
@@ -44,26 +41,25 @@ namespace Thinktecture
          SemanticModel model,
          EnumDeclaration enumDeclaration,
          INamedTypeSymbol enumType,
-         EnumInterfaceInfo enumInterfaceInfo)
+         INamedTypeSymbol enumInterface)
       {
          if (enumDeclaration is null)
             throw new ArgumentNullException(nameof(enumDeclaration));
-         if (enumInterfaceInfo is null)
-            throw new ArgumentNullException(nameof(enumInterfaceInfo));
+         if (enumInterface is null)
+            throw new ArgumentNullException(nameof(enumInterface));
 
          Context = context;
          Model = model ?? throw new ArgumentNullException(nameof(model));
 
          EnumSyntax = enumDeclaration.TypeDeclarationSyntax;
-         EnumInterfaceSyntax = enumInterfaceInfo.Syntax;
 
          EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
          Namespace = enumType.ContainingNamespace.ToString();
-         KeyType = enumInterfaceInfo.KeyType;
-         IsValidatable = enumInterfaceInfo.IsValidatable;
+         KeyType = enumInterface.TypeArguments[0];
+         IsValidatable = enumInterface.IsValidatableEnumInterface();
 
-         NullableQuestionMarkEnum = IsEnumARefType ? "?" : null;
-         NullableQuestionMarkKey = IsKeyARefType ? "?" : null;
+         NullableQuestionMarkEnum = EnumType.IsReferenceType ? "?" : null;
+         NullableQuestionMarkKey = KeyType.IsReferenceType ? "?" : null;
 
          EnumSettings = enumDeclaration.TypeDeclarationSyntax.AttributeLists.SelectMany(a => a.Attributes).FirstOrDefault(a => ModelExtensions.GetTypeInfo(model, a).Type?.ToString() == "Thinktecture.EnumGenerationAttribute");
 
@@ -139,46 +135,6 @@ namespace Thinktecture
                                      return member;
                                   })
                           .Where(m => m is not null)
-                          .ToList()!;
-      }
-
-      private IReadOnlyList<FieldDeclarationSyntax> GetItems()
-      {
-         return EnumSyntax.Members
-                          .Select(m =>
-                                  {
-                                     if (m.IsStatic() && m is FieldDeclarationSyntax fds)
-                                     {
-                                        var fieldTypeInfo = ModelExtensions.GetTypeInfo(Model, fds.Declaration.Type).Type;
-
-                                        if (SymbolEqualityComparer.Default.Equals(fieldTypeInfo, EnumType))
-                                        {
-                                           if (!m.IsPublic())
-                                           {
-                                              Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBePublic,
-                                                                                         fds.GetLocation(),
-                                                                                         fds.Declaration.Variables[0].Identifier,
-                                                                                         EnumIdentifier));
-                                              return null;
-                                           }
-
-                                           if (!m.IsReadOnly())
-                                           {
-                                              Context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
-                                                                                         fds.GetLocation(),
-                                                                                         fds.Declaration.Variables[0].Identifier,
-                                                                                         EnumIdentifier));
-
-                                              return null;
-                                           }
-
-                                           return fds;
-                                        }
-                                     }
-
-                                     return null;
-                                  })
-                          .Where(fds => fds is not null)
                           .ToList()!;
       }
 

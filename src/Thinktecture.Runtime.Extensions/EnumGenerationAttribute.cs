@@ -5,7 +5,7 @@ namespace Thinktecture
    /// <summary>
    /// Settings to be used by source generator.
    /// </summary>
-   [AttributeUsage(AttributeTargets.Class)]
+   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
    public class EnumGenerationAttribute : Attribute
    {
       /// <summary>

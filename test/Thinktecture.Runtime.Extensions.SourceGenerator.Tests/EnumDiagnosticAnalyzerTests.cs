@@ -15,8 +15,9 @@ using Thinktecture;
 
 namespace Thinktecture.EnumLikeClass
 {
-	public class {|#0:ProductCategory|} : IEnum<string>
+	public class {|#0:ProductCategory|} : IValidatableEnum<string>
 	{
+      public static readonly ProductCategory Item1 = null;
    }
 }";
 
@@ -26,8 +27,9 @@ using Thinktecture;
 
 namespace Thinktecture.EnumLikeClass
 {
-	public partial class ProductCategory : IEnum<string>
+	public partial class ProductCategory : IValidatableEnum<string>
 	{
+      public static readonly ProductCategory Item1 = null;
    }
 }";
 

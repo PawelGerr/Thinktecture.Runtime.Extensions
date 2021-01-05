@@ -21,7 +21,7 @@ namespace Thinktecture
          if (syntaxNode is TypeDeclarationSyntax tds
              && (tds is ClassDeclarationSyntax || tds is StructDeclarationSyntax))
          {
-            if (tds.IsEnum(out var enumDeclaration) && tds.IsPartial())
+            if (tds.IsEnumCandidate(out var enumDeclaration) && tds.IsPartial())
                Enums.Add(enumDeclaration);
          }
       }

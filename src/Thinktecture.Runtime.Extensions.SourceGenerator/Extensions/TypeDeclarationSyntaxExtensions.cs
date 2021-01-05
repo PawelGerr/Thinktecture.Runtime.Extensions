@@ -26,13 +26,7 @@ namespace Thinktecture
          return tds.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
       }
 
-      public static bool IsEnum(
-         this TypeDeclarationSyntax tds)
-      {
-         return IsEnum(tds, out _);
-      }
-
-      public static bool IsEnum(
+      public static bool IsEnumCandidate(
          this TypeDeclarationSyntax tds,
          out EnumDeclaration enumDeclaration)
       {
