@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,15 @@ namespace Thinktecture.Verifiers
       public static DiagnosticResult Diagnostic(string diagnosticId)
       {
          return CSharpCodeFixVerifier<TAnalyzer, TCodeFix, XUnitVerifier>.Diagnostic(diagnosticId);
+      }
+
+      public static async Task VerifyAnalyzerAsync(
+         string source,
+         IEnumerable<Assembly> additionalReferences,
+         params DiagnosticResult[] expected)
+      {
+         var test = new CodeFixTest(source, null, additionalReferences, expected);
+         await test.RunAsync(CancellationToken.None);
       }
 
       public static async Task VerifyCodeFixAsync(
@@ -42,6 +52,7 @@ namespace Thinktecture.Verifiers
             TestCode = source;
             FixedCode = fixedSource;
             ExpectedDiagnostics.AddRange(expected);
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
 
             foreach (var additionalReference in additionalReferences)
             {

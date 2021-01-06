@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -21,7 +22,9 @@ namespace Thinktecture
                                                                                                                  DiagnosticsDescriptors.FieldMustBeReadOnly,
                                                                                                                  DiagnosticsDescriptors.PropertyMustBeReadOnly,
                                                                                                                  DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
-                                                                                                                 DiagnosticsDescriptors.InvalidImplementationOfCreateInvalidItem);
+                                                                                                                 DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
+                                                                                                                 DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
+                                                                                                                 DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces);
 
       /// <inheritdoc />
       public override void Initialize(AnalysisContext context)
@@ -52,7 +55,7 @@ namespace Thinktecture
          if (!tds.IsPartial())
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBePartial, tds.Identifier.GetLocation(), tds.Identifier));
 
-         var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType);
+         var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, context.ReportDiagnostic);
 
          if (validEnumInterface is null)
             return;
@@ -73,11 +76,14 @@ namespace Thinktecture
             if (!ctor.IsImplicitlyDeclared)
             {
                if (ctor.DeclaredAccessibility != Accessibility.Private)
-                  context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ConstructorsMustBePrivate, ctor.DeclaringSyntaxReferences.First().GetSyntax().GetLocation(), tds.Identifier));
+               {
+                  var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation();
+                  context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ConstructorsMustBePrivate, location, tds.Identifier));
+               }
             }
          }
 
-         var items = enumType.GetValidItems(context.ReportDiagnostic);
+         var items = enumType.GetEnumItems(context.ReportDiagnostic);
 
          if (items.Count == 0)
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NoItemsWarning, tds.Identifier.GetLocation(), tds.Identifier));
@@ -92,11 +98,28 @@ namespace Thinktecture
                context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
                                                           tds.Identifier.GetLocation(),
                                                           enumType.Name,
-                                                          keyType.Name));
+                                                          keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
             }
          }
 
          enumType.GetAssignableInstanceFieldsAndProperties(context.ReportDiagnostic);
+
+         var enumSettingsAttr = enumType.FindEnumGenerationAttribute();
+
+         if (enumSettingsAttr is not null)
+         {
+            var keyPropName =  enumSettingsAttr.FindKeyPropertyName();
+
+            if (StringComparer.OrdinalIgnoreCase.Equals(keyPropName, "Item"))
+            {
+               var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax();
+
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
+                                                          attributeSyntax?.ArgumentList?.GetLocation() ?? tds.Identifier.GetLocation(),
+                                                          keyPropName));
+            }
+         }
       }
+
    }
 }

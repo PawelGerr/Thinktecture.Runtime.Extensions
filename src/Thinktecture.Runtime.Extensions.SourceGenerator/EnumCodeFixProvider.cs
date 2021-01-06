@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
@@ -17,13 +18,17 @@ namespace Thinktecture
    {
       private const string _MAKE_PARTIAL = "Make the enumeration partial";
       private const string _MAKE_STRUCT_READONLY = "Make the enumeration read-only";
-      private const string _MAKE_FIELD_READONLY = "Make the enumeration item read-only";
+      private const string _MAKE_FIELD_PUBLIC = "Make the field public";
+      private const string _MAKE_FIELD_READONLY = "Make the field read-only";
+      private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
       private const string _IMPLEMENT_CREATE_INVALID = "Implement 'CreateInvalidItem'";
 
       /// <inheritdoc />
       public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
                                                                                                    DiagnosticsDescriptors.StructMustBeReadOnly.Id,
+                                                                                                   DiagnosticsDescriptors.FieldMustBePublic.Id,
                                                                                                    DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
+                                                                                                   DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
                                                                                                    DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id);
 
       /// <inheritdoc />
@@ -40,6 +45,8 @@ namespace Thinktecture
          if (root is not null)
          {
             var enumDeclaration = GetDeclaration<TypeDeclarationSyntax>(context, root);
+            FieldDeclarationSyntax? fieldDeclaration = null;
+            PropertyDeclarationSyntax? propertyDeclaration = null;
 
             if (enumDeclaration is not null)
             {
@@ -57,10 +64,30 @@ namespace Thinktecture
 
                if (makeFieldReadOnlyDiagnostic is not null)
                {
-                  var fieldDeclaration = GetDeclaration<FieldDeclarationSyntax>(context, root);
+                  fieldDeclaration ??= GetDeclaration<FieldDeclarationSyntax>(context, root);
 
                   if (fieldDeclaration is not null)
                      context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_READONLY, _ => AddTypeModifierAsync(context.Document, root, fieldDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_FIELD_READONLY), makeFieldReadOnlyDiagnostic);
+               }
+
+               var makeFieldPublicDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.FieldMustBePublic);
+
+               if (makeFieldPublicDiagnostic is not null)
+               {
+                  fieldDeclaration ??= GetDeclaration<FieldDeclarationSyntax>(context, root);
+
+                  if (fieldDeclaration is not null)
+                     context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_PUBLIC, _ => MakePublicAsync(context.Document, root, fieldDeclaration), _MAKE_FIELD_PUBLIC), makeFieldPublicDiagnostic);
+               }
+
+               var makePropertyReadOnlyDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.PropertyMustBeReadOnly);
+
+               if (makePropertyReadOnlyDiagnostic is not null)
+               {
+                  propertyDeclaration ??= GetDeclaration<PropertyDeclarationSyntax>(context, root);
+
+                  if (propertyDeclaration is not null)
+                     context.RegisterCodeFix(CodeAction.Create(_REMOVE_PROPERTY_SETTER, t => RemovePropertySetterAsync(context.Document, root, propertyDeclaration), _REMOVE_PROPERTY_SETTER), makePropertyReadOnlyDiagnostic);
                }
 
                var needsCreateInvalidDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation);
@@ -98,6 +125,67 @@ namespace Thinktecture
          return Task.FromResult(newDoc);
       }
 
+      private static Task<Document> MakePublicAsync(
+         Document document,
+         SyntaxNode root,
+         MemberDeclarationSyntax declaration)
+      {
+         var firstModifier = declaration.Modifiers.FirstOrDefault();
+         var newModifiers = declaration.Modifiers;
+         var isFirstModiferRemoved = false;
+
+         foreach (var currentModifier in newModifiers)
+         {
+            if (currentModifier.Kind() is SyntaxKind.PrivateKeyword or SyntaxKind.ProtectedKeyword or SyntaxKind.InternalKeyword)
+            {
+               newModifiers = newModifiers.Remove(currentModifier);
+
+               if (currentModifier == firstModifier)
+                  isFirstModiferRemoved = true;
+            }
+         }
+
+         if (!isFirstModiferRemoved && firstModifier.HasLeadingTrivia)
+            newModifiers = newModifiers.RemoveAt(0).Insert(0, firstModifier.WithLeadingTrivia(SyntaxTriviaList.Empty));
+
+         var publicSyntax = SyntaxFactory.Token(SyntaxKind.PublicKeyword);
+
+         if (firstModifier.HasLeadingTrivia)
+            publicSyntax = publicSyntax.WithLeadingTrivia(declaration.Modifiers.FirstOrDefault().LeadingTrivia);
+
+         if (firstModifier.HasTrailingTrivia)
+            publicSyntax = publicSyntax.WithTrailingTrivia(declaration.Modifiers.FirstOrDefault().TrailingTrivia);
+
+         newModifiers = newModifiers.Insert(0, publicSyntax);
+
+         var newDeclaration = declaration.WithModifiers(newModifiers);
+         var newRoot = root.ReplaceNode(declaration, newDeclaration);
+         var newDoc = document.WithSyntaxRoot(newRoot);
+
+         return Task.FromResult(newDoc);
+      }
+
+      private static Task<Document> RemovePropertySetterAsync(
+         Document document,
+         SyntaxNode root,
+         PropertyDeclarationSyntax declaration)
+      {
+         var setter = declaration.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+
+         if (setter is not null)
+         {
+            var newAccessors = declaration.AccessorList!.Accessors.Remove(setter);
+            var newAccessorList = declaration.AccessorList.WithAccessors(newAccessors);
+            var newDeclaration = declaration.WithAccessorList(newAccessorList);
+            var newRoot = root.ReplaceNode(declaration, newDeclaration);
+            var newDoc = document.WithSyntaxRoot(newRoot);
+
+            document = newDoc;
+         }
+
+         return Task.FromResult(document);
+      }
+
       private async Task<Document> AddCreateInvalidItemAsync(
          Document document,
          SyntaxNode root,
@@ -122,9 +210,9 @@ namespace Thinktecture
          var keyType = enumInterface.TypeArguments[0];
 
          var parameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("key"))
-                                      .WithType(SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.End)));
+                                      .WithType(SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)));
 
-         var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(enumType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.End)), "CreateInvalidItem")
+         var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(enumType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)), "CreateInvalidItem")
                                    .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword))
                                    .AddParameterListParameters(parameter)
                                    .WithBody(SyntaxFactory.Block(BuildThrowNotImplementedException()));

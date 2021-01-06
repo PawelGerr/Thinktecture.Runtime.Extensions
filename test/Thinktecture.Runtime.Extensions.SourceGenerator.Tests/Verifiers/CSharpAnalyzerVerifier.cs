@@ -44,6 +44,7 @@ namespace Thinktecture.Verifiers
          {
             TestCode = source;
             ExpectedDiagnostics.AddRange(expected);
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
 
             foreach (var additionalReference in additionalReferences)
             {

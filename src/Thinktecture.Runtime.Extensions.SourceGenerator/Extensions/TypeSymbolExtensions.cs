@@ -49,7 +49,7 @@ namespace Thinktecture
                if (!SymbolEqualityComparer.Default.Equals(validKeyType, keyType))
                {
                   reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces,
-                                                             enumType.DeclaringSyntaxReferences.First().GetSyntax().GetLocation(),
+                                                             ((TypeDeclarationSyntax)enumType.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(),
                                                              enumType.Name));
                   return null;
                }
@@ -77,7 +77,7 @@ namespace Thinktecture
                 && type.Name == "IValidatableEnum";
       }
 
-      public static IReadOnlyList<IFieldSymbol> GetValidItems(
+      public static IReadOnlyList<IFieldSymbol> GetEnumItems(
          this ITypeSymbol enumType,
          Action<Diagnostic>? reportDiagnostic = null)
       {
@@ -94,7 +94,6 @@ namespace Thinktecture
                                          reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBePublic,
                                                                                     GetLocation(field),
                                                                                     m.Name, enumType.Name));
-                                         return null;
                                       }
 
                                       if (!field.IsReadOnly)
@@ -102,8 +101,6 @@ namespace Thinktecture
                                          reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
                                                                                     GetLocation(field),
                                                                                     m.Name, enumType.Name));
-
-                                         return null;
                                       }
 
                                       return field;
@@ -113,6 +110,11 @@ namespace Thinktecture
                                 })
                         .Where(field => field is not null)
                         .ToList()!;
+      }
+
+      public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol enumType)
+      {
+         return enumType.GetAttributes().FirstOrDefault(a => a.AttributeClass?.ToString() == "Thinktecture.EnumGenerationAttribute");
       }
 
       public static IReadOnlyList<EnumMemberInfo> GetAssignableInstanceFieldsAndProperties(
@@ -147,13 +149,18 @@ namespace Thinktecture
                                       if (syntax.ExpressionBody is not null) // public int Foo => 42;
                                          return null;
 
-                                      var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.Keyword.IsKind(SyntaxKind.GetKeyword));
+                                      var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
 
-                                      if (getter?.Body is not null) // public int Foo { get => 42; }
+                                      if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
                                          return null;
 
                                       if (pds.SetMethod is not null)
                                       {
+                                         var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+
+                                         if (!IsDefaultImplementation(setter))
+                                            return null;
+
                                          reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
                                                                                     GetLocation(pds),
                                                                                     pds.Name,
@@ -167,6 +174,14 @@ namespace Thinktecture
                                 })
                         .Where(m => m is not null)
                         .ToList()!;
+      }
+
+      private static bool IsDefaultImplementation(AccessorDeclarationSyntax? accessor)
+      {
+         if (accessor is null)
+            return false;
+
+         return accessor.Body is null && accessor.ExpressionBody is null;
       }
 
       public static bool HasCreateInvalidImplementation(
@@ -196,10 +211,10 @@ namespace Thinktecture
                }
             }
 
-            reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.InvalidImplementationOfCreateInvalidItem,
+            reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
                                                        GetLocation(method),
                                                        enumType.Name,
-                                                       keyType.Name));
+                                                       keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
 
             return true;
          }
