@@ -11,7 +11,7 @@ using Thinktecture.Extensions;
 
 namespace Thinktecture.Verifiers
 {
-   public static class CSharpAnalyzerVerifier<TAnalyzer>
+   public static class AnalyzerVerifier<TAnalyzer>
       where TAnalyzer : DiagnosticAnalyzer, new()
    {
       public static DiagnosticResult Diagnostic(string diagnosticId)
