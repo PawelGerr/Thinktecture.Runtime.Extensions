@@ -33,6 +33,9 @@ namespace Thinktecture
             if (!enumType.IsEnum(out var enumInterfaces))
                continue;
 
+            if (enumType.ContainingType is not null)
+               continue;
+
             var enumInterface = enumInterfaces.GetValidEnumInterface(enumType);
 
             if (enumInterface is not null)

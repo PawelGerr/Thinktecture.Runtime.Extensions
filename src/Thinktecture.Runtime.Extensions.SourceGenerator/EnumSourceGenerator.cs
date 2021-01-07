@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace Thinktecture
 {
@@ -42,7 +41,7 @@ using Thinktecture;
 
       private static void GenerateEnum(StringBuilder sb, EnumSourceGeneratorState state)
       {
-         var derivedTypes = state.FindDerivedTypes();
+         var derivedTypes = state.EnumType.FindDerivedInnerTypes();
          var needCreateInvalidImplementation = state.IsValidatable && !state.EnumType.HasCreateInvalidImplementation(state.KeyType);
 
          if (state.EnumType.IsValueType && !state.HasAttribute("System.Runtime.InteropServices.StructLayoutAttribute"))
@@ -65,12 +64,10 @@ using Thinktecture;
 
          EnumMetadataLookup.AddEnumMetadata(typeof({state.EnumIdentifier}), metadata);");
 
-         foreach (var typeDeclaration in derivedTypes)
+         foreach (var derivedType in derivedTypes)
          {
-            var typeInfo = state.Model.GetDeclaredSymbol(typeDeclaration);
-
             sb.Append($@"
-         EnumMetadataLookup.AddEnumMetadata(typeof({typeInfo}), metadata);");
+         EnumMetadataLookup.AddEnumMetadata(typeof({derivedType.Type}), metadata);");
          }
 
          sb.Append($@"

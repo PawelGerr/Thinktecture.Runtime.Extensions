@@ -10,6 +10,19 @@ namespace Thinktecture
 {
    public static class TypeSymbolExtensions
    {
+      public static bool IsSelfOrBaseTypesAnEnum(this ITypeSymbol? type)
+      {
+         while (type is not null)
+         {
+            if (type.IsEnum(out _))
+               return true;
+
+            type = type.BaseType;
+         }
+
+         return false;
+      }
+
       public static bool IsEnum(this ITypeSymbol enumType, out IReadOnlyList<INamedTypeSymbol> enumInterfaces)
       {
          var implementedInterfaces = new List<INamedTypeSymbol>();
@@ -115,6 +128,47 @@ namespace Thinktecture
       public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol enumType)
       {
          return enumType.GetAttributes().FirstOrDefault(a => a.AttributeClass?.ToString() == "Thinktecture.EnumGenerationAttribute");
+      }
+
+      public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(this ITypeSymbol enumType)
+      {
+         var derivedTypes = new List<(INamedTypeSymbol, int Level)>();
+
+         FindDerivedTypes(enumType, 0, enumType, derivedTypes);
+
+         return derivedTypes;
+      }
+
+      private static void FindDerivedTypes(ITypeSymbol typeToCheck, int currentLevel, ITypeSymbol enumType, List<(INamedTypeSymbol, int Level)> derivedTypes)
+      {
+         currentLevel++;
+
+         foreach (var innerType in typeToCheck.GetTypeMembers())
+         {
+            if (IsDerivedFrom(innerType, enumType))
+               derivedTypes.Add((innerType, currentLevel));
+
+            FindDerivedTypes(innerType, currentLevel, enumType, derivedTypes);
+         }
+      }
+
+      public static bool IsDerivedFrom(this ITypeSymbol? type, ITypeSymbol baseType)
+      {
+         while (type is not null)
+         {
+            if (SymbolEqualityComparer.Default.Equals(type.BaseType, baseType))
+               return true;
+
+            foreach (var @interface in type.Interfaces)
+            {
+               if (SymbolEqualityComparer.Default.Equals(@interface, baseType))
+                  return true;
+            }
+
+            type = type.BaseType;
+         }
+
+         return false;
       }
 
       public static IReadOnlyList<EnumMemberInfo> GetAssignableInstanceFieldsAndProperties(

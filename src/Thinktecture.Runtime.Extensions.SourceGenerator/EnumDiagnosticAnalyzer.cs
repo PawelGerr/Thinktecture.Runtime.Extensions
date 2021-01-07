@@ -24,7 +24,11 @@ namespace Thinktecture
                                                                                                                  DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
                                                                                                                  DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
                                                                                                                  DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
-                                                                                                                 DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces);
+                                                                                                                 DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces,
+                                                                                                                 DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
+                                                                                                                 DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate,
+                                                                                                                 DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic,
+                                                                                                                 DiagnosticsDescriptors.EnumCannotBeNestedClass);
 
       /// <inheritdoc />
       public override void Initialize(AnalysisContext context)
@@ -51,6 +55,15 @@ namespace Thinktecture
 
          if (!enumType.IsEnum(out var enumInterfaces))
             return;
+
+         if (enumType.ContainingType is not null) // is nested class
+         {
+            if (!enumType.BaseType.IsSelfOrBaseTypesAnEnum()) // base class is not an enum because in this case "DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces" kicks in
+            {
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.EnumCannotBeNestedClass, tds.Identifier.GetLocation(), tds.Identifier));
+               return;
+            }
+         }
 
          if (!tds.IsPartial())
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBePartial, tds.Identifier.GetLocation(), tds.Identifier));
@@ -108,7 +121,7 @@ namespace Thinktecture
 
          if (enumSettingsAttr is not null)
          {
-            var keyPropName =  enumSettingsAttr.FindKeyPropertyName();
+            var keyPropName = enumSettingsAttr.FindKeyPropertyName();
 
             if (StringComparer.OrdinalIgnoreCase.Equals(keyPropName, "Item"))
             {
@@ -119,7 +132,34 @@ namespace Thinktecture
                                                           keyPropName));
             }
          }
-      }
 
+         var derivedTypes = enumType.FindDerivedInnerTypes();
+
+         foreach (var derivedType in derivedTypes)
+         {
+            if (derivedType.Type.IsEnum(out _))
+            {
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
+                                                          ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(),
+                                                          derivedType.Type.Name));
+            }
+
+            if (derivedType.Level == 1)
+            {
+               if (derivedType.Type.DeclaredAccessibility != Accessibility.Private)
+               {
+                  context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate,
+                                                             ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(),
+                                                             derivedType.Type.Name));
+               }
+            }
+            else if (derivedType.Type.DeclaredAccessibility != Accessibility.Public)
+            {
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic,
+                                                          ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(),
+                                                          derivedType.Type.Name));
+            }
+         }
+      }
    }
 }

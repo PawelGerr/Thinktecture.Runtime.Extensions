@@ -22,6 +22,8 @@ namespace Thinktecture
       private const string _MAKE_FIELD_READONLY = "Make the field read-only";
       private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
       private const string _IMPLEMENT_CREATE_INVALID = "Implement 'CreateInvalidItem'";
+      private const string _MAKE_TYPE_PRIVATE = "Make type private";
+      private const string _MAKE_TYPE_PUBLIC = "Make type public";
 
       /// <inheritdoc />
       public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
@@ -29,7 +31,9 @@ namespace Thinktecture
                                                                                                    DiagnosticsDescriptors.FieldMustBePublic.Id,
                                                                                                    DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
                                                                                                    DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
-                                                                                                   DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id);
+                                                                                                   DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id,
+                                                                                                   DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate.Id,
+                                                                                                   DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic.Id);
 
       /// <inheritdoc />
       public override FixAllProvider GetFixAllProvider()
@@ -77,7 +81,7 @@ namespace Thinktecture
                   fieldDeclaration ??= GetDeclaration<FieldDeclarationSyntax>(context, root);
 
                   if (fieldDeclaration is not null)
-                     context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_PUBLIC, _ => MakePublicAsync(context.Document, root, fieldDeclaration), _MAKE_FIELD_PUBLIC), makeFieldPublicDiagnostic);
+                     context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, fieldDeclaration, SyntaxKind.PublicKeyword), _MAKE_FIELD_PUBLIC), makeFieldPublicDiagnostic);
                }
 
                var makePropertyReadOnlyDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.PropertyMustBeReadOnly);
@@ -94,6 +98,26 @@ namespace Thinktecture
 
                if (needsCreateInvalidDiagnostic is not null)
                   context.RegisterCodeFix(CodeAction.Create(_IMPLEMENT_CREATE_INVALID, t => AddCreateInvalidItemAsync(context.Document, root, enumDeclaration, t), _IMPLEMENT_CREATE_INVALID), needsCreateInvalidDiagnostic);
+
+               var makeDerivedTypePrivate = FindDiagnostics(context, DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate);
+
+               if (makeDerivedTypePrivate is not null)
+               {
+                  var typeDeclaration = GetDeclaration<TypeDeclarationSyntax>(context, root);
+
+                  if (typeDeclaration is not null)
+                     context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, typeDeclaration, SyntaxKind.PrivateKeyword), _MAKE_TYPE_PRIVATE), makeDerivedTypePrivate);
+               }
+
+               var makeDerivedTypePublic = FindDiagnostics(context, DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic);
+
+               if (makeDerivedTypePublic is not null)
+               {
+                  var typeDeclaration = GetDeclaration<TypeDeclarationSyntax>(context, root);
+
+                  if (typeDeclaration is not null)
+                     context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, typeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), makeDerivedTypePublic);
+               }
             }
          }
       }
@@ -125,10 +149,11 @@ namespace Thinktecture
          return Task.FromResult(newDoc);
       }
 
-      private static Task<Document> MakePublicAsync(
+      private static Task<Document> ChangeAccessibilityAsync(
          Document document,
          SyntaxNode root,
-         MemberDeclarationSyntax declaration)
+         MemberDeclarationSyntax declaration,
+         SyntaxKind accessbility)
       {
          var firstModifier = declaration.Modifiers.FirstOrDefault();
          var newModifiers = declaration.Modifiers;
@@ -136,7 +161,7 @@ namespace Thinktecture
 
          foreach (var currentModifier in newModifiers)
          {
-            if (currentModifier.Kind() is SyntaxKind.PrivateKeyword or SyntaxKind.ProtectedKeyword or SyntaxKind.InternalKeyword)
+            if (currentModifier.Kind() is SyntaxKind.PrivateKeyword or SyntaxKind.ProtectedKeyword or SyntaxKind.InternalKeyword or SyntaxKind.PublicKeyword && !currentModifier.IsKind(accessbility))
             {
                newModifiers = newModifiers.Remove(currentModifier);
 
@@ -148,7 +173,7 @@ namespace Thinktecture
          if (!isFirstModiferRemoved && firstModifier.HasLeadingTrivia)
             newModifiers = newModifiers.RemoveAt(0).Insert(0, firstModifier.WithLeadingTrivia(SyntaxTriviaList.Empty));
 
-         var publicSyntax = SyntaxFactory.Token(SyntaxKind.PublicKeyword);
+         var publicSyntax = SyntaxFactory.Token(accessbility);
 
          if (firstModifier.HasLeadingTrivia)
             publicSyntax = publicSyntax.WithLeadingTrivia(declaration.Modifiers.FirstOrDefault().LeadingTrivia);

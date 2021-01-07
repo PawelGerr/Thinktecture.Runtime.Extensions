@@ -88,38 +88,5 @@ namespace Thinktecture
 
          return "Key";
       }
-
-      public IReadOnlyList<TypeDeclarationSyntax> FindDerivedTypes()
-      {
-         var types = new List<TypeDeclarationSyntax>();
-
-         FindDerivedTypes(types, _enumSyntax);
-
-         return types;
-      }
-
-      private void FindDerivedTypes(
-         List<TypeDeclarationSyntax> types,
-         TypeDeclarationSyntax typeToAnalyse)
-      {
-         foreach (var member in typeToAnalyse.Members)
-         {
-            if (member is TypeDeclarationSyntax innerClass)
-            {
-               if (innerClass.BaseList?.Types.Count > 0)
-               {
-                  foreach (var baseType in innerClass.BaseList.Types)
-                  {
-                     var baseTypeInfo = Model.GetTypeInfo(baseType.Type).Type;
-
-                     if (SymbolEqualityComparer.Default.Equals(baseTypeInfo, EnumType))
-                        types.Add(innerClass);
-                  }
-               }
-
-               FindDerivedTypes(types, innerClass);
-            }
-         }
-      }
    }
 }

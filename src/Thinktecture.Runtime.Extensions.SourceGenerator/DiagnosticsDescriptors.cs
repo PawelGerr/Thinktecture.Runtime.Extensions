@@ -16,6 +16,10 @@ namespace Thinktecture
       public static readonly DiagnosticDescriptor NonValidatableEnumsMustBeClass = new("TTRESG010", "An non-validatable enumeration must be a class", "A non-validatable enum must be a class", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor StructMustBeReadOnly = new("TTRESG011", "A struct must be readonly", "A struct must be readonly", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor KeyPropertyNameNotAllowed = new("TTRESG012", "Provided KeyPropertyName is not allowed", "Provided KeyPropertyName '{0}' is not allowed", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor DerivedTypeMustNotImplementEnumInterfaces = new("TTRESG013", "Derived types must not implement IEnum<T> or IValidatableEnum<T>", "Derived type '{0}' must not implement IEnum<T> or IValidatableEnum<T> if a base type implement one of this interfaces already", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor FirstLevelInnerTypeMustBePrivate = new("TTRESG014", "First-level inner types must be private", "Derived type '{0}' must be private", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor NonFirstLevelInnerTypeMustBePublic = new("TTRESG015", "Non-first-level inner types must be public", "Derived type '{0}' must be public", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor EnumCannotBeNestedClass = new("TTRESG016", "The enumeration cannot be a nested class", "The enumeration '{0}' cannot be a nested class", nameof(EnumSourceGenerator), DiagnosticSeverity.Error, true);
 
       public static readonly DiagnosticDescriptor NoItemsWarning = new("TTRESG100", "The enumeration has no items", "The enumeration '{0}' has no items", nameof(EnumSourceGenerator), DiagnosticSeverity.Warning, true);
    }
