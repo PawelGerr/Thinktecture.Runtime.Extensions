@@ -18,6 +18,9 @@ namespace Thinktecture
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
+         if (state.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
+            return String.Empty;
+
          var sb = new StringBuilder($@"
 using System;
 using System.Collections.Generic;
@@ -35,20 +38,12 @@ using Thinktecture;
       {{
       }}
    }}
-");
 
-         if (!state.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
-         {
-            sb.Append($@"
    [Newtonsoft.Json.JsonConverterAttribute(typeof({state.EnumIdentifier}_EnumNewtonsoftJsonConverter))]
    partial class {state.EnumIdentifier}
    {{
    }}
-");
-         }
-
-         sb.Append(@"
-}
+}}
 ");
 
          return sb.ToString();

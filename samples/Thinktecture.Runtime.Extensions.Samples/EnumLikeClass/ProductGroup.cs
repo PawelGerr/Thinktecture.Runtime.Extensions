@@ -17,14 +17,15 @@ namespace Thinktecture.EnumLikeClass
          return 42;
       }
 
+      static partial void ValidateConstructorArguments(int key, bool isValid, string displayName, ProductCategory category)
+      {
+      }
+
       private static ProductGroup CreateInvalidItem(int key)
       {
          // the values can be anything besides the key,
          // the key must not be null
-         return new(key, "Unknown product group", ProductCategory.Get("Unknown"))
-                {
-                   IsValid = false
-                };
+         return new(key, false, "Unknown product group", ProductCategory.Get("Unknown"));
       }
    }
 }

@@ -18,6 +18,9 @@ namespace Thinktecture
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
+         if (state.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
+            return String.Empty;
+
          var sb = new StringBuilder($@"
 using System;
 using System.Collections.Generic;
@@ -42,20 +45,12 @@ using Thinktecture;
       {{
       }}
    }}
-");
 
-         if (!state.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
-         {
-            sb.Append($@"
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof({state.EnumIdentifier}_EnumJsonConverter))]
    partial class {state.EnumIdentifier}
    {{
    }}
-");
-         }
-
-         sb.Append(@"
-}
+}}
 ");
 
          return sb.ToString();

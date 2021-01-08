@@ -7,7 +7,7 @@ namespace Thinktecture.EnumLikeClass
    {
       public static void Demo(ILogger logger)
       {
-         var categories = ProductCategory.GetAll();
+         var categories = ProductCategory.Items;
          logger.Information("Catgories: {categories}", categories);
 
          var category = ProductCategory.Get("Fruits");

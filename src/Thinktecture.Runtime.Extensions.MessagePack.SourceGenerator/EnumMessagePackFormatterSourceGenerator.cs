@@ -18,6 +18,9 @@ namespace Thinktecture
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
+         if (state.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
+            return String.Empty;
+
          var sb = new StringBuilder($@"
 using System;
 using System.Collections.Generic;
@@ -35,17 +38,12 @@ using Thinktecture;
       {{
       }}
    }}
-");
 
-         if (!state.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
-         {
-            sb.Append($@"
    [MessagePack.MessagePackFormatter(typeof({state.EnumIdentifier}_EnumMessagePackFormatter))]
    partial class {state.EnumIdentifier}
    {{
    }}
 ");
-         }
 
          sb.Append(@"
 }

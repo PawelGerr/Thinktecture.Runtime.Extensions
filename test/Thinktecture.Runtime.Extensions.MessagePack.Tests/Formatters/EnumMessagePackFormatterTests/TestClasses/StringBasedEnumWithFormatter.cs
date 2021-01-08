@@ -1,8 +1,17 @@
+using System;
 using MessagePack;
 
 namespace Thinktecture.Formatters.EnumMessagePackFormatterTests.TestClasses
 {
-   [MessagePackFormatter(typeof(StringBasedEnumWithFormatter_EnumMessagePackFormatter))]
+   public class StringBasedEnumWithFormatterMessagePackFormatter : EnumMessagePackFormatter<StringBasedEnumWithFormatter, string>
+   {
+      public StringBasedEnumWithFormatterMessagePackFormatter()
+         : base(StringBasedEnumWithFormatter.Get)
+      {
+      }
+   }
+
+   [MessagePackFormatter(typeof(StringBasedEnumWithFormatterMessagePackFormatter))]
    public partial class StringBasedEnumWithFormatter : IValidatableEnum<string>
    {
       public static readonly StringBasedEnumWithFormatter ValueA = new("A");

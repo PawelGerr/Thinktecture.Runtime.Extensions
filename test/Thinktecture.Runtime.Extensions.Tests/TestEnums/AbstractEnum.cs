@@ -6,13 +6,13 @@ namespace Thinktecture.TestEnums
 
       private static AbstractEnum CreateInvalidItem(int key)
       {
-         return new InvalidItem(key) { IsValid = false };
+         return new InvalidItem(key);
       }
 
       private class InvalidItem : AbstractEnum
       {
          public InvalidItem(int key)
-            : base(key)
+            : base(key, false)
          {
          }
       }
