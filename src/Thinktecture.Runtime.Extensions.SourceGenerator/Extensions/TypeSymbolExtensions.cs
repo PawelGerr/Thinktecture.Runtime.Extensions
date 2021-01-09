@@ -25,6 +25,19 @@ namespace Thinktecture
          return false;
       }
 
+      public static bool HasValueTypeAttribute(this ITypeSymbol? type, [MaybeNullWhen(false)] out AttributeData valueTypeAttribute)
+      {
+         if (type is null)
+         {
+            valueTypeAttribute = null;
+            return false;
+         }
+
+         valueTypeAttribute = type.FindValueTypeAttribute();
+
+         return valueTypeAttribute is not null;
+      }
+
       public static bool IsEnum(this ITypeSymbol enumType, out IReadOnlyList<INamedTypeSymbol> enumInterfaces)
       {
          var implementedInterfaces = new List<INamedTypeSymbol>();
@@ -114,6 +127,11 @@ namespace Thinktecture
          return FindAttribute(enumType, "Thinktecture.EnumGenerationAttribute");
       }
 
+      public static AttributeData? FindValueTypeAttribute(this ITypeSymbol enumType)
+      {
+         return FindAttribute(enumType, "Thinktecture.ValueTypeAttribute");
+      }
+
       public static bool HasStructLayoutAttribute(this ITypeSymbol enumType)
       {
          return enumType.HasAttribute("System.Runtime.InteropServices.StructLayoutAttribute");
@@ -184,15 +202,17 @@ namespace Thinktecture
 
                                if (m is IFieldSymbol fds)
                                {
+                                  var identifier = fds.GetIdentifier();
+
                                   if (!fds.IsReadOnly)
                                   {
                                      reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
-                                                                                fds.GetLocation(),
+                                                                                identifier.GetLocation(),
                                                                                 fds.Name,
                                                                                 type.Name));
                                   }
 
-                                  return new InstanceMemberInfo(fds, fds.Type);
+                                  return new InstanceMemberInfo(fds, fds.Type, identifier);
                                }
 
                                if (m is IPropertySymbol pds)
@@ -207,6 +227,8 @@ namespace Thinktecture
                                   if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
                                      return null;
 
+                                  var identifier = pds.GetIdentifier();
+
                                   if (pds.SetMethod is not null)
                                   {
                                      var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
@@ -215,12 +237,12 @@ namespace Thinktecture
                                         return null;
 
                                      reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
-                                                                                GetLocation(pds),
+                                                                                identifier.GetLocation(),
                                                                                 pds.Name,
                                                                                 type.Name));
                                   }
 
-                                  return new InstanceMemberInfo(pds, pds.Type);
+                                  return new InstanceMemberInfo(pds, pds.Type, identifier);
                                }
 
                                return null;
@@ -240,12 +262,12 @@ namespace Thinktecture
                                switch (m)
                                {
                                   case IFieldSymbol fds:
-                                     return new InstanceMemberInfo(fds, fds.Type);
+                                     return new InstanceMemberInfo(fds, fds.Type, fds.GetIdentifier());
 
                                   case IPropertySymbol pds:
                                   {
                                      if (!pds.IsWriteOnly)
-                                        return new InstanceMemberInfo(pds, pds.Type);
+                                        return new InstanceMemberInfo(pds, pds.Type, pds.GetIdentifier());
 
                                      break;
                                   }
@@ -293,7 +315,7 @@ namespace Thinktecture
             }
 
             reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
-                                                       GetLocation(method),
+                                                       method.GetIdentifier().GetLocation(),
                                                        enumType.Name,
                                                        keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
 
@@ -301,18 +323,6 @@ namespace Thinktecture
          }
 
          return false;
-      }
-
-      private static Location GetLocation(IPropertySymbol field)
-      {
-         var syntax = (PropertyDeclarationSyntax)field.DeclaringSyntaxReferences.First().GetSyntax();
-         return syntax.Identifier.GetLocation();
-      }
-
-      private static Location GetLocation(IMethodSymbol method)
-      {
-         var syntax = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences.First().GetSyntax();
-         return syntax.Identifier.GetLocation();
       }
    }
 }

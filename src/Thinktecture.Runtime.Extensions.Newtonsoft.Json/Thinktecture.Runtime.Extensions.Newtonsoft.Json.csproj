@@ -7,14 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"/>
-        <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
-                          Include="..\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator.csproj"
-                          PrivateAssets="contentfiles;build"/>
+        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+        <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'" Include="..\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator.csproj" PrivateAssets="contentfiles;build" />
     </ItemGroup>
 
 </Project>

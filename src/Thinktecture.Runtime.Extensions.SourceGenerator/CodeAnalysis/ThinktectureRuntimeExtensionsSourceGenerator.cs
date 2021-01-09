@@ -17,5 +17,11 @@ namespace Thinktecture.CodeAnalysis
       {
          return new EnumSourceGenerator(state).Generate();
       }
+
+      /// <inheritdoc />
+      protected override string GenerateValueType(ValueTypeSourceGeneratorState state)
+      {
+         return new ValueTypeSourceGenerator(state).Generate();
+      }
    }
 }

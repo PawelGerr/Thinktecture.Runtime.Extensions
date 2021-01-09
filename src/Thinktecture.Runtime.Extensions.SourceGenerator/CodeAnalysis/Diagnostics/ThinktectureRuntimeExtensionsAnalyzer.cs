@@ -29,7 +29,8 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
                                                                                                                  DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
                                                                                                                  DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate,
                                                                                                                  DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic,
-                                                                                                                 DiagnosticsDescriptors.TypeCannotBeNestedClass);
+                                                                                                                 DiagnosticsDescriptors.TypeCannotBeNestedClass,
+                                                                                                                 DiagnosticsDescriptors.KeyMemberShouldNotBeNullable);
 
       /// <inheritdoc />
       public override void Initialize(AnalysisContext context)
@@ -50,6 +51,39 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
          if (type.IsEnum(out var enumInterfaces))
             ValidateEnum(context, declaration, tds, type, enumInterfaces);
+
+         if (type.HasValueTypeAttribute(out var valueTypeAttribute))
+            ValidateValueType(context, declaration, tds, type, valueTypeAttribute);
+      }
+
+      private static void ValidateValueType(SymbolAnalysisContext context, SyntaxNode declaration, TypeDeclarationSyntax tds, INamedTypeSymbol type, AttributeData valueTypeAttribute)
+      {
+         if (!declaration.IsKind(SyntaxKind.ClassDeclaration) && !declaration.IsKind(SyntaxKind.StructDeclaration))
+         {
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBeClassOrStruct, tds.Identifier.GetLocation(), tds.Identifier));
+            return;
+         }
+
+         if (type.ContainingType is not null) // is nested class
+         {
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeCannotBeNestedClass, tds.Identifier.GetLocation(), tds.Identifier));
+            return;
+         }
+
+         TypeMustBePartial(context, tds);
+         StructMustBeReadOnly(context, tds, type);
+
+         var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic)
+                                     .Where(m => !m.Symbol.IsStatic)
+                                     .ToList();
+
+         if (assignableMembers.Count == 1)
+         {
+            var keyMember = assignableMembers[0];
+
+            if (keyMember.Type.NullableAnnotation == NullableAnnotation.Annotated)
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.Identifier.GetLocation(), keyMember.Identifier));
+         }
       }
 
       private static void ValidateEnum(SymbolAnalysisContext context, SyntaxNode declaration, TypeDeclarationSyntax tds, INamedTypeSymbol enumType, IReadOnlyList<INamedTypeSymbol> enumInterfaces)
@@ -93,18 +127,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          FieldsMustBePublic(context, enumType, items);
 
          if (isValidatable)
-         {
-            var keyType = validEnumInterface.TypeArguments[0];
-            var hasCreateInvalidImplementation = enumType.HasCreateInvalidImplementation(keyType, context.ReportDiagnostic);
-
-            if (enumType.IsAbstract && !hasCreateInvalidImplementation)
-            {
-               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
-                                                          tds.Identifier.GetLocation(),
-                                                          enumType.Name,
-                                                          keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
-            }
-         }
+            ValidateCreateInvalidItem(context, tds, enumType, validEnumInterface);
 
          enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic);
 
@@ -113,6 +136,11 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          if (enumSettingsAttr is not null)
             EnumKeyPropertyNameMustNotBeItem(context, tds, enumSettingsAttr);
 
+         ValidateDerivedTypes(context, enumType);
+      }
+
+      private static void ValidateDerivedTypes(SymbolAnalysisContext context, INamedTypeSymbol enumType)
+      {
          var derivedTypes = enumType.FindDerivedInnerTypes();
 
          foreach (var derivedType in derivedTypes)
@@ -142,6 +170,20 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          }
       }
 
+      private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, TypeDeclarationSyntax tds, INamedTypeSymbol enumType, INamedTypeSymbol validEnumInterface)
+      {
+         var keyType = validEnumInterface.TypeArguments[0];
+         var hasCreateInvalidImplementation = enumType.HasCreateInvalidImplementation(keyType, context.ReportDiagnostic);
+
+         if (!hasCreateInvalidImplementation && enumType.IsAbstract)
+         {
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
+                                                       tds.Identifier.GetLocation(),
+                                                       enumType.Name,
+                                                       keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
+         }
+      }
+
       private static void EnumKeyPropertyNameMustNotBeItem(SymbolAnalysisContext context, TypeDeclarationSyntax tds, AttributeData enumSettingsAttr)
       {
          var keyPropName = enumSettingsAttr.FindKeyPropertyName();
@@ -163,7 +205,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
             if (item.DeclaredAccessibility != Accessibility.Public)
             {
                context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBePublic,
-                                                          item.GetLocation(),
+                                                          item.GetIdentifier().GetLocation(),
                                                           item.Name, type.Name));
             }
          }

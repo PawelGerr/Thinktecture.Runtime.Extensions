@@ -3,6 +3,7 @@ using System.Text;
 using Serilog;
 using Thinktecture.EmptyClass;
 using Thinktecture.EnumLikeClasses;
+using Thinktecture.ValueTypes;
 
 namespace Thinktecture
 {
@@ -13,6 +14,7 @@ namespace Thinktecture
          var logger = GetLogger();
 
          EnumLikeClassDemos.Demo(logger);
+         ValueTypeDemos.Demo(logger);
          EmptyActionDemos.Demo();
          EmptyCollectionsDemos.Demo();
       }

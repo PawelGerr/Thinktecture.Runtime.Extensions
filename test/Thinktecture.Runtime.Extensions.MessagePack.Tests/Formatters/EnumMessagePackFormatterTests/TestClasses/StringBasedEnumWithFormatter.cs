@@ -3,10 +3,10 @@ using MessagePack;
 
 namespace Thinktecture.Formatters.EnumMessagePackFormatterTests.TestClasses
 {
-   public class StringBasedEnumWithFormatterMessagePackFormatter : EnumMessagePackFormatter<StringBasedEnumWithFormatter, string>
+   public class StringBasedEnumWithFormatterMessagePackFormatter : ValueTypeMessagePackFormatter<StringBasedEnumWithFormatter, string>
    {
       public StringBasedEnumWithFormatterMessagePackFormatter()
-         : base(StringBasedEnumWithFormatter.Get)
+         : base(StringBasedEnumWithFormatter.Get, obj => obj.Key)
       {
       }
    }

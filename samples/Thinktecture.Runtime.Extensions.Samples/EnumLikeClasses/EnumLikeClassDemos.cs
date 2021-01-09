@@ -10,9 +10,6 @@ namespace Thinktecture.EnumLikeClasses
       {
          DemoForNonValidatableEnum(logger);
          DemoForValidatableEnum(logger);
-
-         logger.Information("Press ENTER to exit");
-         Console.ReadLine();
       }
 
       private static void DemoForNonValidatableEnum(ILogger logger)

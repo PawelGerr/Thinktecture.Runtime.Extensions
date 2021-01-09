@@ -28,6 +28,8 @@ namespace Thinktecture
          // 	http://localhost:5000/api/groupWithConverter/1
          // 	http://localhost:5000/api/productType/groceries
          // 	http://localhost:5000/api/productType/invalid
+         // 	http://localhost:5000/api/productName/bread
+         // 	http://localhost:5000/api/productName/a
          await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
 
          await server;
@@ -35,15 +37,16 @@ namespace Thinktecture
 
       private static async Task DoHttpRequestsAsync(ILogger logger)
       {
-         using (var client = new HttpClient())
-         {
-            await DoRequestAsync(logger, client, "category/fruits");
-            await DoRequestAsync(logger, client, "categoryWithConverter/fruits");
-            await DoRequestAsync(logger, client, "group/1");
-            await DoRequestAsync(logger, client, "groupWithConverter/1");
-            await DoRequestAsync(logger, client, "productType/groceries");
-            await DoRequestAsync(logger, client, "productType/invalid");
-         }
+         using var client = new HttpClient();
+
+         await DoRequestAsync(logger, client, "category/fruits");
+         await DoRequestAsync(logger, client, "categoryWithConverter/fruits");
+         await DoRequestAsync(logger, client, "group/1");
+         await DoRequestAsync(logger, client, "groupWithConverter/1");
+         await DoRequestAsync(logger, client, "productType/groceries");
+         await DoRequestAsync(logger, client, "productType/invalid");
+         await DoRequestAsync(logger, client, "productName/bread");
+         await DoRequestAsync(logger, client, "productName/a");
       }
 
       private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url)
@@ -72,7 +75,7 @@ namespace Thinktecture
                                           {
                                              collection.AddSingleton(loggerFactory);
                                              collection.AddControllers()
-                                                       .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new EnumJsonConverter()));
+                                                       .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new ValueTypeNewtonsoftJsonConverter()));
                                           })
                        .Build();
 

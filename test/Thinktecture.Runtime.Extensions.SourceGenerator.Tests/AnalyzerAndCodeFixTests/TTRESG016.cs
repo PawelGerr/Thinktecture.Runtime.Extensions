@@ -33,5 +33,30 @@ namespace TestNamespace
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
          }
       }
+
+      public class ValueType_cannot_be_nested_class
+      {
+         [Fact]
+         public async Task Should_trigger_if_valuetype_is_nested_class()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public class SomeClass
+	{
+      [ValueType]
+      public partial class {|#0:TestValueType|}
+	   {
+      }
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueType");
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+         }
+      }
    }
 }

@@ -8,10 +8,12 @@ namespace Thinktecture.CodeAnalysis
    internal class SyntaxReceiver : ISyntaxReceiver
    {
       public List<TypeDeclarationSyntax> Enums { get; }
+      public List<TypeDeclarationSyntax> ValueTypes { get; }
 
       public SyntaxReceiver()
       {
          Enums = new List<TypeDeclarationSyntax>();
+         ValueTypes = new List<TypeDeclarationSyntax>();
       }
 
       public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
@@ -25,6 +27,9 @@ namespace Thinktecture.CodeAnalysis
 
          if (tds.IsEnumCandidate())
             Enums.Add(tds);
+
+         if (tds.IsValueTypeCandidate())
+            ValueTypes.Add(tds);
       }
    }
 }

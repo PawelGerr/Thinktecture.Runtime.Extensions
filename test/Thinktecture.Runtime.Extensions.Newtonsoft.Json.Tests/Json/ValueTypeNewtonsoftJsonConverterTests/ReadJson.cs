@@ -4,7 +4,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Thinktecture.Json.EnumJsonConverterTests
+namespace Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests
 {
    public class ReadJson
    {
@@ -26,7 +26,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_deserialize_string_based_enum(StringBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<StringBasedEnum, string, StringBasedEnum_EnumNewtonsoftJsonConverter>(json);
+         var value = Deserialize<StringBasedEnum, string, StringBasedEnum_ValueTypeNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -35,14 +35,14 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_deserialize_int_based_enum(IntBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<IntBasedEnum, int, IntBasedEnum_EnumNewtonsoftJsonConverter>(json);
+         var value = Deserialize<IntBasedEnum, int, IntBasedEnum_ValueTypeNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
 
       private static T Deserialize<T, TKey, TConverter>(string json)
          where T : IEnum<TKey>
-         where TConverter : EnumJsonConverter<T, TKey>, new()
+         where TConverter : ValueTypeNewtonsoftJsonConverter<T, TKey>, new()
       {
          var sut = new TConverter();
 
@@ -50,7 +50,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
          using (var jsonWriter = new JsonTextReader(reader))
          {
             var serializer = JsonSerializer.CreateDefault();
-            return (T)sut.ReadJson(jsonWriter, typeof(T), default(T), false, serializer);
+            return (T)sut.ReadJson(jsonWriter, typeof(T), default, false, serializer);
          }
       }
    }

@@ -18,6 +18,32 @@ namespace Thinktecture
          return tds.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
       }
 
+      public static bool IsValueTypeCandidate(this TypeDeclarationSyntax tds)
+      {
+         return tds.AttributeLists.Any(l => l.Attributes.Any(a => CouldBeValueType(a.Name)));
+      }
+
+      private static bool CouldBeValueType(TypeSyntax? type)
+      {
+         while (type is not null)
+         {
+            switch (type)
+            {
+               case IdentifierNameSyntax ins:
+                  return ins.Identifier.Text == "ValueTypeAttribute" || ins.Identifier.Text == "ValueType";
+
+               case QualifiedNameSyntax qns:
+                  type = qns.Right;
+                  break;
+
+               default:
+                  return false;
+            }
+         }
+
+         return false;
+      }
+
       public static bool IsEnumCandidate(this TypeDeclarationSyntax tds)
       {
          if (tds.BaseList?.Types.Count > 0)

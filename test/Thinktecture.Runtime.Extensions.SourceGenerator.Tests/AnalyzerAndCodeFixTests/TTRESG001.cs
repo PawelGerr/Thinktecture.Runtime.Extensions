@@ -134,5 +134,74 @@ namespace TestNamespace
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
          }
       }
+
+      public class ValueType_fields_must_be_readonly
+      {
+         [Fact]
+         public async Task Should_trigger_on_static_non_readonly_field()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+   [ValueType]
+	public partial class TestValueType
+	{
+      public static object {|#0:Field|} = default;
+   }
+}";
+
+            var expectedCode = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+   [ValueType]
+	public partial class TestValueType
+	{
+      public static readonly object {|#0:Field|} = default;
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueType");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_on_instance_non_readonly_field()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+   [ValueType]
+	public partial class TestValueType
+	{
+      public object {|#0:Field|} = default;
+   }
+}";
+
+            var expectedCode = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+   [ValueType]
+	public partial class TestValueType
+	{
+      public readonly object {|#0:Field|} = default;
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueType");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+         }
+      }
    }
 }

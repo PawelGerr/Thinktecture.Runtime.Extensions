@@ -4,10 +4,10 @@ namespace Thinktecture.EnumTypeConverterTests
 {
    public abstract class TypeConverterTestsBase
    {
-      protected EnumTypeConverter<TestEnum, string> StringBasedConverter { get; }
-      protected EnumTypeConverter<IntegerEnum, int> IntBasedConverter { get; }
-      protected EnumTypeConverter<StructIntegerEnum, int> IntBasedStructEnumConverter { get; }
-      protected EnumTypeConverter<ValidTestEnum, string> ValidEnumConverter { get; }
+      protected ValueTypeConverter<TestEnum, string> StringBasedConverter { get; }
+      protected ValueTypeConverter<IntegerEnum, int> IntBasedConverter { get; }
+      protected ValueTypeConverter<StructIntegerEnum, int> IntBasedStructEnumConverter { get; }
+      protected ValueTypeConverter<ValidTestEnum, string> ValidEnumConverter { get; }
 
       protected TypeConverterTestsBase()
       {

@@ -21,6 +21,7 @@ namespace Thinktecture.CodeAnalysis
       public static readonly DiagnosticDescriptor FirstLevelInnerTypeMustBePrivate = new("TTRESG014", "First-level inner types must be private", "Derived type '{0}' must be private", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor NonFirstLevelInnerTypeMustBePublic = new("TTRESG015", "Non-first-level inner types must be public", "Derived type '{0}' must be public", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor TypeCannotBeNestedClass = new("TTRESG016", "The type cannot be a nested class", "The type '{0}' cannot be a nested class", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor KeyMemberShouldNotBeNullable = new("TTRESG017", "The key member should not be nullable", "The key member '{0}' should not be nullable", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
       public static readonly DiagnosticDescriptor NoItemsWarning = new("TTRESG100", "The enumeration has no items", "The enumeration '{0}' has no items", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Warning, true);
    }

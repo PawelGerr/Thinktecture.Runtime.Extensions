@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Thinktecture.EnumLikeClasses;
+using Thinktecture.ValueTypes;
 
 namespace Thinktecture
 {
@@ -19,7 +20,7 @@ namespace Thinktecture
          InsertProduct(ctx, new Product
                             {
                                Id = Guid.NewGuid(),
-                               Name = "Apple",
+                               Name = ProductName.Create("Apple"),
                                Category = ProductCategory.Fruits
                             });
 
@@ -28,7 +29,7 @@ namespace Thinktecture
             InsertProduct(ctx, new Product
                                {
                                   Id = Guid.NewGuid(),
-                                  Name = "Pear",
+                                  Name = ProductName.Create("Pear"),
                                   Category = ProductCategory.Get("Invalid Category")
                                });
          }
@@ -73,6 +74,7 @@ namespace Thinktecture
          var serilog = new LoggerConfiguration()
                        .WriteTo.Console()
                        .Destructure.AsScalar<ProductCategory>()
+                       .Destructure.AsScalar<ProductName>()
                        .CreateLogger();
 
          return new LoggerFactory()

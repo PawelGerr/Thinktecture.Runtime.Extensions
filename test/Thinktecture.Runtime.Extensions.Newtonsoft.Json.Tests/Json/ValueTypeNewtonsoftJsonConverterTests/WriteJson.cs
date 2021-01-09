@@ -4,7 +4,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Thinktecture.Json.EnumJsonConverterTests
+namespace Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests
 {
    public class WriteJson
    {
@@ -26,7 +26,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_serialize_string_based_enum(StringBasedEnum enumValue, string expectedJson)
       {
-         var json = Serialize<StringBasedEnum, string, StringBasedEnum_EnumNewtonsoftJsonConverter>(enumValue);
+         var json = Serialize<StringBasedEnum, string, StringBasedEnum_ValueTypeNewtonsoftJsonConverter>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -35,26 +35,25 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_serialize_int_based_enum(IntBasedEnum enumValue, string expectedJson)
       {
-         var json = Serialize<IntBasedEnum, int, IntBasedEnum_EnumNewtonsoftJsonConverter>(enumValue);
+         var json = Serialize<IntBasedEnum, int, IntBasedEnum_ValueTypeNewtonsoftJsonConverter>(enumValue);
 
          json.Should().Be(expectedJson);
       }
 
       private static string Serialize<T, TKey, TConverter>(T value)
          where T : IEnum<TKey>
-         where TConverter : EnumJsonConverter<T, TKey>, new()
+         where TConverter : ValueTypeNewtonsoftJsonConverter<T, TKey>, new()
       {
          var sut = new TConverter();
 
-         using (var writer = new StringWriter())
-         {
-            using (var jsonWriter = new JsonTextWriter(writer))
-            {
-               sut.WriteJson(jsonWriter, value, JsonSerializer.CreateDefault());
-            }
+         using var writer = new StringWriter();
 
-            return writer.GetStringBuilder().ToString();
+         using (var jsonWriter = new JsonTextWriter(writer))
+         {
+            sut.WriteJson(jsonWriter, value, JsonSerializer.CreateDefault());
          }
+
+         return writer.GetStringBuilder().ToString();
       }
    }
 }

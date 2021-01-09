@@ -5,11 +5,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 // ReSharper disable once CheckNamespace
 namespace Thinktecture
 {
-   public static class FieldSymbolExtensions
+   public static class PropertySymbolExtensions
    {
-      public static SyntaxToken GetIdentifier(this IFieldSymbol field)
+      public static SyntaxToken GetIdentifier(this IPropertySymbol property)
       {
-         var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.First().GetSyntax();
+         var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.First().GetSyntax();
          return syntax.Identifier;
       }
    }

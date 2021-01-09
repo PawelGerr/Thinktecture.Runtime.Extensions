@@ -28,9 +28,9 @@ using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.EnumTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
@@ -41,6 +41,12 @@ namespace Thinktecture.EnumLikeClass
 
          throw new NotSupportedException($""There is no item of type 'TestEnum' with the identifier '{key}'."");
       }
+
+      /// <inheritdoc />
+      protected override string GetKeyValue(TestEnum item)
+      {
+         return item.Key;
+      }
    }
 
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
@@ -49,13 +55,16 @@ namespace Thinktecture.EnumLikeClass
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {
-         var convert = new Func<string?, TestEnum?>(TestEnum.Get);
-         Expression<Func<string?, TestEnum?>> convertExpression = key => TestEnum.Get(key);
+         var convertFromKey = new Func<string?, TestEnum?>(TestEnum.Get);
+         Expression<Func<string?, TestEnum?>> convertFromKeyExpression = key => TestEnum.Get(key);
+
+         var convertToKey = new Func<TestEnum, string?>(item => item.Key);
+         Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
          var enumType = typeof(TestEnum);
-         var metadata = new EnumMetadata(enumType, typeof(string), convert, convertExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
-         EnumMetadataLookup.AddEnumMetadata(enumType, metadata);
+         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -138,7 +147,7 @@ namespace Thinktecture.EnumLikeClass
       /// Implicit conversion to the type of <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator string?(TestEnum? item)
       {
@@ -236,7 +245,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
 	public partial class TestEnum : IEnum<string>
 	{
@@ -255,7 +264,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
 	public partial class TestEnum : Thinktecture.IEnum<string>
 	{
@@ -274,7 +283,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
 	public partial class TestEnum : IValidatableEnum<string>
 	{
@@ -296,15 +305,21 @@ using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.EnumTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
       protected override TestEnum? ConvertFrom(string? key)
       {
          return TestEnum.Get(key);
+      }
+
+      /// <inheritdoc />
+      protected override string GetKeyValue(TestEnum item)
+      {
+         return item.Key;
       }
    }
 
@@ -314,13 +329,16 @@ namespace Thinktecture.EnumLikeClass
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {
-         var convert = new Func<string?, TestEnum?>(TestEnum.Get);
-         Expression<Func<string?, TestEnum?>> convertExpression = key => TestEnum.Get(key);
+         var convertFromKey = new Func<string?, TestEnum?>(TestEnum.Get);
+         Expression<Func<string?, TestEnum?>> convertFromKeyExpression = key => TestEnum.Get(key);
+
+         var convertToKey = new Func<TestEnum, string?>(item => item.Key);
+         Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
          var enumType = typeof(TestEnum);
-         var metadata = new EnumMetadata(enumType, typeof(string), convert, convertExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
-         EnumMetadataLookup.AddEnumMetadata(enumType, metadata);
+         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -432,7 +450,7 @@ namespace Thinktecture.EnumLikeClass
       /// Implicit conversion to the type of <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator string?(TestEnum? item)
       {
@@ -537,7 +555,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
 	public readonly partial struct TestEnum : IValidatableEnum<string>
 	{
@@ -559,15 +577,21 @@ using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.EnumTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
       protected override TestEnum ConvertFrom(string? key)
       {
          return TestEnum.Get(key);
+      }
+
+      /// <inheritdoc />
+      protected override string GetKeyValue(TestEnum item)
+      {
+         return item.Key;
       }
    }
 
@@ -578,13 +602,16 @@ namespace Thinktecture.EnumLikeClass
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {
-         var convert = new Func<string?, TestEnum>(TestEnum.Get);
-         Expression<Func<string?, TestEnum>> convertExpression = key => TestEnum.Get(key);
+         var convertFromKey = new Func<string?, TestEnum>(TestEnum.Get);
+         Expression<Func<string?, TestEnum>> convertFromKeyExpression = key => TestEnum.Get(key);
+
+         var convertToKey = new Func<TestEnum, string?>(item => item.Key);
+         Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
          var enumType = typeof(TestEnum);
-         var metadata = new EnumMetadata(enumType, typeof(string), convert, convertExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
-         EnumMetadataLookup.AddEnumMetadata(enumType, metadata);
+         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -693,7 +720,7 @@ namespace Thinktecture.EnumLikeClass
       /// Implicit conversion to the type of <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator string?(TestEnum item)
       {
@@ -783,7 +810,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
    [EnumGeneration(KeyPropertyName = ""Name"", KeyComparerProvidingMember = ""_testEqualityComparer"")]
 	public partial class TestEnum : IValidatableEnum<string>
@@ -840,15 +867,21 @@ using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.EnumTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""name"")]
       protected override TestEnum? ConvertFrom(string? name)
       {
          return TestEnum.Get(name);
+      }
+
+      /// <inheritdoc />
+      protected override string GetKeyValue(TestEnum item)
+      {
+         return item.Name;
       }
    }
 
@@ -858,13 +891,16 @@ namespace Thinktecture.EnumLikeClass
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {
-         var convert = new Func<string?, TestEnum?>(TestEnum.Get);
-         Expression<Func<string?, TestEnum?>> convertExpression = name => TestEnum.Get(name);
+         var convertFromKey = new Func<string?, TestEnum?>(TestEnum.Get);
+         Expression<Func<string?, TestEnum?>> convertFromKeyExpression = name => TestEnum.Get(name);
+
+         var convertToKey = new Func<TestEnum, string?>(item => item.Name);
+         Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Name;
 
          var enumType = typeof(TestEnum);
-         var metadata = new EnumMetadata(enumType, typeof(string), convert, convertExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
-         EnumMetadataLookup.AddEnumMetadata(enumType, metadata);
+         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -976,7 +1012,7 @@ namespace Thinktecture.EnumLikeClass
       /// Implicit conversion to the type of <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""Name""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""Name""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator string?(TestEnum? item)
       {
@@ -1081,7 +1117,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
 	public partial class TestEnum : IEnum<string>
 	{
@@ -1090,7 +1126,7 @@ namespace Thinktecture.EnumLikeClass
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.EnumJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -1103,23 +1139,23 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Thinktecture;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumJsonConverter : Thinktecture.Text.Json.Serialization.EnumJsonConverter<TestEnum, string>
+   public class TestEnum_ValueTypeJsonConverter : Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>
    {
-      public TestEnum_EnumJsonConverter()
+      public TestEnum_ValueTypeJsonConverter()
          : this(null)
       {
       }
 
-      public TestEnum_EnumJsonConverter(
+      public TestEnum_ValueTypeJsonConverter(
          JsonConverter<string>? keyConverter)
-         : base(TestEnum.Get, keyConverter)
+         : base(TestEnum.Get, obj => (string) obj, keyConverter)
       {
       }
    }
 
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestEnum_EnumJsonConverter))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestEnum_ValueTypeJsonConverter))]
    partial class TestEnum
    {
    }
@@ -1134,7 +1170,7 @@ namespace Thinktecture.EnumLikeClass
 using System;
 using System.Text.Json.Serialization;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
    public class TestEnumJsonConverter : Thinktecture.Text.Json.Serialization.EnumJsonConverter<TestEnum, string>
    {
@@ -1158,7 +1194,7 @@ namespace Thinktecture.EnumLikeClass
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.EnumJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
          output.Should().BeNull();
       }
@@ -1169,7 +1205,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
 	public partial class TestEnum : IEnum<string>
 	{
@@ -1178,7 +1214,7 @@ namespace Thinktecture.EnumLikeClass
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.EnumJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueTypeNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -1190,17 +1226,17 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Thinktecture;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumNewtonsoftJsonConverter : Thinktecture.Json.EnumJsonConverter<TestEnum, string>
+   public class TestEnum_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
    {
-      public TestEnum_EnumNewtonsoftJsonConverter()
-         : base(TestEnum.Get)
+      public TestEnum_ValueTypeNewtonsoftJsonConverter()
+         : base(TestEnum.Get, obj => (string) obj)
       {
       }
    }
 
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestEnum_EnumNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestEnum_ValueTypeNewtonsoftJsonConverter))]
    partial class TestEnum
    {
    }
@@ -1215,17 +1251,17 @@ namespace Thinktecture.EnumLikeClass
 using System;
 using Newtonsoft.Json;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumNewtonsoftJsonConverter : Thinktecture.Json.EnumJsonConverter<TestEnum, string>
+   public class TestEnum_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
    {
-      public TestEnum_EnumNewtonsoftJsonConverter()
+      public TestEnum_ValueTypeNewtonsoftJsonConverter()
          : base(TestEnum.Get)
       {
       }
    }
 
-   [JsonConverterAttribute(typeof(TestEnum_EnumNewtonsoftJsonConverter))]
+   [JsonConverterAttribute(typeof(TestEnum_ValueTypeNewtonsoftJsonConverter))]
 	public partial class TestEnum : IEnum<string>
 	{
       public static readonly TestEnum Item1 = new(""Item1"");
@@ -1233,7 +1269,7 @@ namespace Thinktecture.EnumLikeClass
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.EnumJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueTypeNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
          output.Should().BeNull();
       }
@@ -1244,7 +1280,7 @@ namespace Thinktecture.EnumLikeClass
          var source = @"
 using System;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
 	public partial class TestEnum : IEnum<string>
 	{
@@ -1253,7 +1289,7 @@ namespace Thinktecture.EnumLikeClass
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(EnumMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueTypeMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -1265,21 +1301,20 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Thinktecture;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumMessagePackFormatter : Thinktecture.Formatters.EnumMessagePackFormatter<TestEnum, string>
+   public class TestEnum_ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestEnum, string>
    {
-      public TestEnum_EnumMessagePackFormatter()
-         : base(TestEnum.Get)
+      public TestEnum_ValueTypeMessagePackFormatter()
+         : base(TestEnum.Get, obj => (string) obj)
       {
       }
    }
 
-   [MessagePack.MessagePackFormatter(typeof(TestEnum_EnumMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(TestEnum_ValueTypeMessagePackFormatter))]
    partial class TestEnum
    {
    }
-
 }
 ");
       }
@@ -1291,7 +1326,7 @@ namespace Thinktecture.EnumLikeClass
 using System;
 using MessagePack;
 
-namespace Thinktecture.EnumLikeClass
+namespace Thinktecture.Tests
 {
    public class TestEnumMessagePackFormatter : Thinktecture.Formatters.EnumMessagePackFormatter<TestEnum, string>
    {
@@ -1309,7 +1344,7 @@ namespace Thinktecture.EnumLikeClass
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(EnumMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueTypeMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
          output.Should().BeNull();
       }

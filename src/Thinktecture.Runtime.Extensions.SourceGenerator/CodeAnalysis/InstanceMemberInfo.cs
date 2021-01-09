@@ -6,13 +6,16 @@ namespace Thinktecture.CodeAnalysis
    {
       public ISymbol Symbol { get; }
       public ITypeSymbol Type { get; }
+      public SyntaxToken Identifier { get; }
       public string ArgumentName { get; }
+      public string? NullableQuestionMark => Type.IsReferenceType ? "?" : null;
 
-      public InstanceMemberInfo(ISymbol symbol, ITypeSymbol type)
+      public InstanceMemberInfo(ISymbol symbol, ITypeSymbol type, SyntaxToken identifier)
       {
          Symbol = symbol;
          Type = type;
-         ArgumentName = symbol.Name.MakeArgumentName();
+         Identifier = identifier;
+         ArgumentName = identifier.Text.MakeArgumentName();
       }
    }
 }

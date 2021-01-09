@@ -52,18 +52,21 @@ using Thinktecture;
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {{
-         var convert = new Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>({_state.EnumIdentifier}.Get);
-         Expression<Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>> convertExpression = {_state.KeyArgumentName} => {_state.EnumIdentifier}.Get({_state.KeyArgumentName});
+         var convertFromKey = new Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>({_state.EnumIdentifier}.Get);
+         Expression<Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>> convertFromKeyExpression = {_state.KeyArgumentName} => {_state.EnumIdentifier}.Get({_state.KeyArgumentName});
+
+         var convertToKey = new Func<{_state.EnumIdentifier}, {_state.KeyType}{_state.NullableQuestionMarkKey}>(item => item.{_state.KeyPropertyName});
+         Expression<Func<{_state.EnumIdentifier}, {_state.KeyType}{_state.NullableQuestionMarkKey}>> convertToKeyExpression = item => item.{_state.KeyPropertyName};
 
          var enumType = typeof({_state.EnumIdentifier});
-         var metadata = new EnumMetadata(enumType, typeof({_state.KeyType}), convert, convertExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof({_state.KeyType}), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
-         EnumMetadataLookup.AddEnumMetadata(enumType, metadata);");
+         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);");
 
          foreach (var derivedType in derivedTypes)
          {
             _sb.Append($@"
-         EnumMetadataLookup.AddEnumMetadata(typeof({derivedType.Type}), metadata);");
+         ValueTypeMetadataLookup.AddMetadata(typeof({derivedType.Type}), metadata);");
          }
 
          _sb.Append($@"
@@ -216,7 +219,7 @@ using Thinktecture;
       /// Implicit conversion to the type of <see cref=""{_state.KeyType}""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator {_state.KeyType}{_state.NullableQuestionMarkKey}({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item)
       {{");
@@ -519,7 +522,7 @@ using Thinktecture;
          foreach (var memberInfo in fieldsAndProperties)
          {
             _sb.Append($@"
-         this.{memberInfo.Symbol.Name} = {memberInfo.ArgumentName};");
+         this.{memberInfo.Identifier} = {memberInfo.ArgumentName};");
          }
 
          _sb.Append($@"
@@ -543,7 +546,7 @@ using Thinktecture;
       private void GenerateTypeConverter()
       {
          _sb.Append($@"
-   public class {_state.EnumIdentifier}_EnumTypeConverter : Thinktecture.EnumTypeConverter<{_state.EnumIdentifier}, {_state.KeyType}>
+   public class {_state.EnumIdentifier}_EnumTypeConverter : Thinktecture.ValueTypeConverter<{_state.EnumIdentifier}, {_state.KeyType}>
    {{
       /// <inheritdoc />
       [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
@@ -565,6 +568,12 @@ using Thinktecture;
          }
 
          _sb.Append($@"
+      }}
+
+      /// <inheritdoc />
+      protected override {_state.KeyType} GetKeyValue({_state.EnumIdentifier} item)
+      {{
+         return item.{_state.KeyPropertyName};
       }}
    }}
 ");

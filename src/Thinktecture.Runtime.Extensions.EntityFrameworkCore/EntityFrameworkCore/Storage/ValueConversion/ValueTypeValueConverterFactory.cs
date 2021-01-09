@@ -5,21 +5,20 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
 {
    /// <summary>
-   /// Value converter for <see cref="IEnum{TKey}"/>.
+   /// Value converter for value types and <see cref="IEnum{TKey}"/>.
    /// </summary>
-   public class EnumValueConverterFactory
+   public class ValueTypeValueConverterFactory
    {
       /// <summary>
-      /// Creates a value converter for <see cref="IEnum{TKey}"/>.
+      /// Creates a value converter for value types with a key property and <see cref="IEnum{TKey}"/>.
       /// </summary>
-      /// <typeparam name="TEnum">Type of the enum.</typeparam>
+      /// <typeparam name="T">Type of the value type.</typeparam>
       /// <typeparam name="TKey">Type of the key.</typeparam>
-      /// <returns>An instance of <see cref="ValueConverter{TEnum,TKey}"/>></returns>
-      public static ValueConverter<TEnum, TKey> Create<TEnum, TKey>()
-         where TEnum : IEnum<TKey>
+      /// <returns>An instance of <see cref="ValueConverter{T,TKey}"/>></returns>
+      public static ValueConverter<T, TKey> Create<T, TKey>()
          where TKey : notnull
       {
-         return new NonValidatableEnumValueConverter<TEnum, TKey>();
+         return new ValueTypeValueConverter<T, TKey>();
       }
 
       /// <summary>
@@ -36,22 +35,31 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
          return new ValidatableEnumValueConverter<TEnum, TKey>(validateOnWrite);
       }
 
-      private static Expression<Func<TKey, TEnum>> GetConverter<TEnum, TKey>()
+      private static Expression<Func<TKey, T>> GetConverterFromKey<T, TKey>()
       {
-         var enumMetadata = EnumMetadataLookup.FindEnum(typeof(TEnum));
+         var metadata = ValueTypeMetadataLookup.Find(typeof(T));
 
-         if (enumMetadata is null)
-            throw new InvalidOperationException($"No metadata for provided type '{typeof(TEnum).Name}' found.");
+         if (metadata is null)
+            throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
 
-         return (Expression<Func<TKey, TEnum>>)enumMetadata.ConvertFromKeyExpression;
+         return (Expression<Func<TKey, T>>)metadata.ConvertFromKeyExpression;
       }
 
-      private class NonValidatableEnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
-         where TEnum : IEnum<TKey>
+      private static Expression<Func<T, TKey>> GetConverterToKey<T, TKey>()
+      {
+         var metadata = ValueTypeMetadataLookup.Find(typeof(T));
+
+         if (metadata is null)
+            throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
+
+         return (Expression<Func<T, TKey>>)metadata.ConvertToKeyExpression;
+      }
+
+      private class ValueTypeValueConverter<T, TKey> : ValueConverter<T, TKey>
          where TKey : notnull
       {
-         public NonValidatableEnumValueConverter()
-            : base(item => item.GetKey(), GetConverter<TEnum, TKey>())
+         public ValueTypeValueConverter()
+            : base(GetConverterToKey<T, TKey>(), GetConverterFromKey<T, TKey>())
          {
          }
       }
@@ -61,7 +69,7 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
          where TKey : notnull
       {
          public ValidatableEnumValueConverter(bool validateOnWrite)
-            : base(GetKeyProvider(validateOnWrite), GetConverter<TEnum, TKey>())
+            : base(GetKeyProvider(validateOnWrite), GetConverterFromKey<TEnum, TKey>())
          {
          }
 

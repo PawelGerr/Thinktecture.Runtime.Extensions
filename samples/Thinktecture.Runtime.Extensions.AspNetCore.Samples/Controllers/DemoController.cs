@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Thinktecture.EnumLikeClasses;
+using Thinktecture.ValueTypes;
 
 namespace Thinktecture.Controllers
 {
@@ -43,6 +44,17 @@ namespace Thinktecture.Controllers
       public IActionResult RoundTrip(ProductType productType)
       {
          return RoundTrip<ProductType, string>(productType);
+      }
+
+      [HttpGet("productName/{name}")]
+      public IActionResult RoundTrip(ProductName name)
+      {
+         if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+         _logger.LogInformation($"Round trip test with {name.GetType().Name}", name);
+
+         return Json(name);
       }
 
       private IActionResult RoundTripValidatableEnum<T, TKey>(T value)

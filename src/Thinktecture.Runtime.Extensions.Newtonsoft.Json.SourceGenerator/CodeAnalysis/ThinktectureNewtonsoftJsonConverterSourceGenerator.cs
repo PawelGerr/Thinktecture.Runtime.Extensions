@@ -11,7 +11,7 @@ namespace Thinktecture
    /// Source generator for JsonConverter for an enum-like class.
    /// </summary>
    [Generator]
-   public class ThinktectureMessagePackFormatterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
+   public class ThinktectureNewtonsoftJsonConverterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
    {
       /// <inheritdoc />
       protected override string GenerateEnum(EnumSourceGeneratorState state)
@@ -19,7 +19,7 @@ namespace Thinktecture
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get", state.KeyPropertyName);
+         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get");
       }
 
       /// <inheritdoc />
@@ -28,21 +28,20 @@ namespace Thinktecture
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         if (state.KeyMember is null)
+         if (!state.HasKeyMember)
             return null;
 
-         return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Type, "Create", state.KeyMember.Identifier.ToString());
+         return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Type, "Create");
       }
 
-      private static string GenerateFormatter(
+      private static string GenerateJsonConverter(
          ITypeSymbol type,
          string? @namespace,
          SyntaxToken typeIdentifier,
          ITypeSymbol keyType,
-         string factoryMethod,
-         string keyMemberName)
+         string factoryMethod)
       {
-         if (type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
+         if (type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
             return String.Empty;
 
          return $@"
@@ -55,15 +54,15 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
-   public class {typeIdentifier}_ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<{typeIdentifier}, {keyType}>
+   public class {typeIdentifier}_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<{typeIdentifier}, {keyType}>
    {{
-      public {typeIdentifier}_ValueTypeMessagePackFormatter()
+      public {typeIdentifier}_ValueTypeNewtonsoftJsonConverter()
          : base({typeIdentifier}.{factoryMethod}, obj => ({keyType}) obj)
       {{
       }}
    }}
 
-   [MessagePack.MessagePackFormatter(typeof({typeIdentifier}_ValueTypeMessagePackFormatter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof({typeIdentifier}_ValueTypeNewtonsoftJsonConverter))]
    partial class {typeIdentifier}
    {{
    }}

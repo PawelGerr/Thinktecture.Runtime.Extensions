@@ -83,5 +83,63 @@ namespace TestNamespace
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
          }
       }
+
+      public class ValueType_must_be_class_or_struct
+      {
+         [Fact]
+         public async Task Should_trigger_on_record()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	[ValueType]
+   public partial record {|#0:TestValueType|}
+	{
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueType");
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_on_class()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	[ValueType]
+   public partial class TestValueType
+	{
+   }
+}";
+
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_on_struct()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	[ValueType]
+	public readonly partial struct TestValueType
+	{
+   }
+}";
+
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+         }
+      }
    }
 }

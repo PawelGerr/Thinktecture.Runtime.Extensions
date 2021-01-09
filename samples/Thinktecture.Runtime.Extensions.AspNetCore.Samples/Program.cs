@@ -28,6 +28,8 @@ namespace Thinktecture
          // 	http://localhost:5000/api/groupWithConverter/1
          // 	http://localhost:5000/api/productType/groceries
          // 	http://localhost:5000/api/productType/invalid
+         // 	http://localhost:5000/api/productName/bread
+         // 	http://localhost:5000/api/productName/a
          await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
 
          await server;
@@ -43,6 +45,8 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "groupWithConverter/1");
          await DoRequestAsync(logger, client, "productType/groceries");
          await DoRequestAsync(logger, client, "productType/invalid");
+         await DoRequestAsync(logger, client, "productName/bread");
+         await DoRequestAsync(logger, client, "productName/a");
       }
 
       private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url)
@@ -71,7 +75,7 @@ namespace Thinktecture
                                           {
                                              collection.AddSingleton(loggerFactory);
                                              collection.AddControllers()
-                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new EnumJsonConverterFactory()));
+                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ValueTypeJsonConverterFactory()));
                                           })
                        .Build();
 

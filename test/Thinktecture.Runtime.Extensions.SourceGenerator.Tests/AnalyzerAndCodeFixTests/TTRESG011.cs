@@ -60,5 +60,57 @@ namespace TestNamespace
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
          }
       }
+
+      public class ValueType_struct_must_be_readonly
+      {
+         [Fact]
+         public async Task Should_trigger_if_struct_is_not_readonly()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+   [ValueType]
+	public partial struct {|#0:TestValueType|}
+	{
+   }
+}";
+
+            var expectedCode = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+   [ValueType]
+	public readonly partial struct {|#0:TestValueType|}
+	{
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueType");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_if_struct_is_readonly()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+   [ValueType]
+	public readonly partial struct {|#0:TestValueType|}
+	{
+   }
+}";
+
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+         }
+      }
    }
 }

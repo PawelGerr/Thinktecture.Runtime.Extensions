@@ -9,6 +9,14 @@ namespace Thinktecture.Formatters.EnumMessagePackFormatterTests
 {
    public class Serialize
    {
+      private readonly MessagePackSerializerOptions _options;
+
+      public Serialize()
+      {
+         var resolver = CompositeResolver.Create(ValueTypeMessageFormatterResolver.Instance, StandardResolver.Instance);
+         _options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
+      }
+
       [Fact]
       public void Should_roundtrip_serialize_string_based_enum_having_formatter()
       {
@@ -30,10 +38,8 @@ namespace Thinktecture.Formatters.EnumMessagePackFormatterTests
       [Fact]
       public void Should_roundtrip_serialize_string_based_enum_providing_resolver()
       {
-         var option = StandardResolver.Options.WithResolver(EnumMessageFormatterResolver.Instance);
-
-         var bytes = MessagePackSerializer.Serialize(StringBasedEnum.ValueA, option, CancellationToken.None);
-         var value = MessagePackSerializer.Deserialize<StringBasedEnum>(bytes, option, CancellationToken.None);
+         var bytes = MessagePackSerializer.Serialize(StringBasedEnum.ValueA, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<StringBasedEnum>(bytes, _options, CancellationToken.None);
 
          value.Should().Be(StringBasedEnum.ValueA);
       }
@@ -41,10 +47,8 @@ namespace Thinktecture.Formatters.EnumMessagePackFormatterTests
       [Fact]
       public void Should_roundtrip_serialize_int_based_enum_providing_resolver()
       {
-         var option = StandardResolver.Options.WithResolver(EnumMessageFormatterResolver.Instance);
-
-         var bytes = MessagePackSerializer.Serialize(IntBasedEnum.Value1, option, CancellationToken.None);
-         var value = MessagePackSerializer.Deserialize<IntBasedEnum>(bytes, option, CancellationToken.None);
+         var bytes = MessagePackSerializer.Serialize(IntBasedEnum.Value1, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<IntBasedEnum>(bytes, _options, CancellationToken.None);
 
          value.Should().Be(IntBasedEnum.Value1);
       }
@@ -52,12 +56,10 @@ namespace Thinktecture.Formatters.EnumMessagePackFormatterTests
       [Fact]
       public void Should_roundtrip_serialize_class_with_string_based_enum_providing_resolver()
       {
-         var option = StandardResolver.Options.WithResolver(EnumMessageFormatterResolver.Instance);
-
          var instance = new ClassWithStringBasedEnum(StringBasedEnum.ValueA);
 
-         var bytes = MessagePackSerializer.Serialize(instance, option, CancellationToken.None);
-         var value = MessagePackSerializer.Deserialize<ClassWithStringBasedEnum>(bytes, option, CancellationToken.None);
+         var bytes = MessagePackSerializer.Serialize(instance, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<ClassWithStringBasedEnum>(bytes, _options, CancellationToken.None);
 
          value.Should().BeEquivalentTo(instance);
       }
@@ -65,12 +67,10 @@ namespace Thinktecture.Formatters.EnumMessagePackFormatterTests
       [Fact]
       public void Should_roundtrip_serialize_class_with_int_based_enum_providing_resolver()
       {
-         var option = StandardResolver.Options.WithResolver(EnumMessageFormatterResolver.Instance);
-
          var instance = new ClassWithIntBasedEnum(IntBasedEnum.Value1);
 
-         var bytes = MessagePackSerializer.Serialize(instance, option, CancellationToken.None);
-         var value = MessagePackSerializer.Deserialize<ClassWithIntBasedEnum>(bytes, option, CancellationToken.None);
+         var bytes = MessagePackSerializer.Serialize(instance, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<ClassWithIntBasedEnum>(bytes, _options, CancellationToken.None);
 
          value.Should().BeEquivalentTo(instance);
       }

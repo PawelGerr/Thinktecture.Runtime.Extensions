@@ -6,16 +6,16 @@ using Newtonsoft.Json.Linq;
 namespace Thinktecture.Json
 {
    /// <summary>
-   /// Non-generic converter for <see cref="IEnum{TKey}"/>.
+   /// Non-generic converter for value types.
    /// </summary>
-   public class EnumJsonConverter : JsonConverter
+   public class ValueTypeNewtonsoftJsonConverter : JsonConverter
    {
       private static readonly ConcurrentDictionary<Type, JsonConverter> _cache = new();
 
       /// <inheritdoc />
       public override bool CanConvert(Type objectType)
       {
-         return _cache.ContainsKey(objectType) || EnumMetadataLookup.FindEnum(objectType) is not null;
+         return _cache.ContainsKey(objectType) || ValueTypeMetadataLookup.Find(objectType) is not null;
       }
 
       /// <inheritdoc />
@@ -45,13 +45,13 @@ namespace Thinktecture.Json
 
       private static JsonConverter CreateConverter(Type type)
       {
-         var enumMetadata = EnumMetadataLookup.FindEnum(type);
+         var metadata = ValueTypeMetadataLookup.Find(type);
 
-         if (enumMetadata is null)
-            throw new InvalidOperationException($"The provided type does not derive from 'Enum<,>'. Type: {type.Name}");
+         if (metadata is null)
+            throw new InvalidOperationException($"The provided type is not serializable by the '{nameof(ValueTypeNewtonsoftJsonConverter)}'. Type: {type.FullName}");
 
-         var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumMetadata.EnumType, enumMetadata.KeyType);
-         var converter = Activator.CreateInstance(converterType, enumMetadata.ConvertFromKey)
+         var converterType = typeof(ValueTypeNewtonsoftJsonConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
+         var converter = Activator.CreateInstance(converterType, metadata.ConvertFromKey, metadata.ConvertToKey)
                          ?? throw new Exception($"Could not create a converter of type '{converterType.Name}'.");
 
          return (JsonConverter)converter;
@@ -59,27 +59,31 @@ namespace Thinktecture.Json
    }
 
    /// <summary>
-   /// <see cref="JsonConverter"/> for <see cref="IEnum{TKey}"/>
+   /// <see cref="JsonConverter"/> for value types.
    /// </summary>
-   /// <typeparam name="TEnum">Type of the enum.</typeparam>
+   /// <typeparam name="T">Type of the value type.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum?>
-      where TEnum : IEnum<TKey>
+   public class ValueTypeNewtonsoftJsonConverter<T, TKey> : JsonConverter<T?>
       where TKey : notnull
    {
-      private readonly Func<TKey?, TEnum?> _convert;
+      private readonly Func<TKey, T> _convertFromKey;
+      private readonly Func<T, TKey> _convertToKey;
 
       /// <summary>
-      /// Initializes a new instance of <see cref="EnumJsonConverter{TEnum,TKey}"/>.
+      /// Initializes a new instance of <see cref="ValueTypeNewtonsoftJsonConverter{T,TKey}"/>.
       /// </summary>
-      /// <param name="convert">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="TEnum"/>.</param>
-      public EnumJsonConverter(Func<TKey?, TEnum?> convert)
+      /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
+      /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
+      public ValueTypeNewtonsoftJsonConverter(
+         Func<TKey, T> convertFromKey,
+         Func<T, TKey> convertToKey)
       {
-         _convert = convert ?? throw new ArgumentNullException(nameof(convert));
+         _convertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));
+         _convertToKey = convertToKey ?? throw new ArgumentNullException(nameof(convertToKey));
       }
 
       /// <inheritdoc />
-      public override void WriteJson(JsonWriter writer, TEnum? value, JsonSerializer serializer)
+      public override void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
       {
          if (writer is null)
             throw new ArgumentNullException(nameof(writer));
@@ -92,12 +96,12 @@ namespace Thinktecture.Json
          }
          else
          {
-            serializer.Serialize(writer, value.GetKey());
+            serializer.Serialize(writer, _convertToKey(value));
          }
       }
 
       /// <inheritdoc />
-      public override TEnum? ReadJson(JsonReader reader, Type objectType, TEnum? existingValue, bool hasExistingValue, JsonSerializer serializer)
+      public override T? ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)
       {
          if (reader is null)
             throw new ArgumentNullException(nameof(reader));
@@ -113,7 +117,11 @@ namespace Thinktecture.Json
             return default;
 
          var key = token.ToObject<TKey>(serializer);
-         return _convert(key);
+
+         if (key is null)
+            return default;
+
+         return _convertFromKey(key);
       }
    }
 }
