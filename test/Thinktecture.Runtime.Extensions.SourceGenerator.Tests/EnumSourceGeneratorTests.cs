@@ -892,7 +892,7 @@ namespace Thinktecture.EnumLikeClass
         if (name is null)
             throw new ArgumentNullException(nameof(name));
 
-         ValidateConstructorArguments(name, isValid, structProperty, nullableStructProperty, referenceProperty, nullableReferenceProperty, structField, referenceField);
+         ValidateConstructorArguments(name, isValid, ref structProperty, ref nullableStructProperty, ref referenceProperty, ref nullableReferenceProperty, ref structField, ref referenceField);
 
          this.Name = name;
          this.IsValid = isValid;
@@ -904,7 +904,7 @@ namespace Thinktecture.EnumLikeClass
          this.ReferenceField = referenceField;
       }
 
-      static partial void ValidateConstructorArguments(string name, bool isValid, int structProperty, int? nullableStructProperty, string referenceProperty, string? nullableReferenceProperty, int structField, string referenceField);
+      static partial void ValidateConstructorArguments(string name, bool isValid, ref int structProperty, ref int? nullableStructProperty, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structField, ref string referenceField);
 
       /// <summary>
       /// Gets the identifier of the item.

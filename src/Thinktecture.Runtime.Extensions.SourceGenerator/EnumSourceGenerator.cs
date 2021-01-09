@@ -508,7 +508,7 @@ using Thinktecture;
 
          foreach (var members in fieldsAndProperties)
          {
-            sb.Append($@", {members.ArgumentName}");
+            sb.Append($@", ref {members.ArgumentName}");
          }
 
          sb.Append($@");
@@ -539,7 +539,7 @@ using Thinktecture;
 
          foreach (var members in fieldsAndProperties)
          {
-            sb.Append($@", {members.Type} {members.ArgumentName}");
+            sb.Append($@", ref {members.Type} {members.ArgumentName}");
          }
 
          sb.Append($@");");
