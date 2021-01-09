@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture
 {
    /// <summary>
-   /// Settings to be used by source generator.
+   /// Settings to be used by enum source generator.
    /// </summary>
    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
    public class EnumGenerationAttribute : Attribute

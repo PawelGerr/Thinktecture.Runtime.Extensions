@@ -47,14 +47,14 @@ namespace Thinktecture
          if (declaration is not TypeDeclarationSyntax tds)
             return;
 
+         if (!enumType.IsEnum(out var enumInterfaces))
+            return;
+
          if (!declaration.IsKind(SyntaxKind.ClassDeclaration) && !declaration.IsKind(SyntaxKind.StructDeclaration))
          {
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.EnumMustBeClassOrStruct, tds.Identifier.GetLocation(), tds.Identifier));
             return;
          }
-
-         if (!enumType.IsEnum(out var enumInterfaces))
-            return;
 
          if (enumType.ContainingType is not null) // is nested class
          {
