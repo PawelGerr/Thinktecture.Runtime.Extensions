@@ -18,34 +18,55 @@ namespace Thinktecture.Controllers
       [HttpGet("category/{category}")]
       public IActionResult RoundTrip(ProductCategory category)
       {
-         return RoundTrip<ProductCategory, string>(category);
+         return RoundTripValidatableEnum<ProductCategory, string>(category);
       }
 
       [HttpGet("categoryWithConverter/{category}")]
       public IActionResult RoundTrip(ProductCategoryWithJsonConverter category)
       {
-         return RoundTrip<ProductCategoryWithJsonConverter, string>(category);
+         return RoundTripValidatableEnum<ProductCategoryWithJsonConverter, string>(category);
       }
 
       [HttpGet("group/{group}")]
       public IActionResult RoundTrip(ProductGroup group)
       {
-         return RoundTrip<ProductGroup, int>(group);
+         return RoundTripValidatableEnum<ProductGroup, int>(group);
       }
 
       [HttpGet("groupWithConverter/{group}")]
       public IActionResult RoundTrip(ProductGroupWithJsonConverter group)
       {
-         return RoundTrip<ProductGroupWithJsonConverter, int>(group);
+         return RoundTripValidatableEnum<ProductGroupWithJsonConverter, int>(group);
       }
 
-      private IActionResult RoundTrip<T, TKey>(T value)
+      [HttpGet("productType/{productType}")]
+      public IActionResult RoundTrip(ProductType productType)
+      {
+         return RoundTrip<ProductType, string>(productType);
+      }
+
+      private IActionResult RoundTripValidatableEnum<T, TKey>(T value)
          where T : IValidatableEnum<TKey>
          where TKey : notnull
       {
+         if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
          _logger.LogInformation($"Round trip test with {value.GetType().Name}", value);
 
          return Json(new { Value = value, value.IsValid });
+      }
+
+      private IActionResult RoundTrip<T, TKey>(T value)
+         where T : IEnum<TKey>
+         where TKey : notnull
+      {
+         if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+         _logger.LogInformation($"Round trip test with {value.GetType().Name}", value);
+
+         return Json(value);
       }
    }
 }

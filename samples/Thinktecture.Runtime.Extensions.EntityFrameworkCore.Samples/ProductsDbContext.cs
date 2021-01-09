@@ -21,7 +21,7 @@ namespace Thinktecture
 
          modelBuilder.Entity<Product>()
                      .Property(p => p.Category)
-                     .HasConversion(new EnumValueConverter<ProductCategory, string>());
+                     .HasConversion(EnumValueConverterFactory.Create<ProductCategory, string>(true));
       }
    }
 }
