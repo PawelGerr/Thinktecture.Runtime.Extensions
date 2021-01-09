@@ -34,18 +34,16 @@ namespace Thinktecture
 
       public EnumSourceGeneratorState(
          SemanticModel model,
-         EnumDeclaration enumDeclaration,
+         TypeDeclarationSyntax enumDeclaration,
          INamedTypeSymbol enumType,
          INamedTypeSymbol enumInterface)
       {
-         if (enumDeclaration is null)
-            throw new ArgumentNullException(nameof(enumDeclaration));
          if (enumInterface is null)
             throw new ArgumentNullException(nameof(enumInterface));
 
          Model = model ?? throw new ArgumentNullException(nameof(model));
 
-         _enumSyntax = enumDeclaration.TypeDeclarationSyntax;
+         _enumSyntax = enumDeclaration ?? throw new ArgumentNullException(nameof(enumDeclaration));
 
          EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
          Namespace = enumType.ContainingNamespace.ToString();

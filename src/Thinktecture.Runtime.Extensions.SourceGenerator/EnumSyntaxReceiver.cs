@@ -7,11 +7,11 @@ namespace Thinktecture
 {
    internal class EnumSyntaxReceiver : ISyntaxReceiver
    {
-      public List<EnumDeclaration> Enums { get; }
+      public List<TypeDeclarationSyntax> Enums { get; }
 
       public EnumSyntaxReceiver()
       {
-         Enums = new List<EnumDeclaration>();
+         Enums = new List<TypeDeclarationSyntax>();
       }
 
       /// <inheritdoc />
@@ -20,8 +20,8 @@ namespace Thinktecture
          if (syntaxNode is TypeDeclarationSyntax tds
              && (tds is ClassDeclarationSyntax || tds is StructDeclarationSyntax))
          {
-            if (tds.IsEnumCandidate(out var enumDeclaration) && tds.IsPartial())
-               Enums.Add(enumDeclaration);
+            if (tds.IsEnumCandidate() && tds.IsPartial())
+               Enums.Add(tds);
          }
       }
    }

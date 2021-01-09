@@ -10,14 +10,6 @@ namespace Thinktecture
 {
    internal static class TypeDeclarationSyntaxExtensions
    {
-      public static bool IsAbstract(this TypeDeclarationSyntax tds)
-      {
-         if (tds is null)
-            throw new ArgumentNullException(nameof(tds));
-
-         return tds.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
-      }
-
       public static bool IsPartial(this TypeDeclarationSyntax tds)
       {
          if (tds is null)
@@ -26,42 +18,45 @@ namespace Thinktecture
          return tds.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
       }
 
-      public static bool IsEnumCandidate(
-         this TypeDeclarationSyntax tds,
-         out EnumDeclaration enumDeclaration)
+      public static bool IsEnumCandidate(this TypeDeclarationSyntax tds)
       {
          if (tds.BaseList?.Types.Count > 0)
          {
             foreach (var baseType in tds.BaseList.Types)
             {
-               var enumInterfaces = GetEnumInterfaces(baseType);
-
-               if (enumInterfaces.Count > 0)
-               {
-                  enumDeclaration = new EnumDeclaration(tds, enumInterfaces);
+               if (CouldBeEnumInterface(baseType))
                   return true;
-               }
             }
          }
 
-         enumDeclaration = null!;
          return false;
       }
 
-      private static IReadOnlyList<GenericNameSyntax> GetEnumInterfaces(BaseTypeSyntax? type)
+      private static bool CouldBeEnumInterface(BaseTypeSyntax? baseType)
       {
-         List<GenericNameSyntax>? enumInterfaces = null;
+         var type = baseType?.Type;
 
-         if (type?.Type is GenericNameSyntax genericNameSyntax)
+         while (type is not null)
          {
-            if ((genericNameSyntax.Identifier.Text == "IEnum" || genericNameSyntax.Identifier.Text == "IValidatableEnum") &&
-                genericNameSyntax.TypeArgumentList.Arguments.Count == 1)
+            switch (type)
             {
-               (enumInterfaces ??= new List<GenericNameSyntax>()).Add(genericNameSyntax);
+               case IdentifierNameSyntax: // could be an alias
+                  return true;
+
+               case QualifiedNameSyntax qns:
+                  type = qns.Right;
+                  break;
+
+               case GenericNameSyntax genericNameSyntax:
+                  return (genericNameSyntax.Identifier.Text == "IEnum" || genericNameSyntax.Identifier.Text == "IValidatableEnum") &&
+                         genericNameSyntax.TypeArgumentList.Arguments.Count == 1;
+
+               default:
+                  return false;
             }
          }
 
-         return enumInterfaces ?? (IReadOnlyList<GenericNameSyntax>)Array.Empty<GenericNameSyntax>();
+         return false;
       }
    }
 }
