@@ -2,22 +2,19 @@
 
     <PropertyGroup>
         <Description>Adds MessagePack formatter for components from Thinktecture.Runtime.Extensions.</Description>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp5.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
         <PackageTags>common;MessagePack</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"/>
+        <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
+                          Include="..\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator.csproj"
+                          PrivateAssets="contentfiles;build"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MessagePack" Version="2.2.60" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Include="..\..\NullableAttributes.cs">
-        <Link>NullableAttributes.cs</Link>
-      </Compile>
+        <PackageReference Include="MessagePack" Version="2.2.85"/>
     </ItemGroup>
 
 </Project>

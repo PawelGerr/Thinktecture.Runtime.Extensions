@@ -5,39 +5,28 @@ using System.Text.Json.Serialization;
 namespace Thinktecture.Text.Json.Serialization
 {
    /// <summary>
-   /// JSON converter for instances of type <see cref="Enum{TEnum}"/>.
-   /// </summary>
-   /// <typeparam name="TEnum">Type of the enum.</typeparam>
-   public class EnumJsonConverter<TEnum> : EnumJsonConverter<TEnum, string>
-      where TEnum : Enum<TEnum, string>
-   {
-      /// <summary>
-      /// Initializes new instance of type <see cref="EnumJsonConverter{TEnum}"/>.
-      /// </summary>
-      /// <param name="keyConverter">JSON converter for the key.</param>
-      public EnumJsonConverter(JsonConverter<string>? keyConverter = null)
-         : base(keyConverter)
-      {
-      }
-   }
-
-   /// <summary>
-   /// JSON converter for instances of type <see cref="Enum{TEnum,TKey}"/>.
+   /// JSON converter for instances of type <see cref="IEnum{TKey}"/>.
    /// </summary>
    /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
    public class EnumJsonConverter<TEnum, TKey> : JsonConverter<TEnum>
-      where TEnum : Enum<TEnum, TKey>
+      where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      private readonly Func<TKey?, TEnum?> _convert;
+
       private JsonConverter<TKey>? _keyConverter;
 
       /// <summary>
-      /// Initializes new instance of type <see cref="EnumJsonConverter{TEnum,Tkey}"/>.
+      /// Initializes a new instance of <see cref="EnumJsonConverter{TEnum,TKey}"/>.
       /// </summary>
+      /// <param name="convert">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="TEnum"/>.</param>
       /// <param name="keyConverter">JSON converter for the key.</param>
-      public EnumJsonConverter(JsonConverter<TKey>? keyConverter = null)
+      public EnumJsonConverter(
+         Func<TKey?, TEnum?> convert,
+         JsonConverter<TKey>? keyConverter = null)
       {
+         _convert = convert ?? throw new ArgumentNullException(nameof(convert));
          _keyConverter = keyConverter;
       }
 
@@ -45,7 +34,7 @@ namespace Thinktecture.Text.Json.Serialization
       public override TEnum? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
       {
          var key = GetKeyConverter(options).Read(ref reader, typeof(TKey), options);
-         return Enum<TEnum, TKey>.Get(key);
+         return _convert(key);
       }
 
       /// <inheritdoc />
@@ -54,7 +43,7 @@ namespace Thinktecture.Text.Json.Serialization
          if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-         GetKeyConverter(options).Write(writer, value.Key, options);
+         GetKeyConverter(options).Write(writer, value.GetKey(), options);
       }
 
       private JsonConverter<TKey> GetKeyConverter(JsonSerializerOptions options)

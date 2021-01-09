@@ -2,16 +2,19 @@
 
     <PropertyGroup>
         <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using Newtonsoft.Json.</Description>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp5.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
         <PackageTags>common;json</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"/>
+        <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
+                          Include="..\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator.csproj"
+                          PrivateAssets="contentfiles;build"/>
     </ItemGroup>
 
 </Project>

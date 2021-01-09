@@ -1,0 +1,24 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <ParentPropsFile>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))</ParentPropsFile>
+    </PropertyGroup>
+
+    <Import Condition=" exists('$(ParentPropsFile)') " Project="$(ParentPropsFile)"/>
+
+    <PropertyGroup>
+        <Nullable>disable</Nullable>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS1591;CA1707</NoWarn>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <Compile Include="..\..\IsExternalInit.cs">
+            <Link>IsExternalInit.cs</Link>
+        </Compile>
+        <Compile Include="..\..\ModuleInitializer.cs">
+            <Link>ModuleInitializer.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>

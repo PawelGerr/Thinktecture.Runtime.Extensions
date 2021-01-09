@@ -45,7 +45,7 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_serialize_string_based_enum(StringBasedEnum enumValue, string expectedJson)
       {
-         var json = Serialize<StringBasedEnum, string>(enumValue);
+         var json = Serialize<StringBasedEnum, string, StringBasedEnum_EnumJsonConverter>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -54,7 +54,7 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_serialize_int_based_enum(IntBasedEnum enumValue, string expectedJson)
       {
-         var json = Serialize<IntBasedEnum, int>(enumValue);
+         var json = Serialize<IntBasedEnum, int, IntBasedEnum_EnumJsonConverter>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -63,7 +63,7 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
       public void Should_serialize_class_containing_string_based_enum(ClassWithStringBasedEnum classWithEnum, string expectedJson)
       {
-         var json = Serialize<ClassWithStringBasedEnum, StringBasedEnum, string>(classWithEnum);
+         var json = Serialize<ClassWithStringBasedEnum, StringBasedEnum, string, StringBasedEnum_EnumJsonConverter>(classWithEnum);
 
          json.Should().Be(expectedJson);
       }
@@ -72,21 +72,24 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
       public void Should_serialize_class_containing_int_based_enum(ClassWithIntBasedEnum classWithEnum, string expectedJson)
       {
-         var json = Serialize<ClassWithIntBasedEnum, IntBasedEnum, int>(classWithEnum);
+         var json = Serialize<ClassWithIntBasedEnum, IntBasedEnum, int, IntBasedEnum_EnumJsonConverter>(classWithEnum);
 
          json.Should().Be(expectedJson);
       }
 
-      private static string Serialize<T, TKey>(T value)
-         where T : Enum<T, TKey>
+      private static string Serialize<T, TKey, TConverter>(T value)
+         where T : IEnum<TKey>
+         where TConverter : EnumJsonConverter<T, TKey>, new()
       {
-         return Serialize<T, T, TKey>(value);
+         return Serialize<T, T, TKey, TConverter>(value);
       }
 
-      private static string Serialize<T, TEnum, TKey>(T value)
-         where TEnum : Enum<TEnum, TKey>
+      private static string Serialize<T, TEnum, TKey, TConverter>(T value)
+         where TEnum : IEnum<TKey>
+         where TKey : notnull
+         where TConverter : EnumJsonConverter<TEnum, TKey>, new()
       {
-         var sut = new EnumJsonConverter<TEnum, TKey>();
+         var sut = new TConverter();
          var options = new JsonSerializerOptions { Converters = { sut } };
 
          return JsonSerializer.Serialize(value, options);

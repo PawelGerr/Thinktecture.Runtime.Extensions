@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 using Thinktecture.Text.Json.Serialization;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -25,6 +26,8 @@ namespace Thinktecture
          // 	http://localhost:5000/api/categoryWithConverter/fruits
          // 	http://localhost:5000/api/group/1
          // 	http://localhost:5000/api/groupWithConverter/1
+         // 	http://localhost:5000/api/productType/groceries
+         // 	http://localhost:5000/api/productType/invalid
          await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
 
          await server;
@@ -32,24 +35,24 @@ namespace Thinktecture
 
       private static async Task DoHttpRequestsAsync(ILogger logger)
       {
-         using (var client = new HttpClient())
-         {
-            await DoRequestAsync(logger, client, "category/fruits");
-            await DoRequestAsync(logger, client, "categoryWithConverter/fruits");
-            await DoRequestAsync(logger, client, "group/1");
-            await DoRequestAsync(logger, client, "groupWithConverter/1");
-         }
+         using var client = new HttpClient();
+
+         await DoRequestAsync(logger, client, "category/fruits");
+         await DoRequestAsync(logger, client, "categoryWithConverter/fruits");
+         await DoRequestAsync(logger, client, "group/1");
+         await DoRequestAsync(logger, client, "groupWithConverter/1");
+         await DoRequestAsync(logger, client, "productType/groceries");
+         await DoRequestAsync(logger, client, "productType/invalid");
       }
 
       private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url)
       {
-         logger.LogWarning("Making request with url '{url}'", url);
+         logger.LogInformation("Making request with url '{url}'", url);
 
-         using (var response = await client.GetAsync("http://localhost:5000/api/" + url))
-         {
-            var content = await response.Content.ReadAsStringAsync();
-            logger.LogWarning("Server responded with: {response}", content);
-         }
+         using var response = await client.GetAsync("http://localhost:5000/api/" + url);
+
+         var content = await response.Content.ReadAsStringAsync();
+         logger.LogInformation("Server responded with: [{statuscode}] {response}", response.StatusCode, content);
       }
 
       private static Task StartServerAsync(ILoggerFactory loggerFactory)
@@ -68,8 +71,7 @@ namespace Thinktecture
                                           {
                                              collection.AddSingleton(loggerFactory);
                                              collection.AddControllers()
-                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new EnumJsonConverterFactory()))
-                                                ;
+                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new EnumJsonConverterFactory()));
                                           })
                        .Build();
 
@@ -81,6 +83,7 @@ namespace Thinktecture
          var serilog = new LoggerConfiguration()
                        .WriteTo.Console()
                        .MinimumLevel.Information()
+                       .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                        .CreateLogger();
 
          var loggerFactory = new LoggerFactory();

@@ -1,25 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Thinktecture.TestEnums
 {
-	public class TestEnumWithNonDefaultComparer : Enum<TestEnumWithNonDefaultComparer>
-	{
-		public static readonly TestEnumWithNonDefaultComparer Item = new("item");
-		public static readonly TestEnumWithNonDefaultComparer AnotherItem = new("Item");
+   [EnumGeneration(KeyComparerProvidingMember = nameof(_equalityComparer))]
+   public partial class TestEnumWithNonDefaultComparer : IValidatableEnum<string>
+   {
+      private static readonly IEqualityComparer<string> _equalityComparer = StringComparer.Ordinal;
 
-		static TestEnumWithNonDefaultComparer()
-		{
-			KeyEqualityComparer = StringComparer.Ordinal;
-		}
-
-		private TestEnumWithNonDefaultComparer(string key)
-			: base(key)
-		{
-		}
-
-		protected override TestEnumWithNonDefaultComparer CreateInvalid(string key)
-		{
-			return new(key);
-		}
-	}
+      public static readonly TestEnumWithNonDefaultComparer Item = new("item");
+      public static readonly TestEnumWithNonDefaultComparer AnotherItem = new("Item");
+   }
 }

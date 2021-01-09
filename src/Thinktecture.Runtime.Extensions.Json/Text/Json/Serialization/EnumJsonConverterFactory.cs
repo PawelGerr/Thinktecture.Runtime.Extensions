@@ -12,7 +12,7 @@ namespace Thinktecture.Text.Json.Serialization
       /// <inheritdoc />
       public override bool CanConvert(Type typeToConvert)
       {
-         return typeof(IEnum).IsAssignableFrom(typeToConvert);
+         return EnumMetadataLookup.FindEnum(typeToConvert) is not null;
       }
 
       /// <inheritdoc />
@@ -23,18 +23,18 @@ namespace Thinktecture.Text.Json.Serialization
          if (options is null)
             throw new ArgumentNullException(nameof(options));
 
-         var enumType = typeToConvert.FindGenericEnumTypeDefinition();
+         var enumMetadata = EnumMetadataLookup.FindEnum(typeToConvert);
 
-         if (enumType is null)
-            throw new InvalidOperationException($"The provided type does not derive from 'Enum<,>'. Type: {typeToConvert.Name}");
+         if (enumMetadata is null)
+            throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");
 
-         var keyConverter = options.GetConverter(enumType.GenericTypeArguments[1]);
+         var keyConverter = options.GetConverter(enumMetadata.KeyType);
 
          if (keyConverter is null)
-            throw new ArgumentException($"The enum '{typeToConvert.Name}' is not JSON-serializable because there is no {nameof(JsonConverter)} for its key of type '{enumType.GenericTypeArguments[1].Name}'.", nameof(typeToConvert));
+            throw new ArgumentException($"The enum '{typeToConvert.Name}' is not JSON-serializable because there is no {nameof(JsonConverter)} for its key of type '{enumMetadata.KeyType.Name}'.", nameof(typeToConvert));
 
-         var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumType.GenericTypeArguments);
-         var converter = Activator.CreateInstance(converterType, keyConverter)
+         var converterType = typeof(EnumJsonConverter<,>).MakeGenericType(enumMetadata.EnumType, enumMetadata.KeyType);
+         var converter = Activator.CreateInstance(converterType, enumMetadata.ConvertFromKey, keyConverter)
                          ?? throw new Exception($"Could not create converter of type '{converterType.Name}'.");
 
          return (JsonConverter)converter;

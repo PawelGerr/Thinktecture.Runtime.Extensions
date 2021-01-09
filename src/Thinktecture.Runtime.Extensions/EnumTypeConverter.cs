@@ -1,19 +1,31 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
 namespace Thinktecture
 {
    /// <summary>
-   /// Type converter to convert an <see cref="Enum{TEnum,TKey}"/> to <typeparamref name="TKey"/> and vice versa.
+   /// Type converter to convert an <see cref="IEnum{TKey}"/> to <typeparamref name="TKey"/> and vice versa.
    /// </summary>
    /// <typeparam name="TEnum">Type of the concrete enumeration.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public class EnumTypeConverter<TEnum, TKey> : TypeConverter
-      where TEnum : Enum<TEnum, TKey>
+   public abstract class EnumTypeConverter<TEnum, TKey> : TypeConverter
+      where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      private static readonly Type _enumType = typeof(TEnum);
+      private static readonly Type _keyType = typeof(TKey);
+
+      /// <summary>
+      /// Converts <paramref name="key"/> to an instance of <typeparamref name="TEnum"/>.
+      /// </summary>
+      /// <param name="key">Key to convert.</param>
+      /// <returns>An instance of <typeparamref name="TEnum"/>.</returns>
+      [return: NotNullIfNotNull("key")]
+      protected abstract TEnum? ConvertFrom(TKey? key);
+
       /// <inheritdoc />
       public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
       {
@@ -21,10 +33,7 @@ namespace Thinktecture
             return true;
 
          if (typeof(TKey) != typeof(TEnum))
-         {
-            var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-            return keyConverter.CanConvertFrom(context, sourceType);
-         }
+            return GetKeyConverter().CanConvertFrom(context, sourceType);
 
          return base.CanConvertFrom(context, sourceType);
       }
@@ -32,14 +41,16 @@ namespace Thinktecture
       /// <inheritdoc />
       public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
       {
-         if (destinationType == typeof(TKey) || destinationType == typeof(TEnum))
+         if (destinationType == _keyType || destinationType == _enumType)
             return true;
 
-         if (typeof(TKey) != typeof(TEnum))
-         {
-            var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-            return keyConverter.CanConvertTo(context, destinationType);
-         }
+         var underlyingType = Nullable.GetUnderlyingType(destinationType);
+
+         if (underlyingType == _keyType || underlyingType == _enumType)
+            return true;
+
+         if (_keyType != _enumType)
+            return GetKeyConverter().CanConvertTo(context, destinationType);
 
          return base.CanConvertTo(context, destinationType);
       }
@@ -48,20 +59,24 @@ namespace Thinktecture
       public override object? ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object? value)
       {
          if (value is null)
-            return default(TEnum);
+         {
+            if (!_enumType.IsClass)
+               throw new NotSupportedException($"{GetType().Name} cannot convert from 'null'.");
 
-         if (value is TKey key)
-            return Enum<TEnum, TKey>.Get(key);
+            return default(TEnum);
+         }
 
          if (value is TEnum item)
             return item;
 
-         if (typeof(TKey) != typeof(TEnum))
-         {
-            var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-            key = (TKey?)keyConverter.ConvertFrom(context, culture, value);
+         if (value is TKey key)
+            return ConvertFrom(key);
 
-            return Enum<TEnum, TKey>.Get(key);
+         if (_keyType != _enumType)
+         {
+            key = (TKey?)GetKeyConverter().ConvertFrom(context, culture, value);
+
+            return ConvertFrom(key);
          }
 
          return base.ConvertFrom(context, culture, value);
@@ -75,19 +90,23 @@ namespace Thinktecture
 
          if (value is TEnum item)
          {
-            if (destinationType == typeof(TKey))
-               return item.Key;
-            if (destinationType == typeof(TEnum))
+            var underlyingType = Nullable.GetUnderlyingType(destinationType);
+
+            if (destinationType == _keyType || underlyingType == _keyType)
+               return item.GetKey();
+            if (destinationType == _enumType || underlyingType == _enumType)
                return value;
 
-            if (typeof(TKey) != typeof(TEnum))
-            {
-               var keyConverter = TypeDescriptor.GetConverter(typeof(TKey));
-               return keyConverter.ConvertTo(context, culture, item.Key, destinationType);
-            }
+            if (_keyType != _enumType)
+               return GetKeyConverter().ConvertTo(context, culture, item.GetKey(), destinationType);
          }
 
          return base.ConvertTo(context, culture, value, destinationType);
+      }
+
+      private static TypeConverter GetKeyConverter()
+      {
+         return TypeDescriptor.GetConverter(_keyType);
       }
    }
 }

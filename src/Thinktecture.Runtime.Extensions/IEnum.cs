@@ -3,24 +3,21 @@ using System;
 namespace Thinktecture
 {
    /// <summary>
-   /// Non-generic interface implemented by <see cref="Enum{TEnum,TKey}"/>.
+   /// Base class for enum-like classes.
    /// </summary>
-   public interface IEnum
+   /// <typeparam name="TKey">Type of the key.</typeparam>
+#pragma warning disable CA1716, CA1000
+   // ReSharper disable once UnusedTypeParameter
+   public interface IEnum<out TKey>
+#pragma warning restore CA1716
+      where TKey : notnull
    {
       /// <summary>
-      /// Indication whether the current enumeration item is valid or not.
+      /// Gets the key of the item.
       /// </summary>
-      bool IsValid { get; }
-
-      /// <summary>
-      /// Checks whether current enumeration item is valid.
-      /// </summary>
-      /// <exception cref="InvalidOperationException">The enumeration item is not valid.</exception>
-      void EnsureValid();
-
-      /// <summary>
-      /// The key of the enumeration item.
-      /// </summary>
-      object Key { get; }
+      TKey GetKey()
+      {
+         throw new NotImplementedException("This method will be implemented by the source generator.");
+      }
    }
 }

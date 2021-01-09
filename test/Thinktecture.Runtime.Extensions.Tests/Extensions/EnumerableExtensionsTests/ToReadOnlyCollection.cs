@@ -9,14 +9,14 @@ namespace Thinktecture.Extensions.EnumerableExtensionsTests
    public class ToReadOnlyCollection
    {
       [Fact]
-      public void Shoud_throw_if_items_is_null()
+      public void Should_throw_if_items_is_null()
       {
          ((IEnumerable<int>)null).Invoking(e => e.ToReadOnlyCollection(42))
                                  .Should().Throw<ArgumentNullException>();
       }
 
       [Fact]
-      public void Shoud_throw_if_count_is_negative()
+      public void Should_throw_if_count_is_negative()
       {
          Enumerable.Empty<int>().Invoking(e => e.ToReadOnlyCollection(-1))
                    .Should().Throw<ArgumentException>();
@@ -26,7 +26,7 @@ namespace Thinktecture.Extensions.EnumerableExtensionsTests
       [InlineData(0)]
       [InlineData(1)]
       [InlineData(42)]
-      public void Shoud_return_collection_returning_provided_count(int count)
+      public void Should_return_collection_returning_provided_count(int count)
       {
          var collection = Enumerable.Empty<int>().ToReadOnlyCollection(count);
 

@@ -1,15 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Thinktecture.TestEnums
 {
-	public class EmptyEnum : Enum<EmptyEnum>
-	{
-		private EmptyEnum(string key)
-			: base(key)
-		{
-		}
-
-		protected override EmptyEnum CreateInvalid(string key)
-		{
-			return new(key);
-		}
-	}
+   [SuppressMessage("ReSharper", "TTRESG100")]
+   public partial class EmptyEnum : IValidatableEnum<string>
+   {
+   }
 }

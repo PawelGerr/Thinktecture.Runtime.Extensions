@@ -5,27 +5,28 @@ using MessagePack.Formatters;
 namespace Thinktecture.Formatters
 {
    /// <summary>
-   /// MessagePack formatter for <see cref="Enum{TEnum}"/>.
+   /// MessagePack formatter for <see cref="IEnum{TKey}"/>.
    /// </summary>
-   /// <typeparam name="T">Type of the enum.</typeparam>
-   public class EnumMessagePackFormatter<T> : EnumMessagePackFormatter<T, string>
-      where T : Enum<T>
-   {
-   }
-
-   /// <summary>
-   /// MessagePack formatter for <see cref="Enum{TEnum,TKey}"/>.
-   /// </summary>
-   /// <typeparam name="T">Type of the enum.</typeparam>
+   /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public class EnumMessagePackFormatter<T, TKey> : IMessagePackFormatter<T>
-      where T : Enum<T, TKey>
+   public class EnumMessagePackFormatter<TEnum, TKey> : IMessagePackFormatter<TEnum>
+      where TEnum : IEnum<TKey>
       where TKey : notnull
    {
+      private readonly Func<TKey?, TEnum?> _convert;
       private IMessagePackFormatter<TKey>? _keyFormatter;
 
+      /// <summary>
+      /// Initializes a new instance of <see cref="EnumMessagePackFormatter{TEnum,TKey}"/>.
+      /// </summary>
+      /// <param name="convert">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="TEnum"/>.</param>
+      public EnumMessagePackFormatter(Func<TKey?, TEnum?> convert)
+      {
+         _convert = convert ?? throw new ArgumentNullException(nameof(convert));
+      }
+
       /// <inheritdoc />
-      public void Serialize(ref MessagePackWriter writer, T? value, MessagePackSerializerOptions options)
+      public void Serialize(ref MessagePackWriter writer, TEnum? value, MessagePackSerializerOptions options)
       {
          if (value is null)
          {
@@ -33,13 +34,13 @@ namespace Thinktecture.Formatters
          }
          else
          {
-            GetKeyConverter(options).Serialize(ref writer, value.Key, options);
+            GetKeyConverter(options).Serialize(ref writer, value.GetKey(), options);
          }
       }
 
       /// <inheritdoc />
 #pragma warning disable CS8766
-      public T? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+      public TEnum? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
 #pragma warning restore CS8766
       {
          if (reader.TryReadNil())
@@ -47,7 +48,7 @@ namespace Thinktecture.Formatters
 
          var key = GetKeyConverter(options).Deserialize(ref reader, options);
 
-         return Enum<T, TKey>.Get(key);
+         return _convert(key);
       }
 
       private IMessagePackFormatter<TKey> GetKeyConverter(MessagePackSerializerOptions options)

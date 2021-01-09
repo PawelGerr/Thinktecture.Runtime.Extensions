@@ -26,7 +26,7 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_serialize_string_based_enum(StringBasedEnum enumValue, string expectedJson)
       {
-         var json = Serialize<StringBasedEnum, string>(enumValue);
+         var json = Serialize<StringBasedEnum, string, StringBasedEnum_EnumNewtonsoftJsonConverter>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -35,15 +35,16 @@ namespace Thinktecture.Json.EnumJsonConverterTests
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_serialize_int_based_enum(IntBasedEnum enumValue, string expectedJson)
       {
-         var json = Serialize<IntBasedEnum, int>(enumValue);
+         var json = Serialize<IntBasedEnum, int, IntBasedEnum_EnumNewtonsoftJsonConverter>(enumValue);
 
          json.Should().Be(expectedJson);
       }
 
-      private static string Serialize<T, TKey>(T value)
-         where T : Enum<T, TKey>
+      private static string Serialize<T, TKey, TConverter>(T value)
+         where T : IEnum<TKey>
+         where TConverter : EnumJsonConverter<T, TKey>, new()
       {
-         var sut = new EnumJsonConverter<T, TKey>();
+         var sut = new TConverter();
 
          using (var writer = new StringWriter())
          {

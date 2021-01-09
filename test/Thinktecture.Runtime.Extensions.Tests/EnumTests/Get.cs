@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using FluentAssertions;
 using Thinktecture.TestEnums;
@@ -12,13 +13,12 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_null_if_null_is_provided()
       {
-         var item = EmptyEnum.Get(null);
-
-         item.Should().BeNull();
+         TestEnum.Get(null).Should().BeNull();
+         ValidTestEnum.Get(null).Should().BeNull();
       }
 
       [Fact]
-      public void Should_return_invalid_item_if_enum_dont_have_any_items()
+      public void Should_return_invalid_item_if_enum_doesnt_have_any_items()
       {
          var item = EmptyEnum.Get("unknown");
 
@@ -27,18 +27,18 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
-      public void Should_return_invalid_item_via_reflection_if_enum_dont_have_any_items()
+      public void Should_return_invalid_item_via_reflection_if_enum_doesnt_have_any_items()
       {
          // ReSharper disable once PossibleNullReferenceException
-         var item = (IEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
-                                            .Invoke(null, new object[] { "unknown" });
+         var item = (EmptyEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                                                .Invoke(null, new object[] { "unknown" });
 
          item.IsValid.Should().BeFalse();
          item.Key.Should().Be("unknown");
       }
 
       [Fact]
-      public void Should_return_invalid_item_if_enum_dont_have_item_with_provided_key()
+      public void Should_return_invalid_item_if_enum_doesnt_have_item_with_provided_key()
       {
          var item = TestEnum.Get("unknown");
 
@@ -49,19 +49,17 @@ namespace Thinktecture.EnumTests
       [Fact]
       public void Should_return_item_with_provided_key()
       {
-         var item = TestEnum.Get("item2");
-         item.Should().Be(TestEnum.Item2);
+         TestEnum.Get("item2").Should().Be(TestEnum.Item2);
       }
 
       [Fact]
       public void Should_return_item_with_provided_key_ignoring_casing()
       {
-         var item = StaticCtorTestEnum_Get.Get("Item");
-         item.Should().Be(StaticCtorTestEnum_Get.Item);
+         StaticCtorTestEnum_Get.Get("Item").Should().Be(StaticCtorTestEnum_Get.Item);
       }
 
       [Fact]
-      public void Should_return_invalid_item_if_the_casing_does_not_match_accoring_to_comparer()
+      public void Should_return_invalid_item_if_the_casing_does_not_match_according_to_comparer()
       {
          var item = TestEnumWithNonDefaultComparer.Get("Item2");
          item.Key.Should().Be("Item2");
@@ -69,17 +67,24 @@ namespace Thinktecture.EnumTests
       }
 
       [Fact]
-      public void Should_return_item_with_provided_key_of_type_provided_to_baseclass()
+      public void Should_return_derived_type()
       {
-         var item = InvalidImplementationEnum.Get(TestEnum.Item2.Key);
-         item.Should().Be(TestEnum.Item2);
+         EnumWithDerivedType.Get(2).Should().Be(EnumWithDerivedType.ItemOfDerivedType);
+
+         AbstractEnum.Get(1).Should().Be(AbstractEnum.Item);
       }
 
       [Fact]
-      public void Should_throw_if_createInvalid_is_returning_null()
+      public void Should_return_valid_item_of_non_validatable_enum()
       {
-         Action action = () => InvalidCreateInvalidImplementationEnum.Get("unknown");
-         action.Should().Throw<Exception>().WithMessage($"The method CreateInvalid of enumeration type {typeof(InvalidCreateInvalidImplementationEnum).FullName} returned null.");
+         ValidTestEnum.Get("item1").Should().Be(ValidTestEnum.Item1);
+      }
+
+      [Fact]
+      public void Should_throw_if_key_is_unknown_to_non_validatable_enum()
+      {
+         Action action = () => ValidTestEnum.Get("invalid");
+         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
       }
    }
 }

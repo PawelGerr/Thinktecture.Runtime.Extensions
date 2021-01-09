@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Json.SourceGenerator.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json\Thinktecture.Runtime.Extensions.Json.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack\Thinktecture.Runtime.Extensions.MessagePack.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Newtonsoft.Json\Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentAssertions" Version="5.10.3" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" Version="1.0.1-beta1.20631.1" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing.XUnit" Version="1.0.1-beta1.20631.1" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeRefactoring.Testing.XUnit" Version="1.0.1-beta1.20631.1" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+      <PackageReference Include="xunit" Version="2.4.1" />
+    </ItemGroup>
+
+</Project>
