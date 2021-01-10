@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{21EB22DE-251
 		.github\workflows\ci.ps1 = .github\workflows\ci.ps1
 		.github\workflows\main.yml = .github\workflows\main.yml
 		.gitignore = .gitignore
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E6F200ED-86D2-4D5C-9D5F-34592908B107}"
