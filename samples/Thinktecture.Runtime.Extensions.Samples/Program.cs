@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Serilog;
 using Thinktecture.EmptyClass;
-using Thinktecture.EnumLikeClass;
+using Thinktecture.EnumLikeClasses;
 
 namespace Thinktecture
 {

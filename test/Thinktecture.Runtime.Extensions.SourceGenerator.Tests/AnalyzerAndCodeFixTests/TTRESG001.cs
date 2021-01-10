@@ -1,0 +1,138 @@
+using System.Threading.Tasks;
+using Xunit;
+using Verifier = Thinktecture.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
+
+namespace Thinktecture.AnalyzerAndCodeFixTests
+{
+   // ReSharper disable InconsistentNaming
+   public class TTRESG001
+   {
+      private const string _DIAGNOSTIC_ID = "TTRESG001";
+
+      public class Enum_fields_must_be_readonly
+      {
+         [Fact]
+         public async Task Should_trigger_on_non_readonly_enum_item()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public partial class TestEnum : IValidatableEnum<string>
+	{
+      public static TestEnum {|#0:Item1|} = default;
+      public static readonly TestEnum Item2 = default;
+   }
+}";
+
+            var expectedCode = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public partial class TestEnum : IValidatableEnum<string>
+	{
+      public static readonly TestEnum Item1 = default;
+      public static readonly TestEnum Item2 = default;
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_on_static_non_readonly_non_enum_item()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public partial class TestEnum : IValidatableEnum<string>
+	{
+      public static readonly TestEnum Item1 = default;
+
+      public static object {|#0:SomeStaticField|} = default;
+   }
+}";
+
+            var expectedCode = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public partial class TestEnum : IValidatableEnum<string>
+	{
+      public static readonly TestEnum Item1 = default;
+
+      public static readonly object {|#0:SomeStaticField|} = default;
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("SomeStaticField", "TestEnum");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_on_non_readonly_instance_field()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public partial class TestEnum : IValidatableEnum<string>
+	{
+      public static readonly TestEnum Item1 = default;
+
+      public int {|#0:InstanceField|};
+   }
+}";
+
+            var expectedCode = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public partial class TestEnum : IValidatableEnum<string>
+	{
+      public static readonly TestEnum Item1 = default;
+
+      public readonly int InstanceField;
+   }
+}";
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceField", "TestEnum");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_on_readonly_instance_field()
+         {
+            var code = @"
+using System;
+using Thinktecture;
+
+namespace TestNamespace
+{
+	public partial class TestEnum : IValidatableEnum<string>
+	{
+      public static readonly TestEnum Item1 = default;
+
+      public readonly int {|#0:InstanceField|};
+   }
+}";
+
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         }
+      }
+   }
+}

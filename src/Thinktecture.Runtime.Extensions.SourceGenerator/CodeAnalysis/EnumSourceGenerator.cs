@@ -1,0 +1,573 @@
+using System;
+using System.Text;
+
+namespace Thinktecture.CodeAnalysis
+{
+   public class EnumSourceGenerator
+   {
+      private readonly EnumSourceGeneratorState _state;
+      private readonly StringBuilder _sb;
+
+      public EnumSourceGenerator(EnumSourceGeneratorState state)
+      {
+         _state = state ?? throw new ArgumentNullException(nameof(state));
+         _sb = new StringBuilder();
+      }
+
+      public string Generate()
+      {
+         _sb.Clear();
+         _sb.Append($@"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Linq.Expressions;
+using Thinktecture;
+
+{(String.IsNullOrWhiteSpace(_state.Namespace) ? null : $"namespace {_state.Namespace}")}
+{{");
+         GenerateTypeConverter();
+         GenerateEnum();
+
+         _sb.Append($@"
+}}
+");
+
+         return _sb.ToString();
+      }
+
+      private void GenerateEnum()
+      {
+         var derivedTypes = _state.EnumType.FindDerivedInnerTypes();
+         var needCreateInvalidImplementation = _state.IsValidatable && !_state.EnumType.HasCreateInvalidImplementation(_state.KeyType);
+
+         _sb.GenerateStructLayoutAttributeIfRequired(_state.EnumType);
+
+         _sb.Append($@"
+   [System.ComponentModel.TypeConverter(typeof({_state.EnumIdentifier}_EnumTypeConverter))]
+   partial {(_state.EnumType.IsValueType ? "struct" : "class")} {_state.EnumIdentifier} : IEquatable<{_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>
+   {{
+      [System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {{
+         var convert = new Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>({_state.EnumIdentifier}.Get);
+         Expression<Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>> convertExpression = {_state.KeyArgumentName} => {_state.EnumIdentifier}.Get({_state.KeyArgumentName});
+
+         var enumType = typeof({_state.EnumIdentifier});
+         var metadata = new EnumMetadata(enumType, typeof({_state.KeyType}), convert, convertExpression);
+
+         EnumMetadataLookup.AddEnumMetadata(enumType, metadata);");
+
+         foreach (var derivedType in derivedTypes)
+         {
+            _sb.Append($@"
+         EnumMetadataLookup.AddEnumMetadata(typeof({derivedType.Type}), metadata);");
+         }
+
+         _sb.Append($@"
+      }}
+
+      private static readonly int _typeHashCode = typeof({_state.EnumIdentifier}).GetHashCode() * 397;");
+
+         if (_state.NeedsDefaultComparer)
+         {
+            var defaultComparer = _state.KeyType.IsString() ? "StringComparer.OrdinalIgnoreCase" : $"EqualityComparer<{_state.KeyType}>.Default";
+
+            _sb.Append($@"
+      private static readonly IEqualityComparer<{_state.KeyType}{_state.NullableQuestionMarkKey}> _defaultKeyComparerMember = {defaultComparer};");
+         }
+
+         _sb.Append($@"
+
+      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumIdentifier}>? _itemsLookup;
+      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumIdentifier}> ItemsLookup => _itemsLookup ??= GetLookup();
+
+      private static IReadOnlyList<{_state.EnumIdentifier}>? _items;
+
+      /// <summary>
+      /// Gets all valid items.
+      /// </summary>
+      public static IReadOnlyList<{_state.EnumIdentifier}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+
+      /// <summary>
+      /// The identifier of the item.
+      /// </summary>
+      [NotNull]
+      public {_state.KeyType} {_state.KeyPropertyName} {{ get; }}");
+
+         if (_state.IsValidatable)
+         {
+            _sb.Append($@"
+
+      /// <inheritdoc />
+      public bool IsValid {{ get; }}");
+
+            GenerateEnsureValid();
+         }
+
+         GenerateConstructors();
+         GenerateGetKey();
+         GeneratedGet(needCreateInvalidImplementation);
+
+         if (needCreateInvalidImplementation && !_state.EnumType.IsAbstract)
+            GenerateCreateInvalidItem();
+
+         GeneratedTryGet();
+         GenerateImplicitConversion();
+         GenerateEqualityOperators();
+         GenerateTypedEquals();
+
+         _sb.Append($@"
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {{
+         return other is {_state.EnumIdentifier} item && Equals(item);
+      }}
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {{
+         return _typeHashCode ^ {_state.KeyComparerMember}.GetHashCode(this.{_state.KeyPropertyName});
+      }}
+
+      /// <inheritdoc />
+      public override string? ToString()
+      {{
+         return this.{_state.KeyPropertyName}{(_state.EnumType.IsValueType && _state.KeyType.IsReferenceType ? "?" : null)}.ToString();
+      }}");
+
+         GenerateGetLookup();
+      }
+
+      private void GeneratedTryGet()
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Gets a valid enumeration item for provided <paramref name=""{_state.KeyArgumentName}""/> if a valid item exists.
+      /// </summary>
+      /// <param name=""{_state.KeyArgumentName}"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumIdentifier}""/>; otherwise <c>null</c>.</param>
+      /// <returns><c>true</c> if a valid item with provided <paramref name=""{_state.KeyArgumentName}""/> exists; <c>false</c> otherwise.</returns>
+      public static bool TryGet([AllowNull] {_state.KeyType} {_state.KeyArgumentName}, [MaybeNullWhen(false)] out {_state.EnumIdentifier} item)
+      {{");
+
+         if (_state.KeyType.IsReferenceType)
+         {
+            _sb.Append($@"
+         if ({_state.KeyArgumentName} is null)
+         {{
+            item = default;
+            return false;
+         }}
+");
+         }
+
+         _sb.Append($@"
+         return ItemsLookup.TryGetValue({_state.KeyArgumentName}, out item);
+      }}");
+      }
+
+      private void GenerateEqualityOperators()
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Compares to instances of <see cref=""{_state.EnumIdentifier}""/>.
+      /// </summary>
+      /// <param name=""item1"">Instance to compare.</param>
+      /// <param name=""item2"">Another instance to compare.</param>
+      /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item1, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item2)
+      {{");
+
+         if (_state.EnumType.IsReferenceType)
+         {
+            _sb.Append(@"
+         if (item1 is null)
+            return item2 is null;
+");
+         }
+
+         _sb.Append($@"
+         return item1.Equals(item2);
+      }}
+
+      /// <summary>
+      /// Compares to instances of <see cref=""{_state.EnumIdentifier}""/>.
+      /// </summary>
+      /// <param name=""item1"">Instance to compare.</param>
+      /// <param name=""item2"">Another instance to compare.</param>
+      /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item1, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item2)
+      {{
+         return !(item1 == item2);
+      }}");
+      }
+
+      private void GenerateImplicitConversion()
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Implicit conversion to the type of <see cref=""{_state.KeyType}""/>.
+      /// </summary>
+      /// <param name=""item"">Item to covert.</param>
+      /// <returns>The <see cref=""{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>null</c> if a<paramref name=""item""/> is <c>null</c>.</returns>
+      [return: NotNullIfNotNull(""item"")]
+      public static implicit operator {_state.KeyType}{_state.NullableQuestionMarkKey}({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item)
+      {{");
+
+         if (_state.EnumType.IsReferenceType)
+         {
+            _sb.Append($@"
+         return item is null ? default : item.{_state.KeyPropertyName};");
+         }
+         else
+         {
+            _sb.Append($@"
+         return item.{_state.KeyPropertyName};");
+         }
+
+         _sb.Append($@"
+      }}");
+      }
+
+      private void GenerateTypedEquals()
+      {
+         _sb.Append($@"
+
+      /// <inheritdoc />
+      public bool Equals({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} other)
+      {{");
+
+         if (_state.EnumType.IsReferenceType)
+         {
+            _sb.Append(@"
+         if (other is null)
+            return false;
+
+         if (!ReferenceEquals(GetType(), other.GetType()))
+            return false;
+
+         if (ReferenceEquals(this, other))
+            return true;
+");
+         }
+
+         if (_state.IsValidatable)
+         {
+            _sb.Append($@"
+         if (this.IsValid != other.IsValid)
+            return false;
+");
+         }
+
+         _sb.Append($@"
+         return {_state.KeyComparerMember}.Equals(this.{_state.KeyPropertyName}, other.{_state.KeyPropertyName});
+      }}");
+      }
+
+      private void GenerateGetLookup()
+      {
+         _sb.Append($@"
+
+      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumIdentifier}> GetLookup()
+      {{
+         var lookup = new Dictionary<{_state.KeyType}, {_state.EnumIdentifier}>({_state.KeyComparerMember});");
+
+         if (_state.Items.Count > 0)
+         {
+            _sb.Append($@"
+
+         void AddItem({_state.EnumIdentifier} item, string itemName)
+         {{");
+
+            if (_state.EnumType.IsReferenceType)
+            {
+               _sb.Append($@"
+            if(item is null)
+               throw new ArgumentNullException($""The item \""{{itemName}}\"" of type \""{_state.EnumIdentifier}\"" must not be null."");
+");
+            }
+
+            if (_state.KeyType.IsReferenceType)
+            {
+               _sb.Append($@"
+            if(item.{_state.KeyPropertyName} is null)
+               throw new ArgumentException($""The \""{_state.KeyPropertyName}\"" of the item \""{{itemName}}\"" of type \""{_state.EnumIdentifier}\"" must not be null."");
+");
+            }
+
+            if (_state.IsValidatable)
+            {
+               _sb.Append($@"
+            if(!item.IsValid)
+               throw new ArgumentException($""All 'public static readonly' fields of type \""{_state.EnumIdentifier}\"" must be valid but the item \""{{itemName}}\"" with the identifier \""{{item.{_state.KeyPropertyName}}}\"" is not."");
+");
+            }
+
+            _sb.Append($@"
+            if (lookup.ContainsKey(item.{_state.KeyPropertyName}))
+               throw new ArgumentException($""The type \""{_state.EnumIdentifier}\"" has multiple items with the identifier \""{{item.{_state.KeyPropertyName}}}\""."");
+
+            lookup.Add(item.{_state.KeyPropertyName}, item);
+         }}
+");
+
+            foreach (var item in _state.Items)
+            {
+               _sb.Append($@"
+         AddItem({item.Name}, ""{item.Name}"");");
+            }
+         }
+
+         _sb.Append($@"
+
+         return lookup;
+      }}
+   }}");
+      }
+
+      private void GenerateEnsureValid()
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Checks whether current enumeration item is valid.
+      /// </summary>
+      /// <exception cref=""InvalidOperationException"">The enumeration item is not valid.</exception>
+      public void EnsureValid()
+      {{
+         if (!IsValid)
+            throw new InvalidOperationException($""The current enumeration item of type '{_state.EnumIdentifier}' with identifier '{{this.{_state.KeyPropertyName}}}' is not valid."");
+      }}");
+      }
+
+      private void GenerateGetKey()
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      {_state.KeyType} IEnum<{_state.KeyType}>.GetKey()
+      {{
+         return this.{_state.KeyPropertyName};
+      }}");
+      }
+
+      private void GeneratedGet(bool needCreateInvalidImplementation)
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Gets an enumeration item for provided <paramref name=""{_state.KeyArgumentName}""/>.
+      /// </summary>
+      /// <param name=""{_state.KeyArgumentName}"">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of <see cref=""{_state.EnumIdentifier}"" /> if <paramref name=""{_state.KeyArgumentName}""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
+
+         if (!_state.IsValidatable)
+         {
+            _sb.Append($@"
+      /// <exception cref=""KeyNotFoundException"">If there is no item with the provided <paramref name=""{_state.KeyArgumentName}""/>.</exception>");
+         }
+
+         _sb.Append($@"
+      [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
+      public static {_state.EnumIdentifier}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} Get({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
+      {{");
+
+         if (_state.KeyType.IsReferenceType)
+         {
+            _sb.Append($@"
+        if ({_state.KeyArgumentName} is null)
+            return default;
+");
+         }
+
+         _sb.Append($@"
+         if (!ItemsLookup.TryGetValue({_state.KeyArgumentName}, out var item))
+         {{");
+
+         if (_state.IsValidatable)
+         {
+            _sb.Append($@"
+            item = {(needCreateInvalidImplementation && _state.EnumType.IsAbstract ? "null" : $"CreateInvalidItem({_state.KeyArgumentName})")};
+");
+
+            if (_state.EnumType.IsReferenceType)
+            {
+               _sb.Append(@"
+            if (item is null)
+               throw new Exception(""The implementation of method 'CreateInvalidItem' must not return 'null'."");
+");
+            }
+
+            _sb.Append(@"
+            if (item.IsValid)
+               throw new Exception(""The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'."");");
+         }
+         else
+         {
+            _sb.Append($@"
+            throw new KeyNotFoundException($""There is no item of type '{_state.EnumIdentifier}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
+         }
+
+         _sb.Append($@"
+         }}
+
+         return item;
+      }}");
+      }
+
+      private void GenerateCreateInvalidItem()
+      {
+         _sb.Append($@"
+
+      private static {_state.EnumIdentifier} CreateInvalidItem({_state.KeyType} {_state.KeyArgumentName})
+      {{
+         return new {_state.EnumIdentifier}({_state.KeyArgumentName}, false");
+
+         foreach (var member in _state.AssignableInstanceFieldsAndProperties)
+         {
+            _sb.Append(", default");
+
+            if (member.Type.IsReferenceType)
+               _sb.Append('!');
+         }
+
+         _sb.Append($@");
+      }}");
+      }
+
+      private void GenerateConstructors()
+      {
+         var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+
+         if (_state.IsValidatable)
+         {
+            _sb.Append($@"
+
+      private {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
+
+            foreach (var members in fieldsAndProperties)
+            {
+               _sb.Append($@", {members.Type} {members.ArgumentName}");
+            }
+
+            _sb.Append($@")
+         : this({_state.KeyArgumentName}, true");
+
+            foreach (var members in fieldsAndProperties)
+            {
+               _sb.Append($@", {members.ArgumentName}");
+            }
+
+            _sb.Append($@")
+      {{
+      }}");
+         }
+
+         _sb.Append($@"
+
+      private {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
+
+         if (_state.IsValidatable)
+            _sb.Append(", bool isValid");
+
+         foreach (var members in fieldsAndProperties)
+         {
+            _sb.Append($@", {members.Type} {members.ArgumentName}");
+         }
+
+         _sb.Append($@")
+      {{");
+
+         if (_state.KeyType.IsReferenceType)
+         {
+            _sb.Append($@"
+        if ({_state.KeyArgumentName} is null)
+            throw new ArgumentNullException(nameof({_state.KeyArgumentName}));
+");
+         }
+
+         _sb.Append($@"
+         ValidateConstructorArguments({_state.KeyArgumentName}");
+
+         if (_state.IsValidatable)
+            _sb.Append(", isValid");
+
+         foreach (var members in fieldsAndProperties)
+         {
+            _sb.Append($@", ref {members.ArgumentName}");
+         }
+
+         _sb.Append($@");
+
+         this.{_state.KeyPropertyName} = {_state.KeyArgumentName};");
+
+         if (_state.IsValidatable)
+         {
+            _sb.Append(@"
+         this.IsValid = isValid;");
+         }
+
+         foreach (var memberInfo in fieldsAndProperties)
+         {
+            _sb.Append($@"
+         this.{memberInfo.Symbol.Name} = {memberInfo.ArgumentName};");
+         }
+
+         _sb.Append($@"
+      }}");
+
+         _sb.Append($@"
+
+      static partial void ValidateConstructorArguments({_state.KeyType} {_state.KeyArgumentName}");
+
+         if (_state.IsValidatable)
+            _sb.Append(", bool isValid");
+
+         foreach (var members in fieldsAndProperties)
+         {
+            _sb.Append($@", ref {members.Type} {members.ArgumentName}");
+         }
+
+         _sb.Append($@");");
+      }
+
+      private void GenerateTypeConverter()
+      {
+         _sb.Append($@"
+   public class {_state.EnumIdentifier}_EnumTypeConverter : Thinktecture.EnumTypeConverter<{_state.EnumIdentifier}, {_state.KeyType}>
+   {{
+      /// <inheritdoc />
+      [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
+      protected override {_state.EnumIdentifier}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} ConvertFrom({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
+      {{");
+
+         if (_state.IsValidatable)
+         {
+            _sb.Append($@"
+         return {_state.EnumIdentifier}.Get({_state.KeyArgumentName});");
+         }
+         else
+         {
+            _sb.Append($@"
+         if({_state.EnumIdentifier}.TryGet({_state.KeyArgumentName}, out var item))
+            return item;
+
+         throw new NotSupportedException($""There is no item of type '{_state.EnumIdentifier}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
+         }
+
+         _sb.Append($@"
+      }}
+   }}
+");
+      }
+   }
+}

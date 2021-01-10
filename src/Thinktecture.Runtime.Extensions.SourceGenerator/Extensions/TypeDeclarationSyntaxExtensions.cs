@@ -40,9 +40,6 @@ namespace Thinktecture
          {
             switch (type)
             {
-               case IdentifierNameSyntax: // could be an alias
-                  return true;
-
                case QualifiedNameSyntax qns:
                   type = qns.Right;
                   break;

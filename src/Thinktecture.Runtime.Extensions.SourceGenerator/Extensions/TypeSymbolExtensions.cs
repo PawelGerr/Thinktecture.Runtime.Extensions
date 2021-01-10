@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Thinktecture.CodeAnalysis;
 
 // ReSharper disable once CheckNamespace
 namespace Thinktecture
@@ -90,9 +92,7 @@ namespace Thinktecture
                 && type.Name == "IValidatableEnum";
       }
 
-      public static IReadOnlyList<IFieldSymbol> GetEnumItems(
-         this ITypeSymbol enumType,
-         Action<Diagnostic>? reportDiagnostic = null)
+      public static IReadOnlyList<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType)
       {
          return enumType.GetMembers()
                         .Select(m =>
@@ -101,23 +101,7 @@ namespace Thinktecture
                                       return null;
 
                                    if (SymbolEqualityComparer.Default.Equals(field.Type, enumType))
-                                   {
-                                      if (m.DeclaredAccessibility != Accessibility.Public)
-                                      {
-                                         reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBePublic,
-                                                                                    GetLocation(field),
-                                                                                    m.Name, enumType.Name));
-                                      }
-
-                                      if (!field.IsReadOnly)
-                                      {
-                                         reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
-                                                                                    GetLocation(field),
-                                                                                    m.Name, enumType.Name));
-                                      }
-
                                       return field;
-                                   }
 
                                    return null;
                                 })
@@ -127,7 +111,22 @@ namespace Thinktecture
 
       public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol enumType)
       {
-         return enumType.GetAttributes().FirstOrDefault(a => a.AttributeClass?.ToString() == "Thinktecture.EnumGenerationAttribute");
+         return FindAttribute(enumType, "Thinktecture.EnumGenerationAttribute");
+      }
+
+      public static bool HasStructLayoutAttribute(this ITypeSymbol enumType)
+      {
+         return enumType.HasAttribute("System.Runtime.InteropServices.StructLayoutAttribute");
+      }
+
+      public static bool HasAttribute(this ITypeSymbol enumType, string attributeType)
+      {
+         return FindAttribute(enumType, attributeType) is not null;
+      }
+
+      private static AttributeData? FindAttribute(ITypeSymbol type, string attributeType)
+      {
+         return type.GetAttributes().FirstOrDefault(a => a.AttributeClass?.ToString() == attributeType);
       }
 
       public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(this ITypeSymbol enumType)
@@ -171,63 +170,91 @@ namespace Thinktecture
          return false;
       }
 
-      public static IReadOnlyList<EnumMemberInfo> GetAssignableInstanceFieldsAndProperties(
-         this ITypeSymbol enumType,
+      public static IReadOnlyList<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
+         this ITypeSymbol type,
+         bool instanceMembersOnly,
          Action<Diagnostic>? reportDiagnostic = null)
       {
-         return enumType.GetMembers()
-                        .Select(m =>
-                                {
-                                   if (m.IsStatic || !m.CanBeReferencedByName)
-                                      return null;
+         return type.GetMembers()
+                    .Select(m =>
+                            {
+                               if (instanceMembersOnly && m.IsStatic
+                                   || !m.CanBeReferencedByName)
+                                  return null;
 
-                                   EnumMemberInfo? member = null;
+                               if (m is IFieldSymbol fds)
+                               {
+                                  if (!fds.IsReadOnly)
+                                  {
+                                     reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
+                                                                                fds.GetLocation(),
+                                                                                fds.Name,
+                                                                                type.Name));
+                                  }
 
-                                   if (m is IFieldSymbol fds)
-                                   {
-                                      if (!fds.IsReadOnly)
-                                      {
-                                         reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
-                                                                                    GetLocation(fds),
-                                                                                    fds.Name,
-                                                                                    enumType.Name));
-                                      }
+                                  return new InstanceMemberInfo(fds, fds.Type);
+                               }
 
-                                      member = new EnumMemberInfo(fds, fds.Type);
-                                   }
+                               if (m is IPropertySymbol pds)
+                               {
+                                  var syntax = (PropertyDeclarationSyntax)pds.DeclaringSyntaxReferences.First().GetSyntax();
 
-                                   if (m is IPropertySymbol pds)
-                                   {
-                                      var syntax = (PropertyDeclarationSyntax)pds.DeclaringSyntaxReferences.First().GetSyntax();
+                                  if (syntax.ExpressionBody is not null) // public int Foo => 42;
+                                     return null;
 
-                                      if (syntax.ExpressionBody is not null) // public int Foo => 42;
-                                         return null;
+                                  var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
 
-                                      var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
+                                  if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
+                                     return null;
 
-                                      if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
-                                         return null;
+                                  if (pds.SetMethod is not null)
+                                  {
+                                     var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
 
-                                      if (pds.SetMethod is not null)
-                                      {
-                                         var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+                                     if (!IsDefaultImplementation(setter))
+                                        return null;
 
-                                         if (!IsDefaultImplementation(setter))
-                                            return null;
+                                     reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
+                                                                                GetLocation(pds),
+                                                                                pds.Name,
+                                                                                type.Name));
+                                  }
 
-                                         reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
-                                                                                    GetLocation(pds),
-                                                                                    pds.Name,
-                                                                                    enumType.Name));
-                                      }
+                                  return new InstanceMemberInfo(pds, pds.Type);
+                               }
 
-                                      member = new EnumMemberInfo(pds, pds.Type);
-                                   }
+                               return null;
+                            })
+                    .Where(m => m is not null)
+                    .ToList()!;
+      }
 
-                                   return member;
-                                })
-                        .Where(m => m is not null)
-                        .ToList()!;
+      public static IReadOnlyList<InstanceMemberInfo> GetReadableInstanceFieldsAndProperties(this ITypeSymbol type)
+      {
+         return type.GetMembers()
+                    .Select(m =>
+                            {
+                               if (m.IsStatic || !m.CanBeReferencedByName)
+                                  return null;
+
+                               switch (m)
+                               {
+                                  case IFieldSymbol fds:
+                                     return new InstanceMemberInfo(fds, fds.Type);
+
+                                  case IPropertySymbol pds:
+                                  {
+                                     if (!pds.IsWriteOnly)
+                                        return new InstanceMemberInfo(pds, pds.Type);
+
+                                     break;
+                                  }
+                               }
+
+                               return null;
+                            })
+                    .Where(m => m is not null)
+                    .ToList()!;
       }
 
       private static bool IsDefaultImplementation(AccessorDeclarationSyntax? accessor)
@@ -274,12 +301,6 @@ namespace Thinktecture
          }
 
          return false;
-      }
-
-      private static Location GetLocation(IFieldSymbol field)
-      {
-         var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.First().GetSyntax();
-         return syntax.Identifier.GetLocation();
       }
 
       private static Location GetLocation(IPropertySymbol field)
