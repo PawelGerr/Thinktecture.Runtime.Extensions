@@ -40,7 +40,7 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
       /// Creates a value converter for <see cref="IValidatableEnum{TKey}"/>.
       /// </summary>
       /// <param name="type">Type of the value type/enum.</param>
-      /// <param name="validateOnWrite">In case of an enum, ensures that the item is valid before writing it to database.</param>
+      /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
       /// <returns>An instance of <see cref="ValueConverter"/>></returns>
       public static ValueConverter Create(Type type, bool validateOnWrite)
       {

@@ -17,28 +17,18 @@ namespace Thinktecture
 
          using var ctx = CreateContext(loggerFactory);
 
-         InsertProduct(ctx, new Product
-                            {
-                               Id = Guid.NewGuid(),
-                               Name = ProductName.Create("Apple"),
-                               Category = ProductCategory.Fruits
-                            });
+         InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits));
 
          try
          {
-            InsertProduct(ctx, new Product
-                               {
-                                  Id = Guid.NewGuid(),
-                                  Name = ProductName.Create("Pear"),
-                                  Category = ProductCategory.Get("Invalid Category")
-                               });
+            InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category")));
          }
          catch (DbUpdateException)
          {
             logger.LogError("Error during persistence of invalid category.");
          }
 
-         var products = ctx.Products.Where(p => p.Category == ProductCategory.Fruits).ToList();
+         var products = ctx.Products.AsNoTracking().Where(p => p.Category == ProductCategory.Fruits).ToList();
          logger.LogInformation("Loaded products: {@products}", products);
       }
 
