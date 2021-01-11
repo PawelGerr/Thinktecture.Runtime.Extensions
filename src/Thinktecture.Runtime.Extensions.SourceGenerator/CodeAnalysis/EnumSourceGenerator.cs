@@ -119,6 +119,7 @@ using Thinktecture;
 
          GeneratedTryGet();
          GenerateImplicitConversion();
+         GenerateExplicitConversion();
          GenerateEqualityOperators();
          GenerateTypedEquals();
 
@@ -216,7 +217,7 @@ using Thinktecture;
          _sb.Append($@"
 
       /// <summary>
-      /// Implicit conversion to the type of <see cref=""{_state.KeyType}""/>.
+      /// Implicit conversion to the type <see cref=""{_state.KeyType}""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The <see cref=""{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
@@ -236,6 +237,22 @@ using Thinktecture;
          }
 
          _sb.Append($@"
+      }}");
+      }
+
+      private void GenerateExplicitConversion()
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""{_state.KeyType}""/>.
+      /// </summary>
+      /// <param name=""{_state.KeyArgumentName}"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""{_state.EnumIdentifier}""/> if the <paramref name=""{_state.KeyArgumentName}""/> is a known item or implements <see cref=""IValidatableEnum{{TKey}}""/>.</returns>
+      [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
+      public static explicit operator {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
+      {{
+         return {_state.EnumIdentifier}.Get({_state.KeyArgumentName});
       }}");
       }
 

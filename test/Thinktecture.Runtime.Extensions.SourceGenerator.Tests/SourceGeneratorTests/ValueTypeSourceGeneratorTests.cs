@@ -295,7 +295,7 @@ namespace Thinktecture.Tests
          Expression<Func<TestValueType, string>> convertToKeyExpression = obj => obj.ReferenceField;
 
          var type = typeof(TestValueType);
-         var metadata = new ValueTypeMetadata(type, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
          ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }
@@ -330,7 +330,7 @@ namespace Thinktecture.Tests
       static partial void ValidateFactoryArguments(ref string referenceField);
 
       /// <summary>
-      /// Implicit conversion to the type of <see cref=""string""/>.
+      /// Implicit conversion to the type <see cref=""string""/>.
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""ReferenceField""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -338,6 +338,16 @@ namespace Thinktecture.Tests
       public static implicit operator string?(TestValueType? obj)
       {
          return obj is null ? default : obj.ReferenceField;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""string""/>.
+      /// </summary>
+      /// <param name=""referenceField"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""TestValueType""/>.</returns>
+      public static explicit operator TestValueType(string referenceField)
+      {
+         return TestValueType.Create(referenceField);
       }
 
       private TestValueType(string referenceField)

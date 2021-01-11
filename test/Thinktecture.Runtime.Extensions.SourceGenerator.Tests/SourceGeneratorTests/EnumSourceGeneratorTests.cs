@@ -62,7 +62,7 @@ namespace Thinktecture.Tests
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -144,7 +144,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to the type of <see cref=""string""/>.
+      /// Implicit conversion to the type <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
@@ -152,6 +152,17 @@ namespace Thinktecture.Tests
       public static implicit operator string?(TestEnum? item)
       {
          return item is null ? default : item.Key;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""string""/>.
+      /// </summary>
+      /// <param name=""key"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""TestEnum""/> if the <paramref name=""key""/> is a known item or implements <see cref=""IValidatableEnum{TKey}""/>.</returns>
+      [return: NotNullIfNotNull(""key"")]
+      public static explicit operator TestEnum?(string? key)
+      {
+         return TestEnum.Get(key);
       }
 
       /// <summary>
@@ -336,7 +347,7 @@ namespace Thinktecture.Tests
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -447,7 +458,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to the type of <see cref=""string""/>.
+      /// Implicit conversion to the type <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
@@ -455,6 +466,17 @@ namespace Thinktecture.Tests
       public static implicit operator string?(TestEnum? item)
       {
          return item is null ? default : item.Key;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""string""/>.
+      /// </summary>
+      /// <param name=""key"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""TestEnum""/> if the <paramref name=""key""/> is a known item or implements <see cref=""IValidatableEnum{TKey}""/>.</returns>
+      [return: NotNullIfNotNull(""key"")]
+      public static explicit operator TestEnum?(string? key)
+      {
+         return TestEnum.Get(key);
       }
 
       /// <summary>
@@ -609,7 +631,7 @@ namespace Thinktecture.Tests
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -717,7 +739,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to the type of <see cref=""string""/>.
+      /// Implicit conversion to the type <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The <see cref=""Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
@@ -725,6 +747,17 @@ namespace Thinktecture.Tests
       public static implicit operator string?(TestEnum item)
       {
          return item.Key;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""string""/>.
+      /// </summary>
+      /// <param name=""key"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""TestEnum""/> if the <paramref name=""key""/> is a known item or implements <see cref=""IValidatableEnum{TKey}""/>.</returns>
+      [return: NotNullIfNotNull(""key"")]
+      public static explicit operator TestEnum(string? key)
+      {
+         return TestEnum.Get(key);
       }
 
       /// <summary>
@@ -898,7 +931,7 @@ namespace Thinktecture.Tests
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Name;
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -1009,7 +1042,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to the type of <see cref=""string""/>.
+      /// Implicit conversion to the type <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The <see cref=""Name""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
@@ -1017,6 +1050,17 @@ namespace Thinktecture.Tests
       public static implicit operator string?(TestEnum? item)
       {
          return item is null ? default : item.Name;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""string""/>.
+      /// </summary>
+      /// <param name=""name"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""TestEnum""/> if the <paramref name=""name""/> is a known item or implements <see cref=""IValidatableEnum{TKey}""/>.</returns>
+      [return: NotNullIfNotNull(""name"")]
+      public static explicit operator TestEnum?(string? name)
+      {
+         return TestEnum.Get(name);
       }
 
       /// <summary>

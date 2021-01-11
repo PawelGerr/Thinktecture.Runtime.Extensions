@@ -123,6 +123,7 @@ using Thinktecture;
          {
             GenerateFactoryMethod(_state.KeyMember);
             GenerateImplicitConversion(_state.KeyMember);
+            GenerateExplicitConversion(_state.KeyMember);
          }
 
          GenerateConstructor();
@@ -140,7 +141,7 @@ using Thinktecture;
          _sb.Append($@"
 
       /// <summary>
-      /// Implicit conversion to the type of <see cref=""{keyMember.Type}""/>.
+      /// Implicit conversion to the type <see cref=""{keyMember.Type}""/>.
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""{keyMember.Identifier}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -160,6 +161,21 @@ using Thinktecture;
          }
 
          _sb.Append($@"
+      }}");
+      }
+
+      private void GenerateExplicitConversion(InstanceMemberInfo keyMember)
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""{keyMember.Type}""/>.
+      /// </summary>
+      /// <param name=""{keyMember.ArgumentName}"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""{_state.TypeIdentifier}""/>.</returns>
+      public static explicit operator {_state.TypeIdentifier}({keyMember.Type} {keyMember.ArgumentName})
+      {{
+         return {_state.TypeIdentifier}.Create({keyMember.ArgumentName});
       }}");
       }
 

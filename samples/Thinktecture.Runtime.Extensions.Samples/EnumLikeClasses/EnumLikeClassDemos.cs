@@ -22,6 +22,9 @@ namespace Thinktecture.EnumLikeClasses
          var productType = ProductType.Get("Groceries");
          logger.Information("Product type: {type}", productType);
 
+         productType = (ProductType)"Groceries";
+         logger.Information("Explicitly casted product type: {type}", productType);
+
          if (ProductType.TryGet("Housewares", out var housewares))
             logger.Information("Product type {type} with TryGet found", housewares);
 
