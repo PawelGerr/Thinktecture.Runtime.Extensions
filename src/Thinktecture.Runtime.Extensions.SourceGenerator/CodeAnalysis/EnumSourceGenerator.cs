@@ -59,7 +59,7 @@ using Thinktecture;
          Expression<Func<{_state.EnumIdentifier}, {_state.KeyType}{_state.NullableQuestionMarkKey}>> convertToKeyExpression = item => item.{_state.KeyPropertyName};
 
          var enumType = typeof({_state.EnumIdentifier});
-         var metadata = new ValueTypeMetadata(enumType, typeof({_state.KeyType}), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);");
 

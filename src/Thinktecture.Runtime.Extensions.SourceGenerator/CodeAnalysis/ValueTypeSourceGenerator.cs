@@ -102,7 +102,7 @@ using Thinktecture;
          Expression<Func<{_state.TypeIdentifier}, {keyMember.Type}>> convertToKeyExpression = obj => obj.{keyMember.Identifier};
 
          var type = typeof({_state.TypeIdentifier});
-         var metadata = new ValueTypeMetadata(type, typeof({keyMember.Type}), convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(type, typeof({keyMember.Type}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
 
          ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }}

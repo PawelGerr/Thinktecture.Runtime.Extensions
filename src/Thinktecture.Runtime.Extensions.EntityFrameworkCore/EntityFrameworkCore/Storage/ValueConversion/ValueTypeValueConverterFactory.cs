@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -33,6 +34,38 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
          where TKey : notnull
       {
          return new ValidatableEnumValueConverter<TEnum, TKey>(validateOnWrite);
+      }
+
+      /// <summary>
+      /// Creates a value converter for <see cref="IValidatableEnum{TKey}"/>.
+      /// </summary>
+      /// <param name="type">Type of the value type/enum.</param>
+      /// <param name="validateOnWrite">In case of an enum, ensures that the item is valid before writing it to database.</param>
+      /// <returns>An instance of <see cref="ValueConverter"/>></returns>
+      public static ValueConverter Create(Type type, bool validateOnWrite)
+      {
+         if (type is null)
+            throw new ArgumentNullException(nameof(type));
+
+         var metadata = ValueTypeMetadataLookup.Find(type);
+
+         if (metadata is null)
+            throw new ArgumentException($"The provided type '{type.Name}' is neither an enumeration nor a value type with a key member.");
+
+         object converter;
+
+         if (metadata.IsValidatableEnum)
+         {
+            var enumConverterType = typeof(ValidatableEnumValueConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
+            converter = Activator.CreateInstance(enumConverterType, new object[] { validateOnWrite }) ?? throw new Exception($"Could not create an instance of '{enumConverterType.Name}'.");
+         }
+         else
+         {
+            var converterType = typeof(ValueTypeValueConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
+            converter = Activator.CreateInstance(converterType) ?? throw new Exception($"Could not create an instance of '{converterType.Name}'.");
+         }
+
+         return (ValueConverter)converter;
       }
 
       private static Expression<Func<TKey, T>> GetConverterFromKey<T, TKey>()

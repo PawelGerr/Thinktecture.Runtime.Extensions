@@ -39,10 +39,16 @@ namespace Thinktecture
       public LambdaExpression ConvertToKeyExpression { get; }
 
       /// <summary>
+      /// An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.
+      /// </summary>
+      public bool IsValidatableEnum { get; }
+
+      /// <summary>
       /// Initializes new instance of <see cref="ValueTypeMetadata"/>.
       /// </summary>
       /// <param name="type">The type of the value type.</param>
       /// <param name="keyType">The type of the key property.</param>
+      /// <param name="isValidatableEnum">An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.</param>
       /// <param name="convertFromKey">A delegate for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>
       /// <param name="convertFromKeyExpression">An expression for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>
       /// <param name="convertToKey">A delegate for conversion of values of type <paramref name="type"/> to type <paramref name="keyType"/>.</param>
@@ -50,6 +56,7 @@ namespace Thinktecture
       public ValueTypeMetadata(
          Type type,
          Type keyType,
+         bool isValidatableEnum,
          Delegate convertFromKey,
          LambdaExpression convertFromKeyExpression,
          Delegate convertToKey,
@@ -57,6 +64,7 @@ namespace Thinktecture
       {
          Type = type ?? throw new ArgumentNullException(nameof(type));
          KeyType = keyType ?? throw new ArgumentNullException(nameof(keyType));
+         IsValidatableEnum = isValidatableEnum;
          ConvertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));
          ConvertFromKeyExpression = convertFromKeyExpression ?? throw new ArgumentNullException(nameof(convertFromKeyExpression));
          ConvertToKey = convertToKey ?? throw new ArgumentNullException(nameof(convertToKey));
