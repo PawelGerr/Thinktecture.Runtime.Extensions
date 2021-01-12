@@ -122,29 +122,19 @@ namespace Thinktecture
                         .ToList()!;
       }
 
-      public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol enumType)
+      public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
       {
-         return FindAttribute(enumType, "Thinktecture.EnumGenerationAttribute");
+         return type.FindAttribute("Thinktecture.EnumGenerationAttribute");
       }
 
-      public static AttributeData? FindValueTypeAttribute(this ITypeSymbol enumType)
+      public static AttributeData? FindValueTypeAttribute(this ITypeSymbol type)
       {
-         return FindAttribute(enumType, "Thinktecture.ValueTypeAttribute");
+         return type.FindAttribute("Thinktecture.ValueTypeAttribute");
       }
 
       public static bool HasStructLayoutAttribute(this ITypeSymbol enumType)
       {
          return enumType.HasAttribute("System.Runtime.InteropServices.StructLayoutAttribute");
-      }
-
-      public static bool HasAttribute(this ITypeSymbol enumType, string attributeType)
-      {
-         return FindAttribute(enumType, attributeType) is not null;
-      }
-
-      private static AttributeData? FindAttribute(ITypeSymbol type, string attributeType)
-      {
-         return type.GetAttributes().FirstOrDefault(a => a.AttributeClass?.ToString() == attributeType);
       }
 
       public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(this ITypeSymbol enumType)

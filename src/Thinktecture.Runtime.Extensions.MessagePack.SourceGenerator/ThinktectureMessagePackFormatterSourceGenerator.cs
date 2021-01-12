@@ -31,7 +31,7 @@ namespace Thinktecture
          if (state.KeyMember is null)
             return null;
 
-         return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Type, "Create", state.KeyMember.Identifier.ToString());
+         return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString());
       }
 
       private static string GenerateFormatter(

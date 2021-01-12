@@ -5,6 +5,7 @@ namespace Thinktecture.ValueTypes
    [ValueType]
    public partial class ProductName
    {
+      [ValueTypeEqualityMember(Comparer = nameof(StringComparer.OrdinalIgnoreCase))]
       private string Value { get; }
 
       static partial void ValidateFactoryArguments(ref string value)

@@ -845,7 +845,7 @@ using System;
 
 namespace Thinktecture.Tests
 {
-   [EnumGeneration(KeyPropertyName = ""Name"", KeyComparerProvidingMember = ""_testEqualityComparer"")]
+   [EnumGeneration(KeyPropertyName = ""Name"", KeyComparer = ""_testEqualityComparer"")]
 	public partial class TestEnum : IValidatableEnum<string>
 	{
       private static readonly IEqualityComparer<string> _testEqualityComparer = StringComparer.Ordinal;

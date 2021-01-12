@@ -63,7 +63,7 @@ namespace Thinktecture.CodeAnalysis
 
       private static string GetKeyComparerMember(AttributeData? enumSettingsAttribute, out bool needsDefaultComparer)
       {
-         var comparerMemberName = enumSettingsAttribute?.FindKeyComparerProvidingMember();
+         var comparerMemberName = enumSettingsAttribute?.FindKeyComparer();
 
          needsDefaultComparer = comparerMemberName is null;
          return comparerMemberName ?? "_defaultKeyComparerMember";

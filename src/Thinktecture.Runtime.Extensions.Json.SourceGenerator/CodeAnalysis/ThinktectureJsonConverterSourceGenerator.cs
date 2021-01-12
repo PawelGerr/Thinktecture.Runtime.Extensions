@@ -30,7 +30,7 @@ namespace Thinktecture.CodeAnalysis
          if (!state.HasKeyMember)
             return null;
 
-         return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Type, "Create");
+         return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create");
       }
 
       private static string GenerateJsonConverter(

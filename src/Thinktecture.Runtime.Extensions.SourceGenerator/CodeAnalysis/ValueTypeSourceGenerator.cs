@@ -42,15 +42,23 @@ using Thinktecture;
          return _sb.ToString();
       }
 
-      private void GenerateTypeConverter(InstanceMemberInfo keyMember)
+      private void GenerateTypeConverter(EqualityInstanceMemberInfo keyMemberInfo)
       {
+         var keyMember = keyMemberInfo.Member;
          var nullableKeyType = keyMember.Type.WithNullableAnnotation(NullableAnnotation.Annotated);
 
          _sb.Append($@"
    public class {_state.TypeIdentifier}_ValueTypeConverter : Thinktecture.ValueTypeConverter<{_state.TypeIdentifier}, {keyMember.Type}>
    {{
-      /// <inheritdoc />
-      [return: NotNullIfNotNull(""{keyMember.ArgumentName}"")]
+      /// <inheritdoc />");
+
+         if (keyMember.Type.IsReferenceType)
+         {
+            _sb.Append($@"
+      [return: NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
+         }
+
+         _sb.Append($@"
       protected override {_state.TypeIdentifier}{(keyMember.Type.IsReferenceType ? _state.NullableQuestionMark : null)} ConvertFrom({nullableKeyType} {keyMember.ArgumentName})
       {{");
 
@@ -89,7 +97,7 @@ using Thinktecture;
 
          if (_state.HasKeyMember)
          {
-            var keyMember = _state.KeyMember;
+            var keyMember = _state.KeyMember.Member;
 
             _sb.Append($@"
       [System.Runtime.CompilerServices.ModuleInitializer]
@@ -136,8 +144,10 @@ using Thinktecture;
    }}");
       }
 
-      private void GenerateImplicitConversion(InstanceMemberInfo keyMember)
+      private void GenerateImplicitConversion(EqualityInstanceMemberInfo keyMemberInfo)
       {
+         var keyMember = keyMemberInfo.Member;
+
          _sb.Append($@"
 
       /// <summary>
@@ -164,8 +174,10 @@ using Thinktecture;
       }}");
       }
 
-      private void GenerateExplicitConversion(InstanceMemberInfo keyMember)
+      private void GenerateExplicitConversion(EqualityInstanceMemberInfo keyMemberInfo)
       {
+         var keyMember = keyMemberInfo.Member;
+
          _sb.Append($@"
 
       /// <summary>
@@ -179,8 +191,10 @@ using Thinktecture;
       }}");
       }
 
-      private void GenerateFactoryMethod(InstanceMemberInfo keyMember)
+      private void GenerateFactoryMethod(EqualityInstanceMemberInfo keyMemberInfo)
       {
+         var keyMember = keyMemberInfo.Member;
+
          _sb.Append($@"
 
       public static {_state.TypeIdentifier} Create({keyMember.Type} {keyMember.ArgumentName})
@@ -346,7 +360,7 @@ using Thinktecture;
          {
             for (var i = 0; i < _state.EqualityMembers.Count; i++)
             {
-               var member = _state.EqualityMembers[i];
+               var (member, comparer) = _state.EqualityMembers[i];
 
                if (i == 0)
                {
@@ -359,13 +373,20 @@ using Thinktecture;
              && ");
                }
 
-               if (member.Type.IsReferenceType)
+               if (comparer == null)
                {
-                  _sb.Append($@"(this.{member.Identifier} is null ? other.{member.Identifier} is null : this.{member.Identifier}.Equals(other.{member.Identifier}))");
+                  if (member.Type.IsReferenceType)
+                  {
+                     _sb.Append($@"(this.{member.Identifier} is null ? other.{member.Identifier} is null : this.{member.Identifier}.Equals(other.{member.Identifier}))");
+                  }
+                  else
+                  {
+                     _sb.Append($@"this.{member.Identifier}.Equals(other.{member.Identifier})");
+                  }
                }
                else
                {
-                  _sb.Append($@"this.{member.Identifier}.Equals(other.{member.Identifier})");
+                  _sb.Append($@"{comparer}.Equals(this.{member.Identifier}, other.{member.Identifier})");
                }
             }
 
@@ -391,7 +412,7 @@ using Thinktecture;
 
          if (_state.EqualityMembers.Count > 0)
          {
-            var useShortForm = _state.EqualityMembers.Count <= 8;
+            var useShortForm = _state.EqualityMembers.Count <= 8 && _state.EqualityMembers.All(m => m.Comparer == null);
 
             if (useShortForm)
             {
@@ -406,7 +427,7 @@ using Thinktecture;
 
             for (var i = 0; i < _state.EqualityMembers.Count; i++)
             {
-               var member = _state.EqualityMembers[i];
+               var (member, comparer) = _state.EqualityMembers[i];
 
                if (useShortForm)
                {
@@ -421,7 +442,12 @@ using Thinktecture;
                else
                {
                   _sb.Append($@"
-         hashCode.Add(this.{member.Identifier});");
+         hashCode.Add(this.{member.Identifier}");
+
+                  if (comparer is not null)
+                     _sb.Append($@", {comparer}");
+
+                  _sb.Append($@");");
                }
             }
 
@@ -455,7 +481,7 @@ using Thinktecture;
 
          if (_state.HasKeyMember)
          {
-            var keyMember = _state.KeyMember;
+            var keyMember = _state.KeyMember.Member;
 
             _sb.Append($@"
          return this.{keyMember.Identifier}{keyMember.NullableQuestionMark}.ToString();");
@@ -467,7 +493,7 @@ using Thinktecture;
 
             for (var i = 0; i < _state.EqualityMembers.Count; i++)
             {
-               var member = _state.EqualityMembers[i];
+               var (member, _) = _state.EqualityMembers[i];
 
                if (i > 0)
                   _sb.Append(',');

@@ -11,7 +11,7 @@ namespace Thinktecture
       /// <summary>
       /// The static member name containing the key equality comparer.
       /// </summary>
-      public string? KeyComparerProvidingMember { get; set; }
+      public string? KeyComparer { get; set; }
 
       private string? _keyPropertyName;
 
