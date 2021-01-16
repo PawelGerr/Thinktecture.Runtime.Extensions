@@ -1,10 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Thinktecture.ValueTypes
+namespace Thinktecture
 {
    [ValueType]
-   public partial class ProductName
+   public partial class ProductNameWithModelBinder
    {
       [ValueTypeEqualityMember(Comparer = nameof(StringComparer.OrdinalIgnoreCase))]
       private string Value { get; }

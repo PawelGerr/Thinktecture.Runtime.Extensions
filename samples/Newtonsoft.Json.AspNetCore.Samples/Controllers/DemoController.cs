@@ -46,8 +46,25 @@ namespace Thinktecture.Controllers
          return RoundTrip<ProductType, string>(productType);
       }
 
+      [HttpGet("productTypeWithJsonConverter/{productType}")]
+      public IActionResult RoundTrip(ProductTypeWithJsonConverter productType)
+      {
+         return RoundTrip<ProductTypeWithJsonConverter, string>(productType);
+      }
+
       [HttpGet("productName/{name}")]
       public IActionResult RoundTrip(ProductName name)
+      {
+         if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+         _logger.LogInformation("Round trip test with {Type}: {Name}", name.GetType().Name, name);
+
+         return Json(name);
+      }
+
+      [HttpGet("productNameWithModelBinder/{name}")]
+      public IActionResult RoundTrip(ProductNameWithModelBinder name)
       {
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -64,7 +81,7 @@ namespace Thinktecture.Controllers
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-         _logger.LogInformation("Round trip test with {Type}: {Value}", value.GetType().Name, value);
+         _logger.LogInformation("Round trip test with {Type}: {Name}", value.GetType().Name, value);
 
          return Json(new { Value = value, value.IsValid });
       }
@@ -76,7 +93,7 @@ namespace Thinktecture.Controllers
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-         _logger.LogInformation("Round trip test with {Type}: {Value}", value.GetType().Name, value);
+         _logger.LogInformation("Round trip test with {Type}: {Name}", value.GetType().Name, value);
 
          return Json(value);
       }

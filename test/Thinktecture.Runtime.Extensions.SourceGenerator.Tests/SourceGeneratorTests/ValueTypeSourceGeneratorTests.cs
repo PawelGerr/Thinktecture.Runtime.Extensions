@@ -23,6 +23,7 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 namespace Thinktecture.Tests
@@ -173,6 +174,7 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 namespace Thinktecture.Tests
@@ -259,6 +261,7 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 namespace Thinktecture.Tests
@@ -294,8 +297,10 @@ namespace Thinktecture.Tests
          var convertToKey = new Func<TestValueType, string>(item => item.ReferenceField);
          Expression<Func<TestValueType, string>> convertToKeyExpression = obj => obj.ReferenceField;
 
+         var tryCreate = new Thinktecture.Internal.Validate<TestValueType, string>(TestValueType.TryCreate);
+
          var type = typeof(TestValueType);
-         var metadata = new ValueTypeMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }
@@ -304,30 +309,30 @@ namespace Thinktecture.Tests
 
       public static TestValueType Create(string referenceField)
       {
-         ValidateFactoryArguments(ref referenceField);
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref referenceField);
+
+         if(validationResult != ValidationResult.Success)
+            throw new ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
          return new TestValueType(referenceField);
       }
 
-      public static bool TryCreate(
+      public static ValidationResult? TryCreate(
          string referenceField,
-         [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out TestValueType? obj)
+         [MaybeNull] out TestValueType? obj)
       {
-         try
-         {
-            ValidateFactoryArguments(ref referenceField);
-         }
-         catch(Exception)
-         {
-            obj = default;
-            return false;
-         }
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = new TestValueType(referenceField);
-         return true;
+         obj = validationResult == ValidationResult.Success
+               ? new TestValueType(referenceField)
+               : default;
+
+         return validationResult;
       }
 
-      static partial void ValidateFactoryArguments(ref string referenceField);
+      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref string referenceField);
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""string""/>.
@@ -448,6 +453,7 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 namespace Thinktecture.Tests
@@ -479,8 +485,10 @@ namespace Thinktecture.Tests
          var convertToKey = new Func<TestValueType, int>(item => item.ReferenceField);
          Expression<Func<TestValueType, int>> convertToKeyExpression = obj => obj.ReferenceField;
 
+         var tryCreate = new Thinktecture.Internal.Validate<TestValueType, int>(TestValueType.TryCreate);
+
          var type = typeof(TestValueType);
-         var metadata = new ValueTypeMetadata(type, typeof(int), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(type, typeof(int), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }
@@ -489,30 +497,30 @@ namespace Thinktecture.Tests
 
       public static TestValueType Create(int referenceField)
       {
-         ValidateFactoryArguments(ref referenceField);
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref referenceField);
+
+         if(validationResult != ValidationResult.Success)
+            throw new ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
          return new TestValueType(referenceField);
       }
 
-      public static bool TryCreate(
+      public static ValidationResult? TryCreate(
          int referenceField,
-         [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out TestValueType? obj)
+         [MaybeNull] out TestValueType? obj)
       {
-         try
-         {
-            ValidateFactoryArguments(ref referenceField);
-         }
-         catch(Exception)
-         {
-            obj = default;
-            return false;
-         }
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = new TestValueType(referenceField);
-         return true;
+         obj = validationResult == ValidationResult.Success
+               ? new TestValueType(referenceField)
+               : default;
+
+         return validationResult;
       }
 
-      static partial void ValidateFactoryArguments(ref int referenceField);
+      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref int referenceField);
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""int""/>.
@@ -658,6 +666,7 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 namespace Thinktecture.Tests
@@ -778,6 +787,7 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 namespace Thinktecture.Tests

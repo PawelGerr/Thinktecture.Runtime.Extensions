@@ -46,8 +46,25 @@ namespace Thinktecture.Controllers
          return RoundTrip<ProductType, string>(productType);
       }
 
+      [HttpGet("productTypeWithJsonConverter/{productType}")]
+      public IActionResult RoundTrip(ProductTypeWithJsonConverter productType)
+      {
+         return RoundTrip<ProductTypeWithJsonConverter, string>(productType);
+      }
+
       [HttpGet("productName/{name}")]
       public IActionResult RoundTrip(ProductName name)
+      {
+         if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+         _logger.LogInformation("Round trip test with {Type}: {Name}", name.GetType().Name, name);
+
+         return Json(name);
+      }
+
+      [HttpGet("productNameWithModelBinder/{name}")]
+      public IActionResult RoundTrip(ProductNameWithModelBinder name)
       {
          if (!ModelState.IsValid)
             return BadRequest(ModelState);

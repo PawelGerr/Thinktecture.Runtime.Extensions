@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
 namespace Thinktecture
@@ -39,6 +40,11 @@ namespace Thinktecture
       public LambdaExpression ConvertToKeyExpression { get; }
 
       /// <summary>
+      /// A delegate of type <see cref="Validate"/> for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/>.
+      /// </summary>
+      public Delegate Validate { get; }
+
+      /// <summary>
       /// An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.
       /// </summary>
       public bool IsValidatableEnum { get; }
@@ -53,6 +59,7 @@ namespace Thinktecture
       /// <param name="convertFromKeyExpression">An expression for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>
       /// <param name="convertToKey">A delegate for conversion of values of type <paramref name="type"/> to type <paramref name="keyType"/>.</param>
       /// <param name="convertToKeyExpression">An expression for conversion of values of type <paramref name="type"/> to type <paramref name="keyType"/>.</param>
+      /// <param name="validate">A delegate for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/> returning a <see cref="ValidationResult"/>.</param>
       public ValueTypeMetadata(
          Type type,
          Type keyType,
@@ -60,7 +67,8 @@ namespace Thinktecture
          Delegate convertFromKey,
          LambdaExpression convertFromKeyExpression,
          Delegate convertToKey,
-         LambdaExpression convertToKeyExpression)
+         LambdaExpression convertToKeyExpression,
+         Delegate validate)
       {
          Type = type ?? throw new ArgumentNullException(nameof(type));
          KeyType = keyType ?? throw new ArgumentNullException(nameof(keyType));
@@ -69,6 +77,7 @@ namespace Thinktecture
          ConvertFromKeyExpression = convertFromKeyExpression ?? throw new ArgumentNullException(nameof(convertFromKeyExpression));
          ConvertToKey = convertToKey ?? throw new ArgumentNullException(nameof(convertToKey));
          ConvertToKeyExpression = convertToKeyExpression ?? throw new ArgumentNullException(nameof(convertToKeyExpression));
+         Validate = validate ?? throw new ArgumentNullException(nameof(validate));
       }
    }
 }

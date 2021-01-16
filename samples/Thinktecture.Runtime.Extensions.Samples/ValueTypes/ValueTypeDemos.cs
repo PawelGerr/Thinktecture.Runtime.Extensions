@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Serilog;
 
 namespace Thinktecture.ValueTypes
@@ -25,7 +26,8 @@ namespace Thinktecture.ValueTypes
             logger.Information("ArgumentException is thrown because a product name cannot be an empty string.");
          }
 
-         if (ProductName.TryCreate("Milk", out var milk))
+         var validationResult = ProductName.TryCreate("Milk", out var milk);
+         if (validationResult == ValidationResult.Success)
             logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
       }
    }

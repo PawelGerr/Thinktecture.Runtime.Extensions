@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
@@ -58,8 +59,10 @@ using Thinktecture;
          var convertToKey = new Func<{_state.EnumIdentifier}, {_state.KeyType}{_state.NullableQuestionMarkKey}>(item => item.{_state.KeyPropertyName});
          Expression<Func<{_state.EnumIdentifier}, {_state.KeyType}{_state.NullableQuestionMarkKey}>> convertToKeyExpression = item => item.{_state.KeyPropertyName};
 
+         var validate = new Thinktecture.Internal.Validate<{_state.EnumIdentifier}, {_state.KeyType}>({_state.EnumIdentifier}.Validate);
+
          var enumType = typeof({_state.EnumIdentifier});
-         var metadata = new ValueTypeMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);");
 
@@ -117,7 +120,8 @@ using Thinktecture;
          if (needCreateInvalidImplementation && !_state.EnumType.IsAbstract)
             GenerateCreateInvalidItem();
 
-         GeneratedTryGet();
+         GenerateTryGet();
+         GenerateValidate();
          GenerateImplicitConversion();
          GenerateExplicitConversion();
          GenerateEqualityOperators();
@@ -146,7 +150,7 @@ using Thinktecture;
          GenerateGetLookup();
       }
 
-      private void GeneratedTryGet()
+      private void GenerateTryGet()
       {
          _sb.Append($@"
 
@@ -172,6 +176,24 @@ using Thinktecture;
 
          _sb.Append($@"
          return ItemsLookup.TryGetValue({_state.KeyArgumentName}, out item);
+      }}");
+      }
+
+      private void GenerateValidate()
+      {
+         _sb.Append($@"
+
+      /// <summary>
+      /// Validates the provided <paramref name=""{_state.KeyArgumentName}""/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name=""{_state.KeyArgumentName}"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumIdentifier}""/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""{_state.KeyArgumentName}""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
+      public static ValidationResult? Validate({_state.KeyType} {_state.KeyArgumentName}, [MaybeNull] out {_state.EnumIdentifier} item)
+      {{
+         return {_state.EnumIdentifier}.TryGet({_state.KeyArgumentName}, out item)
+               ? ValidationResult.Success
+               : new ValidationResult($""The enumeration item of type '{_state.EnumIdentifier}' with identifier '{{{_state.KeyArgumentName}}}' is not valid."");
       }}");
       }
 

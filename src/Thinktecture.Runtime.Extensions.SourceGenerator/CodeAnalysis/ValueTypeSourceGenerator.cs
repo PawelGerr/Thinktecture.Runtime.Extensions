@@ -26,6 +26,7 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(_state.Namespace) ? null : $"namespace {_state.Namespace}")}
@@ -109,8 +110,10 @@ using Thinktecture;
          var convertToKey = new Func<{_state.TypeIdentifier}, {keyMember.Type}>(item => item.{keyMember.Identifier});
          Expression<Func<{_state.TypeIdentifier}, {keyMember.Type}>> convertToKeyExpression = obj => obj.{keyMember.Identifier};
 
+         var tryCreate = new Thinktecture.Internal.Validate<{_state.TypeIdentifier}, {_state.KeyMember.Member.Type}>({_state.TypeIdentifier}.TryCreate);
+
          var type = typeof({_state.TypeIdentifier});
-         var metadata = new ValueTypeMetadata(type, typeof({keyMember.Type}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(type, typeof({keyMember.Type}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }}
@@ -199,30 +202,30 @@ using Thinktecture;
 
       public static {_state.TypeIdentifier} Create({keyMember.Type} {keyMember.ArgumentName})
       {{
-         ValidateFactoryArguments(ref {keyMember.ArgumentName});
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref {keyMember.ArgumentName});
+
+         if(validationResult != ValidationResult.Success)
+            throw new ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
          return new {_state.TypeIdentifier}({keyMember.ArgumentName});
       }}
 
-      public static bool TryCreate(
+      public static ValidationResult? TryCreate(
          {keyMember.Type} {keyMember.ArgumentName},
-         [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out {_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
+         [MaybeNull] out {_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
       {{
-         try
-         {{
-            ValidateFactoryArguments(ref {keyMember.ArgumentName});
-         }}
-         catch(Exception)
-         {{
-            obj = default;
-            return false;
-         }}
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref {keyMember.ArgumentName});
 
-         obj = new {_state.TypeIdentifier}({keyMember.ArgumentName});
-         return true;
+         obj = validationResult == ValidationResult.Success
+               ? new {_state.TypeIdentifier}({keyMember.ArgumentName})
+               : default;
+
+         return validationResult;
       }}
 
-      static partial void ValidateFactoryArguments(ref {keyMember.Type} {keyMember.ArgumentName});");
+      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref {keyMember.Type} {keyMember.ArgumentName});");
       }
 
       private void GenerateEqualityOperators()

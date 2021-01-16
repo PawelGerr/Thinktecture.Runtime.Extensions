@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
@@ -64,8 +65,10 @@ namespace Thinktecture.Tests
          var convertToKey = new Func<TestEnum, string?>(item => item.Key);
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
+         var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
+
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -144,6 +147,19 @@ namespace Thinktecture.Tests
          }
 
          return ItemsLookup.TryGetValue(key, out item);
+      }
+
+      /// <summary>
+      /// Validates the provided <paramref name=""key""/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
+      public static ValidationResult? Validate(string key, [MaybeNull] out TestEnum item)
+      {
+         return TestEnum.TryGet(key, out item)
+               ? ValidationResult.Success
+               : new ValidationResult($""The enumeration item of type 'TestEnum' with identifier '{key}' is not valid."");
       }
 
       /// <summary>
@@ -315,6 +331,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
@@ -349,8 +366,10 @@ namespace Thinktecture.Tests
          var convertToKey = new Func<TestEnum, string?>(item => item.Key);
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
+         var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
+
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -458,6 +477,19 @@ namespace Thinktecture.Tests
          }
 
          return ItemsLookup.TryGetValue(key, out item);
+      }
+
+      /// <summary>
+      /// Validates the provided <paramref name=""key""/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
+      public static ValidationResult? Validate(string key, [MaybeNull] out TestEnum item)
+      {
+         return TestEnum.TryGet(key, out item)
+               ? ValidationResult.Success
+               : new ValidationResult($""The enumeration item of type 'TestEnum' with identifier '{key}' is not valid."");
       }
 
       /// <summary>
@@ -598,6 +630,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
@@ -633,8 +666,10 @@ namespace Thinktecture.Tests
          var convertToKey = new Func<TestEnum, string?>(item => item.Key);
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
 
+         var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
+
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -739,6 +774,19 @@ namespace Thinktecture.Tests
          }
 
          return ItemsLookup.TryGetValue(key, out item);
+      }
+
+      /// <summary>
+      /// Validates the provided <paramref name=""key""/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
+      public static ValidationResult? Validate(string key, [MaybeNull] out TestEnum item)
+      {
+         return TestEnum.TryGet(key, out item)
+               ? ValidationResult.Success
+               : new ValidationResult($""The enumeration item of type 'TestEnum' with identifier '{key}' is not valid."");
       }
 
       /// <summary>
@@ -899,6 +947,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
@@ -933,8 +982,10 @@ namespace Thinktecture.Tests
          var convertToKey = new Func<TestEnum, string?>(item => item.Name);
          Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Name;
 
+         var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
+
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression);
+         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -1042,6 +1093,19 @@ namespace Thinktecture.Tests
          }
 
          return ItemsLookup.TryGetValue(name, out item);
+      }
+
+      /// <summary>
+      /// Validates the provided <paramref name=""name""/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name=""name"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""name""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
+      public static ValidationResult? Validate(string name, [MaybeNull] out TestEnum item)
+      {
+         return TestEnum.TryGet(name, out item)
+               ? ValidationResult.Success
+               : new ValidationResult($""The enumeration item of type 'TestEnum' with identifier '{name}' is not valid."");
       }
 
       /// <summary>
