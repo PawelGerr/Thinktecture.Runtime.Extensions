@@ -577,11 +577,19 @@ using Thinktecture;
          }
          else
          {
+            if (_state.KeyType.IsReferenceType)
+            {
+               _sb.Append($@"
+         if({_state.KeyArgumentName} is null)
+            return default;
+");
+            }
+
             _sb.Append($@"
          if({_state.EnumIdentifier}.TryGet({_state.KeyArgumentName}, out var item))
             return item;
 
-         throw new NotSupportedException($""There is no item of type '{_state.EnumIdentifier}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
+         throw new FormatException($""There is no item of type '{_state.EnumIdentifier}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
          }
 
          _sb.Append($@"

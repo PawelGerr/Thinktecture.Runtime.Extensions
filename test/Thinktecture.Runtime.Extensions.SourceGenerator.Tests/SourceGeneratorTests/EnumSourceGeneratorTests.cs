@@ -36,10 +36,13 @@ namespace Thinktecture.Tests
       [return: NotNullIfNotNull(""key"")]
       protected override TestEnum? ConvertFrom(string? key)
       {
+         if(key is null)
+            return default;
+
          if(TestEnum.TryGet(key, out var item))
             return item;
 
-         throw new NotSupportedException($""There is no item of type 'TestEnum' with the identifier '{key}'."");
+         throw new FormatException($""There is no item of type 'TestEnum' with the identifier '{key}'."");
       }
 
       /// <inheritdoc />

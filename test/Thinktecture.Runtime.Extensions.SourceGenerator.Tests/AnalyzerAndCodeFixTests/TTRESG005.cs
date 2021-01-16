@@ -14,6 +14,8 @@ namespace Thinktecture.AnalyzerAndCodeFixTests
       {
          var code = @"
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture;
 
 namespace TestNamespace
@@ -21,6 +23,11 @@ namespace TestNamespace
 	public partial class {|#0:TestEnum|} : IValidatableEnum<string>, IValidatableEnum<int>
 	{
       public static readonly TestEnum Item1 = default;
+
+      public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+      {
+         throw new System.NotImplementedException();
+      }
    }
 }";
 

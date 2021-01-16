@@ -14,7 +14,7 @@ namespace Thinktecture.ValueTypes
             throw new ArgumentException("Product name cannot be empty.");
 
          if (value.Length == 1)
-            throw new ArgumentException("Product name cannot be 1 character long.");
+            throw new FormatException("Product name cannot be 1 character long.");
 
          value = value.Trim();
       }
