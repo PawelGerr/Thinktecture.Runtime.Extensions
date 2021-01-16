@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Thinktecture
 {
@@ -27,11 +28,9 @@ namespace Thinktecture
 
       IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
       {
-         var validationResult = IsValid
-                                   ? ValidationResult.Success!
-                                   : new($"The enumeration item of type '{GetType().Name}' with identifier '{GetKey()}' is not valid.");
-
-         return new[] { validationResult };
+         return IsValid
+                   ? Enumerable.Empty<ValidationResult>()
+                   : new[] { new ValidationResult($"The enumeration item of type '{GetType().Name}' with identifier '{GetKey()}' is not valid.") };
       }
    }
 }
