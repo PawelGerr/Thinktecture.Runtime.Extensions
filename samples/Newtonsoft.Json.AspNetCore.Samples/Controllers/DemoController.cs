@@ -52,7 +52,7 @@ namespace Thinktecture.Controllers
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-         _logger.LogInformation($"Round trip test with {name.GetType().Name}", name);
+         _logger.LogInformation("Round trip test with {Type}: {Name}", name.GetType().Name, name);
 
          return Json(name);
       }
@@ -64,7 +64,7 @@ namespace Thinktecture.Controllers
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-         _logger.LogInformation($"Round trip test with {value.GetType().Name}", value);
+         _logger.LogInformation("Round trip test with {Type}: {Value}", value.GetType().Name, value);
 
          return Json(new { Value = value, value.IsValid });
       }
@@ -76,7 +76,7 @@ namespace Thinktecture.Controllers
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-         _logger.LogInformation($"Round trip test with {value.GetType().Name}", value);
+         _logger.LogInformation("Round trip test with {Type}: {Value}", value.GetType().Name, value);
 
          return Json(value);
       }

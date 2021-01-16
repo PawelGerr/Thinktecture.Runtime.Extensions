@@ -1,6 +1,5 @@
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Thinktecture.CodeAnalysis;
 
 // ReSharper disable once CheckNamespace
 namespace Thinktecture

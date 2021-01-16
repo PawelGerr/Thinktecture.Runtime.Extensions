@@ -10,10 +10,10 @@ namespace Thinktecture.ValueTypes
          logger.Information("==== Demo for ValueTypeAttribute ====");
 
          var bread = ProductName.Create("Bread");
-         logger.Information($"Product name: {bread}", bread);
+         logger.Information("Product name: {Bread}", bread);
 
          string valueOfTheProductName = bread;
-         logger.Information("Implicit conversion of ProductName -> string: {key}", valueOfTheProductName);
+         logger.Information("Implicit conversion of ProductName -> string: {Key}", valueOfTheProductName);
 
          try
          {
@@ -26,7 +26,7 @@ namespace Thinktecture.ValueTypes
          }
 
          if (ProductName.TryCreate("Milk", out var milk))
-            logger.Information("Product name '{name}' created with 'TryCreate'.", milk);
+            logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
       }
    }
 }

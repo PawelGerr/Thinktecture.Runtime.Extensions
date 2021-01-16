@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Thinktecture.CodeAnalysis;
 
-namespace Thinktecture
+namespace Thinktecture.CodeAnalysis
 {
    /// <summary>
    /// Source generator for JsonConverter for an enum-like class.

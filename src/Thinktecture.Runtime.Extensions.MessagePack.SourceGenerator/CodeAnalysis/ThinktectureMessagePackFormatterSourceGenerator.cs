@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Thinktecture.CodeAnalysis;
 
-namespace Thinktecture
+namespace Thinktecture.CodeAnalysis
 {
    /// <summary>
    /// Source generator for JsonConverter for an enum-like class.
@@ -19,7 +18,7 @@ namespace Thinktecture
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get", state.KeyPropertyName);
+         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get");
       }
 
       /// <inheritdoc />
@@ -31,7 +30,7 @@ namespace Thinktecture
          if (state.KeyMember is null)
             return null;
 
-         return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString());
+         return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create");
       }
 
       private static string GenerateFormatter(
@@ -39,8 +38,7 @@ namespace Thinktecture
          string? @namespace,
          SyntaxToken typeIdentifier,
          ITypeSymbol keyType,
-         string factoryMethod,
-         string keyMemberName)
+         string factoryMethod)
       {
          if (type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
             return String.Empty;

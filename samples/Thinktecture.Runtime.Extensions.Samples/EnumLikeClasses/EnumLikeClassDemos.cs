@@ -17,19 +17,19 @@ namespace Thinktecture.EnumLikeClasses
          logger.Information("==== Demo for IEnum<T> ====");
 
          var productTypes = ProductType.Items;
-         logger.Information("Product types: {types}", productTypes);
+         logger.Information("Product types: {Types}", productTypes);
 
          var productType = ProductType.Get("Groceries");
-         logger.Information("Product type: {type}", productType);
+         logger.Information("Product type: {Type}", productType);
 
          productType = (ProductType)"Groceries";
-         logger.Information("Explicitly casted product type: {type}", productType);
+         logger.Information("Explicitly casted product type: {Type}", productType);
 
          if (ProductType.TryGet("Housewares", out var housewares))
-            logger.Information("Product type {type} with TryGet found", housewares);
+            logger.Information("Product type {Type} with TryGet found", housewares);
 
          string keyOfTheProductType = productType;
-         logger.Information("Implicit conversion of ProductType -> string: {key}", keyOfTheProductType);
+         logger.Information("Implicit conversion of ProductType -> string: {Key}", keyOfTheProductType);
 
          try
          {
@@ -47,22 +47,22 @@ namespace Thinktecture.EnumLikeClasses
          logger.Information("==== Demo for IValidatableEnum<T> ====");
 
          var categories = ProductCategory.Items;
-         logger.Information("Categories: {categories}", categories);
+         logger.Information("Categories: {Categories}", categories);
 
          var category = ProductCategory.Get("Fruits");
-         logger.Information("Category: {category}", category);
+         logger.Information("Category: {Category}", category);
 
          // Throws "InvalidOperationException" if not valid
          category.EnsureValid();
 
          if (ProductCategory.TryGet("fruits", out var fruits))
-            logger.Information("Category {category} with TryGet found", fruits);
+            logger.Information("Category {Category} with TryGet found", fruits);
 
          string keyOfTheCategory = category;
-         logger.Information("Implicit conversion of Category -> string: {key}", keyOfTheCategory);
+         logger.Information("Implicit conversion of Category -> string: {Key}", keyOfTheCategory);
 
          var unknownCategory = ProductCategory.Get("Grains");
-         logger.Information("unknownCategory.Key: {categoryKey}", unknownCategory.Name);
+         logger.Information("unknownCategory.Key: {CategoryKey}", unknownCategory.Name);
          logger.Information("unknownCategory.isValid: {IsValid}", unknownCategory.IsValid);
       }
    }

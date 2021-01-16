@@ -29,7 +29,7 @@ namespace Thinktecture
          }
 
          var products = ctx.Products.AsNoTracking().Where(p => p.Category == ProductCategory.Fruits).ToList();
-         logger.LogInformation("Loaded products: {@products}", products);
+         logger.LogInformation("Loaded products: {@Products}", products);
       }
 
       private static void InsertProduct(ProductsDbContext ctx, Product apple)

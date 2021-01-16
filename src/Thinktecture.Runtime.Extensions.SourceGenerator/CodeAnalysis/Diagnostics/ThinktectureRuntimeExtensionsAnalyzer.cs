@@ -56,7 +56,12 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
             ValidateValueType(context, declaration, tds, type, valueTypeAttribute);
       }
 
-      private static void ValidateValueType(SymbolAnalysisContext context, SyntaxNode declaration, TypeDeclarationSyntax tds, INamedTypeSymbol type, AttributeData valueTypeAttribute)
+      private static void ValidateValueType(
+         SymbolAnalysisContext context,
+         SyntaxNode declaration,
+         TypeDeclarationSyntax tds,
+         INamedTypeSymbol type,
+         AttributeData valueTypeAttribute)
       {
          if (!declaration.IsKind(SyntaxKind.ClassDeclaration) && !declaration.IsKind(SyntaxKind.StructDeclaration))
          {

@@ -91,7 +91,7 @@ namespace Thinktecture.CodeAnalysis.CodeFixes
                   propertyDeclaration ??= GetDeclaration<PropertyDeclarationSyntax>(context, root);
 
                   if (propertyDeclaration is not null)
-                     context.RegisterCodeFix(CodeAction.Create(_REMOVE_PROPERTY_SETTER, t => RemovePropertySetterAsync(context.Document, root, propertyDeclaration), _REMOVE_PROPERTY_SETTER), makePropertyReadOnlyDiagnostic);
+                     context.RegisterCodeFix(CodeAction.Create(_REMOVE_PROPERTY_SETTER, _ => RemovePropertySetterAsync(context.Document, root, propertyDeclaration), _REMOVE_PROPERTY_SETTER), makePropertyReadOnlyDiagnostic);
                }
 
                var needsCreateInvalidDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation);

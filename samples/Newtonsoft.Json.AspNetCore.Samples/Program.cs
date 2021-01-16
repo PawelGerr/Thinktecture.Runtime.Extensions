@@ -51,12 +51,12 @@ namespace Thinktecture
 
       private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url)
       {
-         logger.LogInformation("Making request with url '{url}'", url);
+         logger.LogInformation("Making request with url '{Url}'", url);
 
          using var response = await client.GetAsync("http://localhost:5000/api/" + url);
 
          var content = await response.Content.ReadAsStringAsync();
-         logger.LogInformation("Server responded with: [{statuscode}] {response}", response.StatusCode, content);
+         logger.LogInformation("Server responded with: [{StatusCode}] {Response}", response.StatusCode, content);
       }
 
       private static Task StartServerAsync(ILoggerFactory loggerFactory)
