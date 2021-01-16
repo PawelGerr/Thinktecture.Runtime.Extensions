@@ -25,6 +25,7 @@ namespace Thinktecture
          // 	http://localhost:5000/api/category/fruits
          // 	http://localhost:5000/api/categoryWithConverter/fruits
          // 	http://localhost:5000/api/group/1
+         // 	http://localhost:5000/api/group/42
          // 	http://localhost:5000/api/groupWithConverter/1
          // 	http://localhost:5000/api/productType/groceries
          // 	http://localhost:5000/api/productType/invalid
@@ -42,6 +43,7 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "category/fruits");
          await DoRequestAsync(logger, client, "categoryWithConverter/fruits");
          await DoRequestAsync(logger, client, "group/1");
+         await DoRequestAsync(logger, client, "group/42"); // invalid
          await DoRequestAsync(logger, client, "groupWithConverter/1");
          await DoRequestAsync(logger, client, "productType/groceries");
          await DoRequestAsync(logger, client, "productType/invalid");

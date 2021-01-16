@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture
 {
@@ -6,7 +8,7 @@ namespace Thinktecture
    /// Base class for enum-like classes.
    /// </summary>
    /// <typeparam name="TKey">Type of the key.</typeparam>
-   public interface IValidatableEnum<out TKey> : IEnum<TKey>
+   public interface IValidatableEnum<out TKey> : IEnum<TKey>, IValidatableObject
       where TKey : notnull
    {
       /// <summary>
@@ -21,6 +23,15 @@ namespace Thinktecture
       void EnsureValid()
       {
          throw new NotImplementedException("This method will be implemented by the source generator.");
+      }
+
+      IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
+      {
+         var validationResult = IsValid
+                                   ? ValidationResult.Success!
+                                   : new($"The enumeration item of type '{GetType().Name}' with identifier '{GetKey()}' is not valid.");
+
+         return new[] { validationResult };
       }
    }
 }
