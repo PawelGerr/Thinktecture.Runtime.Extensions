@@ -40,7 +40,7 @@ namespace Thinktecture.CodeAnalysis
          ITypeSymbol keyType,
          string factoryMethod)
       {
-         if (type.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
+         if (type.HasAttribute("Microsoft.AspNetCore.Mvc.ModelBinderAttribute"))
             return String.Empty;
 
          return $@"
@@ -51,13 +51,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Thinktecture.AspNetCore.ModelBinding;
+using Microsoft.Extensions.Logging;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
    public class {typeIdentifier}_ValueTypeModelBinder : Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinder<{typeIdentifier}, {keyType}>
    {{
-      public {typeIdentifier}_ValueTypeModelBinder()
-         : base({typeIdentifier}.{factoryMethod})
+      public {typeIdentifier}_ValueTypeModelBinder(ILoggerFactory loggerFactory)
+         : base(loggerFactory, {typeIdentifier}.{factoryMethod})
       {{
       }}
    }}
