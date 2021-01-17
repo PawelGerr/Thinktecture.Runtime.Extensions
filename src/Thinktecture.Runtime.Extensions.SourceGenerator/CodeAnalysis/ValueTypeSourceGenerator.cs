@@ -209,26 +209,14 @@ using Thinktecture;
 
       public static {_state.TypeIdentifier} Create(");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-
-            if (i > 0)
-               _sb.Append(", ");
-
-            _sb.Append($@"{members.Type} {members.ArgumentName}");
-         }
+         _sb.RenderArgumentsWithType(fieldsAndProperties);
 
          _sb.Append($@")
       {{
          var validationResult = ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-            _sb.Append($@", ref {members.ArgumentName}");
-         }
+         _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
          _sb.Append($@");
 
@@ -251,12 +239,8 @@ using Thinktecture;
 
       public static ValidationResult? TryCreate(");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-            _sb.Append($@"
-         {members.Type} {members.ArgumentName},");
-         }
+         _sb.RenderArgumentsWithType(fieldsAndProperties, @"
+         ", ",", trailingComma: true);
 
          _sb.Append($@"
          [MaybeNull] out {_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
@@ -264,11 +248,7 @@ using Thinktecture;
          var validationResult = ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-            _sb.Append($@", ref {members.ArgumentName}");
-         }
+         _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
          _sb.Append($@");
 
@@ -292,11 +272,7 @@ using Thinktecture;
 
       static partial void ValidateFactoryArguments(ref ValidationResult? validationResult");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-            _sb.Append($@", ref {members.Type} {members.ArgumentName}");
-         }
+         _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true);
 
          _sb.Append($@");");
       }
@@ -306,17 +282,7 @@ using Thinktecture;
          var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
          _sb.Append($@"new {_state.TypeIdentifier}(");
-
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-
-            if (i > 0)
-               _sb.Append(", ");
-
-            _sb.Append(members.ArgumentName);
-         }
-
+         _sb.RenderArguments(fieldsAndProperties);
          _sb.Append($@")");
       }
 
@@ -368,15 +334,7 @@ using Thinktecture;
 
       private {_state.TypeIdentifier}(");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-
-            if (i > 0)
-               _sb.Append(", ");
-
-            _sb.Append($@"{members.Type} {members.ArgumentName}");
-         }
+         _sb.RenderArgumentsWithType(fieldsAndProperties);
 
          _sb.Append($@")
       {{");
@@ -384,15 +342,7 @@ using Thinktecture;
          _sb.Append($@"
          ValidateConstructorArguments(");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-
-            if (i > 0)
-               _sb.Append(", ");
-
-            _sb.Append($@"ref {members.ArgumentName}");
-         }
+         _sb.RenderArguments(fieldsAndProperties, "ref ");
 
          _sb.Append($@");
 ");
@@ -410,15 +360,7 @@ using Thinktecture;
 
       static partial void ValidateConstructorArguments(");
 
-         for (var i = 0; i < fieldsAndProperties.Count; i++)
-         {
-            var members = fieldsAndProperties[i];
-
-            if (i > 0)
-               _sb.Append(", ");
-
-            _sb.Append($@"ref {members.Type} {members.ArgumentName}");
-         }
+         _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ");
 
          _sb.Append($@");");
       }
