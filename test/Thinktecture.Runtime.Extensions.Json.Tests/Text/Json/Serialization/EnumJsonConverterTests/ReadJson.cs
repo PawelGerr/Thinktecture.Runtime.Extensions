@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using Thinktecture.Text.Json.Serialization.EnumJsonConverterTests.TestClasses;
 using Xunit;
@@ -45,7 +46,7 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_deserialize_string_based_enum(StringBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<StringBasedEnum, string, StringBasedEnum_ValueTypeJsonConverter>(json);
+         var value = Deserialize<StringBasedEnum, StringBasedEnum_ValueTypeJsonConverterFactory>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -54,7 +55,7 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_deserialize_int_based_enum(IntBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<IntBasedEnum, int, IntBasedEnum_ValueTypeJsonConverter>(json);
+         var value = Deserialize<IntBasedEnum, IntBasedEnum_ValueTypeJsonConverterFactory>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -63,7 +64,7 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
       public void Should_deserialize_class_containing_string_based_enum(ClassWithStringBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<ClassWithStringBasedEnum, StringBasedEnum, string, StringBasedEnum_ValueTypeJsonConverter>(json);
+         var value = Deserialize<ClassWithStringBasedEnum, StringBasedEnum_ValueTypeJsonConverterFactory>(json);
 
          value.Should().BeEquivalentTo(expectedValue);
       }
@@ -72,23 +73,15 @@ namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests
       [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
       public void Should_deserialize_class_containing_int_based_enum(ClassWithIntBasedEnum expectedValue, string json)
       {
-         var value = Deserialize<ClassWithIntBasedEnum, IntBasedEnum, int, IntBasedEnum_ValueTypeJsonConverter>(json);
+         var value = Deserialize<ClassWithIntBasedEnum, IntBasedEnum_ValueTypeJsonConverterFactory>(json);
 
          value.Should().BeEquivalentTo(expectedValue);
       }
 
-      private static T Deserialize<T, TKey, TConverter>(string json)
-         where T : IEnum<TKey>
-         where TConverter : ValueTypeJsonConverter<T, TKey>, new()
+      private static T Deserialize<T, TConverterFactory>(string json)
+         where TConverterFactory : JsonConverterFactory, new()
       {
-         return Deserialize<T, T, TKey, TConverter>(json);
-      }
-
-      private static T Deserialize<T, TEnum, TKey, TConverter>(string json)
-         where TEnum : IEnum<TKey>
-         where TConverter : ValueTypeJsonConverter<TEnum, TKey>, new()
-      {
-         var sut = new TConverter();
+         var sut = new TConverterFactory();
          var options = new JsonSerializerOptions { Converters = { sut } };
 
          return JsonSerializer.Deserialize<T>(json, options);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,7 @@ namespace Thinktecture
          // 	http://localhost:5000/api/productName/a
          // 	http://localhost:5000/api/productNameWithModelBinder/bread
          // 	http://localhost:5000/api/productNameWithModelBinder/a
+         // 	http://localhost:5000/api/boundary
          await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
 
          await server;
@@ -59,14 +61,19 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "productName/bread");
          await DoRequestAsync(logger, client, "productName/a"); // invalid
          await DoRequestAsync(logger, client, "productNameWithModelBinder/bread");
-         await DoRequestAsync(logger, client, "productNameWithModelBinder/a"); // invalid
+         await DoRequestAsync(logger, client, "boundary", Boundary.Create(1, 2));
       }
 
-      private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url)
+      private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url, object? body = null)
       {
          logger.LogInformation("Making request with url '{Url}'", url);
 
-         using var response = await client.GetAsync("http://localhost:5000/api/" + url);
+         var request = new HttpRequestMessage(body is null ? HttpMethod.Get : HttpMethod.Post, "http://localhost:5000/api/" + url);
+
+         if (body is not null)
+            request.Content = JsonContent.Create(body);
+
+         using var response = await client.SendAsync(request);
 
          var content = await response.Content.ReadAsStringAsync();
          logger.LogInformation("Server responded with: [{StatusCode}] {Response}", response.StatusCode, content);

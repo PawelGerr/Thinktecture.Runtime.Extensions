@@ -14,29 +14,31 @@ namespace Thinktecture.Text.Json.Serialization
    {
       private readonly Func<TKey, T> _convertFromKey;
       private readonly Func<T, TKey> _convertToKey;
-
-      private JsonConverter<TKey>? _keyConverter;
+      private readonly JsonConverter<TKey> _keyConverter;
 
       /// <summary>
       /// Initializes a new instance of <see cref="ValueTypeJsonConverter{TEnum,TKey}"/>.
       /// </summary>
       /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
       /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
-      /// <param name="keyConverter">JSON converter for the key.</param>
+      /// <param name="options">JSON serializer options.</param>
       public ValueTypeJsonConverter(
          Func<TKey, T> convertFromKey,
          Func<T, TKey> convertToKey,
-         JsonConverter<TKey>? keyConverter = null)
+         JsonSerializerOptions options)
       {
+         if (options is null)
+            throw new ArgumentNullException(nameof(options));
+
          _convertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));
          _convertToKey = convertToKey ?? throw new ArgumentNullException(nameof(convertToKey));
-         _keyConverter = keyConverter;
+         _keyConverter = (JsonConverter<TKey>)options.GetConverter(typeof(TKey));
       }
 
       /// <inheritdoc />
       public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
       {
-         var key = GetKeyConverter(options).Read(ref reader, typeof(TKey), options);
+         var key = _keyConverter.Read(ref reader, typeof(TKey), options);
 
          if (key is null)
             return default;
@@ -50,22 +52,7 @@ namespace Thinktecture.Text.Json.Serialization
          if (value is null)
             throw new ArgumentNullException(nameof(value));
 
-         GetKeyConverter(options).Write(writer, _convertToKey(value), options);
-      }
-
-      private JsonConverter<TKey> GetKeyConverter(JsonSerializerOptions options)
-      {
-         if (_keyConverter is null)
-         {
-            if (options is null)
-               throw new ArgumentNullException(nameof(options));
-
-            var converter = options.GetConverter(typeof(TKey));
-
-            _keyConverter = (JsonConverter<TKey>)converter ?? throw new JsonException($"The type '{typeof(T).Name}' is not JSON-serializable because there is no {nameof(JsonConverter)} for its key member of type '{typeof(TKey)}'.");
-         }
-
-         return _keyConverter;
+         _keyConverter.Write(writer, _convertToKey(value), options);
       }
    }
 }

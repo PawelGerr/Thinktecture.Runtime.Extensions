@@ -1249,26 +1249,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeJsonConverter : Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>
+   public class TestEnum_ValueTypeJsonConverterFactory : JsonConverterFactory
    {
-      public TestEnum_ValueTypeJsonConverter()
-         : this(null)
+      /// <inheritdoc />
+      public override bool CanConvert(Type typeToConvert)
       {
+         return typeof(TestEnum).IsAssignableFrom(typeToConvert);
       }
 
-      public TestEnum_ValueTypeJsonConverter(
-         JsonConverter<string>? keyConverter)
-         : base(TestEnum.Get, obj => (string) obj, keyConverter)
+      /// <inheritdoc />
+      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
       {
+         if (typeToConvert is null)
+            throw new ArgumentNullException(nameof(typeToConvert));
+         if (options is null)
+            throw new ArgumentNullException(nameof(options));
+
+         return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>(TestEnum.Get, obj => (string) obj, options);
       }
    }
 
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestEnum_ValueTypeJsonConverter))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestEnum_ValueTypeJsonConverterFactory))]
    partial class TestEnum
    {
    }

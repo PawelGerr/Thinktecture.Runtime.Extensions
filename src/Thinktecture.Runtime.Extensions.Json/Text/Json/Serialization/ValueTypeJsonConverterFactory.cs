@@ -28,13 +28,8 @@ namespace Thinktecture.Text.Json.Serialization
          if (metadata is null)
             throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");
 
-         var keyConverter = options.GetConverter(metadata.KeyType);
-
-         if (keyConverter is null)
-            throw new ArgumentException($"The type '{typeToConvert.Name}' is not JSON-serializable because there is no {nameof(JsonConverter)} for its key member of type '{metadata.KeyType.Name}'.", nameof(typeToConvert));
-
          var converterType = typeof(ValueTypeJsonConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-         var converter = Activator.CreateInstance(converterType, metadata.ConvertFromKey, metadata.ConvertToKey, keyConverter)
+         var converter = Activator.CreateInstance(converterType, metadata.ConvertFromKey, metadata.ConvertToKey, options)
                          ?? throw new Exception($"Could not create converter of type '{converterType.Name}'.");
 
          return (JsonConverter)converter;

@@ -74,6 +74,17 @@ namespace Thinktecture.Controllers
          return Json(name);
       }
 
+      [HttpPost("boundary")]
+      public IActionResult RoundTrip([FromBody] Boundary boundary)
+      {
+         if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+         _logger.LogInformation("Round trip test with {Type}: {Boundary}", boundary.GetType().Name, boundary);
+
+         return Json(boundary);
+      }
+
       private IActionResult RoundTripValidatableEnum<T, TKey>(T value)
          where T : IValidatableEnum<TKey>
          where TKey : notnull
