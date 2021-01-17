@@ -16,6 +16,8 @@ namespace Thinktecture.CodeAnalysis
       public AttributeData ValueTypeAttribute { get; }
       public SyntaxToken TypeIdentifier => _declaration.Identifier;
 
+      public bool SkipFactoryMethods => ValueTypeAttribute.FindSkipFactoryMethods() ?? false;
+
       public string? Namespace { get; }
       public string? NullableQuestionMark => Type.IsReferenceType ? "?" : null;
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -130,9 +131,15 @@ using Thinktecture;
       public static readonly {_state.TypeIdentifier} Empty = default;");
          }
 
+         if (!_state.SkipFactoryMethods)
+         {
+            GenerateCreateMethod();
+            GenerateTryCreateMethod();
+            GenerateValidateFactoryArguments();
+         }
+
          if (_state.HasKeyMember)
          {
-            GenerateFactoryMethod(_state.KeyMember);
             GenerateImplicitConversion(_state.KeyMember);
             GenerateExplicitConversion(_state.KeyMember);
          }
@@ -194,38 +201,123 @@ using Thinktecture;
       }}");
       }
 
-      private void GenerateFactoryMethod(EqualityInstanceMemberInfo keyMemberInfo)
+      private void GenerateCreateMethod()
       {
-         var keyMember = keyMemberInfo.Member;
+         var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
          _sb.Append($@"
 
-      public static {_state.TypeIdentifier} Create({keyMember.Type} {keyMember.ArgumentName})
+      public static {_state.TypeIdentifier} Create(");
+
+         for (var i = 0; i < fieldsAndProperties.Count; i++)
+         {
+            var members = fieldsAndProperties[i];
+
+            if (i > 0)
+               _sb.Append(", ");
+
+            _sb.Append($@"{members.Type} {members.ArgumentName}");
+         }
+
+         _sb.Append($@")
       {{
          var validationResult = ValidationResult.Success;
-         ValidateFactoryArguments(ref validationResult, ref {keyMember.ArgumentName});
+         ValidateFactoryArguments(ref validationResult");
+
+         for (var i = 0; i < fieldsAndProperties.Count; i++)
+         {
+            var members = fieldsAndProperties[i];
+            _sb.Append($@", ref {members.ArgumentName}");
+         }
+
+         _sb.Append($@");
 
          if(validationResult != ValidationResult.Success)
             throw new ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new {_state.TypeIdentifier}({keyMember.ArgumentName});
-      }}
+         return ");
 
-      public static ValidationResult? TryCreate(
-         {keyMember.Type} {keyMember.ArgumentName},
+         GenerateConstructCall();
+
+         _sb.Append($@";
+      }}");
+      }
+
+      private void GenerateTryCreateMethod()
+      {
+         var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+
+         _sb.Append($@"
+
+      public static ValidationResult? TryCreate(");
+
+         for (var i = 0; i < fieldsAndProperties.Count; i++)
+         {
+            var members = fieldsAndProperties[i];
+            _sb.Append($@"
+         {members.Type} {members.ArgumentName},");
+         }
+
+         _sb.Append($@"
          [MaybeNull] out {_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
       {{
          var validationResult = ValidationResult.Success;
-         ValidateFactoryArguments(ref validationResult, ref {keyMember.ArgumentName});
+         ValidateFactoryArguments(ref validationResult");
+
+         for (var i = 0; i < fieldsAndProperties.Count; i++)
+         {
+            var members = fieldsAndProperties[i];
+            _sb.Append($@", ref {members.ArgumentName}");
+         }
+
+         _sb.Append($@");
 
          obj = validationResult == ValidationResult.Success
-               ? new {_state.TypeIdentifier}({keyMember.ArgumentName})
+               ? ");
+
+         GenerateConstructCall();
+
+         _sb.Append($@"
                : default;
 
          return validationResult;
-      }}
+      }}");
+      }
 
-      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref {keyMember.Type} {keyMember.ArgumentName});");
+      private void GenerateValidateFactoryArguments()
+      {
+         var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+
+         _sb.Append($@"
+
+      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult");
+
+         for (var i = 0; i < fieldsAndProperties.Count; i++)
+         {
+            var members = fieldsAndProperties[i];
+            _sb.Append($@", ref {members.Type} {members.ArgumentName}");
+         }
+
+         _sb.Append($@");");
+      }
+
+      private void GenerateConstructCall()
+      {
+         var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+
+         _sb.Append($@"new {_state.TypeIdentifier}(");
+
+         for (var i = 0; i < fieldsAndProperties.Count; i++)
+         {
+            var members = fieldsAndProperties[i];
+
+            if (i > 0)
+               _sb.Append(", ");
+
+            _sb.Append(members.ArgumentName);
+         }
+
+         _sb.Append($@")");
       }
 
       private void GenerateEqualityOperators()
