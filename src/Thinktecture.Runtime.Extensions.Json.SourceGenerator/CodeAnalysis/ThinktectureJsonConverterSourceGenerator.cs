@@ -115,15 +115,22 @@ using Thinktecture.Text.Json.Serialization;
             if (needsConverter)
             {
                sb.Append(@$"
-      private JsonConverter<{memberInfo.Type}> _{memberInfo.ArgumentName}Converter;");
+      private readonly JsonConverter<{memberInfo.Type}> _{memberInfo.ArgumentName}Converter;");
             }
+
+            sb.Append(@$"
+      private readonly string _{memberInfo.ArgumentName}PropertyName;");
          }
 
          sb.Append(@$"
+
       public {state.TypeIdentifier}_ValueTypeJsonConverter(JsonSerializerOptions options)
       {{
          if(options is null)
-            throw new ArgumentNullException(nameof(options));");
+            throw new ArgumentNullException(nameof(options));
+
+         var namingPolicy = options.PropertyNamingPolicy;
+");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
@@ -133,8 +140,11 @@ using Thinktecture.Text.Json.Serialization;
             if (needsConverter)
             {
                sb.Append(@$"
-         this_{memberInfo.ArgumentName}Converter = (JsonConverter<{memberInfo.Type}>)options.GetConverter(typeof({memberInfo.Type}));");
+         this._{memberInfo.ArgumentName}Converter = (JsonConverter<{memberInfo.Type}>)options.GetConverter(typeof({memberInfo.Type}));");
             }
+
+            sb.Append(@$"
+         this._{memberInfo.ArgumentName}PropertyName = namingPolicy?.ConvertName(""{memberInfo.Identifier}"") ?? ""{memberInfo.Identifier}"";");
          }
 
          sb.Append(@$"
@@ -155,10 +165,12 @@ using Thinktecture.Text.Json.Serialization;
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-         ValueTypeJsonValue<{memberInfo.Type}> {memberInfo.ArgumentName} = default;");
+         {memberInfo.Type} {memberInfo.ArgumentName} = default;");
          }
 
          sb.Append(@$"
+
+         var comparer = options.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
          while (reader.Read())
          {{
@@ -189,10 +201,9 @@ using Thinktecture.Text.Json.Serialization;
             else if ");
             }
 
-            sb.Append(@$"(propName == ""{memberInfo.Identifier}"")
+            sb.Append(@$"(comparer.Equals(propName, this._{memberInfo.ArgumentName}PropertyName))
             {{
-               var value = {GenerateReadValue(memberInfo)};
-               {memberInfo.ArgumentName} = new ValueTypeJsonValue<{memberInfo.Type}>(value);
+               {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)};
             }}");
          }
 
@@ -215,7 +226,7 @@ using Thinktecture.Text.Json.Serialization;
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-                                    {memberInfo.ArgumentName}.GetValue(""{state.TypeIdentifier}"", ""{memberInfo.Identifier}""),");
+                                    {memberInfo.ArgumentName},");
          }
 
          sb.Append(@$"
@@ -230,18 +241,43 @@ using Thinktecture.Text.Json.Serialization;
       /// <inheritdoc />
       public override void Write(Utf8JsonWriter writer, {state.TypeIdentifier} value, JsonSerializerOptions options)
       {{
-         writer.WriteStartObject();");
+         writer.WriteStartObject();
+
+         var ignoreNullValues = options.IgnoreNullValues;
+");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
-            // TODO: naming policy
-
             sb.Append(@$"
-         writer.WritePropertyName(""{memberInfo.Identifier}"");");
+         var {memberInfo.ArgumentName}PropertyValue = value.{memberInfo.Identifier};
+");
+
+            if (memberInfo.IsReferenceTypeOrNullableStruct)
+            {
+               sb.Append(@$"
+         if(!ignoreNullValues || {memberInfo.ArgumentName}PropertyValue is not null)
+         {{
+            ");
+            }
+            else
+            {
+               sb.Append(@$"
+         ");
+            }
+
+            sb.Append(@$"writer.WritePropertyName(this._{memberInfo.ArgumentName}PropertyName);
+         ");
+
+            if (memberInfo.IsReferenceTypeOrNullableStruct)
+               sb.Append(@$"   ");
 
             GenerateWriteValue(sb, memberInfo);
+
+            if (memberInfo.IsReferenceTypeOrNullableStruct)
+               sb.Append(@$"
+         }}");
          }
 
          sb.Append($@"
@@ -314,15 +350,13 @@ using Thinktecture.Text.Json.Serialization;
             }
             else
             {
-               sb?.Append(@$"
-         _{memberInfo.ArgumentName}Converter.Write(writer, value.{memberInfo.Identifier}, options);");
+               sb?.Append(@$"this._{memberInfo.ArgumentName}Converter.Write(writer, {memberInfo.ArgumentName}PropertyValue, options);");
 
                return true;
             }
          }
 
-         sb?.Append(@$"
-         writer.").Append(command).Append($"(value.{memberInfo.Identifier});");
+         sb?.Append("writer.").Append(command).Append($"({memberInfo.ArgumentName}PropertyValue);");
 
          return false;
       }
@@ -366,7 +400,7 @@ using Thinktecture.Text.Json.Serialization;
             }
             else
             {
-               return @$"_{memberInfo.ArgumentName}Converter.Read(ref reader, typeof({memberInfo.Type}), options)";
+               return @$"this._{memberInfo.ArgumentName}Converter.Read(ref reader, typeof({memberInfo.Type}), options)";
             }
          }
 

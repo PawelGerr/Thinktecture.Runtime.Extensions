@@ -86,7 +86,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          {
             var keyMember = assignableMembers[0];
 
-            if (keyMember.Type.NullableAnnotation == NullableAnnotation.Annotated)
+            if (keyMember.Type.NullableAnnotation == NullableAnnotation.Annotated || keyMember.IsNullableStruct)
                context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.Identifier.GetLocation(), keyMember.Identifier));
          }
       }

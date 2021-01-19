@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
@@ -42,6 +43,17 @@ namespace Thinktecture.Text.Json.Serialization.ValueTypeJsonConverterFactoryTest
                                                                                  new object[] { new ClassWithIntBasedEnum(IntBasedEnum.Value2), "{ \"Enum\": 2 }" }
                                                                               };
 
+      public static IEnumerable<object[]> DataForValueTypeWithMultipleProperties => new[]
+                                                                                    {
+                                                                                       new object[] { null, "null" },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, null, null!), "{\"StructProperty\":0,\"NullableStructProperty\":null,\"ReferenceProperty\":null}" },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, null, null!), "{\"StructProperty\":0}" },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, 0, String.Empty), "{\"StructProperty\":0,\"NullableStructProperty\":0,\"ReferenceProperty\":\"\"}" },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value"), "{\"StructProperty\":1,\"NullableStructProperty\":42,\"ReferenceProperty\":\"Value\"}" },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value"), "{\"structProperty\":1,\"nullableStructProperty\":42,\"referenceProperty\":\"Value\"}", JsonNamingPolicy.CamelCase },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value"), "{\"structproperty\":1,\"NULLABLESTRUCTPROPERTY\":42,\"ReFeReNCePRoPeRTy\":\"Value\"}", null, true }
+                                                                                    };
+
       [Theory]
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_deserialize_string_based_enum(StringBasedEnum expectedValue, string json)
@@ -78,11 +90,32 @@ namespace Thinktecture.Text.Json.Serialization.ValueTypeJsonConverterFactoryTest
          value.Should().BeEquivalentTo(expectedValue);
       }
 
-      private static T Deserialize<T, TConverterFactory>(string json)
+      [Theory]
+      [MemberData(nameof(DataForValueTypeWithMultipleProperties))]
+      public void Should_deserialize_value_type_with_multiple_properties(
+         ValueTypeWithMultipleProperties expectedValueType,
+         string json,
+         JsonNamingPolicy namingPolicy = null,
+         bool propertyNameCaseInsensitive = false)
+      {
+         var value = Deserialize<ValueTypeWithMultipleProperties, ValueTypeWithMultipleProperties_ValueTypeJsonConverterFactory>(json, namingPolicy, propertyNameCaseInsensitive);
+
+         value.Should().BeEquivalentTo(expectedValueType);
+      }
+
+      private static T Deserialize<T, TConverterFactory>(
+         string json,
+         JsonNamingPolicy namingPolicy = null,
+         bool propertyNameCaseInsensitive = false)
          where TConverterFactory : JsonConverterFactory, new()
       {
-         var sut = new TConverterFactory();
-         var options = new JsonSerializerOptions { Converters = { sut } };
+         var factory = new TConverterFactory();
+         var options = new JsonSerializerOptions
+                       {
+                          Converters = { factory },
+                          PropertyNamingPolicy = namingPolicy,
+                          PropertyNameCaseInsensitive = propertyNameCaseInsensitive
+                       };
 
          return JsonSerializer.Deserialize<T>(json, options);
       }

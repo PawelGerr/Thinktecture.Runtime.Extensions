@@ -1180,6 +1180,7 @@ namespace Thinktecture.Tests
 	{
       public readonly string ReferenceField;
       public int StructProperty { get; }
+      public decimal? NullableStructProperty { get; }
    }
 }
 ";
@@ -1202,10 +1203,22 @@ namespace Thinktecture.Tests
 {
    public class TestValueType_ValueTypeJsonConverter : JsonConverter<TestValueType>
    {
+      private readonly string _referenceFieldPropertyName;
+      private readonly string _structPropertyPropertyName;
+      private readonly JsonConverter<decimal?> _nullableStructPropertyConverter;
+      private readonly string _nullableStructPropertyPropertyName;
+
       public TestValueType_ValueTypeJsonConverter(JsonSerializerOptions options)
       {
          if(options is null)
             throw new ArgumentNullException(nameof(options));
+
+         var namingPolicy = options.PropertyNamingPolicy;
+
+         this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
+         this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
+         this._nullableStructPropertyConverter = (JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
+         this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
       }
 
       /// <inheritdoc />
@@ -1217,8 +1230,11 @@ namespace Thinktecture.Tests
          if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.StartArray}'."");
 
-         ValueTypeJsonValue<string> referenceField = default;
-         ValueTypeJsonValue<int> structProperty = default;
+         string referenceField = default;
+         int structProperty = default;
+         decimal? nullableStructProperty = default;
+
+         var comparer = options.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
          while (reader.Read())
          {
@@ -1233,15 +1249,17 @@ namespace Thinktecture.Tests
             if(!reader.Read())
                throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
 
-            if (propName == ""ReferenceField"")
+            if (comparer.Equals(propName, this._referenceFieldPropertyName))
             {
-               var value = reader.GetString();
-               referenceField = new ValueTypeJsonValue<string>(value);
+               referenceField = reader.GetString();
             }
-            else if (propName == ""StructProperty"")
+            else if (comparer.Equals(propName, this._structPropertyPropertyName))
             {
-               var value = reader.GetInt32();
-               structProperty = new ValueTypeJsonValue<int>(value);
+               structProperty = reader.GetInt32();
+            }
+            else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
+            {
+               nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
             }
             else
             {
@@ -1250,8 +1268,9 @@ namespace Thinktecture.Tests
          }
 
          var validationResult = TestValueType.TryCreate(
-                                    referenceField.GetValue(""TestValueType"", ""ReferenceField""),
-                                    structProperty.GetValue(""TestValueType"", ""StructProperty""),
+                                    referenceField,
+                                    structProperty,
+                                    nullableStructProperty,
                                     out var obj);
 
          if (validationResult != ValidationResult.Success)
@@ -1264,10 +1283,27 @@ namespace Thinktecture.Tests
       public override void Write(Utf8JsonWriter writer, TestValueType value, JsonSerializerOptions options)
       {
          writer.WriteStartObject();
-         writer.WritePropertyName(""ReferenceField"");
-         writer.WriteStringValue(value.ReferenceField);
-         writer.WritePropertyName(""StructProperty"");
-         writer.WriteNumberValue(value.StructProperty);
+
+         var ignoreNullValues = options.IgnoreNullValues;
+
+         var referenceFieldPropertyValue = value.ReferenceField;
+
+         if(!ignoreNullValues || referenceFieldPropertyValue is not null)
+         {
+            writer.WritePropertyName(this._referenceFieldPropertyName);
+            writer.WriteStringValue(referenceFieldPropertyValue);
+         }
+         var structPropertyPropertyValue = value.StructProperty;
+
+         writer.WritePropertyName(this._structPropertyPropertyName);
+         writer.WriteNumberValue(structPropertyPropertyValue);
+         var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+
+         if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
+         {
+            writer.WritePropertyName(this._nullableStructPropertyPropertyName);
+            this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
+         }
          writer.WriteEndObject();
       }
    }
