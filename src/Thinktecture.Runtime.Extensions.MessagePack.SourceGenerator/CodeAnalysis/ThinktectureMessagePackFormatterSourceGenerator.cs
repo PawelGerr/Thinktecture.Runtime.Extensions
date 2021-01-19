@@ -27,10 +27,13 @@ namespace Thinktecture.CodeAnalysis
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         if (state.KeyMember is null)
-            return null;
+         if (state.HasKeyMember)
+            return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create");
 
-         return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create");
+         if (!state.SkipFactoryMethods)
+            return GenerateValueTypeFormatter(state);
+
+         return null;
       }
 
       private static string GenerateFormatter(
@@ -67,6 +70,182 @@ using Thinktecture;
    }}
 }}
 ";
+      }
+
+      private static string GenerateValueTypeFormatter(ValueTypeSourceGeneratorState state)
+      {
+         if (state.Type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
+            return String.Empty;
+
+         var sb = new StringBuilder($@"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using MessagePack;
+using MessagePack.Formatters;
+using Thinktecture;
+
+{(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
+{{
+   public class {state.TypeIdentifier}_ValueTypeMessagePackFormatter : IMessagePackFormatter<{state.TypeIdentifier}{state.NullableQuestionMark}>
+   {{");
+         sb.Append(@$"
+      /// <inheritdoc />
+      public {state.TypeIdentifier}{state.NullableQuestionMark} Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+      {{
+         if (reader.TryReadNil())
+            return default;
+
+         var count = reader.ReadArrayHeader();
+
+         if (count != {state.AssignableInstanceFieldsAndProperties.Count})
+            throw new MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
+
+         IFormatterResolver resolver = options.Resolver;
+         options.Security.DepthStep(ref reader);
+
+         try
+         {{
+");
+
+         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+         {
+            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+
+            sb.Append(@$"
+            var {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)}!;");
+         }
+
+         sb.Append(@$"
+
+            var validationResult = {state.TypeIdentifier}.TryCreate(");
+
+         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+         {
+            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+
+            sb.Append(@$"
+                                       {memberInfo.ArgumentName},");
+         }
+
+         sb.Append(@$"
+                                       out var obj);
+
+            if (validationResult != ValidationResult.Success)
+               throw new MessagePackSerializationException($""Unable to deserialize '{state.TypeIdentifier}'. Error: {{validationResult!.ErrorMessage}}."");
+
+            return obj;
+         }}
+         finally
+         {{
+           reader.Depth--;
+         }}
+      }}
+
+      /// <inheritdoc />
+      public void Serialize(ref MessagePackWriter writer, {state.TypeIdentifier}{state.NullableQuestionMark} value, MessagePackSerializerOptions options)
+      {{");
+
+         if (state.Type.IsReferenceType)
+         {
+            sb.Append(@$"
+         if(value is null)
+         {{
+            writer.WriteNil();
+            return;
+         }}
+");
+         }
+
+         sb.Append(@$"
+         writer.WriteArrayHeader({state.AssignableInstanceFieldsAndProperties.Count});
+
+         var resolver = options.Resolver;");
+
+         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+         {
+            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+
+            sb.Append(@$"
+         {GenerateWriteValue(memberInfo)};");
+         }
+
+         sb.Append($@"
+      }}
+   }}
+
+   [MessagePack.MessagePackFormatter(typeof({state.TypeIdentifier}_ValueTypeMessagePackFormatter))]
+   partial class {state.TypeIdentifier}
+   {{
+   }}
+}}
+");
+
+         return sb.ToString();
+      }
+
+      private static string GenerateWriteValue(InstanceMemberInfo memberInfo)
+      {
+         var command = memberInfo.Type.SpecialType switch
+         {
+            SpecialType.System_Boolean => "Write",
+            SpecialType.System_Char => "Write",
+            SpecialType.System_String => "Write",
+            SpecialType.System_DateTime => "Write",
+            SpecialType.System_Byte => "Write",
+            SpecialType.System_SByte => "Write",
+            SpecialType.System_Int16 => "Write",
+            SpecialType.System_UInt16 => "Write",
+            SpecialType.System_Int32 => "Write",
+            SpecialType.System_UInt32 => "Write",
+            SpecialType.System_Int64 => "Write",
+            SpecialType.System_UInt64 => "Write",
+            SpecialType.System_Single => "Write",
+            SpecialType.System_Double => "Write",
+            _ => null
+         };
+
+         if (command is not null)
+            return $"writer.{command}(value.{memberInfo.Identifier})";
+
+         return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Serialize(ref writer, value.{memberInfo.Identifier}, options)";
+      }
+
+      private static string GenerateReadValue(InstanceMemberInfo memberInfo)
+      {
+         var command = memberInfo.Type.SpecialType switch
+         {
+            SpecialType.System_Boolean => "ReadBoolean",
+
+            SpecialType.System_Char => "ReadChar",
+            SpecialType.System_String => "ReadString",
+
+            SpecialType.System_DateTime => "ReadDateTime",
+
+            SpecialType.System_Byte => "ReadByte",
+            SpecialType.System_SByte => "ReadSByte",
+
+            SpecialType.System_Int16 => "ReadInt16",
+            SpecialType.System_UInt16 => "ReadUInt16",
+
+            SpecialType.System_Int32 => "ReadInt32",
+            SpecialType.System_UInt32 => "ReadUInt32",
+
+            SpecialType.System_Int64 => "ReadInt64",
+            SpecialType.System_UInt64 => "ReadUInt64",
+
+            SpecialType.System_Single => "ReadSingle",
+            SpecialType.System_Double => "ReadDouble",
+            _ => null
+         };
+
+         if (command is not null)
+            return @$"reader.{command}()";
+
+         return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Deserialize(ref reader, options)";
       }
    }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using FluentAssertions;
 using MessagePack;
@@ -73,6 +75,27 @@ namespace Thinktecture.Formatters.EnumMessagePackFormatterTests
          var value = MessagePackSerializer.Deserialize<ClassWithIntBasedEnum>(bytes, _options, CancellationToken.None);
 
          value.Should().BeEquivalentTo(instance);
+      }
+
+      public static IEnumerable<object[]> DataForValueTypeWithMultipleProperties => new[]
+                                                                                    {
+                                                                                       new object[] { null },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, null, null!) },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, null, null!) },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, 0, String.Empty) },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value") },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value") },
+                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value") }
+                                                                                    };
+
+      [Theory]
+      [MemberData(nameof(DataForValueTypeWithMultipleProperties))]
+      public void Should_roundtrip_serialize_ValueTypeWithMultipleProperties(ValueTypeWithMultipleProperties expectedValueType)
+      {
+         var bytes = MessagePackSerializer.Serialize(expectedValueType);
+         var value = MessagePackSerializer.Deserialize<ValueTypeWithMultipleProperties>(bytes);
+
+         value.Should().BeEquivalentTo(expectedValueType);
       }
    }
 }

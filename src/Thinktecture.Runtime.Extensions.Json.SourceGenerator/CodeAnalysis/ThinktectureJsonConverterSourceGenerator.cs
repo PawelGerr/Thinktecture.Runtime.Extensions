@@ -157,7 +157,7 @@ using Thinktecture.Text.Json.Serialization;
             return default;
 
          if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonTokenType.StartArray}}'."");
+            throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonTokenType.StartObject}}'."");
 ");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
