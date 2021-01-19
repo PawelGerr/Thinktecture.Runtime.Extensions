@@ -1,4 +1,4 @@
-namespace Thinktecture.Text.Json.Serialization.EnumJsonConverterTests.TestClasses
+namespace Thinktecture.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests.TestClasses
 {
    public partial class StringBasedEnum : IValidatableEnum<string>
    {
