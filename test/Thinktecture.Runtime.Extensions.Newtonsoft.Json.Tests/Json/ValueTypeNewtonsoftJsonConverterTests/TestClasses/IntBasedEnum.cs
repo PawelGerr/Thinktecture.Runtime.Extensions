@@ -1,4 +1,4 @@
-namespace Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests
+namespace Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests.TestClasses
 {
    public partial class IntBasedEnum : IValidatableEnum<int>
    {
