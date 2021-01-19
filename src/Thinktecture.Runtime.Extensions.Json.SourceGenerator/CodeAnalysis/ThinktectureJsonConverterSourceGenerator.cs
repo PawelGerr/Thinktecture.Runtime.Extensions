@@ -165,7 +165,7 @@ using Thinktecture.Text.Json.Serialization;
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-         {memberInfo.Type} {memberInfo.ArgumentName} = default;");
+         {memberInfo.Type}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
          }
 
          sb.Append(@$"
@@ -226,7 +226,7 @@ using Thinktecture.Text.Json.Serialization;
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-                                    {memberInfo.ArgumentName},");
+                                    {memberInfo.ArgumentName}!,");
          }
 
          sb.Append(@$"

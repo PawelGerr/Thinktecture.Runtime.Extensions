@@ -15,8 +15,6 @@ namespace Thinktecture.Formatters
       private readonly Func<TKey, T> _convertFromKey;
       private readonly Func<T, TKey> _convertToKey;
 
-      private IMessagePackFormatter<TKey>? _keyFormatter;
-
       /// <summary>
       /// Initializes a new instance of <see cref="ValueTypeMessagePackFormatter{T,TKey}"/>.
       /// </summary>
@@ -39,7 +37,8 @@ namespace Thinktecture.Formatters
          }
          else
          {
-            GetKeyConverter(options).Serialize(ref writer, _convertToKey(value), options);
+            var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
+            formatter.Serialize(ref writer, _convertToKey(value), options);
          }
       }
 
@@ -51,25 +50,13 @@ namespace Thinktecture.Formatters
          if (reader.TryReadNil())
             return default;
 
-         var key = GetKeyConverter(options).Deserialize(ref reader, options);
+         var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
+         var key = formatter.Deserialize(ref reader, options);
 
          if (key is null)
             return default;
 
          return _convertFromKey(key);
-      }
-
-      private IMessagePackFormatter<TKey> GetKeyConverter(MessagePackSerializerOptions options)
-      {
-         if (_keyFormatter is null)
-         {
-            if (options is null)
-               throw new ArgumentNullException(nameof(options));
-
-            _keyFormatter = options.Resolver.GetFormatter<TKey>();
-         }
-
-         return _keyFormatter;
       }
    }
 }
