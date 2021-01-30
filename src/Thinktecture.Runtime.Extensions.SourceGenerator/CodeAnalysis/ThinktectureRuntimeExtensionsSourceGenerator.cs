@@ -13,6 +13,12 @@ namespace Thinktecture.CodeAnalysis
    public class ThinktectureRuntimeExtensionsSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
    {
       /// <inheritdoc />
+      public ThinktectureRuntimeExtensionsSourceGenerator()
+         : base(null)
+      {
+      }
+
+      /// <inheritdoc />
       protected override string GenerateEnum(EnumSourceGeneratorState state)
       {
          return new EnumSourceGenerator(state).Generate();

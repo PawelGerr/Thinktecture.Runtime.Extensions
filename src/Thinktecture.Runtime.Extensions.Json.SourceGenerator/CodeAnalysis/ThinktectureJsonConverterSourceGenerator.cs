@@ -13,6 +13,12 @@ namespace Thinktecture.CodeAnalysis
    public class ThinktectureJsonConverterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
    {
       /// <inheritdoc />
+      public ThinktectureJsonConverterSourceGenerator()
+         : base("_Json")
+      {
+      }
+
+      /// <inheritdoc />
       protected override string GenerateEnum(EnumSourceGeneratorState state)
       {
          if (state is null)

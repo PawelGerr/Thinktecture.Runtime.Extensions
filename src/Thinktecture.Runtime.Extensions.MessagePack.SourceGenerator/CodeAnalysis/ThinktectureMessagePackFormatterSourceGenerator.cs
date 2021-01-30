@@ -13,6 +13,12 @@ namespace Thinktecture.CodeAnalysis
    public class ThinktectureMessagePackFormatterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
    {
       /// <inheritdoc />
+      public ThinktectureMessagePackFormatterSourceGenerator()
+         : base("_MessagePack")
+      {
+      }
+
+      /// <inheritdoc />
       protected override string GenerateEnum(EnumSourceGeneratorState state)
       {
          if (state is null)

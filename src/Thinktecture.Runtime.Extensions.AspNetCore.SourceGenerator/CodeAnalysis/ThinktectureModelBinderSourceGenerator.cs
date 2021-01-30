@@ -13,6 +13,12 @@ namespace Thinktecture.CodeAnalysis
    public class ThinktectureModelBinderSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
    {
       /// <inheritdoc />
+      public ThinktectureModelBinderSourceGenerator()
+         : base("_ModelBinder")
+      {
+      }
+
+      /// <inheritdoc />
       protected override string GenerateEnum(EnumSourceGeneratorState state)
       {
          if (state is null)
