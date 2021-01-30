@@ -9,12 +9,22 @@ namespace Thinktecture
       public Guid Id { get; private set; }
       public ProductName Name { get; private set; }
       public ProductCategory Category { get; private set; }
+      public Boundary Boundary { get; private set; }
 
-      public Product(Guid id, ProductName name, ProductCategory category)
+      // For EF (see also https://github.com/dotnet/efcore/issues/12078)
+#pragma warning disable 8618
+      private Product(Guid id, ProductName name, ProductCategory category)
       {
          Id = id;
          Name = name;
          Category = category;
+      }
+#pragma warning restore 8618
+
+      public Product(Guid id, ProductName name, ProductCategory category, Boundary boundary)
+         : this(id, name, category)
+      {
+         Boundary = boundary;
       }
    }
 }

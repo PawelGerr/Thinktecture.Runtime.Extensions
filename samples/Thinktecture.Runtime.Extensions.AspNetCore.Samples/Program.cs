@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,16 +63,29 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "productName/a"); // invalid
          await DoRequestAsync(logger, client, "productNameWithModelBinder/bread");
          await DoRequestAsync(logger, client, "boundary", Boundary.Create(1, 2));
+         await DoRequestAsync(logger, client, "boundary", jsonBody: "{ \"lower\": 2, \"upper\": 1 }");
       }
 
-      private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url, object? body = null)
+      private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url, object? body = null, string? jsonBody = null)
       {
-         logger.LogInformation("Making request with url '{Url}'", url);
+         var hasBody = body is not null || jsonBody is not null;
 
-         var request = new HttpRequestMessage(body is null ? HttpMethod.Get : HttpMethod.Post, "http://localhost:5000/api/" + url);
+         if (hasBody)
+         {
+            logger.LogInformation("Making request with url '{Url}' and body '{Body}'", url, body ?? jsonBody);
+         }
+         else
+         {
+            logger.LogInformation("Making request with url '{Url}'", url);
+         }
+
+         var request = new HttpRequestMessage(hasBody ? HttpMethod.Post : HttpMethod.Get, "http://localhost:5000/api/" + url);
 
          if (body is not null)
             request.Content = JsonContent.Create(body);
+
+         if (jsonBody is not null)
+            request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
          using var response = await client.SendAsync(request);
 
@@ -105,7 +119,7 @@ namespace Thinktecture
       private static ILoggerFactory CreateLoggerFactory()
       {
          var serilog = new LoggerConfiguration()
-                       .WriteTo.Console()
+                       .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
                        .MinimumLevel.Information()
                        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                        .CreateLogger();

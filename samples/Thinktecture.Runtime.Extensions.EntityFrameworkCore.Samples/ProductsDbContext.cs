@@ -17,6 +17,16 @@ namespace Thinktecture
       {
          base.OnModelCreating(modelBuilder);
 
+         modelBuilder.Entity<Product>(builder =>
+                                      {
+                                         builder.OwnsOne(p => p.Boundary,
+                                                         boundaryBuilder =>
+                                                         {
+                                                            boundaryBuilder.Property(b => b.Lower).HasColumnName("Lower").HasPrecision(18, 2);
+                                                            boundaryBuilder.Property(b => b.Upper).HasColumnName("Upper").HasPrecision(18, 2);
+                                                         });
+                                      });
+
          modelBuilder.AddEnumAndValueTypeConverters(true);
       }
    }

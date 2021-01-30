@@ -17,11 +17,11 @@ namespace Thinktecture
 
          using var ctx = CreateContext(loggerFactory);
 
-         InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits));
+         InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, Boundary.Create(1, 2)));
 
          try
          {
-            InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category")));
+            InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), Boundary.Create(1, 2)));
          }
          catch (DbUpdateException)
          {
@@ -62,7 +62,7 @@ namespace Thinktecture
       private static ILoggerFactory GetLoggerFactory()
       {
          var serilog = new LoggerConfiguration()
-                       .WriteTo.Console()
+                       .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
                        .Destructure.AsScalar<ProductCategory>()
                        .Destructure.AsScalar<ProductName>()
                        .CreateLogger();
