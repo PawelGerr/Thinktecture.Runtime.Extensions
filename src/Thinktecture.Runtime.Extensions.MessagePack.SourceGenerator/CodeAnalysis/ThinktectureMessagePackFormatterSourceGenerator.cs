@@ -71,7 +71,7 @@ using Thinktecture;
    }}
 
    [MessagePack.MessagePackFormatter(typeof({typeIdentifier}_ValueTypeMessagePackFormatter))]
-   partial class {typeIdentifier}
+   partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
    {{
    }}
 }}
@@ -184,7 +184,7 @@ using Thinktecture;
    }}
 
    [MessagePack.MessagePackFormatter(typeof({state.TypeIdentifier}_ValueTypeMessagePackFormatter))]
-   partial class {state.TypeIdentifier}
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
    {{
    }}
 }}

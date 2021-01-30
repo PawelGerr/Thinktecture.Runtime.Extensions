@@ -71,7 +71,7 @@ using Thinktecture;
    }}
 
    [Newtonsoft.Json.JsonConverterAttribute(typeof({typeIdentifier}_ValueTypeNewtonsoftJsonConverter))]
-   partial class {typeIdentifier}
+   partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
    {{
    }}
 }}
@@ -254,7 +254,7 @@ using Thinktecture;
    }}
 
    [Newtonsoft.Json.JsonConverterAttribute(typeof({state.TypeIdentifier}_ValueTypeNewtonsoftJsonConverter))]
-   partial class {state.TypeIdentifier}
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
    {{
    }}
 }}

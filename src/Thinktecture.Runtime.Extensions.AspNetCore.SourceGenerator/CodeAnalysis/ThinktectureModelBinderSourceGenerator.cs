@@ -70,7 +70,7 @@ using Microsoft.Extensions.Logging;
    }}
 
    [Microsoft.AspNetCore.Mvc.ModelBinderAttribute(typeof({typeIdentifier}_ValueTypeModelBinder))]
-   partial class {typeIdentifier}
+   partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
    {{
    }}
 }}

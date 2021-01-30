@@ -85,7 +85,7 @@ using Thinktecture;
    }}
 
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof({typeIdentifier}_ValueTypeJsonConverterFactory))]
-   partial class {typeIdentifier}
+   partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
    {{
    }}
 }}
@@ -312,7 +312,7 @@ using Thinktecture.Text.Json.Serialization;
    }}
 
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof({state.TypeIdentifier}_ValueTypeJsonConverterFactory))]
-   partial class {state.TypeIdentifier}
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
    {{
    }}
 }}
