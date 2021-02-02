@@ -94,7 +94,16 @@ using Thinktecture;
          }
 
          _sb.Append($@"
-   partial {(_state.Type.IsValueType ? "struct" : "class")} {_state.TypeIdentifier} : IEquatable<{_state.TypeIdentifier}{_state.NullableQuestionMark}>
+   partial {(_state.Type.IsValueType ? "struct" : "class")} {_state.TypeIdentifier} : System.IEquatable<{_state.TypeIdentifier}{_state.NullableQuestionMark}>");
+
+         var isFormattable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsFormattable();
+
+         if (isFormattable)
+         {
+            _sb.Append(", System.IFormattable");
+         }
+
+         _sb.Append($@"
    {{");
 
          if (_state.HasKeyMember)
@@ -150,6 +159,9 @@ using Thinktecture;
          GenerateEquals();
          GenerateGetHashCode();
          GenerateToString();
+
+         if (_state.HasKeyMember && isFormattable)
+            GenerateToStringFormat(_state.KeyMember);
 
          _sb.Append($@"
    }}");
@@ -573,6 +585,19 @@ using Thinktecture;
          }
 
          _sb.Append($@"
+      }}");
+      }
+
+      private void GenerateToStringFormat(EqualityInstanceMemberInfo keyMemberInfo)
+      {
+         var keyMember = keyMemberInfo.Member;
+
+         _sb.Append($@"
+
+      /// <inheritdoc />
+      public string ToString(string? format, IFormatProvider? formatProvider = null)
+      {{
+         return this.{keyMember.Identifier}.ToString(format, formatProvider);
       }}");
       }
    }

@@ -28,7 +28,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   partial class TestValueType : IEquatable<TestValueType?>
+   partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);
 
@@ -205,7 +205,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   partial class TestValueType : IEquatable<TestValueType?>
+   partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);
 
@@ -301,7 +301,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   partial struct TestValueType : IEquatable<TestValueType>
+   partial struct TestValueType : System.IEquatable<TestValueType>
    {
       private static readonly Type _type = typeof(TestValueType);
 
@@ -434,7 +434,7 @@ namespace Thinktecture.Tests
    }
 
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
-   partial class TestValueType : IEquatable<TestValueType?>
+   partial class TestValueType : System.IEquatable<TestValueType?>
    {
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -622,7 +622,7 @@ namespace Thinktecture.Tests
    }
 
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
-   partial class TestValueType : IEquatable<TestValueType?>
+   partial class TestValueType : System.IEquatable<TestValueType?>, System.IFormattable
    {
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -773,6 +773,12 @@ namespace Thinktecture.Tests
       {
          return this.ReferenceField.ToString();
       }
+
+      /// <inheritdoc />
+      public string ToString(string? format, IFormatProvider? formatProvider = null)
+      {
+         return this.ReferenceField.ToString(format, formatProvider);
+      }
    }
 }
 ");
@@ -833,7 +839,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   partial class TestValueType : IEquatable<TestValueType?>
+   partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);
 
@@ -984,7 +990,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   partial class TestValueType : IEquatable<TestValueType?>
+   partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);
 

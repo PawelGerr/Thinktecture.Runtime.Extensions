@@ -122,6 +122,11 @@ namespace Thinktecture
                         .ToList()!;
       }
 
+      public static bool IsFormattable(this ITypeSymbol type)
+      {
+         return type.AllInterfaces.Any(i => i.ContainingNamespace?.Name == "System" && i.Name == "IFormattable");
+      }
+
       public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
       {
          return type.FindAttribute("Thinktecture.EnumGenerationAttribute");
