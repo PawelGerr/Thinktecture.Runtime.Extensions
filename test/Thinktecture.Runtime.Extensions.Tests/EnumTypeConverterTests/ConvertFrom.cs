@@ -59,7 +59,7 @@ namespace Thinktecture.EnumTypeConverterTests
       public void Should_throw_trying_to_convert_null_to_structs()
       {
          IntBasedStructEnumConverter.Invoking(c => c.ConvertFrom(null, null, null))
-                                    .Should().Throw<NotSupportedException>().WithMessage("StructIntegerEnum_EnumTypeConverter cannot convert from 'null'.");
+                                    .Should().Throw<NotSupportedException>().WithMessage("StructIntegerEnum is a struct and cannot be converted from 'null'.");
       }
 
       [Fact]

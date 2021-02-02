@@ -15,7 +15,10 @@ namespace Thinktecture
       where TKey : notnull
    {
       private static readonly Type _type = typeof(T);
+      private static readonly Type? _nullableType = !typeof(T).IsClass ? typeof(Nullable<>).MakeGenericType(typeof(T)) : null;
       private static readonly Type _keyType = typeof(TKey);
+      private static readonly Type? _nullableKeyType = !typeof(TKey).IsClass ? typeof(Nullable<>).MakeGenericType(typeof(TKey)) : null;
+      private static readonly TypeConverter? _keyConverter = typeof(TKey) != typeof(T) ? TypeDescriptor.GetConverter(typeof(TKey)) : null;
 
       /// <summary>
       /// Converts <paramref name="key"/> to an instance of <typeparamref name="T"/>.
@@ -35,30 +38,21 @@ namespace Thinktecture
       /// <inheritdoc />
       public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
       {
-         if (sourceType == typeof(TKey) || sourceType == typeof(T))
+         if (sourceType == _keyType || sourceType == _nullableKeyType || sourceType == _type || sourceType == _nullableType)
             return true;
 
-         if (typeof(TKey) != typeof(T))
-            return GetKeyConverter().CanConvertFrom(context, sourceType);
-
-         return base.CanConvertFrom(context, sourceType);
+         return _keyConverter?.CanConvertFrom(context, sourceType)
+                ?? base.CanConvertFrom(context, sourceType);
       }
 
       /// <inheritdoc />
       public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
       {
-         if (destinationType == _keyType || destinationType == _type)
+         if (destinationType == _keyType || destinationType == _nullableKeyType || destinationType == _type || destinationType == _nullableType)
             return true;
 
-         var underlyingType = Nullable.GetUnderlyingType(destinationType);
-
-         if (underlyingType == _keyType || underlyingType == _type)
-            return true;
-
-         if (_keyType != _type)
-            return GetKeyConverter().CanConvertTo(context, destinationType);
-
-         return base.CanConvertTo(context, destinationType);
+         return _keyConverter?.CanConvertTo(context, destinationType)
+                ?? base.CanConvertTo(context, destinationType);
       }
 
       /// <inheritdoc />
@@ -66,10 +60,10 @@ namespace Thinktecture
       {
          if (value is null)
          {
-            if (!_type.IsClass)
-               throw new NotSupportedException($"{GetType().Name} cannot convert from 'null'.");
+            if (_type.IsClass)
+               return null;
 
-            return default(T);
+            throw new NotSupportedException($"{_type.Name} is a struct and cannot be converted from 'null'.");
          }
 
          if (value is T obj)
@@ -78,9 +72,9 @@ namespace Thinktecture
          if (value is TKey key)
             return ConvertFrom(key);
 
-         if (_keyType != _type)
+         if (_keyConverter is not null)
          {
-            key = (TKey?)GetKeyConverter().ConvertFrom(context, culture, value);
+            key = (TKey?)_keyConverter.ConvertFrom(context, culture, value);
 
             return ConvertFrom(key);
          }
@@ -92,7 +86,12 @@ namespace Thinktecture
       public override object? ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object? value, Type destinationType)
       {
          if (value is null)
-            return destinationType.GetTypeInfo().IsValueType ? Activator.CreateInstance(destinationType) : null;
+         {
+            if (destinationType.IsClass || Nullable.GetUnderlyingType(destinationType) is not null)
+               return null;
+
+            throw new NotSupportedException($"{destinationType.Name} is a struct and cannot be converted to 'null'.");
+         }
 
          if (value is T item)
          {
@@ -104,16 +103,11 @@ namespace Thinktecture
             if (destinationType == _type || underlyingType == _type)
                return value;
 
-            if (_keyType != _type)
-               return GetKeyConverter().ConvertTo(context, culture, GetKeyValue(item), destinationType);
+            if (_keyConverter is not null)
+               return _keyConverter.ConvertTo(context, culture, GetKeyValue(item), destinationType);
          }
 
          return base.ConvertTo(context, culture, value, destinationType);
-      }
-
-      private static TypeConverter GetKeyConverter()
-      {
-         return TypeDescriptor.GetConverter(_keyType);
       }
    }
 }

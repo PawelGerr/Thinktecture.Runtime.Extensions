@@ -140,7 +140,8 @@ using Thinktecture;
 
          if (_state.HasKeyMember)
          {
-            GenerateImplicitConversion(_state.KeyMember);
+            GenerateImplicitConversionToKey(_state.KeyMember);
+            GenerateExplicitConversionToKey(_state.KeyMember);
             GenerateExplicitConversion(_state.KeyMember);
          }
 
@@ -154,9 +155,10 @@ using Thinktecture;
    }}");
       }
 
-      private void GenerateImplicitConversion(EqualityInstanceMemberInfo keyMemberInfo)
+      private void GenerateImplicitConversionToKey(EqualityInstanceMemberInfo keyMemberInfo)
       {
          var keyMember = keyMemberInfo.Member;
+         var returnTypeNullableQuestionMark = _state.Type.IsReferenceType ? "?" : keyMember.NullableQuestionMark;
 
          _sb.Append($@"
 
@@ -166,13 +168,13 @@ using Thinktecture;
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""{keyMember.Identifier}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""obj"")]
-      public static implicit operator {keyMember.Type}{keyMember.NullableQuestionMark}({_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
+      public static implicit operator {keyMember.Type}{returnTypeNullableQuestionMark}({_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
       {{");
 
          if (_state.Type.IsReferenceType)
          {
             _sb.Append($@"
-         return obj is null ? default : obj.{keyMember.Identifier};");
+         return obj is null ? null : obj.{keyMember.Identifier};");
          }
          else
          {
@@ -181,6 +183,30 @@ using Thinktecture;
          }
 
          _sb.Append($@"
+      }}");
+      }
+
+      private void GenerateExplicitConversionToKey(EqualityInstanceMemberInfo keyMemberInfo)
+      {
+         var keyMember = keyMemberInfo.Member;
+
+         if (keyMember.Type.IsReferenceType || _state.Type.IsValueType)
+            return;
+
+         _sb.Append($@"
+
+      /// <summary>
+      /// Explicit conversion to the type <see cref=""{keyMember.Type}""/>.
+      /// </summary>
+      /// <param name=""obj"">Object to covert.</param>
+      /// <returns>The <see cref=""{keyMember.Identifier}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
+      [return: NotNullIfNotNull(""obj"")]
+      public static explicit operator {keyMember.Type}({_state.TypeIdentifier} obj)
+      {{
+         if(obj is null)
+            throw new NullReferenceException();
+
+         return obj.{keyMember.Identifier};
       }}");
       }
 

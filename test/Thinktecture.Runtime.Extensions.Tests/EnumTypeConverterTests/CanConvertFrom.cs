@@ -38,9 +38,9 @@ namespace Thinktecture.EnumTypeConverterTests
       }
 
       [Fact]
-      public void Should_return_false_for_nullable_structs()
+      public void Should_return_true_for_nullable_structs()
       {
-         IntBasedStructEnumConverter.CanConvertFrom(typeof(StructIntegerEnum?)).Should().BeFalse();
+         IntBasedStructEnumConverter.CanConvertFrom(typeof(StructIntegerEnum?)).Should().BeTrue();
       }
    }
 }

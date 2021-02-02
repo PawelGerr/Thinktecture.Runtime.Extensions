@@ -8,9 +8,11 @@ namespace Thinktecture.EnumTypeConverterTests
    public class ConvertTo : TypeConverterTestsBase
    {
       [Fact]
-      public void Should_return_default_of_provided_destinationtype_if_null_is_provided_and_type_is_valuetype()
+      public void Should_throw_if_null_is_provided_and_type_is_valuetype()
       {
-         IntBasedConverter.ConvertTo(null, null, null, typeof(int)).Should().Be(0);
+         IntBasedConverter.Invoking(c => c.ConvertTo(null, null, null, typeof(int)))
+                          .Should().Throw<NotSupportedException>()
+                          .WithMessage("Int32 is a struct and cannot be converted to 'null'.");
       }
 
       [Fact]

@@ -384,7 +384,7 @@ namespace Thinktecture.Tests
       }
 
       [Fact]
-      public void Should_generate_class_with_key_member()
+      public void Should_generate_class_with_string_key_member()
       {
          var source = @"
 using System;
@@ -490,7 +490,7 @@ namespace Thinktecture.Tests
       [return: NotNullIfNotNull(""obj"")]
       public static implicit operator string?(TestValueType? obj)
       {
-         return obj is null ? default : obj.ReferenceField;
+         return obj is null ? null : obj.ReferenceField;
       }
 
       /// <summary>
@@ -575,7 +575,7 @@ namespace Thinktecture.Tests
       }
 
       [Fact]
-      public void Should_generate_class_with_key_member_having_EqualityMemberAttribute()
+      public void Should_generate_class_with_int_key_member_having_EqualityMemberAttribute()
       {
          var source = @"
 using System;
@@ -676,9 +676,23 @@ namespace Thinktecture.Tests
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""ReferenceField""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""obj"")]
-      public static implicit operator int(TestValueType? obj)
+      public static implicit operator int?(TestValueType? obj)
       {
-         return obj is null ? default : obj.ReferenceField;
+         return obj is null ? null : obj.ReferenceField;
+      }
+
+      /// <summary>
+      /// Explicit conversion to the type <see cref=""int""/>.
+      /// </summary>
+      /// <param name=""obj"">Object to covert.</param>
+      /// <returns>The <see cref=""ReferenceField""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
+      [return: NotNullIfNotNull(""obj"")]
+      public static explicit operator int(TestValueType obj)
+      {
+         if(obj is null)
+            throw new NullReferenceException();
+
+         return obj.ReferenceField;
       }
 
       /// <summary>
