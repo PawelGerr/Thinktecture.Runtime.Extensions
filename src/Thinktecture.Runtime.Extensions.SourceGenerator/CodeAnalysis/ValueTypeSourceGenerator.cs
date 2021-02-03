@@ -88,7 +88,7 @@ using Thinktecture;
       private void GenerateValueType()
       {
          var isFormattable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsFormattable();
-         var isComparable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsComparable();
+         var isComparable = !_state.SkipCompareTo && _state.HasKeyMember && _state.KeyMember.Member.Type.IsComparable();
 
          if (_state.HasKeyMember)
          {
@@ -443,7 +443,7 @@ using Thinktecture;
          {
             for (var i = 0; i < _state.EqualityMembers.Count; i++)
             {
-               var (member, comparer) = _state.EqualityMembers[i];
+               var (member, equalityComparer, _) = _state.EqualityMembers[i];
 
                if (i == 0)
                {
@@ -456,7 +456,7 @@ using Thinktecture;
              && ");
                }
 
-               if (comparer == null)
+               if (equalityComparer == null)
                {
                   if (member.Type.IsReferenceType)
                   {
@@ -469,7 +469,7 @@ using Thinktecture;
                }
                else
                {
-                  _sb.Append($@"{comparer}.Equals(this.{member.Identifier}, other.{member.Identifier})");
+                  _sb.Append($@"{equalityComparer}.Equals(this.{member.Identifier}, other.{member.Identifier})");
                }
             }
 
@@ -510,7 +510,7 @@ using Thinktecture;
 
             for (var i = 0; i < _state.EqualityMembers.Count; i++)
             {
-               var (member, equalityComparer) = _state.EqualityMembers[i];
+               var (member, equalityComparer, _) = _state.EqualityMembers[i];
 
                if (useShortForm)
                {
@@ -576,7 +576,7 @@ using Thinktecture;
 
             for (var i = 0; i < _state.EqualityMembers.Count; i++)
             {
-               var (member, _) = _state.EqualityMembers[i];
+               var (member, _, _) = _state.EqualityMembers[i];
 
                if (i > 0)
                   _sb.Append(',');
@@ -612,6 +612,7 @@ using Thinktecture;
       private void GenerateCompareTo(EqualityInstanceMemberInfo keyMemberInfo)
       {
          var keyMember = keyMemberInfo.Member;
+         var comparer = keyMemberInfo.Comparer;
 
          _sb.Append($@"
 
@@ -639,16 +640,26 @@ using Thinktecture;
 ");
          }
 
-         if (keyMember.Type.IsReferenceType)
+         if (comparer is null)
          {
-            _sb.Append($@"
+            if (keyMember.Type.IsReferenceType)
+            {
+               _sb.Append($@"
          if(this.{keyMember.Identifier} is null)
             return obj.{keyMember.Identifier} is null ? 0 : -1;
 ");
+            }
+
+            _sb.Append($@"
+         return this.{keyMember.Identifier}.CompareTo(obj.{keyMember.Identifier});");
+         }
+         else
+         {
+            _sb.Append($@"
+         return {comparer}.Compare(this.{keyMember.Identifier}, obj.{keyMember.Identifier});");
          }
 
          _sb.Append($@"
-         return this.{keyMember.Identifier}.CompareTo(obj.{keyMember.Identifier});
       }}");
       }
    }

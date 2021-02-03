@@ -610,7 +610,7 @@ namespace Thinktecture.Tests
    [ValueType]
 	public partial class TestValueType
 	{
-      [ValueTypeEqualityMember(EqualityComparer = ""EqualityComparer<int>.Default"")]
+      [ValueTypeEqualityMember(EqualityComparer = ""EqualityComparer<int>.Default"", Comparer = ""Comparer<int>.Default"")]
       public readonly int ReferenceField;
    }
 }
@@ -822,7 +822,7 @@ namespace Thinktecture.Tests
          if(obj is null)
             return 1;
 
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
+         return Comparer<int>.Default.Compare(this.ReferenceField, obj.ReferenceField);
       }
    }
 }

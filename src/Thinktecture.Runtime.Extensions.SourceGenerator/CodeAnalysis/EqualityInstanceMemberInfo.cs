@@ -7,13 +7,16 @@ namespace Thinktecture.CodeAnalysis
    {
       public InstanceMemberInfo Member { get; }
       public string? EqualityComparer { get; }
+      public string? Comparer { get; }
 
       public EqualityInstanceMemberInfo(
          InstanceMemberInfo member,
-         string? equalityComparer)
+         string? equalityComparer,
+         string? comparer)
       {
          Member = member;
          EqualityComparer = AdjustEqualityComparer(member.Type, equalityComparer);
+         Comparer = comparer;
       }
 
       private static string? AdjustEqualityComparer(ITypeSymbol memberType, string? equalityComparer)
@@ -41,10 +44,11 @@ namespace Thinktecture.CodeAnalysis
          };
       }
 
-      public void Deconstruct(out InstanceMemberInfo member, out string? equalityComparer)
+      public void Deconstruct(out InstanceMemberInfo member, out string? equalityComparer, out string? comparer)
       {
          member = Member;
          equalityComparer = EqualityComparer;
+         comparer = Comparer;
       }
    }
 }

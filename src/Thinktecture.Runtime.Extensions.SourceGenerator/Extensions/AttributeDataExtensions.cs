@@ -17,6 +17,11 @@ namespace Thinktecture
          return GetStringParameterValue(attributeData, "EqualityComparer");
       }
 
+      public static string? FindComparer(this AttributeData attributeData)
+      {
+         return GetStringParameterValue(attributeData, "Comparer");
+      }
+
       public static string? FindKeyComparer(this AttributeData attributeData)
       {
          return GetStringParameterValue(attributeData, "KeyComparer");
@@ -25,6 +30,11 @@ namespace Thinktecture
       public static bool? FindSkipFactoryMethods(this AttributeData attributeData)
       {
          return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");
+      }
+
+      public static bool? FindSkipCompareTo(this AttributeData attributeData)
+      {
+         return GetBooleanParameterValue(attributeData, "SkipCompareTo");
       }
 
       private static string? GetStringParameterValue(AttributeData attributeData, string name)

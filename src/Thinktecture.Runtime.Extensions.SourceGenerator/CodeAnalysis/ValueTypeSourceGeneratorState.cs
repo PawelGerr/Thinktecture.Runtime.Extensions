@@ -17,6 +17,7 @@ namespace Thinktecture.CodeAnalysis
       public SyntaxToken TypeIdentifier => _declaration.Identifier;
 
       public bool SkipFactoryMethods => ValueTypeAttribute.FindSkipFactoryMethods() ?? false;
+      public bool SkipCompareTo => ValueTypeAttribute.FindSkipCompareTo() ?? false;
 
       public string? Namespace { get; }
       public string? NullableQuestionMark => Type.IsReferenceType ? "?" : null;
@@ -61,13 +62,14 @@ namespace Thinktecture.CodeAnalysis
             if (attribute is not null)
             {
                var equalityComparer = attribute.FindEqualityComparer().TrimmAndNullify();
-               var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer);
+               var comparer = attribute.FindComparer().TrimmAndNullify();
+               var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer, comparer);
 
                (equalityMembers ??= new List<EqualityInstanceMemberInfo>()).Add(equalityMember);
             }
          }
 
-         return equalityMembers ?? members.Select(m => new EqualityInstanceMemberInfo(m, null)).ToList();
+         return equalityMembers ?? members.Select(m => new EqualityInstanceMemberInfo(m, null, null)).ToList();
       }
    }
 }

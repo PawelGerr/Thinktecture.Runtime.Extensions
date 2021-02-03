@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Thinktecture
 {
@@ -9,9 +10,14 @@ namespace Thinktecture
    public class ValueTypeEqualityMemberAttribute : Attribute
    {
       /// <summary>
-      /// A field or property defining the comparer to use.
+      /// A field or property defining the <see cref="IEqualityComparer{T}"/> to use.
       /// Example: "System.StringComparer.OrdinalIgnoreCase"
       /// </summary>
       public string? EqualityComparer { get; set; }
+
+      /// <summary>
+      /// A field or property defining the <see cref="IComparer{T}"/> to use.
+      /// </summary>
+      public string? Comparer { get; set; }
    }
 }
