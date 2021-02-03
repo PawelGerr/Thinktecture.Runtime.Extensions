@@ -5,15 +5,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Primitives;
-using Moq;
-using Thinktecture.AspNetCore.ModelBinding.TestClasses;
+using Thinktecture.AspNetCore.ModelBinding;
 using Thinktecture.Internal;
+using Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.TestClasses;
 using Xunit;
 
-namespace Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinderTests
+namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueTypeModelBinderTests
 {
    // ReSharper disable once InconsistentNaming
    public class BindModelAsync

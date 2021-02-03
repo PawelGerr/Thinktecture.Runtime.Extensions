@@ -1,6 +1,6 @@
-using Thinktecture.TestEnums;
+using Thinktecture.Runtime.Tests.TestEnums;
 
-namespace Thinktecture.EnumTypeConverterTests
+namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests
 {
    public abstract class TypeConverterTestsBase
    {

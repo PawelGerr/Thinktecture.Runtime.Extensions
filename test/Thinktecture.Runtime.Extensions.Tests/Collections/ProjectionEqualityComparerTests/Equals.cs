@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
 using FluentAssertions;
+using Thinktecture.Collections;
 using Xunit;
 
-namespace Thinktecture.Collections.ProjectionEqualityComparerTests
+namespace Thinktecture.Runtime.Tests.Collections.ProjectionEqualityComparerTests
 {
    public class Equals
    {

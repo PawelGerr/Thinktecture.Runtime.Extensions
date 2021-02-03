@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Thinktecture.EmptyActionTests
+namespace Thinktecture.Runtime.Tests.EmptyActionTests
 {
 	public class EmptyAction
 	{

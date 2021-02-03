@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Thinktecture.Extensions;
 
-namespace Thinktecture.Verifiers
+namespace Thinktecture.Runtime.Tests.Verifiers
 {
    public static class AnalyzerVerifier<TAnalyzer>
       where TAnalyzer : DiagnosticAnalyzer, new()

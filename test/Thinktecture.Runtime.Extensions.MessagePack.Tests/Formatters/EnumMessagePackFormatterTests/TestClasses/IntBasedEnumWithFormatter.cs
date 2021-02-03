@@ -1,6 +1,7 @@
 using MessagePack;
+using Thinktecture.Formatters;
 
-namespace Thinktecture.Formatters.EnumMessagePackFormatterTests.TestClasses
+namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses
 {
    public class IntBasedEnumWithFormatterMessagePackFormatter : ValueTypeMessagePackFormatter<IntBasedEnumWithFormatter, int>
    {

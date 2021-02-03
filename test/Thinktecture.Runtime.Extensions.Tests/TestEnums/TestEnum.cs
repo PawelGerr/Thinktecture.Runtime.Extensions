@@ -4,7 +4,7 @@ using System;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
 
-namespace Thinktecture.TestEnums
+namespace Thinktecture.Runtime.Tests.TestEnums
 {
    public partial class TestEnum : IValidatableEnum<string>
    {

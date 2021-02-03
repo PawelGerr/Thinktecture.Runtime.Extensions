@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests.TestClasses;
+using Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests.TestClasses;
 using Xunit;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
-namespace Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests
+namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
 {
    public class WriteJson
    {

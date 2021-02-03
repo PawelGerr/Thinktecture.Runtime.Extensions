@@ -1,4 +1,4 @@
-﻿namespace Thinktecture.TestEnums.Isolated
+﻿namespace Thinktecture.Runtime.Tests.TestEnums.Isolated
 {
    /// <summary>
    /// This enum may be used in 1 test only.

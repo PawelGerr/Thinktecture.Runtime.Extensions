@@ -1,9 +1,9 @@
 using System;
 using FluentAssertions;
-using Thinktecture.TestEnums;
+using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit;
 
-namespace Thinktecture.EnumTypeConverterTests
+namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests
 {
    public class CanConvertFrom : TypeConverterTestsBase
    {

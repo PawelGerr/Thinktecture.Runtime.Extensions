@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Thinktecture.TestEnums;
+using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit;
 
-namespace Thinktecture.EnumTypeConverterTests
+namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests
 {
    // ReSharper disable AssignNullToNotNullAttribute
    // ReSharper disable PossibleNullReferenceException

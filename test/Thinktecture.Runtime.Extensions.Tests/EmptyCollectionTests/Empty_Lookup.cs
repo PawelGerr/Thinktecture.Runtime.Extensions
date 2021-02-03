@@ -4,7 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Xunit;
 
-namespace Thinktecture.EmptyCollectionTests
+namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
 {
    // ReSharper disable once InconsistentNaming
    public class Empty_Lookup

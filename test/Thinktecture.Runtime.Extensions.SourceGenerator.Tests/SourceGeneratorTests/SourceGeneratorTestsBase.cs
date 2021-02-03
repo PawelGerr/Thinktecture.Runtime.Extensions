@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit.Abstractions;
 
-namespace Thinktecture.SourceGeneratorTests
+namespace Thinktecture.Runtime.Tests.SourceGeneratorTests
 {
    public abstract class SourceGeneratorTestsBase
    {

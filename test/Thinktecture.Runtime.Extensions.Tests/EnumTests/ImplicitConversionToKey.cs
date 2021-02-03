@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
-using Thinktecture.TestEnums;
+using FluentAssertions;
+using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit;
 
-namespace Thinktecture.EnumTests
+namespace Thinktecture.Runtime.Tests.EnumTests
 {
 	public class ImplicitConversionToKey
 	{

@@ -1,6 +1,6 @@
-using Thinktecture.TestValueTypes;
+using Thinktecture.Runtime.Tests.TestValueTypes;
 
-namespace Thinktecture.ValueTypeTypeConverterTests
+namespace Thinktecture.Runtime.Tests.ValueTypeTypeConverterTests
 {
    public abstract class TypeConverterTestsBase
    {

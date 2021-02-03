@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Moq;
 
-namespace Thinktecture.AspNetCore.ModelBinding
+namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding
 {
    public class BindingContextHelper
    {

@@ -1,4 +1,4 @@
-namespace Thinktecture.Formatters.EnumMessagePackFormatterTests.TestClasses
+namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses
 {
    [ValueType]
    public partial class ValueTypeWithMultipleProperties

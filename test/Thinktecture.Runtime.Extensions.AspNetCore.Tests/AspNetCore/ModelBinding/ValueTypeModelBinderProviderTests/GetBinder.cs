@@ -4,10 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Thinktecture.AspNetCore.ModelBinding.TestClasses;
+using Thinktecture.AspNetCore.ModelBinding;
+using Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.TestClasses;
 using Xunit;
 
-namespace Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinderProviderTests
+namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueTypeModelBinderProviderTests
 {
    public class GetBinder
    {

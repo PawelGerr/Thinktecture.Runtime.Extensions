@@ -4,10 +4,10 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentAssertions;
+using Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests.TestClasses;
 using Xunit;
-using Thinktecture.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests.TestClasses;
 
-namespace Thinktecture.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests
+namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests
 {
    public class ReadJson
    {

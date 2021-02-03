@@ -1,4 +1,4 @@
-namespace Thinktecture.TestValueTypes
+namespace Thinktecture.Runtime.Tests.TestValueTypes
 {
    [ValueType]
    public readonly partial struct IntBasedStructValueType

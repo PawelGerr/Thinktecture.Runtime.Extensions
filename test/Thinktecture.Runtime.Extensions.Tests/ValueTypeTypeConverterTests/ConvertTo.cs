@@ -1,9 +1,9 @@
 using System;
 using FluentAssertions;
-using Thinktecture.TestValueTypes;
+using Thinktecture.Runtime.Tests.TestValueTypes;
 using Xunit;
 
-namespace Thinktecture.ValueTypeTypeConverterTests
+namespace Thinktecture.Runtime.Tests.ValueTypeTypeConverterTests
 {
    public class ConvertTo : TypeConverterTestsBase
    {

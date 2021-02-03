@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using FluentAssertions;
-using Thinktecture.TestEnums;
-using Thinktecture.TestEnums.Isolated;
+using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestEnums.Isolated;
 using Xunit;
 
-namespace Thinktecture.EnumTests
+namespace Thinktecture.Runtime.Tests.EnumTests
 {
    public class Get
    {

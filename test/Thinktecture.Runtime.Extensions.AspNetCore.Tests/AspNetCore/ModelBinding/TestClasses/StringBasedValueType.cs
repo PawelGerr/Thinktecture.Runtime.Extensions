@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Thinktecture.AspNetCore.ModelBinding.TestClasses
+namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.TestClasses
 {
    [ValueType]
    public partial class StringBasedValueType

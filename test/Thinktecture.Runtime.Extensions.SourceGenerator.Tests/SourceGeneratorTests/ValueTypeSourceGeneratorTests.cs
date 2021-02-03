@@ -5,7 +5,7 @@ using Thinktecture.Formatters;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Thinktecture.SourceGeneratorTests
+namespace Thinktecture.Runtime.Tests.SourceGeneratorTests
 {
    public class ValueTypeSourceGeneratorTests : SourceGeneratorTestsBase
    {

@@ -4,10 +4,10 @@ using System.IO;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests.TestClasses;
+using Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests.TestClasses;
 using Xunit;
 
-namespace Thinktecture.Json.ValueTypeNewtonsoftJsonConverterTests
+namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
 {
    public class ReadJson
    {

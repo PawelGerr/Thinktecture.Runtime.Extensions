@@ -1,4 +1,4 @@
-namespace Thinktecture.AspNetCore.ModelBinding.TestClasses
+namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.TestClasses
 {
    public partial class IntBasedEnum : IValidatableEnum<int>
    {

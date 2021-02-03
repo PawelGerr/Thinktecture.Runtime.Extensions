@@ -1,4 +1,4 @@
-namespace Thinktecture.TestEnums
+namespace Thinktecture.Runtime.Tests.TestEnums
 {
    public readonly partial struct StructIntegerEnumWithZero : IValidatableEnum<int>
    {

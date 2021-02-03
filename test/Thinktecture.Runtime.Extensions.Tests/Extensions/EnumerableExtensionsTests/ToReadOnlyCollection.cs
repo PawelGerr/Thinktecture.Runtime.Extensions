@@ -4,7 +4,8 @@ using System.Linq;
 using FluentAssertions;
 using Xunit;
 
-namespace Thinktecture.Extensions.EnumerableExtensionsTests
+// ReSharper disable once CheckNamespace
+namespace Thinktecture
 {
    public class ToReadOnlyCollection
    {

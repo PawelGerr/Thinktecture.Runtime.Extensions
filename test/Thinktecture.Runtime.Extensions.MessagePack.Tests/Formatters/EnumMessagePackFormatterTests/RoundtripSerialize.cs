@@ -4,10 +4,10 @@ using System.Threading;
 using FluentAssertions;
 using MessagePack;
 using MessagePack.Resolvers;
-using Thinktecture.Formatters.EnumMessagePackFormatterTests.TestClasses;
+using Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 using Xunit;
 
-namespace Thinktecture.Formatters.EnumMessagePackFormatterTests
+namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests
 {
    public class Serialize
    {
