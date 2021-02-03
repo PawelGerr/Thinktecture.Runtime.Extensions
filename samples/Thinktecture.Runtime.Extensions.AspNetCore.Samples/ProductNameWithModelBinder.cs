@@ -6,7 +6,7 @@ namespace Thinktecture
    [ValueType]
    public partial class ProductNameWithModelBinder
    {
-      [ValueTypeEqualityMember(Comparer = nameof(StringComparer.OrdinalIgnoreCase))]
+      [ValueTypeEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]
       private string Value { get; }
 
       static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref string value)

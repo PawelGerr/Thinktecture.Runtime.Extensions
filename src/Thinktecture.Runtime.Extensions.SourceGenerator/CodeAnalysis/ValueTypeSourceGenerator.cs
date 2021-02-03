@@ -495,7 +495,7 @@ using Thinktecture;
 
          if (_state.EqualityMembers.Count > 0)
          {
-            var useShortForm = _state.EqualityMembers.Count <= 8 && _state.EqualityMembers.All(m => m.Comparer == null);
+            var useShortForm = _state.EqualityMembers.Count <= 8 && _state.EqualityMembers.All(m => m.EqualityComparer == null);
 
             if (useShortForm)
             {
@@ -510,7 +510,7 @@ using Thinktecture;
 
             for (var i = 0; i < _state.EqualityMembers.Count; i++)
             {
-               var (member, comparer) = _state.EqualityMembers[i];
+               var (member, equalityComparer) = _state.EqualityMembers[i];
 
                if (useShortForm)
                {
@@ -527,8 +527,8 @@ using Thinktecture;
                   _sb.Append($@"
          hashCode.Add(this.{member.Identifier}");
 
-                  if (comparer is not null)
-                     _sb.Append($@", {comparer}");
+                  if (equalityComparer is not null)
+                     _sb.Append($@", {equalityComparer}");
 
                   _sb.Append($@");");
                }

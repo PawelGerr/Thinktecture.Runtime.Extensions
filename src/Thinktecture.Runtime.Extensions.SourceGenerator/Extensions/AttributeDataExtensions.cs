@@ -12,9 +12,9 @@ namespace Thinktecture
          return GetStringParameterValue(attributeData, "KeyPropertyName");
       }
 
-      public static string? FindComparer(this AttributeData attributeData)
+      public static string? FindEqualityComparer(this AttributeData attributeData)
       {
-         return GetStringParameterValue(attributeData, "Comparer");
+         return GetStringParameterValue(attributeData, "EqualityComparer");
       }
 
       public static string? FindKeyComparer(this AttributeData attributeData)

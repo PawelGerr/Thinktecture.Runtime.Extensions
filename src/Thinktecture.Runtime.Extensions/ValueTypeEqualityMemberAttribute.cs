@@ -12,6 +12,6 @@ namespace Thinktecture
       /// A field or property defining the comparer to use.
       /// Example: "System.StringComparer.OrdinalIgnoreCase"
       /// </summary>
-      public string? Comparer { get; set; }
+      public string? EqualityComparer { get; set; }
    }
 }

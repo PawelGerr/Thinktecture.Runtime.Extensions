@@ -6,25 +6,25 @@ namespace Thinktecture.CodeAnalysis
    public class EqualityInstanceMemberInfo
    {
       public InstanceMemberInfo Member { get; }
-      public string? Comparer { get; }
+      public string? EqualityComparer { get; }
 
       public EqualityInstanceMemberInfo(
          InstanceMemberInfo member,
-         string? comparer)
+         string? equalityComparer)
       {
          Member = member;
-         Comparer = AdjustComparer(member.Type, comparer);
+         EqualityComparer = AdjustEqualityComparer(member.Type, equalityComparer);
       }
 
-      private static string? AdjustComparer(ITypeSymbol memberType, string? comparer)
+      private static string? AdjustEqualityComparer(ITypeSymbol memberType, string? equalityComparer)
       {
-         if (comparer is null)
+         if (equalityComparer is null)
             return null;
 
          if (memberType.IsString())
-            return AdjustStringComparer(comparer);
+            return AdjustStringComparer(equalityComparer);
 
-         return comparer;
+         return equalityComparer;
       }
 
       private static string AdjustStringComparer(string comparer)
@@ -41,10 +41,10 @@ namespace Thinktecture.CodeAnalysis
          };
       }
 
-      public void Deconstruct(out InstanceMemberInfo member, out string? comparer)
+      public void Deconstruct(out InstanceMemberInfo member, out string? equalityComparer)
       {
          member = Member;
-         comparer = Comparer;
+         equalityComparer = EqualityComparer;
       }
    }
 }

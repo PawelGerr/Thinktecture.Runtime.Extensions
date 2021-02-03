@@ -60,8 +60,8 @@ namespace Thinktecture.CodeAnalysis
 
             if (attribute is not null)
             {
-               var comparer = attribute.FindComparer().TrimmAndNullify();
-               var equalityMember = new EqualityInstanceMemberInfo(member, comparer);
+               var equalityComparer = attribute.FindEqualityComparer().TrimmAndNullify();
+               var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer);
 
                (equalityMembers ??= new List<EqualityInstanceMemberInfo>()).Add(equalityMember);
             }
