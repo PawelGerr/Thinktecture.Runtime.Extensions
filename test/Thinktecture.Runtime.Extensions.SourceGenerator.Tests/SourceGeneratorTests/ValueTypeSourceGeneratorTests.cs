@@ -610,7 +610,7 @@ namespace Thinktecture.Tests
    [ValueType]
 	public partial class TestValueType
 	{
-      [ValueTypeEqualityMember(Comparer = ""EqualityComparer<int>.Default"")]
+      [ValueTypeEqualityMember(EqualityComparer = ""EqualityComparer<int>.Default"")]
       public readonly int ReferenceField;
    }
 }
@@ -841,7 +841,7 @@ namespace Thinktecture.Tests
    [ValueType]
 	public partial class TestValueType
 	{
-      [ValueTypeEqualityMember(Comparer = nameof(StringComparer.OrdinalIgnoreCase))]
+      [ValueTypeEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]
       public readonly string ReferenceField;
 
       [ValueTypeEqualityMember]
