@@ -13,10 +13,10 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <Compile Include="..\..\IsExternalInit.cs">
+        <Compile Include="..\..\shared\IsExternalInit.cs">
             <Link>IsExternalInit.cs</Link>
         </Compile>
-        <Compile Include="..\..\ModuleInitializer.cs">
+        <Compile Include="..\..\shared\ModuleInitializer.cs">
             <Link>ModuleInitializer.cs</Link>
         </Compile>
     </ItemGroup>

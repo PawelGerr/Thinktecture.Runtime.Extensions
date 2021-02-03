@@ -15,6 +15,13 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);CA1303</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+   <ItemGroup>
+      <Compile Include="..\..\shared\SkipLocalsInit.cs">
+         <Link>SkipLocalsInit.cs</Link>
+      </Compile>
+   </ItemGroup>
 
 </Project>
