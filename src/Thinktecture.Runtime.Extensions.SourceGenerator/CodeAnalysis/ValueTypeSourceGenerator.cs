@@ -87,6 +87,9 @@ using Thinktecture;
 
       private void GenerateValueType()
       {
+         var isFormattable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsFormattable();
+         var isComparable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsComparable();
+
          if (_state.HasKeyMember)
          {
             _sb.Append($@"
@@ -96,12 +99,11 @@ using Thinktecture;
          _sb.Append($@"
    partial {(_state.Type.IsValueType ? "struct" : "class")} {_state.TypeIdentifier} : System.IEquatable<{_state.TypeIdentifier}{_state.NullableQuestionMark}>");
 
-         var isFormattable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsFormattable();
-
          if (isFormattable)
-         {
             _sb.Append(", System.IFormattable");
-         }
+
+         if (isComparable)
+            _sb.Append($", System.IComparable, System.IComparable<{_state.TypeIdentifier}>");
 
          _sb.Append($@"
    {{");
@@ -160,8 +162,14 @@ using Thinktecture;
          GenerateGetHashCode();
          GenerateToString();
 
-         if (_state.HasKeyMember && isFormattable)
-            GenerateToStringFormat(_state.KeyMember);
+         if (_state.HasKeyMember)
+         {
+            if (isFormattable)
+               GenerateToStringFormat(_state.KeyMember);
+
+            if (isComparable)
+               GenerateCompareTo(_state.KeyMember);
+         }
 
          _sb.Append($@"
    }}");
@@ -598,6 +606,49 @@ using Thinktecture;
       public string ToString(string? format, IFormatProvider? formatProvider = null)
       {{
          return this.{keyMember.Identifier}.ToString(format, formatProvider);
+      }}");
+      }
+
+      private void GenerateCompareTo(EqualityInstanceMemberInfo keyMemberInfo)
+      {
+         var keyMember = keyMemberInfo.Member;
+
+         _sb.Append($@"
+
+      /// <inheritdoc />
+      public int CompareTo(object? obj)
+      {{
+         if(obj is null)
+            return 1;
+
+         if(obj is not {_state.TypeIdentifier} valueType)
+            throw new ArgumentException(""Argument must be of type '{_state.TypeIdentifier}'."", nameof(obj));
+
+         return this.CompareTo(valueType);
+      }}
+
+      /// <inheritdoc />
+      public int CompareTo({_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
+      {{");
+
+         if (_state.Type.IsReferenceType)
+         {
+            _sb.Append($@"
+         if(obj is null)
+            return 1;
+");
+         }
+
+         if (keyMember.Type.IsReferenceType)
+         {
+            _sb.Append($@"
+         if(this.{keyMember.Identifier} is null)
+            return obj.{keyMember.Identifier} is null ? 0 : -1;
+");
+         }
+
+         _sb.Append($@"
+         return this.{keyMember.Identifier}.CompareTo(obj.{keyMember.Identifier});
       }}");
       }
    }

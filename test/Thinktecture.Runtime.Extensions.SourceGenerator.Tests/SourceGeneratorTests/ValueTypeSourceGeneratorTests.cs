@@ -434,7 +434,7 @@ namespace Thinktecture.Tests
    }
 
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
-   partial class TestValueType : System.IEquatable<TestValueType?>
+   partial class TestValueType : System.IEquatable<TestValueType?>, System.IComparable, System.IComparable<TestValueType>
    {
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -569,6 +569,30 @@ namespace Thinktecture.Tests
       {
          return this.ReferenceField?.ToString();
       }
+
+      /// <inheritdoc />
+      public int CompareTo(object? obj)
+      {
+         if(obj is null)
+            return 1;
+
+         if(obj is not TestValueType valueType)
+            throw new ArgumentException(""Argument must be of type 'TestValueType'."", nameof(obj));
+
+         return this.CompareTo(valueType);
+      }
+
+      /// <inheritdoc />
+      public int CompareTo(TestValueType? obj)
+      {
+         if(obj is null)
+            return 1;
+
+         if(this.ReferenceField is null)
+            return obj.ReferenceField is null ? 0 : -1;
+
+         return this.ReferenceField.CompareTo(obj.ReferenceField);
+      }
    }
 }
 ");
@@ -622,7 +646,7 @@ namespace Thinktecture.Tests
    }
 
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
-   partial class TestValueType : System.IEquatable<TestValueType?>, System.IFormattable
+   partial class TestValueType : System.IEquatable<TestValueType?>, System.IFormattable, System.IComparable, System.IComparable<TestValueType>
    {
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -778,6 +802,27 @@ namespace Thinktecture.Tests
       public string ToString(string? format, IFormatProvider? formatProvider = null)
       {
          return this.ReferenceField.ToString(format, formatProvider);
+      }
+
+      /// <inheritdoc />
+      public int CompareTo(object? obj)
+      {
+         if(obj is null)
+            return 1;
+
+         if(obj is not TestValueType valueType)
+            throw new ArgumentException(""Argument must be of type 'TestValueType'."", nameof(obj));
+
+         return this.CompareTo(valueType);
+      }
+
+      /// <inheritdoc />
+      public int CompareTo(TestValueType? obj)
+      {
+         if(obj is null)
+            return 1;
+
+         return this.ReferenceField.CompareTo(obj.ReferenceField);
       }
    }
 }
