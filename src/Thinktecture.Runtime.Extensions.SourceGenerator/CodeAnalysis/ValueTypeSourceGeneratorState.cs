@@ -61,8 +61,8 @@ namespace Thinktecture.CodeAnalysis
 
             if (attribute is not null)
             {
-               var equalityComparer = attribute.FindEqualityComparer().TrimmAndNullify();
-               var comparer = attribute.FindComparer().TrimmAndNullify();
+               var equalityComparer = attribute.FindEqualityComparer().TrimAndNullify();
+               var comparer = attribute.FindComparer().TrimAndNullify();
                var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer, comparer);
 
                (equalityMembers ??= new List<EqualityInstanceMemberInfo>()).Add(equalityMember);
@@ -70,6 +70,11 @@ namespace Thinktecture.CodeAnalysis
          }
 
          return equalityMembers ?? members.Select(m => new EqualityInstanceMemberInfo(m, null, null)).ToList();
+      }
+
+      public void SetBaseType(ValueTypeSourceGeneratorState baseTypeState)
+      {
+
       }
    }
 }

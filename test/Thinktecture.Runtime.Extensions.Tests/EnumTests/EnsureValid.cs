@@ -14,6 +14,8 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          StructIntegerEnum.Item1.EnsureValid();
          StructIntegerEnumWithZero.Item0.EnsureValid();
          StructStringEnum.Item1.EnsureValid();
+         ExtensibleTestValidatableEnum.Item1.EnsureValid();
+         ExtendedTestValidatableEnum.Item2.EnsureValid();
       }
 
       [Fact]
@@ -59,6 +61,12 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          // we cannot prevent construction of a struct
          new StructIntegerEnumWithZero().Invoking(e => e.EnsureValid())
                                         .Should().Throw<InvalidOperationException>().WithMessage($"The current enumeration item of type '{nameof(StructIntegerEnumWithZero)}' with identifier '0' is not valid.");
+
+         ExtensibleTestValidatableEnum.Get("invalid").Invoking(e => e.EnsureValid())
+                                      .Should().Throw<InvalidOperationException>().WithMessage($"The current enumeration item of type '{nameof(ExtensibleTestValidatableEnum)}' with identifier 'invalid' is not valid.");
+
+         ExtendedTestValidatableEnum.Get("invalid").Invoking(e => e.EnsureValid())
+                                    .Should().Throw<InvalidOperationException>().WithMessage($"The current enumeration item of type '{nameof(ExtendedTestValidatableEnum)}' with identifier 'invalid' is not valid.");
       }
    }
 }

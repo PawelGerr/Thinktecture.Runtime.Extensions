@@ -7,10 +7,15 @@ namespace Thinktecture
    {
       public static string MakeArgumentName(this string name)
       {
-         return $"{Char.ToLowerInvariant(name[0])}{name.Substring(1)}";
+         if (name.Length == 1)
+            return name.ToLowerInvariant();
+
+         return name.StartsWith("_", StringComparison.Ordinal)
+                   ? $"{Char.ToLowerInvariant(name[1])}{name.Substring(2)}"
+                   : $"{Char.ToLowerInvariant(name[0])}{name.Substring(1)}";
       }
 
-      public static string? TrimmAndNullify(this string? text)
+      public static string? TrimAndNullify(this string? text)
       {
          if (String.IsNullOrWhiteSpace(text))
             return null;

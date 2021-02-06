@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -8,20 +9,42 @@ namespace Thinktecture.CodeAnalysis
 {
    public class EnumSourceGeneratorState
    {
-      private readonly TypeDeclarationSyntax _declaration;
-
+      public TypeDeclarationSyntax Declaration { get; }
       public SemanticModel Model { get; }
 
       public string? Namespace { get; }
       public INamedTypeSymbol EnumType { get; }
       public ITypeSymbol KeyType { get; }
-      public SyntaxToken EnumIdentifier => _declaration.Identifier;
+      public SyntaxToken EnumIdentifier => Declaration.Identifier;
 
-      public string KeyPropertyName { get; }
-      public string KeyArgumentName { get; }
-      public string KeyComparerMember { get; }
-      public bool NeedsDefaultComparer { get; }
+      public string RuntimeTypeName { get; }
+
+      public string KeyPropertyName { get; private set; }
+      public string KeyArgumentName { get; private set; }
+      public string KeyComparerMember { get; private set; }
+      public bool NeedsDefaultComparer { get; private set; }
+      public bool IsExtensible { get; private set; }
+
       public bool IsValidatable { get; }
+
+      private bool _isBaseItemDetermined;
+      private IBaseEnumState? _baseEnum;
+
+      public IBaseEnumState? BaseEnum
+      {
+         get
+         {
+            if (_isBaseItemDetermined)
+               return _baseEnum;
+
+            DetermineBaseEnum();
+
+            return _baseEnum;
+         }
+      }
+
+      [MemberNotNullWhen(true, nameof(BaseEnum))]
+      public bool HasBaseEnum => BaseEnum is not null;
 
       public string? NullableQuestionMarkEnum { get; }
       public string? NullableQuestionMarkKey { get; }
@@ -43,7 +66,7 @@ namespace Thinktecture.CodeAnalysis
 
          Model = model ?? throw new ArgumentNullException(nameof(model));
 
-         _declaration = enumDeclaration ?? throw new ArgumentNullException(nameof(enumDeclaration));
+         Declaration = enumDeclaration ?? throw new ArgumentNullException(nameof(enumDeclaration));
 
          EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
          Namespace = enumType.ContainingNamespace.ToString();
@@ -55,10 +78,19 @@ namespace Thinktecture.CodeAnalysis
 
          var enumSettings = enumType.FindEnumGenerationAttribute();
 
+         InitializeFromSettings(enumSettings, false);
+         IsExtensible = enumType.IsReferenceType && (enumSettings?.IsExtensible() ?? false);
+
+         RuntimeTypeName = IsExtensible ? "{GetType().Name}" : Declaration.Identifier.ToString();
+      }
+
+      [MemberNotNull(nameof(KeyComparerMember), nameof(KeyPropertyName), nameof(KeyArgumentName))]
+      private void InitializeFromSettings(AttributeData? enumSettings, bool isFromBaseEnum)
+      {
          KeyComparerMember = GetKeyComparerMember(enumSettings, out var needsDefaultComparer);
          KeyPropertyName = GetKeyPropertyName(enumSettings);
          KeyArgumentName = KeyPropertyName.MakeArgumentName();
-         NeedsDefaultComparer = needsDefaultComparer;
+         NeedsDefaultComparer = !isFromBaseEnum && needsDefaultComparer;
       }
 
       private static string GetKeyComparerMember(AttributeData? enumSettingsAttribute, out bool needsDefaultComparer)
@@ -80,6 +112,43 @@ namespace Thinktecture.CodeAnalysis
          }
 
          return "Key";
+      }
+
+      public void SetBaseType(EnumSourceGeneratorState other)
+      {
+         if (_baseEnum is SameAssemblyBaseEnumState)
+            return;
+
+         SetBaseTypeInternal(new SameAssemblyBaseEnumState(other));
+      }
+
+      private void DetermineBaseEnum()
+      {
+         _isBaseItemDetermined = true;
+
+         if (EnumType.BaseType is null)
+            return;
+
+         if (!EnumType.BaseType.IsEnum(out var enumInterfaces))
+            return;
+
+         var baseInterface = enumInterfaces.GetValidEnumInterface(EnumType.BaseType);
+
+         if (baseInterface is null)
+            return;
+
+         SetBaseTypeInternal(new BaseEnumState(EnumType.BaseType));
+      }
+
+      private void SetBaseTypeInternal(IBaseEnumState other)
+      {
+         _baseEnum = other;
+         _isBaseItemDetermined = true;
+
+         var enumSettings = other.Type.FindEnumGenerationAttribute();
+         InitializeFromSettings(enumSettings, true);
+
+         IsExtensible = false;
       }
    }
 }

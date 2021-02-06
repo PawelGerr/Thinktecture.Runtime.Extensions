@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
@@ -15,9 +15,9 @@ namespace Thinktecture.Extensions
       /// related to nullability mapped to <see cref="ReportDiagnostic.Error"/>, which is then used to enable all
       /// of these warnings for default validation during analyzer and code fix tests.
       /// </summary>
-      private static ImmutableDictionary<string, ReportDiagnostic> NullableWarnings { get; } = GetNullableWarningsFromCompiler();
+      private static IReadOnlyDictionary<string, ReportDiagnostic> NullableWarnings { get; } = GetNullableWarningsFromCompiler();
 
-      private static ImmutableDictionary<string, ReportDiagnostic> GetNullableWarningsFromCompiler()
+      private static IReadOnlyDictionary<string, ReportDiagnostic> GetNullableWarningsFromCompiler()
       {
          string[] args = { "/warnaserror:nullable" };
          var commandLineArguments = CSharpCommandLineParser.Default.Parse(args, Environment.CurrentDirectory, Environment.CurrentDirectory);

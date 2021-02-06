@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using FluentAssertions;
 using Thinktecture.Runtime.Tests.TestEnums;
-using Thinktecture.Runtime.Tests.TestEnums.Isolated;
 using Xunit;
 
 namespace Thinktecture.Runtime.Tests.EnumTests
@@ -15,6 +14,11 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       {
          TestEnum.Get(null).Should().BeNull();
          ValidTestEnum.Get(null).Should().BeNull();
+
+         ExtensibleTestEnum.Get(null).Should().BeNull();
+         ExtendedTestEnum.Get(null).Should().BeNull();
+         ExtensibleTestValidatableEnum.Get(null).Should().BeNull();
+         ExtendedTestValidatableEnum.Get(null).Should().BeNull();
       }
 
       [Fact]
@@ -41,21 +45,39 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       public void Should_return_invalid_item_if_enum_doesnt_have_item_with_provided_key()
       {
          var item = TestEnum.Get("unknown");
-
          item.IsValid.Should().BeFalse();
          item.Key.Should().Be("unknown");
+
+         var extensibleItem = ExtensibleTestValidatableEnum.Get("unknown");
+         extensibleItem.IsValid.Should().BeFalse();
+         extensibleItem.Key.Should().Be("unknown");
+
+         var extendedItem = ExtendedTestValidatableEnum.Get("unknown");
+         extendedItem.IsValid.Should().BeFalse();
+         extendedItem.Key.Should().Be("unknown");
       }
 
       [Fact]
       public void Should_return_item_with_provided_key()
       {
          TestEnum.Get("item2").Should().Be(TestEnum.Item2);
+
+         ValidTestEnum.Get("item1").Should().Be(ValidTestEnum.Item1);
+
+         ExtensibleTestEnum.Get("Item1").Should().Be(ExtensibleTestEnum.Item1);
+         ExtendedTestEnum.Get("Item1").Should().Be(ExtendedTestEnum.Item1);
+         ExtendedTestEnum.Get("Item2").Should().Be(ExtendedTestEnum.Item2);
+
+         ExtensibleTestValidatableEnum.Get("Item1").Should().Be(ExtensibleTestValidatableEnum.Item1);
+         ExtendedTestValidatableEnum.Get("Item1").Should().Be(ExtendedTestValidatableEnum.Item1);
+         ExtendedTestValidatableEnum.Get("Item2").Should().Be(ExtendedTestValidatableEnum.Item2);
       }
 
       [Fact]
       public void Should_return_item_with_provided_key_ignoring_casing()
       {
-         StaticCtorTestEnum_Get.Get("Item").Should().Be(StaticCtorTestEnum_Get.Item);
+         TestEnum.Get("Item1").Should().Be(TestEnum.Item1);
+         TestEnum.Get("item1").Should().Be(TestEnum.Item1);
       }
 
       [Fact]
@@ -72,12 +94,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          EnumWithDerivedType.Get(2).Should().Be(EnumWithDerivedType.ItemOfDerivedType);
 
          AbstractEnum.Get(1).Should().Be(AbstractEnum.Item);
-      }
 
-      [Fact]
-      public void Should_return_valid_item_of_non_validatable_enum()
-      {
-         ValidTestEnum.Get("item1").Should().Be(ValidTestEnum.Item1);
+         ExtensibleTestEnum.Get("DerivedItem").Should().Be(ExtensibleTestEnum.DerivedItem);
+         ExtendedTestEnum.Get("DerivedItem").Should().Be(ExtendedTestEnum.DerivedItem);
       }
 
       [Fact]
@@ -85,6 +104,12 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       {
          Action action = () => ValidTestEnum.Get("invalid");
          action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+
+         action = () => ExtensibleTestEnum.Get("invalid");
+         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ExtensibleTestEnum' with the identifier 'invalid'.");
+
+         action = () => ExtendedTestEnum.Get("invalid");
+         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
       }
    }
 }

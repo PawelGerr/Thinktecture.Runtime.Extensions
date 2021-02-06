@@ -10,6 +10,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 		public void Should_return_string_representation_of_the_key()
 		{
 			TestEnum.Item1.ToString().Should().Be("item1");
+
+			ExtensibleTestEnum.Item1.ToString().Should().Be("Item1");
+			ExtendedTestEnum.Item1.ToString().Should().Be("Item1");
 		}
 
       [Fact]

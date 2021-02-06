@@ -10,6 +10,11 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       public void Should_return_false_if_item_is_null()
       {
          (TestEnum.Item1 is null).Should().BeFalse();
+
+         (ExtensibleTestEnum.Item1 is null).Should().BeFalse();
+         (ExtendedTestEnum.DerivedItem is null).Should().BeFalse();
+         (ExtendedTestEnum.Item1 is null).Should().BeFalse();
+         (ExtendedTestEnum.Item2 is null).Should().BeFalse();
       }
 
       [Fact]
@@ -17,13 +22,23 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       {
          // ReSharper disable once SuspiciousTypeConversion.Global
          (TestEnum.Item1 == TestEnumWithNonDefaultComparer.Item).Should().BeFalse();
+
+         (ExtensibleTestEnum.Item1 == ExtendedTestEnum.Item1).Should().BeFalse();
+         (ExtensibleTestEnum.DerivedItem == ExtendedTestEnum.DerivedItem).Should().BeFalse();
+         (ExtensibleTestValidatableEnum.Item1 == ExtendedTestValidatableEnum.Item1).Should().BeFalse();
       }
 
       [Fact]
       public void Should_return_true_on_reference_equality()
       {
-         // ReSharper disable once EqualExpressionComparison
+         // ReSharper disable EqualExpressionComparison
          (TestEnum.Item1 == TestEnum.Item1).Should().BeTrue();
+
+         (ExtensibleTestEnum.Item1 == ExtensibleTestEnum.Item1).Should().BeTrue();
+         (ExtensibleTestEnum.DerivedItem == ExtensibleTestEnum.DerivedItem).Should().BeTrue();
+         (ExtendedTestEnum.Item1 == ExtendedTestEnum.Item1).Should().BeTrue();
+         (ExtendedTestEnum.Item2 == ExtendedTestEnum.Item2).Should().BeTrue();
+         (ExtendedTestEnum.DerivedItem == ExtendedTestEnum.DerivedItem).Should().BeTrue();
       }
 
       [Fact]
@@ -66,12 +81,18 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       public void Should_return_true_if_both_items_are_invalid_and_have_same_key()
       {
          (TestEnum.Get("unknown") == TestEnum.Get("Unknown")).Should().BeTrue();
+
+         (ExtensibleTestValidatableEnum.Get("unknown") == ExtensibleTestValidatableEnum.Get("Unknown")).Should().BeTrue();
+         (ExtendedTestValidatableEnum.Get("unknown") == ExtendedTestValidatableEnum.Get("Unknown")).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_false_if_both_items_are_invalid_and_have_different_keys()
       {
          (TestEnum.Get("unknown") == TestEnum.Get("other")).Should().BeFalse();
+
+         (ExtensibleTestValidatableEnum.Get("unknown") == ExtensibleTestValidatableEnum.Get("other")).Should().BeFalse();
+         (ExtendedTestValidatableEnum.Get("unknown") == ExtendedTestValidatableEnum.Get("other")).Should().BeFalse();
       }
 
       [Fact]

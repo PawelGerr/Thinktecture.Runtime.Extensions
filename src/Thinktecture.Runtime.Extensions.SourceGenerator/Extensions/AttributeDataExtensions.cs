@@ -27,6 +27,16 @@ namespace Thinktecture
          return GetStringParameterValue(attributeData, "KeyComparer");
       }
 
+      public static string? FindMapsToMember(this AttributeData attributeData)
+      {
+         return GetStringParameterValue(attributeData, "MapsToMember");
+      }
+
+      public static bool? IsExtensible(this AttributeData attributeData)
+      {
+         return GetBooleanParameterValue(attributeData, "IsExtensible");
+      }
+
       public static bool? FindSkipFactoryMethods(this AttributeData attributeData)
       {
          return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");

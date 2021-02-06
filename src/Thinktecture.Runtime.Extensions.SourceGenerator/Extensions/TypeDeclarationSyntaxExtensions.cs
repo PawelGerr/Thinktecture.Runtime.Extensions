@@ -25,27 +25,36 @@ namespace Thinktecture
 
       private static bool CouldBeValueType(TypeSyntax? type)
       {
+         var typeName = ExtractTypeName(type);
+         return typeName == "ValueTypeAttribute" || typeName == "ValueType";
+      }
+
+      private static string? ExtractTypeName(TypeSyntax? type)
+      {
          while (type is not null)
          {
             switch (type)
             {
                case IdentifierNameSyntax ins:
-                  return ins.Identifier.Text == "ValueTypeAttribute" || ins.Identifier.Text == "ValueType";
+                  return ins.Identifier.Text;
 
                case QualifiedNameSyntax qns:
                   type = qns.Right;
                   break;
 
                default:
-                  return false;
+                  return null;
             }
          }
 
-         return false;
+         return null;
       }
 
       public static bool IsEnumCandidate(this TypeDeclarationSyntax tds)
       {
+         if (tds.AttributeLists.Any(l => l.Attributes.Any(a => CouldBeEnumType(a.Name))))
+            return true;
+
          if (tds.BaseList?.Types.Count > 0)
          {
             foreach (var baseType in tds.BaseList.Types)
@@ -56,6 +65,12 @@ namespace Thinktecture
          }
 
          return false;
+      }
+
+      private static bool CouldBeEnumType(TypeSyntax? type)
+      {
+         var typeName = ExtractTypeName(type);
+         return typeName == "EnumGeneration" || typeName == "EnumGeneration";
       }
 
       private static bool CouldBeEnumInterface(BaseTypeSyntax? baseType)

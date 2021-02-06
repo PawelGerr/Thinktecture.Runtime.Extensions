@@ -23,5 +23,11 @@ namespace Thinktecture
          get => _keyPropertyName ?? "Key";
          set => _keyPropertyName = value;
       }
+
+      /// <summary>
+      /// Indication whether the enumeration should be to derive from.
+      /// This feature comes with multiple limitations, use it only if necessary!
+      /// </summary>
+      public bool IsExtensible { get; set; }
    }
 }

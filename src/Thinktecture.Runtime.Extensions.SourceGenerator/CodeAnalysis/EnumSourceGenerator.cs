@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Thinktecture.CodeAnalysis
@@ -43,15 +45,31 @@ using Thinktecture;
       {
          var derivedTypes = _state.EnumType.FindDerivedInnerTypes();
          var needCreateInvalidImplementation = _state.IsValidatable && !_state.EnumType.HasCreateInvalidImplementation(_state.KeyType);
+         var newKeyword = _state.HasBaseEnum ? "new " : null;
 
          _sb.GenerateStructLayoutAttributeIfRequired(_state.EnumType);
+
+         if (_state.IsExtensible)
+         {
+            _sb.Append($@"
+   [Thinktecture.EnumConstructor(nameof({_state.KeyPropertyName})");
+
+            foreach (var member in _state.AssignableInstanceFieldsAndProperties)
+            {
+               var memberName = member.Symbol.FindEnumGenerationMemberAttribute()?.FindMapsToMember() ?? member.Identifier.ToString();
+
+               _sb.Append($@", nameof({memberName})");
+            }
+
+            _sb.Append(")]");
+         }
 
          _sb.Append($@"
    [System.ComponentModel.TypeConverter(typeof({_state.EnumIdentifier}_EnumTypeConverter))]
    partial {(_state.EnumType.IsValueType ? "struct" : "class")} {_state.EnumIdentifier} : IEquatable<{_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>
    {{
       [System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
+      internal {(_state.HasBaseEnum && _state.BaseEnum.IsSameAssembly ? newKeyword : null)}static void ModuleInit()
       {{
          var convertFromKey = new Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>({_state.EnumIdentifier}.Get);
          Expression<Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>> convertFromKeyExpression = {_state.KeyArgumentName} => {_state.EnumIdentifier}.Get({_state.KeyArgumentName});
@@ -82,7 +100,7 @@ using Thinktecture;
             var defaultComparer = _state.KeyType.IsString() ? "StringComparer.OrdinalIgnoreCase" : $"EqualityComparer<{_state.KeyType}>.Default";
 
             _sb.Append($@"
-      private static readonly IEqualityComparer<{_state.KeyType}{_state.NullableQuestionMarkKey}> _defaultKeyComparerMember = {defaultComparer};");
+      {(_state.IsExtensible ? "protected" : "private")} static readonly IEqualityComparer<{_state.KeyType}{_state.NullableQuestionMarkKey}> _defaultKeyComparerMember = {defaultComparer};");
          }
 
          _sb.Append($@"
@@ -95,7 +113,11 @@ using Thinktecture;
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static IReadOnlyList<{_state.EnumIdentifier}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public {newKeyword}static IReadOnlyList<{_state.EnumIdentifier}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();");
+
+         if (!_state.HasBaseEnum)
+         {
+            _sb.Append($@"
 
       /// <summary>
       /// The identifier of the item.
@@ -103,19 +125,26 @@ using Thinktecture;
       [NotNull]
       public {_state.KeyType} {_state.KeyPropertyName} {{ get; }}");
 
-         if (_state.IsValidatable)
-         {
-            _sb.Append($@"
+            if (_state.IsValidatable)
+            {
+               _sb.Append($@"
 
       /// <inheritdoc />
       public bool IsValid {{ get; }}");
 
-            GenerateEnsureValid();
+               GenerateEnsureValid();
+            }
          }
 
+         if (_state.HasBaseEnum)
+            GenerateBaseItems(_state.BaseEnum);
+
          GenerateConstructors();
-         GenerateGetKey();
-         GeneratedGet(needCreateInvalidImplementation);
+
+         if (!_state.HasBaseEnum)
+            GenerateGetKey();
+
+         GenerateGet(needCreateInvalidImplementation);
 
          if (needCreateInvalidImplementation && !_state.EnumType.IsAbstract)
             GenerateCreateInvalidItem();
@@ -139,15 +168,46 @@ using Thinktecture;
       public override int GetHashCode()
       {{
          return _typeHashCode ^ {_state.KeyComparerMember}.GetHashCode(this.{_state.KeyPropertyName});
-      }}
+      }}");
+
+         if (!_state.HasBaseEnum)
+         {
+            _sb.Append($@"
 
       /// <inheritdoc />
       public override string? ToString()
       {{
          return this.{_state.KeyPropertyName}{(_state.EnumType.IsValueType && _state.KeyType.IsReferenceType ? "?" : null)}.ToString();
       }}");
+         }
 
          GenerateGetLookup();
+      }
+
+      private void GenerateBaseItems(IBaseEnumState baseEnum)
+      {
+         if(baseEnum.Items.Count == 0)
+            return;
+
+         _sb.Append(@"
+");
+
+         foreach (var item in baseEnum.Items)
+         {
+            _sb.Append($@"
+      public new static readonly {_state.EnumType} {item.Identifier} = new {_state.EnumType}(");
+
+            for (var i = 0; i < baseEnum.ConstructorArguments.Count; i++)
+            {
+               if (i > 0)
+                  _sb.Append($@", ");
+
+               var arg = baseEnum.ConstructorArguments[i];
+               _sb.Append($@"{baseEnum.Type}.{item.Identifier}.{arg.Identifier}");
+            }
+
+            _sb.Append($@");");
+         }
       }
 
       private void GenerateTryGet()
@@ -242,7 +302,7 @@ using Thinktecture;
       /// Implicit conversion to the type <see cref=""{_state.KeyType}""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""{(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumIdentifier)}.{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator {_state.KeyType}{_state.NullableQuestionMarkKey}({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item)
       {{");
@@ -360,10 +420,19 @@ using Thinktecture;
          }}
 ");
 
+            if (_state.HasBaseEnum)
+            {
+               foreach (var item in _state.BaseEnum.Items)
+               {
+                  _sb.Append($@"
+         AddItem({item.Identifier}, nameof({item.Identifier}));");
+               }
+            }
+
             foreach (var item in _state.Items)
             {
                _sb.Append($@"
-         AddItem({item.Name}, ""{item.Name}"");");
+         AddItem({item.Name}, nameof({item.Name}));");
             }
          }
 
@@ -385,7 +454,7 @@ using Thinktecture;
       public void EnsureValid()
       {{
          if (!IsValid)
-            throw new InvalidOperationException($""The current enumeration item of type '{_state.EnumIdentifier}' with identifier '{{this.{_state.KeyPropertyName}}}' is not valid."");
+            throw new InvalidOperationException($""The current enumeration item of type '{_state.RuntimeTypeName}' with identifier '{{this.{_state.KeyPropertyName}}}' is not valid."");
       }}");
       }
 
@@ -402,7 +471,7 @@ using Thinktecture;
       }}");
       }
 
-      private void GeneratedGet(bool needCreateInvalidImplementation)
+      private void GenerateGet(bool needCreateInvalidImplementation)
       {
          _sb.Append($@"
 
@@ -420,7 +489,7 @@ using Thinktecture;
 
          _sb.Append($@"
       [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
-      public static {_state.EnumIdentifier}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} Get({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
+      public {(_state.HasBaseEnum ? "new " : null)}static {_state.EnumIdentifier}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} Get({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
       {{");
 
          if (_state.KeyType.IsReferenceType)
@@ -482,29 +551,43 @@ using Thinktecture;
                _sb.Append('!');
          }
 
+         if (_state.HasBaseEnum)
+         {
+            foreach (var arg in _state.BaseEnum.ConstructorArguments.Skip(1))
+            {
+               _sb.Append(", default");
+
+               if (arg.Type.IsReferenceType)
+                  _sb.Append('!');
+            }
+         }
+
          _sb.Append($@");
       }}");
       }
 
       private void GenerateConstructors()
       {
-         var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+         var baseCtorArgs = _state.BaseEnum?.ConstructorArguments.Skip(1) ?? Array.Empty<ISymbolState>();
+         var ctorArgs = _state.AssignableInstanceFieldsAndProperties
+                              .Concat(baseCtorArgs);
+         var accessibilityModifier = _state.IsExtensible ? "protected" : "private";
 
          if (_state.IsValidatable)
          {
             _sb.Append($@"
 
-      private {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
+      {accessibilityModifier} {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
 
-            foreach (var members in fieldsAndProperties)
+            foreach (var member in ctorArgs)
             {
-               _sb.Append($@", {members.Type} {members.ArgumentName}");
+               _sb.Append($@", {member.Type} {member.ArgumentName}");
             }
 
             _sb.Append($@")
          : this({_state.KeyArgumentName}, true");
 
-            foreach (var members in fieldsAndProperties)
+            foreach (var members in ctorArgs)
             {
                _sb.Append($@", {members.ArgumentName}");
             }
@@ -516,20 +599,38 @@ using Thinktecture;
 
          _sb.Append($@"
 
-      private {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
+      {accessibilityModifier} {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
 
          if (_state.IsValidatable)
             _sb.Append(", bool isValid");
 
-         foreach (var members in fieldsAndProperties)
+         foreach (var member in ctorArgs)
          {
-            _sb.Append($@", {members.Type} {members.ArgumentName}");
+            _sb.Append($@", {member.Type} {member.ArgumentName}");
          }
 
-         _sb.Append($@")
+         _sb.Append($@")");
+
+         if (_state.HasBaseEnum)
+         {
+            _sb.Append($@"
+         : base({_state.KeyArgumentName}");
+
+            if (_state.IsValidatable)
+               _sb.Append($@", isValid");
+
+            foreach (var baseArg in baseCtorArgs)
+            {
+               _sb.Append($@", {baseArg.ArgumentName}");
+            }
+
+            _sb.Append($@")");
+         }
+
+         _sb.Append($@"
       {{");
 
-         if (_state.KeyType.IsReferenceType)
+         if (!_state.HasBaseEnum && _state.KeyType.IsReferenceType)
          {
             _sb.Append($@"
         if ({_state.KeyArgumentName} is null)
@@ -543,38 +644,41 @@ using Thinktecture;
          if (_state.IsValidatable)
             _sb.Append(", isValid");
 
-         foreach (var members in fieldsAndProperties)
+         foreach (var members in ctorArgs)
          {
             _sb.Append($@", ref {members.ArgumentName}");
          }
 
          _sb.Append($@");
+");
 
+         if (!_state.HasBaseEnum)
+         {
+            _sb.Append($@"
          this.{_state.KeyPropertyName} = {_state.KeyArgumentName};");
 
-         if (_state.IsValidatable)
-         {
-            _sb.Append(@"
+            if (_state.IsValidatable)
+            {
+               _sb.Append(@"
          this.IsValid = isValid;");
+            }
          }
 
-         foreach (var memberInfo in fieldsAndProperties)
+         foreach (var memberInfo in _state.AssignableInstanceFieldsAndProperties)
          {
             _sb.Append($@"
          this.{memberInfo.Identifier} = {memberInfo.ArgumentName};");
          }
 
          _sb.Append($@"
-      }}");
-
-         _sb.Append($@"
+      }}
 
       static partial void ValidateConstructorArguments({_state.KeyType} {_state.KeyArgumentName}");
 
          if (_state.IsValidatable)
             _sb.Append(", bool isValid");
 
-         foreach (var members in fieldsAndProperties)
+         foreach (var members in ctorArgs)
          {
             _sb.Append($@", ref {members.Type} {members.ArgumentName}");
          }
@@ -611,7 +715,7 @@ using Thinktecture;
          if({_state.EnumIdentifier}.TryGet({_state.KeyArgumentName}, out var item))
             return item;
 
-         throw new FormatException($""There is no item of type '{_state.EnumIdentifier}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
+         throw new FormatException($""There is no item of type '{_state.RuntimeTypeName}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
          }
 
          _sb.Append($@"

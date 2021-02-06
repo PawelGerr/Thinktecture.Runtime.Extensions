@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -11,6 +12,18 @@ namespace Thinktecture
       {
          var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.First().GetSyntax();
          return syntax.Identifier;
+      }
+
+      public static bool IsPropertyBackingField(this IFieldSymbol field, [MaybeNullWhen(false)] out IPropertySymbol property)
+      {
+         if (field.AssociatedSymbol is IPropertySymbol prop)
+         {
+            property = prop;
+            return true;
+         }
+
+         property = null;
+         return false;
       }
    }
 }

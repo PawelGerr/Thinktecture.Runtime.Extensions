@@ -49,7 +49,29 @@ namespace Thinktecture
                implementedInterfaces.Add(@interface);
          }
 
-         return implementedInterfaces.Count > 0;
+         if (implementedInterfaces.Count > 0)
+         {
+            if (enumType.BaseType is not null)
+            {
+               foreach (var @interface in enumType.BaseType.AllInterfaces)
+               {
+                  if (@interface.IsNonValidatableEnumInterface() || @interface.IsValidatableEnumInterface())
+                     implementedInterfaces.Add(@interface);
+               }
+            }
+
+            return true;
+         }
+
+         var enumGenerationAttr = enumType.FindEnumGenerationAttribute();
+
+         if (enumGenerationAttr is null)
+            return false;
+
+         if (enumType.BaseType is null)
+            return false;
+
+         return enumType.BaseType.IsEnum(out enumInterfaces);
       }
 
       public static INamedTypeSymbol? GetValidEnumInterface(
@@ -107,10 +129,15 @@ namespace Thinktecture
 
       public static IReadOnlyList<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType)
       {
+         return enumType.EnumerateEnumItems().ToList()!;
+      }
+
+      public static IEnumerable<IFieldSymbol> EnumerateEnumItems(this ITypeSymbol enumType)
+      {
          return enumType.GetMembers()
                         .Select(m =>
                                 {
-                                   if (!m.IsStatic || m is not IFieldSymbol field)
+                                   if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField(out _))
                                       return null;
 
                                    if (SymbolEqualityComparer.Default.Equals(field.Type, enumType))
@@ -118,8 +145,7 @@ namespace Thinktecture
 
                                    return null;
                                 })
-                        .Where(field => field is not null)
-                        .ToList()!;
+                        .Where(field => field is not null)!;
       }
 
       public static bool IsFormattable(this ITypeSymbol type)
@@ -213,7 +239,7 @@ namespace Thinktecture
                                                                                 type.Name));
                                   }
 
-                                  return new InstanceMemberInfo(fds, fds.Type, identifier);
+                                  return InstanceMemberInfo.CreateFrom(fds);
                                }
 
                                if (m is IPropertySymbol pds)
@@ -243,7 +269,7 @@ namespace Thinktecture
                                                                                 type.Name));
                                   }
 
-                                  return new InstanceMemberInfo(pds, pds.Type, identifier);
+                                  return InstanceMemberInfo.CreateFrom(pds);
                                }
 
                                return null;
@@ -263,12 +289,12 @@ namespace Thinktecture
                                switch (m)
                                {
                                   case IFieldSymbol fds:
-                                     return new InstanceMemberInfo(fds, fds.Type, fds.GetIdentifier());
+                                     return InstanceMemberInfo.CreateFrom(fds);
 
                                   case IPropertySymbol pds:
                                   {
                                      if (!pds.IsWriteOnly)
-                                        return new InstanceMemberInfo(pds, pds.Type, pds.GetIdentifier());
+                                        return InstanceMemberInfo.CreateFrom(pds);
 
                                      break;
                                   }

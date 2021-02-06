@@ -29,5 +29,15 @@ namespace Thinktecture
       {
          return symbol.FindAttribute("Thinktecture.ValueTypeEqualityMemberAttribute");
       }
+
+      public static AttributeData? FindEnumGenerationMemberAttribute(this ISymbol symbol)
+      {
+         return symbol.FindAttribute("Thinktecture.EnumGenerationMemberAttribute");
+      }
+
+      public static AttributeData? FindEnumConstructorAttribute(this ISymbol symbol)
+      {
+         return symbol.FindAttribute("Thinktecture.EnumConstructorAttribute");
+      }
    }
 }
