@@ -28,7 +28,7 @@ jobs:
       - name: set version
         run: |
           . ./.github/workflows/ci.ps1          
-          Set-VersionSuffixOnTag "$Env:GITHUB_WORKSPACE" "$Env:GITHUB_REF"
+          Set-VersionSuffixOnTag "$Env:GITHUB_WORKSPACE/src" "$Env:GITHUB_REF"
         shell: powershell
 
       - name: dotnet restore
