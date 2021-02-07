@@ -20,22 +20,30 @@ namespace Thinktecture
       /// </summary>
       /// <param name="modelBuilder">EF model builder.</param>
       /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
+      /// <param name="configure">Action for further configuration of the property.</param>
       /// <exception cref="ArgumentNullException">If <paramref name="modelBuilder"/> is <c>null</c>.</exception>
       public static void AddEnumAndValueTypeConverters(
          this ModelBuilder modelBuilder,
-         bool validateOnWrite)
+         bool validateOnWrite,
+         Action<IMutableProperty>? configure = null)
       {
          if (modelBuilder is null)
             throw new ArgumentNullException(nameof(modelBuilder));
 
+         configure ??= Empty.Action;
+
          foreach (var entity in modelBuilder.Model.GetEntityTypes())
          {
-            AddConverterForScalarProperties(entity, validateOnWrite);
-            AddConvertersForNavigations(entity, modelBuilder, validateOnWrite);
+            AddConverterForScalarProperties(entity, validateOnWrite, configure);
+            AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, configure);
          }
       }
 
-      private static void AddConvertersForNavigations(IMutableEntityType entity, ModelBuilder modelBuilder, bool validateOnWrite)
+      private static void AddConvertersForNavigations(
+         IMutableEntityType entity,
+         ModelBuilder modelBuilder,
+         bool validateOnWrite,
+         Action<IMutableProperty> configure)
       {
          List<IMutableNavigation>? navigationsToConvert = null;
 
@@ -50,12 +58,17 @@ namespace Thinktecture
             foreach (var navigation in navigationsToConvert)
             {
                var valueConverter = ValueTypeValueConverterFactory.Create(navigation.ClrType, validateOnWrite);
-               modelBuilder.Entity(entity.ClrType).Property(navigation.Name).HasConversion(valueConverter);
+               var property = modelBuilder.Entity(entity.ClrType).Property(navigation.Name);
+               property.HasConversion(valueConverter);
+               configure(property.Metadata);
             }
          }
       }
 
-      private static void AddConverterForScalarProperties(IMutableEntityType entity, bool validateOnWrite)
+      private static void AddConverterForScalarProperties(
+         IMutableEntityType entity,
+         bool validateOnWrite,
+         Action<IMutableProperty> configure)
       {
          foreach (var property in entity.GetProperties())
          {
@@ -69,6 +82,7 @@ namespace Thinktecture
 
             valueConverter = ValueTypeValueConverterFactory.Create(property.ClrType, validateOnWrite);
             property.SetValueConverter(valueConverter);
+            configure(property);
          }
       }
    }

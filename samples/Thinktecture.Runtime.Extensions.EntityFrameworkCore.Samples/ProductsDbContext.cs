@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Thinktecture.EnumLikeClasses;
 
 namespace Thinktecture
 {
@@ -27,7 +29,19 @@ namespace Thinktecture
                                                          });
                                       });
 
-         modelBuilder.AddEnumAndValueTypeConverters(true);
+         modelBuilder.AddEnumAndValueTypeConverters(true, property =>
+                                                          {
+                                                             if (property.ClrType == typeof(SpecialProductType))
+                                                             {
+                                                                var maxLength = SpecialProductType.Items.Max(i => i.Key.Length);
+                                                                property.SetMaxLength(RoundUp(maxLength));
+                                                             }
+                                                          });
+      }
+
+      private static int RoundUp(int value)
+      {
+         return value + (10 - value % 10);
       }
    }
 }
