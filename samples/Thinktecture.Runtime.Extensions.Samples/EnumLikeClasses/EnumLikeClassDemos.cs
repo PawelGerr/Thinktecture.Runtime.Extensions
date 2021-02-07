@@ -16,8 +16,8 @@ namespace Thinktecture.EnumLikeClasses
       {
          logger.Information("==== Demo for IEnum<T> ====");
 
-         var productTypes = ProductType.Items;
-         logger.Information("Product types: {Types}", productTypes);
+         logger.Information("Product types: {Types}", ProductType.Items);
+         logger.Information("Special product types: {Types}", SpecialProductType.Items);
 
          var productType = ProductType.Get("Groceries");
          logger.Information("Product type: {Type}", productType);

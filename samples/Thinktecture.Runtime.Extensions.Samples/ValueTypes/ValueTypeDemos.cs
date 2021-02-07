@@ -21,9 +21,9 @@ namespace Thinktecture.ValueTypes
             ProductName.Create("  ");
             logger.Warning("This line won't be reached.");
          }
-         catch (ArgumentException)
+         catch (ValidationException)
          {
-            logger.Information("ArgumentException is thrown because a product name cannot be an empty string.");
+            logger.Information("ValidationException is thrown because a product name cannot be an empty string.");
          }
 
          var validationResult = ProductName.TryCreate("Milk", out var milk);

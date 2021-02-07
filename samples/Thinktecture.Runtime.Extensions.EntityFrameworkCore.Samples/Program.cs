@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using Thinktecture.EnumLikeClasses;
 using Thinktecture.ValueTypes;
 
@@ -12,16 +14,18 @@ namespace Thinktecture
    {
       public static void Main()
       {
-         var loggerFactory = GetLoggerFactory();
+         var loggerFactory = GetLoggerFactory(out var loggingLevelSwitch);
          var logger = loggerFactory.CreateLogger<Program>();
 
          using var ctx = CreateContext(loggerFactory);
 
-         InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, Boundary.Create(1, 2)));
+         InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, SpecialProductType.Special, Boundary.Create(1, 2)));
 
          try
          {
-            InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), Boundary.Create(1, 2)));
+            loggingLevelSwitch.MinimumLevel = LogEventLevel.Fatal;
+            InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), SpecialProductType.Special, Boundary.Create(1, 2)));
+            loggingLevelSwitch.MinimumLevel = LogEventLevel.Information;
          }
          catch (DbUpdateException)
          {
@@ -59,12 +63,15 @@ namespace Thinktecture
          return ctx;
       }
 
-      private static ILoggerFactory GetLoggerFactory()
+      private static ILoggerFactory GetLoggerFactory(out LoggingLevelSwitch loggingLevelSwitch)
       {
+         loggingLevelSwitch = new LoggingLevelSwitch();
+
          var serilog = new LoggerConfiguration()
                        .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
                        .Destructure.AsScalar<ProductCategory>()
                        .Destructure.AsScalar<ProductName>()
+                       .MinimumLevel.ControlledBy(loggingLevelSwitch)
                        .CreateLogger();
 
          return new LoggerFactory()
