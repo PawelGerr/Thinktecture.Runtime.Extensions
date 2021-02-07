@@ -37,6 +37,12 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          key = ExtendedTestEnum.Item2;
          key.Should().Be(ExtendedTestEnum.Item2.Key);
+
+         key = DifferentAssemblyExtendedTestEnum.Item1;
+         key.Should().Be(DifferentAssemblyExtendedTestEnum.Item1.Key);
+
+         key = DifferentAssemblyExtendedTestEnum.Item2;
+         key.Should().Be(DifferentAssemblyExtendedTestEnum.Item2.Key);
       }
    }
 }

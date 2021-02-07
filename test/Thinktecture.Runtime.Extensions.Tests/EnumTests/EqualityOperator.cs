@@ -15,6 +15,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          (ExtendedTestEnum.DerivedItem is null).Should().BeFalse();
          (ExtendedTestEnum.Item1 is null).Should().BeFalse();
          (ExtendedTestEnum.Item2 is null).Should().BeFalse();
+         (DifferentAssemblyExtendedTestEnum.DerivedItem is null).Should().BeFalse();
+         (DifferentAssemblyExtendedTestEnum.Item1 is null).Should().BeFalse();
+         (DifferentAssemblyExtendedTestEnum.Item2 is null).Should().BeFalse();
       }
 
       [Fact]
@@ -25,6 +28,8 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          (ExtensibleTestEnum.Item1 == ExtendedTestEnum.Item1).Should().BeFalse();
          (ExtensibleTestEnum.DerivedItem == ExtendedTestEnum.DerivedItem).Should().BeFalse();
+         (ExtensibleTestEnum.Item1 == DifferentAssemblyExtendedTestEnum.Item1).Should().BeFalse();
+         (ExtensibleTestEnum.DerivedItem == DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeFalse();
          (ExtensibleTestValidatableEnum.Item1 == ExtendedTestValidatableEnum.Item1).Should().BeFalse();
       }
 
@@ -39,6 +44,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          (ExtendedTestEnum.Item1 == ExtendedTestEnum.Item1).Should().BeTrue();
          (ExtendedTestEnum.Item2 == ExtendedTestEnum.Item2).Should().BeTrue();
          (ExtendedTestEnum.DerivedItem == ExtendedTestEnum.DerivedItem).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.Item1 == DifferentAssemblyExtendedTestEnum.Item1).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.Item2 == DifferentAssemblyExtendedTestEnum.Item2).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.DerivedItem == DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeTrue();
       }
 
       [Fact]

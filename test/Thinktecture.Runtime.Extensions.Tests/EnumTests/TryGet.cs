@@ -17,6 +17,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          ExtendedTestEnum.TryGet(null, out var extendedItem).Should().BeFalse();
          extendedItem.Should().BeNull();
+
+         DifferentAssemblyExtendedTestEnum.TryGet(null, out var differentAssemblyExtendedItem).Should().BeFalse();
+         differentAssemblyExtendedItem.Should().BeNull();
       }
 
       [Fact]
@@ -44,6 +47,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          ExtendedTestEnum.TryGet("unknown", out var extendedItem).Should().BeFalse();
          extendedItem.Should().BeNull();
+
+         DifferentAssemblyExtendedTestEnum.TryGet("unknown", out var differentAssemblyExtendedItem).Should().BeFalse();
+         differentAssemblyExtendedItem.Should().BeNull();
       }
 
       [Fact]
@@ -60,6 +66,12 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          ExtendedTestEnum.TryGet("Item2", out extendedItem).Should().BeTrue();
          extendedItem.Should().Be(ExtendedTestEnum.Item2);
+
+         DifferentAssemblyExtendedTestEnum.TryGet("Item1", out var differentAssemblyExtendedItem).Should().BeTrue();
+         differentAssemblyExtendedItem.Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
+
+         DifferentAssemblyExtendedTestEnum.TryGet("Item2", out differentAssemblyExtendedItem).Should().BeTrue();
+         differentAssemblyExtendedItem.Should().Be(DifferentAssemblyExtendedTestEnum.Item2);
       }
 
       [Fact]

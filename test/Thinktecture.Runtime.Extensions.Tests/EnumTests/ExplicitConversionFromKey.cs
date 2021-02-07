@@ -40,6 +40,12 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          extendedItem = (ExtendedTestEnum)"Item2";
          extendedItem.Should().Be(ExtendedTestEnum.Item2);
+
+         var differentAssemblyExtendedItem = (DifferentAssemblyExtendedTestEnum)"Item1";
+         differentAssemblyExtendedItem.Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
+
+         differentAssemblyExtendedItem = (DifferentAssemblyExtendedTestEnum)"Item2";
+         differentAssemblyExtendedItem.Should().Be(DifferentAssemblyExtendedTestEnum.Item2);
       }
 
       [Fact]

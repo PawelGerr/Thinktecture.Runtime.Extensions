@@ -17,6 +17,7 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          ExtensibleTestEnum.Get(null).Should().BeNull();
          ExtendedTestEnum.Get(null).Should().BeNull();
+         DifferentAssemblyExtendedTestEnum.Get(null).Should().BeNull();
          ExtensibleTestValidatableEnum.Get(null).Should().BeNull();
          ExtendedTestValidatableEnum.Get(null).Should().BeNull();
       }
@@ -67,6 +68,8 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          ExtensibleTestEnum.Get("Item1").Should().Be(ExtensibleTestEnum.Item1);
          ExtendedTestEnum.Get("Item1").Should().Be(ExtendedTestEnum.Item1);
          ExtendedTestEnum.Get("Item2").Should().Be(ExtendedTestEnum.Item2);
+         DifferentAssemblyExtendedTestEnum.Get("Item1").Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
+         DifferentAssemblyExtendedTestEnum.Get("Item2").Should().Be(DifferentAssemblyExtendedTestEnum.Item2);
 
          ExtensibleTestValidatableEnum.Get("Item1").Should().Be(ExtensibleTestValidatableEnum.Item1);
          ExtendedTestValidatableEnum.Get("Item1").Should().Be(ExtendedTestValidatableEnum.Item1);
@@ -97,6 +100,7 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          ExtensibleTestEnum.Get("DerivedItem").Should().Be(ExtensibleTestEnum.DerivedItem);
          ExtendedTestEnum.Get("DerivedItem").Should().Be(ExtendedTestEnum.DerivedItem);
+         DifferentAssemblyExtendedTestEnum.Get("DerivedItem").Should().Be(DifferentAssemblyExtendedTestEnum.DerivedItem);
       }
 
       [Fact]
@@ -110,6 +114,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          action = () => ExtendedTestEnum.Get("invalid");
          action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
+
+         action = () => DifferentAssemblyExtendedTestEnum.Get("invalid");
+         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'DifferentAssemblyExtendedTestEnum' with the identifier 'invalid'.");
       }
    }
 }

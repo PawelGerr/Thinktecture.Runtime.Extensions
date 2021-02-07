@@ -1,14 +1,16 @@
+using Thinktecture.Runtime.Tests.TestEnums;
+
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests.TestClasses
 {
    public class ClassWithStringBasedEnum
    {
-      public StringBasedEnum Enum { get; set; }
+      public TestEnum Enum { get; set; }
 
       public ClassWithStringBasedEnum()
       {
       }
 
-      public ClassWithStringBasedEnum(StringBasedEnum value)
+      public ClassWithStringBasedEnum(TestEnum value)
       {
          Enum = value;
       }

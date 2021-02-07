@@ -2,6 +2,9 @@ using FluentAssertions;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit;
 
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
+// ReSharper disable EqualExpressionComparison
+
 namespace Thinktecture.Runtime.Tests.EnumTests
 {
    public class NotEqualityOperator
@@ -15,6 +18,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          (ExtendedTestEnum.DerivedItem is not null).Should().BeTrue();
          (ExtendedTestEnum.Item1 is not null).Should().BeTrue();
          (ExtendedTestEnum.Item2 is not null).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.DerivedItem is not null).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.Item1 is not null).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.Item2 is not null).Should().BeTrue();
       }
 
       [Fact]
@@ -25,6 +31,8 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          (ExtensibleTestEnum.Item1 != ExtendedTestEnum.Item1).Should().BeTrue();
          (ExtensibleTestEnum.DerivedItem != ExtendedTestEnum.DerivedItem).Should().BeTrue();
+         (ExtensibleTestEnum.Item1 != DifferentAssemblyExtendedTestEnum.Item1).Should().BeTrue();
+         (ExtensibleTestEnum.DerivedItem != DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeTrue();
          (ExtensibleTestValidatableEnum.Item1 != ExtendedTestValidatableEnum.Item1).Should().BeTrue();
       }
 
@@ -39,6 +47,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          (ExtendedTestEnum.Item1 != ExtendedTestEnum.Item1).Should().BeFalse();
          (ExtendedTestEnum.Item2 != ExtendedTestEnum.Item2).Should().BeFalse();
          (ExtendedTestEnum.DerivedItem != ExtendedTestEnum.DerivedItem).Should().BeFalse();
+         (DifferentAssemblyExtendedTestEnum.Item1 != DifferentAssemblyExtendedTestEnum.Item1).Should().BeFalse();
+         (DifferentAssemblyExtendedTestEnum.Item2 != DifferentAssemblyExtendedTestEnum.Item2).Should().BeFalse();
+         (DifferentAssemblyExtendedTestEnum.DerivedItem != DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeFalse();
       }
 
       [Fact]

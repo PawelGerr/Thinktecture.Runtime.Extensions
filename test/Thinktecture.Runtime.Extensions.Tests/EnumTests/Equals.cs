@@ -15,6 +15,10 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          ExtensibleTestEnum.DerivedItem.Equals(null).Should().BeFalse();
          ExtendedTestEnum.Item1.Equals(null).Should().BeFalse();
          ExtendedTestEnum.DerivedItem.Equals(null).Should().BeFalse();
+         DifferentAssemblyExtendedTestEnum.Item1.Equals(null).Should().BeFalse();
+         DifferentAssemblyExtendedTestEnum.DerivedItem.Equals(null).Should().BeFalse();
+         ExtensibleTestValidatableEnum.Item1.Equals(null).Should().BeFalse();
+         DifferentAssemblyExtendedTestEnum.DerivedItem.Equals(null).Should().BeFalse();
          ExtensibleTestValidatableEnum.Item1.Equals(null).Should().BeFalse();
          ExtendedTestValidatableEnum.Item1.Equals(null).Should().BeFalse();
       }
@@ -27,6 +31,8 @@ namespace Thinktecture.Runtime.Tests.EnumTests
 
          ExtensibleTestEnum.Item1.Equals(ExtendedTestEnum.Item1).Should().BeFalse();
          ExtensibleTestEnum.DerivedItem.Equals(ExtendedTestEnum.DerivedItem).Should().BeFalse();
+         ExtensibleTestEnum.Item1.Equals(DifferentAssemblyExtendedTestEnum.Item1).Should().BeFalse();
+         ExtensibleTestEnum.DerivedItem.Equals(DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeFalse();
          ExtensibleTestValidatableEnum.Item1.Equals(ExtendedTestValidatableEnum.Item1).Should().BeFalse();
       }
 
@@ -40,6 +46,9 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          ExtendedTestEnum.Item1.Equals(ExtendedTestEnum.Item1).Should().BeTrue();
          ExtendedTestEnum.Item2.Equals(ExtendedTestEnum.Item2).Should().BeTrue();
          ExtendedTestEnum.DerivedItem.Equals(ExtendedTestEnum.DerivedItem).Should().BeTrue();
+         DifferentAssemblyExtendedTestEnum.Item1.Equals(DifferentAssemblyExtendedTestEnum.Item1).Should().BeTrue();
+         DifferentAssemblyExtendedTestEnum.Item2.Equals(DifferentAssemblyExtendedTestEnum.Item2).Should().BeTrue();
+         DifferentAssemblyExtendedTestEnum.DerivedItem.Equals(DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeTrue();
       }
 
       [Fact]

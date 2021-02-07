@@ -24,6 +24,11 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          typeHashCode = typeof(ExtendedTestEnum).GetHashCode();
          keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(ExtendedTestEnum.Item1.Key);
          hashCode.Should().Be((typeHashCode * 397) ^ keyHashCode);
+
+         hashCode = DifferentAssemblyExtendedTestEnum.Item1.GetHashCode();
+         typeHashCode = typeof(DifferentAssemblyExtendedTestEnum).GetHashCode();
+         keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(DifferentAssemblyExtendedTestEnum.Item1.Key);
+         hashCode.Should().Be((typeHashCode * 397) ^ keyHashCode);
       }
 
       [Fact]

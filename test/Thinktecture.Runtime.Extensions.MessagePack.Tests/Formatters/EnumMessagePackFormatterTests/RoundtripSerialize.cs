@@ -5,6 +5,7 @@ using FluentAssertions;
 using MessagePack;
 using MessagePack.Resolvers;
 using Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
+using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit;
 
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests
@@ -40,25 +41,52 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests
       [Fact]
       public void Should_roundtrip_serialize_string_based_enum_providing_resolver()
       {
-         var bytes = MessagePackSerializer.Serialize(StringBasedEnum.ValueA, _options, CancellationToken.None);
-         var value = MessagePackSerializer.Deserialize<StringBasedEnum>(bytes, _options, CancellationToken.None);
+         var bytes = MessagePackSerializer.Serialize(TestEnum.Item1, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<TestEnum>(bytes, _options, CancellationToken.None);
 
-         value.Should().Be(StringBasedEnum.ValueA);
+         value.Should().Be(TestEnum.Item1);
+      }
+
+      [Fact]
+      public void Should_roundtrip_serialize_ExtensibleTestEnum()
+      {
+         var bytes = MessagePackSerializer.Serialize(ExtensibleTestEnum.Item1, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<ExtensibleTestEnum>(bytes, _options, CancellationToken.None);
+
+         value.Should().Be(ExtensibleTestEnum.Item1);
+      }
+
+      [Fact]
+      public void Should_roundtrip_serialize_ExtendedTestEnum()
+      {
+         var bytes = MessagePackSerializer.Serialize(ExtendedTestEnum.Item1, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<ExtendedTestEnum>(bytes, _options, CancellationToken.None);
+
+         value.Should().Be(ExtendedTestEnum.Item1);
+      }
+
+      [Fact]
+      public void Should_roundtrip_serialize_DifferentAssemblyExtendedTestEnum()
+      {
+         var bytes = MessagePackSerializer.Serialize(DifferentAssemblyExtendedTestEnum.Item1, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<DifferentAssemblyExtendedTestEnum>(bytes, _options, CancellationToken.None);
+
+         value.Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
       }
 
       [Fact]
       public void Should_roundtrip_serialize_int_based_enum_providing_resolver()
       {
-         var bytes = MessagePackSerializer.Serialize(IntBasedEnum.Value1, _options, CancellationToken.None);
-         var value = MessagePackSerializer.Deserialize<IntBasedEnum>(bytes, _options, CancellationToken.None);
+         var bytes = MessagePackSerializer.Serialize(IntegerEnum.Item1, _options, CancellationToken.None);
+         var value = MessagePackSerializer.Deserialize<IntegerEnum>(bytes, _options, CancellationToken.None);
 
-         value.Should().Be(IntBasedEnum.Value1);
+         value.Should().Be(IntegerEnum.Item1);
       }
 
       [Fact]
       public void Should_roundtrip_serialize_class_with_string_based_enum_providing_resolver()
       {
-         var instance = new ClassWithStringBasedEnum(StringBasedEnum.ValueA);
+         var instance = new ClassWithStringBasedEnum(TestEnum.Item1);
 
          var bytes = MessagePackSerializer.Serialize(instance, _options, CancellationToken.None);
          var value = MessagePackSerializer.Deserialize<ClassWithStringBasedEnum>(bytes, _options, CancellationToken.None);
@@ -69,7 +97,7 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests
       [Fact]
       public void Should_roundtrip_serialize_class_with_int_based_enum_providing_resolver()
       {
-         var instance = new ClassWithIntBasedEnum(IntBasedEnum.Value1);
+         var instance = new ClassWithIntBasedEnum(IntegerEnum.Item1);
 
          var bytes = MessagePackSerializer.Serialize(instance, _options, CancellationToken.None);
          var value = MessagePackSerializer.Deserialize<ClassWithIntBasedEnum>(bytes, _options, CancellationToken.None);

@@ -4,45 +4,14 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentAssertions;
+using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests.TestClasses;
 using Xunit;
 
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConverterFactoryTests
 {
-   public class WriteJson
+   public class WriteJson : JsonTestsBase
    {
-      public static IEnumerable<object[]> DataForStringBasedEnumTest => new[]
-                                                                        {
-                                                                           new object[] { null, "null" },
-                                                                           new object[] { StringBasedEnum.ValueA, "\"A\"" },
-                                                                           new object[] { StringBasedEnum.ValueB, "\"B\"" }
-                                                                        };
-
-      public static IEnumerable<object[]> DataForClassWithStringBasedEnumTest => new[]
-                                                                                 {
-                                                                                    new object[] { null, "null" },
-                                                                                    new object[] { new ClassWithStringBasedEnum(), "{\"Enum\":null}" },
-                                                                                    new object[] { new ClassWithStringBasedEnum(), "{\"Enum\":null}" },
-                                                                                    new object[] { new ClassWithStringBasedEnum(StringBasedEnum.ValueA), "{\"Enum\":\"A\"}" },
-                                                                                    new object[] { new ClassWithStringBasedEnum(StringBasedEnum.ValueB), "{\"Enum\":\"B\"}" }
-                                                                                 };
-
-      public static IEnumerable<object[]> DataForIntBasedEnumTest => new[]
-                                                                     {
-                                                                        new object[] { null, "null" },
-                                                                        new object[] { IntBasedEnum.Value1, "1" },
-                                                                        new object[] { IntBasedEnum.Value2, "2" }
-                                                                     };
-
-      public static IEnumerable<object[]> DataForClassWithIntBasedEnumTest => new[]
-                                                                              {
-                                                                                 new object[] { null, "null" },
-                                                                                 new object[] { new ClassWithIntBasedEnum(), "{\"Enum\":null}" },
-                                                                                 new object[] { new ClassWithIntBasedEnum(), "{\"Enum\":null}" },
-                                                                                 new object[] { new ClassWithIntBasedEnum(IntBasedEnum.Value1), "{\"Enum\":1}" },
-                                                                                 new object[] { new ClassWithIntBasedEnum(IntBasedEnum.Value2), "{\"Enum\":2}" }
-                                                                              };
-
       public static IEnumerable<object[]> DataForValueTypeWithMultipleProperties => new[]
                                                                                     {
                                                                                        new object[] { null, "null" },
@@ -55,36 +24,63 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
 
       [Theory]
       [MemberData(nameof(DataForStringBasedEnumTest))]
-      public void Should_serialize_string_based_enum(StringBasedEnum enumValue, string expectedJson)
+      public void Should_serialize_string_based_enum(TestEnum enumValue, string expectedJson)
       {
-         var json = Serialize<StringBasedEnum, StringBasedEnum_ValueTypeJsonConverterFactory>(enumValue);
+         var json = Serialize<TestEnum, TestEnum_ValueTypeJsonConverterFactory>(enumValue);
+
+         json.Should().Be(expectedJson);
+      }
+
+      [Theory]
+      [MemberData(nameof(DataForExtensibleEnumTest))]
+      public void Should_serialize_ExtensibleTestEnum(ExtensibleTestEnum enumValue, string expectedJson)
+      {
+         var json = Serialize<ExtensibleTestEnum, ExtensibleTestEnum_ValueTypeJsonConverterFactory>(enumValue);
+
+         json.Should().Be(expectedJson);
+      }
+
+      [Theory]
+      [MemberData(nameof(DataForExtendedEnumTest))]
+      public void Should_serialize_ExtendedTestEnum(ExtendedTestEnum enumValue, string expectedJson)
+      {
+         var json = Serialize<ExtendedTestEnum, ExtendedTestEnum_ValueTypeJsonConverterFactory>(enumValue);
+
+         json.Should().Be(expectedJson);
+      }
+
+      [Theory]
+      [MemberData(nameof(DataForDifferentAssemblyExtendedTestEnumTest))]
+      public void Should_serialize_DifferentAssemblyExtendedTestEnum(DifferentAssemblyExtendedTestEnum enumValue, string expectedJson)
+      {
+         var json = Serialize<DifferentAssemblyExtendedTestEnum, DifferentAssemblyExtendedTestEnum_ValueTypeJsonConverterFactory>(enumValue);
 
          json.Should().Be(expectedJson);
       }
 
       [Theory]
       [MemberData(nameof(DataForIntBasedEnumTest))]
-      public void Should_serialize_int_based_enum(IntBasedEnum enumValue, string expectedJson)
+      public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
       {
-         var json = Serialize<IntBasedEnum, IntBasedEnum_ValueTypeJsonConverterFactory>(enumValue);
+         var json = Serialize<IntegerEnum, IntegerEnum_ValueTypeJsonConverterFactory>(enumValue);
 
          json.Should().Be(expectedJson);
       }
 
       [Theory]
       [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
-      public void Should_serialize_class_containing_string_based_enum(ClassWithStringBasedEnum classWithEnum, string expectedJson)
+      public void Should_serialize_class_containing_string_based_enum(ClassWithStringBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
       {
-         var json = Serialize<ClassWithStringBasedEnum, StringBasedEnum_ValueTypeJsonConverterFactory>(classWithEnum);
+         var json = Serialize<ClassWithStringBasedEnum, TestEnum_ValueTypeJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
 
          json.Should().Be(expectedJson);
       }
 
       [Theory]
       [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
-      public void Should_serialize_class_containing_int_based_enum(ClassWithIntBasedEnum classWithEnum, string expectedJson)
+      public void Should_serialize_class_containing_int_based_enum(ClassWithIntBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
       {
-         var json = Serialize<ClassWithIntBasedEnum, IntBasedEnum_ValueTypeJsonConverterFactory>(classWithEnum);
+         var json = Serialize<ClassWithIntBasedEnum, IntegerEnum_ValueTypeJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
 
          json.Should().Be(expectedJson);
       }

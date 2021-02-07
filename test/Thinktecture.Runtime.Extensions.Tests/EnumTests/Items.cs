@@ -33,6 +33,12 @@ namespace Thinktecture.Runtime.Tests.EnumTests
          extendedItems.Should().Contain(ExtendedTestEnum.Item1);
          extendedItems.Should().Contain(ExtendedTestEnum.Item2);
          extendedItems.Should().Contain(ExtendedTestEnum.DerivedItem);
+
+         var differentAssemblyExtendedItem = DifferentAssemblyExtendedTestEnum.Items;
+         differentAssemblyExtendedItem.Should().HaveCount(3);
+         differentAssemblyExtendedItem.Should().Contain(DifferentAssemblyExtendedTestEnum.Item1);
+         differentAssemblyExtendedItem.Should().Contain(DifferentAssemblyExtendedTestEnum.Item2);
+         differentAssemblyExtendedItem.Should().Contain(DifferentAssemblyExtendedTestEnum.DerivedItem);
       }
 
       [Fact]

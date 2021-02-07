@@ -1,4 +1,5 @@
 using MessagePack;
+using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses
 {
@@ -6,13 +7,13 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.Te
    public class ClassWithIntBasedEnum
    {
       [Key(0)]
-      public IntBasedEnum Enum { get; set; }
+      public IntegerEnum Enum { get; set; }
 
       public ClassWithIntBasedEnum()
       {
       }
 
-      public ClassWithIntBasedEnum(IntBasedEnum value)
+      public ClassWithIntBasedEnum(IntegerEnum value)
       {
          Enum = value;
       }

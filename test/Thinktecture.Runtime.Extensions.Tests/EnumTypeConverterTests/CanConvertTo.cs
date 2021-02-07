@@ -11,18 +11,30 @@ namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests
       public void Should_return_true_if_type_matches_the_key()
       {
          StringBasedConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+
+         ExtensibleTestEnumConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+         ExtendedTestEnumConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+         DifferentAssemblyExtendedTestEnumConverter.CanConvertTo(typeof(string)).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_true_if_type_matches_the_enum()
       {
          StringBasedConverter.CanConvertTo(typeof(TestEnum)).Should().BeTrue();
+
+         ExtensibleTestEnumConverter.CanConvertTo(typeof(ExtensibleTestEnum)).Should().BeTrue();
+         ExtendedTestEnumConverter.CanConvertTo(typeof(ExtendedTestEnum)).Should().BeTrue();
+         DifferentAssemblyExtendedTestEnumConverter.CanConvertTo(typeof(DifferentAssemblyExtendedTestEnum)).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_false_if_type_doesnt_match_the_enum_and_key()
       {
          StringBasedConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
+
+         ExtensibleTestEnumConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
+         ExtendedTestEnumConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
+         DifferentAssemblyExtendedTestEnumConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
       }
 
       [Fact]
