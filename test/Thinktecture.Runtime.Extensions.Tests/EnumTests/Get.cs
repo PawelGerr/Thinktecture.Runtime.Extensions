@@ -59,6 +59,13 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       }
 
       [Fact]
+      public void Should_throw_if_custom_validation_throws()
+      {
+         Action action = () => TestEnum.Get(String.Empty);
+         action.Should().Throw<ArgumentException>().WithMessage("Key cannot be empty.");
+      }
+
+      [Fact]
       public void Should_return_item_with_provided_key()
       {
          TestEnum.Get("item2").Should().Be(TestEnum.Item2);
