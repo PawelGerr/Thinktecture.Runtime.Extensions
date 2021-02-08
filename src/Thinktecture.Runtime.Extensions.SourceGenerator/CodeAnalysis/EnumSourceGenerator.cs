@@ -186,7 +186,7 @@ using Thinktecture;
 
       private void GenerateBaseItems(IBaseEnumState baseEnum)
       {
-         if(baseEnum.Items.Count == 0)
+         if (baseEnum.Items.Count == 0)
             return;
 
          _sb.Append(@"
@@ -630,16 +630,8 @@ using Thinktecture;
          _sb.Append($@"
       {{");
 
-         if (!_state.HasBaseEnum && _state.KeyType.IsReferenceType)
-         {
-            _sb.Append($@"
-        if ({_state.KeyArgumentName} is null)
-            throw new ArgumentNullException(nameof({_state.KeyArgumentName}));
-");
-         }
-
          _sb.Append($@"
-         ValidateConstructorArguments({_state.KeyArgumentName}");
+         ValidateConstructorArguments(ref {_state.KeyArgumentName}");
 
          if (_state.IsValidatable)
             _sb.Append(", isValid");
@@ -651,6 +643,14 @@ using Thinktecture;
 
          _sb.Append($@");
 ");
+
+         if (!_state.HasBaseEnum && _state.KeyType.IsReferenceType)
+         {
+            _sb.Append($@"
+         if ({_state.KeyArgumentName} is null)
+            throw new ArgumentNullException(nameof({_state.KeyArgumentName}));
+");
+         }
 
          if (!_state.HasBaseEnum)
          {
@@ -673,7 +673,7 @@ using Thinktecture;
          _sb.Append($@"
       }}
 
-      static partial void ValidateConstructorArguments({_state.KeyType} {_state.KeyArgumentName}");
+      static partial void ValidateConstructorArguments(ref {_state.KeyType} {_state.KeyArgumentName}");
 
          if (_state.IsValidatable)
             _sb.Append(", bool isValid");

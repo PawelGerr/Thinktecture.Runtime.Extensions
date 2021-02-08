@@ -17,7 +17,7 @@ namespace Thinktecture.EnumLikeClasses
          return 42;
       }
 
-      static partial void ValidateConstructorArguments(int key, bool isValid, ref string displayName, ref ProductCategory category)
+      static partial void ValidateConstructorArguments(ref int key, bool isValid, ref string displayName, ref ProductCategory category)
       {
       }
 

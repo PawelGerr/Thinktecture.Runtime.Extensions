@@ -19,7 +19,7 @@ namespace Thinktecture.Runtime.Tests.TestEnums
       public static readonly IntegerEnum Item6 = IntegerEnum.Item1;
       public static readonly IntegerEnum Item7 = IntegerEnum.Get(42);
 
-      static partial void ValidateConstructorArguments(string key, bool isValid)
+      static partial void ValidateConstructorArguments(ref string key, bool isValid)
       {
          if (String.IsNullOrWhiteSpace(key))
             throw new ArgumentException("Key cannot be empty.");

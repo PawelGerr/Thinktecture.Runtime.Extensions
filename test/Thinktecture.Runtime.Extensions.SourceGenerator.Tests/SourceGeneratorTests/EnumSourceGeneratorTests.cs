@@ -97,15 +97,15 @@ namespace Thinktecture.Tests
 
       private TestEnum(string key)
       {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+         ValidateConstructorArguments(ref key);
 
-         ValidateConstructorArguments(key);
+         if (key is null)
+            throw new ArgumentNullException(nameof(key));
 
          this.Key = key;
       }
 
-      static partial void ValidateConstructorArguments(string key);
+      static partial void ValidateConstructorArguments(ref string key);
 
       /// <summary>
       /// Gets the identifier of the item.
@@ -405,15 +405,15 @@ namespace Thinktecture.Tests
 
       protected TestEnum(string key)
       {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+         ValidateConstructorArguments(ref key);
 
-         ValidateConstructorArguments(key);
+         if (key is null)
+            throw new ArgumentNullException(nameof(key));
 
          this.Key = key;
       }
 
-      static partial void ValidateConstructorArguments(string key);
+      static partial void ValidateConstructorArguments(ref string key);
 
       /// <summary>
       /// Gets the identifier of the item.
@@ -671,11 +671,11 @@ namespace Thinktecture.Tests
       private ExtendedTestEnum(string key, System.Action foo)
          : base(key, foo)
       {
-         ValidateConstructorArguments(key, ref foo);
+         ValidateConstructorArguments(ref key, ref foo);
 
       }
 
-      static partial void ValidateConstructorArguments(string key, ref System.Action foo);
+      static partial void ValidateConstructorArguments(ref string key, ref System.Action foo);
 
       /// <summary>
       /// Gets an enumeration item for provided <paramref name=""key""/>.
@@ -937,11 +937,11 @@ namespace Thinktecture.Tests
       private ExtendedTestEnum(string key, System.Action foo)
          : base(key, foo)
       {
-         ValidateConstructorArguments(key, ref foo);
+         ValidateConstructorArguments(ref key, ref foo);
 
       }
 
-      static partial void ValidateConstructorArguments(string key, ref System.Action foo);
+      static partial void ValidateConstructorArguments(ref string key, ref System.Action foo);
 
       /// <summary>
       /// Gets an enumeration item for provided <paramref name=""key""/>.
@@ -1202,16 +1202,16 @@ namespace Thinktecture.Tests
 
       private TestEnum(string key, bool isValid)
       {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+         ValidateConstructorArguments(ref key, isValid);
 
-         ValidateConstructorArguments(key, isValid);
+         if (key is null)
+            throw new ArgumentNullException(nameof(key));
 
          this.Key = key;
          this.IsValid = isValid;
       }
 
-      static partial void ValidateConstructorArguments(string key, bool isValid);
+      static partial void ValidateConstructorArguments(ref string key, bool isValid);
 
       /// <summary>
       /// Gets the identifier of the item.
@@ -1502,16 +1502,16 @@ namespace Thinktecture.Tests
 
       private TestEnum(string key, bool isValid)
       {
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+         ValidateConstructorArguments(ref key, isValid);
 
-         ValidateConstructorArguments(key, isValid);
+         if (key is null)
+            throw new ArgumentNullException(nameof(key));
 
          this.Key = key;
          this.IsValid = isValid;
       }
 
-      static partial void ValidateConstructorArguments(string key, bool isValid);
+      static partial void ValidateConstructorArguments(ref string key, bool isValid);
 
       /// <summary>
       /// Gets the identifier of the item.
@@ -1817,10 +1817,10 @@ namespace Thinktecture.Tests
 
       private TestEnum(string name, bool isValid, int structProperty, int? nullableStructProperty, string referenceProperty, string? nullableReferenceProperty, int structField, string referenceField)
       {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
+         ValidateConstructorArguments(ref name, isValid, ref structProperty, ref nullableStructProperty, ref referenceProperty, ref nullableReferenceProperty, ref structField, ref referenceField);
 
-         ValidateConstructorArguments(name, isValid, ref structProperty, ref nullableStructProperty, ref referenceProperty, ref nullableReferenceProperty, ref structField, ref referenceField);
+         if (name is null)
+            throw new ArgumentNullException(nameof(name));
 
          this.Name = name;
          this.IsValid = isValid;
@@ -1832,7 +1832,7 @@ namespace Thinktecture.Tests
          this.ReferenceField = referenceField;
       }
 
-      static partial void ValidateConstructorArguments(string name, bool isValid, ref int structProperty, ref int? nullableStructProperty, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structField, ref string referenceField);
+      static partial void ValidateConstructorArguments(ref string name, bool isValid, ref int structProperty, ref int? nullableStructProperty, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structField, ref string referenceField);
 
       /// <summary>
       /// Gets the identifier of the item.
