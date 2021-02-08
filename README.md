@@ -9,6 +9,6 @@
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore](https://img.shields.io/nuget/vpre/Thinktecture.Runtime.Extensions.EntityFrameworkCore.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore/)  
 [![Thinktecture.Runtime.Extensions.AspNetCore](https://img.shields.io/nuget/vpre/Thinktecture.Runtime.Extensions.AspNetCore.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.AspNetCore)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.AspNetCore/)  
 
-Provides some base classes like enum-like class and convenience methods like empty actions and read-only collections/dictionary.
+Provides Roslyn Source Generators for generation of enum-like classes (a.k.a smart enums) and value types. Furthermore, offers some convenience classes/methods for getting empty actions and read-only collections/dictionary and more.
 
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for documentation
