@@ -4,6 +4,10 @@ using Xunit;
 
 namespace Thinktecture.Runtime.Tests.EnumTests
 {
+   // ReSharper disable SuspiciousTypeConversion.Global
+   // ReSharper disable EqualExpressionComparison
+   // ReSharper disable ConditionIsAlwaysTrueOrFalse
+
    public class EqualityOperator
    {
       [Fact]
@@ -21,22 +25,50 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       }
 
       [Fact]
+      public void Should_return_true_if_item_is_extended_clone()
+      {
+         // equality should be symmetrical
+
+         (ExtensibleTestEnum.Item1 == ExtendedTestEnum.Item1).Should().BeTrue();
+         (ExtensibleTestEnum.DerivedItem == ExtendedTestEnum.DerivedItem).Should().BeTrue();
+         (ExtensibleTestEnum.Item1 == DifferentAssemblyExtendedTestEnum.Item1).Should().BeTrue();
+         (ExtensibleTestEnum.DerivedItem == DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeTrue();
+         (ExtensibleTestEnum.Item1 == ExtendedSiblingTestEnum.Item1).Should().BeTrue();
+         (ExtensibleTestEnum.DerivedItem == ExtendedSiblingTestEnum.DerivedItem).Should().BeTrue();
+         (ExtensibleTestValidatableEnum.Item1 == ExtendedTestValidatableEnum.Item1).Should().BeTrue();
+
+         (ExtendedTestEnum.Item1 == ExtensibleTestEnum.Item1).Should().BeTrue();
+         (ExtendedTestEnum.DerivedItem == ExtensibleTestEnum.DerivedItem).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.Item1 == ExtensibleTestEnum.Item1).Should().BeTrue();
+         (DifferentAssemblyExtendedTestEnum.DerivedItem == ExtensibleTestEnum.DerivedItem).Should().BeTrue();
+         (ExtendedSiblingTestEnum.Item1 == ExtensibleTestEnum.Item1).Should().BeTrue();
+         (ExtendedSiblingTestEnum.DerivedItem == ExtensibleTestEnum.DerivedItem).Should().BeTrue();
+         (ExtendedTestValidatableEnum.Item1 == ExtensibleTestValidatableEnum.Item1).Should().BeTrue();
+      }
+
+      [Fact]
+      public void Should_return_true_if_comparing_base_items_of_extended_clone_siblings()
+      {
+         (ExtendedTestEnum.Item1 == ExtendedSiblingTestEnum.Item1).Should().BeTrue();
+         (ExtendedSiblingTestEnum.Item1 == ExtendedTestEnum.Item1).Should().BeTrue();
+      }
+
+      [Fact]
+      public void Should_return_false_if_items_are_extended_clone_siblings_having_same_key()
+      {
+         (ExtendedTestEnum.Item2 == ExtendedSiblingTestEnum.Item2).Should().BeFalse();
+         (ExtendedSiblingTestEnum.Item2 == ExtendedTestEnum.Item2).Should().BeFalse();
+      }
+
+      [Fact]
       public void Should_return_false_if_item_is_of_different_type()
       {
-         // ReSharper disable once SuspiciousTypeConversion.Global
          (TestEnum.Item1 == TestEnumWithNonDefaultComparer.Item).Should().BeFalse();
-
-         (ExtensibleTestEnum.Item1 == ExtendedTestEnum.Item1).Should().BeFalse();
-         (ExtensibleTestEnum.DerivedItem == ExtendedTestEnum.DerivedItem).Should().BeFalse();
-         (ExtensibleTestEnum.Item1 == DifferentAssemblyExtendedTestEnum.Item1).Should().BeFalse();
-         (ExtensibleTestEnum.DerivedItem == DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeFalse();
-         (ExtensibleTestValidatableEnum.Item1 == ExtendedTestValidatableEnum.Item1).Should().BeFalse();
       }
 
       [Fact]
       public void Should_return_true_on_reference_equality()
       {
-         // ReSharper disable EqualExpressionComparison
          (TestEnum.Item1 == TestEnum.Item1).Should().BeTrue();
 
          (ExtensibleTestEnum.Item1 == ExtensibleTestEnum.Item1).Should().BeTrue();

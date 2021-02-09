@@ -28,12 +28,6 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       {
          // ReSharper disable once SuspiciousTypeConversion.Global
          (TestEnum.Item1 != TestEnumWithNonDefaultComparer.Item).Should().BeTrue();
-
-         (ExtensibleTestEnum.Item1 != ExtendedTestEnum.Item1).Should().BeTrue();
-         (ExtensibleTestEnum.DerivedItem != ExtendedTestEnum.DerivedItem).Should().BeTrue();
-         (ExtensibleTestEnum.Item1 != DifferentAssemblyExtendedTestEnum.Item1).Should().BeTrue();
-         (ExtensibleTestEnum.DerivedItem != DifferentAssemblyExtendedTestEnum.DerivedItem).Should().BeTrue();
-         (ExtensibleTestValidatableEnum.Item1 != ExtendedTestValidatableEnum.Item1).Should().BeTrue();
       }
 
       [Fact]

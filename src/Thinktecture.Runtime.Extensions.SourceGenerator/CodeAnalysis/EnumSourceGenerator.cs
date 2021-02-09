@@ -93,7 +93,7 @@ using Thinktecture;
          _sb.Append($@"
       }}
 
-      private static readonly int _typeHashCode = typeof({_state.EnumIdentifier}).GetHashCode() * 397;");
+      private static readonly int _typeHashCode = typeof({(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumIdentifier)}).GetHashCode() * 397;");
 
          if (_state.NeedsDefaultComparer)
          {
@@ -135,6 +135,12 @@ using Thinktecture;
                GenerateEnsureValid();
             }
          }
+         else
+         {
+            _sb.Append($@"
+
+      private readonly bool _isBaseEnumItem;");
+         }
 
          if (_state.HasBaseEnum)
             GenerateBaseItems(_state.BaseEnum);
@@ -161,7 +167,7 @@ using Thinktecture;
       /// <inheritdoc />
       public override bool Equals(object? other)
       {{
-         return other is {_state.EnumIdentifier} item && Equals(item);
+         return other is {(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumIdentifier)} item && Equals(item);
       }}
 
       /// <inheritdoc />
@@ -340,21 +346,52 @@ using Thinktecture;
 
       private void GenerateTypedEquals()
       {
-         _sb.Append($@"
+         if (_state.HasBaseEnum)
+         {
+            _sb.Append($@"
 
       /// <inheritdoc />
       public bool Equals({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} other)
+      {{
+         return Equals(({_state.BaseEnum.Type}{_state.BaseEnum.NullableQuestionMark})other);
+      }}
+
+      /// <inheritdoc />
+      public override bool Equals({_state.BaseEnum.Type}{_state.BaseEnum.NullableQuestionMark} other)
       {{");
+         }
+         else
+         {
+            _sb.Append($@"
+
+      /// <inheritdoc />
+      public {(_state.IsExtensible ? "virtual " : null)}bool Equals({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} other)
+      {{");
+         }
 
          if (_state.EnumType.IsReferenceType)
          {
             _sb.Append(@"
          if (other is null)
             return false;
+");
 
+            if (!_state.IsExtensible && !_state.HasBaseEnum)
+            {
+               _sb.Append(@"
          if (!ReferenceEquals(GetType(), other.GetType()))
             return false;
+");
+            }
+            else if (_state.HasBaseEnum)
+            {
+               _sb.Append(@"
+         if (!ReferenceEquals(GetType(), other.GetType()) && !this._isBaseEnumItem)
+            return false;
+");
+            }
 
+            _sb.Append(@"
          if (ReferenceEquals(this, other))
             return true;
 ");
@@ -662,6 +699,11 @@ using Thinktecture;
                _sb.Append(@"
          this.IsValid = isValid;");
             }
+         }
+         else
+         {
+            _sb.Append($@"
+         this._isBaseEnumItem = {_state.BaseEnum.Type}.TryGet({_state.KeyArgumentName}, out _);");
          }
 
          foreach (var memberInfo in _state.AssignableInstanceFieldsAndProperties)

@@ -521,12 +521,9 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      public bool Equals(TestEnum? other)
+      public virtual bool Equals(TestEnum? other)
       {
          if (other is null)
-            return false;
-
-         if (!ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (ReferenceEquals(this, other))
@@ -653,7 +650,7 @@ namespace Thinktecture.Tests
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(ExtendedTestEnum).GetHashCode() * 397;
+      private static readonly int _typeHashCode = typeof(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum).GetHashCode() * 397;
 
       private static IReadOnlyDictionary<string, ExtendedTestEnum>? _itemsLookup;
       private static IReadOnlyDictionary<string, ExtendedTestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
@@ -665,6 +662,8 @@ namespace Thinktecture.Tests
       /// </summary>
       public new static IReadOnlyList<ExtendedTestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
 
+      private readonly bool _isBaseEnumItem;
+
       public new static readonly Thinktecture.Tests.ExtendedTestEnum DerivedItem = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Key, Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Foo);
       public new static readonly Thinktecture.Tests.ExtendedTestEnum Item1 = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Key, Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Foo);
 
@@ -673,6 +672,7 @@ namespace Thinktecture.Tests
       {
          ValidateConstructorArguments(ref key, ref foo);
 
+         this._isBaseEnumItem = Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.TryGet(key, out _);
       }
 
       static partial void ValidateConstructorArguments(ref string key, ref System.Action foo);
@@ -777,10 +777,16 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(ExtendedTestEnum? other)
       {
+         return Equals((Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum?)other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum? other)
+      {
          if (other is null)
             return false;
 
-         if (!ReferenceEquals(GetType(), other.GetType()))
+         if (!ReferenceEquals(GetType(), other.GetType()) && !this._isBaseEnumItem)
             return false;
 
          if (ReferenceEquals(this, other))
@@ -792,7 +798,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
-         return other is ExtendedTestEnum item && Equals(item);
+         return other is Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum item && Equals(item);
       }
 
       /// <inheritdoc />
@@ -919,7 +925,7 @@ namespace Thinktecture.Tests
          ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(ExtendedTestEnum).GetHashCode() * 397;
+      private static readonly int _typeHashCode = typeof(Thinktecture.Tests.ExtensibleTestEnum).GetHashCode() * 397;
 
       private static IReadOnlyDictionary<string, ExtendedTestEnum>? _itemsLookup;
       private static IReadOnlyDictionary<string, ExtendedTestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
@@ -931,6 +937,8 @@ namespace Thinktecture.Tests
       /// </summary>
       public new static IReadOnlyList<ExtendedTestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
 
+      private readonly bool _isBaseEnumItem;
+
       public new static readonly Thinktecture.Tests.ExtendedTestEnum DerivedItem = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Tests.ExtensibleTestEnum.DerivedItem.Key, Thinktecture.Tests.ExtensibleTestEnum.DerivedItem.Foo);
       public new static readonly Thinktecture.Tests.ExtendedTestEnum Item1 = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Tests.ExtensibleTestEnum.Item1.Key, Thinktecture.Tests.ExtensibleTestEnum.Item1.Foo);
 
@@ -939,6 +947,7 @@ namespace Thinktecture.Tests
       {
          ValidateConstructorArguments(ref key, ref foo);
 
+         this._isBaseEnumItem = Thinktecture.Tests.ExtensibleTestEnum.TryGet(key, out _);
       }
 
       static partial void ValidateConstructorArguments(ref string key, ref System.Action foo);
@@ -1043,10 +1052,16 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(ExtendedTestEnum? other)
       {
+         return Equals((Thinktecture.Tests.ExtensibleTestEnum?)other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(Thinktecture.Tests.ExtensibleTestEnum? other)
+      {
          if (other is null)
             return false;
 
-         if (!ReferenceEquals(GetType(), other.GetType()))
+         if (!ReferenceEquals(GetType(), other.GetType()) && !this._isBaseEnumItem)
             return false;
 
          if (ReferenceEquals(this, other))
@@ -1058,7 +1073,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
-         return other is ExtendedTestEnum item && Equals(item);
+         return other is Thinktecture.Tests.ExtensibleTestEnum item && Equals(item);
       }
 
       /// <inheritdoc />
