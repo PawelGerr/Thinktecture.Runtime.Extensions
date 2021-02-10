@@ -558,6 +558,14 @@ using Thinktecture;
             _sb.Append(@"
             if (item.IsValid)
                throw new Exception(""The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'."");");
+
+            if (!needCreateInvalidImplementation)
+            {
+               _sb.Append($@"
+
+            if ({_state.EnumType}.TryGet(item.{_state.KeyPropertyName}, out _))
+               throw new Exception(""The implementation of method 'CreateInvalidItem' must not return an instance with property '{_state.KeyPropertyName}' equals to one of a valid item."");");
+            }
          }
          else
          {

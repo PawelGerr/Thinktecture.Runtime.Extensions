@@ -59,6 +59,20 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       }
 
       [Fact]
+      public void Should_throw_if_CreateInvalidItem_uses_key_of_valid_item()
+      {
+         Action action = () => TestEnumWithInvalidCreateInvalidItem.Get(TestEnumWithInvalidCreateInvalidItem.INVALID_KEY_FOR_TESTING_KEY_REUSE);
+         action.Should().Throw<Exception>().WithMessage("The implementation of method 'CreateInvalidItem' must not return an instance with property 'Key' equals to one of a valid item.");
+      }
+
+      [Fact]
+      public void Should_throw_if_CreateInvalidItem_isValid_is_true()
+      {
+         Action action = () => TestEnumWithInvalidCreateInvalidItem.Get(TestEnumWithInvalidCreateInvalidItem.INVALID_KEY_FOR_TESTING_ISVALID_TRUE);
+         action.Should().Throw<Exception>().WithMessage("The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'.");
+      }
+
+      [Fact]
       public void Should_throw_if_custom_validation_throws()
       {
          Action action = () => TestEnum.Get(String.Empty);

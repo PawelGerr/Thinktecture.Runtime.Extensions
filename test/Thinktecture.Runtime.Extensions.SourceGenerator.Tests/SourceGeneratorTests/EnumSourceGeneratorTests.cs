@@ -1877,6 +1877,9 @@ namespace Thinktecture.Tests
 
             if (item.IsValid)
                throw new Exception(""The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'."");
+
+            if (Thinktecture.Tests.TestEnum.TryGet(item.Name, out _))
+               throw new Exception(""The implementation of method 'CreateInvalidItem' must not return an instance with property 'Name' equals to one of a valid item."");
          }
 
          return item;
