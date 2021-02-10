@@ -231,7 +231,7 @@ namespace Thinktecture
                                {
                                   var identifier = fds.GetIdentifier();
 
-                                  if (!fds.IsReadOnly)
+                                  if (!fds.IsReadOnly && !fds.IsConst)
                                   {
                                      reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
                                                                                 identifier.GetLocation(),
