@@ -44,7 +44,8 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
                                                                                                                  DiagnosticsDescriptors.ExtensibleEnumMustNotHaveVirtualMembers,
                                                                                                                  DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
                                                                                                                  DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty,
-                                                                                                                 DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic);
+                                                                                                                 DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic,
+                                                                                                                 DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly);
 
       /// <inheritdoc />
       public override void Initialize(AnalysisContext context)
@@ -102,6 +103,30 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
             if (keyMember.Type.NullableAnnotation == NullableAnnotation.Annotated || keyMember.IsNullableStruct)
                context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.Identifier.GetLocation(), keyMember.Identifier));
+         }
+         else
+         {
+            CheckAssignableMembers(context, assignableMembers);
+         }
+      }
+
+      private static void CheckAssignableMembers(SymbolAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)
+      {
+         foreach (var assignableMember in assignableMembers)
+         {
+            var memberAttr = assignableMember.Symbol.FindValueTypeEqualityMemberAttribute();
+
+            if (memberAttr is null)
+               continue;
+
+            var comparer = memberAttr.FindComparer();
+
+            if (comparer is not null)
+            {
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
+                                                          memberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? assignableMember.Identifier.GetLocation(),
+                                                          comparer));
+            }
          }
       }
 

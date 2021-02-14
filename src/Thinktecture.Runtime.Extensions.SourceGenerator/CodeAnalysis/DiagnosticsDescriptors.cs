@@ -35,6 +35,7 @@ namespace Thinktecture.CodeAnalysis
       public static readonly DiagnosticDescriptor ExtensibleEnumMustNotHaveVirtualMembers = new("TTRESG028", "An extensible enumeration must not have virtual members.", "A extensible enumeration '{0}' must not have virtual members.", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor KeyComparerOfExtensibleEnumMustBeProtectedOrPublic = new("TTRESG029", "The key comparer of an extensible enumeration must be protected or public.", "The key comparer '{0}' of an extensible enumeration must be protected or public.", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
       public static readonly DiagnosticDescriptor KeyComparerMustBeStaticFieldOrProperty = new("TTRESG030", "The key comparer must a static field or property.", "The key comparer '{0}' must be a static field or property.", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
+      public static readonly DiagnosticDescriptor ComparerApplicableOnKeyMemberOnly = new("TTRESG031", "The comparer is applicable on a key member only.", "The comparer '{0}' is applicable on a key member only.", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
       public static readonly DiagnosticDescriptor ErrorDuringGeneration = new("TTRESG099", "Error during code generation.", "Error during code generation for '{0}': '{1}'.", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
