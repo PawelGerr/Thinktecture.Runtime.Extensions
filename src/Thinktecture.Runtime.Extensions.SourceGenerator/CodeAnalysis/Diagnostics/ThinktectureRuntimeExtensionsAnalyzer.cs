@@ -31,12 +31,12 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
                                                                                                                  DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic,
                                                                                                                  DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                                  DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
-                                                                                                                 DiagnosticsDescriptors.ExtensibleMemberMustBePublicOrHaveMapping,
+                                                                                                                 DiagnosticsDescriptors.ExtensibleEnumMemberMustBePublicOrHaveMapping,
                                                                                                                  DiagnosticsDescriptors.MemberNotFound,
                                                                                                                  DiagnosticsDescriptors.MultipleMembersWithSameName,
                                                                                                                  DiagnosticsDescriptors.MappedMemberMustBePublic,
                                                                                                                  DiagnosticsDescriptors.MappedMethodMustBeNotBeGeneric,
-                                                                                                                 DiagnosticsDescriptors.EnumAndBaseClassMustBeBothEnumOrValidatableEnum,
+                                                                                                                 DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableEnumIfBaseEnumIsNot,
                                                                                                                  DiagnosticsDescriptors.DerivedEnumMustNotBeExtensible,
                                                                                                                  DiagnosticsDescriptors.BaseEnumMustBeExtensible,
                                                                                                                  DiagnosticsDescriptors.ExtensibleEnumCannotBeStruct,
@@ -295,7 +295,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          var isBaseEnumValidatable = baseEnumInterfaces.GetValidEnumInterface(enumType.BaseType)?.IsValidatableEnumInterface() ?? false;
 
          if (isValidatable != isBaseEnumValidatable)
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.EnumAndBaseClassMustBeBothEnumOrValidatableEnum, enumDeclaration.Identifier.GetLocation(), enumDeclaration.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableEnumIfBaseEnumIsNot, enumDeclaration.Identifier.GetLocation(), enumDeclaration.Identifier));
 
          var baseEnumAttr = enumType.BaseType.FindEnumGenerationAttribute();
          var isBaseEnumExtensible = baseEnumAttr?.IsExtensible() ?? false;
@@ -323,7 +323,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
             if (HasMemberMapping(context, memberInfo, enumDeclaration))
                continue;
 
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleMemberMustBePublicOrHaveMapping,
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleEnumMemberMustBePublicOrHaveMapping,
                                                        memberInfo.Identifier.GetLocation(),
                                                        memberInfo.Identifier));
          }
@@ -365,7 +365,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
                                                        enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(),
                                                        mappedMemberName));
          }
-         else if (mappedMembers.Count > 2)
+         else if (mappedMembers.Count > 1)
          {
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.MultipleMembersWithSameName,
                                                        enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(),
