@@ -2060,29 +2060,28 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeJsonConverterFactory : JsonConverterFactory
-   {
-      /// <inheritdoc />
-      public override bool CanConvert(Type typeToConvert)
-      {
-         return typeof(TestEnum).IsAssignableFrom(typeToConvert);
-      }
-
-      /// <inheritdoc />
-      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>(TestEnum.Get, obj => (string) obj, options);
-      }
-   }
-
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestEnum_ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
    partial class TestEnum
    {
+      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      {
+         /// <inheritdoc />
+         public override bool CanConvert(Type typeToConvert)
+         {
+            return typeof(TestEnum).IsAssignableFrom(typeToConvert);
+         }
+
+         /// <inheritdoc />
+         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (typeToConvert is null)
+               throw new ArgumentNullException(nameof(typeToConvert));
+            if (options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
+         }
+      }
    }
 }
 ");
@@ -2119,29 +2118,28 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeJsonConverterFactory : JsonConverterFactory
-   {
-      /// <inheritdoc />
-      public override bool CanConvert(Type typeToConvert)
-      {
-         return typeof(TestEnum).IsAssignableFrom(typeToConvert);
-      }
-
-      /// <inheritdoc />
-      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>(TestEnum.Get, obj => (string) obj, options);
-      }
-   }
-
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestEnum_ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
    partial struct TestEnum
    {
+      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      {
+         /// <inheritdoc />
+         public override bool CanConvert(Type typeToConvert)
+         {
+            return typeof(TestEnum).IsAssignableFrom(typeToConvert);
+         }
+
+         /// <inheritdoc />
+         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (typeToConvert is null)
+               throw new ArgumentNullException(nameof(typeToConvert));
+            if (options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
+         }
+      }
    }
 }
 ");
@@ -2212,17 +2210,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
-   {
-      public TestEnum_ValueTypeNewtonsoftJsonConverter()
-         : base(TestEnum.Get, obj => (string) obj)
-      {
-      }
-   }
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestEnum_ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
    partial class TestEnum
    {
+      public class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
+      {
+         public ValueTypeNewtonsoftJsonConverter()
+            : base(TestEnum.Get, obj => obj.Key)
+         {
+         }
+      }
    }
 }
 ");
@@ -2257,17 +2254,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
-   {
-      public TestEnum_ValueTypeNewtonsoftJsonConverter()
-         : base(TestEnum.Get, obj => (string) obj)
-      {
-      }
-   }
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestEnum_ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
    partial struct TestEnum
    {
+      public class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
+      {
+         public ValueTypeNewtonsoftJsonConverter()
+            : base(TestEnum.Get, obj => obj.Key)
+         {
+         }
+      }
    }
 }
 ");
@@ -2332,17 +2328,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestEnum, string>
-   {
-      public TestEnum_ValueTypeMessagePackFormatter()
-         : base(TestEnum.Get, obj => (string) obj)
-      {
-      }
-   }
-
-   [MessagePack.MessagePackFormatter(typeof(TestEnum_ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
    partial class TestEnum
    {
+      public class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestEnum, string>
+      {
+         public ValueTypeMessagePackFormatter()
+            : base(TestEnum.Get, obj => obj.Key)
+         {
+         }
+      }
    }
 }
 ");
@@ -2377,17 +2372,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestEnum, string>
-   {
-      public TestEnum_ValueTypeMessagePackFormatter()
-         : base(TestEnum.Get, obj => (string) obj)
-      {
-      }
-   }
-
-   [MessagePack.MessagePackFormatter(typeof(TestEnum_ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
    partial struct TestEnum
    {
+      public class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestEnum, string>
+      {
+         public ValueTypeMessagePackFormatter()
+            : base(TestEnum.Get, obj => obj.Key)
+         {
+         }
+      }
    }
 }
 ");
@@ -2454,17 +2448,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeModelBinder : Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinder<TestEnum, string>
-   {
-      public TestEnum_ValueTypeModelBinder(ILoggerFactory loggerFactory)
-         : base(loggerFactory, TestEnum.Validate)
-      {
-      }
-   }
-
-   [Microsoft.AspNetCore.Mvc.ModelBinderAttribute(typeof(TestEnum_ValueTypeModelBinder))]
+   [Microsoft.AspNetCore.Mvc.ModelBinderAttribute(typeof(ValueTypeModelBinder))]
    partial class TestEnum
    {
+      public class ValueTypeModelBinder : Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinder<TestEnum, string>
+      {
+         public ValueTypeModelBinder(ILoggerFactory loggerFactory)
+            : base(loggerFactory, TestEnum.Validate)
+         {
+         }
+      }
    }
 }
 ");
@@ -2501,17 +2494,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeModelBinder : Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinder<TestEnum, string>
-   {
-      public TestEnum_ValueTypeModelBinder(ILoggerFactory loggerFactory)
-         : base(loggerFactory, TestEnum.Validate)
-      {
-      }
-   }
-
-   [Microsoft.AspNetCore.Mvc.ModelBinderAttribute(typeof(TestEnum_ValueTypeModelBinder))]
+   [Microsoft.AspNetCore.Mvc.ModelBinderAttribute(typeof(ValueTypeModelBinder))]
    partial struct TestEnum
    {
+      public class ValueTypeModelBinder : Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinder<TestEnum, string>
+      {
+         public ValueTypeModelBinder(ILoggerFactory loggerFactory)
+            : base(loggerFactory, TestEnum.Validate)
+         {
+         }
+      }
    }
 }
 ");

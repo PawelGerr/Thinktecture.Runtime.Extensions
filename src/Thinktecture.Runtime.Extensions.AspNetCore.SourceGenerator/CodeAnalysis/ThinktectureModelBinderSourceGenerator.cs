@@ -24,7 +24,8 @@ namespace Thinktecture.CodeAnalysis
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Validate");
+         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeModelBinder").Any());
+         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Validate", requiresNew);
       }
 
       /// <inheritdoc />
@@ -36,7 +37,7 @@ namespace Thinktecture.CodeAnalysis
          if (!state.HasKeyMember)
             return null;
 
-         return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "TryCreate");
+         return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "TryCreate", false);
       }
 
       private static string GenerateJsonConverter(
@@ -44,7 +45,8 @@ namespace Thinktecture.CodeAnalysis
          string? @namespace,
          SyntaxToken typeIdentifier,
          ITypeSymbol keyType,
-         string factoryMethod)
+         string factoryMethod,
+         bool requiresNew)
       {
          if (type.HasAttribute("Microsoft.AspNetCore.Mvc.ModelBinderAttribute"))
             return String.Empty;
@@ -61,17 +63,16 @@ using Microsoft.Extensions.Logging;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
-   public class {typeIdentifier}_ValueTypeModelBinder : Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinder<{typeIdentifier}, {keyType}>
-   {{
-      public {typeIdentifier}_ValueTypeModelBinder(ILoggerFactory loggerFactory)
-         : base(loggerFactory, {typeIdentifier}.{factoryMethod})
-      {{
-      }}
-   }}
-
-   [Microsoft.AspNetCore.Mvc.ModelBinderAttribute(typeof({typeIdentifier}_ValueTypeModelBinder))]
+   [Microsoft.AspNetCore.Mvc.ModelBinderAttribute(typeof(ValueTypeModelBinder))]
    partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
    {{
+      public {(requiresNew ? "new " : null)}class ValueTypeModelBinder : Thinktecture.AspNetCore.ModelBinding.ValueTypeModelBinder<{typeIdentifier}, {keyType}>
+      {{
+         public ValueTypeModelBinder(ILoggerFactory loggerFactory)
+            : base(loggerFactory, {typeIdentifier}.{factoryMethod})
+         {{
+         }}
+      }}
    }}
 }}
 ";

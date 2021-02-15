@@ -27,7 +27,7 @@ namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_deserialize_string_based_enum(TestEnum expectedValue, string json)
       {
-         var value = Deserialize<TestEnum, TestEnum_ValueTypeNewtonsoftJsonConverter>(json);
+         var value = Deserialize<TestEnum, TestEnum.ValueTypeNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -36,7 +36,7 @@ namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
       [MemberData(nameof(DataForExtensibleTestEnumTest))]
       public void Should_deserialize_ExtensibleTestEnum(ExtensibleTestEnum expectedValue, string json)
       {
-         var value = Deserialize<ExtensibleTestEnum, ExtensibleTestEnum_ValueTypeNewtonsoftJsonConverter>(json);
+         var value = Deserialize<ExtensibleTestEnum, ExtensibleTestEnum.ValueTypeNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -45,7 +45,7 @@ namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
       [MemberData(nameof(DataForExtendedTestEnumTest))]
       public void Should_deserialize_ExtendedTestEnum(ExtendedTestEnum expectedValue, string json)
       {
-         var value = Deserialize<ExtendedTestEnum, ExtendedTestEnum_ValueTypeNewtonsoftJsonConverter>(json);
+         var value = Deserialize<ExtendedTestEnum, ExtendedTestEnum.ValueTypeNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -54,7 +54,7 @@ namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
       [MemberData(nameof(DataForDifferentAssemblyExtendedTestEnumTest))]
       public void Should_deserialize_DifferentAssemblyExtendedTestEnum(DifferentAssemblyExtendedTestEnum expectedValue, string json)
       {
-         var value = Deserialize<DifferentAssemblyExtendedTestEnum, DifferentAssemblyExtendedTestEnum_ValueTypeNewtonsoftJsonConverter>(json);
+         var value = Deserialize<DifferentAssemblyExtendedTestEnum, DifferentAssemblyExtendedTestEnum.ValueTypeNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -63,7 +63,7 @@ namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_deserialize_int_based_enum(IntegerEnum expectedValue, string json)
       {
-         var value = Deserialize<IntegerEnum, IntegerEnum_ValueTypeNewtonsoftJsonConverter>(json);
+         var value = Deserialize<IntegerEnum, IntegerEnum.ValueTypeNewtonsoftJsonConverter>(json);
 
          value.Should().Be(expectedValue);
       }
@@ -75,7 +75,7 @@ namespace Thinktecture.Runtime.Tests.Json.ValueTypeNewtonsoftJsonConverterTests
          string json,
          NamingStrategy namingStrategy = null)
       {
-         var value = Deserialize<ValueTypeWithMultipleProperties, ValueTypeWithMultipleProperties_ValueTypeNewtonsoftJsonConverter>(json, namingStrategy);
+         var value = Deserialize<ValueTypeWithMultipleProperties, ValueTypeWithMultipleProperties.ValueTypeNewtonsoftJsonConverter>(json, namingStrategy);
 
          value.Should().BeEquivalentTo(expectedValueType);
       }

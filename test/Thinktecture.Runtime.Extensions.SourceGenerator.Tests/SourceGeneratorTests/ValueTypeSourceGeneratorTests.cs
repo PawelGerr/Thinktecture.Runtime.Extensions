@@ -1203,29 +1203,28 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeJsonConverterFactory : JsonConverterFactory
-   {
-      /// <inheritdoc />
-      public override bool CanConvert(Type typeToConvert)
-      {
-         return typeof(TestValueType).IsAssignableFrom(typeToConvert);
-      }
-
-      /// <inheritdoc />
-      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestValueType, string>(TestValueType.Create, obj => (string) obj, options);
-      }
-   }
-
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestValueType_ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
    partial class TestValueType
    {
+      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      {
+         /// <inheritdoc />
+         public override bool CanConvert(Type typeToConvert)
+         {
+            return typeof(TestValueType).IsAssignableFrom(typeToConvert);
+         }
+
+         /// <inheritdoc />
+         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (typeToConvert is null)
+               throw new ArgumentNullException(nameof(typeToConvert));
+            if (options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestValueType, string>(TestValueType.Create, obj => obj.ReferenceField, options);
+         }
+      }
    }
 }
 ");
@@ -1263,29 +1262,28 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeJsonConverterFactory : JsonConverterFactory
-   {
-      /// <inheritdoc />
-      public override bool CanConvert(Type typeToConvert)
-      {
-         return typeof(TestValueType).IsAssignableFrom(typeToConvert);
-      }
-
-      /// <inheritdoc />
-      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestValueType, string>(TestValueType.Create, obj => (string) obj, options);
-      }
-   }
-
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestValueType_ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
    partial struct TestValueType
    {
+      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      {
+         /// <inheritdoc />
+         public override bool CanConvert(Type typeToConvert)
+         {
+            return typeof(TestValueType).IsAssignableFrom(typeToConvert);
+         }
+
+         /// <inheritdoc />
+         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (typeToConvert is null)
+               throw new ArgumentNullException(nameof(typeToConvert));
+            if (options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestValueType, string>(TestValueType.Create, obj => obj.ReferenceField, options);
+         }
+      }
    }
 }
 ");
@@ -1326,136 +1324,135 @@ using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeJsonConverter : JsonConverter<TestValueType>
-   {
-      private readonly string _referenceFieldPropertyName;
-      private readonly string _structPropertyPropertyName;
-      private readonly JsonConverter<decimal?> _nullableStructPropertyConverter;
-      private readonly string _nullableStructPropertyPropertyName;
-
-      public TestValueType_ValueTypeJsonConverter(JsonSerializerOptions options)
-      {
-         if(options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         var namingPolicy = options.PropertyNamingPolicy;
-
-         this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
-         this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
-         this._nullableStructPropertyConverter = (JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
-         this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
-      }
-
-      /// <inheritdoc />
-      public override TestValueType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (reader.TokenType == JsonTokenType.Null)
-            return default;
-
-         if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.StartObject}'."");
-
-         string? referenceField = default;
-         int structProperty = default;
-         decimal? nullableStructProperty = default;
-
-         var comparer = options.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
-
-         while (reader.Read())
-         {
-            if (reader.TokenType == JsonTokenType.EndObject)
-               break;
-
-            if (reader.TokenType != JsonTokenType.PropertyName)
-               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.PropertyName}'."");
-
-            var propName = reader.GetString();
-
-            if(!reader.Read())
-               throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
-
-            if (comparer.Equals(propName, this._referenceFieldPropertyName))
-            {
-               referenceField = reader.GetString();
-            }
-            else if (comparer.Equals(propName, this._structPropertyPropertyName))
-            {
-               structProperty = reader.GetInt32();
-            }
-            else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
-            {
-               nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
-            }
-            else
-            {
-               throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
-            }
-         }
-
-         var validationResult = TestValueType.TryCreate(
-                                    referenceField!,
-                                    structProperty!,
-                                    nullableStructProperty!,
-                                    out var obj);
-
-         if (validationResult != ValidationResult.Success)
-            throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
-
-         return obj;
-      }
-
-      /// <inheritdoc />
-      public override void Write(Utf8JsonWriter writer, TestValueType value, JsonSerializerOptions options)
-      {
-         writer.WriteStartObject();
-
-         var ignoreNullValues = options.IgnoreNullValues;
-
-         var referenceFieldPropertyValue = value.ReferenceField;
-
-         if(!ignoreNullValues || referenceFieldPropertyValue is not null)
-         {
-            writer.WritePropertyName(this._referenceFieldPropertyName);
-            writer.WriteStringValue(referenceFieldPropertyValue);
-         }
-         var structPropertyPropertyValue = value.StructProperty;
-
-         writer.WritePropertyName(this._structPropertyPropertyName);
-         writer.WriteNumberValue(structPropertyPropertyValue);
-         var nullableStructPropertyPropertyValue = value.NullableStructProperty;
-
-         if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
-         {
-            writer.WritePropertyName(this._nullableStructPropertyPropertyName);
-            this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
-         }
-         writer.WriteEndObject();
-      }
-   }
-
-   public class TestValueType_ValueTypeJsonConverterFactory : JsonConverterFactory
-   {
-      /// <inheritdoc />
-      public override bool CanConvert(Type typeToConvert)
-      {
-         return typeof(TestValueType).IsAssignableFrom(typeToConvert);
-      }
-
-      /// <inheritdoc />
-      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         return new TestValueType_ValueTypeJsonConverter(options);
-      }
-   }
-
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestValueType_ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
    partial class TestValueType
    {
+      public class ValueTypeJsonConverter : JsonConverter<TestValueType>
+      {
+         private readonly string _referenceFieldPropertyName;
+         private readonly string _structPropertyPropertyName;
+         private readonly JsonConverter<decimal?> _nullableStructPropertyConverter;
+         private readonly string _nullableStructPropertyPropertyName;
+
+         public ValueTypeJsonConverter(JsonSerializerOptions options)
+         {
+            if(options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            var namingPolicy = options.PropertyNamingPolicy;
+
+            this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
+            this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
+            this._nullableStructPropertyConverter = (JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
+            this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
+         }
+
+         /// <inheritdoc />
+         public override TestValueType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (reader.TokenType == JsonTokenType.Null)
+               return default;
+
+            if (reader.TokenType != JsonTokenType.StartObject)
+               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.StartObject}'."");
+
+            string? referenceField = default;
+            int structProperty = default;
+            decimal? nullableStructProperty = default;
+
+            var comparer = options.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
+            while (reader.Read())
+            {
+               if (reader.TokenType == JsonTokenType.EndObject)
+                  break;
+
+               if (reader.TokenType != JsonTokenType.PropertyName)
+                  throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.PropertyName}'."");
+
+               var propName = reader.GetString();
+
+               if(!reader.Read())
+                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
+
+               if (comparer.Equals(propName, this._referenceFieldPropertyName))
+               {
+                  referenceField = reader.GetString();
+               }
+               else if (comparer.Equals(propName, this._structPropertyPropertyName))
+               {
+                  structProperty = reader.GetInt32();
+               }
+               else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
+               {
+                  nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
+               }
+               else
+               {
+                  throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
+               }
+            }
+
+            var validationResult = TestValueType.TryCreate(
+                                       referenceField!,
+                                       structProperty!,
+                                       nullableStructProperty!,
+                                       out var obj);
+
+            if (validationResult != ValidationResult.Success)
+               throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
+
+            return obj;
+         }
+
+         /// <inheritdoc />
+         public override void Write(Utf8JsonWriter writer, TestValueType value, JsonSerializerOptions options)
+         {
+            writer.WriteStartObject();
+
+            var ignoreNullValues = options.IgnoreNullValues;
+
+            var referenceFieldPropertyValue = value.ReferenceField;
+
+            if(!ignoreNullValues || referenceFieldPropertyValue is not null)
+            {
+               writer.WritePropertyName(this._referenceFieldPropertyName);
+               writer.WriteStringValue(referenceFieldPropertyValue);
+            }
+            var structPropertyPropertyValue = value.StructProperty;
+
+            writer.WritePropertyName(this._structPropertyPropertyName);
+            writer.WriteNumberValue(structPropertyPropertyValue);
+            var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+
+            if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
+            {
+               writer.WritePropertyName(this._nullableStructPropertyPropertyName);
+               this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
+            }
+            writer.WriteEndObject();
+         }
+      }
+
+      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      {
+         /// <inheritdoc />
+         public override bool CanConvert(Type typeToConvert)
+         {
+            return typeof(TestValueType).IsAssignableFrom(typeToConvert);
+         }
+
+         /// <inheritdoc />
+         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (typeToConvert is null)
+               throw new ArgumentNullException(nameof(typeToConvert));
+            if (options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            return new ValueTypeJsonConverter(options);
+         }
+      }
    }
 }
 ");
@@ -1496,136 +1493,135 @@ using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeJsonConverter : JsonConverter<TestValueType>
-   {
-      private readonly string _referenceFieldPropertyName;
-      private readonly string _structPropertyPropertyName;
-      private readonly JsonConverter<decimal?> _nullableStructPropertyConverter;
-      private readonly string _nullableStructPropertyPropertyName;
-
-      public TestValueType_ValueTypeJsonConverter(JsonSerializerOptions options)
-      {
-         if(options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         var namingPolicy = options.PropertyNamingPolicy;
-
-         this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
-         this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
-         this._nullableStructPropertyConverter = (JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
-         this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
-      }
-
-      /// <inheritdoc />
-      public override TestValueType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (reader.TokenType == JsonTokenType.Null)
-            return default;
-
-         if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.StartObject}'."");
-
-         string? referenceField = default;
-         int structProperty = default;
-         decimal? nullableStructProperty = default;
-
-         var comparer = options.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
-
-         while (reader.Read())
-         {
-            if (reader.TokenType == JsonTokenType.EndObject)
-               break;
-
-            if (reader.TokenType != JsonTokenType.PropertyName)
-               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.PropertyName}'."");
-
-            var propName = reader.GetString();
-
-            if(!reader.Read())
-               throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
-
-            if (comparer.Equals(propName, this._referenceFieldPropertyName))
-            {
-               referenceField = reader.GetString();
-            }
-            else if (comparer.Equals(propName, this._structPropertyPropertyName))
-            {
-               structProperty = reader.GetInt32();
-            }
-            else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
-            {
-               nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
-            }
-            else
-            {
-               throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
-            }
-         }
-
-         var validationResult = TestValueType.TryCreate(
-                                    referenceField!,
-                                    structProperty!,
-                                    nullableStructProperty!,
-                                    out var obj);
-
-         if (validationResult != ValidationResult.Success)
-            throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
-
-         return obj;
-      }
-
-      /// <inheritdoc />
-      public override void Write(Utf8JsonWriter writer, TestValueType value, JsonSerializerOptions options)
-      {
-         writer.WriteStartObject();
-
-         var ignoreNullValues = options.IgnoreNullValues;
-
-         var referenceFieldPropertyValue = value.ReferenceField;
-
-         if(!ignoreNullValues || referenceFieldPropertyValue is not null)
-         {
-            writer.WritePropertyName(this._referenceFieldPropertyName);
-            writer.WriteStringValue(referenceFieldPropertyValue);
-         }
-         var structPropertyPropertyValue = value.StructProperty;
-
-         writer.WritePropertyName(this._structPropertyPropertyName);
-         writer.WriteNumberValue(structPropertyPropertyValue);
-         var nullableStructPropertyPropertyValue = value.NullableStructProperty;
-
-         if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
-         {
-            writer.WritePropertyName(this._nullableStructPropertyPropertyName);
-            this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
-         }
-         writer.WriteEndObject();
-      }
-   }
-
-   public class TestValueType_ValueTypeJsonConverterFactory : JsonConverterFactory
-   {
-      /// <inheritdoc />
-      public override bool CanConvert(Type typeToConvert)
-      {
-         return typeof(TestValueType).IsAssignableFrom(typeToConvert);
-      }
-
-      /// <inheritdoc />
-      public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new ArgumentNullException(nameof(options));
-
-         return new TestValueType_ValueTypeJsonConverter(options);
-      }
-   }
-
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(TestValueType_ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
    partial struct TestValueType
    {
+      public class ValueTypeJsonConverter : JsonConverter<TestValueType>
+      {
+         private readonly string _referenceFieldPropertyName;
+         private readonly string _structPropertyPropertyName;
+         private readonly JsonConverter<decimal?> _nullableStructPropertyConverter;
+         private readonly string _nullableStructPropertyPropertyName;
+
+         public ValueTypeJsonConverter(JsonSerializerOptions options)
+         {
+            if(options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            var namingPolicy = options.PropertyNamingPolicy;
+
+            this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
+            this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
+            this._nullableStructPropertyConverter = (JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
+            this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
+         }
+
+         /// <inheritdoc />
+         public override TestValueType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (reader.TokenType == JsonTokenType.Null)
+               return default;
+
+            if (reader.TokenType != JsonTokenType.StartObject)
+               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.StartObject}'."");
+
+            string? referenceField = default;
+            int structProperty = default;
+            decimal? nullableStructProperty = default;
+
+            var comparer = options.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
+            while (reader.Read())
+            {
+               if (reader.TokenType == JsonTokenType.EndObject)
+                  break;
+
+               if (reader.TokenType != JsonTokenType.PropertyName)
+                  throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonTokenType.PropertyName}'."");
+
+               var propName = reader.GetString();
+
+               if(!reader.Read())
+                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
+
+               if (comparer.Equals(propName, this._referenceFieldPropertyName))
+               {
+                  referenceField = reader.GetString();
+               }
+               else if (comparer.Equals(propName, this._structPropertyPropertyName))
+               {
+                  structProperty = reader.GetInt32();
+               }
+               else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
+               {
+                  nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
+               }
+               else
+               {
+                  throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
+               }
+            }
+
+            var validationResult = TestValueType.TryCreate(
+                                       referenceField!,
+                                       structProperty!,
+                                       nullableStructProperty!,
+                                       out var obj);
+
+            if (validationResult != ValidationResult.Success)
+               throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
+
+            return obj;
+         }
+
+         /// <inheritdoc />
+         public override void Write(Utf8JsonWriter writer, TestValueType value, JsonSerializerOptions options)
+         {
+            writer.WriteStartObject();
+
+            var ignoreNullValues = options.IgnoreNullValues;
+
+            var referenceFieldPropertyValue = value.ReferenceField;
+
+            if(!ignoreNullValues || referenceFieldPropertyValue is not null)
+            {
+               writer.WritePropertyName(this._referenceFieldPropertyName);
+               writer.WriteStringValue(referenceFieldPropertyValue);
+            }
+            var structPropertyPropertyValue = value.StructProperty;
+
+            writer.WritePropertyName(this._structPropertyPropertyName);
+            writer.WriteNumberValue(structPropertyPropertyValue);
+            var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+
+            if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
+            {
+               writer.WritePropertyName(this._nullableStructPropertyPropertyName);
+               this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
+            }
+            writer.WriteEndObject();
+         }
+      }
+
+      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      {
+         /// <inheritdoc />
+         public override bool CanConvert(Type typeToConvert)
+         {
+            return typeof(TestValueType).IsAssignableFrom(typeToConvert);
+         }
+
+         /// <inheritdoc />
+         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         {
+            if (typeToConvert is null)
+               throw new ArgumentNullException(nameof(typeToConvert));
+            if (options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            return new ValueTypeJsonConverter(options);
+         }
+      }
    }
 }
 ");
@@ -1661,17 +1657,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestValueType, string>
-   {
-      public TestValueType_ValueTypeNewtonsoftJsonConverter()
-         : base(TestValueType.Create, obj => (string) obj)
-      {
-      }
-   }
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestValueType_ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
    partial class TestValueType
    {
+      public class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestValueType, string>
+      {
+         public ValueTypeNewtonsoftJsonConverter()
+            : base(TestValueType.Create, obj => obj.ReferenceField)
+         {
+         }
+      }
    }
 }
 ");
@@ -1707,17 +1702,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestValueType, string>
-   {
-      public TestValueType_ValueTypeNewtonsoftJsonConverter()
-         : base(TestValueType.Create, obj => (string) obj)
-      {
-      }
-   }
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestValueType_ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
    partial struct TestValueType
    {
+      public class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestValueType, string>
+      {
+         public ValueTypeNewtonsoftJsonConverter()
+            : base(TestValueType.Create, obj => obj.ReferenceField)
+         {
+         }
+      }
    }
 }
 ");
@@ -1759,108 +1753,107 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeNewtonsoftJsonConverter : JsonConverter<TestValueType?>
-   {
-      /// <inheritdoc />
-      public override TestValueType? ReadJson(JsonReader reader, Type objectType, TestValueType? existingValue, bool hasExistingValue, JsonSerializer serializer)
-      {
-         if (reader is null)
-            throw new ArgumentNullException(nameof(reader));
-         if (serializer is null)
-            throw new ArgumentNullException(nameof(serializer));
-
-         if (reader.TokenType == JsonToken.Null)
-            return default;
-
-         if (reader.TokenType != JsonToken.StartObject)
-            throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.StartObject}'."");
-
-         string? referenceField = default;
-         int structProperty = default;
-         decimal? nullableStructProperty = default;
-
-         var comparer = StringComparer.OrdinalIgnoreCase;
-
-         while (reader.Read())
-         {
-            if (reader.TokenType == JsonToken.EndObject)
-               break;
-
-            if (reader.TokenType != JsonToken.PropertyName)
-               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.PropertyName}'."");
-
-            var propName = reader.Value!.ToString();
-
-            if(!reader.Read())
-               throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
-
-            if (comparer.Equals(propName, ""referenceField""))
-            {
-               referenceField = serializer.Deserialize<string>(reader);
-            }
-            else if (comparer.Equals(propName, ""structProperty""))
-            {
-               structProperty = serializer.Deserialize<int>(reader);
-            }
-            else if (comparer.Equals(propName, ""nullableStructProperty""))
-            {
-               nullableStructProperty = serializer.Deserialize<decimal?>(reader);
-            }
-            else
-            {
-               throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
-            }
-         }
-
-         var validationResult = TestValueType.TryCreate(
-                                    referenceField!,
-                                    structProperty!,
-                                    nullableStructProperty!,
-                                    out var obj);
-
-         if (validationResult != ValidationResult.Success)
-            throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
-
-         return obj;
-      }
-
-      /// <inheritdoc />
-      public override void WriteJson(JsonWriter writer, TestValueType? value, JsonSerializer serializer)
-      {
-         if (value == null)
-         {
-            writer.WriteNull();
-            return;
-         }
-
-         var resolver = serializer.ContractResolver as DefaultContractResolver;
-
-         writer.WriteStartObject();
-         var referenceFieldPropertyValue = value.ReferenceField;
-
-         if(serializer.NullValueHandling != NullValueHandling.Ignore || referenceFieldPropertyValue is not null)
-         {
-            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""ReferenceField"") : ""ReferenceField"");
-            writer.WriteValue(referenceFieldPropertyValue);
-         }
-         var structPropertyPropertyValue = value.StructProperty;
-
-         writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""StructProperty"") : ""StructProperty"");
-         writer.WriteValue(structPropertyPropertyValue);
-         var nullableStructPropertyPropertyValue = value.NullableStructProperty;
-
-         if(serializer.NullValueHandling != NullValueHandling.Ignore || nullableStructPropertyPropertyValue is not null)
-         {
-            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""NullableStructProperty"") : ""NullableStructProperty"");
-            serializer.Serialize(writer, nullableStructPropertyPropertyValue);
-         }
-         writer.WriteEndObject();
-      }
-   }
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestValueType_ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
    partial class TestValueType
    {
+      public class ValueTypeNewtonsoftJsonConverter : JsonConverter<TestValueType?>
+      {
+         /// <inheritdoc />
+         public override TestValueType? ReadJson(JsonReader reader, Type objectType, TestValueType? existingValue, bool hasExistingValue, JsonSerializer serializer)
+         {
+            if (reader is null)
+               throw new ArgumentNullException(nameof(reader));
+            if (serializer is null)
+               throw new ArgumentNullException(nameof(serializer));
+
+            if (reader.TokenType == JsonToken.Null)
+               return default;
+
+            if (reader.TokenType != JsonToken.StartObject)
+               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.StartObject}'."");
+
+            string? referenceField = default;
+            int structProperty = default;
+            decimal? nullableStructProperty = default;
+
+            var comparer = StringComparer.OrdinalIgnoreCase;
+
+            while (reader.Read())
+            {
+               if (reader.TokenType == JsonToken.EndObject)
+                  break;
+
+               if (reader.TokenType != JsonToken.PropertyName)
+                  throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.PropertyName}'."");
+
+               var propName = reader.Value!.ToString();
+
+               if(!reader.Read())
+                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
+
+               if (comparer.Equals(propName, ""referenceField""))
+               {
+                  referenceField = serializer.Deserialize<string>(reader);
+               }
+               else if (comparer.Equals(propName, ""structProperty""))
+               {
+                  structProperty = serializer.Deserialize<int>(reader);
+               }
+               else if (comparer.Equals(propName, ""nullableStructProperty""))
+               {
+                  nullableStructProperty = serializer.Deserialize<decimal?>(reader);
+               }
+               else
+               {
+                  throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
+               }
+            }
+
+            var validationResult = TestValueType.TryCreate(
+                                       referenceField!,
+                                       structProperty!,
+                                       nullableStructProperty!,
+                                       out var obj);
+
+            if (validationResult != ValidationResult.Success)
+               throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
+
+            return obj;
+         }
+
+         /// <inheritdoc />
+         public override void WriteJson(JsonWriter writer, TestValueType? value, JsonSerializer serializer)
+         {
+            if (value == null)
+            {
+               writer.WriteNull();
+               return;
+            }
+
+            var resolver = serializer.ContractResolver as DefaultContractResolver;
+
+            writer.WriteStartObject();
+            var referenceFieldPropertyValue = value.ReferenceField;
+
+            if(serializer.NullValueHandling != NullValueHandling.Ignore || referenceFieldPropertyValue is not null)
+            {
+               writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""ReferenceField"") : ""ReferenceField"");
+               writer.WriteValue(referenceFieldPropertyValue);
+            }
+            var structPropertyPropertyValue = value.StructProperty;
+
+            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""StructProperty"") : ""StructProperty"");
+            writer.WriteValue(structPropertyPropertyValue);
+            var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+
+            if(serializer.NullValueHandling != NullValueHandling.Ignore || nullableStructPropertyPropertyValue is not null)
+            {
+               writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""NullableStructProperty"") : ""NullableStructProperty"");
+               serializer.Serialize(writer, nullableStructPropertyPropertyValue);
+            }
+            writer.WriteEndObject();
+         }
+      }
    }
 }
 ");
@@ -1902,102 +1895,101 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeNewtonsoftJsonConverter : JsonConverter<TestValueType>
-   {
-      /// <inheritdoc />
-      public override TestValueType ReadJson(JsonReader reader, Type objectType, TestValueType existingValue, bool hasExistingValue, JsonSerializer serializer)
-      {
-         if (reader is null)
-            throw new ArgumentNullException(nameof(reader));
-         if (serializer is null)
-            throw new ArgumentNullException(nameof(serializer));
-
-         if (reader.TokenType == JsonToken.Null)
-            return default;
-
-         if (reader.TokenType != JsonToken.StartObject)
-            throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.StartObject}'."");
-
-         string? referenceField = default;
-         int structProperty = default;
-         decimal? nullableStructProperty = default;
-
-         var comparer = StringComparer.OrdinalIgnoreCase;
-
-         while (reader.Read())
-         {
-            if (reader.TokenType == JsonToken.EndObject)
-               break;
-
-            if (reader.TokenType != JsonToken.PropertyName)
-               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.PropertyName}'."");
-
-            var propName = reader.Value!.ToString();
-
-            if(!reader.Read())
-               throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
-
-            if (comparer.Equals(propName, ""referenceField""))
-            {
-               referenceField = serializer.Deserialize<string>(reader);
-            }
-            else if (comparer.Equals(propName, ""structProperty""))
-            {
-               structProperty = serializer.Deserialize<int>(reader);
-            }
-            else if (comparer.Equals(propName, ""nullableStructProperty""))
-            {
-               nullableStructProperty = serializer.Deserialize<decimal?>(reader);
-            }
-            else
-            {
-               throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
-            }
-         }
-
-         var validationResult = TestValueType.TryCreate(
-                                    referenceField!,
-                                    structProperty!,
-                                    nullableStructProperty!,
-                                    out var obj);
-
-         if (validationResult != ValidationResult.Success)
-            throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
-
-         return obj;
-      }
-
-      /// <inheritdoc />
-      public override void WriteJson(JsonWriter writer, TestValueType value, JsonSerializer serializer)
-      {
-         var resolver = serializer.ContractResolver as DefaultContractResolver;
-
-         writer.WriteStartObject();
-         var referenceFieldPropertyValue = value.ReferenceField;
-
-         if(serializer.NullValueHandling != NullValueHandling.Ignore || referenceFieldPropertyValue is not null)
-         {
-            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""ReferenceField"") : ""ReferenceField"");
-            writer.WriteValue(referenceFieldPropertyValue);
-         }
-         var structPropertyPropertyValue = value.StructProperty;
-
-         writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""StructProperty"") : ""StructProperty"");
-         writer.WriteValue(structPropertyPropertyValue);
-         var nullableStructPropertyPropertyValue = value.NullableStructProperty;
-
-         if(serializer.NullValueHandling != NullValueHandling.Ignore || nullableStructPropertyPropertyValue is not null)
-         {
-            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""NullableStructProperty"") : ""NullableStructProperty"");
-            serializer.Serialize(writer, nullableStructPropertyPropertyValue);
-         }
-         writer.WriteEndObject();
-      }
-   }
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(TestValueType_ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
    partial struct TestValueType
    {
+      public class ValueTypeNewtonsoftJsonConverter : JsonConverter<TestValueType>
+      {
+         /// <inheritdoc />
+         public override TestValueType ReadJson(JsonReader reader, Type objectType, TestValueType existingValue, bool hasExistingValue, JsonSerializer serializer)
+         {
+            if (reader is null)
+               throw new ArgumentNullException(nameof(reader));
+            if (serializer is null)
+               throw new ArgumentNullException(nameof(serializer));
+
+            if (reader.TokenType == JsonToken.Null)
+               return default;
+
+            if (reader.TokenType != JsonToken.StartObject)
+               throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.StartObject}'."");
+
+            string? referenceField = default;
+            int structProperty = default;
+            decimal? nullableStructProperty = default;
+
+            var comparer = StringComparer.OrdinalIgnoreCase;
+
+            while (reader.Read())
+            {
+               if (reader.TokenType == JsonToken.EndObject)
+                  break;
+
+               if (reader.TokenType != JsonToken.PropertyName)
+                  throw new JsonException($""Unexpected token '{reader.TokenType}' when trying to deserialize 'TestValueType'. Expected token: '{JsonToken.PropertyName}'."");
+
+               var propName = reader.Value!.ToString();
+
+               if(!reader.Read())
+                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{propName}' during deserialization of 'TestValueType'."");
+
+               if (comparer.Equals(propName, ""referenceField""))
+               {
+                  referenceField = serializer.Deserialize<string>(reader);
+               }
+               else if (comparer.Equals(propName, ""structProperty""))
+               {
+                  structProperty = serializer.Deserialize<int>(reader);
+               }
+               else if (comparer.Equals(propName, ""nullableStructProperty""))
+               {
+                  nullableStructProperty = serializer.Deserialize<decimal?>(reader);
+               }
+               else
+               {
+                  throw new JsonException($""Unknown member '{propName}' encountered when trying to deserialize 'TestValueType'."");
+               }
+            }
+
+            var validationResult = TestValueType.TryCreate(
+                                       referenceField!,
+                                       structProperty!,
+                                       nullableStructProperty!,
+                                       out var obj);
+
+            if (validationResult != ValidationResult.Success)
+               throw new JsonException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
+
+            return obj;
+         }
+
+         /// <inheritdoc />
+         public override void WriteJson(JsonWriter writer, TestValueType value, JsonSerializer serializer)
+         {
+            var resolver = serializer.ContractResolver as DefaultContractResolver;
+
+            writer.WriteStartObject();
+            var referenceFieldPropertyValue = value.ReferenceField;
+
+            if(serializer.NullValueHandling != NullValueHandling.Ignore || referenceFieldPropertyValue is not null)
+            {
+               writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""ReferenceField"") : ""ReferenceField"");
+               writer.WriteValue(referenceFieldPropertyValue);
+            }
+            var structPropertyPropertyValue = value.StructProperty;
+
+            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""StructProperty"") : ""StructProperty"");
+            writer.WriteValue(structPropertyPropertyValue);
+            var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+
+            if(serializer.NullValueHandling != NullValueHandling.Ignore || nullableStructPropertyPropertyValue is not null)
+            {
+               writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""NullableStructProperty"") : ""NullableStructProperty"");
+               serializer.Serialize(writer, nullableStructPropertyPropertyValue);
+            }
+            writer.WriteEndObject();
+         }
+      }
    }
 }
 ");
@@ -2033,17 +2025,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestValueType, string>
-   {
-      public TestValueType_ValueTypeMessagePackFormatter()
-         : base(TestValueType.Create, obj => (string) obj)
-      {
-      }
-   }
-
-   [MessagePack.MessagePackFormatter(typeof(TestValueType_ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
    partial class TestValueType
    {
+      public class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestValueType, string>
+      {
+         public ValueTypeMessagePackFormatter()
+            : base(TestValueType.Create, obj => obj.ReferenceField)
+         {
+         }
+      }
    }
 }
 ");
@@ -2079,17 +2070,16 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestValueType, string>
-   {
-      public TestValueType_ValueTypeMessagePackFormatter()
-         : base(TestValueType.Create, obj => (string) obj)
-      {
-      }
-   }
-
-   [MessagePack.MessagePackFormatter(typeof(TestValueType_ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
    partial struct TestValueType
    {
+      public class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestValueType, string>
+      {
+         public ValueTypeMessagePackFormatter()
+            : base(TestValueType.Create, obj => obj.ReferenceField)
+         {
+         }
+      }
    }
 }
 ");
@@ -2130,67 +2120,66 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeMessagePackFormatter : IMessagePackFormatter<TestValueType?>
-   {
-      /// <inheritdoc />
-      public TestValueType? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
-      {
-         if (reader.TryReadNil())
-            return default;
-
-         var count = reader.ReadArrayHeader();
-
-         if (count != 3)
-            throw new MessagePackSerializationException($""Invalid member count. Expected 3 but found {count} field/property values."");
-
-         IFormatterResolver resolver = options.Resolver;
-         options.Security.DepthStep(ref reader);
-
-         try
-         {
-
-            var referenceField = reader.ReadString()!;
-            var structProperty = reader.ReadInt32()!;
-            var nullableStructProperty = resolver.GetFormatterWithVerify<decimal?>().Deserialize(ref reader, options)!;
-
-            var validationResult = TestValueType.TryCreate(
-                                       referenceField,
-                                       structProperty,
-                                       nullableStructProperty,
-                                       out var obj);
-
-            if (validationResult != ValidationResult.Success)
-               throw new MessagePackSerializationException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
-
-            return obj;
-         }
-         finally
-         {
-           reader.Depth--;
-         }
-      }
-
-      /// <inheritdoc />
-      public void Serialize(ref MessagePackWriter writer, TestValueType? value, MessagePackSerializerOptions options)
-      {
-         if(value is null)
-         {
-            writer.WriteNil();
-            return;
-         }
-
-         writer.WriteArrayHeader(3);
-
-         var resolver = options.Resolver;
-         writer.Write(value.ReferenceField);
-         writer.Write(value.StructProperty);
-         resolver.GetFormatterWithVerify<decimal?>().Serialize(ref writer, value.NullableStructProperty, options);
-      }
-   }
-
-   [MessagePack.MessagePackFormatter(typeof(TestValueType_ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
    partial class TestValueType
    {
+      public class ValueTypeMessagePackFormatter : IMessagePackFormatter<TestValueType?>
+      {
+         /// <inheritdoc />
+         public TestValueType? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+         {
+            if (reader.TryReadNil())
+               return default;
+
+            var count = reader.ReadArrayHeader();
+
+            if (count != 3)
+               throw new MessagePackSerializationException($""Invalid member count. Expected 3 but found {count} field/property values."");
+
+            IFormatterResolver resolver = options.Resolver;
+            options.Security.DepthStep(ref reader);
+
+            try
+            {
+
+               var referenceField = reader.ReadString()!;
+               var structProperty = reader.ReadInt32()!;
+               var nullableStructProperty = resolver.GetFormatterWithVerify<decimal?>().Deserialize(ref reader, options)!;
+
+               var validationResult = TestValueType.TryCreate(
+                                          referenceField,
+                                          structProperty,
+                                          nullableStructProperty,
+                                          out var obj);
+
+               if (validationResult != ValidationResult.Success)
+                  throw new MessagePackSerializationException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
+
+               return obj;
+            }
+            finally
+            {
+              reader.Depth--;
+            }
+         }
+
+         /// <inheritdoc />
+         public void Serialize(ref MessagePackWriter writer, TestValueType? value, MessagePackSerializerOptions options)
+         {
+            if(value is null)
+            {
+               writer.WriteNil();
+               return;
+            }
+
+            writer.WriteArrayHeader(3);
+
+            var resolver = options.Resolver;
+            writer.Write(value.ReferenceField);
+            writer.Write(value.StructProperty);
+            resolver.GetFormatterWithVerify<decimal?>().Serialize(ref writer, value.NullableStructProperty, options);
+         }
+      }
    }
 }
 ");
@@ -2231,61 +2220,60 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestValueType_ValueTypeMessagePackFormatter : IMessagePackFormatter<TestValueType>
-   {
-      /// <inheritdoc />
-      public TestValueType Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
-      {
-         if (reader.TryReadNil())
-            return default;
-
-         var count = reader.ReadArrayHeader();
-
-         if (count != 3)
-            throw new MessagePackSerializationException($""Invalid member count. Expected 3 but found {count} field/property values."");
-
-         IFormatterResolver resolver = options.Resolver;
-         options.Security.DepthStep(ref reader);
-
-         try
-         {
-
-            var referenceField = reader.ReadString()!;
-            var structProperty = reader.ReadInt32()!;
-            var nullableStructProperty = resolver.GetFormatterWithVerify<decimal?>().Deserialize(ref reader, options)!;
-
-            var validationResult = TestValueType.TryCreate(
-                                       referenceField,
-                                       structProperty,
-                                       nullableStructProperty,
-                                       out var obj);
-
-            if (validationResult != ValidationResult.Success)
-               throw new MessagePackSerializationException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
-
-            return obj;
-         }
-         finally
-         {
-           reader.Depth--;
-         }
-      }
-
-      /// <inheritdoc />
-      public void Serialize(ref MessagePackWriter writer, TestValueType value, MessagePackSerializerOptions options)
-      {
-         writer.WriteArrayHeader(3);
-
-         var resolver = options.Resolver;
-         writer.Write(value.ReferenceField);
-         writer.Write(value.StructProperty);
-         resolver.GetFormatterWithVerify<decimal?>().Serialize(ref writer, value.NullableStructProperty, options);
-      }
-   }
-
-   [MessagePack.MessagePackFormatter(typeof(TestValueType_ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
    partial struct TestValueType
    {
+      public class ValueTypeMessagePackFormatter : IMessagePackFormatter<TestValueType>
+      {
+         /// <inheritdoc />
+         public TestValueType Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+         {
+            if (reader.TryReadNil())
+               return default;
+
+            var count = reader.ReadArrayHeader();
+
+            if (count != 3)
+               throw new MessagePackSerializationException($""Invalid member count. Expected 3 but found {count} field/property values."");
+
+            IFormatterResolver resolver = options.Resolver;
+            options.Security.DepthStep(ref reader);
+
+            try
+            {
+
+               var referenceField = reader.ReadString()!;
+               var structProperty = reader.ReadInt32()!;
+               var nullableStructProperty = resolver.GetFormatterWithVerify<decimal?>().Deserialize(ref reader, options)!;
+
+               var validationResult = TestValueType.TryCreate(
+                                          referenceField,
+                                          structProperty,
+                                          nullableStructProperty,
+                                          out var obj);
+
+               if (validationResult != ValidationResult.Success)
+                  throw new MessagePackSerializationException($""Unable to deserialize 'TestValueType'. Error: {validationResult!.ErrorMessage}."");
+
+               return obj;
+            }
+            finally
+            {
+              reader.Depth--;
+            }
+         }
+
+         /// <inheritdoc />
+         public void Serialize(ref MessagePackWriter writer, TestValueType value, MessagePackSerializerOptions options)
+         {
+            writer.WriteArrayHeader(3);
+
+            var resolver = options.Resolver;
+            writer.Write(value.ReferenceField);
+            writer.Write(value.StructProperty);
+            resolver.GetFormatterWithVerify<decimal?>().Serialize(ref writer, value.NullableStructProperty, options);
+         }
+      }
    }
 }
 ");

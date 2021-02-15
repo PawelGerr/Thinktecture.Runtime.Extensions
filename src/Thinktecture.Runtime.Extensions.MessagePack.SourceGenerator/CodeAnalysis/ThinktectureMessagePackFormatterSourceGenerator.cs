@@ -24,7 +24,8 @@ namespace Thinktecture.CodeAnalysis
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get");
+         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeMessagePackFormatter").Any());
+         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
       }
 
       /// <inheritdoc />
@@ -34,7 +35,7 @@ namespace Thinktecture.CodeAnalysis
             throw new ArgumentNullException(nameof(state));
 
          if (state.HasKeyMember)
-            return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create");
+            return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
          if (!state.SkipFactoryMethods)
             return GenerateValueTypeFormatter(state);
@@ -47,7 +48,9 @@ namespace Thinktecture.CodeAnalysis
          string? @namespace,
          SyntaxToken typeIdentifier,
          ITypeSymbol keyType,
-         string factoryMethod)
+         string factoryMethod,
+         string keyMember,
+         bool requiresNew)
       {
          if (type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
             return String.Empty;
@@ -62,17 +65,16 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
-   public class {typeIdentifier}_ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<{typeIdentifier}, {keyType}>
-   {{
-      public {typeIdentifier}_ValueTypeMessagePackFormatter()
-         : base({typeIdentifier}.{factoryMethod}, obj => ({keyType}) obj)
-      {{
-      }}
-   }}
-
-   [MessagePack.MessagePackFormatter(typeof({typeIdentifier}_ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
    partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
    {{
+      public {(requiresNew ? "new " : null)}class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<{typeIdentifier}, {keyType}>
+      {{
+         public ValueTypeMessagePackFormatter()
+            : base({typeIdentifier}.{factoryMethod}, obj => obj.{keyMember})
+         {{
+         }}
+      }}
    }}
 }}
 ";
@@ -96,25 +98,27 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   public class {state.TypeIdentifier}_ValueTypeMessagePackFormatter : IMessagePackFormatter<{state.TypeIdentifier}{state.NullableQuestionMark}>
-   {{");
-         sb.Append(@$"
-      /// <inheritdoc />
-      public {state.TypeIdentifier}{state.NullableQuestionMark} Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
+   {{
+      public class ValueTypeMessagePackFormatter : IMessagePackFormatter<{state.TypeIdentifier}{state.NullableQuestionMark}>
       {{
-         if (reader.TryReadNil())
-            return default;
-
-         var count = reader.ReadArrayHeader();
-
-         if (count != {state.AssignableInstanceFieldsAndProperties.Count})
-            throw new MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
-
-         IFormatterResolver resolver = options.Resolver;
-         options.Security.DepthStep(ref reader);
-
-         try
+         /// <inheritdoc />
+         public {state.TypeIdentifier}{state.NullableQuestionMark} Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
          {{
+            if (reader.TryReadNil())
+               return default;
+
+            var count = reader.ReadArrayHeader();
+
+            if (count != {state.AssignableInstanceFieldsAndProperties.Count})
+               throw new MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
+
+            IFormatterResolver resolver = options.Resolver;
+            options.Security.DepthStep(ref reader);
+
+            try
+            {{
 ");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -122,70 +126,66 @@ using Thinktecture;
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-            var {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)}!;");
+               var {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)}!;");
          }
 
          sb.Append(@$"
 
-            var validationResult = {state.TypeIdentifier}.TryCreate(");
+               var validationResult = {state.TypeIdentifier}.TryCreate(");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-                                       {memberInfo.ArgumentName},");
+                                          {memberInfo.ArgumentName},");
          }
 
          sb.Append(@$"
-                                       out var obj);
+                                          out var obj);
 
-            if (validationResult != ValidationResult.Success)
-               throw new MessagePackSerializationException($""Unable to deserialize '{state.TypeIdentifier}'. Error: {{validationResult!.ErrorMessage}}."");
+               if (validationResult != ValidationResult.Success)
+                  throw new MessagePackSerializationException($""Unable to deserialize '{state.TypeIdentifier}'. Error: {{validationResult!.ErrorMessage}}."");
 
-            return obj;
+               return obj;
+            }}
+            finally
+            {{
+              reader.Depth--;
+            }}
          }}
-         finally
-         {{
-           reader.Depth--;
-         }}
-      }}
 
-      /// <inheritdoc />
-      public void Serialize(ref MessagePackWriter writer, {state.TypeIdentifier}{state.NullableQuestionMark} value, MessagePackSerializerOptions options)
-      {{");
+         /// <inheritdoc />
+         public void Serialize(ref MessagePackWriter writer, {state.TypeIdentifier}{state.NullableQuestionMark} value, MessagePackSerializerOptions options)
+         {{");
 
          if (state.Type.IsReferenceType)
          {
             sb.Append(@$"
-         if(value is null)
-         {{
-            writer.WriteNil();
-            return;
-         }}
+            if(value is null)
+            {{
+               writer.WriteNil();
+               return;
+            }}
 ");
          }
 
          sb.Append(@$"
-         writer.WriteArrayHeader({state.AssignableInstanceFieldsAndProperties.Count});
+            writer.WriteArrayHeader({state.AssignableInstanceFieldsAndProperties.Count});
 
-         var resolver = options.Resolver;");
+            var resolver = options.Resolver;");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-         {GenerateWriteValue(memberInfo)};");
+            {GenerateWriteValue(memberInfo)};");
          }
 
          sb.Append($@"
+         }}
       }}
-   }}
-
-   [MessagePack.MessagePackFormatter(typeof({state.TypeIdentifier}_ValueTypeMessagePackFormatter))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
-   {{
    }}
 }}
 ");

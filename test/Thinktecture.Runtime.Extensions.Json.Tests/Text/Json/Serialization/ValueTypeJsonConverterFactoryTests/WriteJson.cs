@@ -26,7 +26,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
       [MemberData(nameof(DataForStringBasedEnumTest))]
       public void Should_serialize_string_based_enum(TestEnum enumValue, string expectedJson)
       {
-         var json = Serialize<TestEnum, TestEnum_ValueTypeJsonConverterFactory>(enumValue);
+         var json = Serialize<TestEnum, TestEnum.ValueTypeJsonConverterFactory>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -35,7 +35,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
       [MemberData(nameof(DataForExtensibleEnumTest))]
       public void Should_serialize_ExtensibleTestEnum(ExtensibleTestEnum enumValue, string expectedJson)
       {
-         var json = Serialize<ExtensibleTestEnum, ExtensibleTestEnum_ValueTypeJsonConverterFactory>(enumValue);
+         var json = Serialize<ExtensibleTestEnum, ExtensibleTestEnum.ValueTypeJsonConverterFactory>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -44,7 +44,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
       [MemberData(nameof(DataForExtendedEnumTest))]
       public void Should_serialize_ExtendedTestEnum(ExtendedTestEnum enumValue, string expectedJson)
       {
-         var json = Serialize<ExtendedTestEnum, ExtendedTestEnum_ValueTypeJsonConverterFactory>(enumValue);
+         var json = Serialize<ExtendedTestEnum, ExtendedTestEnum.ValueTypeJsonConverterFactory>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -53,7 +53,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
       [MemberData(nameof(DataForDifferentAssemblyExtendedTestEnumTest))]
       public void Should_serialize_DifferentAssemblyExtendedTestEnum(DifferentAssemblyExtendedTestEnum enumValue, string expectedJson)
       {
-         var json = Serialize<DifferentAssemblyExtendedTestEnum, DifferentAssemblyExtendedTestEnum_ValueTypeJsonConverterFactory>(enumValue);
+         var json = Serialize<DifferentAssemblyExtendedTestEnum, DifferentAssemblyExtendedTestEnum.ValueTypeJsonConverterFactory>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -62,7 +62,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
       [MemberData(nameof(DataForIntBasedEnumTest))]
       public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
       {
-         var json = Serialize<IntegerEnum, IntegerEnum_ValueTypeJsonConverterFactory>(enumValue);
+         var json = Serialize<IntegerEnum, IntegerEnum.ValueTypeJsonConverterFactory>(enumValue);
 
          json.Should().Be(expectedJson);
       }
@@ -71,7 +71,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
       [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
       public void Should_serialize_class_containing_string_based_enum(ClassWithStringBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
       {
-         var json = Serialize<ClassWithStringBasedEnum, TestEnum_ValueTypeJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
+         var json = Serialize<ClassWithStringBasedEnum, TestEnum.ValueTypeJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
 
          json.Should().Be(expectedJson);
       }
@@ -80,7 +80,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
       [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
       public void Should_serialize_class_containing_int_based_enum(ClassWithIntBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
       {
-         var json = Serialize<ClassWithIntBasedEnum, IntegerEnum_ValueTypeJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
+         var json = Serialize<ClassWithIntBasedEnum, IntegerEnum.ValueTypeJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
 
          json.Should().Be(expectedJson);
       }
@@ -93,7 +93,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueTypeJsonConver
          JsonNamingPolicy namingPolicy = null,
          bool ignoreNullValues = false)
       {
-         var json = Serialize<ValueTypeWithMultipleProperties, ValueTypeWithMultipleProperties_ValueTypeJsonConverterFactory>(valueType, namingPolicy, ignoreNullValues);
+         var json = Serialize<ValueTypeWithMultipleProperties, ValueTypeWithMultipleProperties.ValueTypeJsonConverterFactory>(valueType, namingPolicy, ignoreNullValues);
 
          json.Should().Be(expectedJson);
       }

@@ -24,7 +24,8 @@ namespace Thinktecture.CodeAnalysis
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get");
+         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeNewtonsoftJsonConverter").Any());
+         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
       }
 
       /// <inheritdoc />
@@ -34,7 +35,7 @@ namespace Thinktecture.CodeAnalysis
             throw new ArgumentNullException(nameof(state));
 
          if (state.HasKeyMember)
-            return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create");
+            return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
          if (!state.SkipFactoryMethods)
             return GenerateValueTypeJsonConverter(state);
@@ -47,7 +48,9 @@ namespace Thinktecture.CodeAnalysis
          string? @namespace,
          SyntaxToken typeIdentifier,
          ITypeSymbol keyType,
-         string factoryMethod)
+         string factoryMethod,
+         string keyMember,
+         bool requiresNew)
       {
          if (type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
             return String.Empty;
@@ -62,17 +65,16 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
-   public class {typeIdentifier}_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<{typeIdentifier}, {keyType}>
-   {{
-      public {typeIdentifier}_ValueTypeNewtonsoftJsonConverter()
-         : base({typeIdentifier}.{factoryMethod}, obj => ({keyType}) obj)
-      {{
-      }}
-   }}
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof({typeIdentifier}_ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
    partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
    {{
+      public {(requiresNew ? "new " : null)}class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<{typeIdentifier}, {keyType}>
+      {{
+         public ValueTypeNewtonsoftJsonConverter()
+            : base({typeIdentifier}.{factoryMethod}, obj => obj.{keyMember})
+         {{
+         }}
+      }}
    }}
 }}
 ";
@@ -97,23 +99,26 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   public class {state.TypeIdentifier}_ValueTypeNewtonsoftJsonConverter : JsonConverter<{state.TypeIdentifier}{state.NullableQuestionMark}>
-   {{");
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
+   {{
+      public class ValueTypeNewtonsoftJsonConverter : JsonConverter<{state.TypeIdentifier}{state.NullableQuestionMark}>
+      {{");
 
          sb.Append(@$"
-      /// <inheritdoc />
-      public override {state.TypeIdentifier}{state.NullableQuestionMark} ReadJson(JsonReader reader, Type objectType, {state.TypeIdentifier}{state.NullableQuestionMark} existingValue, bool hasExistingValue, JsonSerializer serializer)
-      {{
-         if (reader is null)
-            throw new ArgumentNullException(nameof(reader));
-         if (serializer is null)
-            throw new ArgumentNullException(nameof(serializer));
+         /// <inheritdoc />
+         public override {state.TypeIdentifier}{state.NullableQuestionMark} ReadJson(JsonReader reader, Type objectType, {state.TypeIdentifier}{state.NullableQuestionMark} existingValue, bool hasExistingValue, JsonSerializer serializer)
+         {{
+            if (reader is null)
+               throw new ArgumentNullException(nameof(reader));
+            if (serializer is null)
+               throw new ArgumentNullException(nameof(serializer));
 
-         if (reader.TokenType == JsonToken.Null)
-            return default;
+            if (reader.TokenType == JsonToken.Null)
+               return default;
 
-         if (reader.TokenType != JsonToken.StartObject)
-            throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonToken.StartObject}}'."");
+            if (reader.TokenType != JsonToken.StartObject)
+               throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonToken.StartObject}}'."");
 ");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -121,25 +126,25 @@ using Thinktecture;
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-         {memberInfo.Type}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
+            {memberInfo.Type}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
          }
 
          sb.Append(@$"
 
-         var comparer = StringComparer.OrdinalIgnoreCase;
+            var comparer = StringComparer.OrdinalIgnoreCase;
 
-         while (reader.Read())
-         {{
-            if (reader.TokenType == JsonToken.EndObject)
-               break;
+            while (reader.Read())
+            {{
+               if (reader.TokenType == JsonToken.EndObject)
+                  break;
 
-            if (reader.TokenType != JsonToken.PropertyName)
-               throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonToken.PropertyName}}'."");
+               if (reader.TokenType != JsonToken.PropertyName)
+                  throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonToken.PropertyName}}'."");
 
-            var propName = reader.Value!.ToString();
+               var propName = reader.Value!.ToString();
 
-            if(!reader.Read())
-               throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{{propName}}' during deserialization of '{state.TypeIdentifier}'."");
+               if(!reader.Read())
+                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{{propName}}' during deserialization of '{state.TypeIdentifier}'."");
 ");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -149,94 +154,94 @@ using Thinktecture;
             if (i == 0)
             {
                sb.Append(@$"
-            if ");
+               if ");
             }
             else
             {
                sb.Append(@$"
-            else if ");
+               else if ");
             }
 
             sb.Append(@$"(comparer.Equals(propName, ""{memberInfo.ArgumentName}""))
-            {{
-               {memberInfo.ArgumentName} = serializer.Deserialize<{memberInfo.Type}>(reader);
-            }}");
+               {{
+                  {memberInfo.ArgumentName} = serializer.Deserialize<{memberInfo.Type}>(reader);
+               }}");
          }
 
          if (state.AssignableInstanceFieldsAndProperties.Count > 0)
          {
             sb.Append(@$"
-            else
-            {{
-               throw new JsonException($""Unknown member '{{propName}}' encountered when trying to deserialize '{state.TypeIdentifier}'."");
-            }}");
+               else
+               {{
+                  throw new JsonException($""Unknown member '{{propName}}' encountered when trying to deserialize '{state.TypeIdentifier}'."");
+               }}");
          }
 
          sb.Append(@$"
-         }}
+            }}
 
-         var validationResult = {state.TypeIdentifier}.TryCreate(");
+            var validationResult = {state.TypeIdentifier}.TryCreate(");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-                                    {memberInfo.ArgumentName}!,");
+                                       {memberInfo.ArgumentName}!,");
          }
 
          sb.Append(@$"
-                                    out var obj);
+                                       out var obj);
 
-         if (validationResult != ValidationResult.Success)
-            throw new JsonException($""Unable to deserialize '{state.TypeIdentifier}'. Error: {{validationResult!.ErrorMessage}}."");
+            if (validationResult != ValidationResult.Success)
+               throw new JsonException($""Unable to deserialize '{state.TypeIdentifier}'. Error: {{validationResult!.ErrorMessage}}."");
 
-         return obj;
-      }}
+            return obj;
+         }}
 
-      /// <inheritdoc />
-      public override void WriteJson(JsonWriter writer, {state.TypeIdentifier}{state.NullableQuestionMark} value, JsonSerializer serializer)
-      {{");
+         /// <inheritdoc />
+         public override void WriteJson(JsonWriter writer, {state.TypeIdentifier}{state.NullableQuestionMark} value, JsonSerializer serializer)
+         {{");
 
          if (state.Type.IsReferenceType)
          {
             sb.Append(@$"
-         if (value == null)
-         {{
-            writer.WriteNull();
-            return;
-         }}
+            if (value == null)
+            {{
+               writer.WriteNull();
+               return;
+            }}
 ");
          }
 
          sb.Append(@$"
-         var resolver = serializer.ContractResolver as DefaultContractResolver;
+            var resolver = serializer.ContractResolver as DefaultContractResolver;
 
-         writer.WriteStartObject();");
+            writer.WriteStartObject();");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
             var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
             sb.Append(@$"
-         var {memberInfo.ArgumentName}PropertyValue = value.{memberInfo.Identifier};
+            var {memberInfo.ArgumentName}PropertyValue = value.{memberInfo.Identifier};
 ");
 
             if (memberInfo.IsReferenceTypeOrNullableStruct)
             {
                sb.Append(@$"
-         if(serializer.NullValueHandling != NullValueHandling.Ignore || {memberInfo.ArgumentName}PropertyValue is not null)
-         {{
-            ");
+            if(serializer.NullValueHandling != NullValueHandling.Ignore || {memberInfo.ArgumentName}PropertyValue is not null)
+            {{
+               ");
             }
             else
             {
                sb.Append(@$"
-         ");
+            ");
             }
 
             sb.Append(@$"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""{memberInfo.Identifier}"") : ""{memberInfo.Identifier}"");
-         ");
+            ");
 
             if (memberInfo.IsReferenceTypeOrNullableStruct)
                sb.Append(@$"   ");
@@ -245,17 +250,13 @@ using Thinktecture;
 
             if (memberInfo.IsReferenceTypeOrNullableStruct)
                sb.Append(@$"
-         }}");
+            }}");
          }
 
          sb.Append($@"
-         writer.WriteEndObject();
+            writer.WriteEndObject();
+         }}
       }}
-   }}
-
-   [Newtonsoft.Json.JsonConverterAttribute(typeof({state.TypeIdentifier}_ValueTypeNewtonsoftJsonConverter))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
-   {{
    }}
 }}
 ");
