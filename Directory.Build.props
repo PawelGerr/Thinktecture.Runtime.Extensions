@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <Copyright>(c) 2020, Pawel Gerr. All rights reserved.</Copyright>
+    <Copyright>(c) 2021, Pawel Gerr. All rights reserved.</Copyright>
     <VersionPrefix>3.0.0</VersionPrefix>
     <Authors>Pawel Gerr</Authors>    
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
