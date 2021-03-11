@@ -134,7 +134,7 @@ namespace Thinktecture
 
       public static IEnumerable<IFieldSymbol> EnumerateEnumItems(this ITypeSymbol enumType)
       {
-         return enumType.GetMembers()
+         return enumType.GetNonIgnoredMembers()
                         .Select(m =>
                                 {
                                    if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField(out _))
@@ -215,12 +215,18 @@ namespace Thinktecture
          return false;
       }
 
+      public static IEnumerable<ISymbol> GetNonIgnoredMembers(this ITypeSymbol type, string? name = null)
+      {
+         return (name is not null ? type.GetMembers(name) : type.GetMembers())
+            .Where(m => !m.HasAttribute("Thinktecture.ValueTypeIgnoreAttribute"));
+      }
+
       public static IReadOnlyList<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
          this ITypeSymbol type,
          bool instanceMembersOnly,
          Action<Diagnostic>? reportDiagnostic = null)
       {
-         return type.GetMembers()
+         return type.GetNonIgnoredMembers()
                     .Select(m =>
                             {
                                if (instanceMembersOnly && m.IsStatic
@@ -280,7 +286,7 @@ namespace Thinktecture
 
       public static IReadOnlyList<InstanceMemberInfo> GetReadableInstanceFieldsAndProperties(this ITypeSymbol type)
       {
-         return type.GetMembers()
+         return type.GetNonIgnoredMembers()
                     .Select(m =>
                             {
                                if (m.IsStatic || !m.CanBeReferencedByName)
@@ -319,7 +325,7 @@ namespace Thinktecture
          ITypeSymbol keyType,
          Action<Diagnostic>? reportDiagnostic = null)
       {
-         foreach (var member in enumType.GetMembers())
+         foreach (var member in enumType.GetNonIgnoredMembers())
          {
             if (member is not IMethodSymbol method)
                continue;

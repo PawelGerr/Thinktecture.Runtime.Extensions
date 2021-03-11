@@ -185,7 +185,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
             EnumKeyPropertyNameMustNotBeItem(context, tds, enumAttr);
 
             var comparer = enumAttr.FindKeyComparer();
-            var comparerMembers = comparer is null ? (IReadOnlyList<ISymbol>)Array.Empty<ISymbol>() : enumType.GetMembers(comparer);
+            var comparerMembers = comparer is null ? Array.Empty<ISymbol>() : enumType.GetNonIgnoredMembers(comparer);
 
             var isExtensible = enumAttr.IsExtensible() ?? false;
 
@@ -222,7 +222,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          ValidateDerivedTypes(context, enumType);
       }
 
-      private static void CheckKeyComparer(SymbolAnalysisContext context, IReadOnlyList<ISymbol> comparerMembers, bool isExtensible)
+      private static void CheckKeyComparer(SymbolAnalysisContext context, IEnumerable<ISymbol> comparerMembers, bool isExtensible)
       {
          foreach (var comparerMember in comparerMembers)
          {
@@ -257,7 +257,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
       private static void Check_ItemLike_StaticProperties(SymbolAnalysisContext context, INamedTypeSymbol enumType)
       {
-         foreach (var member in enumType.GetMembers())
+         foreach (var member in enumType.GetNonIgnoredMembers())
          {
             if (member.IsStatic && member is IPropertySymbol property && SymbolEqualityComparer.Default.Equals(property.Type, enumType))
             {

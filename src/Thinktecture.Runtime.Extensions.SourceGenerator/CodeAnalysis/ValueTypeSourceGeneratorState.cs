@@ -71,10 +71,5 @@ namespace Thinktecture.CodeAnalysis
 
          return equalityMembers ?? members.Select(m => new EqualityInstanceMemberInfo(m, null, null)).ToList();
       }
-
-      public void SetBaseType(ValueTypeSourceGeneratorState baseTypeState)
-      {
-
-      }
    }
 }
