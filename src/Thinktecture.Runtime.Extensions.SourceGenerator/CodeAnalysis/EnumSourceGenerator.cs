@@ -52,7 +52,7 @@ using Thinktecture;
          if (_state.IsExtensible)
          {
             _sb.Append($@"
-   [Thinktecture.EnumConstructor(nameof({_state.KeyPropertyName})");
+   [Thinktecture.Internal.EnumConstructor(nameof({_state.KeyPropertyName})");
 
             foreach (var member in _state.AssignableInstanceFieldsAndProperties)
             {
@@ -81,14 +81,14 @@ using Thinktecture;
          var validate = new Thinktecture.Internal.Validate<{_state.EnumIdentifier}, {_state.KeyType}>({_state.EnumIdentifier}.Validate);
 
          var enumType = typeof({_state.EnumIdentifier});
-         var metadata = new ValueTypeMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);");
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);");
 
          foreach (var derivedType in derivedTypes)
          {
             _sb.Append($@"
-         ValueTypeMetadataLookup.AddMetadata(typeof({derivedType.Type}), metadata);");
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(typeof({derivedType.Type}), metadata);");
          }
 
          _sb.Append($@"

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Thinktecture.Internal;
 
 namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion
 {

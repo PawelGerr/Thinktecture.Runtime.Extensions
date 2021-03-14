@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Thinktecture.Internal;
 
 namespace Thinktecture.AspNetCore.ModelBinding
 {

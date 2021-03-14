@@ -126,9 +126,9 @@ using Thinktecture;
          var tryCreate = new Thinktecture.Internal.Validate<{_state.TypeIdentifier}, {_state.KeyMember.Member.Type}>({_state.TypeIdentifier}.TryCreate);
 
          var type = typeof({_state.TypeIdentifier});
-         var metadata = new ValueTypeMetadata(type, typeof({keyMember.Type}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(type, typeof({keyMember.Type}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
-         ValueTypeMetadataLookup.AddMetadata(type, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }}
 ");
          }

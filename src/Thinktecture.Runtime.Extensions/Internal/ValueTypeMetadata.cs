@@ -2,10 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
-namespace Thinktecture
+namespace Thinktecture.Internal
 {
    /// <summary>
-   /// Value type metadata.
+   /// For internal use only.
    /// </summary>
    public sealed class ValueTypeMetadata
    {

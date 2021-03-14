@@ -449,9 +449,9 @@ namespace Thinktecture.Tests
          var tryCreate = new Thinktecture.Internal.Validate<TestValueType, string>(TestValueType.TryCreate);
 
          var type = typeof(TestValueType);
-         var metadata = new ValueTypeMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
-         ValueTypeMetadataLookup.AddMetadata(type, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }
 
       private static readonly Type _type = typeof(TestValueType);
@@ -669,9 +669,9 @@ namespace Thinktecture.Tests
          var tryCreate = new Thinktecture.Internal.Validate<TestValueType, string>(TestValueType.TryCreate);
 
          var type = typeof(TestValueType);
-         var metadata = new ValueTypeMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
-         ValueTypeMetadataLookup.AddMetadata(type, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }
 
       private static readonly Type _type = typeof(TestValueType);
@@ -882,9 +882,9 @@ namespace Thinktecture.Tests
          var tryCreate = new Thinktecture.Internal.Validate<TestValueType, int>(TestValueType.TryCreate);
 
          var type = typeof(TestValueType);
-         var metadata = new ValueTypeMetadata(type, typeof(int), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(type, typeof(int), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
-         ValueTypeMetadataLookup.AddMetadata(type, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(type, metadata);
       }
 
       private static readonly Type _type = typeof(TestValueType);

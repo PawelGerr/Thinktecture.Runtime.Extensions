@@ -1,6 +1,6 @@
 using System;
 
-namespace Thinktecture
+namespace Thinktecture.Internal
 {
    /// <summary>
    /// For internal use only.

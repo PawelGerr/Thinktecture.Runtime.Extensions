@@ -72,9 +72,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -364,7 +364,7 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.EnumConstructor(nameof(Key))]
+   [Thinktecture.Internal.EnumConstructor(nameof(Key))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
@@ -381,9 +381,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -648,9 +648,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<ExtendedTestEnum, string>(ExtendedTestEnum.Validate);
 
          var enumType = typeof(ExtendedTestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum).GetHashCode() * 397;
@@ -924,9 +924,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<ExtendedTestEnum, string>(ExtendedTestEnum.Validate);
 
          var enumType = typeof(ExtendedTestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(Thinktecture.Tests.ExtensibleTestEnum).GetHashCode() * 397;
@@ -1178,9 +1178,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -1479,9 +1479,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -1796,9 +1796,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;

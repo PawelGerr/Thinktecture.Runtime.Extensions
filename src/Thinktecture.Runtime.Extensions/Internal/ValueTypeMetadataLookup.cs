@@ -2,12 +2,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Thinktecture.Internal;
 
-namespace Thinktecture
+namespace Thinktecture.Internal
 {
    /// <summary>
-   /// Provides lookup for implementations of <see cref="IEnum{TKey}"/>.
+   /// For internal use only.
    /// </summary>
    public static class ValueTypeMetadataLookup
    {

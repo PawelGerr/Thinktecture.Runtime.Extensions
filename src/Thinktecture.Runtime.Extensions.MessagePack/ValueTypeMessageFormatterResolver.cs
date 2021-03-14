@@ -2,6 +2,7 @@ using System;
 using MessagePack;
 using MessagePack.Formatters;
 using Thinktecture.Formatters;
+using Thinktecture.Internal;
 
 namespace Thinktecture
 {

@@ -37,7 +37,7 @@ namespace Thinktecture
 
       public static AttributeData? FindEnumConstructorAttribute(this ISymbol symbol)
       {
-         return symbol.FindAttribute("Thinktecture.EnumConstructorAttribute");
+         return symbol.FindAttribute("Thinktecture.Internal.EnumConstructorAttribute");
       }
    }
 }

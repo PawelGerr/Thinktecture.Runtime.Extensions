@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Thinktecture.Internal;
 
 namespace Thinktecture.Json
 {
