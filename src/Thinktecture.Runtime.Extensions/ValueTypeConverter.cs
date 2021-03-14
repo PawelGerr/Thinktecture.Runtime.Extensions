@@ -73,11 +73,7 @@ namespace Thinktecture
             return ConvertFrom(key);
 
          if (_keyConverter is not null)
-         {
-            key = (TKey?)_keyConverter.ConvertFrom(context, culture, value);
-
-            return ConvertFrom(key);
-         }
+            return ConvertFrom((TKey?)_keyConverter.ConvertFrom(context, culture, value));
 
          return base.ConvertFrom(context, culture, value);
       }
