@@ -56,6 +56,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
@@ -364,7 +365,7 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.Internal.EnumConstructor(nameof(Key))]
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
@@ -632,6 +633,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(ExtendedTestEnum_EnumTypeConverter))]
    partial class ExtendedTestEnum : IEquatable<ExtendedTestEnum?>
@@ -908,6 +910,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(ExtendedTestEnum_EnumTypeConverter))]
    partial class ExtendedTestEnum : IEquatable<ExtendedTestEnum?>
@@ -1162,6 +1165,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
@@ -1463,6 +1467,7 @@ namespace Thinktecture.Tests
    }
 
    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial struct TestEnum : IEquatable<TestEnum>
@@ -1780,6 +1785,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(Name), nameof(StructProperty), nameof(NullableStructProperty), nameof(ReferenceProperty), nameof(NullableReferenceProperty), nameof(StructField), nameof(ReferenceField))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>

@@ -28,6 +28,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
+   [Thinktecture.Internal.ValueTypeConstructor()]
    partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);
@@ -205,6 +206,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
+   [Thinktecture.Internal.ValueTypeConstructor()]
    partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);
@@ -301,6 +303,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
+   [Thinktecture.Internal.ValueTypeConstructor()]
    partial struct TestValueType : System.IEquatable<TestValueType>
    {
       private static readonly Type _type = typeof(TestValueType);
@@ -433,6 +436,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(ReferenceField))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
    partial class TestValueType : System.IEquatable<TestValueType?>, System.IComparable, System.IComparable<TestValueType>
@@ -601,7 +605,7 @@ namespace Thinktecture.Tests
 
 
       [Fact]
-      public void Should_generate_keyd_value_type_if_second_member_is_ignored()
+      public void Should_generate_keyed_value_type_if_second_member_is_ignored()
       {
          var source = @"
 using System;
@@ -653,6 +657,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(ReferenceField))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
    partial class TestValueType : System.IEquatable<TestValueType?>, System.IComparable, System.IComparable<TestValueType>
@@ -866,6 +871,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(ReferenceField))]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
    partial class TestValueType : System.IEquatable<TestValueType?>, System.IFormattable, System.IComparable, System.IComparable<TestValueType>
@@ -1106,6 +1112,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(ReferenceField), nameof(StructField), nameof(ReferenceProperty), nameof(StructProperty))]
    partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);
@@ -1257,6 +1264,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
+   [Thinktecture.Internal.ValueTypeConstructor(nameof(ReferenceField1), nameof(ReferenceField2), nameof(ReferenceField3), nameof(ReferenceField4), nameof(ReferenceField5), nameof(ReferenceField6), nameof(ReferenceField7), nameof(ReferenceField8), nameof(ReferenceField9))]
    partial class TestValueType : System.IEquatable<TestValueType?>
    {
       private static readonly Type _type = typeof(TestValueType);

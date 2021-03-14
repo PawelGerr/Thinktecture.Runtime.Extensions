@@ -49,22 +49,17 @@ using Thinktecture;
 
          _sb.GenerateStructLayoutAttributeIfRequired(_state.EnumType);
 
-         if (_state.IsExtensible)
+         _sb.Append($@"
+   [Thinktecture.Internal.ValueTypeConstructor(nameof({_state.KeyPropertyName})");
+
+         foreach (var member in _state.AssignableInstanceFieldsAndProperties)
          {
-            _sb.Append($@"
-   [Thinktecture.Internal.EnumConstructor(nameof({_state.KeyPropertyName})");
+            var memberName = member.Symbol.FindEnumGenerationMemberAttribute()?.FindMapsToMember() ?? member.Identifier.ToString();
 
-            foreach (var member in _state.AssignableInstanceFieldsAndProperties)
-            {
-               var memberName = member.Symbol.FindEnumGenerationMemberAttribute()?.FindMapsToMember() ?? member.Identifier.ToString();
-
-               _sb.Append($@", nameof({memberName})");
-            }
-
-            _sb.Append(")]");
+            _sb.Append($@", nameof({memberName})");
          }
 
-         _sb.Append($@"
+         _sb.Append($@")]
    [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof({_state.EnumIdentifier}_EnumTypeConverter))]
    partial {(_state.EnumType.IsValueType ? "struct" : "class")} {_state.EnumIdentifier} : IEquatable<{_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>

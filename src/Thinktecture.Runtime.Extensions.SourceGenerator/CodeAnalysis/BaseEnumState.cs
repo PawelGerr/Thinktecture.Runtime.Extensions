@@ -39,7 +39,7 @@ namespace Thinktecture.CodeAnalysis
                                                var memberName = ctorAttrArgs[i];
 
                                                if (memberName.Value is not string name)
-                                                  throw new Exception($"The parameter '{memberName.Value}' of the 'EnumConstructorAttribute' of '{Type.Name}' at index {i} must be a string.");
+                                                  throw new Exception($"The parameter '{memberName.Value}' of the 'ValueTypeConstructorAttribute' of '{Type.Name}' at index {i} must be a string.");
 
                                                return new DefaultSymbolState(name, p.Type, p.Name, false);
                                             })
@@ -52,18 +52,18 @@ namespace Thinktecture.CodeAnalysis
 
       private IReadOnlyList<TypedConstant> GetCtorParameterNames(IMethodSymbol ctor)
       {
-         var ctorAttr = Type.FindEnumConstructorAttribute();
+         var ctorAttr = Type.FindValueTypeConstructorAttribute();
 
          if (ctorAttr is null)
-            throw new Exception($"'{Type.Name}' doesn't have an 'EnumConstructorAttribute'.");
+            throw new Exception($"'{Type.Name}' doesn't have an 'ValueTypeConstructorAttribute'.");
 
          if (ctorAttr.ConstructorArguments.Length != 1)
-            throw new Exception($"'EnumConstructorAttribute' of '{Type.Name}' must have exactly 1 argument.");
+            throw new Exception($"'ValueTypeConstructorAttribute' of '{Type.Name}' must have exactly 1 argument.");
 
          var ctorAttrArgs = ctorAttr.ConstructorArguments[0].Values;
 
          if (ctorAttrArgs.Length != ctor.Parameters.Length)
-            throw new Exception($"'EnumConstructorAttribute' of '{Type.Name}' specifies {ctorAttrArgs.Length} parameters but the constructor takes {ctor.Parameters.Length} arguments.");
+            throw new Exception($"'ValueTypeConstructorAttribute' of '{Type.Name}' specifies {ctorAttrArgs.Length} parameters but the constructor takes {ctor.Parameters.Length} arguments.");
 
          return ctorAttrArgs;
       }

@@ -35,9 +35,9 @@ namespace Thinktecture
          return symbol.FindAttribute("Thinktecture.EnumGenerationMemberAttribute");
       }
 
-      public static AttributeData? FindEnumConstructorAttribute(this ISymbol symbol)
+      public static AttributeData? FindValueTypeConstructorAttribute(this ISymbol symbol)
       {
-         return symbol.FindAttribute("Thinktecture.Internal.EnumConstructorAttribute");
+         return symbol.FindAttribute("Thinktecture.Internal.ValueTypeConstructorAttribute");
       }
    }
 }

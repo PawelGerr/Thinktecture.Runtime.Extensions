@@ -6,7 +6,7 @@ namespace Thinktecture.Internal
    /// For internal use only.
    /// </summary>
    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-   public class EnumConstructorAttribute : Attribute
+   public class ValueTypeConstructorAttribute : Attribute
    {
       /// <summary>
       /// The names of the members of the constructor.
@@ -14,10 +14,10 @@ namespace Thinktecture.Internal
       public string[] Members { get; set; }
 
       /// <summary>
-      /// Initializes new instance of <see cref="EnumConstructorAttribute"/>.
+      /// Initializes new instance of <see cref="ValueTypeConstructorAttribute"/>.
       /// </summary>
       /// <param name="members">Member names of the constructor.</param>
-      public EnumConstructorAttribute(params string[] members)
+      public ValueTypeConstructorAttribute(params string[] members)
       {
          Members = members;
       }

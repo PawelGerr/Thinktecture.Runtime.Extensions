@@ -90,6 +90,19 @@ using Thinktecture;
          var isFormattable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsFormattable();
          var isComparable = !_state.SkipCompareTo && _state.HasKeyMember && _state.KeyMember.Member.Type.IsComparable();
 
+         _sb.Append(@"
+   [Thinktecture.Internal.ValueTypeConstructor(");
+
+         for (var i = 0; i < _state.AssignableInstanceFieldsAndProperties.Count; i++)
+         {
+            if (i != 0)
+               _sb.Append(", ");
+
+            _sb.Append($@"nameof({_state.AssignableInstanceFieldsAndProperties[i].Identifier})");
+         }
+
+         _sb.Append(")]");
+
          if (_state.HasKeyMember)
          {
             _sb.Append($@"
