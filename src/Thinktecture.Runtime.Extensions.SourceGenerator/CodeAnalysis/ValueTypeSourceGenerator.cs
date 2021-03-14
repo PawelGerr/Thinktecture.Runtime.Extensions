@@ -131,7 +131,7 @@ using Thinktecture;
       internal static void ModuleInit()
       {{
          var convertFromKey = new Func<{keyMember.Type}, {_state.TypeIdentifier}>({_state.TypeIdentifier}.Create);
-         Expression<Func<{keyMember.Type}, {_state.TypeIdentifier}>> convertFromKeyExpression = {keyMember.ArgumentName} => {_state.TypeIdentifier}.Create({keyMember.ArgumentName});
+         Expression<Func<{keyMember.Type}, {_state.TypeIdentifier}>> convertFromKeyExpression = {keyMember.ArgumentName} => new {_state.TypeIdentifier}({keyMember.ArgumentName});
 
          var convertToKey = new Func<{_state.TypeIdentifier}, {keyMember.Type}>(item => item.{keyMember.Identifier});
          Expression<Func<{_state.TypeIdentifier}, {keyMember.Type}>> convertToKeyExpression = obj => obj.{keyMember.Identifier};

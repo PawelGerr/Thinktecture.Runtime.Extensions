@@ -8,7 +8,7 @@ namespace Thinktecture.Runtime.Tests.TestValueTypes
    {
       public string Property { get; }
 
-      static partial void ValidateFactoryArguments(ref ValidationResult validationResult, ref string property)
+      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref string property)
       {
          if (String.IsNullOrWhiteSpace(property))
          {

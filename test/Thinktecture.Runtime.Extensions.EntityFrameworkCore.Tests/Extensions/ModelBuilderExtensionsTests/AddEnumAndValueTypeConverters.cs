@@ -11,17 +11,17 @@ using Xunit;
 // ReSharper disable InconsistentNaming
 namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
 {
-   public class AddEnumAndValueTypeConverters
+   public class AddEnumAndValueTypeConverters : IDisposable
    {
       private static readonly Type _converterType = typeof(ValueTypeValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
                                                                                           .Single(t => t.Name.StartsWith("ValidatableEnumValueConverter", StringComparison.Ordinal));
 
-      private readonly TestDbContext SUT = new();
+      private readonly TestDbContext _ctx = new();
 
       [Fact]
       public void Should_add_converters_for_owned_types()
       {
-         var entityType = SUT.Model.FindEntityType(typeof(TestEntity_with_OwnedTypes));
+         var entityType = _ctx.Model.FindEntityType(typeof(TestEntity_with_OwnedTypes));
          ValidateConverter(entityType, nameof(TestEntity_with_OwnedTypes.TestEnum));
 
          var inline_inline = entityType.FindNavigation(nameof(TestEntity_with_OwnedTypes.Inline_Inline)).TargetEntityType;
@@ -73,6 +73,11 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
       private static void ValidateConverter(IEntityType entityType, string propertyName)
       {
          entityType.FindProperty(propertyName).GetValueConverter().Should().BeOfType(_converterType);
+      }
+
+      public void Dispose()
+      {
+         _ctx.Dispose();
       }
    }
 }

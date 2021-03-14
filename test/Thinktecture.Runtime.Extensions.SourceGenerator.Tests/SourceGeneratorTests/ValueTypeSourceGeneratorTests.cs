@@ -445,7 +445,7 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<string, TestValueType>(TestValueType.Create);
-         Expression<Func<string, TestValueType>> convertFromKeyExpression = referenceField => TestValueType.Create(referenceField);
+         Expression<Func<string, TestValueType>> convertFromKeyExpression = referenceField => new TestValueType(referenceField);
 
          var convertToKey = new Func<TestValueType, string>(item => item.ReferenceField);
          Expression<Func<TestValueType, string>> convertToKeyExpression = obj => obj.ReferenceField;
@@ -666,7 +666,7 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<string, TestValueType>(TestValueType.Create);
-         Expression<Func<string, TestValueType>> convertFromKeyExpression = referenceField => TestValueType.Create(referenceField);
+         Expression<Func<string, TestValueType>> convertFromKeyExpression = referenceField => new TestValueType(referenceField);
 
          var convertToKey = new Func<TestValueType, string>(item => item.ReferenceField);
          Expression<Func<TestValueType, string>> convertToKeyExpression = obj => obj.ReferenceField;
@@ -880,7 +880,7 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<int, TestValueType>(TestValueType.Create);
-         Expression<Func<int, TestValueType>> convertFromKeyExpression = referenceField => TestValueType.Create(referenceField);
+         Expression<Func<int, TestValueType>> convertFromKeyExpression = referenceField => new TestValueType(referenceField);
 
          var convertToKey = new Func<TestValueType, int>(item => item.ReferenceField);
          Expression<Func<TestValueType, int>> convertToKeyExpression = obj => obj.ReferenceField;

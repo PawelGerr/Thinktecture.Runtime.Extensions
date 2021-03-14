@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -35,8 +36,26 @@ namespace Thinktecture
 
          foreach (var entity in modelBuilder.Model.GetEntityTypes())
          {
+            AddNonKeyedValueTypeMembers(entity);
+
             AddConverterForScalarProperties(entity, validateOnWrite, configure);
             AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, configure);
+         }
+      }
+
+      private static void AddNonKeyedValueTypeMembers(IMutableEntityType entity)
+      {
+         if (entity.ClrType.GetCustomAttribute<KeyedValueTypeAttribute>() is not null)
+            return;
+
+         var ctorAttr = entity.ClrType.GetCustomAttribute<ValueTypeConstructorAttribute>();
+
+         if (ctorAttr is not null && ctorAttr.Members.Length != 0)
+         {
+            foreach (string memberName in ctorAttr.Members)
+            {
+               entity.AddProperty(memberName);
+            }
          }
       }
 
