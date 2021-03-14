@@ -65,6 +65,7 @@ using Thinktecture;
          }
 
          _sb.Append($@"
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof({_state.EnumIdentifier}_EnumTypeConverter))]
    partial {(_state.EnumType.IsValueType ? "struct" : "class")} {_state.EnumIdentifier} : IEquatable<{_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>
    {{

@@ -433,6 +433,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
    partial class TestValueType : System.IEquatable<TestValueType?>, System.IComparable, System.IComparable<TestValueType>
    {
@@ -652,6 +653,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
    partial class TestValueType : System.IEquatable<TestValueType?>, System.IComparable, System.IComparable<TestValueType>
    {
@@ -864,6 +866,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestValueType_ValueTypeConverter))]
    partial class TestValueType : System.IEquatable<TestValueType?>, System.IFormattable, System.IComparable, System.IComparable<TestValueType>
    {

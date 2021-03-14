@@ -93,6 +93,7 @@ using Thinktecture;
          if (_state.HasKeyMember)
          {
             _sb.Append($@"
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof({_state.TypeIdentifier}_ValueTypeConverter))]");
          }
 

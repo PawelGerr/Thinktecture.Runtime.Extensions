@@ -56,6 +56,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {
@@ -364,6 +365,7 @@ namespace Thinktecture.Tests
    }
 
    [Thinktecture.EnumConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {
@@ -630,6 +632,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(ExtendedTestEnum_EnumTypeConverter))]
    partial class ExtendedTestEnum : IEquatable<ExtendedTestEnum?>
    {
@@ -905,6 +908,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(ExtendedTestEnum_EnumTypeConverter))]
    partial class ExtendedTestEnum : IEquatable<ExtendedTestEnum?>
    {
@@ -1158,6 +1162,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {
@@ -1458,6 +1463,7 @@ namespace Thinktecture.Tests
    }
 
    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial struct TestEnum : IEquatable<TestEnum>
    {
@@ -1774,6 +1780,7 @@ namespace Thinktecture.Tests
       }
    }
 
+   [Thinktecture.Internal.KeyedValueType]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {

@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Concurrent;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using Thinktecture.Internal;
 
 namespace Thinktecture
 {
@@ -21,7 +24,22 @@ namespace Thinktecture
          if (type is null)
             throw new ArgumentNullException(nameof(type));
 
-         return _metadata.TryGetValue(type, out var metadata) ? metadata : null;
+         type = Nullable.GetUnderlyingType(type) ?? type;
+
+         if (type.IsPrimitive)
+            return null;
+
+         if (_metadata.TryGetValue(type, out var metadata))
+            return metadata;
+
+         if (type.GetCustomAttribute<KeyedValueTypeAttribute>() is null)
+            return null;
+
+         // The initializer of the assembly/module containing the enum/value type is not executed yet
+         RuntimeHelpers.RunModuleConstructor(type.Assembly.ManifestModule.ModuleHandle);
+         _metadata.TryGetValue(type, out metadata);
+
+         return metadata;
       }
 
       /// <summary>
