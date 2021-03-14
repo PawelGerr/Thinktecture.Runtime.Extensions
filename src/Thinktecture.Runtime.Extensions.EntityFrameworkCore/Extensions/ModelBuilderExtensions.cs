@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 
-// ReSharper disable once CheckNamespace
 namespace Thinktecture
 {
    /// <summary>
@@ -55,10 +55,12 @@ namespace Thinktecture
 
          if (navigationsToConvert is not null)
          {
+            var builders = modelBuilder.FindEntityBuilder(entity);
+
             foreach (var navigation in navigationsToConvert)
             {
                var valueConverter = ValueTypeValueConverterFactory.Create(navigation.ClrType, validateOnWrite);
-               var property = modelBuilder.Entity(entity.ClrType).Property(navigation.Name);
+               var property = FindPropertyBuilder(builders, entity, navigation.Name);
                property.HasConversion(valueConverter);
                configure(property.Metadata);
             }
@@ -84,6 +86,42 @@ namespace Thinktecture
             property.SetValueConverter(valueConverter);
             configure(property);
          }
+      }
+
+      private static PropertyBuilder FindPropertyBuilder((EntityTypeBuilder?, OwnedNavigationBuilder?) builders, IMutableEntityType entityType, string propertyName)
+      {
+         return builders.Item1?.Property(propertyName)
+                ?? builders.Item2?.Property(propertyName)
+                ?? throw new Exception($"Property '{propertyName}' in der Entity '{entityType.Name}' nicht gefunden.");
+      }
+
+      private static (EntityTypeBuilder?, OwnedNavigationBuilder?) FindEntityBuilder(this ModelBuilder modelBuilder, IMutableEntityType entityType)
+      {
+         if (!entityType.IsOwned())
+            return (modelBuilder.Entity(entityType.Name), null);
+
+         var ownership = entityType.FindOwnership();
+         var navigation = ownership.GetNavigation(false).Name;
+         var (entityTypeBuilder, ownedNavigationBuilder) = modelBuilder.FindEntityBuilder(ownership.PrincipalEntityType);
+
+         if (entityTypeBuilder is not null)
+         {
+            ownedNavigationBuilder = ownership.IsUnique
+                                        ? entityTypeBuilder.OwnsOne(entityType.ClrType, navigation)
+                                        : entityTypeBuilder.OwnsMany(entityType.ClrType, navigation);
+         }
+         else if (ownedNavigationBuilder is not null)
+         {
+            ownedNavigationBuilder = ownership.IsUnique
+                                        ? ownedNavigationBuilder.OwnsOne(entityType.ClrType, navigation)
+                                        : ownedNavigationBuilder.OwnsMany(entityType.ClrType, navigation);
+         }
+         else
+         {
+            throw new Exception($"Entity Builder für Owned Type '{entityType.Name}' nicht gefunden.");
+         }
+
+         return (null, ownedNavigationBuilder);
       }
    }
 }
