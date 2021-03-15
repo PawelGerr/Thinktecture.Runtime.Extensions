@@ -17,6 +17,11 @@ namespace Thinktecture.AspNetCore.ModelBinding
          if (context is null)
             throw new ArgumentNullException(nameof(context));
 
+         // Skip model binding from body so BodyModelBinder incl. JSON serialization takes over
+         if (context.BindingInfo.BindingSource != null &&
+             context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Body))
+            return null;
+
          var metadata = ValueTypeMetadataLookup.Find(context.Metadata.ModelType);
 
          if (metadata is null)
