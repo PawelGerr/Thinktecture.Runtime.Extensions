@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -67,6 +67,8 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "specialProductType/invalid"); // invalid
          await DoRequestAsync(logger, client, "productName/bread");
          await DoRequestAsync(logger, client, "productName/a"); // invalid
+         await DoRequestAsync(logger, client, "productName", "bread");
+         await DoRequestAsync(logger, client, "productName", "a"); // invalid
          await DoRequestAsync(logger, client, "productNameWithModelBinder/bread");
          await DoRequestAsync(logger, client, "boundary", Boundary.Create(1, 2));
          await DoRequestAsync(logger, client, "boundary", jsonBody: "{ \"lower\": 2, \"upper\": 1 }");
@@ -78,11 +80,11 @@ namespace Thinktecture
 
          if (hasBody)
          {
-            logger.LogInformation("Making request with url '{Url}' and body '{Body}'", url, body ?? jsonBody);
+            logger.LogInformation("POST request with url '{Url}' and body '{Body}'", url, body ?? jsonBody);
          }
          else
          {
-            logger.LogInformation("Making request with url '{Url}'", url);
+            logger.LogInformation("GET request with url '{Url}'", url);
          }
 
          var request = new HttpRequestMessage(hasBody ? HttpMethod.Post : HttpMethod.Get, "http://localhost:5000/api/" + url);

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -43,7 +44,14 @@ namespace Thinktecture.Text.Json.Serialization
          if (key is null)
             return default;
 
-         return _convertFromKey(key);
+         try
+         {
+            return _convertFromKey(key);
+         }
+         catch (ValidationException ex)
+         {
+            throw new JsonException(ex.ValidationResult.ErrorMessage, ex);
+         }
       }
 
       /// <inheritdoc />

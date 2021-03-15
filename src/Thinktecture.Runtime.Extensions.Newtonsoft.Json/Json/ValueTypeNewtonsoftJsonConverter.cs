@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Thinktecture.Internal;
@@ -122,7 +123,14 @@ namespace Thinktecture.Json
          if (key is null)
             return default;
 
-         return _convertFromKey(key);
+         try
+         {
+            return _convertFromKey(key);
+         }
+         catch (ValidationException ex)
+         {
+            throw new JsonException(ex.ValidationResult.ErrorMessage!, ex);
+         }
       }
    }
 }

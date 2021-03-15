@@ -50,6 +50,7 @@ namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueTypeModelBinde
          contextMock.Setup(c => c.Metadata).Returns(BindingContextHelper.CreateModelMetadata<T>());
          var serviceProvider = new ServiceCollection().AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance).BuildServiceProvider();
          contextMock.Setup(c => c.Services).Returns(serviceProvider);
+         contextMock.Setup(c => c.BindingInfo).Returns(new BindingInfo());
 
          return provider.GetBinder(contextMock.Object);
       }
