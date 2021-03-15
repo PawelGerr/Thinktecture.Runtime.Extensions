@@ -18,8 +18,7 @@ namespace Thinktecture.AspNetCore.ModelBinding
             throw new ArgumentNullException(nameof(context));
 
          // Skip model binding from body so BodyModelBinder incl. JSON serialization takes over
-         if (context.BindingInfo.BindingSource != null &&
-             context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Body))
+         if (SkipModelBinding(context))
             return null;
 
          var metadata = ValueTypeMetadataLookup.Find(context.Metadata.ModelType);
@@ -32,6 +31,12 @@ namespace Thinktecture.AspNetCore.ModelBinding
          var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory, metadata.Validate) ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
 
          return (IModelBinder)modelBinder;
+      }
+
+      private static bool SkipModelBinding(ModelBinderProviderContext context)
+      {
+         return context.BindingInfo.BindingSource != null &&
+                (context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Body) || context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Services));
       }
    }
 }
