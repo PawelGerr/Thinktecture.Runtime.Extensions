@@ -247,6 +247,8 @@ using Thinktecture;
       private void GenerateExplicitConversion(EqualityInstanceMemberInfo keyMemberInfo)
       {
          var keyMember = keyMemberInfo.Member;
+         var bothAreReferenceTypes = _state.Type.IsReferenceType && keyMemberInfo.Member.Type.IsReferenceType;
+         var nullableQuestionMark = bothAreReferenceTypes ? "?" : null;
 
          _sb.Append($@"
 
@@ -254,9 +256,27 @@ using Thinktecture;
       /// Explicit conversion from the type <see cref=""{keyMember.Type}""/>.
       /// </summary>
       /// <param name=""{keyMember.ArgumentName}"">Value to covert.</param>
-      /// <returns>An instance of <see cref=""{_state.TypeIdentifier}""/>.</returns>
-      public static explicit operator {_state.TypeIdentifier}({keyMember.Type} {keyMember.ArgumentName})
-      {{
+      /// <returns>An instance of <see cref=""{_state.TypeIdentifier}""/>.</returns>");
+
+         if (bothAreReferenceTypes)
+         {
+            _sb.Append($@"
+      [return: NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
+         }
+
+         _sb.Append($@"
+      public static explicit operator {_state.TypeIdentifier}{nullableQuestionMark}({keyMember.Type}{nullableQuestionMark} {keyMember.ArgumentName})
+      {{");
+
+         if (bothAreReferenceTypes)
+         {
+            _sb.Append($@"
+         if({keyMember.ArgumentName} is null)
+            return null;
+");
+         }
+
+         _sb.Append($@"
          return {_state.TypeIdentifier}.Create({keyMember.ArgumentName});
       }}");
       }

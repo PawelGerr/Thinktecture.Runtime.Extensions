@@ -503,8 +503,12 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name=""referenceField"">Value to covert.</param>
       /// <returns>An instance of <see cref=""TestValueType""/>.</returns>
-      public static explicit operator TestValueType(string referenceField)
+      [return: NotNullIfNotNull(""referenceField"")]
+      public static explicit operator TestValueType?(string? referenceField)
       {
+         if(referenceField is null)
+            return null;
+
          return TestValueType.Create(referenceField);
       }
 
@@ -724,8 +728,12 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name=""referenceField"">Value to covert.</param>
       /// <returns>An instance of <see cref=""TestValueType""/>.</returns>
-      public static explicit operator TestValueType(string referenceField)
+      [return: NotNullIfNotNull(""referenceField"")]
+      public static explicit operator TestValueType?(string? referenceField)
       {
+         if(referenceField is null)
+            return null;
+
          return TestValueType.Create(referenceField);
       }
 
