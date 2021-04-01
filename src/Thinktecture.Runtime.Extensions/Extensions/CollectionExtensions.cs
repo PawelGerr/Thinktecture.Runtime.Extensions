@@ -40,7 +40,7 @@ namespace Thinktecture
       }
 
       /// <summary>
-      /// Adds the <paramref name="item"/> to <see cref="collection"/>
+      /// Adds the <paramref name="item"/> to <paramref name="collection"/>
       /// and return the provided <paramref name="item"/>.
       /// </summary>
       /// <param name="collection">Collection to add items to.</param>
@@ -65,7 +65,7 @@ namespace Thinktecture
       }
 
       /// <summary>
-      /// Adds the <paramref name="item"/> to <see cref="collection"/>
+      /// Adds the <paramref name="item"/> to <paramref name="collection"/>
       /// and return the provided <paramref name="collection"/> for chaining.
       /// </summary>
       /// <param name="collection">Collection to add items to.</param>
