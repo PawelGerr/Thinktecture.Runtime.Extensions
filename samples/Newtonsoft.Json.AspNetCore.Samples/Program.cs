@@ -38,8 +38,6 @@ namespace Thinktecture
          // 	http://localhost:5000/api/specialProductType/invalid
          // 	http://localhost:5000/api/productName/bread
          // 	http://localhost:5000/api/productName/a
-         // 	http://localhost:5000/api/productNameWithModelBinder/bread
-         // 	http://localhost:5000/api/productNameWithModelBinder/a
          await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
 
          await server;
@@ -64,8 +62,6 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "specialProductType/invalid"); // invalid
          await DoRequestAsync(logger, client, "productName/bread");
          await DoRequestAsync(logger, client, "productName/a"); // invalid
-         await DoRequestAsync(logger, client, "productNameWithModelBinder/bread");
-         await DoRequestAsync(logger, client, "productNameWithModelBinder/a"); // invalid
       }
 
       private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url)

@@ -69,17 +69,6 @@ namespace Thinktecture.Controllers
          return Json(name);
       }
 
-      [HttpGet("productNameWithModelBinder/{name}")]
-      public IActionResult RoundTrip(ProductNameWithModelBinder name)
-      {
-         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-         _logger.LogInformation("Round trip test with {Type}: {Name}", name.GetType().Name, name);
-
-         return Json(name);
-      }
-
       private IActionResult RoundTripValidatableEnum<T, TKey>(T value)
          where T : IValidatableEnum<TKey>
          where TKey : notnull
