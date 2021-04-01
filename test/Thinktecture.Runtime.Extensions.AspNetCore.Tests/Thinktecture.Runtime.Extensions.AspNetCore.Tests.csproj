@@ -3,7 +3,6 @@
    <ItemGroup>
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.AspNetCore\Thinktecture.Runtime.Extensions.AspNetCore.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.AspNetCore.SourceGenerator\Thinktecture.Runtime.Extensions.AspNetCore.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
    </ItemGroup>
 

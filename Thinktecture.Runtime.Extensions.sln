@@ -64,8 +64,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.AspNetCore", "src\Thinktecture.Runtime.Extensions.AspNetCore\Thinktecture.Runtime.Extensions.AspNetCore.csproj", "{CA1D0C43-10C9-46E2-A893-4E93FB4A1511}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.AspNetCore.SourceGenerator", "src\Thinktecture.Runtime.Extensions.AspNetCore.SourceGenerator\Thinktecture.Runtime.Extensions.AspNetCore.SourceGenerator.csproj", "{6328DC16-6E31-42B9-B0E5-6A98A072CACC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.AspNetCore.Tests", "test\Thinktecture.Runtime.Extensions.AspNetCore.Tests\Thinktecture.Runtime.Extensions.AspNetCore.Tests.csproj", "{EF07F98E-9914-4419-A1B4-AB264F496121}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Tests.Shared", "test\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj", "{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2}"
@@ -154,10 +152,6 @@ Global
 		{CA1D0C43-10C9-46E2-A893-4E93FB4A1511}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA1D0C43-10C9-46E2-A893-4E93FB4A1511}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA1D0C43-10C9-46E2-A893-4E93FB4A1511}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6328DC16-6E31-42B9-B0E5-6A98A072CACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6328DC16-6E31-42B9-B0E5-6A98A072CACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6328DC16-6E31-42B9-B0E5-6A98A072CACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6328DC16-6E31-42B9-B0E5-6A98A072CACC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF07F98E-9914-4419-A1B4-AB264F496121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF07F98E-9914-4419-A1B4-AB264F496121}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF07F98E-9914-4419-A1B4-AB264F496121}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -194,7 +188,6 @@ Global
 		{CC8A21CC-85C6-4DFA-B00A-F81967D6B9DC} = {8F117684-7943-4DCE-8861-F2B854924837}
 		{0D7DFF0D-960B-439A-A98A-32263C22C7B8} = {8F117684-7943-4DCE-8861-F2B854924837}
 		{CA1D0C43-10C9-46E2-A893-4E93FB4A1511} = {8F117684-7943-4DCE-8861-F2B854924837}
-		{6328DC16-6E31-42B9-B0E5-6A98A072CACC} = {8F117684-7943-4DCE-8861-F2B854924837}
 		{EF07F98E-9914-4419-A1B4-AB264F496121} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
