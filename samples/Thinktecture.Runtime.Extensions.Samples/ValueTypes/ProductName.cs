@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.ValueTypes
 {
-   [ValueType]
+   [ValueType(NullInFactoryMethodsYieldsNull = true)]
    public partial class ProductName
    {
       [ValueTypeEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]

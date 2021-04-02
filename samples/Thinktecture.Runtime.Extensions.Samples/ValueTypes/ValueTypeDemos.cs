@@ -29,6 +29,14 @@ namespace Thinktecture.ValueTypes
          var validationResult = ProductName.TryCreate("Milk", out var milk);
          if (validationResult == ValidationResult.Success)
             logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
+
+         // Thanks to setting "NullInFactoryMethodsYieldsNull = true"
+         var nullProduct = ProductName.Create(null);
+         logger.Information("Null-Product name: {NullProduct}", nullProduct);
+
+         var nullValidationResult = ProductName.TryCreate(null, out nullProduct);
+         if (nullValidationResult == ValidationResult.Success)
+            logger.Information("Null-Product name: {NullProduct}", nullProduct);
       }
    }
 }

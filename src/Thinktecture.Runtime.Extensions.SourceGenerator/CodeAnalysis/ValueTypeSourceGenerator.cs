@@ -158,8 +158,10 @@ using Thinktecture;
 
          if (!_state.SkipFactoryMethods)
          {
-            GenerateCreateMethod();
-            GenerateTryCreateMethod();
+            var allowNullKeyMember = _state.HasKeyMember && _state.KeyMember.Member.Type.IsReferenceType && _state.Type.IsReferenceType && _state.NullInFactoryMethodsYieldsNull;
+
+            GenerateCreateMethod(allowNullKeyMember);
+            GenerateTryCreateMethod(allowNullKeyMember);
             GenerateValidateFactoryArguments();
          }
 
@@ -281,18 +283,36 @@ using Thinktecture;
       }}");
       }
 
-      private void GenerateCreateMethod()
+      private void GenerateCreateMethod(bool allowNullKeyMember)
       {
          var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
          _sb.Append($@"
+");
 
-      public static {_state.TypeIdentifier} Create(");
+         if (allowNullKeyMember)
+         {
+            _sb.Append($@"
+      [return: NotNullIfNotNull(""{_state.KeyMember!.Member.ArgumentName}"")]");
+         }
 
-         _sb.RenderArgumentsWithType(fieldsAndProperties);
+         _sb.Append($@"
+      public static {_state.TypeIdentifier}{(allowNullKeyMember ? "?" : null)} Create(");
+
+         _sb.RenderArgumentsWithType(fieldsAndProperties, useNullableTypes: allowNullKeyMember);
 
          _sb.Append($@")
-      {{
+      {{");
+
+         if (allowNullKeyMember)
+         {
+            _sb.Append($@"
+         if({_state.KeyMember!.Member.ArgumentName} is null)
+            return default;
+");
+         }
+
+         _sb.Append($@"
          var validationResult = ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 
@@ -311,7 +331,7 @@ using Thinktecture;
       }}");
       }
 
-      private void GenerateTryCreateMethod()
+      private void GenerateTryCreateMethod(bool allowNullKeyMember)
       {
          var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
@@ -320,11 +340,24 @@ using Thinktecture;
       public static ValidationResult? TryCreate(");
 
          _sb.RenderArgumentsWithType(fieldsAndProperties, @"
-         ", ",", trailingComma: true);
+         ", ",", trailingComma: true, useNullableTypes: allowNullKeyMember);
 
          _sb.Append($@"
          [MaybeNull] out {_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
-      {{
+      {{");
+
+         if (allowNullKeyMember)
+         {
+            _sb.Append($@"
+         if({_state.KeyMember!.Member.ArgumentName} is null)
+         {{
+            obj = default;
+            return null;
+         }}
+");
+         }
+
+         _sb.Append($@"
          var validationResult = ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 

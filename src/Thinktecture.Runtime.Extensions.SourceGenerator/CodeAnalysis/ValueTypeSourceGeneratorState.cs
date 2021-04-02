@@ -17,6 +17,7 @@ namespace Thinktecture.CodeAnalysis
       public SyntaxToken TypeIdentifier => _declaration.Identifier;
 
       public bool SkipFactoryMethods => ValueTypeAttribute.FindSkipFactoryMethods() ?? false;
+      public bool NullInFactoryMethodsYieldsNull => ValueTypeAttribute.FindNullInFactoryMethodsYieldsNull() ?? false;
       public bool SkipCompareTo => ValueTypeAttribute.FindSkipCompareTo() ?? false;
 
       public string? Namespace { get; }

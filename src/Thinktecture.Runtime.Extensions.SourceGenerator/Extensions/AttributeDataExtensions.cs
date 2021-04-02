@@ -42,6 +42,11 @@ namespace Thinktecture
          return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");
       }
 
+      public static bool? FindNullInFactoryMethodsYieldsNull(this AttributeData attributeData)
+      {
+         return GetBooleanParameterValue(attributeData, "NullInFactoryMethodsYieldsNull");
+      }
+
       public static bool? FindSkipCompareTo(this AttributeData attributeData)
       {
          return GetBooleanParameterValue(attributeData, "SkipCompareTo");

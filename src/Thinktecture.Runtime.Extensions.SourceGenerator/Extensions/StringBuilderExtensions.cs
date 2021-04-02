@@ -39,7 +39,8 @@ namespace Thinktecture
          string? prefix = null,
          string comma = ", ",
          bool leadingComma = false,
-         bool trailingComma = false)
+         bool trailingComma = false,
+         bool useNullableTypes = false)
       {
          for (var i = 0; i < members.Count; i++)
          {
@@ -47,7 +48,12 @@ namespace Thinktecture
                sb.Append(comma);
 
             var member = members[i];
-            sb.Append(prefix).Append(member.Type).Append(' ').Append(member.ArgumentName);
+            sb.Append(prefix).Append(member.Type);
+
+            if (useNullableTypes && !member.IsNullableStruct)
+               sb.Append("?");
+
+            sb.Append(' ').Append(member.ArgumentName);
          }
 
          if (trailingComma && members.Count > 0)
