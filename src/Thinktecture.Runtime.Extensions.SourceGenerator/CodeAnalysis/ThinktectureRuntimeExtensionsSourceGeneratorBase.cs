@@ -143,7 +143,7 @@ namespace Thinktecture.CodeAnalysis
          if (type.ContainingType is not null)
             return null;
 
-         var enumInterface = enumInterfaces.GetValidEnumInterface(type);
+         var enumInterface = enumInterfaces.GetValidEnumInterface(type, declaration.Identifier.GetLocation());
 
          if (enumInterface is null)
             return null;

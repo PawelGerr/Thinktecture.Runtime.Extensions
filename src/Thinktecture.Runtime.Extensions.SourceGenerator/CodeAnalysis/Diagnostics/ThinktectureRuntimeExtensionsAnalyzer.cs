@@ -168,7 +168,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
          TypeMustBePartial(context, enumType, declarations);
 
-         var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, context.ReportDiagnostic);
+         var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, locationOfFirstDeclaration, context.ReportDiagnostic);
 
          if (validEnumInterface is null)
             return;
@@ -268,7 +268,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
                   break;
 
                default:
-                  context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, comparerMember.DeclaringSyntaxReferences.First().GetSyntax().GetLocation(), comparerMember.Name));
+                  context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, comparerMember.DeclaringSyntaxReferences.Single().GetSyntax().GetLocation(), comparerMember.Name));
                   break;
             }
          }
@@ -300,7 +300,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
                                                   return keyword == default ? (SyntaxToken?)null : keyword;
                                                })
-                                       .FirstOrDefault(n => n is not null);
+                                       .SingleOrDefault(n => n is not null);
 
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleEnumMustNotHaveVirtualMembers,
                                                        virtualKeyword?.GetLocation() ?? location,
@@ -509,7 +509,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
             if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
                continue;
 
-            var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation();
+            var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.Single().GetSyntax()).Identifier.GetLocation();
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ConstructorsMustBePrivate, location, type.Name));
          }
       }

@@ -9,7 +9,7 @@ namespace Thinktecture
    {
       public static SyntaxToken GetIdentifier(this IPropertySymbol property)
       {
-         var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.First().GetSyntax();
+         var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax();
          return syntax.Identifier;
       }
    }

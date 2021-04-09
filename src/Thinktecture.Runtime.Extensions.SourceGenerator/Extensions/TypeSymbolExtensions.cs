@@ -77,6 +77,7 @@ namespace Thinktecture
       public static INamedTypeSymbol? GetValidEnumInterface(
          this IReadOnlyList<INamedTypeSymbol> enumInterfaces,
          ITypeSymbol enumType,
+         Location? location = null,
          Action<Diagnostic>? reportDiagnostic = null)
       {
          INamedTypeSymbol? validInterface = null;
@@ -98,9 +99,8 @@ namespace Thinktecture
             {
                if (!SymbolEqualityComparer.Default.Equals(validKeyType, keyType))
                {
-                  reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces,
-                                                             ((TypeDeclarationSyntax)enumType.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(),
-                                                             enumType.Name));
+                  location ??= ((TypeDeclarationSyntax)enumType.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation();
+                  reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces, location, enumType.Name));
                   return null;
                }
 
@@ -250,7 +250,7 @@ namespace Thinktecture
 
                                if (m is IPropertySymbol pds)
                                {
-                                  var syntax = (PropertyDeclarationSyntax)pds.DeclaringSyntaxReferences.First().GetSyntax();
+                                  var syntax = (PropertyDeclarationSyntax)pds.DeclaringSyntaxReferences.Single().GetSyntax();
 
                                   if (syntax.ExpressionBody is not null) // public int Foo => 42;
                                      return null;

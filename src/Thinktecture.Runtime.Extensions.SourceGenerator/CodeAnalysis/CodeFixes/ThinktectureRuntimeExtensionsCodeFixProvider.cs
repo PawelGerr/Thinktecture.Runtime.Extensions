@@ -202,7 +202,7 @@ namespace Thinktecture.CodeAnalysis.CodeFixes
          if (enumType is null || !enumType.IsEnum(out var enumInterfaces))
             return document;
 
-         var enumInterface = enumInterfaces.GetValidEnumInterface(enumType);
+         var enumInterface = enumInterfaces.GetValidEnumInterface(enumType, declaration.Identifier.GetLocation());
 
          if (enumInterface is null)
             return document;

@@ -10,7 +10,7 @@ namespace Thinktecture
    {
       public static SyntaxToken GetIdentifier(this IFieldSymbol field)
       {
-         var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.First().GetSyntax();
+         var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax();
          return syntax.Identifier;
       }
 
