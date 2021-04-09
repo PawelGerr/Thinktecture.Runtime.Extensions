@@ -35,24 +35,28 @@ namespace Thinktecture.CodeAnalysis
             try
             {
                var generatedCode = GenerateEnum(state);
-               EmitFile(context, state.Declaration, generatedCode);
+               EmitFile(context, state.EnumType.Name, generatedCode);
             }
             catch (Exception ex)
             {
-               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration, state.Declaration.GetLocation(), state.EnumIdentifier, ex.Message));
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
+                                                          state.EnumType.DeclaringSyntaxReferences.First().GetSyntax().GetLocation(), // pick one location as the representative,
+                                                          state.EnumType.Name, ex.Message));
             }
          }
 
-         foreach (var declaration in receiver.ValueTypes)
+         foreach (var state in PrepareValueTypes(context.Compilation, receiver.ValueTypes))
          {
             try
             {
-               var generatedCode = GenerateValueType(context.Compilation, declaration);
-               EmitFile(context, declaration, generatedCode);
+               var generatedCode = GenerateValueType(state);
+               EmitFile(context, state.Type.Name, generatedCode);
             }
             catch (Exception ex)
             {
-               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration, declaration.GetLocation(), declaration.Identifier, ex.Message));
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
+                                                          state.Type.DeclaringSyntaxReferences.First().GetSyntax().GetLocation(), // pick one location as the representative
+                                                          state.Type.Name, ex.Message));
             }
          }
       }
@@ -64,7 +68,7 @@ namespace Thinktecture.CodeAnalysis
          if (enums.Count == 0)
             return Array.Empty<EnumSourceGeneratorState>();
 
-         var states = new List<EnumSourceGeneratorState>();
+         var states = new HashSet<EnumSourceGeneratorState>();
 
          foreach (var tds in enums)
          {
@@ -85,24 +89,30 @@ namespace Thinktecture.CodeAnalysis
                state.SetBaseType(baseEnum);
          }
 
-         states.Sort((state, other) =>
-                     {
-                        if (SymbolEqualityComparer.Default.Equals(state.EnumType.BaseType, other.EnumType))
-                           return 1;
+         return states.OrderBy(s => s).ToList();
+      }
 
-                        if (SymbolEqualityComparer.Default.Equals(other.EnumType.BaseType, state.EnumType))
-                           return -1;
+      private static IReadOnlyCollection<ValueTypeSourceGeneratorState> PrepareValueTypes(
+         Compilation compilation,
+         IReadOnlyList<TypeDeclarationSyntax> valueTypes)
+      {
+         if (valueTypes.Count == 0)
+            return Array.Empty<ValueTypeSourceGeneratorState>();
 
-                        if (state.EnumType.BaseType is null)
-                           return other.EnumType.BaseType is null ? 0 : -1;
+         var states = new HashSet<ValueTypeSourceGeneratorState>();
 
-                        return other.EnumType.BaseType is null ? 1 : 0;
-                     });
+         foreach (var tds in valueTypes)
+         {
+            var state = GetValueTypeState(compilation, tds);
+
+            if (state is not null)
+               states.Add(state);
+         }
 
          return states;
       }
 
-      private string? GenerateValueType(Compilation compilation, TypeDeclarationSyntax declaration)
+      private static ValueTypeSourceGeneratorState? GetValueTypeState(Compilation compilation, TypeDeclarationSyntax declaration)
       {
          var model = compilation.GetSemanticModel(declaration.SyntaxTree, true);
          var type = model.GetDeclaredSymbol(declaration);
@@ -116,8 +126,7 @@ namespace Thinktecture.CodeAnalysis
          if (type.ContainingType is not null)
             return null;
 
-         var state = new ValueTypeSourceGeneratorState(model, declaration, type, valueTypeAttribute);
-         return GenerateValueType(state);
+         return new ValueTypeSourceGeneratorState(model, type, valueTypeAttribute);
       }
 
       private static EnumSourceGeneratorState? GetEnumState(Compilation compilation, TypeDeclarationSyntax declaration)
@@ -139,17 +148,17 @@ namespace Thinktecture.CodeAnalysis
          if (enumInterface is null)
             return null;
 
-         return new EnumSourceGeneratorState(model, declaration, type, enumInterface);
+         return new EnumSourceGeneratorState(model, type, enumInterface);
       }
 
       private void EmitFile(
          GeneratorExecutionContext context,
-         TypeDeclarationSyntax declaration,
+         string typeName,
          string? generatedCode)
       {
          if (!String.IsNullOrWhiteSpace(generatedCode))
          {
-            context.AddSource($"{declaration.Identifier}{_generatedFileInfix}_Generated.cs", $@"// <auto-generated />
+            context.AddSource($"{typeName}{_generatedFileInfix}_Generated.cs", $@"// <auto-generated />
 #nullable enable
 {generatedCode}");
          }

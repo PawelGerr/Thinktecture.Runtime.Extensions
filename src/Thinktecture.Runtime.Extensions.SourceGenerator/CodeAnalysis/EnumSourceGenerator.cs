@@ -61,21 +61,21 @@ using Thinktecture;
 
          _sb.Append($@")]
    [Thinktecture.Internal.KeyedValueType]
-   [System.ComponentModel.TypeConverter(typeof({_state.EnumIdentifier}_EnumTypeConverter))]
-   partial {(_state.EnumType.IsValueType ? "struct" : "class")} {_state.EnumIdentifier} : IEquatable<{_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>
+   [System.ComponentModel.TypeConverter(typeof({_state.EnumType.Name}_EnumTypeConverter))]
+   partial {(_state.EnumType.IsValueType ? "struct" : "class")} {_state.EnumType.Name} : IEquatable<{_state.EnumType.Name}{_state.NullableQuestionMarkEnum}>
    {{
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal {(_state.HasBaseEnum && _state.BaseEnum.IsSameAssembly ? newKeyword : null)}static void ModuleInit()
       {{
-         var convertFromKey = new Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>({_state.EnumIdentifier}.Get);
-         Expression<Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}>> convertFromKeyExpression = {_state.KeyArgumentName} => {_state.EnumIdentifier}.Get({_state.KeyArgumentName});
+         var convertFromKey = new Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumType.Name}{_state.NullableQuestionMarkEnum}>({_state.EnumType.Name}.Get);
+         Expression<Func<{_state.KeyType}{_state.NullableQuestionMarkKey}, {_state.EnumType.Name}{_state.NullableQuestionMarkEnum}>> convertFromKeyExpression = {_state.KeyArgumentName} => {_state.EnumType.Name}.Get({_state.KeyArgumentName});
 
-         var convertToKey = new Func<{_state.EnumIdentifier}, {_state.KeyType}{_state.NullableQuestionMarkKey}>(item => item.{_state.KeyPropertyName});
-         Expression<Func<{_state.EnumIdentifier}, {_state.KeyType}{_state.NullableQuestionMarkKey}>> convertToKeyExpression = item => item.{_state.KeyPropertyName};
+         var convertToKey = new Func<{_state.EnumType.Name}, {_state.KeyType}{_state.NullableQuestionMarkKey}>(item => item.{_state.KeyPropertyName});
+         Expression<Func<{_state.EnumType.Name}, {_state.KeyType}{_state.NullableQuestionMarkKey}>> convertToKeyExpression = item => item.{_state.KeyPropertyName};
 
-         var validate = new Thinktecture.Internal.Validate<{_state.EnumIdentifier}, {_state.KeyType}>({_state.EnumIdentifier}.Validate);
+         var validate = new Thinktecture.Internal.Validate<{_state.EnumType.Name}, {_state.KeyType}>({_state.EnumType.Name}.Validate);
 
-         var enumType = typeof({_state.EnumIdentifier});
+         var enumType = typeof({_state.EnumType.Name});
          var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
          Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);");
@@ -89,7 +89,7 @@ using Thinktecture;
          _sb.Append($@"
       }}
 
-      private static readonly int _typeHashCode = typeof({(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumIdentifier)}).GetHashCode() * 397;");
+      private static readonly int _typeHashCode = typeof({(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumType.Name)}).GetHashCode() * 397;");
 
          if (_state.NeedsDefaultComparer)
          {
@@ -101,15 +101,15 @@ using Thinktecture;
 
          _sb.Append($@"
 
-      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumIdentifier}>? _itemsLookup;
-      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumIdentifier}> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}>? _itemsLookup;
+      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}> ItemsLookup => _itemsLookup ??= GetLookup();
 
-      private static IReadOnlyList<{_state.EnumIdentifier}>? _items;
+      private static IReadOnlyList<{_state.EnumType.Name}>? _items;
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public {newKeyword}static IReadOnlyList<{_state.EnumIdentifier}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();");
+      public {newKeyword}static IReadOnlyList<{_state.EnumType.Name}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();");
 
          if (!_state.HasBaseEnum)
          {
@@ -163,7 +163,7 @@ using Thinktecture;
       /// <inheritdoc />
       public override bool Equals(object? other)
       {{
-         return other is {(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumIdentifier)} item && Equals(item);
+         return other is {(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumType.Name)} item && Equals(item);
       }}
 
       /// <inheritdoc />
@@ -220,9 +220,9 @@ using Thinktecture;
       /// Gets a valid enumeration item for provided <paramref name=""{_state.KeyArgumentName}""/> if a valid item exists.
       /// </summary>
       /// <param name=""{_state.KeyArgumentName}"">The identifier to return an enumeration item for.</param>
-      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumIdentifier}""/>; otherwise <c>null</c>.</param>
+      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumType.Name}""/>; otherwise <c>null</c>.</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""{_state.KeyArgumentName}""/> exists; <c>false</c> otherwise.</returns>
-      public static bool TryGet([AllowNull] {_state.KeyType} {_state.KeyArgumentName}, [MaybeNullWhen(false)] out {_state.EnumIdentifier} item)
+      public static bool TryGet([AllowNull] {_state.KeyType} {_state.KeyArgumentName}, [MaybeNullWhen(false)] out {_state.EnumType.Name} item)
       {{");
 
          if (_state.KeyType.IsReferenceType)
@@ -249,13 +249,13 @@ using Thinktecture;
       /// Validates the provided <paramref name=""{_state.KeyArgumentName}""/> and returns a valid enumeration item if found.
       /// </summary>
       /// <param name=""{_state.KeyArgumentName}"">The identifier to return an enumeration item for.</param>
-      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumIdentifier}""/>; otherwise <c>null</c>.</param>
+      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumType.Name}""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""{_state.KeyArgumentName}""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
-      public static ValidationResult? Validate({_state.KeyType} {_state.KeyArgumentName}, [MaybeNull] out {_state.EnumIdentifier} item)
+      public static ValidationResult? Validate({_state.KeyType} {_state.KeyArgumentName}, [MaybeNull] out {_state.EnumType.Name} item)
       {{
-         return {_state.EnumIdentifier}.TryGet({_state.KeyArgumentName}, out item)
+         return {_state.EnumType.Name}.TryGet({_state.KeyArgumentName}, out item)
                ? ValidationResult.Success
-               : new ValidationResult($""The enumeration item of type '{_state.EnumIdentifier}' with identifier '{{{_state.KeyArgumentName}}}' is not valid."");
+               : new ValidationResult($""The enumeration item of type '{_state.EnumType.Name}' with identifier '{{{_state.KeyArgumentName}}}' is not valid."");
       }}");
       }
 
@@ -264,12 +264,12 @@ using Thinktecture;
          _sb.Append($@"
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.EnumIdentifier}""/>.
+      /// Compares to instances of <see cref=""{_state.EnumType.Name}""/>.
       /// </summary>
       /// <param name=""item1"">Instance to compare.</param>
       /// <param name=""item2"">Another instance to compare.</param>
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item1, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item2)
+      public static bool operator ==({_state.EnumType.Name}{_state.NullableQuestionMarkEnum} item1, {_state.EnumType.Name}{_state.NullableQuestionMarkEnum} item2)
       {{");
 
          if (_state.EnumType.IsReferenceType)
@@ -285,12 +285,12 @@ using Thinktecture;
       }}
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.EnumIdentifier}""/>.
+      /// Compares to instances of <see cref=""{_state.EnumType.Name}""/>.
       /// </summary>
       /// <param name=""item1"">Instance to compare.</param>
       /// <param name=""item2"">Another instance to compare.</param>
       /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item1, {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item2)
+      public static bool operator !=({_state.EnumType.Name}{_state.NullableQuestionMarkEnum} item1, {_state.EnumType.Name}{_state.NullableQuestionMarkEnum} item2)
       {{
          return !(item1 == item2);
       }}");
@@ -304,9 +304,9 @@ using Thinktecture;
       /// Implicit conversion to the type <see cref=""{_state.KeyType}""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""{(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumIdentifier)}.{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""{(_state.HasBaseEnum ? _state.BaseEnum.Type : _state.EnumType.Name)}.{_state.KeyPropertyName}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
-      public static implicit operator {_state.KeyType}{_state.NullableQuestionMarkKey}({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} item)
+      public static implicit operator {_state.KeyType}{_state.NullableQuestionMarkKey}({_state.EnumType.Name}{_state.NullableQuestionMarkEnum} item)
       {{");
 
          if (_state.EnumType.IsReferenceType)
@@ -332,11 +332,11 @@ using Thinktecture;
       /// Explicit conversion from the type <see cref=""{_state.KeyType}""/>.
       /// </summary>
       /// <param name=""{_state.KeyArgumentName}"">Value to covert.</param>
-      /// <returns>An instance of <see cref=""{_state.EnumIdentifier}""/> if the <paramref name=""{_state.KeyArgumentName}""/> is a known item or implements <see cref=""IValidatableEnum{{TKey}}""/>.</returns>
+      /// <returns>An instance of <see cref=""{_state.EnumType.Name}""/> if the <paramref name=""{_state.KeyArgumentName}""/> is a known item or implements <see cref=""IValidatableEnum{{TKey}}""/>.</returns>
       [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
-      public static explicit operator {_state.EnumIdentifier}{_state.NullableQuestionMarkEnum}({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
+      public static explicit operator {_state.EnumType.Name}{_state.NullableQuestionMarkEnum}({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
       {{
-         return {_state.EnumIdentifier}.Get({_state.KeyArgumentName});
+         return {_state.EnumType.Name}.Get({_state.KeyArgumentName});
       }}");
       }
 
@@ -347,7 +347,7 @@ using Thinktecture;
             _sb.Append($@"
 
       /// <inheritdoc />
-      public bool Equals({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} other)
+      public bool Equals({_state.EnumType.Name}{_state.NullableQuestionMarkEnum} other)
       {{
          return Equals(({_state.BaseEnum.Type}{_state.BaseEnum.NullableQuestionMark})other);
       }}
@@ -361,7 +361,7 @@ using Thinktecture;
             _sb.Append($@"
 
       /// <inheritdoc />
-      public {(_state.IsExtensible ? "virtual " : null)}bool Equals({_state.EnumIdentifier}{_state.NullableQuestionMarkEnum} other)
+      public {(_state.IsExtensible ? "virtual " : null)}bool Equals({_state.EnumType.Name}{_state.NullableQuestionMarkEnum} other)
       {{");
          }
 
@@ -410,22 +410,22 @@ using Thinktecture;
       {
          _sb.Append($@"
 
-      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumIdentifier}> GetLookup()
+      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}> GetLookup()
       {{
-         var lookup = new Dictionary<{_state.KeyType}, {_state.EnumIdentifier}>({_state.KeyComparerMember});");
+         var lookup = new Dictionary<{_state.KeyType}, {_state.EnumType.Name}>({_state.KeyComparerMember});");
 
          if (_state.Items.Count > 0)
          {
             _sb.Append($@"
 
-         void AddItem({_state.EnumIdentifier} item, string itemName)
+         void AddItem({_state.EnumType.Name} item, string itemName)
          {{");
 
             if (_state.EnumType.IsReferenceType)
             {
                _sb.Append($@"
             if(item is null)
-               throw new ArgumentNullException($""The item \""{{itemName}}\"" of type \""{_state.EnumIdentifier}\"" must not be null."");
+               throw new ArgumentNullException($""The item \""{{itemName}}\"" of type \""{_state.EnumType.Name}\"" must not be null."");
 ");
             }
 
@@ -433,7 +433,7 @@ using Thinktecture;
             {
                _sb.Append($@"
             if(item.{_state.KeyPropertyName} is null)
-               throw new ArgumentException($""The \""{_state.KeyPropertyName}\"" of the item \""{{itemName}}\"" of type \""{_state.EnumIdentifier}\"" must not be null."");
+               throw new ArgumentException($""The \""{_state.KeyPropertyName}\"" of the item \""{{itemName}}\"" of type \""{_state.EnumType.Name}\"" must not be null."");
 ");
             }
 
@@ -441,13 +441,13 @@ using Thinktecture;
             {
                _sb.Append($@"
             if(!item.IsValid)
-               throw new ArgumentException($""All 'public static readonly' fields of type \""{_state.EnumIdentifier}\"" must be valid but the item \""{{itemName}}\"" with the identifier \""{{item.{_state.KeyPropertyName}}}\"" is not."");
+               throw new ArgumentException($""All 'public static readonly' fields of type \""{_state.EnumType.Name}\"" must be valid but the item \""{{itemName}}\"" with the identifier \""{{item.{_state.KeyPropertyName}}}\"" is not."");
 ");
             }
 
             _sb.Append($@"
             if (lookup.ContainsKey(item.{_state.KeyPropertyName}))
-               throw new ArgumentException($""The type \""{_state.EnumIdentifier}\"" has multiple items with the identifier \""{{item.{_state.KeyPropertyName}}}\""."");
+               throw new ArgumentException($""The type \""{_state.EnumType.Name}\"" has multiple items with the identifier \""{{item.{_state.KeyPropertyName}}}\""."");
 
             lookup.Add(item.{_state.KeyPropertyName}, item);
          }}
@@ -512,7 +512,7 @@ using Thinktecture;
       /// Gets an enumeration item for provided <paramref name=""{_state.KeyArgumentName}""/>.
       /// </summary>
       /// <param name=""{_state.KeyArgumentName}"">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of <see cref=""{_state.EnumIdentifier}"" /> if <paramref name=""{_state.KeyArgumentName}""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
+      /// <returns>An instance of <see cref=""{_state.EnumType.Name}"" /> if <paramref name=""{_state.KeyArgumentName}""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
 
          if (!_state.IsValidatable)
          {
@@ -522,7 +522,7 @@ using Thinktecture;
 
          _sb.Append($@"
       [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
-      public {(_state.HasBaseEnum ? "new " : null)}static {_state.EnumIdentifier}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} Get({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
+      public {(_state.HasBaseEnum ? "new " : null)}static {_state.EnumType.Name}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} Get({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
       {{");
 
          if (_state.KeyType.IsReferenceType)
@@ -566,7 +566,7 @@ using Thinktecture;
          else
          {
             _sb.Append($@"
-            throw new KeyNotFoundException($""There is no item of type '{_state.EnumIdentifier}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
+            throw new KeyNotFoundException($""There is no item of type '{_state.EnumType.Name}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
          }
 
          _sb.Append($@"
@@ -580,9 +580,9 @@ using Thinktecture;
       {
          _sb.Append($@"
 
-      private static {_state.EnumIdentifier} CreateInvalidItem({_state.KeyType} {_state.KeyArgumentName})
+      private static {_state.EnumType.Name} CreateInvalidItem({_state.KeyType} {_state.KeyArgumentName})
       {{
-         return new {_state.EnumIdentifier}({_state.KeyArgumentName}, false");
+         return new {_state.EnumType.Name}({_state.KeyArgumentName}, false");
 
          foreach (var member in _state.AssignableInstanceFieldsAndProperties)
          {
@@ -618,7 +618,7 @@ using Thinktecture;
          {
             _sb.Append($@"
 
-      {accessibilityModifier} {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
+      {accessibilityModifier} {_state.EnumType.Name}({_state.KeyType} {_state.KeyArgumentName}");
 
             foreach (var member in ctorArgs)
             {
@@ -640,7 +640,7 @@ using Thinktecture;
 
          _sb.Append($@"
 
-      {accessibilityModifier} {_state.EnumIdentifier}({_state.KeyType} {_state.KeyArgumentName}");
+      {accessibilityModifier} {_state.EnumType.Name}({_state.KeyType} {_state.KeyArgumentName}");
 
          if (_state.IsValidatable)
             _sb.Append(", bool isValid");
@@ -735,17 +735,17 @@ using Thinktecture;
       private void GenerateTypeConverter()
       {
          _sb.Append($@"
-   public class {_state.EnumIdentifier}_EnumTypeConverter : Thinktecture.ValueTypeConverter<{_state.EnumIdentifier}, {_state.KeyType}>
+   public class {_state.EnumType.Name}_EnumTypeConverter : Thinktecture.ValueTypeConverter<{_state.EnumType.Name}, {_state.KeyType}>
    {{
       /// <inheritdoc />
       [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]
-      protected override {_state.EnumIdentifier}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} ConvertFrom({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
+      protected override {_state.EnumType.Name}{(_state.KeyType.IsReferenceType ? _state.NullableQuestionMarkEnum : null)} ConvertFrom({_state.KeyType}{_state.NullableQuestionMarkKey} {_state.KeyArgumentName})
       {{");
 
          if (_state.IsValidatable)
          {
             _sb.Append($@"
-         return {_state.EnumIdentifier}.Get({_state.KeyArgumentName});");
+         return {_state.EnumType.Name}.Get({_state.KeyArgumentName});");
          }
          else
          {
@@ -758,7 +758,7 @@ using Thinktecture;
             }
 
             _sb.Append($@"
-         if({_state.EnumIdentifier}.TryGet({_state.KeyArgumentName}, out var item))
+         if({_state.EnumType.Name}.TryGet({_state.KeyArgumentName}, out var item))
             return item;
 
          throw new FormatException($""There is no item of type '{_state.RuntimeTypeName}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
@@ -768,7 +768,7 @@ using Thinktecture;
       }}
 
       /// <inheritdoc />
-      protected override {_state.KeyType} GetKeyValue({_state.EnumIdentifier} item)
+      protected override {_state.KeyType} GetKeyValue({_state.EnumType.Name} item)
       {{
          return item.{_state.KeyPropertyName};
       }}

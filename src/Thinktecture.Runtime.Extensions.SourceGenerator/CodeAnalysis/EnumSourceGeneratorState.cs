@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture.CodeAnalysis
 {
    public class EnumSourceGeneratorState
+      : IEquatable<EnumSourceGeneratorState>, IComparable<EnumSourceGeneratorState>
    {
-      public TypeDeclarationSyntax Declaration { get; }
       public SemanticModel Model { get; }
 
       public string? Namespace { get; }
       public INamedTypeSymbol EnumType { get; }
       public ITypeSymbol KeyType { get; }
-      public SyntaxToken EnumIdentifier => Declaration.Identifier;
 
       public string RuntimeTypeName { get; }
 
@@ -57,7 +55,6 @@ namespace Thinktecture.CodeAnalysis
 
       public EnumSourceGeneratorState(
          SemanticModel model,
-         TypeDeclarationSyntax enumDeclaration,
          INamedTypeSymbol enumType,
          INamedTypeSymbol enumInterface)
       {
@@ -65,8 +62,6 @@ namespace Thinktecture.CodeAnalysis
             throw new ArgumentNullException(nameof(enumInterface));
 
          Model = model ?? throw new ArgumentNullException(nameof(model));
-
-         Declaration = enumDeclaration ?? throw new ArgumentNullException(nameof(enumDeclaration));
 
          EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
          Namespace = enumType.ContainingNamespace.ToString();
@@ -81,7 +76,7 @@ namespace Thinktecture.CodeAnalysis
          InitializeFromSettings(enumSettings, false);
          IsExtensible = enumType.IsReferenceType && (enumSettings?.IsExtensible() ?? false);
 
-         RuntimeTypeName = IsExtensible ? "{GetType().Name}" : Declaration.Identifier.ToString();
+         RuntimeTypeName = IsExtensible ? "{GetType().Name}" : enumType.Name;
       }
 
       [MemberNotNull(nameof(KeyComparerMember), nameof(KeyPropertyName), nameof(KeyArgumentName))]
@@ -149,6 +144,41 @@ namespace Thinktecture.CodeAnalysis
          InitializeFromSettings(enumSettings, true);
 
          IsExtensible = false;
+      }
+
+      public bool Equals(EnumSourceGeneratorState? other)
+      {
+         return SymbolEqualityComparer.Default.Equals(EnumType, other?.EnumType);
+      }
+
+      public override bool Equals(object? obj)
+      {
+         if (ReferenceEquals(null, obj))
+            return false;
+         if (ReferenceEquals(this, obj))
+            return true;
+         if (obj.GetType() != GetType())
+            return false;
+         return Equals((EnumSourceGeneratorState)obj);
+      }
+
+      public override int GetHashCode()
+      {
+         return SymbolEqualityComparer.Default.GetHashCode(EnumType);
+      }
+
+      public int CompareTo(EnumSourceGeneratorState? other)
+      {
+         if (other is null || SymbolEqualityComparer.Default.Equals(EnumType.BaseType, other.EnumType))
+            return 1;
+
+         if (SymbolEqualityComparer.Default.Equals(other.EnumType.BaseType, EnumType))
+            return -1;
+
+         if (EnumType.BaseType is null)
+            return other.EnumType.BaseType is null ? 0 : -1;
+
+         return other.EnumType.BaseType is null ? 1 : 0;
       }
    }
 }

@@ -25,7 +25,7 @@ namespace Thinktecture.CodeAnalysis
             throw new ArgumentNullException(nameof(state));
 
          var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeJsonConverterFactory").Any());
-         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
+         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
       }
 
       /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace Thinktecture.CodeAnalysis
             throw new ArgumentNullException(nameof(state));
 
          if (state.HasKeyMember)
-            return GenerateJsonConverter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
+            return GenerateJsonConverter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
          if (!state.SkipFactoryMethods)
             return GenerateValueTypeJsonConverter(state);
@@ -46,7 +46,7 @@ namespace Thinktecture.CodeAnalysis
       private static string GenerateJsonConverter(
          ITypeSymbol type,
          string? @namespace,
-         SyntaxToken typeIdentifier,
+         string typeName,
          ITypeSymbol keyType,
          string factoryMethod,
          string keyMember,
@@ -68,14 +68,14 @@ using Thinktecture;
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
-   partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
+   partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
       public {(requiresNew ? "new " : null)}class ValueTypeJsonConverterFactory : JsonConverterFactory
       {{
          /// <inheritdoc />
          public override bool CanConvert(Type typeToConvert)
          {{
-            return typeof({typeIdentifier}).IsAssignableFrom(typeToConvert);
+            return typeof({typeName}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />
@@ -86,7 +86,7 @@ using Thinktecture;
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<{typeIdentifier}, {keyType}>({typeIdentifier}.{factoryMethod}, obj => obj.{keyMember}, options);
+            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<{typeName}, {keyType}>({typeName}.{factoryMethod}, obj => obj.{keyMember}, options);
          }}
       }}
    }}
@@ -113,9 +113,9 @@ using Thinktecture.Text.Json.Serialization;
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueTypeJsonConverter : JsonConverter<{state.TypeIdentifier}>
+      public class ValueTypeJsonConverter : JsonConverter<{state.Type.Name}>
       {{");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -162,13 +162,13 @@ using Thinktecture.Text.Json.Serialization;
          }}
 
          /// <inheritdoc />
-         public override {state.TypeIdentifier}{state.NullableQuestionMark} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+         public override {state.Type.Name}{state.NullableQuestionMark} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
          {{
             if (reader.TokenType == JsonTokenType.Null)
                return default;
 
             if (reader.TokenType != JsonTokenType.StartObject)
-               throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonTokenType.StartObject}}'."");
+               throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.Type.Name}'. Expected token: '{{JsonTokenType.StartObject}}'."");
 ");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -189,12 +189,12 @@ using Thinktecture.Text.Json.Serialization;
                   break;
 
                if (reader.TokenType != JsonTokenType.PropertyName)
-                  throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.TypeIdentifier}'. Expected token: '{{JsonTokenType.PropertyName}}'."");
+                  throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.Type.Name}'. Expected token: '{{JsonTokenType.PropertyName}}'."");
 
                var propName = reader.GetString();
 
                if(!reader.Read())
-                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{{propName}}' during deserialization of '{state.TypeIdentifier}'."");
+                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{{propName}}' during deserialization of '{state.Type.Name}'."");
 ");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -223,14 +223,14 @@ using Thinktecture.Text.Json.Serialization;
             sb.Append(@$"
                else
                {{
-                  throw new JsonException($""Unknown member '{{propName}}' encountered when trying to deserialize '{state.TypeIdentifier}'."");
+                  throw new JsonException($""Unknown member '{{propName}}' encountered when trying to deserialize '{state.Type.Name}'."");
                }}");
          }
 
          sb.Append(@$"
             }}
 
-            var validationResult = {state.TypeIdentifier}.TryCreate(");
+            var validationResult = {state.Type.Name}.TryCreate(");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
@@ -244,13 +244,13 @@ using Thinktecture.Text.Json.Serialization;
                                        out var obj);
 
             if (validationResult != ValidationResult.Success)
-               throw new JsonException($""Unable to deserialize '{state.TypeIdentifier}'. Error: {{validationResult!.ErrorMessage}}."");
+               throw new JsonException($""Unable to deserialize '{state.Type.Name}'. Error: {{validationResult!.ErrorMessage}}."");
 
             return obj;
          }}
 
          /// <inheritdoc />
-         public override void Write(Utf8JsonWriter writer, {state.TypeIdentifier} value, JsonSerializerOptions options)
+         public override void Write(Utf8JsonWriter writer, {state.Type.Name} value, JsonSerializerOptions options)
          {{
             writer.WriteStartObject();
 
@@ -301,7 +301,7 @@ using Thinktecture.Text.Json.Serialization;
          /// <inheritdoc />
          public override bool CanConvert(Type typeToConvert)
          {{
-            return typeof({state.TypeIdentifier}).IsAssignableFrom(typeToConvert);
+            return typeof({state.Type.Name}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />

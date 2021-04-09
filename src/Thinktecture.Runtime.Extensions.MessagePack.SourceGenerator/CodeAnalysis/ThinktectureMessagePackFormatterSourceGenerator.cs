@@ -25,7 +25,7 @@ namespace Thinktecture.CodeAnalysis
             throw new ArgumentNullException(nameof(state));
 
          var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeMessagePackFormatter").Any());
-         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumIdentifier, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
+         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
       }
 
       /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace Thinktecture.CodeAnalysis
             throw new ArgumentNullException(nameof(state));
 
          if (state.HasKeyMember)
-            return GenerateFormatter(state.Type, state.Namespace, state.TypeIdentifier, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
+            return GenerateFormatter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
          if (!state.SkipFactoryMethods)
             return GenerateValueTypeFormatter(state);
@@ -46,7 +46,7 @@ namespace Thinktecture.CodeAnalysis
       private static string GenerateFormatter(
          ITypeSymbol type,
          string? @namespace,
-         SyntaxToken typeIdentifier,
+         string typeName,
          ITypeSymbol keyType,
          string factoryMethod,
          string keyMember,
@@ -66,12 +66,12 @@ using Thinktecture;
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
    [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
-   partial {(type.IsValueType ? "struct" : "class")} {typeIdentifier}
+   partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
-      public {(requiresNew ? "new " : null)}class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<{typeIdentifier}, {keyType}>
+      public {(requiresNew ? "new " : null)}class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<{typeName}, {keyType}>
       {{
          public ValueTypeMessagePackFormatter()
-            : base({typeIdentifier}.{factoryMethod}, obj => obj.{keyMember})
+            : base({typeName}.{factoryMethod}, obj => obj.{keyMember})
          {{
          }}
       }}
@@ -99,12 +99,12 @@ using Thinktecture;
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
    [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.TypeIdentifier}
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueTypeMessagePackFormatter : IMessagePackFormatter<{state.TypeIdentifier}{state.NullableQuestionMark}>
+      public class ValueTypeMessagePackFormatter : IMessagePackFormatter<{state.Type.Name}{state.NullableQuestionMark}>
       {{
          /// <inheritdoc />
-         public {state.TypeIdentifier}{state.NullableQuestionMark} Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+         public {state.Type.Name}{state.NullableQuestionMark} Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
          {{
             if (reader.TryReadNil())
                return default;
@@ -131,7 +131,7 @@ using Thinktecture;
 
          sb.Append(@$"
 
-               var validationResult = {state.TypeIdentifier}.TryCreate(");
+               var validationResult = {state.Type.Name}.TryCreate(");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
          {
@@ -145,7 +145,7 @@ using Thinktecture;
                                           out var obj);
 
                if (validationResult != ValidationResult.Success)
-                  throw new MessagePackSerializationException($""Unable to deserialize '{state.TypeIdentifier}'. Error: {{validationResult!.ErrorMessage}}."");
+                  throw new MessagePackSerializationException($""Unable to deserialize '{state.Type.Name}'. Error: {{validationResult!.ErrorMessage}}."");
 
                return obj;
             }}
@@ -156,7 +156,7 @@ using Thinktecture;
          }}
 
          /// <inheritdoc />
-         public void Serialize(ref MessagePackWriter writer, {state.TypeIdentifier}{state.NullableQuestionMark} value, MessagePackSerializerOptions options)
+         public void Serialize(ref MessagePackWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, MessagePackSerializerOptions options)
          {{");
 
          if (state.Type.IsReferenceType)

@@ -50,7 +50,7 @@ using Thinktecture;
          var nullableKeyType = keyMember.Type.WithNullableAnnotation(NullableAnnotation.Annotated);
 
          _sb.Append($@"
-   public class {_state.TypeIdentifier}_ValueTypeConverter : Thinktecture.ValueTypeConverter<{_state.TypeIdentifier}, {keyMember.Type}>
+   public class {_state.Type.Name}_ValueTypeConverter : Thinktecture.ValueTypeConverter<{_state.Type.Name}, {keyMember.Type}>
    {{
       /// <inheritdoc />");
 
@@ -61,23 +61,23 @@ using Thinktecture;
          }
 
          _sb.Append($@"
-      protected override {_state.TypeIdentifier}{(keyMember.Type.IsReferenceType ? _state.NullableQuestionMark : null)} ConvertFrom({nullableKeyType} {keyMember.ArgumentName})
+      protected override {_state.Type.Name}{(keyMember.Type.IsReferenceType ? _state.NullableQuestionMark : null)} ConvertFrom({nullableKeyType} {keyMember.ArgumentName})
       {{");
 
          if (keyMember.Type.IsReferenceType)
          {
             _sb.Append($@"
          if({keyMember.ArgumentName} is null)
-            return default({_state.TypeIdentifier});
+            return default({_state.Type.Name});
 ");
          }
 
          _sb.Append($@"
-         return {_state.TypeIdentifier}.Create({keyMember.ArgumentName});
+         return {_state.Type.Name}.Create({keyMember.ArgumentName});
       }}
 
       /// <inheritdoc />
-      protected override {keyMember.Type} GetKeyValue({_state.TypeIdentifier} obj)
+      protected override {keyMember.Type} GetKeyValue({_state.Type.Name} obj)
       {{
          return ({keyMember.Type}) obj;
       }}
@@ -107,17 +107,17 @@ using Thinktecture;
          {
             _sb.Append($@"
    [Thinktecture.Internal.KeyedValueType]
-   [System.ComponentModel.TypeConverter(typeof({_state.TypeIdentifier}_ValueTypeConverter))]");
+   [System.ComponentModel.TypeConverter(typeof({_state.Type.Name}_ValueTypeConverter))]");
          }
 
          _sb.Append($@"
-   partial {(_state.Type.IsValueType ? "struct" : "class")} {_state.TypeIdentifier} : System.IEquatable<{_state.TypeIdentifier}{_state.NullableQuestionMark}>");
+   partial {(_state.Type.IsValueType ? "struct" : "class")} {_state.Type.Name} : System.IEquatable<{_state.Type.Name}{_state.NullableQuestionMark}>");
 
          if (isFormattable)
             _sb.Append(", System.IFormattable");
 
          if (isComparable)
-            _sb.Append($", System.IComparable, System.IComparable<{_state.TypeIdentifier}>");
+            _sb.Append($", System.IComparable, System.IComparable<{_state.Type.Name}>");
 
          _sb.Append($@"
    {{");
@@ -130,15 +130,15 @@ using Thinktecture;
       [System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {{
-         var convertFromKey = new Func<{keyMember.Type}, {_state.TypeIdentifier}>({_state.TypeIdentifier}.Create);
-         Expression<Func<{keyMember.Type}, {_state.TypeIdentifier}>> convertFromKeyExpression = {keyMember.ArgumentName} => new {_state.TypeIdentifier}({keyMember.ArgumentName});
+         var convertFromKey = new Func<{keyMember.Type}, {_state.Type.Name}>({_state.Type.Name}.Create);
+         Expression<Func<{keyMember.Type}, {_state.Type.Name}>> convertFromKeyExpression = {keyMember.ArgumentName} => new {_state.Type.Name}({keyMember.ArgumentName});
 
-         var convertToKey = new Func<{_state.TypeIdentifier}, {keyMember.Type}>(item => item.{keyMember.Identifier});
-         Expression<Func<{_state.TypeIdentifier}, {keyMember.Type}>> convertToKeyExpression = obj => obj.{keyMember.Identifier};
+         var convertToKey = new Func<{_state.Type.Name}, {keyMember.Type}>(item => item.{keyMember.Identifier});
+         Expression<Func<{_state.Type.Name}, {keyMember.Type}>> convertToKeyExpression = obj => obj.{keyMember.Identifier};
 
-         var tryCreate = new Thinktecture.Internal.Validate<{_state.TypeIdentifier}, {_state.KeyMember.Member.Type}>({_state.TypeIdentifier}.TryCreate);
+         var tryCreate = new Thinktecture.Internal.Validate<{_state.Type.Name}, {_state.KeyMember.Member.Type}>({_state.Type.Name}.TryCreate);
 
-         var type = typeof({_state.TypeIdentifier});
+         var type = typeof({_state.Type.Name});
          var metadata = new Thinktecture.Internal.ValueTypeMetadata(type, typeof({keyMember.Type}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(type, metadata);
@@ -147,13 +147,13 @@ using Thinktecture;
          }
 
          _sb.Append($@"
-      private static readonly Type _type = typeof({_state.TypeIdentifier});");
+      private static readonly Type _type = typeof({_state.Type.Name});");
 
          if (_state.Type.IsValueType)
          {
             _sb.Append($@"
 
-      public static readonly {_state.TypeIdentifier} Empty = default;");
+      public static readonly {_state.Type.Name} Empty = default;");
          }
 
          if (!_state.SkipFactoryMethods)
@@ -204,7 +204,7 @@ using Thinktecture;
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""{keyMember.Identifier}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""obj"")]
-      public static implicit operator {keyMember.Type}{returnTypeNullableQuestionMark}({_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
+      public static implicit operator {keyMember.Type}{returnTypeNullableQuestionMark}({_state.Type.Name}{_state.NullableQuestionMark} obj)
       {{");
 
          if (_state.Type.IsReferenceType)
@@ -237,7 +237,7 @@ using Thinktecture;
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""{keyMember.Identifier}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""obj"")]
-      public static explicit operator {keyMember.Type}({_state.TypeIdentifier} obj)
+      public static explicit operator {keyMember.Type}({_state.Type.Name} obj)
       {{
          if(obj is null)
             throw new NullReferenceException();
@@ -258,7 +258,7 @@ using Thinktecture;
       /// Explicit conversion from the type <see cref=""{keyMember.Type}""/>.
       /// </summary>
       /// <param name=""{keyMember.ArgumentName}"">Value to covert.</param>
-      /// <returns>An instance of <see cref=""{_state.TypeIdentifier}""/>.</returns>");
+      /// <returns>An instance of <see cref=""{_state.Type.Name}""/>.</returns>");
 
          if (bothAreReferenceTypes)
          {
@@ -267,7 +267,7 @@ using Thinktecture;
          }
 
          _sb.Append($@"
-      public static explicit operator {_state.TypeIdentifier}{nullableQuestionMark}({keyMember.Type}{nullableQuestionMark} {keyMember.ArgumentName})
+      public static explicit operator {_state.Type.Name}{nullableQuestionMark}({keyMember.Type}{nullableQuestionMark} {keyMember.ArgumentName})
       {{");
 
          if (bothAreReferenceTypes)
@@ -279,7 +279,7 @@ using Thinktecture;
          }
 
          _sb.Append($@"
-         return {_state.TypeIdentifier}.Create({keyMember.ArgumentName});
+         return {_state.Type.Name}.Create({keyMember.ArgumentName});
       }}");
       }
 
@@ -297,7 +297,7 @@ using Thinktecture;
          }
 
          _sb.Append($@"
-      public static {_state.TypeIdentifier}{(allowNullKeyMember ? "?" : null)} Create(");
+      public static {_state.Type.Name}{(allowNullKeyMember ? "?" : null)} Create(");
 
          _sb.RenderArgumentsWithType(fieldsAndProperties, useNullableTypes: allowNullKeyMember);
 
@@ -343,7 +343,7 @@ using Thinktecture;
          ", ",", trailingComma: true, useNullableTypes: allowNullKeyMember);
 
          _sb.Append($@"
-         [MaybeNull] out {_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
+         [MaybeNull] out {_state.Type.Name}{_state.NullableQuestionMark} obj)
       {{");
 
          if (allowNullKeyMember)
@@ -394,7 +394,7 @@ using Thinktecture;
       {
          var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-         _sb.Append($@"new {_state.TypeIdentifier}(");
+         _sb.Append($@"new {_state.Type.Name}(");
          _sb.RenderArguments(fieldsAndProperties);
          _sb.Append($@")");
       }
@@ -404,12 +404,12 @@ using Thinktecture;
          _sb.Append($@"
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.TypeIdentifier}""/>.
+      /// Compares to instances of <see cref=""{_state.Type.Name}""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==({_state.TypeIdentifier}{_state.NullableQuestionMark} obj, {_state.TypeIdentifier}{_state.NullableQuestionMark} other)
+      public static bool operator ==({_state.Type.Name}{_state.NullableQuestionMark} obj, {_state.Type.Name}{_state.NullableQuestionMark} other)
       {{");
 
          if (_state.Type.IsReferenceType)
@@ -425,12 +425,12 @@ using Thinktecture;
       }}
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.TypeIdentifier}""/>.
+      /// Compares to instances of <see cref=""{_state.Type.Name}""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=({_state.TypeIdentifier}{_state.NullableQuestionMark} obj, {_state.TypeIdentifier}{_state.NullableQuestionMark} other)
+      public static bool operator !=({_state.Type.Name}{_state.NullableQuestionMark} obj, {_state.Type.Name}{_state.NullableQuestionMark} other)
       {{
          return !(obj == other);
       }}");
@@ -445,7 +445,7 @@ using Thinktecture;
 
          _sb.Append($@"
 
-      private {_state.TypeIdentifier}(");
+      private {_state.Type.Name}(");
 
          _sb.RenderArgumentsWithType(fieldsAndProperties);
 
@@ -485,11 +485,11 @@ using Thinktecture;
       /// <inheritdoc />
       public override bool Equals(object? other)
       {{
-         return other is {_state.TypeIdentifier} obj && Equals(obj);
+         return other is {_state.Type.Name} obj && Equals(obj);
       }}
 
       /// <inheritdoc />
-      public bool Equals({_state.TypeIdentifier}{_state.NullableQuestionMark} other)
+      public bool Equals({_state.Type.Name}{_state.NullableQuestionMark} other)
       {{");
 
          if (_state.Type.IsReferenceType)
@@ -656,7 +656,7 @@ using Thinktecture;
          else
          {
             _sb.Append($@"
-         return ""{_state.TypeIdentifier}"";");
+         return ""{_state.Type.Name}"";");
          }
 
          _sb.Append($@"
@@ -689,14 +689,14 @@ using Thinktecture;
          if(obj is null)
             return 1;
 
-         if(obj is not {_state.TypeIdentifier} valueType)
-            throw new ArgumentException(""Argument must be of type '{_state.TypeIdentifier}'."", nameof(obj));
+         if(obj is not {_state.Type.Name} valueType)
+            throw new ArgumentException(""Argument must be of type '{_state.Type.Name}'."", nameof(obj));
 
          return this.CompareTo(valueType);
       }}
 
       /// <inheritdoc />
-      public int CompareTo({_state.TypeIdentifier}{_state.NullableQuestionMark} obj)
+      public int CompareTo({_state.Type.Name}{_state.NullableQuestionMark} obj)
       {{");
 
          if (_state.Type.IsReferenceType)
