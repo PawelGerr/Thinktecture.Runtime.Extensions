@@ -36,7 +36,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
                                                                                                                  DiagnosticsDescriptors.MultipleMembersWithSameName,
                                                                                                                  DiagnosticsDescriptors.MappedMemberMustBePublic,
                                                                                                                  DiagnosticsDescriptors.MappedMethodMustBeNotBeGeneric,
-                                                                                                                 DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableEnumIfBaseEnumIsNot,
+                                                                                                                 DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableIfBaseEnumIsNot,
                                                                                                                  DiagnosticsDescriptors.DerivedEnumMustNotBeExtensible,
                                                                                                                  DiagnosticsDescriptors.BaseEnumMustBeExtensible,
                                                                                                                  DiagnosticsDescriptors.ExtensibleEnumCannotBeStruct,
@@ -59,39 +59,51 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
       private static void AnalyzeSymbol(SymbolAnalysisContext context)
       {
          var type = (INamedTypeSymbol)context.Symbol;
-         var declaration = type.DeclaringSyntaxReferences.First().GetSyntax();
 
-         if (declaration is not TypeDeclarationSyntax tds)
+         if (type.DeclaringSyntaxReferences.Length == 0)
             return;
 
-         if (type.IsEnum(out var enumInterfaces))
-            ValidateEnum(context, declaration, tds, type, enumInterfaces);
+         var declarations = new TypeDeclarationSyntax[type.DeclaringSyntaxReferences.Length];
 
-         if (type.HasValueTypeAttribute(out var valueTypeAttribute))
-            ValidateValueType(context, declaration, tds, type, valueTypeAttribute);
+         for (var i = 0; i < type.DeclaringSyntaxReferences.Length; i++)
+         {
+            var syntaxRef = type.DeclaringSyntaxReferences[i];
+
+            if (syntaxRef.GetSyntax() is not TypeDeclarationSyntax tds)
+               return;
+
+            declarations[i] = tds;
+         }
+
+         if (type.IsEnum(out var enumInterfaces))
+            ValidateEnum(context, declarations, type, enumInterfaces);
+
+         if (type.HasValueTypeAttribute(out _))
+            ValidateValueType(context, declarations, type);
       }
 
       private static void ValidateValueType(
          SymbolAnalysisContext context,
-         SyntaxNode declaration,
-         TypeDeclarationSyntax tds,
-         INamedTypeSymbol type,
-         AttributeData valueTypeAttribute)
+         IReadOnlyList<TypeDeclarationSyntax> declarations,
+         INamedTypeSymbol type)
       {
-         if (!declaration.IsKind(SyntaxKind.ClassDeclaration) && !declaration.IsKind(SyntaxKind.StructDeclaration))
+         var locationOfFirstDeclaration = declarations[0].Identifier.GetLocation(); // a representative for all
+
+         if (type.IsRecord ||
+             type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Struct)
          {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBeClassOrStruct, tds.Identifier.GetLocation(), tds.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, type.Name));
             return;
          }
 
          if (type.ContainingType is not null) // is nested class
          {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeCannotBeNestedClass, tds.Identifier.GetLocation(), tds.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, type.Name));
             return;
          }
 
-         TypeMustBePartial(context, tds);
-         StructMustBeReadOnly(context, tds, type);
+         TypeMustBePartial(context, type, declarations);
+         StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
          var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic)
                                      .Where(m => !m.Symbol.IsStatic)
@@ -130,11 +142,18 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          }
       }
 
-      private static void ValidateEnum(SymbolAnalysisContext context, SyntaxNode declaration, TypeDeclarationSyntax tds, INamedTypeSymbol enumType, IReadOnlyList<INamedTypeSymbol> enumInterfaces)
+      private static void ValidateEnum(
+         SymbolAnalysisContext context,
+         IReadOnlyList<TypeDeclarationSyntax> declarations,
+         INamedTypeSymbol enumType,
+         IReadOnlyList<INamedTypeSymbol> enumInterfaces)
       {
-         if (!declaration.IsKind(SyntaxKind.ClassDeclaration) && !declaration.IsKind(SyntaxKind.StructDeclaration))
+         var locationOfFirstDeclaration = declarations[0].Identifier.GetLocation(); // a representative for all
+
+         if (enumType.IsRecord ||
+             enumType.TypeKind != TypeKind.Class && enumType.TypeKind != TypeKind.Struct)
          {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBeClassOrStruct, tds.Identifier.GetLocation(), tds.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, enumType.Name));
             return;
          }
 
@@ -142,12 +161,12 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          {
             if (!enumType.BaseType.IsSelfOrBaseTypesAnEnum()) // base class is not an enum because in this case "DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces" kicks in
             {
-               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeCannotBeNestedClass, tds.Identifier.GetLocation(), tds.Identifier));
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, enumType.Name));
                return;
             }
          }
 
-         TypeMustBePartial(context, tds);
+         TypeMustBePartial(context, enumType, declarations);
 
          var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, context.ReportDiagnostic);
 
@@ -156,33 +175,33 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
          var isValidatable = validEnumInterface.IsValidatableEnumInterface();
 
-         StructMustBeReadOnly(context, tds, enumType);
+         StructMustBeReadOnly(context, enumType, locationOfFirstDeclaration);
 
          if (enumType.IsValueType && !isValidatable)
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, tds.Identifier.GetLocation(), tds.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType.Name));
 
-         ConstructorsMustBePrivate(context, tds, enumType);
+         ConstructorsMustBePrivate(context, enumType);
 
          var items = enumType.GetEnumItems();
 
          if (items.Count == 0)
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NoItemsWarning, tds.Identifier.GetLocation(), tds.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.NoItemsWarning, locationOfFirstDeclaration, enumType.Name));
 
          Check_ItemLike_StaticProperties(context, enumType);
          FieldsMustBePublic(context, enumType, items);
 
          if (isValidatable)
-            ValidateCreateInvalidItem(context, tds, enumType, validEnumInterface);
+            ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
 
          var assignableMembers = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic);
 
-         var hasBaseEnum = ValidateBaseEnum(context, tds, enumType, isValidatable);
+         var hasBaseEnum = ValidateBaseEnum(context, enumType, locationOfFirstDeclaration, isValidatable);
 
          var enumAttr = enumType.FindEnumGenerationAttribute();
 
          if (enumAttr is not null)
          {
-            EnumKeyPropertyNameMustNotBeItem(context, tds, enumAttr);
+            EnumKeyPropertyNameMustNotBeItem(context, enumAttr, locationOfFirstDeclaration);
 
             var comparer = enumAttr.FindKeyComparer();
             var comparerMembers = comparer is null ? Array.Empty<ISymbol>() : enumType.GetNonIgnoredMembers(comparer);
@@ -193,28 +212,28 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
             if (isExtensible)
             {
-               AssignableMembersMustBePublicOrBeMapped(context, tds, assignableMembers);
-               InstanceMembersMustNotBeVirtual(context, tds);
+               AssignableMembersMustBePublicOrBeMapped(context, enumType, assignableMembers);
+               InstanceMembersMustNotBeVirtual(context, enumType, locationOfFirstDeclaration);
 
                if (hasBaseEnum)
                {
                   context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.DerivedEnumMustNotBeExtensible,
-                                                             enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? tds.Identifier.GetLocation(),
-                                                             tds.Identifier));
+                                                             enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? locationOfFirstDeclaration,
+                                                             enumType.Name));
                }
 
                if (enumType.IsValueType)
                {
                   context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleEnumCannotBeStruct,
-                                                             enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? tds.Identifier.GetLocation(),
-                                                             tds.Identifier));
+                                                             enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? locationOfFirstDeclaration,
+                                                             enumType.Name));
                }
 
                if (enumType.IsAbstract)
                {
                   context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleEnumCannotBeAbstract,
-                                                             enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? tds.Identifier.GetLocation(),
-                                                             tds.Identifier));
+                                                             enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? locationOfFirstDeclaration,
+                                                             enumType.Name));
                }
             }
          }
@@ -266,21 +285,33 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          }
       }
 
-      private static void InstanceMembersMustNotBeVirtual(SymbolAnalysisContext context, TypeDeclarationSyntax tds)
+      private static void InstanceMembersMustNotBeVirtual(SymbolAnalysisContext context, INamedTypeSymbol enumType, Location location)
       {
-         foreach (var member in tds.Members)
+         foreach (var member in enumType.GetMembers())
          {
-            var virtualKeyword = member.Modifiers.FirstOrDefault(m => m.IsKind(SyntaxKind.VirtualKeyword));
+            if (!member.IsVirtual)
+               continue;
 
-            if (virtualKeyword != default)
-               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleEnumMustNotHaveVirtualMembers, virtualKeyword.GetLocation(), tds.Identifier));
+            var virtualKeyword = member.DeclaringSyntaxReferences
+                                       .Select(r =>
+                                               {
+                                                  var node = (MemberDeclarationSyntax)r.GetSyntax();
+                                                  var keyword = node.Modifiers.FirstOrDefault(m => m.IsKind(SyntaxKind.VirtualKeyword));
+
+                                                  return keyword == default ? (SyntaxToken?)null : keyword;
+                                               })
+                                       .FirstOrDefault(n => n is not null);
+
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleEnumMustNotHaveVirtualMembers,
+                                                       virtualKeyword?.GetLocation() ?? location,
+                                                       enumType.Name));
          }
       }
 
       private static bool ValidateBaseEnum(
          SymbolAnalysisContext context,
-         TypeDeclarationSyntax enumDeclaration,
          INamedTypeSymbol enumType,
+         Location location,
          bool isValidatable)
       {
          if (enumType.BaseType is null)
@@ -295,24 +326,20 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          var isBaseEnumValidatable = baseEnumInterfaces.GetValidEnumInterface(enumType.BaseType)?.IsValidatableEnumInterface() ?? false;
 
          if (isValidatable != isBaseEnumValidatable)
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableEnumIfBaseEnumIsNot, enumDeclaration.Identifier.GetLocation(), enumDeclaration.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableIfBaseEnumIsNot, location, enumType.Name));
 
          var baseEnumAttr = enumType.BaseType.FindEnumGenerationAttribute();
          var isBaseEnumExtensible = baseEnumAttr?.IsExtensible() ?? false;
 
          if (!isBaseEnumExtensible)
-         {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.BaseEnumMustBeExtensible,
-                                                       enumDeclaration.Identifier.GetLocation(),
-                                                       enumType.BaseType.Name));
-         }
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.BaseEnumMustBeExtensible, location, enumType.BaseType.Name));
 
          return true;
       }
 
       private static void AssignableMembersMustBePublicOrBeMapped(
          SymbolAnalysisContext context,
-         TypeDeclarationSyntax enumDeclaration,
+         INamedTypeSymbol enumType,
          IReadOnlyList<InstanceMemberInfo> assignableMembers)
       {
          foreach (var memberInfo in assignableMembers)
@@ -320,7 +347,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
             if (memberInfo.ReadAccessibility == Accessibility.Public || memberInfo.IsStatic)
                continue;
 
-            if (HasMemberMapping(context, memberInfo, enumDeclaration))
+            if (HasMemberMapping(context, enumType, memberInfo))
                continue;
 
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtensibleEnumMemberMustBePublicOrHaveMapping,
@@ -331,8 +358,8 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
 
       private static bool HasMemberMapping(
          SymbolAnalysisContext context,
-         InstanceMemberInfo memberInfo,
-         TypeDeclarationSyntax enumDeclaration)
+         INamedTypeSymbol enumType,
+         InstanceMemberInfo memberInfo)
       {
          var enumMemberAttr = memberInfo.Symbol.FindEnumGenerationMemberAttribute();
 
@@ -344,20 +371,15 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          if (mappedMemberName is null)
             return false;
 
-         var mappedMembers = enumDeclaration.Members.Where(m =>
-                                                           {
-                                                              if (m is FieldDeclarationSyntax field)
-                                                                 return field.Declaration.Variables[0].Identifier.ToString() == mappedMemberName;
-
-                                                              if (m is PropertyDeclarationSyntax property)
-                                                                 return property.Identifier.ToString() == mappedMemberName;
-
-                                                              if (m is MethodDeclarationSyntax method)
-                                                                 return method.Identifier.ToString() == mappedMemberName;
-
-                                                              return false;
-                                                           })
-                                            .ToList();
+         var mappedMembers = enumType.GetMembers()
+                                     .Where(m => m switch
+                                     {
+                                        IFieldSymbol field => field.Name == mappedMemberName,
+                                        IPropertySymbol property => property.Name == mappedMemberName,
+                                        IMethodSymbol method => method.Name == mappedMemberName,
+                                        _ => false
+                                     })
+                                     .ToList();
 
          if (mappedMembers.Count == 0)
          {
@@ -375,15 +397,14 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          {
             var mappedMember = mappedMembers[0];
 
-            if (!mappedMember.Modifiers.Any(SyntaxKind.PublicKeyword))
+            if (mappedMember.DeclaredAccessibility != Accessibility.Public)
             {
                context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.MappedMemberMustBePublic,
                                                           enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(),
                                                           mappedMemberName));
             }
 
-            if (mappedMember is MethodDeclarationSyntax method &&
-                method.TypeParameterList?.Parameters.Count > 0)
+            if (mappedMember is IMethodSymbol { TypeParameters: { Length: > 0 } })
             {
                context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.MappedMethodMustBeNotBeGeneric,
                                                           enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(),
@@ -425,7 +446,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          }
       }
 
-      private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, TypeDeclarationSyntax tds, INamedTypeSymbol enumType, INamedTypeSymbol validEnumInterface)
+      private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, INamedTypeSymbol validEnumInterface, Location location)
       {
          var keyType = validEnumInterface.TypeArguments[0];
          var hasCreateInvalidImplementation = enumType.HasCreateInvalidImplementation(keyType, context.ReportDiagnostic);
@@ -433,24 +454,24 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          if (!hasCreateInvalidImplementation && enumType.IsAbstract)
          {
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
-                                                       tds.Identifier.GetLocation(),
+                                                       location,
                                                        enumType.Name,
                                                        keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
          }
       }
 
-      private static void EnumKeyPropertyNameMustNotBeItem(SymbolAnalysisContext context, TypeDeclarationSyntax tds, AttributeData enumSettingsAttr)
+      private static void EnumKeyPropertyNameMustNotBeItem(SymbolAnalysisContext context, AttributeData enumSettingsAttr, Location location)
       {
          var keyPropName = enumSettingsAttr.FindKeyPropertyName();
 
-         if (StringComparer.OrdinalIgnoreCase.Equals(keyPropName, "Item"))
-         {
-            var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax();
+         if (!StringComparer.OrdinalIgnoreCase.Equals(keyPropName, "Item"))
+            return;
 
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
-                                                       attributeSyntax?.ArgumentList?.GetLocation() ?? tds.Identifier.GetLocation(),
-                                                       keyPropName));
-         }
+         var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax();
+
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
+                                                    attributeSyntax?.ArgumentList?.GetLocation() ?? location,
+                                                    keyPropName));
       }
 
       private static void FieldsMustBePublic(SymbolAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<IFieldSymbol> items)
@@ -466,27 +487,30 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          }
       }
 
-      private static void TypeMustBePartial(SymbolAnalysisContext context, TypeDeclarationSyntax tds)
+      private static void TypeMustBePartial(SymbolAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<TypeDeclarationSyntax> declarations)
       {
-         if (!tds.IsPartial())
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBePartial, tds.Identifier.GetLocation(), tds.Identifier));
+         foreach (var tds in declarations)
+         {
+            if (!tds.IsPartial())
+               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.TypeMustBePartial, tds.Identifier.GetLocation(), type.Name));
+         }
       }
 
-      private static void StructMustBeReadOnly(SymbolAnalysisContext context, TypeDeclarationSyntax tds, INamedTypeSymbol type)
+      private static void StructMustBeReadOnly(SymbolAnalysisContext context, INamedTypeSymbol type, Location location)
       {
          if (type.IsValueType && !type.IsReadOnly)
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.StructMustBeReadOnly, tds.Identifier.GetLocation(), tds.Identifier));
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.StructMustBeReadOnly, location, type.Name));
       }
 
-      private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, TypeDeclarationSyntax tds, INamedTypeSymbol type)
+      private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, INamedTypeSymbol type)
       {
          foreach (var ctor in type.Constructors)
          {
-            if (!ctor.IsImplicitlyDeclared && ctor.DeclaredAccessibility != Accessibility.Private)
-            {
-               var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation();
-               context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ConstructorsMustBePrivate, location, tds.Identifier));
-            }
+            if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
+               continue;
+
+            var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation();
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ConstructorsMustBePrivate, location, type.Name));
          }
       }
    }
