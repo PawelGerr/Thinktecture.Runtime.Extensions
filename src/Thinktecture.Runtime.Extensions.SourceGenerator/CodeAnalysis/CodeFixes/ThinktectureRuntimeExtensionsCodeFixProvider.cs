@@ -46,55 +46,47 @@ namespace Thinktecture.CodeAnalysis.CodeFixes
       {
          var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-         if (root is not null)
+         if (root is null)
+            return;
+
+         foreach (var diagnostic in context.Diagnostics)
          {
-            var ctx = new CodeFixesContext(context, root);
+            CodeFixesContext? ctx = null;
+            CodeFixesContext GetCodeFixesContext() => ctx ??= new CodeFixesContext(diagnostic, root);
 
-            var makePartialDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.TypeMustBePartial);
-
-            if (makePartialDiagnostic is not null)
-               context.RegisterCodeFix(CodeAction.Create(_MAKE_PARTIAL, _ => AddTypeModifierAsync(context.Document, root, ctx.TypeDeclaration, SyntaxKind.PartialKeyword), _MAKE_PARTIAL), makePartialDiagnostic);
-
-            var makeStructReadOnlyDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.StructMustBeReadOnly);
-
-            if (makeStructReadOnlyDiagnostic is not null)
-               context.RegisterCodeFix(CodeAction.Create(_MAKE_STRUCT_READONLY, _ => AddTypeModifierAsync(context.Document, root, ctx.TypeDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_STRUCT_READONLY), makeStructReadOnlyDiagnostic);
-
-            var makeFieldReadOnlyDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.FieldMustBeReadOnly);
-
-            if (makeFieldReadOnlyDiagnostic is not null)
-               context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_READONLY, _ => AddTypeModifierAsync(context.Document, root, ctx.FieldDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_FIELD_READONLY), makeFieldReadOnlyDiagnostic);
-
-            var makeFieldPublicDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.FieldMustBePublic);
-
-            if (makeFieldPublicDiagnostic is not null)
-               context.RegisterCodeFix(CodeAction.Create(_MAKE_MEMBER_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, ctx.FieldDeclaration, SyntaxKind.PublicKeyword), _MAKE_MEMBER_PUBLIC), makeFieldPublicDiagnostic);
-
-            var makePropertyReadOnlyDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.PropertyMustBeReadOnly);
-
-            if (makePropertyReadOnlyDiagnostic is not null)
-               context.RegisterCodeFix(CodeAction.Create(_REMOVE_PROPERTY_SETTER, _ => RemovePropertySetterAsync(context.Document, root, ctx.PropertyDeclaration), _REMOVE_PROPERTY_SETTER), makePropertyReadOnlyDiagnostic);
-
-            var needsCreateInvalidDiagnostic = FindDiagnostics(context, DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation);
-
-            if (needsCreateInvalidDiagnostic is not null)
-               context.RegisterCodeFix(CodeAction.Create(_IMPLEMENT_CREATE_INVALID, t => AddCreateInvalidItemAsync(context.Document, root, ctx.TypeDeclaration, t), _IMPLEMENT_CREATE_INVALID), needsCreateInvalidDiagnostic);
-
-            var makeDerivedTypePrivate = FindDiagnostics(context, DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate);
-
-            if (makeDerivedTypePrivate is not null)
-               context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, ctx.TypeDeclaration, SyntaxKind.PrivateKeyword), _MAKE_TYPE_PRIVATE), makeDerivedTypePrivate);
-
-            var makeDerivedTypePublic = FindDiagnostics(context, DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic);
-
-            if (makeDerivedTypePublic is not null)
-               context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, ctx.TypeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), makeDerivedTypePublic);
+            if (diagnostic.Id == DiagnosticsDescriptors.TypeMustBePartial.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_PARTIAL, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PartialKeyword), _MAKE_PARTIAL), diagnostic);
+            }
+            else if (diagnostic.Id == DiagnosticsDescriptors.StructMustBeReadOnly.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_STRUCT_READONLY, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_STRUCT_READONLY), diagnostic);
+            }
+            else if (diagnostic.Id == DiagnosticsDescriptors.FieldMustBeReadOnly.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_READONLY, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().FieldDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_FIELD_READONLY), diagnostic);
+            }
+            else if (diagnostic.Id == DiagnosticsDescriptors.FieldMustBePublic.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_MEMBER_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().FieldDeclaration, SyntaxKind.PublicKeyword), _MAKE_MEMBER_PUBLIC), diagnostic);
+            }
+            else if (diagnostic.Id == DiagnosticsDescriptors.PropertyMustBeReadOnly.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_REMOVE_PROPERTY_SETTER, _ => RemovePropertySetterAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration), _REMOVE_PROPERTY_SETTER), diagnostic);
+            }
+            else if (diagnostic.Id == DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_IMPLEMENT_CREATE_INVALID, t => AddCreateInvalidItemAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _IMPLEMENT_CREATE_INVALID), diagnostic);
+            }
+            else if (diagnostic.Id == DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PrivateKeyword), _MAKE_TYPE_PRIVATE), diagnostic);
+            }
+            else if (diagnostic.Id == DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic.Id)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), diagnostic);
+            }
          }
-      }
-
-      private static Diagnostic? FindDiagnostics(CodeFixContext context, DiagnosticDescriptor diagnostic)
-      {
-         return context.Diagnostics.FirstOrDefault(d => d.Id == diagnostic.Id);
       }
 
       private static Task<Document> AddTypeModifierAsync(
@@ -234,7 +226,7 @@ namespace Thinktecture.CodeAnalysis.CodeFixes
 
       private class CodeFixesContext
       {
-         private readonly CodeFixContext _context;
+         private readonly Diagnostic _diagnostic;
          private readonly SyntaxNode _root;
 
          private TypeDeclarationSyntax? _typeDeclaration;
@@ -246,16 +238,16 @@ namespace Thinktecture.CodeAnalysis.CodeFixes
          private PropertyDeclarationSyntax? _propertyDeclaration;
          public PropertyDeclarationSyntax? PropertyDeclaration => _propertyDeclaration ??= GetDeclaration<PropertyDeclarationSyntax>();
 
-         public CodeFixesContext(CodeFixContext context, SyntaxNode root)
+         public CodeFixesContext(Diagnostic diagnostic, SyntaxNode root)
          {
-            _context = context;
+            _diagnostic = diagnostic;
             _root = root;
          }
 
          private T? GetDeclaration<T>()
             where T : MemberDeclarationSyntax
          {
-            var diagnosticSpan = _context.Diagnostics.First().Location.SourceSpan;
+            var diagnosticSpan = _diagnostic.Location.SourceSpan;
             return _root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<T>().First();
          }
       }
