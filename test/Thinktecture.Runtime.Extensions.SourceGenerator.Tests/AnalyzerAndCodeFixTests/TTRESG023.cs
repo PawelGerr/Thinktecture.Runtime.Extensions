@@ -9,7 +9,7 @@ namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests
    {
       private const string _DIAGNOSTIC_ID = "TTRESG023";
 
-      public class ValueType_key_member_should_not_be_nullable
+      public class ValueObject_key_member_should_not_be_nullable
       {
          [Fact]
          public async Task Should_trigger_if_base_enum_is_Enum_and_derived_enum_is_ValidatableEnum()

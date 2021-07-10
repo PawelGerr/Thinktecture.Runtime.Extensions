@@ -24,12 +24,12 @@ namespace Thinktecture.CodeAnalysis
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeNewtonsoftJsonConverter").Any());
+         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectNewtonsoftJsonConverter").Any());
          return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
       }
 
       /// <inheritdoc />
-      protected override string? GenerateValueType(ValueTypeSourceGeneratorState state)
+      protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
       {
          if (state is null)
             throw new ArgumentNullException(nameof(state));
@@ -38,7 +38,7 @@ namespace Thinktecture.CodeAnalysis
             return GenerateJsonConverter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
          if (!state.SkipFactoryMethods)
-            return GenerateValueTypeJsonConverter(state);
+            return GenerateValueObjectJsonConverter(state);
 
          return null;
       }
@@ -65,12 +65,12 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
-      public {(requiresNew ? "new " : null)}class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<{typeName}, {keyType}>
+      public {(requiresNew ? "new " : null)}class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{typeName}, {keyType}>
       {{
-         public ValueTypeNewtonsoftJsonConverter()
+         public ValueObjectNewtonsoftJsonConverter()
             : base({typeName}.{factoryMethod}, obj => obj.{keyMember})
          {{
          }}
@@ -80,7 +80,7 @@ using Thinktecture;
 ";
       }
 
-      private static string GenerateValueTypeJsonConverter(ValueTypeSourceGeneratorState state)
+      private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state)
       {
          if (state.Type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
             return String.Empty;
@@ -99,10 +99,10 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueTypeNewtonsoftJsonConverter : JsonConverter<{state.Type.Name}{state.NullableQuestionMark}>
+      public class ValueObjectNewtonsoftJsonConverter : JsonConverter<{state.Type.Name}{state.NullableQuestionMark}>
       {{");
 
          sb.Append(@$"

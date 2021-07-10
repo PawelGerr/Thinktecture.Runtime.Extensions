@@ -16,7 +16,7 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests
 
       public Serialize()
       {
-         var resolver = CompositeResolver.Create(ValueTypeMessageFormatterResolver.Instance, StandardResolver.Instance);
+         var resolver = CompositeResolver.Create(ValueObjectMessageFormatterResolver.Instance, StandardResolver.Instance);
          _options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
       }
 
@@ -105,25 +105,25 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests
          value.Should().BeEquivalentTo(instance);
       }
 
-      public static IEnumerable<object[]> DataForValueTypeWithMultipleProperties => new[]
-                                                                                    {
-                                                                                       new object[] { null },
-                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, null, null!) },
-                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, null, null!) },
-                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(0, 0, String.Empty) },
-                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value") },
-                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value") },
-                                                                                       new object[] { ValueTypeWithMultipleProperties.Create(1, 42, "Value") }
-                                                                                    };
+      public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties => new[]
+                                                                                      {
+                                                                                         new object[] { null },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty) },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") }
+                                                                                      };
 
       [Theory]
-      [MemberData(nameof(DataForValueTypeWithMultipleProperties))]
-      public void Should_roundtrip_serialize_ValueTypeWithMultipleProperties(ValueTypeWithMultipleProperties expectedValueType)
+      [MemberData(nameof(DataForValueObjectWithMultipleProperties))]
+      public void Should_roundtrip_serialize_ValueObjectWithMultipleProperties(ValueObjectWithMultipleProperties expectedValueObject)
       {
-         var bytes = MessagePackSerializer.Serialize(expectedValueType);
-         var value = MessagePackSerializer.Deserialize<ValueTypeWithMultipleProperties>(bytes);
+         var bytes = MessagePackSerializer.Serialize(expectedValueObject);
+         var value = MessagePackSerializer.Deserialize<ValueObjectWithMultipleProperties>(bytes);
 
-         value.Should().BeEquivalentTo(expectedValueType);
+         value.Should().BeEquivalentTo(expectedValueObject);
       }
    }
 }

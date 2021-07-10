@@ -24,12 +24,12 @@ namespace Thinktecture.CodeAnalysis
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeJsonConverterFactory").Any());
+         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectJsonConverterFactory").Any());
          return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
       }
 
       /// <inheritdoc />
-      protected override string? GenerateValueType(ValueTypeSourceGeneratorState state)
+      protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
       {
          if (state is null)
             throw new ArgumentNullException(nameof(state));
@@ -38,7 +38,7 @@ namespace Thinktecture.CodeAnalysis
             return GenerateJsonConverter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
          if (!state.SkipFactoryMethods)
-            return GenerateValueTypeJsonConverter(state);
+            return GenerateValueObjectJsonConverter(state);
 
          return null;
       }
@@ -67,10 +67,10 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
-      public {(requiresNew ? "new " : null)}class ValueTypeJsonConverterFactory : JsonConverterFactory
+      public {(requiresNew ? "new " : null)}class ValueObjectJsonConverterFactory : JsonConverterFactory
       {{
          /// <inheritdoc />
          public override bool CanConvert(Type typeToConvert)
@@ -86,7 +86,7 @@ using Thinktecture;
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<{typeName}, {keyType}>({typeName}.{factoryMethod}, obj => obj.{keyMember}, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{typeName}, {keyType}>({typeName}.{factoryMethod}, obj => obj.{keyMember}, options);
          }}
       }}
    }}
@@ -94,7 +94,7 @@ using Thinktecture;
 ";
       }
 
-      private static string GenerateValueTypeJsonConverter(ValueTypeSourceGeneratorState state)
+      private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state)
       {
          if (state.Type.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
             return String.Empty;
@@ -112,10 +112,10 @@ using Thinktecture.Text.Json.Serialization;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueTypeJsonConverter : JsonConverter<{state.Type.Name}>
+      public class ValueObjectJsonConverter : JsonConverter<{state.Type.Name}>
       {{");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -135,7 +135,7 @@ using Thinktecture.Text.Json.Serialization;
 
          sb.Append(@$"
 
-         public ValueTypeJsonConverter(JsonSerializerOptions options)
+         public ValueObjectJsonConverter(JsonSerializerOptions options)
          {{
             if(options is null)
                throw new ArgumentNullException(nameof(options));
@@ -296,7 +296,7 @@ using Thinktecture.Text.Json.Serialization;
          }}
       }}
 
-      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      public class ValueObjectJsonConverterFactory : JsonConverterFactory
       {{
          /// <inheritdoc />
          public override bool CanConvert(Type typeToConvert)
@@ -312,7 +312,7 @@ using Thinktecture.Text.Json.Serialization;
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new ValueTypeJsonConverter(options);
+            return new ValueObjectJsonConverter(options);
          }}
       }}
    }}

@@ -25,9 +25,9 @@ namespace Thinktecture
          return symbol.FindAttribute(attributeType) is not null;
       }
 
-      public static AttributeData? FindValueTypeEqualityMemberAttribute(this ISymbol symbol)
+      public static AttributeData? FindValueObjectEqualityMemberAttribute(this ISymbol symbol)
       {
-         return symbol.FindAttribute("Thinktecture.ValueTypeEqualityMemberAttribute");
+         return symbol.FindAttribute("Thinktecture.ValueObjectEqualityMemberAttribute");
       }
 
       public static AttributeData? FindEnumGenerationMemberAttribute(this ISymbol symbol)
@@ -35,9 +35,9 @@ namespace Thinktecture
          return symbol.FindAttribute("Thinktecture.EnumGenerationMemberAttribute");
       }
 
-      public static AttributeData? FindValueTypeConstructorAttribute(this ISymbol symbol)
+      public static AttributeData? FindValueObjectConstructorAttribute(this ISymbol symbol)
       {
-         return symbol.FindAttribute("Thinktecture.Internal.ValueTypeConstructorAttribute");
+         return symbol.FindAttribute("Thinktecture.Internal.ValueObjectConstructorAttribute");
       }
    }
 }

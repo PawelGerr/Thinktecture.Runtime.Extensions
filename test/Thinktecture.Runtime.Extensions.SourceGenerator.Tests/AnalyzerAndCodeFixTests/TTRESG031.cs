@@ -21,10 +21,10 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
-      [{|#0:ValueTypeEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
+      [{|#0:ValueObjectEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
       public readonly int Field;
 
       public readonly int Field2;
@@ -32,7 +32,7 @@ namespace TestNamespace
 }";
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Comparer<int>.Default");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
       }
 
       [Fact]
@@ -47,15 +47,15 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
-      [{|#0:ValueTypeEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
+      [{|#0:ValueObjectEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
       public readonly int Field;
    }
 }";
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
       }
    }
 }

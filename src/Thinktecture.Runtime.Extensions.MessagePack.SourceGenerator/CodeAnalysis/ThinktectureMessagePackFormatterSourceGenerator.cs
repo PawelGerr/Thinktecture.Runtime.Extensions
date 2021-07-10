@@ -24,12 +24,12 @@ namespace Thinktecture.CodeAnalysis
          if (state is null)
             throw new ArgumentNullException(nameof(state));
 
-         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueTypeMessagePackFormatter").Any());
+         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectMessagePackFormatter").Any());
          return GenerateFormatter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
       }
 
       /// <inheritdoc />
-      protected override string? GenerateValueType(ValueTypeSourceGeneratorState state)
+      protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
       {
          if (state is null)
             throw new ArgumentNullException(nameof(state));
@@ -38,7 +38,7 @@ namespace Thinktecture.CodeAnalysis
             return GenerateFormatter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
          if (!state.SkipFactoryMethods)
-            return GenerateValueTypeFormatter(state);
+            return GenerateValueObjectFormatter(state);
 
          return null;
       }
@@ -65,12 +65,12 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
 {{
-   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
-      public {(requiresNew ? "new " : null)}class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<{typeName}, {keyType}>
+      public {(requiresNew ? "new " : null)}class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<{typeName}, {keyType}>
       {{
-         public ValueTypeMessagePackFormatter()
+         public ValueObjectMessagePackFormatter()
             : base({typeName}.{factoryMethod}, obj => obj.{keyMember})
          {{
          }}
@@ -80,7 +80,7 @@ using Thinktecture;
 ";
       }
 
-      private static string GenerateValueTypeFormatter(ValueTypeSourceGeneratorState state)
+      private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state)
       {
          if (state.Type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
             return String.Empty;
@@ -98,10 +98,10 @@ using Thinktecture;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
-   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueTypeMessagePackFormatter : IMessagePackFormatter<{state.Type.Name}{state.NullableQuestionMark}>
+      public class ValueObjectMessagePackFormatter : IMessagePackFormatter<{state.Type.Name}{state.NullableQuestionMark}>
       {{
          /// <inheritdoc />
          public {state.Type.Name}{state.NullableQuestionMark} Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)

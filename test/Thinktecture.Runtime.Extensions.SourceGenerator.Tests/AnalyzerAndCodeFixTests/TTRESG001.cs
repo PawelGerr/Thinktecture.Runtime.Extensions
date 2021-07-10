@@ -135,7 +135,7 @@ namespace TestNamespace
          }
       }
 
-      public class ValueType_fields_must_be_readonly
+      public class ValueObject_fields_must_be_readonly
       {
          [Fact]
          public async Task Should_trigger_on_static_non_readonly_field()
@@ -146,8 +146,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public static object {|#0:Field|} = default;
    }
@@ -159,15 +159,15 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public static readonly object {|#0:Field|} = default;
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueType");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
 
          [Fact]
@@ -179,8 +179,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public object {|#0:Field|} = default;
    }
@@ -192,15 +192,15 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public readonly object {|#0:Field|} = default;
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueType");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
       }
    }

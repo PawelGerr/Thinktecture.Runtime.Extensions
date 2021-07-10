@@ -18,15 +18,15 @@ namespace Thinktecture
          return tds.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
       }
 
-      public static bool IsValueTypeCandidate(this TypeDeclarationSyntax tds)
+      public static bool IsValueObjectCandidate(this TypeDeclarationSyntax tds)
       {
-         return tds.AttributeLists.Any(l => l.Attributes.Any(a => CouldBeValueType(a.Name)));
+         return tds.AttributeLists.Any(l => l.Attributes.Any(a => CouldBeValueObject(a.Name)));
       }
 
-      private static bool CouldBeValueType(TypeSyntax? type)
+      private static bool CouldBeValueObject(TypeSyntax? type)
       {
          var typeName = ExtractTypeName(type);
-         return typeName == "ValueTypeAttribute" || typeName == "ValueType";
+         return typeName == "ValueObjectAttribute" || typeName == "ValueObject";
       }
 
       private static string? ExtractTypeName(TypeSyntax? type)

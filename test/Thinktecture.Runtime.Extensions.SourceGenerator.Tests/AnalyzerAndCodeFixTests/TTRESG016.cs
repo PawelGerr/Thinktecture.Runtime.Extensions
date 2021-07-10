@@ -34,10 +34,10 @@ namespace TestNamespace
          }
       }
 
-      public class ValueType_cannot_be_nested_class
+      public class ValueObject_cannot_be_nested_class
       {
          [Fact]
-         public async Task Should_trigger_if_valuetype_is_nested_class()
+         public async Task Should_trigger_if_valueobject_is_nested_class()
          {
             var code = @"
 using System;
@@ -47,15 +47,15 @@ namespace TestNamespace
 {
 	public class SomeClass
 	{
-      [ValueType]
-      public partial class {|#0:TestValueType|}
+      [ValueObject]
+      public partial class {|#0:TestValueObject|}
 	   {
       }
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueType");
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
       }
    }

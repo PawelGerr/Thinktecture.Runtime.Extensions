@@ -25,17 +25,17 @@ namespace Thinktecture
          return false;
       }
 
-      public static bool HasValueTypeAttribute(this ITypeSymbol? type, [MaybeNullWhen(false)] out AttributeData valueTypeAttribute)
+      public static bool HasValueObjectAttribute(this ITypeSymbol? type, [MaybeNullWhen(false)] out AttributeData valueObjectAttribute)
       {
          if (type is null)
          {
-            valueTypeAttribute = null;
+            valueObjectAttribute = null;
             return false;
          }
 
-         valueTypeAttribute = type.FindValueTypeAttribute();
+         valueObjectAttribute = type.FindValueObjectAttribute();
 
-         return valueTypeAttribute is not null;
+         return valueObjectAttribute is not null;
       }
 
       public static bool IsEnum(this ITypeSymbol enumType, out IReadOnlyList<INamedTypeSymbol> enumInterfaces)
@@ -164,9 +164,9 @@ namespace Thinktecture
          return type.FindAttribute("Thinktecture.EnumGenerationAttribute");
       }
 
-      public static AttributeData? FindValueTypeAttribute(this ITypeSymbol type)
+      public static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)
       {
-         return type.FindAttribute("Thinktecture.ValueTypeAttribute");
+         return type.FindAttribute("Thinktecture.ValueObjectAttribute");
       }
 
       public static bool HasStructLayoutAttribute(this ITypeSymbol enumType)
@@ -218,7 +218,7 @@ namespace Thinktecture
       public static IEnumerable<ISymbol> GetNonIgnoredMembers(this ITypeSymbol type, string? name = null)
       {
          return (name is not null ? type.GetMembers(name) : type.GetMembers())
-            .Where(m => !m.HasAttribute("Thinktecture.ValueTypeIgnoreAttribute"));
+            .Where(m => !m.HasAttribute("Thinktecture.ValueObjectIgnoreAttribute"));
       }
 
       public static IReadOnlyList<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(

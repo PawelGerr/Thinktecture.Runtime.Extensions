@@ -5,7 +5,7 @@ namespace Thinktecture.Runtime.Tests.TestEntities
    public class TestDbContext : DbContext
    {
       public DbSet<TestEntity_with_OwnedTypes> TestEntities_with_OwnedTypes { get; set; }
-      public DbSet<TestEntity_with_Enum_and_ValueTypes> TestEntities_with_Enum_and_ValueTypes { get; set; }
+      public DbSet<TestEntity_with_Enum_and_ValueObjects> TestEntities_with_Enum_and_ValueObjects { get; set; }
 
       public TestDbContext()
       {
@@ -28,9 +28,9 @@ namespace Thinktecture.Runtime.Tests.TestEntities
          base.OnModelCreating(modelBuilder);
 
          TestEntity_with_OwnedTypes.Configure(modelBuilder);
-         TestEntity_with_Enum_and_ValueTypes.Configure(modelBuilder);
+         TestEntity_with_Enum_and_ValueObjects.Configure(modelBuilder);
 
-         modelBuilder.AddEnumAndValueTypeConverters(true);
+         modelBuilder.AddEnumAndValueObjectConverters(true);
       }
    }
 }

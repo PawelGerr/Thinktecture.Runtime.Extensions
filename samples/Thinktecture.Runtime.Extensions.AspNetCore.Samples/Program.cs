@@ -113,8 +113,8 @@ namespace Thinktecture
                        .ConfigureServices(collection =>
                                           {
                                              collection.AddSingleton(loggerFactory);
-                                             collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueTypeModelBinderProvider()))
-                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ValueTypeJsonConverterFactory()));
+                                             collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
+                                                       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory()));
                                           })
                        .Build();
 

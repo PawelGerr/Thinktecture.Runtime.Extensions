@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture
 {
-   [ValueType]
+   [ValueObject]
    public partial class Boundary
    {
       public decimal Lower { get; }

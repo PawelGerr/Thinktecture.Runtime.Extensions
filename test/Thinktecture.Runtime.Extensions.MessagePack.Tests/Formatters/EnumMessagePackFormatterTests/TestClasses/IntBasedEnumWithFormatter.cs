@@ -3,7 +3,7 @@ using Thinktecture.Formatters;
 
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses
 {
-   public class IntBasedEnumWithFormatterMessagePackFormatter : ValueTypeMessagePackFormatter<IntBasedEnumWithFormatter, int>
+   public class IntBasedEnumWithFormatterMessagePackFormatter : ValueObjectMessagePackFormatter<IntBasedEnumWithFormatter, int>
    {
       public IntBasedEnumWithFormatterMessagePackFormatter()
          : base(IntBasedEnumWithFormatter.Get, obj => obj.Key)

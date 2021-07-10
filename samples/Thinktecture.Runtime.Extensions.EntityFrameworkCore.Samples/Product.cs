@@ -1,6 +1,6 @@
 ﻿using System;
 using Thinktecture.EnumLikeClasses;
-using Thinktecture.ValueTypes;
+using Thinktecture.ValueObjects;
 
 namespace Thinktecture
 {

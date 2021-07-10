@@ -84,7 +84,7 @@ namespace TestNamespace
          }
       }
 
-      public class ValueType_must_be_class_or_struct
+      public class ValueObject_must_be_class_or_struct
       {
          [Fact]
          public async Task Should_trigger_on_record()
@@ -95,14 +95,14 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	[ValueType]
-   public partial record {|#0:TestValueType|}
+	[ValueObject]
+   public partial record {|#0:TestValueObject|}
 	{
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueType");
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
 
          [Fact]
@@ -114,13 +114,13 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	[ValueType]
-   public partial class TestValueType
+	[ValueObject]
+   public partial class TestValueObject
 	{
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
          }
 
          [Fact]
@@ -132,13 +132,13 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	[ValueType]
-	public readonly partial struct TestValueType
+	[ValueObject]
+	public readonly partial struct TestValueObject
 	{
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
          }
       }
    }

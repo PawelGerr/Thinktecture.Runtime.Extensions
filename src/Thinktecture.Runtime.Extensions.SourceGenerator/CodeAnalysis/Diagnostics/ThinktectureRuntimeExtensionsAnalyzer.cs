@@ -78,11 +78,11 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
          if (type.IsEnum(out var enumInterfaces))
             ValidateEnum(context, declarations, type, enumInterfaces);
 
-         if (type.HasValueTypeAttribute(out _))
-            ValidateValueType(context, declarations, type);
+         if (type.HasValueObjectAttribute(out _))
+            ValidateValueObject(context, declarations, type);
       }
 
-      private static void ValidateValueType(
+      private static void ValidateValueObject(
          SymbolAnalysisContext context,
          IReadOnlyList<TypeDeclarationSyntax> declarations,
          INamedTypeSymbol type)
@@ -126,7 +126,7 @@ namespace Thinktecture.CodeAnalysis.Diagnostics
       {
          foreach (var assignableMember in assignableMembers)
          {
-            var memberAttr = assignableMember.Symbol.FindValueTypeEqualityMemberAttribute();
+            var memberAttr = assignableMember.Symbol.FindValueObjectEqualityMemberAttribute();
 
             if (memberAttr is null)
                continue;

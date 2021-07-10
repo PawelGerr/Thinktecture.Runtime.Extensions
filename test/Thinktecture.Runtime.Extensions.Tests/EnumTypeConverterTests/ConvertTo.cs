@@ -8,75 +8,75 @@ namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests
    public class ConvertTo : TypeConverterTestsBase
    {
       [Fact]
-      public void Should_throw_if_null_is_provided_and_type_is_valuetype()
+      public void Should_throw_if_null_is_provided_and_type_is_valueobject()
       {
-         IntBasedConverter.Invoking(c => c.ConvertTo(null, null, null, typeof(int)))
-                          .Should().Throw<NotSupportedException>()
-                          .WithMessage("Int32 is a struct and cannot be converted to 'null'.");
+         IntBasedTypeConverter.Invoking(c => c.ConvertTo(null, null, null, typeof(int)))
+                              .Should().Throw<NotSupportedException>()
+                              .WithMessage("Int32 is a struct and cannot be converted to 'null'.");
       }
 
       [Fact]
       public void Should_return_default_of_provided_destinationtype_if_null_is_provided_and_type_is_referencetype()
       {
-         IntBasedConverter.ConvertTo(null, null, null, typeof(string)).Should().BeNull();
+         IntBasedTypeConverter.ConvertTo(null, null, null, typeof(string)).Should().BeNull();
       }
 
       [Fact]
       public void Should_return_default_of_the_key_if_null_is_provided()
       {
-         IntBasedConverter.ConvertTo(null, null, null, typeof(TestEnum)).Should().BeNull();
+         IntBasedTypeConverter.ConvertTo(null, null, null, typeof(TestEnum)).Should().BeNull();
       }
 
       [Fact]
       public void Should_return_key_if_type_matches_the_key()
       {
-         StringBasedConverter.ConvertTo(null, null, TestEnum.Item1, typeof(string)).Should().Be("item1");
+         StringBasedTypeConverter.ConvertTo(null, null, TestEnum.Item1, typeof(string)).Should().Be("item1");
 
-         ExtensibleTestEnumConverter.ConvertTo(null, null, ExtensibleTestEnum.Item1, typeof(string)).Should().Be("Item1");
-         ExtendedTestEnumConverter.ConvertTo(null, null, ExtendedTestEnum.Item1, typeof(string)).Should().Be("Item1");
-         DifferentAssemblyExtendedTestEnumConverter.ConvertTo(null, null, DifferentAssemblyExtendedTestEnum.Item1, typeof(string)).Should().Be("Item1");
+         ExtensibleTestEnumTypeConverter.ConvertTo(null, null, ExtensibleTestEnum.Item1, typeof(string)).Should().Be("Item1");
+         ExtendedTestEnumTypeConverter.ConvertTo(null, null, ExtendedTestEnum.Item1, typeof(string)).Should().Be("Item1");
+         DifferentAssemblyExtendedTestEnumTypeConverter.ConvertTo(null, null, DifferentAssemblyExtendedTestEnum.Item1, typeof(string)).Should().Be("Item1");
       }
 
       [Fact]
       public void Should_return_item_if_type_matches_the_enum()
       {
-         StringBasedConverter.ConvertTo(null, null, TestEnum.Item1, typeof(TestEnum)).Should().Be(TestEnum.Item1);
+         StringBasedTypeConverter.ConvertTo(null, null, TestEnum.Item1, typeof(TestEnum)).Should().Be(TestEnum.Item1);
 
-         ExtensibleTestEnumConverter.ConvertTo(null, null, ExtensibleTestEnum.Item1, typeof(ExtensibleTestEnum)).Should().Be(ExtensibleTestEnum.Item1);
-         ExtendedTestEnumConverter.ConvertTo(null, null, ExtendedTestEnum.Item1, typeof(ExtendedTestEnum)).Should().Be(ExtendedTestEnum.Item1);
-         DifferentAssemblyExtendedTestEnumConverter.ConvertTo(null, null, DifferentAssemblyExtendedTestEnum.Item1, typeof(DifferentAssemblyExtendedTestEnum)).Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
+         ExtensibleTestEnumTypeConverter.ConvertTo(null, null, ExtensibleTestEnum.Item1, typeof(ExtensibleTestEnum)).Should().Be(ExtensibleTestEnum.Item1);
+         ExtendedTestEnumTypeConverter.ConvertTo(null, null, ExtendedTestEnum.Item1, typeof(ExtendedTestEnum)).Should().Be(ExtendedTestEnum.Item1);
+         DifferentAssemblyExtendedTestEnumTypeConverter.ConvertTo(null, null, DifferentAssemblyExtendedTestEnum.Item1, typeof(DifferentAssemblyExtendedTestEnum)).Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
       }
 
       [Fact]
       public void Should_throw_if_parameter_type_doesnt_match_the_enum_and_key()
       {
-         StringBasedConverter.Invoking(c => c.ConvertTo(null, null, TestEnum.Item1, typeof(Guid)))
-                             .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
+         StringBasedTypeConverter.Invoking(c => c.ConvertTo(null, null, TestEnum.Item1, typeof(Guid)))
+                                 .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
 
-         ExtensibleTestEnumConverter.Invoking(c => c.ConvertTo(null, null, ExtensibleTestEnum.Item1, typeof(Guid)))
-                                    .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
-         ExtendedTestEnumConverter.Invoking(c => c.ConvertTo(null, null, ExtendedTestEnum.Item1, typeof(Guid)))
-                                  .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
-         DifferentAssemblyExtendedTestEnumConverter.Invoking(c => c.ConvertTo(null, null, DifferentAssemblyExtendedTestEnum.Item1, typeof(Guid)))
-                                                   .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
+         ExtensibleTestEnumTypeConverter.Invoking(c => c.ConvertTo(null, null, ExtensibleTestEnum.Item1, typeof(Guid)))
+                                        .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
+         ExtendedTestEnumTypeConverter.Invoking(c => c.ConvertTo(null, null, ExtendedTestEnum.Item1, typeof(Guid)))
+                                      .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
+         DifferentAssemblyExtendedTestEnumTypeConverter.Invoking(c => c.ConvertTo(null, null, DifferentAssemblyExtendedTestEnum.Item1, typeof(Guid)))
+                                                       .Should().Throw<NotSupportedException>().WithMessage("'StringConverter' is unable to convert 'System.String' to 'System.Guid'.");
       }
 
       [Fact]
       public void Should_return_true_if_type_doesnt_matches_the_key_but_there_is_default_conversion_of_key_to_string()
       {
-         IntBasedConverter.ConvertTo(null, null, IntegerEnum.Item1, typeof(string)).Should().Be("1");
+         IntBasedTypeConverter.ConvertTo(null, null, IntegerEnum.Item1, typeof(string)).Should().Be("1");
       }
 
       [Fact]
       public void Should_convert_struct_enum_to_nullable_struct()
       {
-         IntBasedStructEnumConverter.ConvertTo(null, null, StructIntegerEnum.Item1, typeof(StructIntegerEnum?)).Should().Be(StructIntegerEnum.Item1);
+         IntBasedStructEnumTypeConverter.ConvertTo(null, null, StructIntegerEnum.Item1, typeof(StructIntegerEnum?)).Should().Be(StructIntegerEnum.Item1);
       }
 
       [Fact]
       public void Should_convert_null_to_nullable_struct()
       {
-         IntBasedStructEnumConverter.ConvertTo(null, null, null, typeof(StructIntegerEnum?)).Should().BeNull();
+         IntBasedStructEnumTypeConverter.ConvertTo(null, null, null, typeof(StructIntegerEnum?)).Should().BeNull();
       }
    }
 }

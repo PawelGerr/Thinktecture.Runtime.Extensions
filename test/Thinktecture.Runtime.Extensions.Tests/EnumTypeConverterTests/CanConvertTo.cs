@@ -10,55 +10,55 @@ namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests
       [Fact]
       public void Should_return_true_if_type_matches_the_key()
       {
-         StringBasedConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+         StringBasedTypeConverter.CanConvertTo(typeof(string)).Should().BeTrue();
 
-         ExtensibleTestEnumConverter.CanConvertTo(typeof(string)).Should().BeTrue();
-         ExtendedTestEnumConverter.CanConvertTo(typeof(string)).Should().BeTrue();
-         DifferentAssemblyExtendedTestEnumConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+         ExtensibleTestEnumTypeConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+         ExtendedTestEnumTypeConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+         DifferentAssemblyExtendedTestEnumTypeConverter.CanConvertTo(typeof(string)).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_true_if_type_matches_the_enum()
       {
-         StringBasedConverter.CanConvertTo(typeof(TestEnum)).Should().BeTrue();
+         StringBasedTypeConverter.CanConvertTo(typeof(TestEnum)).Should().BeTrue();
 
-         ExtensibleTestEnumConverter.CanConvertTo(typeof(ExtensibleTestEnum)).Should().BeTrue();
-         ExtendedTestEnumConverter.CanConvertTo(typeof(ExtendedTestEnum)).Should().BeTrue();
-         DifferentAssemblyExtendedTestEnumConverter.CanConvertTo(typeof(DifferentAssemblyExtendedTestEnum)).Should().BeTrue();
+         ExtensibleTestEnumTypeConverter.CanConvertTo(typeof(ExtensibleTestEnum)).Should().BeTrue();
+         ExtendedTestEnumTypeConverter.CanConvertTo(typeof(ExtendedTestEnum)).Should().BeTrue();
+         DifferentAssemblyExtendedTestEnumTypeConverter.CanConvertTo(typeof(DifferentAssemblyExtendedTestEnum)).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_false_if_type_doesnt_match_the_enum_and_key()
       {
-         StringBasedConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
+         StringBasedTypeConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
 
-         ExtensibleTestEnumConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
-         ExtendedTestEnumConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
-         DifferentAssemblyExtendedTestEnumConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
+         ExtensibleTestEnumTypeConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
+         ExtendedTestEnumTypeConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
+         DifferentAssemblyExtendedTestEnumTypeConverter.CanConvertTo(typeof(Guid)).Should().BeFalse();
       }
 
       [Fact]
       public void Should_return_true_if_type_doesnt_matches_the_key_but_there_is_default_conversion_of_key_to_string()
       {
-         IntBasedConverter.CanConvertTo(typeof(string)).Should().BeTrue();
+         IntBasedTypeConverter.CanConvertTo(typeof(string)).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_true_if_type_is_nullable_struct()
       {
-         IntBasedConverter.CanConvertTo(typeof(int?)).Should().BeTrue();
+         IntBasedTypeConverter.CanConvertTo(typeof(int?)).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_true_for_structs()
       {
-         IntBasedStructEnumConverter.CanConvertTo(typeof(StructIntegerEnum)).Should().BeTrue();
+         IntBasedStructEnumTypeConverter.CanConvertTo(typeof(StructIntegerEnum)).Should().BeTrue();
       }
 
       [Fact]
       public void Should_return_true_for_nullable_structs()
       {
-         IntBasedStructEnumConverter.CanConvertTo(typeof(StructIntegerEnum?)).Should().BeTrue();
+         IntBasedStructEnumTypeConverter.CanConvertTo(typeof(StructIntegerEnum?)).Should().BeTrue();
       }
    }
 }

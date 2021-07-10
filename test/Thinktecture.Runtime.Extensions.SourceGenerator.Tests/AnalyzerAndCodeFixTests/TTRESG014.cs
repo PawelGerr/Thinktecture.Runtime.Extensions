@@ -70,7 +70,6 @@ namespace TestNamespace
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
 
-
       [Fact]
       public async Task Should_not_trigger_if_2nd_level_type_is_public()
       {

@@ -45,11 +45,11 @@ namespace Thinktecture.CodeAnalysis
             }
          }
 
-         foreach (var state in PrepareValueTypes(context.Compilation, receiver.ValueTypes))
+         foreach (var state in PrepareValueObjects(context.Compilation, receiver.ValueObjects))
          {
             try
             {
-               var generatedCode = GenerateValueType(state);
+               var generatedCode = GenerateValueObject(state);
                EmitFile(context, state.Type.Name, generatedCode);
             }
             catch (Exception ex)
@@ -92,18 +92,18 @@ namespace Thinktecture.CodeAnalysis
          return states.OrderBy(s => s).ToList();
       }
 
-      private static IReadOnlyCollection<ValueTypeSourceGeneratorState> PrepareValueTypes(
+      private static IReadOnlyCollection<ValueObjectSourceGeneratorState> PrepareValueObjects(
          Compilation compilation,
-         IReadOnlyList<TypeDeclarationSyntax> valueTypes)
+         IReadOnlyList<TypeDeclarationSyntax> valueObjects)
       {
-         if (valueTypes.Count == 0)
-            return Array.Empty<ValueTypeSourceGeneratorState>();
+         if (valueObjects.Count == 0)
+            return Array.Empty<ValueObjectSourceGeneratorState>();
 
-         var states = new HashSet<ValueTypeSourceGeneratorState>();
+         var states = new HashSet<ValueObjectSourceGeneratorState>();
 
-         foreach (var tds in valueTypes)
+         foreach (var tds in valueObjects)
          {
-            var state = GetValueTypeState(compilation, tds);
+            var state = GetValueObjectState(compilation, tds);
 
             if (state is not null)
                states.Add(state);
@@ -112,7 +112,7 @@ namespace Thinktecture.CodeAnalysis
          return states;
       }
 
-      private static ValueTypeSourceGeneratorState? GetValueTypeState(Compilation compilation, TypeDeclarationSyntax declaration)
+      private static ValueObjectSourceGeneratorState? GetValueObjectState(Compilation compilation, TypeDeclarationSyntax declaration)
       {
          var model = compilation.GetSemanticModel(declaration.SyntaxTree, true);
          var type = model.GetDeclaredSymbol(declaration);
@@ -120,13 +120,13 @@ namespace Thinktecture.CodeAnalysis
          if (type is null)
             return null;
 
-         if (!type.HasValueTypeAttribute(out var valueTypeAttribute))
+         if (!type.HasValueObjectAttribute(out var valueObjectAttribute))
             return null;
 
          if (type.ContainingType is not null)
             return null;
 
-         return new ValueTypeSourceGeneratorState(model, type, valueTypeAttribute);
+         return new ValueObjectSourceGeneratorState(model, type, valueObjectAttribute);
       }
 
       private static EnumSourceGeneratorState? GetEnumState(Compilation compilation, TypeDeclarationSyntax declaration)
@@ -164,7 +164,7 @@ namespace Thinktecture.CodeAnalysis
          }
       }
 
-      protected virtual string? GenerateValueType(ValueTypeSourceGeneratorState state)
+      protected virtual string? GenerateValueObject(ValueObjectSourceGeneratorState state)
       {
          return null;
       }

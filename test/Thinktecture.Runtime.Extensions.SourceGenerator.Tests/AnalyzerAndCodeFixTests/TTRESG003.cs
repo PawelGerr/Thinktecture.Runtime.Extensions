@@ -278,7 +278,7 @@ namespace TestNamespace
          }
       }
 
-      public class ValueType_properties_must_be_readonly
+      public class ValueObject_properties_must_be_readonly
       {
          [Fact]
          public async Task Should_trigger_on_non_readonly_instance_property()
@@ -289,8 +289,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public int {|#0:InstanceProperty|} { get; set; }
    }
@@ -302,15 +302,15 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public int InstanceProperty { get; }
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueType");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
 
          [Fact]
@@ -322,8 +322,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public static int {|#0:InstanceProperty|} { get; set; }
    }
@@ -335,17 +335,16 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class TestValueType
+   [ValueObject]
+	public partial class TestValueObject
 	{
       public static int InstanceProperty { get; }
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueType");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
       }
-
    }
 }

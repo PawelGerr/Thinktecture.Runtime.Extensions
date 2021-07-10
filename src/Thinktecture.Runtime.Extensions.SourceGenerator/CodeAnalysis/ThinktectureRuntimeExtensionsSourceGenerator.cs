@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 namespace Thinktecture.CodeAnalysis
 {
    /// <summary>
-   /// Source generator for enum-like class and value type.
+   /// Source generator for enum-like class and value object.
    /// </summary>
    [Generator]
    public class ThinktectureRuntimeExtensionsSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
@@ -25,9 +25,9 @@ namespace Thinktecture.CodeAnalysis
       }
 
       /// <inheritdoc />
-      protected override string GenerateValueType(ValueTypeSourceGeneratorState state)
+      protected override string GenerateValueObject(ValueObjectSourceGeneratorState state)
       {
-         return new ValueTypeSourceGenerator(state).Generate();
+         return new ValueObjectSourceGenerator(state).Generate();
       }
    }
 }

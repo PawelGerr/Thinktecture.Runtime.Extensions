@@ -39,7 +39,7 @@ namespace Thinktecture.CodeAnalysis
                                                var memberName = ctorAttrArgs[i];
 
                                                if (memberName.Value is not string name)
-                                                  throw new Exception($"The parameter '{memberName.Value}' of the 'ValueTypeConstructorAttribute' of '{Type.Name}' at index {i} must be a string.");
+                                                  throw new Exception($"The parameter '{memberName.Value}' of the 'ValueObjectConstructorAttribute' of '{Type.Name}' at index {i} must be a string.");
 
                                                return new DefaultSymbolState(name, p.Type, p.Name, false);
                                             })
@@ -52,18 +52,18 @@ namespace Thinktecture.CodeAnalysis
 
       private IReadOnlyList<TypedConstant> GetCtorParameterNames(IMethodSymbol ctor)
       {
-         var ctorAttr = Type.FindValueTypeConstructorAttribute();
+         var ctorAttr = Type.FindValueObjectConstructorAttribute();
 
          if (ctorAttr is null)
-            throw new Exception($"'{Type.Name}' doesn't have an 'ValueTypeConstructorAttribute'.");
+            throw new Exception($"'{Type.Name}' doesn't have an 'ValueObjectConstructorAttribute'.");
 
          if (ctorAttr.ConstructorArguments.Length != 1)
-            throw new Exception($"'ValueTypeConstructorAttribute' of '{Type.Name}' must have exactly 1 argument.");
+            throw new Exception($"'ValueObjectConstructorAttribute' of '{Type.Name}' must have exactly 1 argument.");
 
          var ctorAttrArgs = ctorAttr.ConstructorArguments[0].Values;
 
          if (ctorAttrArgs.Length != ctor.Parameters.Length)
-            throw new Exception($"'ValueTypeConstructorAttribute' of '{Type.Name}' specifies {ctorAttrArgs.Length} parameters but the constructor takes {ctor.Parameters.Length} arguments.");
+            throw new Exception($"'ValueObjectConstructorAttribute' of '{Type.Name}' specifies {ctorAttrArgs.Length} parameters but the constructor takes {ctor.Parameters.Length} arguments.");
 
          return ctorAttrArgs;
       }

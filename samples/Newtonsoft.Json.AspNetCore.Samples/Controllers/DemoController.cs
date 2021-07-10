@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Thinktecture.EnumLikeClasses;
-using Thinktecture.ValueTypes;
+using Thinktecture.ValueObjects;
 
 namespace Thinktecture.Controllers
 {

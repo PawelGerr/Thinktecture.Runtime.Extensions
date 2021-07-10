@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
 
+// ReSharper disable once CheckNamespace
 namespace Thinktecture.Extensions
 {
    public static class SolutionExtensions

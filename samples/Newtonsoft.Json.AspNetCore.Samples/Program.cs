@@ -89,8 +89,8 @@ namespace Thinktecture
                        .ConfigureServices(collection =>
                                           {
                                              collection.AddSingleton(loggerFactory);
-                                             collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueTypeModelBinderProvider()))
-                                                       .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new ValueTypeNewtonsoftJsonConverter()));
+                                             collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
+                                                       .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new ValueObjectNewtonsoftJsonConverter()));
                                           })
                        .Build();
 

@@ -4,27 +4,27 @@ namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests
 {
    public abstract class TypeConverterTestsBase
    {
-      protected ValueTypeConverter<TestEnum, string> StringBasedConverter { get; }
-      protected ValueTypeConverter<IntegerEnum, int> IntBasedConverter { get; }
-      protected ValueTypeConverter<StructIntegerEnum, int> IntBasedStructEnumConverter { get; }
-      protected ValueTypeConverter<ValidTestEnum, string> ValidEnumConverter { get; }
-      protected ValueTypeConverter<ExtensibleTestValidatableEnum, string> ExtensibleTestValidatableEnumConverter { get; }
-      protected ValueTypeConverter<ExtendedTestValidatableEnum, string> ExtendedTestValidatableEnumConverter { get; }
-      protected ValueTypeConverter<ExtensibleTestEnum, string> ExtensibleTestEnumConverter { get; }
-      protected ValueTypeConverter<ExtendedTestEnum, string> ExtendedTestEnumConverter { get; }
-      protected ValueTypeConverter<DifferentAssemblyExtendedTestEnum, string> DifferentAssemblyExtendedTestEnumConverter { get; }
+      protected ValueObjectTypeConverter<TestEnum, string> StringBasedTypeConverter { get; }
+      protected ValueObjectTypeConverter<IntegerEnum, int> IntBasedTypeConverter { get; }
+      protected ValueObjectTypeConverter<StructIntegerEnum, int> IntBasedStructEnumTypeConverter { get; }
+      protected ValueObjectTypeConverter<ValidTestEnum, string> ValidEnumTypeConverter { get; }
+      protected ValueObjectTypeConverter<ExtensibleTestValidatableEnum, string> ExtensibleTestValidatableEnumTypeConverter { get; }
+      protected ValueObjectTypeConverter<ExtendedTestValidatableEnum, string> ExtendedTestValidatableEnumTypeConverter { get; }
+      protected ValueObjectTypeConverter<ExtensibleTestEnum, string> ExtensibleTestEnumTypeConverter { get; }
+      protected ValueObjectTypeConverter<ExtendedTestEnum, string> ExtendedTestEnumTypeConverter { get; }
+      protected ValueObjectTypeConverter<DifferentAssemblyExtendedTestEnum, string> DifferentAssemblyExtendedTestEnumTypeConverter { get; }
 
       protected TypeConverterTestsBase()
       {
-         StringBasedConverter = new TestEnum_EnumTypeConverter();
-         IntBasedConverter = new IntegerEnum_EnumTypeConverter();
-         IntBasedStructEnumConverter = new StructIntegerEnum_EnumTypeConverter();
-         ValidEnumConverter = new ValidTestEnum_EnumTypeConverter();
-         ExtensibleTestValidatableEnumConverter = new ExtensibleTestValidatableEnum_EnumTypeConverter();
-         ExtendedTestValidatableEnumConverter = new ExtendedTestValidatableEnum_EnumTypeConverter();
-         ExtensibleTestEnumConverter = new ExtensibleTestEnum_EnumTypeConverter();
-         ExtendedTestEnumConverter = new ExtendedTestEnum_EnumTypeConverter();
-         DifferentAssemblyExtendedTestEnumConverter = new DifferentAssemblyExtendedTestEnum_EnumTypeConverter();
+         StringBasedTypeConverter = new TestEnum_EnumTypeConverter();
+         IntBasedTypeConverter = new IntegerEnum_EnumTypeConverter();
+         IntBasedStructEnumTypeConverter = new StructIntegerEnum_EnumTypeConverter();
+         ValidEnumTypeConverter = new ValidTestEnum_EnumTypeConverter();
+         ExtensibleTestValidatableEnumTypeConverter = new ExtensibleTestValidatableEnum_EnumTypeConverter();
+         ExtendedTestValidatableEnumTypeConverter = new ExtendedTestValidatableEnum_EnumTypeConverter();
+         ExtensibleTestEnumTypeConverter = new ExtensibleTestEnum_EnumTypeConverter();
+         ExtendedTestEnumTypeConverter = new ExtendedTestEnum_EnumTypeConverter();
+         DifferentAssemblyExtendedTestEnumTypeConverter = new DifferentAssemblyExtendedTestEnum_EnumTypeConverter();
       }
    }
 }

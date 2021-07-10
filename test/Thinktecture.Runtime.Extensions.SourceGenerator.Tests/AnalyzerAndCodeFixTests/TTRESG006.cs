@@ -110,7 +110,7 @@ namespace TestNamespace
          }
       }
 
-      public class ValueType_must_be_partial
+      public class ValueObject_must_be_partial
       {
          [Fact]
          public async Task Should_trigger_on_non_partial_class()
@@ -121,8 +121,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public class {|#0:TestValueType|}
+   [ValueObject]
+	public class {|#0:TestValueObject|}
 	{
    }
 }";
@@ -133,14 +133,14 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class {|#0:TestValueType|}
+   [ValueObject]
+	public partial class {|#0:TestValueObject|}
 	{
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueType");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
 
          [Fact]
@@ -152,8 +152,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public readonly struct {|#0:TestValueType|}
+   [ValueObject]
+	public readonly struct {|#0:TestValueObject|}
 	{
    }
 }";
@@ -164,14 +164,14 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public readonly partial struct {|#0:TestValueType|}
+   [ValueObject]
+	public readonly partial struct {|#0:TestValueObject|}
 	{
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueType");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueTypeAttribute).Assembly }, expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
          }
 
          [Fact]
@@ -183,13 +183,13 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public partial class {|#0:TestValueType|}
+   [ValueObject]
+	public partial class {|#0:TestValueObject|}
 	{
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
          }
 
          [Fact]
@@ -201,13 +201,13 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [ValueType]
-	public readonly partial struct {|#0:TestValueType|}
+   [ValueObject]
+	public readonly partial struct {|#0:TestValueObject|}
 	{
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueTypeAttribute).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
          }
       }
    }

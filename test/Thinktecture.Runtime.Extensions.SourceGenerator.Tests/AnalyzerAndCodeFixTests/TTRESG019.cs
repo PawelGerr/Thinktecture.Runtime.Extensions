@@ -9,7 +9,7 @@ namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests
    {
       private const string _DIAGNOSTIC_ID = "TTRESG019";
 
-      public class ValueType_key_member_should_not_be_nullable
+      public class ValueObject_key_member_should_not_be_nullable
       {
          [Fact]
          public async Task Should_trigger_if_mapped_member_is_not_found()

@@ -50,7 +50,7 @@ using Thinktecture;
          _sb.GenerateStructLayoutAttributeIfRequired(_state.EnumType);
 
          _sb.Append($@"
-   [Thinktecture.Internal.ValueTypeConstructor(nameof({_state.KeyPropertyName})");
+   [Thinktecture.Internal.ValueObjectConstructor(nameof({_state.KeyPropertyName})");
 
          foreach (var member in _state.AssignableInstanceFieldsAndProperties)
          {
@@ -60,7 +60,7 @@ using Thinktecture;
          }
 
          _sb.Append($@")]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof({_state.EnumType.Name}_EnumTypeConverter))]
    partial {(_state.EnumType.IsValueType ? "struct" : "class")} {_state.EnumType.Name} : IEquatable<{_state.EnumType.Name}{_state.NullableQuestionMarkEnum}>
    {{
@@ -76,14 +76,14 @@ using Thinktecture;
          var validate = new Thinktecture.Internal.Validate<{_state.EnumType.Name}, {_state.KeyType}>({_state.EnumType.Name}.Validate);
 
          var enumType = typeof({_state.EnumType.Name});
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({_state.KeyType}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);");
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
 
          foreach (var derivedType in derivedTypes)
          {
             _sb.Append($@"
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(typeof({derivedType.Type}), metadata);");
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof({derivedType.Type}), metadata);");
          }
 
          _sb.Append($@"
@@ -735,7 +735,7 @@ using Thinktecture;
       private void GenerateTypeConverter()
       {
          _sb.Append($@"
-   public class {_state.EnumType.Name}_EnumTypeConverter : Thinktecture.ValueTypeConverter<{_state.EnumType.Name}, {_state.KeyType}>
+   public class {_state.EnumType.Name}_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<{_state.EnumType.Name}, {_state.KeyType}>
    {{
       /// <inheritdoc />
       [return: NotNullIfNotNull(""{_state.KeyArgumentName}"")]

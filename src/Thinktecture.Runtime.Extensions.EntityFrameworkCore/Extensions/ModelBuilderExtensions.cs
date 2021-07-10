@@ -17,14 +17,14 @@ namespace Thinktecture
    {
       /// <summary>
       /// Adds value converter to all properties implementing <see cref="IEnum{TKey}"/>/<see cref="IValidatableEnum{TKey}"/>
-      /// and having the <see cref="ValueTypeAttribute"/>.
+      /// and having the <see cref="ValueObjectAttribute"/>.
       /// Properties with a value provider are skipped.
       /// </summary>
       /// <param name="modelBuilder">EF model builder.</param>
       /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
       /// <param name="configure">Action for further configuration of the property.</param>
       /// <exception cref="ArgumentNullException">If <paramref name="modelBuilder"/> is <c>null</c>.</exception>
-      public static void AddEnumAndValueTypeConverters(
+      public static void AddEnumAndValueObjectConverters(
          this ModelBuilder modelBuilder,
          bool validateOnWrite,
          Action<IMutableProperty>? configure = null)
@@ -36,19 +36,19 @@ namespace Thinktecture
 
          foreach (var entity in modelBuilder.Model.GetEntityTypes())
          {
-            AddNonKeyedValueTypeMembers(entity);
+            AddNonKeyedValueObjectMembers(entity);
 
             AddConverterForScalarProperties(entity, validateOnWrite, configure);
             AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, configure);
          }
       }
 
-      private static void AddNonKeyedValueTypeMembers(IMutableEntityType entity)
+      private static void AddNonKeyedValueObjectMembers(IMutableEntityType entity)
       {
-         if (entity.ClrType.GetCustomAttribute<KeyedValueTypeAttribute>() is not null)
+         if (entity.ClrType.GetCustomAttribute<KeyedValueObjectAttribute>() is not null)
             return;
 
-         var ctorAttr = entity.ClrType.GetCustomAttribute<ValueTypeConstructorAttribute>();
+         var ctorAttr = entity.ClrType.GetCustomAttribute<ValueObjectConstructorAttribute>();
 
          if (ctorAttr is not null && ctorAttr.Members.Length != 0)
          {
@@ -69,7 +69,7 @@ namespace Thinktecture
 
          foreach (var navigation in entity.GetNavigations())
          {
-            if (ValueTypeMetadataLookup.Find(navigation.ClrType) is not null)
+            if (ValueObjectMetadataLookup.Find(navigation.ClrType) is not null)
                (navigationsToConvert ??= new List<IMutableNavigation>()).Add(navigation);
          }
 
@@ -79,7 +79,7 @@ namespace Thinktecture
 
             foreach (var navigation in navigationsToConvert)
             {
-               var valueConverter = ValueTypeValueConverterFactory.Create(navigation.ClrType, validateOnWrite);
+               var valueConverter = ValueObjectValueConverterFactory.Create(navigation.ClrType, validateOnWrite);
                var property = FindPropertyBuilder(builders, entity, navigation.Name);
                property.HasConversion(valueConverter);
                configure(property.Metadata);
@@ -99,10 +99,10 @@ namespace Thinktecture
             if (valueConverter is not null)
                continue;
 
-            if (ValueTypeMetadataLookup.Find(property.ClrType) is null)
+            if (ValueObjectMetadataLookup.Find(property.ClrType) is null)
                continue;
 
-            valueConverter = ValueTypeValueConverterFactory.Create(property.ClrType, validateOnWrite);
+            valueConverter = ValueObjectValueConverterFactory.Create(property.ClrType, validateOnWrite);
             property.SetValueConverter(valueConverter);
             configure(property);
          }

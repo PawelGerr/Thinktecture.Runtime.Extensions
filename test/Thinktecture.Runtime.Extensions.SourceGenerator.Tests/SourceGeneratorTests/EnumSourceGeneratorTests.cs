@@ -32,7 +32,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
@@ -54,8 +54,8 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {
@@ -71,9 +71,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -341,7 +341,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
@@ -363,8 +363,8 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {
@@ -380,9 +380,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -609,7 +609,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class ExtendedTestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<ExtendedTestEnum, string>
+   public class ExtendedTestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<ExtendedTestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
@@ -631,8 +631,8 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(ExtendedTestEnum_EnumTypeConverter))]
    partial class ExtendedTestEnum : IEquatable<ExtendedTestEnum?>
    {
@@ -648,9 +648,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<ExtendedTestEnum, string>(ExtendedTestEnum.Validate);
 
          var enumType = typeof(ExtendedTestEnum);
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum).GetHashCode() * 397;
@@ -886,7 +886,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class ExtendedTestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<ExtendedTestEnum, string>
+   public class ExtendedTestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<ExtendedTestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
@@ -908,8 +908,8 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(ExtendedTestEnum_EnumTypeConverter))]
    partial class ExtendedTestEnum : IEquatable<ExtendedTestEnum?>
    {
@@ -925,9 +925,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<ExtendedTestEnum, string>(ExtendedTestEnum.Validate);
 
          var enumType = typeof(ExtendedTestEnum);
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(Thinktecture.Tests.ExtensibleTestEnum).GetHashCode() * 397;
@@ -1147,7 +1147,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
@@ -1163,8 +1163,8 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {
@@ -1180,9 +1180,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -1448,7 +1448,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""key"")]
@@ -1465,8 +1465,8 @@ namespace Thinktecture.Tests
    }
 
    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]
-   [Thinktecture.Internal.ValueTypeConstructor(nameof(Key))]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial struct TestEnum : IEquatable<TestEnum>
    {
@@ -1482,9 +1482,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -1767,7 +1767,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_EnumTypeConverter : Thinktecture.ValueTypeConverter<TestEnum, string>
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<TestEnum, string>
    {
       /// <inheritdoc />
       [return: NotNullIfNotNull(""name"")]
@@ -1783,8 +1783,8 @@ namespace Thinktecture.Tests
       }
    }
 
-   [Thinktecture.Internal.ValueTypeConstructor(nameof(Name), nameof(StructProperty), nameof(NullableStructProperty), nameof(ReferenceProperty), nameof(NullableReferenceProperty), nameof(StructField), nameof(ReferenceField))]
-   [Thinktecture.Internal.KeyedValueType]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Name), nameof(StructProperty), nameof(NullableStructProperty), nameof(ReferenceProperty), nameof(NullableReferenceProperty), nameof(StructField), nameof(ReferenceField))]
+   [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
    partial class TestEnum : IEquatable<TestEnum?>
    {
@@ -1800,9 +1800,9 @@ namespace Thinktecture.Tests
          var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
 
          var enumType = typeof(TestEnum);
-         var metadata = new Thinktecture.Internal.ValueTypeMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
-         Thinktecture.Internal.ValueTypeMetadataLookup.AddMetadata(enumType, metadata);
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
@@ -2055,7 +2055,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -2071,10 +2071,10 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial class TestEnum
    {
-      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      public class ValueObjectJsonConverterFactory : JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(Type typeToConvert)
@@ -2090,7 +2090,7 @@ namespace Thinktecture.Tests
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
          }
       }
    }
@@ -2113,7 +2113,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -2129,10 +2129,10 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueTypeJsonConverterFactory))]
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial struct TestEnum
    {
-      public class ValueTypeJsonConverterFactory : JsonConverterFactory
+      public class ValueObjectJsonConverterFactory : JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(Type typeToConvert)
@@ -2148,7 +2148,7 @@ namespace Thinktecture.Tests
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
          }
       }
    }
@@ -2187,7 +2187,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueTypeJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+         var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
          output.Should().BeNull();
       }
@@ -2207,7 +2207,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueTypeNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -2221,12 +2221,12 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial class TestEnum
    {
-      public class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
+      public class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestEnum, string>
       {
-         public ValueTypeNewtonsoftJsonConverter()
+         public ValueObjectNewtonsoftJsonConverter()
             : base(TestEnum.Get, obj => obj.Key)
          {
          }
@@ -2251,7 +2251,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueTypeNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -2265,12 +2265,12 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueTypeNewtonsoftJsonConverter))]
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial struct TestEnum
    {
-      public class ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
+      public class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestEnum, string>
       {
-         public ValueTypeNewtonsoftJsonConverter()
+         public ValueObjectNewtonsoftJsonConverter()
             : base(TestEnum.Get, obj => obj.Key)
          {
          }
@@ -2289,15 +2289,15 @@ using Newtonsoft.Json;
 
 namespace Thinktecture.Tests
 {
-   public class TestEnum_ValueTypeNewtonsoftJsonConverter : Thinktecture.Json.ValueTypeNewtonsoftJsonConverter<TestEnum, string>
+   public class TestEnum_ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestEnum, string>
    {
-      public TestEnum_ValueTypeNewtonsoftJsonConverter()
+      public TestEnum_ValueObjectNewtonsoftJsonConverter()
          : base(TestEnum.Get)
       {
       }
    }
 
-   [JsonConverterAttribute(typeof(TestEnum_ValueTypeNewtonsoftJsonConverter))]
+   [JsonConverterAttribute(typeof(TestEnum_ValueObjectNewtonsoftJsonConverter))]
 	public partial class TestEnum : IEnum<string>
 	{
       public static readonly TestEnum Item1 = new(""Item1"");
@@ -2305,7 +2305,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueTypeNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+         var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
          output.Should().BeNull();
       }
@@ -2325,7 +2325,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueTypeMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -2339,12 +2339,12 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial class TestEnum
    {
-      public class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestEnum, string>
+      public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<TestEnum, string>
       {
-         public ValueTypeMessagePackFormatter()
+         public ValueObjectMessagePackFormatter()
             : base(TestEnum.Get, obj => obj.Key)
          {
          }
@@ -2369,7 +2369,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueTypeMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
          output.Should().Be(@"// <auto-generated />
 #nullable enable
@@ -2383,12 +2383,12 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   [MessagePack.MessagePackFormatter(typeof(ValueTypeMessagePackFormatter))]
+   [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial struct TestEnum
    {
-      public class ValueTypeMessagePackFormatter : Thinktecture.Formatters.ValueTypeMessagePackFormatter<TestEnum, string>
+      public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<TestEnum, string>
       {
-         public ValueTypeMessagePackFormatter()
+         public ValueObjectMessagePackFormatter()
             : base(TestEnum.Get, obj => obj.Key)
          {
          }
@@ -2423,7 +2423,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueTypeMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+         var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
          output.Should().BeNull();
       }
