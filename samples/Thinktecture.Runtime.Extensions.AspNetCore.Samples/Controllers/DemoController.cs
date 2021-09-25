@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Thinktecture.EnumLikeClasses;
@@ -6,7 +6,7 @@ using Thinktecture.ValueObjects;
 
 namespace Thinktecture.Controllers
 {
-   [Route("api")]
+   [Route("api"), ApiController]
    public class DemoController : Controller
    {
       private readonly ILogger<DemoController> _logger;
@@ -44,6 +44,20 @@ namespace Thinktecture.Controllers
       public IActionResult RoundTrip(ProductType productType)
       {
          return RoundTrip<ProductType, string>(productType);
+      }
+
+      [HttpPost("productType")]
+      public IActionResult RoundTripPost([FromBody] ProductType productType)
+      {
+         return RoundTrip<ProductType, string>(productType);
+      }
+
+      public record ProductTypeWrapper(ProductType ProductType);
+
+      [HttpPost("productTypeWrapper")]
+      public IActionResult RoundTripPost([FromBody] ProductTypeWrapper productType)
+      {
+         return RoundTrip<ProductType, string>(productType.ProductType);
       }
 
       [HttpGet("specialProductType/{specialProductType}")]

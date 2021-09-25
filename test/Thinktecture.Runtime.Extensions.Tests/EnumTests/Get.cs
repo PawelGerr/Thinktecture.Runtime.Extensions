@@ -128,16 +128,16 @@ namespace Thinktecture.Runtime.Tests.EnumTests
       public void Should_throw_if_key_is_unknown_to_non_validatable_enum()
       {
          Action action = () => ValidTestEnum.Get("invalid");
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+         action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
 
          action = () => ExtensibleTestEnum.Get("invalid");
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ExtensibleTestEnum' with the identifier 'invalid'.");
+         action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtensibleTestEnum' with the identifier 'invalid'.");
 
          action = () => ExtendedTestEnum.Get("invalid");
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
+         action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
 
          action = () => DifferentAssemblyExtendedTestEnum.Get("invalid");
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'DifferentAssemblyExtendedTestEnum' with the identifier 'invalid'.");
+         action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'DifferentAssemblyExtendedTestEnum' with the identifier 'invalid'.");
       }
    }
 }

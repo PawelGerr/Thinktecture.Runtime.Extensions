@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -47,6 +48,10 @@ namespace Thinktecture.Text.Json.Serialization
          try
          {
             return _convertFromKey(key);
+         }
+         catch (UnknownEnumIdentifierException ex)
+         {
+            throw new JsonException(ex.Message, ex);
          }
          catch (ValidationException ex)
          {

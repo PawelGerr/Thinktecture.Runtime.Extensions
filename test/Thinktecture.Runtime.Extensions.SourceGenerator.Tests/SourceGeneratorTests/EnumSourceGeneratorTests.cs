@@ -120,7 +120,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of <see cref=""TestEnum"" /> if <paramref name=""key""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""KeyNotFoundException"">If there is no item with the provided <paramref name=""key""/>.</exception>
+      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""key""/>.</exception>
       [return: NotNullIfNotNull(""key"")]
       public static TestEnum? Get(string? key)
       {
@@ -129,7 +129,7 @@ namespace Thinktecture.Tests
 
          if (!ItemsLookup.TryGetValue(key, out var item))
          {
-            throw new KeyNotFoundException($""There is no item of type 'TestEnum' with the identifier '{key}'."");
+            throw new UnknownEnumIdentifierException(typeof(TestEnum), key);
          }
 
          return item;
@@ -429,7 +429,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of <see cref=""TestEnum"" /> if <paramref name=""key""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""KeyNotFoundException"">If there is no item with the provided <paramref name=""key""/>.</exception>
+      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""key""/>.</exception>
       [return: NotNullIfNotNull(""key"")]
       public static TestEnum? Get(string? key)
       {
@@ -438,7 +438,7 @@ namespace Thinktecture.Tests
 
          if (!ItemsLookup.TryGetValue(key, out var item))
          {
-            throw new KeyNotFoundException($""There is no item of type 'TestEnum' with the identifier '{key}'."");
+            throw new UnknownEnumIdentifierException(typeof(TestEnum), key);
          }
 
          return item;
@@ -685,7 +685,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of <see cref=""ExtendedTestEnum"" /> if <paramref name=""key""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""KeyNotFoundException"">If there is no item with the provided <paramref name=""key""/>.</exception>
+      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""key""/>.</exception>
       [return: NotNullIfNotNull(""key"")]
       public new static ExtendedTestEnum? Get(string? key)
       {
@@ -694,7 +694,7 @@ namespace Thinktecture.Tests
 
          if (!ItemsLookup.TryGetValue(key, out var item))
          {
-            throw new KeyNotFoundException($""There is no item of type 'ExtendedTestEnum' with the identifier '{key}'."");
+            throw new UnknownEnumIdentifierException(typeof(ExtendedTestEnum), key);
          }
 
          return item;
@@ -962,7 +962,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of <see cref=""ExtendedTestEnum"" /> if <paramref name=""key""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""KeyNotFoundException"">If there is no item with the provided <paramref name=""key""/>.</exception>
+      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""key""/>.</exception>
       [return: NotNullIfNotNull(""key"")]
       public new static ExtendedTestEnum? Get(string? key)
       {
@@ -971,7 +971,7 @@ namespace Thinktecture.Tests
 
          if (!ItemsLookup.TryGetValue(key, out var item))
          {
-            throw new KeyNotFoundException($""There is no item of type 'ExtendedTestEnum' with the identifier '{key}'."");
+            throw new UnknownEnumIdentifierException(typeof(ExtendedTestEnum), key);
          }
 
          return item;

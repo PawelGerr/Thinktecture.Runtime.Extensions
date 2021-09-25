@@ -127,9 +127,13 @@ namespace Thinktecture.Json
          {
             return _convertFromKey(key);
          }
+         catch (UnknownEnumIdentifierException ex)
+         {
+            throw new JsonSerializationException(ex.Message, ex);
+         }
          catch (ValidationException ex)
          {
-            throw new JsonException(ex.ValidationResult.ErrorMessage!, ex);
+            throw new JsonSerializationException(ex.ValidationResult.ErrorMessage!, ex);
          }
       }
    }

@@ -57,7 +57,9 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "groupWithConverter/1");
          await DoRequestAsync(logger, client, "groupWithConverter/42"); // invalid
          await DoRequestAsync(logger, client, "productType/groceries");
-         await DoRequestAsync(logger, client, "productType/invalid"); // invalid
+         await DoRequestAsync(logger, client, "productType/invalid");                          // invalid
+         await DoRequestAsync(logger, client, "productType", "invalid");                       // invalid
+         await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid
          await DoRequestAsync(logger, client, "productTypeWithJsonConverter/groceries");
          await DoRequestAsync(logger, client, "productTypeWithJsonConverter/invalid"); // invalid
          await DoRequestAsync(logger, client, "specialProductType/groceries");
@@ -95,7 +97,7 @@ namespace Thinktecture
          using var response = await client.SendAsync(request);
 
          var content = await response.Content.ReadAsStringAsync();
-         logger.LogInformation("Server responded with: [{StatusCode}] {Response}", response.StatusCode, content);
+         logger.LogInformation("Server responded with: [{StatusCode}] {Response}\n", response.StatusCode, content);
       }
 
       private static Task StartServerAsync(ILoggerFactory loggerFactory)

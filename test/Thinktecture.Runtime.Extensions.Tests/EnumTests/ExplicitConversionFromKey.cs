@@ -71,19 +71,19 @@ namespace Thinktecture.Runtime.Tests.EnumTests
                          {
                             var item = (ValidTestEnum)"invalid";
                          };
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+         action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
 
          action = () =>
                   {
                      var item = (ExtensibleTestEnum)"invalid";
                   };
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ExtensibleTestEnum' with the identifier 'invalid'.");
+         action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtensibleTestEnum' with the identifier 'invalid'.");
 
          action = () =>
                   {
                      var item = (ExtendedTestEnum)"invalid";
                   };
-         action.Should().Throw<KeyNotFoundException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
+         action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
       }
    }
 }

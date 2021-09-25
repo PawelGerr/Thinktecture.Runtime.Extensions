@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,7 +56,9 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "groupWithConverter/1");
          await DoRequestAsync(logger, client, "groupWithConverter/42"); // invalid
          await DoRequestAsync(logger, client, "productType/groceries");
-         await DoRequestAsync(logger, client, "productType/invalid"); // invalid
+         await DoRequestAsync(logger, client, "productType/invalid");                                 // invalid
+         await DoRequestAsync(logger, client, "productType", "invalid");                              // invalid
+         await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid
          await DoRequestAsync(logger, client, "productTypeWithJsonConverter/groceries");
          await DoRequestAsync(logger, client, "productTypeWithJsonConverter/invalid"); // invalid
          await DoRequestAsync(logger, client, "specialProductType/groceries");
@@ -64,14 +68,31 @@ namespace Thinktecture
          await DoRequestAsync(logger, client, "productName/a"); // invalid
       }
 
-      private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url)
+      private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url, object? body = null, string? jsonBody = null)
       {
-         logger.LogInformation("Making request with url '{Url}'", url);
+         var hasBody = body is not null || jsonBody is not null;
 
-         using var response = await client.GetAsync("http://localhost:5000/api/" + url);
+         if (hasBody)
+         {
+            logger.LogInformation("POST request with url '{Url}' and body '{Body}'", url, body ?? jsonBody);
+         }
+         else
+         {
+            logger.LogInformation("GET request with url '{Url}'", url);
+         }
+
+         var request = new HttpRequestMessage(hasBody ? HttpMethod.Post : HttpMethod.Get, "http://localhost:5000/api/" + url);
+
+         if (body is not null)
+            request.Content = JsonContent.Create(body);
+
+         if (jsonBody is not null)
+            request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+         using var response = await client.SendAsync(request);
 
          var content = await response.Content.ReadAsStringAsync();
-         logger.LogInformation("Server responded with: [{StatusCode}] {Response}", response.StatusCode, content);
+         logger.LogInformation("Server responded with: [{StatusCode}] {Response}\n", response.StatusCode, content);
       }
 
       private static Task StartServerAsync(ILoggerFactory loggerFactory)

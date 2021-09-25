@@ -80,6 +80,14 @@ namespace Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTest
          value.Should().BeEquivalentTo(expectedValueObject);
       }
 
+      [Fact]
+      public void Should_throw_JsonSerializationException_if_enum_parsing_throws_UnknownEnumIdentifierException()
+      {
+         Action action = () => Deserialize<ValidTestEnum, ValidTestEnum.ValueObjectNewtonsoftJsonConverter>("\"invalid\"");
+
+         action.Should().Throw<JsonSerializationException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+      }
+
       private static T Deserialize<T, TConverter>(
          string json,
          NamingStrategy namingStrategy = null)

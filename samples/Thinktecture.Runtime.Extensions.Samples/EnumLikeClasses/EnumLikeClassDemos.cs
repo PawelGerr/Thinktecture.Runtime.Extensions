@@ -36,9 +36,9 @@ namespace Thinktecture.EnumLikeClasses
             ProductType.Get("Unknown");
             logger.Warning("This line won't be reached.");
          }
-         catch (KeyNotFoundException)
+         catch (UnknownEnumIdentifierException)
          {
-            logger.Information("KeyNotFoundException is thrown because there is no product type with the key 'Unknown'.");
+            logger.Information("UnknownEnumIdentifierException is thrown because there is no product type with the key 'Unknown'.");
          }
       }
 

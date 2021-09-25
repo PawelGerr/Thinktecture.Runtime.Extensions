@@ -517,7 +517,7 @@ using Thinktecture;
          if (!_state.IsValidatable)
          {
             _sb.Append($@"
-      /// <exception cref=""KeyNotFoundException"">If there is no item with the provided <paramref name=""{_state.KeyArgumentName}""/>.</exception>");
+      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""{_state.KeyArgumentName}""/>.</exception>");
          }
 
          _sb.Append($@"
@@ -566,7 +566,7 @@ using Thinktecture;
          else
          {
             _sb.Append($@"
-            throw new KeyNotFoundException($""There is no item of type '{_state.EnumType.Name}' with the identifier '{{{_state.KeyArgumentName}}}'."");");
+            throw new UnknownEnumIdentifierException(typeof({_state.EnumType.Name}), {_state.KeyArgumentName});");
          }
 
          _sb.Append($@"
