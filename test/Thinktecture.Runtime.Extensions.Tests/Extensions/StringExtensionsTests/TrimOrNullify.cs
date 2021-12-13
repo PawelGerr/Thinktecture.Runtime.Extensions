@@ -1,7 +1,3 @@
-using System;
-using FluentAssertions;
-using Xunit;
-
 namespace Thinktecture.Runtime.Tests.Extensions.StringExtensionsTests;
 
 public class TrimOrNullify

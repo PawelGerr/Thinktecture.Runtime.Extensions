@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Thinktecture.Runtime.Tests.TestEnums;
 

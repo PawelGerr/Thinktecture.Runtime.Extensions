@@ -1,4 +1,3 @@
-using System;
 using MessagePack;
 using Thinktecture.Formatters;
 

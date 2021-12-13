@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
-using Xunit;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTests;

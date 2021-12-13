@@ -1,10 +1,4 @@
 #if !NET6_0
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
-using Xunit;
-
 namespace Thinktecture.Runtime.Tests.Extensions.ReadOnlyListExtensions;
 
 public class SplitInBuckets

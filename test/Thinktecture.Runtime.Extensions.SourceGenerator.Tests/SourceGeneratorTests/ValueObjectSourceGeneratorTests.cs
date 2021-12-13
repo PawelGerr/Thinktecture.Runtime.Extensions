@@ -1,8 +1,6 @@
-using FluentAssertions;
 using MessagePack;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.Formatters;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;

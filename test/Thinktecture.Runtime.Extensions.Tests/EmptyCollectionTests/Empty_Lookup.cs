@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
-using Xunit;
-
 namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
 
 // ReSharper disable once InconsistentNaming

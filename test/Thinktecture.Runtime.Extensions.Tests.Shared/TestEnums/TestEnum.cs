@@ -1,5 +1,3 @@
-using System;
-
 #pragma warning disable CA1823, RCS1213 // Remove unused member declaration.
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local

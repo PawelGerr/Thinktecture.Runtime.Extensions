@@ -1,5 +1,3 @@
-using System;
-
 namespace Thinktecture.Internal;
 
 /// <summary>

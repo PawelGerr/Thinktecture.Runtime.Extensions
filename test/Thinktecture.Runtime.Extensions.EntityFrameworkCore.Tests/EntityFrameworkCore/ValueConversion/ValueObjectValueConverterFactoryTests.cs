@@ -1,11 +1,7 @@
-using System;
-using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
-using Xunit;
 
 namespace Thinktecture.Runtime.Tests.EntityFrameworkCore.ValueConversion;
 

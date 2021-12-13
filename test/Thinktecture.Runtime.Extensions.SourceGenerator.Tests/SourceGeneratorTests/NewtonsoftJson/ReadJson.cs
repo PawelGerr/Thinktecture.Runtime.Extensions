@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Thinktecture.Runtime.Tests.TestEnums;
-using Xunit;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests.NewtonsoftJson;
 

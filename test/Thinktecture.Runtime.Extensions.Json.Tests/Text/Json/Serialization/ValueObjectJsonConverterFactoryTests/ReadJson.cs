@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FluentAssertions;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests.TestClasses;
-using Xunit;
 
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests;
 

@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,7 +6,6 @@ using Moq;
 using Thinktecture.AspNetCore.ModelBinding;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
-using Xunit;
 
 namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueObjectModelBinderProviderTests;
 

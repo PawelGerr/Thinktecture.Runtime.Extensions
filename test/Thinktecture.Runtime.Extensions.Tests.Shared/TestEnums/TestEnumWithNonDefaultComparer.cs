@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Thinktecture.Runtime.Tests.TestEnums;
+﻿namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [EnumGeneration(KeyComparer = nameof(_equalityComparer))]
 public partial class TestEnumWithNonDefaultComparer : IValidatableEnum<string>

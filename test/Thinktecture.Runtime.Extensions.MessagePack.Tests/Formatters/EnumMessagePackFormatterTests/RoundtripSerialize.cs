@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using FluentAssertions;
 using MessagePack;
 using MessagePack.Resolvers;
 using Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
-using Xunit;
 
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests;
 

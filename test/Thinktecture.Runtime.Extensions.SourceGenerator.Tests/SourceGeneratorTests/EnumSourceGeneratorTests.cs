@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
 using MessagePack;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.Formatters;
 using Thinktecture.Runtime.Tests.TestEnums;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;

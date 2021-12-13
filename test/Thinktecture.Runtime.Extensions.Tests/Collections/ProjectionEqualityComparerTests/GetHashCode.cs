@@ -1,7 +1,4 @@
-using System;
-using FluentAssertions;
 using Thinktecture.Collections;
-using Xunit;
 
 namespace Thinktecture.Runtime.Tests.Collections.ProjectionEqualityComparerTests;
 

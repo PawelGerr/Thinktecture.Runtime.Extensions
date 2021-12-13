@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using Xunit;
-
-namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
+﻿namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
 
 // ReSharper disable once InconsistentNaming
 public class Empty_Dictionary

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 
 // ReSharper disable once CheckNamespace

@@ -1,5 +1,4 @@
-﻿using System;
-using Thinktecture.SmartEnums;
+﻿using Thinktecture.SmartEnums;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture;

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Thinktecture.SmartEnums;
 
 namespace Thinktecture;

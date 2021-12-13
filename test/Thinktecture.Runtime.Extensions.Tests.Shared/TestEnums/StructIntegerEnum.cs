@@ -1,5 +1,3 @@
-using System;
-
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 public readonly partial struct StructIntegerEnum : IValidatableEnum<int>

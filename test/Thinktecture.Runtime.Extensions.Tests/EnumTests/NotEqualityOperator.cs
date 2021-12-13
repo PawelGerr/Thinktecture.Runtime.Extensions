@@ -1,6 +1,4 @@
-using FluentAssertions;
 using Thinktecture.Runtime.Tests.TestEnums;
-using Xunit;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 // ReSharper disable EqualExpressionComparison

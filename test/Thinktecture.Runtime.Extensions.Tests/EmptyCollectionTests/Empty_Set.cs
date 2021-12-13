@@ -1,8 +1,4 @@
 #if !NETCOREAPP3_1
-using System.Collections.Generic;
-using FluentAssertions;
-using Xunit;
-
 namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
 {
    // ReSharper disable once InconsistentNaming

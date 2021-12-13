@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [EnumGeneration(IsExtensible = true, KeyComparer = nameof(EqualityComparer))]
