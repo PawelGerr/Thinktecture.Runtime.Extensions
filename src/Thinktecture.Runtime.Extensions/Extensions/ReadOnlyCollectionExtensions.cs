@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-// ReSharper disable once CheckNamespace
 namespace Thinktecture;
 
 /// <summary>
@@ -10,6 +9,7 @@ namespace Thinktecture;
 /// </summary>
 public static class ReadOnlyCollectionExtensions
 {
+#if !NET6_0
    /// <summary>
    /// Splits the <paramref name="collection"/> in buckets of provided <paramref name="bucketSize"/>.
    /// </summary>
@@ -69,4 +69,5 @@ public static class ReadOnlyCollectionExtensions
          yield return bucket;
       }
    }
+#endif
 }

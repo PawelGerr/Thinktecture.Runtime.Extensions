@@ -24,6 +24,7 @@ public static class EnumerableExtensions
       return new EnumerableWrapperWithCount<T>(items, count);
    }
 
+#if !NET6_0
    /// <summary>
    /// Splits the <paramref name="collection"/> in buckets of provided <paramref name="bucketSize"/>.
    /// </summary>
@@ -58,4 +59,5 @@ public static class EnumerableExtensions
       if (bucket.Count != 0)
          yield return bucket;
    }
+#endif
 }

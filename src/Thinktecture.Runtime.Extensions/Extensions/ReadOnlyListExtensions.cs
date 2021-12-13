@@ -10,6 +10,7 @@ namespace Thinktecture;
 /// </summary>
 public static class ReadOnlyListExtensions
 {
+#if !NET6_0
    /// <summary>
    /// Splits the <paramref name="collection"/> in buckets of provided <paramref name="bucketSize"/>.
    /// </summary>
@@ -67,4 +68,5 @@ public static class ReadOnlyListExtensions
          yield return bucket;
       }
    }
+#endif
 }
