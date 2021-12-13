@@ -15,7 +15,7 @@ public abstract class SourceGeneratorTestsBase
    }
 
    protected string GetGeneratedOutput<T>(string source, params Assembly[] furtherAssemblies)
-      where T : ISourceGenerator, new()
+      where T : IIncrementalGenerator, new()
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
       var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies())

@@ -7,10 +7,6 @@ public static class AccessibilityExtensions
 {
    public static bool IsAtLeastProtected(this Accessibility accessibility)
    {
-      return accessibility == Accessibility.Protected ||
-             accessibility == Accessibility.ProtectedAndFriend ||
-             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-             accessibility == Accessibility.ProtectedAndInternal ||
-             accessibility == Accessibility.Public;
+      return accessibility is Accessibility.Protected or Accessibility.ProtectedAndFriend or Accessibility.ProtectedAndInternal or Accessibility.Public;
    }
 }

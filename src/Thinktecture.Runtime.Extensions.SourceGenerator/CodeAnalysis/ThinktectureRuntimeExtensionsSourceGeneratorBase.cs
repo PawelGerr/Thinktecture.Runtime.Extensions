@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,7 +8,7 @@ namespace Thinktecture.CodeAnalysis;
 /// <summary>
 /// Base class for source generator for enum-like classes.
 /// </summary>
-public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : ISourceGenerator
+public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : IIncrementalGenerator
 {
    private readonly string? _generatedFileInfix;
 
@@ -17,17 +18,47 @@ public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : ISource
    }
 
    /// <inheritdoc />
-   public void Initialize(GeneratorInitializationContext context)
+   public void Initialize(IncrementalGeneratorInitializationContext context)
    {
-      context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+      var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetCandidate)
+                              .Where(c => !c.IsEmpty)
+                              .Collect();
+
+      context.RegisterSourceOutput(context.CompilationProvider.Combine(candidates), GenerateCode);
    }
 
-   /// <inheritdoc />
-   public void Execute(GeneratorExecutionContext context)
+   private static ThinktectureRuntimeExtensionsStates GetCandidate(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
-      var receiver = (SyntaxReceiver)(context.SyntaxReceiver ?? throw new Exception($"Syntax receiver must be of type '{nameof(SyntaxReceiver)}' but found '{context.SyntaxReceiver?.GetType().Name}'."));
+      var tds = (TypeDeclarationSyntax)context.Node;
 
-      foreach (var state in PrepareEnums(context.Compilation, receiver.Enums))
+      EnumSourceGeneratorState? enumState = null;
+      ValueObjectSourceGeneratorState? valueObjectState = null;
+
+      if (tds.IsEnumCandidate())
+         enumState = GetEnumState(context.SemanticModel, tds);
+
+      if (tds.IsValueObjectCandidate())
+         valueObjectState = GetValueObjectState(context.SemanticModel, tds);
+
+      return new ThinktectureRuntimeExtensionsStates(enumState, valueObjectState);
+   }
+
+   private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   {
+      return syntaxNode switch
+      {
+         ClassDeclarationSyntax classDeclaration when classDeclaration.IsPartial() => true,
+         StructDeclarationSyntax structDeclaration when structDeclaration.IsPartial() => true,
+         _ => false
+      };
+   }
+
+   private void GenerateCode(SourceProductionContext context, (Compilation Compilation, ImmutableArray<ThinktectureRuntimeExtensionsStates> States) compilationAndCandidates)
+   {
+      if (compilationAndCandidates.States.IsDefaultOrEmpty)
+         return;
+
+      foreach (var state in PrepareEnums(compilationAndCandidates.States))
       {
          try
          {
@@ -42,7 +73,7 @@ public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : ISource
          }
       }
 
-      foreach (var state in PrepareValueObjects(context.Compilation, receiver.ValueObjects))
+      foreach (var state in PrepareValueObjects(compilationAndCandidates.States))
       {
          try
          {
@@ -58,60 +89,48 @@ public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : ISource
       }
    }
 
-   private static IReadOnlyList<EnumSourceGeneratorState> PrepareEnums(
-      Compilation compilation,
-      IReadOnlyList<TypeDeclarationSyntax> enums)
+   private static IReadOnlyList<EnumSourceGeneratorState> PrepareEnums(ImmutableArray<ThinktectureRuntimeExtensionsStates> states)
    {
-      if (enums.Count == 0)
-         return Array.Empty<EnumSourceGeneratorState>();
-
-      var states = new HashSet<EnumSourceGeneratorState>();
-
-      foreach (var tds in enums)
-      {
-         var state = GetEnumState(compilation, tds);
-
-         if (state is not null)
-            states.Add(state);
-      }
+      HashSet<EnumSourceGeneratorState>? enumStates = null;
 
       foreach (var state in states)
+      {
+         if (state.EnumState is not null)
+            (enumStates ??= new HashSet<EnumSourceGeneratorState>()).Add(state.EnumState);
+      }
+
+      if (enumStates is null)
+         return Array.Empty<EnumSourceGeneratorState>();
+
+      foreach (var state in enumStates)
       {
          if (state.EnumType.BaseType is null || state.EnumType.BaseType.SpecialType == SpecialType.System_Object)
             continue;
 
-         var baseEnum = states.FirstOrDefault(s => SymbolEqualityComparer.Default.Equals(state.EnumType.BaseType, s.EnumType));
+         var baseEnum = enumStates.FirstOrDefault(s => SymbolEqualityComparer.Default.Equals(state.EnumType.BaseType, s.EnumType));
 
          if (baseEnum is not null)
             state.SetBaseType(baseEnum);
       }
 
-      return states.OrderBy(s => s).ToList();
+      return enumStates.OrderBy(s => s).ToList();
    }
 
-   private static IReadOnlyCollection<ValueObjectSourceGeneratorState> PrepareValueObjects(
-      Compilation compilation,
-      IReadOnlyList<TypeDeclarationSyntax> valueObjects)
+   private static IReadOnlyCollection<ValueObjectSourceGeneratorState> PrepareValueObjects(ImmutableArray<ThinktectureRuntimeExtensionsStates> states)
    {
-      if (valueObjects.Count == 0)
-         return Array.Empty<ValueObjectSourceGeneratorState>();
+      HashSet<ValueObjectSourceGeneratorState>? valueObjectStates = null;
 
-      var states = new HashSet<ValueObjectSourceGeneratorState>();
-
-      foreach (var tds in valueObjects)
+      foreach (var state in states)
       {
-         var state = GetValueObjectState(compilation, tds);
-
-         if (state is not null)
-            states.Add(state);
+         if (state.ValueObjectState is not null)
+            (valueObjectStates ??= new HashSet<ValueObjectSourceGeneratorState>()).Add(state.ValueObjectState);
       }
 
-      return states;
+      return (IReadOnlyCollection<ValueObjectSourceGeneratorState>?)valueObjectStates ?? Array.Empty<ValueObjectSourceGeneratorState>();
    }
 
-   private static ValueObjectSourceGeneratorState? GetValueObjectState(Compilation compilation, TypeDeclarationSyntax declaration)
+   private static ValueObjectSourceGeneratorState? GetValueObjectState(SemanticModel model, TypeDeclarationSyntax declaration)
    {
-      var model = compilation.GetSemanticModel(declaration.SyntaxTree, true);
       var type = model.GetDeclaredSymbol(declaration);
 
       if (type is null)
@@ -126,9 +145,8 @@ public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : ISource
       return new ValueObjectSourceGeneratorState(model, type, valueObjectAttribute);
    }
 
-   private static EnumSourceGeneratorState? GetEnumState(Compilation compilation, TypeDeclarationSyntax declaration)
+   private static EnumSourceGeneratorState? GetEnumState(SemanticModel model, TypeDeclarationSyntax declaration)
    {
-      var model = compilation.GetSemanticModel(declaration.SyntaxTree, true);
       var type = model.GetDeclaredSymbol(declaration);
 
       if (type is null)
@@ -148,10 +166,7 @@ public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : ISource
       return new EnumSourceGeneratorState(model, type, enumInterface);
    }
 
-   private void EmitFile(
-      GeneratorExecutionContext context,
-      string typeName,
-      string? generatedCode)
+   private void EmitFile(SourceProductionContext context, string typeName, string? generatedCode)
    {
       if (!String.IsNullOrWhiteSpace(generatedCode))
       {

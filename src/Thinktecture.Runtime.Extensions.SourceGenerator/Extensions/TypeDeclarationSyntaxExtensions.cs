@@ -23,7 +23,7 @@ internal static class TypeDeclarationSyntaxExtensions
    private static bool CouldBeValueObject(TypeSyntax? type)
    {
       var typeName = ExtractTypeName(type);
-      return typeName == "ValueObjectAttribute" || typeName == "ValueObject";
+      return typeName is "ValueObjectAttribute" or "ValueObject";
    }
 
    private static string? ExtractTypeName(TypeSyntax? type)
@@ -67,7 +67,7 @@ internal static class TypeDeclarationSyntaxExtensions
    private static bool CouldBeEnumType(TypeSyntax? type)
    {
       var typeName = ExtractTypeName(type);
-      return typeName == "EnumGeneration" || typeName == "EnumGeneration";
+      return typeName is "EnumGeneration" or "EnumGeneration";
    }
 
    private static bool CouldBeEnumInterface(BaseTypeSyntax? baseType)
@@ -83,7 +83,7 @@ internal static class TypeDeclarationSyntaxExtensions
                break;
 
             case GenericNameSyntax genericNameSyntax:
-               return (genericNameSyntax.Identifier.Text == "IEnum" || genericNameSyntax.Identifier.Text == "IValidatableEnum") &&
+               return genericNameSyntax.Identifier.Text is "IEnum" or "IValidatableEnum" &&
                       genericNameSyntax.TypeArgumentList.Arguments.Count == 1;
 
             default:
