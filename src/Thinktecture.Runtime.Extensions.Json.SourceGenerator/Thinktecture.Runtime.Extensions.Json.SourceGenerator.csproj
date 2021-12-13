@@ -5,6 +5,7 @@
         <PackageTags>sourcegenerator</PackageTags>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IncludeSymbols>false</IncludeSymbols>
+        <NoWarn>$(NoWarn);NU5128</NoWarn>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
