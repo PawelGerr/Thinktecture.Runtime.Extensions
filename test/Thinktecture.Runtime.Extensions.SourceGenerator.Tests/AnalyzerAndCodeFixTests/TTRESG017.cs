@@ -2,19 +2,19 @@ using System.Threading.Tasks;
 using Xunit;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
-namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests
-{
-   // ReSharper disable InconsistentNaming
-   public class TTRESG017
-   {
-      private const string _DIAGNOSTIC_ID = "TTRESG017";
+namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
-      public class ValueObject_key_member_should_not_be_nullable
+// ReSharper disable InconsistentNaming
+public class TTRESG017
+{
+   private const string _DIAGNOSTIC_ID = "TTRESG017";
+
+   public class ValueObject_key_member_should_not_be_nullable
+   {
+      [Fact]
+      public async Task Should_trigger_if_key_member_is_nullable_reference_type()
       {
-         [Fact]
-         public async Task Should_trigger_if_key_member_is_nullable_reference_type()
-         {
-            var code = @"
+         var code = @"
 #nullable enable
 
 using System;
@@ -29,14 +29,14 @@ namespace TestNamespace
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-         }
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+      }
 
-         [Fact]
-         public async Task Should_not_trigger_if_key_member_is_non_nullable_reference_type()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_not_trigger_if_key_member_is_non_nullable_reference_type()
+      {
+         var code = @"
 #nullable enable
 
 using System;
@@ -53,13 +53,13 @@ namespace TestNamespace
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
-         }
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+      }
 
-         [Fact]
-         public async Task Should_not_trigger_if_nullability_is_not_active()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_not_trigger_if_nullability_is_not_active()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -72,13 +72,13 @@ namespace TestNamespace
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
-         }
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+      }
 
-         [Fact]
-         public async Task Should_trigger_if_key_member_is_nullable_struct()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_trigger_if_key_member_is_nullable_struct()
+      {
+         var code = @"
 #nullable enable
 
 using System;
@@ -93,14 +93,14 @@ namespace TestNamespace
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-         }
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+      }
 
-         [Fact]
-         public async Task Should_trigger_if_key_member_is_nullable_struct_even_if_nullability_is_not_active()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_trigger_if_key_member_is_nullable_struct_even_if_nullability_is_not_active()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -113,14 +113,14 @@ namespace TestNamespace
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-         }
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+      }
 
-         [Fact]
-         public async Task Should_not_trigger_if_key_member_is_non_nullable_struct()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_not_trigger_if_key_member_is_non_nullable_struct()
+      {
+         var code = @"
 #nullable enable
 
 using System;
@@ -135,8 +135,7 @@ namespace TestNamespace
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
-         }
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
       }
    }
 }

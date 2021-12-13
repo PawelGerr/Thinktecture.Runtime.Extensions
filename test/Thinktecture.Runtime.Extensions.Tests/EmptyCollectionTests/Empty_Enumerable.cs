@@ -3,23 +3,22 @@ using System.Linq;
 using FluentAssertions;
 using Xunit;
 
-namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
+namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
+
+// ReSharper disable once InconsistentNaming
+public class Empty_Enumerable
 {
-   // ReSharper disable once InconsistentNaming
-   public class Empty_Enumerable
+   private IEnumerable SUT => Empty.Collection();
+
+   [Fact]
+   public void Should_not_be_null()
    {
-      private IEnumerable SUT => Empty.Collection();
+      SUT.Should().NotBeNull();
+   }
 
-      [Fact]
-      public void Should_not_be_null()
-      {
-         SUT.Should().NotBeNull();
-      }
-
-      [Fact]
-      public void Should_be_empty()
-      {
-         SUT.Cast<object>().Should().BeEmpty();
-      }
+   [Fact]
+   public void Should_be_empty()
+   {
+      SUT.Cast<object>().Should().BeEmpty();
    }
 }

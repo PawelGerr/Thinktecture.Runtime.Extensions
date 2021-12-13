@@ -1,10 +1,9 @@
-namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses
+namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
+
+[ValueObject]
+public partial class ValueObjectWithMultipleProperties
 {
-   [ValueObject]
-   public partial class ValueObjectWithMultipleProperties
-   {
-      public decimal StructProperty { get; }
-      public int? NullableStructProperty { get; }
-      public string ReferenceProperty { get; }
-   }
+   public decimal StructProperty { get; }
+   public int? NullableStructProperty { get; }
+   public string ReferenceProperty { get; }
 }

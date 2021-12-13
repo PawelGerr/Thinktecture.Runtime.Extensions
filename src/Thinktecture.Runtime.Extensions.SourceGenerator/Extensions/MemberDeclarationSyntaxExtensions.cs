@@ -5,32 +5,31 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 // ReSharper disable once CheckNamespace
-namespace Thinktecture
+namespace Thinktecture;
+
+internal static class MemberDeclarationSyntaxExtensions
 {
-   internal static class MemberDeclarationSyntaxExtensions
+   public static bool IsStatic(this MemberDeclarationSyntax mds)
    {
-      public static bool IsStatic(this MemberDeclarationSyntax mds)
-      {
-         if (mds is null)
-            throw new ArgumentNullException(nameof(mds));
+      if (mds is null)
+         throw new ArgumentNullException(nameof(mds));
 
-         return mds.Modifiers.Any(SyntaxKind.StaticKeyword);
-      }
+      return mds.Modifiers.Any(SyntaxKind.StaticKeyword);
+   }
 
-      public static bool IsPublic(this MemberDeclarationSyntax mds)
-      {
-         if (mds is null)
-            throw new ArgumentNullException(nameof(mds));
+   public static bool IsPublic(this MemberDeclarationSyntax mds)
+   {
+      if (mds is null)
+         throw new ArgumentNullException(nameof(mds));
 
-         return mds.Modifiers.Any(SyntaxKind.PublicKeyword);
-      }
+      return mds.Modifiers.Any(SyntaxKind.PublicKeyword);
+   }
 
-      public static bool IsReadOnly(this MemberDeclarationSyntax mds)
-      {
-         if (mds is null)
-            throw new ArgumentNullException(nameof(mds));
+   public static bool IsReadOnly(this MemberDeclarationSyntax mds)
+   {
+      if (mds is null)
+         throw new ArgumentNullException(nameof(mds));
 
-         return mds.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
-      }
+      return mds.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
    }
 }

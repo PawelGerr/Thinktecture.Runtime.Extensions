@@ -3,71 +3,70 @@ using System.Collections.Generic;
 using System.Linq;
 
 // ReSharper disable once CheckNamespace
-namespace Thinktecture
+namespace Thinktecture;
+
+/// <summary>
+/// Extensions for <see cref="IReadOnlyCollection{T}"/>.
+/// </summary>
+public static class ReadOnlyCollectionExtensions
 {
    /// <summary>
-   /// Extensions for <see cref="IReadOnlyCollection{T}"/>.
+   /// Splits the <paramref name="collection"/> in buckets of provided <paramref name="bucketSize"/>.
    /// </summary>
-   public static class ReadOnlyCollectionExtensions
+   /// <param name="collection">Collection to split in buckets.</param>
+   /// <param name="bucketSize">The size of the buckets.</param>
+   /// <typeparam name="T">Type of the item.</typeparam>
+   /// <returns>An collection of buckets.</returns>
+   /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <c>null</c>.</exception>
+   /// <exception cref="ArgumentOutOfRangeException"><paramref name="bucketSize"/> is less than 1.</exception>
+   public static IEnumerable<IReadOnlyCollection<T>> SplitInBuckets<T>(
+      this IReadOnlyCollection<T> collection,
+      int bucketSize)
    {
-      /// <summary>
-      /// Splits the <paramref name="collection"/> in buckets of provided <paramref name="bucketSize"/>.
-      /// </summary>
-      /// <param name="collection">Collection to split in buckets.</param>
-      /// <param name="bucketSize">The size of the buckets.</param>
-      /// <typeparam name="T">Type of the item.</typeparam>
-      /// <returns>An collection of buckets.</returns>
-      /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <c>null</c>.</exception>
-      /// <exception cref="ArgumentOutOfRangeException"><paramref name="bucketSize"/> is less than 1.</exception>
-      public static IEnumerable<IReadOnlyCollection<T>> SplitInBuckets<T>(
-         this IReadOnlyCollection<T> collection,
-         int bucketSize)
+      if (collection is null)
+         throw new ArgumentNullException(nameof(collection));
+      if (bucketSize < 1)
+         throw new ArgumentOutOfRangeException(nameof(bucketSize), "Bucket size cannot be less than 1.");
+
+      if (collection.Count == 0)
+         yield break;
+
+      if (collection.Count <= bucketSize)
       {
-         if (collection is null)
-            throw new ArgumentNullException(nameof(collection));
-         if (bucketSize < 1)
-            throw new ArgumentOutOfRangeException(nameof(bucketSize), "Bucket size cannot be less than 1.");
+         yield return collection;
+         yield break;
+      }
 
-         if (collection.Count == 0)
-            yield break;
+      var bucketCount = collection.Count / bucketSize;
 
-         if (collection.Count <= bucketSize)
+      using var enumerator = collection.GetEnumerator();
+
+      for (var i = 0; i < bucketCount; i++)
+      {
+         var bucket = new T[bucketSize];
+
+         for (var j = 0; j < bucketSize; j++)
          {
-            yield return collection;
-            yield break;
+            enumerator.MoveNext();
+            bucket[j] = enumerator.Current;
          }
 
-         var bucketCount = collection.Count / bucketSize;
+         yield return bucket;
+      }
 
-         using var enumerator = collection.GetEnumerator();
+      var lastBucketSize = collection.Count % bucketSize;
 
-         for (var i = 0; i < bucketCount; i++)
+      if (lastBucketSize != 0)
+      {
+         var bucket = new T[lastBucketSize];
+
+         for (var j = 0; j < lastBucketSize; j++)
          {
-            var bucket = new T[bucketSize];
-
-            for (var j = 0; j < bucketSize; j++)
-            {
-               enumerator.MoveNext();
-               bucket[j] = enumerator.Current;
-            }
-
-            yield return bucket;
+            enumerator.MoveNext();
+            bucket[j] = enumerator.Current;
          }
 
-         var lastBucketSize = collection.Count % bucketSize;
-
-         if (lastBucketSize != 0)
-         {
-            var bucket = new T[lastBucketSize];
-
-            for (var j = 0; j < lastBucketSize; j++)
-            {
-               enumerator.MoveNext();
-               bucket[j] = enumerator.Current;
-            }
-
-            yield return bucket;
-         }
+         yield return bucket;
       }
    }
 }

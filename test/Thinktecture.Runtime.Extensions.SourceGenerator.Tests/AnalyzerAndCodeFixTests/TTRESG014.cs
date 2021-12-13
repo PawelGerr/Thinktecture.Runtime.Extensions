@@ -2,17 +2,17 @@ using System.Threading.Tasks;
 using Xunit;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
-namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests
-{
-   // ReSharper disable once InconsistentNaming
-   public class TTRESG014_First_level_inner_types_must_be_private
-   {
-      private const string _DIAGNOSTIC_ID = "TTRESG014";
+namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
-      [Fact]
-      public async Task Should_trigger_if_1st_level_type_is_public()
-      {
-         var code = @"
+// ReSharper disable once InconsistentNaming
+public class TTRESG014_First_level_inner_types_must_be_private
+{
+   private const string _DIAGNOSTIC_ID = "TTRESG014";
+
+   [Fact]
+   public async Task Should_trigger_if_1st_level_type_is_public()
+   {
+      var code = @"
 using System;
 using Thinktecture;
 
@@ -28,7 +28,7 @@ namespace TestNamespace
    }
 }";
 
-         var expectedCode = @"
+      var expectedCode = @"
 using System;
 using Thinktecture;
 
@@ -44,14 +44,14 @@ namespace TestNamespace
    }
 }";
 
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InnerTestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
-      }
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InnerTestEnum");
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+   }
 
-      [Fact]
-      public async Task Should_not_trigger_if_1st_level_type_is_private()
-      {
-         var code = @"
+   [Fact]
+   public async Task Should_not_trigger_if_1st_level_type_is_private()
+   {
+      var code = @"
 using System;
 using Thinktecture;
 
@@ -67,13 +67,13 @@ namespace TestNamespace
    }
 }";
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
-      }
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+   }
 
-      [Fact]
-      public async Task Should_not_trigger_if_2nd_level_type_is_public()
-      {
-         var code = @"
+   [Fact]
+   public async Task Should_not_trigger_if_2nd_level_type_is_public()
+   {
+      var code = @"
 using System;
 using Thinktecture;
 
@@ -92,7 +92,6 @@ namespace TestNamespace
    }
 }";
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
-      }
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
 }

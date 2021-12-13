@@ -1,28 +1,27 @@
-namespace Thinktecture.Runtime.Tests.TestEnums
+namespace Thinktecture.Runtime.Tests.TestEnums;
+
+public abstract partial class AbstractEnum : IValidatableEnum<int>
 {
-   public abstract partial class AbstractEnum : IValidatableEnum<int>
+   public static readonly AbstractEnum Item = new ValidItem(1);
+
+   private static AbstractEnum CreateInvalidItem(int key)
    {
-      public static readonly AbstractEnum Item = new ValidItem(1);
+      return new InvalidItem(key);
+   }
 
-      private static AbstractEnum CreateInvalidItem(int key)
+   private class InvalidItem : AbstractEnum
+   {
+      public InvalidItem(int key)
+         : base(key, false)
       {
-         return new InvalidItem(key);
       }
+   }
 
-      private class InvalidItem : AbstractEnum
+   private class ValidItem : AbstractEnum
+   {
+      public ValidItem(int key)
+         : base(key)
       {
-         public InvalidItem(int key)
-            : base(key, false)
-         {
-         }
-      }
-
-      private class ValidItem : AbstractEnum
-      {
-         public ValidItem(int key)
-            : base(key)
-         {
-         }
       }
    }
 }

@@ -4,26 +4,25 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 // ReSharper disable once CheckNamespace
-namespace Thinktecture
+namespace Thinktecture;
+
+public static class FieldSymbolExtensions
 {
-   public static class FieldSymbolExtensions
+   public static SyntaxToken GetIdentifier(this IFieldSymbol field)
    {
-      public static SyntaxToken GetIdentifier(this IFieldSymbol field)
+      var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax();
+      return syntax.Identifier;
+   }
+
+   public static bool IsPropertyBackingField(this IFieldSymbol field, [MaybeNullWhen(false)] out IPropertySymbol property)
+   {
+      if (field.AssociatedSymbol is IPropertySymbol prop)
       {
-         var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax();
-         return syntax.Identifier;
+         property = prop;
+         return true;
       }
 
-      public static bool IsPropertyBackingField(this IFieldSymbol field, [MaybeNullWhen(false)] out IPropertySymbol property)
-      {
-         if (field.AssociatedSymbol is IPropertySymbol prop)
-         {
-            property = prop;
-            return true;
-         }
-
-         property = null;
-         return false;
-      }
+      property = null;
+      return false;
    }
 }

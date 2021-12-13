@@ -2,17 +2,17 @@ using System.Threading.Tasks;
 using Xunit;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
-namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests
-{
-   // ReSharper disable once InconsistentNaming
-   public class TTRESG010_NonValidatable_Enum_must_be_class
-   {
-      private const string _DIAGNOSTIC_ID = "TTRESG010";
+namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
-      [Fact]
-      public async Task Should_trigger_if_IEnum_is_struct()
-      {
-         var code = @"
+// ReSharper disable once InconsistentNaming
+public class TTRESG010_NonValidatable_Enum_must_be_class
+{
+   private const string _DIAGNOSTIC_ID = "TTRESG010";
+
+   [Fact]
+   public async Task Should_trigger_if_IEnum_is_struct()
+   {
+      var code = @"
 using System;
 using Thinktecture;
 
@@ -24,14 +24,14 @@ namespace TestNamespace
    }
 }";
 
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
-      }
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+   }
 
-      [Fact]
-      public async Task Should_not_trigger_if_IEnum_is_class()
-      {
-         var code = @"
+   [Fact]
+   public async Task Should_not_trigger_if_IEnum_is_class()
+   {
+      var code = @"
 using System;
 using Thinktecture;
 
@@ -43,7 +43,6 @@ namespace TestNamespace
    }
 }";
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
-      }
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
 }

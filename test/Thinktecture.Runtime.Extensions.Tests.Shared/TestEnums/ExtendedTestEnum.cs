@@ -1,8 +1,7 @@
-namespace Thinktecture.Runtime.Tests.TestEnums
+namespace Thinktecture.Runtime.Tests.TestEnums;
+
+[EnumGeneration]
+public partial class ExtendedTestEnum : ExtensibleTestEnum
 {
-   [EnumGeneration]
-   public partial class ExtendedTestEnum : ExtensibleTestEnum
-   {
-      public static readonly ExtendedTestEnum Item2 = new("Item2", Empty.Action);
-   }
+   public static readonly ExtendedTestEnum Item2 = new("Item2", Empty.Action);
 }

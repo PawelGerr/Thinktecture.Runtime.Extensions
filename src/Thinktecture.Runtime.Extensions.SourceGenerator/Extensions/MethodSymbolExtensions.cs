@@ -3,14 +3,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 // ReSharper disable once CheckNamespace
-namespace Thinktecture
+namespace Thinktecture;
+
+public static class MethodSymbolExtensions
 {
-   public static class MethodSymbolExtensions
+   public static SyntaxToken GetIdentifier(this IMethodSymbol method)
    {
-      public static SyntaxToken GetIdentifier(this IMethodSymbol method)
-      {
-         var syntax = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences.Single().GetSyntax();
-         return syntax.Identifier;
-      }
+      var syntax = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences.Single().GetSyntax();
+      return syntax.Identifier;
    }
 }

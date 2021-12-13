@@ -4,58 +4,58 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
-namespace Thinktecture.CodeAnalysis
+namespace Thinktecture.CodeAnalysis;
+
+/// <summary>
+/// Source generator for JsonConverter for an enum-like class.
+/// </summary>
+[Generator]
+public class ThinktectureMessagePackFormatterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
 {
-   /// <summary>
-   /// Source generator for JsonConverter for an enum-like class.
-   /// </summary>
-   [Generator]
-   public class ThinktectureMessagePackFormatterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
+   /// <inheritdoc />
+   public ThinktectureMessagePackFormatterSourceGenerator()
+      : base("_MessagePack")
    {
-      /// <inheritdoc />
-      public ThinktectureMessagePackFormatterSourceGenerator()
-         : base("_MessagePack")
-      {
-      }
+   }
 
-      /// <inheritdoc />
-      protected override string GenerateEnum(EnumSourceGeneratorState state)
-      {
-         if (state is null)
-            throw new ArgumentNullException(nameof(state));
+   /// <inheritdoc />
+   protected override string GenerateEnum(EnumSourceGeneratorState state)
+   {
+      if (state is null)
+         throw new ArgumentNullException(nameof(state));
 
-         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectMessagePackFormatter").Any());
-         return GenerateFormatter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
-      }
+      var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectMessagePackFormatter").Any());
+      return GenerateFormatter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
+   }
 
-      /// <inheritdoc />
-      protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
-      {
-         if (state is null)
-            throw new ArgumentNullException(nameof(state));
+   /// <inheritdoc />
+   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
+   {
+      if (state is null)
+         throw new ArgumentNullException(nameof(state));
 
-         if (state.HasKeyMember)
-            return GenerateFormatter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
+      if (state.HasKeyMember)
+         return GenerateFormatter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
-         if (!state.SkipFactoryMethods)
-            return GenerateValueObjectFormatter(state);
+      if (!state.SkipFactoryMethods)
+         return GenerateValueObjectFormatter(state);
 
-         return null;
-      }
+      return null;
+   }
 
-      private static string GenerateFormatter(
-         ITypeSymbol type,
-         string? @namespace,
-         string typeName,
-         ITypeSymbol keyType,
-         string factoryMethod,
-         string keyMember,
-         bool requiresNew)
-      {
-         if (type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
-            return String.Empty;
+   private static string GenerateFormatter(
+      ITypeSymbol type,
+      string? @namespace,
+      string typeName,
+      ITypeSymbol keyType,
+      string factoryMethod,
+      string keyMember,
+      bool requiresNew)
+   {
+      if (type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
+         return String.Empty;
 
-         return $@"
+      return $@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,14 +78,14 @@ using Thinktecture;
    }}
 }}
 ";
-      }
+   }
 
-      private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state)
-      {
-         if (state.Type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
-            return String.Empty;
+   private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state)
+   {
+      if (state.Type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
+         return String.Empty;
 
-         var sb = new StringBuilder($@"
+      var sb = new StringBuilder($@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -121,27 +121,27 @@ using Thinktecture;
             {{
 ");
 
-         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
-         {
-            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
-
-            sb.Append(@$"
-               var {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)}!;");
-         }
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
+               var {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)}!;");
+      }
+
+      sb.Append(@$"
 
                var validationResult = {state.Type.Name}.TryCreate(");
 
-         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
-         {
-            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
-
-            sb.Append(@$"
-                                          {memberInfo.ArgumentName},");
-         }
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
+                                          {memberInfo.ArgumentName},");
+      }
+
+      sb.Append(@$"
                                           out var obj);
 
                if (validationResult != ValidationResult.Success)
@@ -159,99 +159,98 @@ using Thinktecture;
          public void Serialize(ref MessagePackWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, MessagePackSerializerOptions options)
          {{");
 
-         if (state.Type.IsReferenceType)
-         {
-            sb.Append(@$"
+      if (state.Type.IsReferenceType)
+      {
+         sb.Append(@$"
             if(value is null)
             {{
                writer.WriteNil();
                return;
             }}
 ");
-         }
+      }
 
-         sb.Append(@$"
+      sb.Append(@$"
             writer.WriteArrayHeader({state.AssignableInstanceFieldsAndProperties.Count});
 
             var resolver = options.Resolver;");
 
-         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
-         {
-            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
-            sb.Append(@$"
+         sb.Append(@$"
             {GenerateWriteValue(memberInfo)};");
-         }
+      }
 
-         sb.Append($@"
+      sb.Append($@"
          }}
       }}
    }}
 }}
 ");
 
-         return sb.ToString();
-      }
+      return sb.ToString();
+   }
 
-      private static string GenerateWriteValue(InstanceMemberInfo memberInfo)
+   private static string GenerateWriteValue(InstanceMemberInfo memberInfo)
+   {
+      var command = memberInfo.Type.SpecialType switch
       {
-         var command = memberInfo.Type.SpecialType switch
-         {
-            SpecialType.System_Boolean => "Write",
-            SpecialType.System_Char => "Write",
-            SpecialType.System_String => "Write",
-            SpecialType.System_DateTime => "Write",
-            SpecialType.System_Byte => "Write",
-            SpecialType.System_SByte => "Write",
-            SpecialType.System_Int16 => "Write",
-            SpecialType.System_UInt16 => "Write",
-            SpecialType.System_Int32 => "Write",
-            SpecialType.System_UInt32 => "Write",
-            SpecialType.System_Int64 => "Write",
-            SpecialType.System_UInt64 => "Write",
-            SpecialType.System_Single => "Write",
-            SpecialType.System_Double => "Write",
-            _ => null
-         };
+         SpecialType.System_Boolean => "Write",
+         SpecialType.System_Char => "Write",
+         SpecialType.System_String => "Write",
+         SpecialType.System_DateTime => "Write",
+         SpecialType.System_Byte => "Write",
+         SpecialType.System_SByte => "Write",
+         SpecialType.System_Int16 => "Write",
+         SpecialType.System_UInt16 => "Write",
+         SpecialType.System_Int32 => "Write",
+         SpecialType.System_UInt32 => "Write",
+         SpecialType.System_Int64 => "Write",
+         SpecialType.System_UInt64 => "Write",
+         SpecialType.System_Single => "Write",
+         SpecialType.System_Double => "Write",
+         _ => null
+      };
 
-         if (command is not null)
-            return $"writer.{command}(value.{memberInfo.Identifier})";
+      if (command is not null)
+         return $"writer.{command}(value.{memberInfo.Identifier})";
 
-         return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Serialize(ref writer, value.{memberInfo.Identifier}, options)";
-      }
+      return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Serialize(ref writer, value.{memberInfo.Identifier}, options)";
+   }
 
-      private static string GenerateReadValue(InstanceMemberInfo memberInfo)
+   private static string GenerateReadValue(InstanceMemberInfo memberInfo)
+   {
+      var command = memberInfo.Type.SpecialType switch
       {
-         var command = memberInfo.Type.SpecialType switch
-         {
-            SpecialType.System_Boolean => "ReadBoolean",
+         SpecialType.System_Boolean => "ReadBoolean",
 
-            SpecialType.System_Char => "ReadChar",
-            SpecialType.System_String => "ReadString",
+         SpecialType.System_Char => "ReadChar",
+         SpecialType.System_String => "ReadString",
 
-            SpecialType.System_DateTime => "ReadDateTime",
+         SpecialType.System_DateTime => "ReadDateTime",
 
-            SpecialType.System_Byte => "ReadByte",
-            SpecialType.System_SByte => "ReadSByte",
+         SpecialType.System_Byte => "ReadByte",
+         SpecialType.System_SByte => "ReadSByte",
 
-            SpecialType.System_Int16 => "ReadInt16",
-            SpecialType.System_UInt16 => "ReadUInt16",
+         SpecialType.System_Int16 => "ReadInt16",
+         SpecialType.System_UInt16 => "ReadUInt16",
 
-            SpecialType.System_Int32 => "ReadInt32",
-            SpecialType.System_UInt32 => "ReadUInt32",
+         SpecialType.System_Int32 => "ReadInt32",
+         SpecialType.System_UInt32 => "ReadUInt32",
 
-            SpecialType.System_Int64 => "ReadInt64",
-            SpecialType.System_UInt64 => "ReadUInt64",
+         SpecialType.System_Int64 => "ReadInt64",
+         SpecialType.System_UInt64 => "ReadUInt64",
 
-            SpecialType.System_Single => "ReadSingle",
-            SpecialType.System_Double => "ReadDouble",
-            _ => null
-         };
+         SpecialType.System_Single => "ReadSingle",
+         SpecialType.System_Double => "ReadDouble",
+         _ => null
+      };
 
-         if (command is not null)
-            return @$"reader.{command}()";
+      if (command is not null)
+         return @$"reader.{command}()";
 
-         return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Deserialize(ref reader, options)";
-      }
+      return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Deserialize(ref reader, options)";
    }
 }

@@ -1,8 +1,7 @@
-namespace Thinktecture.Runtime.Tests.TestValueObjects
+namespace Thinktecture.Runtime.Tests.TestValueObjects;
+
+[ValueObject]
+public partial class IntBasedReferenceValueObject
 {
-   [ValueObject]
-   public partial class IntBasedReferenceValueObject
-   {
-      public int Property { get; }
-   }
+   public int Property { get; }
 }

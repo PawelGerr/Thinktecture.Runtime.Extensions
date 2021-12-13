@@ -2,31 +2,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Thinktecture.Collections
+namespace Thinktecture.Collections;
+
+internal readonly struct EnumerableWrapperWithCount<T> : IReadOnlyCollection<T>
 {
-   internal readonly struct EnumerableWrapperWithCount<T> : IReadOnlyCollection<T>
+   private readonly IEnumerable<T> _items;
+
+   public int Count { get; }
+
+   public EnumerableWrapperWithCount(IEnumerable<T> items, int count)
    {
-      private readonly IEnumerable<T> _items;
+      if (count < 0)
+         throw new ArgumentOutOfRangeException(nameof(count), "The count cannot be negative.");
 
-      public int Count { get; }
+      _items = items ?? throw new ArgumentNullException(nameof(items));
+      Count = count;
+   }
 
-      public EnumerableWrapperWithCount(IEnumerable<T> items, int count)
-      {
-         if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count), "The count cannot be negative.");
+   public IEnumerator<T> GetEnumerator()
+   {
+      return _items.GetEnumerator();
+   }
 
-         _items = items ?? throw new ArgumentNullException(nameof(items));
-         Count = count;
-      }
-
-      public IEnumerator<T> GetEnumerator()
-      {
-         return _items.GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return ((IEnumerable)_items).GetEnumerator();
-      }
+   IEnumerator IEnumerable.GetEnumerator()
+   {
+      return ((IEnumerable)_items).GetEnumerator();
    }
 }

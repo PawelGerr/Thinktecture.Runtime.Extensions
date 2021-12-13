@@ -7,50 +7,49 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit.Abstractions;
 
-namespace Thinktecture.Runtime.Tests.SourceGeneratorTests
+namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
+
+public abstract class SourceGeneratorTestsBase
 {
-   public abstract class SourceGeneratorTestsBase
+   private readonly ITestOutputHelper _output;
+
+   protected SourceGeneratorTestsBase(ITestOutputHelper output)
    {
-      private readonly ITestOutputHelper _output;
+      _output = output ?? throw new ArgumentNullException(nameof(output));
+   }
 
-      protected SourceGeneratorTestsBase(ITestOutputHelper output)
+   protected string GetGeneratedOutput<T>(string source, params Assembly[] furtherAssemblies)
+      where T : ISourceGenerator, new()
+   {
+      var syntaxTree = CSharpSyntaxTree.ParseText(source);
+      var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies())
+                       {
+                          typeof(T).Assembly
+                       };
+
+      foreach (var furtherAssembly in furtherAssemblies)
       {
-         _output = output ?? throw new ArgumentNullException(nameof(output));
+         assemblies.Add(furtherAssembly);
       }
 
-      protected string GetGeneratedOutput<T>(string source, params Assembly[] furtherAssemblies)
-         where T : ISourceGenerator, new()
-      {
-         var syntaxTree = CSharpSyntaxTree.ParseText(source);
-         var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies())
-                          {
-                             typeof(T).Assembly
-                          };
+      var references = assemblies.Where(assembly => !assembly.IsDynamic)
+                                 .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
+                                 .Cast<MetadataReference>();
 
-         foreach (var furtherAssembly in furtherAssemblies)
-         {
-            assemblies.Add(furtherAssembly);
-         }
+      var compilation = CSharpCompilation.Create("SourceGeneratorTests", new[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-         var references = assemblies.Where(assembly => !assembly.IsDynamic)
-                                    .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
-                                    .Cast<MetadataReference>();
+      // compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).Should().BeEmpty();
 
-         var compilation = CSharpCompilation.Create("SourceGeneratorTests", new[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+      var generator = new T();
+      CSharpGeneratorDriver.Create(generator).RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
 
-         // compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).Should().BeEmpty();
+      var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
+      errors.Should().BeEmpty();
 
-         var generator = new T();
-         CSharpGeneratorDriver.Create(generator).RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
+      var output = outputCompilation.SyntaxTrees.Skip(1).LastOrDefault()?.ToString();
 
-         var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
-         errors.Should().BeEmpty();
+      _output.WriteLine(output ?? "No output provided.");
 
-         var output = outputCompilation.SyntaxTrees.Skip(1).LastOrDefault()?.ToString();
-
-         _output.WriteLine(output ?? "No output provided.");
-
-         return output;
-      }
+      return output;
    }
 }

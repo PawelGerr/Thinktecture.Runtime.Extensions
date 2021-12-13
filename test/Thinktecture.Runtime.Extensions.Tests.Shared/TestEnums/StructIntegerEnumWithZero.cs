@@ -1,9 +1,8 @@
-namespace Thinktecture.Runtime.Tests.TestEnums
+namespace Thinktecture.Runtime.Tests.TestEnums;
+
+public readonly partial struct StructIntegerEnumWithZero : IValidatableEnum<int>
 {
-   public readonly partial struct StructIntegerEnumWithZero : IValidatableEnum<int>
-   {
-      public static readonly StructIntegerEnumWithZero Item0 = new(0);
-      public static readonly StructIntegerEnumWithZero Item1 = new(1);
-      public static readonly StructIntegerEnumWithZero Item2 = new(2);
-   }
+   public static readonly StructIntegerEnumWithZero Item0 = new(0);
+   public static readonly StructIntegerEnumWithZero Item1 = new(1);
+   public static readonly StructIntegerEnumWithZero Item2 = new(2);
 }

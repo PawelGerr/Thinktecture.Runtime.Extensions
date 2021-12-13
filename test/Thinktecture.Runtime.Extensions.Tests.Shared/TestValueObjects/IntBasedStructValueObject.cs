@@ -1,8 +1,7 @@
-namespace Thinktecture.Runtime.Tests.TestValueObjects
+namespace Thinktecture.Runtime.Tests.TestValueObjects;
+
+[ValueObject]
+public readonly partial struct IntBasedStructValueObject
 {
-   [ValueObject]
-   public readonly partial struct IntBasedStructValueObject
-   {
-      public int Property { get; }
-   }
+   public int Property { get; }
 }

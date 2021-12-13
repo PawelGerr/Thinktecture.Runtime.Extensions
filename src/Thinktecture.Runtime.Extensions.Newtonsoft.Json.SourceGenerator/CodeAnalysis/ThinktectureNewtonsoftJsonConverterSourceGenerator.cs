@@ -4,58 +4,58 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
-namespace Thinktecture.CodeAnalysis
+namespace Thinktecture.CodeAnalysis;
+
+/// <summary>
+/// Source generator for JsonConverter for an enum-like class.
+/// </summary>
+[Generator]
+public class ThinktectureNewtonsoftJsonConverterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
 {
-   /// <summary>
-   /// Source generator for JsonConverter for an enum-like class.
-   /// </summary>
-   [Generator]
-   public class ThinktectureNewtonsoftJsonConverterSourceGenerator : ThinktectureRuntimeExtensionsSourceGeneratorBase
+   /// <inheritdoc />
+   public ThinktectureNewtonsoftJsonConverterSourceGenerator()
+      : base("_NewtonsoftJson")
    {
-      /// <inheritdoc />
-      public ThinktectureNewtonsoftJsonConverterSourceGenerator()
-         : base("_NewtonsoftJson")
-      {
-      }
+   }
 
-      /// <inheritdoc />
-      protected override string GenerateEnum(EnumSourceGeneratorState state)
-      {
-         if (state is null)
-            throw new ArgumentNullException(nameof(state));
+   /// <inheritdoc />
+   protected override string GenerateEnum(EnumSourceGeneratorState state)
+   {
+      if (state is null)
+         throw new ArgumentNullException(nameof(state));
 
-         var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectNewtonsoftJsonConverter").Any());
-         return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
-      }
+      var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectNewtonsoftJsonConverter").Any());
+      return GenerateJsonConverter(state.EnumType, state.Namespace, state.EnumType.Name, state.KeyType, "Get", state.KeyPropertyName, requiresNew);
+   }
 
-      /// <inheritdoc />
-      protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
-      {
-         if (state is null)
-            throw new ArgumentNullException(nameof(state));
+   /// <inheritdoc />
+   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
+   {
+      if (state is null)
+         throw new ArgumentNullException(nameof(state));
 
-         if (state.HasKeyMember)
-            return GenerateJsonConverter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
+      if (state.HasKeyMember)
+         return GenerateJsonConverter(state.Type, state.Namespace, state.Type.Name, state.KeyMember.Member.Type, "Create", state.KeyMember.Member.Identifier.ToString(), false);
 
-         if (!state.SkipFactoryMethods)
-            return GenerateValueObjectJsonConverter(state);
+      if (!state.SkipFactoryMethods)
+         return GenerateValueObjectJsonConverter(state);
 
-         return null;
-      }
+      return null;
+   }
 
-      private static string GenerateJsonConverter(
-         ITypeSymbol type,
-         string? @namespace,
-         string typeName,
-         ITypeSymbol keyType,
-         string factoryMethod,
-         string keyMember,
-         bool requiresNew)
-      {
-         if (type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
-            return String.Empty;
+   private static string GenerateJsonConverter(
+      ITypeSymbol type,
+      string? @namespace,
+      string typeName,
+      ITypeSymbol keyType,
+      string factoryMethod,
+      string keyMember,
+      bool requiresNew)
+   {
+      if (type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
+         return String.Empty;
 
-         return $@"
+      return $@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,14 +78,14 @@ using Thinktecture;
    }}
 }}
 ";
-      }
+   }
 
-      private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state)
-      {
-         if (state.Type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
-            return String.Empty;
+   private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state)
+   {
+      if (state.Type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
+         return String.Empty;
 
-         var sb = new StringBuilder($@"
+      var sb = new StringBuilder($@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +105,7 @@ using Thinktecture;
       public class ValueObjectNewtonsoftJsonConverter : JsonConverter<{state.Type.Name}{state.NullableQuestionMark}>
       {{");
 
-         sb.Append(@$"
+      sb.Append(@$"
          /// <inheritdoc />
          public override {state.Type.Name}{state.NullableQuestionMark} ReadJson(JsonReader reader, Type objectType, {state.Type.Name}{state.NullableQuestionMark} existingValue, bool hasExistingValue, JsonSerializer serializer)
          {{
@@ -121,15 +121,15 @@ using Thinktecture;
                throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.Type.Name}'. Expected token: '{{JsonToken.StartObject}}'."");
 ");
 
-         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
-         {
-            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
-
-            sb.Append(@$"
-            {memberInfo.Type}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
-         }
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
+            {memberInfo.Type}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
+      }
+
+      sb.Append(@$"
 
             var comparer = StringComparer.OrdinalIgnoreCase;
 
@@ -147,50 +147,50 @@ using Thinktecture;
                   throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{{propName}}' during deserialization of '{state.Type.Name}'."");
 ");
 
-         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+
+         if (i == 0)
          {
-            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
-
-            if (i == 0)
-            {
-               sb.Append(@$"
+            sb.Append(@$"
                if ");
-            }
-            else
-            {
-               sb.Append(@$"
+         }
+         else
+         {
+            sb.Append(@$"
                else if ");
-            }
+         }
 
-            sb.Append(@$"(comparer.Equals(propName, ""{memberInfo.ArgumentName}""))
+         sb.Append(@$"(comparer.Equals(propName, ""{memberInfo.ArgumentName}""))
                {{
                   {memberInfo.ArgumentName} = serializer.Deserialize<{memberInfo.Type}>(reader);
                }}");
-         }
+      }
 
-         if (state.AssignableInstanceFieldsAndProperties.Count > 0)
-         {
-            sb.Append(@$"
+      if (state.AssignableInstanceFieldsAndProperties.Count > 0)
+      {
+         sb.Append(@$"
                else
                {{
                   throw new JsonException($""Unknown member '{{propName}}' encountered when trying to deserialize '{state.Type.Name}'."");
                }}");
-         }
+      }
 
-         sb.Append(@$"
+      sb.Append(@$"
             }}
 
             var validationResult = {state.Type.Name}.TryCreate(");
 
-         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
-         {
-            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
-
-            sb.Append(@$"
-                                       {memberInfo.ArgumentName}!,");
-         }
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
+                                       {memberInfo.ArgumentName}!,");
+      }
+
+      sb.Append(@$"
                                        out var obj);
 
             if (validationResult != ValidationResult.Success)
@@ -203,57 +203,57 @@ using Thinktecture;
          public override void WriteJson(JsonWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, JsonSerializer serializer)
          {{");
 
-         if (state.Type.IsReferenceType)
-         {
-            sb.Append(@$"
+      if (state.Type.IsReferenceType)
+      {
+         sb.Append(@$"
             if (value == null)
             {{
                writer.WriteNull();
                return;
             }}
 ");
-         }
+      }
 
-         sb.Append(@$"
+      sb.Append(@$"
             var resolver = serializer.ContractResolver as DefaultContractResolver;
 
             writer.WriteStartObject();");
 
-         for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
-         {
-            var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
-            sb.Append(@$"
+         sb.Append(@$"
             var {memberInfo.ArgumentName}PropertyValue = value.{memberInfo.Identifier};
 ");
 
-            if (memberInfo.IsReferenceTypeOrNullableStruct)
-            {
-               sb.Append(@$"
+         if (memberInfo.IsReferenceTypeOrNullableStruct)
+         {
+            sb.Append(@$"
             if(serializer.NullValueHandling != NullValueHandling.Ignore || {memberInfo.ArgumentName}PropertyValue is not null)
             {{
                ");
-            }
-            else
-            {
-               sb.Append(@$"
+         }
+         else
+         {
+            sb.Append(@$"
             ");
-            }
-
-            sb.Append(@$"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""{memberInfo.Identifier}"") : ""{memberInfo.Identifier}"");
-            ");
-
-            if (memberInfo.IsReferenceTypeOrNullableStruct)
-               sb.Append(@$"   ");
-
-            GenerateWriteValue(sb, memberInfo);
-
-            if (memberInfo.IsReferenceTypeOrNullableStruct)
-               sb.Append(@$"
-            }}");
          }
 
-         sb.Append($@"
+         sb.Append(@$"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""{memberInfo.Identifier}"") : ""{memberInfo.Identifier}"");
+            ");
+
+         if (memberInfo.IsReferenceTypeOrNullableStruct)
+            sb.Append(@$"   ");
+
+         GenerateWriteValue(sb, memberInfo);
+
+         if (memberInfo.IsReferenceTypeOrNullableStruct)
+            sb.Append(@$"
+            }}");
+      }
+
+      sb.Append($@"
             writer.WriteEndObject();
          }}
       }}
@@ -261,50 +261,49 @@ using Thinktecture;
 }}
 ");
 
-         return sb.ToString();
-      }
+      return sb.ToString();
+   }
 
-      private static void GenerateWriteValue(StringBuilder? sb, InstanceMemberInfo memberInfo)
+   private static void GenerateWriteValue(StringBuilder? sb, InstanceMemberInfo memberInfo)
+   {
+      var command = memberInfo.Type.SpecialType switch
       {
-         var command = memberInfo.Type.SpecialType switch
+         SpecialType.System_Boolean => "WriteValue",
+
+         SpecialType.System_Char => "WriteValue",
+         SpecialType.System_String => "WriteValue",
+         SpecialType.System_DateTime => "WriteValue",
+
+         SpecialType.System_Byte => "WriteValue",
+         SpecialType.System_SByte => "WriteValue",
+         SpecialType.System_Int16 => "WriteValue",
+         SpecialType.System_UInt16 => "WriteValue",
+         SpecialType.System_Int32 => "WriteValue",
+         SpecialType.System_UInt32 => "WriteValue",
+         SpecialType.System_Int64 => "WriteValue",
+         SpecialType.System_UInt64 => "WriteValue",
+         SpecialType.System_Single => "WriteValue",
+         SpecialType.System_Double => "WriteValue",
+         SpecialType.System_Decimal => "WriteValue",
+         _ => null
+      };
+
+      if (command is null)
+      {
+         switch (memberInfo.Type.Name)
          {
-            SpecialType.System_Boolean => "WriteValue",
+            case "System.Guid":
+            case "System.TimeSpan":
+            case "System.DateTimeOffset":
+               command = "WriteValue";
+               break;
 
-            SpecialType.System_Char => "WriteValue",
-            SpecialType.System_String => "WriteValue",
-            SpecialType.System_DateTime => "WriteValue",
-
-            SpecialType.System_Byte => "WriteValue",
-            SpecialType.System_SByte => "WriteValue",
-            SpecialType.System_Int16 => "WriteValue",
-            SpecialType.System_UInt16 => "WriteValue",
-            SpecialType.System_Int32 => "WriteValue",
-            SpecialType.System_UInt32 => "WriteValue",
-            SpecialType.System_Int64 => "WriteValue",
-            SpecialType.System_UInt64 => "WriteValue",
-            SpecialType.System_Single => "WriteValue",
-            SpecialType.System_Double => "WriteValue",
-            SpecialType.System_Decimal => "WriteValue",
-            _ => null
-         };
-
-         if (command is null)
-         {
-            switch (memberInfo.Type.Name)
-            {
-               case "System.Guid":
-               case "System.TimeSpan":
-               case "System.DateTimeOffset":
-                  command = "WriteValue";
-                  break;
-
-               default:
-                  sb?.Append(@$"serializer.Serialize(writer, {memberInfo.ArgumentName}PropertyValue);");
-                  return;
-            }
+            default:
+               sb?.Append(@$"serializer.Serialize(writer, {memberInfo.ArgumentName}PropertyValue);");
+               return;
          }
-
-         sb?.Append("writer.").Append(command).Append($"({memberInfo.ArgumentName}PropertyValue);");
       }
+
+      sb?.Append("writer.").Append(command).Append($"({memberInfo.ArgumentName}PropertyValue);");
    }
 }

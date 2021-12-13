@@ -2,17 +2,17 @@ using System.Threading.Tasks;
 using Xunit;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
-namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests
-{
-   // ReSharper disable once InconsistentNaming
-   public class TTRESG101_StaticPropertiesAreNotConsideredItems
-   {
-      private const string _DIAGNOSTIC_ID = "TTRESG101";
+namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
-      [Fact]
-      public async Task Should_trigger_if_potential_item_is_a_property()
-      {
-         var code = @"
+// ReSharper disable once InconsistentNaming
+public class TTRESG101_StaticPropertiesAreNotConsideredItems
+{
+   private const string _DIAGNOSTIC_ID = "TTRESG101";
+
+   [Fact]
+   public async Task Should_trigger_if_potential_item_is_a_property()
+   {
+      var code = @"
 using System;
 using Thinktecture;
 
@@ -26,8 +26,7 @@ namespace TestNamespace
    }
 }";
 
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item2");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
-      }
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item2");
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 }

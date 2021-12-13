@@ -2,19 +2,19 @@ using System.Threading.Tasks;
 using Xunit;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
-namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests
-{
-   // ReSharper disable InconsistentNaming
-   public class TTRESG006
-   {
-      private const string _DIAGNOSTIC_ID = "TTRESG006";
+namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
-      public class Enum_must_be_partial
+// ReSharper disable InconsistentNaming
+public class TTRESG006
+{
+   private const string _DIAGNOSTIC_ID = "TTRESG006";
+
+   public class Enum_must_be_partial
+   {
+      [Fact]
+      public async Task Should_trigger_on_non_partial_class()
       {
-         [Fact]
-         public async Task Should_trigger_on_non_partial_class()
-         {
-            var code = @"
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -26,7 +26,7 @@ namespace TestNamespace
    }
 }";
 
-            var expectedCode = @"
+         var expectedCode = @"
 using System;
 using Thinktecture;
 
@@ -38,14 +38,14 @@ namespace TestNamespace
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
-         }
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+      }
 
-         [Fact]
-         public async Task Should_trigger_on_non_partial_struct()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_trigger_on_non_partial_struct()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -57,7 +57,7 @@ namespace TestNamespace
    }
 }";
 
-            var expectedCode = @"
+         var expectedCode = @"
 using System;
 using Thinktecture;
 
@@ -69,14 +69,14 @@ namespace TestNamespace
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
-         }
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+      }
 
-         [Fact]
-         public async Task Should_not_trigger_on_partial_class()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_not_trigger_on_partial_class()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -88,13 +88,13 @@ namespace TestNamespace
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
-         }
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      }
 
-         [Fact]
-         public async Task Should_not_trigger_on_partial_struct()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_not_trigger_on_partial_struct()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -106,16 +106,16 @@ namespace TestNamespace
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
-         }
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
+   }
 
-      public class ValueObject_must_be_partial
+   public class ValueObject_must_be_partial
+   {
+      [Fact]
+      public async Task Should_trigger_on_non_partial_class()
       {
-         [Fact]
-         public async Task Should_trigger_on_non_partial_class()
-         {
-            var code = @"
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -127,7 +127,7 @@ namespace TestNamespace
    }
 }";
 
-            var expectedCode = @"
+         var expectedCode = @"
 using System;
 using Thinktecture;
 
@@ -139,14 +139,14 @@ namespace TestNamespace
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-         }
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+      }
 
-         [Fact]
-         public async Task Should_trigger_on_non_partial_struct()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_trigger_on_non_partial_struct()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -158,7 +158,7 @@ namespace TestNamespace
    }
 }";
 
-            var expectedCode = @"
+         var expectedCode = @"
 using System;
 using Thinktecture;
 
@@ -170,14 +170,14 @@ namespace TestNamespace
    }
 }";
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-            await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-         }
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+      }
 
-         [Fact]
-         public async Task Should_not_trigger_on_partial_class()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_not_trigger_on_partial_class()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -189,13 +189,13 @@ namespace TestNamespace
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
-         }
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+      }
 
-         [Fact]
-         public async Task Should_not_trigger_on_partial_struct()
-         {
-            var code = @"
+      [Fact]
+      public async Task Should_not_trigger_on_partial_struct()
+      {
+         var code = @"
 using System;
 using Thinktecture;
 
@@ -207,8 +207,7 @@ namespace TestNamespace
    }
 }";
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
-         }
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
       }
    }
 }

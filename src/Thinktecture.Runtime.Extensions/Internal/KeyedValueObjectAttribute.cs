@@ -1,11 +1,10 @@
 using System;
 
-namespace Thinktecture.Internal
+namespace Thinktecture.Internal;
+
+/// <summary>
+/// For internal use only.
+/// </summary>
+public class KeyedValueObjectAttribute : Attribute
 {
-   /// <summary>
-   /// For internal use only.
-   /// </summary>
-   public class KeyedValueObjectAttribute : Attribute
-   {
-   }
 }
