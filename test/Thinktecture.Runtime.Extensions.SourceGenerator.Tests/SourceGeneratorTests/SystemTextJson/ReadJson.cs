@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit;
@@ -27,9 +28,11 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests.SystemTextJson
          var options = new JsonSerializerOptions
                        {
                           PropertyNamingPolicy = namingPolicy,
-                          PropertyNameCaseInsensitive = propertyNameCaseInsensitive,
-                          IgnoreNullValues = ignoreNullValues
+                          PropertyNameCaseInsensitive = propertyNameCaseInsensitive
                        };
+
+         if (ignoreNullValues)
+            options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
          return JsonSerializer.Deserialize<T>(json, options);
       }

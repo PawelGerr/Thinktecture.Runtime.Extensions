@@ -11,9 +11,9 @@ namespace Thinktecture.Runtime.Tests.Extensions.ReadOnlyListExtensions
       [Fact]
       public void Should_throw_if_collection_is_null()
       {
-         ((IReadOnlyList<int>)null).Invoking(c => c.SplitInBuckets(5).ToList())
-                                   .Should().Throw<ArgumentNullException>()
-                                   .WithMessage("Value cannot be null. (Parameter 'collection')");
+         0.Invoking(_ => ((IReadOnlyList<int>)null).SplitInBuckets(5).ToList())
+          .Should().Throw<ArgumentNullException>()
+          .WithMessage("Value cannot be null. (Parameter 'collection')");
       }
 
       [Fact]

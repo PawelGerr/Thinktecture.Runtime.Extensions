@@ -254,7 +254,8 @@ using Thinktecture.Text.Json.Serialization;
          {{
             writer.WriteStartObject();
 
-            var ignoreNullValues = options.IgnoreNullValues;
+            var ignoreNullValues = options.DefaultIgnoreCondition is JsonIgnoreCondition.WhenWritingNull or JsonIgnoreCondition.WhenWritingDefault;
+            var ignoreDefaultValues = options.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault;
 ");
 
          for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -275,19 +276,19 @@ using Thinktecture.Text.Json.Serialization;
             else
             {
                sb.Append(@$"
-            ");
+            if(!ignoreDefaultValues || !{memberInfo.ArgumentName}PropertyValue.Equals(default({memberInfo.Type})))
+            {{
+               ");
             }
 
             sb.Append(@$"writer.WritePropertyName(this._{memberInfo.ArgumentName}PropertyName);
             ");
 
-            if (memberInfo.IsReferenceTypeOrNullableStruct)
-               sb.Append(@$"   ");
+            sb.Append(@$"   ");
 
             GenerateWriteValue(sb, memberInfo);
 
-            if (memberInfo.IsReferenceTypeOrNullableStruct)
-               sb.Append(@$"
+            sb.Append(@$"
             }}");
          }
 

@@ -2746,7 +2746,8 @@ namespace Thinktecture.Tests
          {
             writer.WriteStartObject();
 
-            var ignoreNullValues = options.IgnoreNullValues;
+            var ignoreNullValues = options.DefaultIgnoreCondition is JsonIgnoreCondition.WhenWritingNull or JsonIgnoreCondition.WhenWritingDefault;
+            var ignoreDefaultValues = options.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault;
 
             var referenceFieldPropertyValue = value.ReferenceField;
 
@@ -2757,8 +2758,11 @@ namespace Thinktecture.Tests
             }
             var structPropertyPropertyValue = value.StructProperty;
 
-            writer.WritePropertyName(this._structPropertyPropertyName);
-            writer.WriteNumberValue(structPropertyPropertyValue);
+            if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
+            {
+               writer.WritePropertyName(this._structPropertyPropertyName);
+               writer.WriteNumberValue(structPropertyPropertyValue);
+            }
             var nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
             if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
@@ -2915,7 +2919,8 @@ namespace Thinktecture.Tests
          {
             writer.WriteStartObject();
 
-            var ignoreNullValues = options.IgnoreNullValues;
+            var ignoreNullValues = options.DefaultIgnoreCondition is JsonIgnoreCondition.WhenWritingNull or JsonIgnoreCondition.WhenWritingDefault;
+            var ignoreDefaultValues = options.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault;
 
             var referenceFieldPropertyValue = value.ReferenceField;
 
@@ -2926,8 +2931,11 @@ namespace Thinktecture.Tests
             }
             var structPropertyPropertyValue = value.StructProperty;
 
-            writer.WritePropertyName(this._structPropertyPropertyName);
-            writer.WriteNumberValue(structPropertyPropertyValue);
+            if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
+            {
+               writer.WritePropertyName(this._structPropertyPropertyName);
+               writer.WriteNumberValue(structPropertyPropertyValue);
+            }
             var nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
             if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)

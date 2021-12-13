@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Testing;
@@ -51,7 +50,11 @@ namespace Thinktecture.Runtime.Tests.Verifiers
             TestCode = source;
             FixedCode = fixedSource;
             ExpectedDiagnostics.AddRange(expected);
+#if NET6_0
+            ReferenceAssemblies = new ReferenceAssemblies("net6.0", new PackageIdentity("Microsoft.NETCore.App.Ref","6.0.0"), Path.Combine("ref", "net6.0"));
+#else
             ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
+#endif
 
             foreach (var additionalReference in additionalReferences)
             {

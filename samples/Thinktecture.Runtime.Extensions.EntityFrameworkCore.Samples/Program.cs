@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
-using Thinktecture.EnumLikeClasses;
+using Thinktecture.SmartEnums;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture

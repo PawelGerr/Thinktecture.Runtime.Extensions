@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Serilog;
 using Thinktecture.EmptyClass;
-using Thinktecture.EnumLikeClasses;
+using Thinktecture.SmartEnums;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture
@@ -13,7 +13,7 @@ namespace Thinktecture
       {
          var logger = GetLogger();
 
-         EnumLikeClassDemos.Demo(logger);
+         SmartEnumDemos.Demo(logger);
          ValueObjectDemos.Demo(logger);
          EmptyActionDemos.Demo();
          EmptyCollectionsDemos.Demo();

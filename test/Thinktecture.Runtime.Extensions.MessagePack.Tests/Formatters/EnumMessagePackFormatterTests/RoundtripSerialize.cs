@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using FluentAssertions;
 using MessagePack;
 using MessagePack.Resolvers;

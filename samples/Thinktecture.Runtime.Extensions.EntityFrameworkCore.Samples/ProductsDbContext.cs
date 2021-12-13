@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Thinktecture.EnumLikeClasses;
+using Thinktecture.SmartEnums;
 
 namespace Thinktecture
 {

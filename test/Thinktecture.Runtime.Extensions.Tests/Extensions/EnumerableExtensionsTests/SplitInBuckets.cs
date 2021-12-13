@@ -11,9 +11,9 @@ namespace Thinktecture.Runtime.Tests.Extensions.EnumerableExtensionsTests
       [Fact]
       public void Should_throw_if_collection_is_null()
       {
-         ((IEnumerable<int>)null).Invoking(c => c.SplitInBuckets(5).ToList())
-                                 .Should().Throw<ArgumentNullException>()
-                                 .WithMessage("Value cannot be null. (Parameter 'collection')");
+         0.Invoking(_ => ((IEnumerable<int>)null).SplitInBuckets(5).ToList())
+          .Should().Throw<ArgumentNullException>()
+          .WithMessage("Value cannot be null. (Parameter 'collection')");
       }
 
       [Fact]

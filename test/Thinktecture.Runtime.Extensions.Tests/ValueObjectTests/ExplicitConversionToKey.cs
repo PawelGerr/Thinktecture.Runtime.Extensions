@@ -10,10 +10,8 @@ namespace Thinktecture.Runtime.Tests.ValueObjectTests
       [Fact]
       public void Should_throw_trying_convert_null_to_struct_key()
       {
-         IntBasedReferenceValueObject obj = null;
-
-         obj.Invoking(o => (int)o)
-            .Should().Throw<NullReferenceException>();
+         0.Invoking(_ => (int)(IntBasedReferenceValueObject)null)
+          .Should().Throw<NullReferenceException>();
       }
 
       [Fact]

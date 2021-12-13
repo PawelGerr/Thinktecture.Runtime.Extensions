@@ -2,12 +2,12 @@
 
     <PropertyGroup>
         <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using Newtonsoft.Json.</Description>
-        <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1;net5.0;net6.0</TargetFrameworks>
         <PackageTags>common;json</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
     <ItemGroup>

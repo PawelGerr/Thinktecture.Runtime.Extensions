@@ -53,7 +53,7 @@ namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueObjectModelBin
          var ctx = await BindAsync<IntegerEnum, int>(IntegerEnum.Validate, "42");
 
          ctx.ModelState.ErrorCount.Should().Be(1);
-         ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new ModelError("The enumeration item of type 'IntegerEnum' with identifier '42' is not valid."));
+         ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("The enumeration item of type 'IntegerEnum' with identifier '42' is not valid.") });
          ctx.Result.IsModelSet.Should().BeFalse();
       }
 
@@ -63,7 +63,7 @@ namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueObjectModelBin
          var ctx = await BindAsync<IntegerEnum, int>(IntegerEnum.Validate, "item1");
 
          ctx.ModelState.ErrorCount.Should().Be(1);
-         ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new ModelError("The value 'item1' is not valid."));
+         ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
          ctx.Result.IsModelSet.Should().BeFalse();
       }
 
@@ -107,7 +107,7 @@ namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueObjectModelBin
          var ctx = await BindAsync<StringBasedReferenceValueObject, string>(StringBasedReferenceValueObject.TryCreate, "A");
 
          ctx.ModelState.ErrorCount.Should().Be(1);
-         ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new ModelError("Property cannot be 1 character long."));
+         ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("Property cannot be 1 character long.") });
          ctx.Result.IsModelSet.Should().BeFalse();
       }
 

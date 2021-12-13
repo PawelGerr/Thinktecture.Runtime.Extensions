@@ -1,6 +1,6 @@
 [module: System.Runtime.CompilerServices.SkipLocalsInit]
 
-#if !NET5_0
+#if !NET5_0 && !NET6_0
 #pragma warning disable CA1812
 // ReSharper disable once CheckNamespace
 namespace System.Runtime.CompilerServices

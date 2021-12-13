@@ -1,4 +1,4 @@
-using Thinktecture.EnumLikeClasses;
+using Thinktecture.SmartEnums;
 
 namespace Thinktecture
 {

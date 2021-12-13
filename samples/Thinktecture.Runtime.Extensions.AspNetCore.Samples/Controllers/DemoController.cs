@@ -1,7 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Thinktecture.EnumLikeClasses;
+using Thinktecture.SmartEnums;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture.Controllers

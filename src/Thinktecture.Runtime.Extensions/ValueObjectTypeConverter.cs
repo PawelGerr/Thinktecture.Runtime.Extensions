@@ -35,7 +35,7 @@ namespace Thinktecture
       protected abstract TKey GetKeyValue(T obj);
 
       /// <inheritdoc />
-      public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+      public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
       {
          if (sourceType == _keyType || sourceType == _nullableKeyType || sourceType == _type || sourceType == _nullableType)
             return true;
@@ -45,7 +45,7 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+      public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
       {
          if (destinationType == _keyType || destinationType == _nullableKeyType || destinationType == _type || destinationType == _nullableType)
             return true;
@@ -55,7 +55,7 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public override object? ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object? value)
+      public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object? value)
       {
          if (value is null)
          {
@@ -78,7 +78,7 @@ namespace Thinktecture
       }
 
       /// <inheritdoc />
-      public override object? ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object? value, Type destinationType)
+      public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
       {
          if (value is null)
          {

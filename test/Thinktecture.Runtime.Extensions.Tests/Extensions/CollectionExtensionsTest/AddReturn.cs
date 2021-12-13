@@ -14,7 +14,7 @@ namespace Thinktecture.Runtime.Tests.Extensions.CollectionExtensionsTest
          var result = collection.AddReturn(1);
 
          result.Should().Be(1);
-         collection.Should().BeEquivalentTo(1);
+         collection.Should().BeEquivalentTo(new[] { 1 });
       }
    }
 }

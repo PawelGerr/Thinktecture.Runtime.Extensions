@@ -15,11 +15,17 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConv
       public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties => new[]
                                                                                       {
                                                                                          new object[] { null, "null" },
-                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!), "{\"StructProperty\":0,\"NullableStructProperty\":null,\"ReferenceProperty\":null}" },
-                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!), "{\"StructProperty\":0}", null, true },
-                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty), "{\"StructProperty\":0,\"NullableStructProperty\":0,\"ReferenceProperty\":\"\"}" },
-                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"StructProperty\":1,\"NullableStructProperty\":42,\"ReferenceProperty\":\"Value\"}" },
-                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"structProperty\":1,\"nullableStructProperty\":42,\"referenceProperty\":\"Value\"}", JsonNamingPolicy.CamelCase }
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!), "{\"StructProperty\":0,\"NullableStructProperty\":null,\"ReferenceProperty\":null}", null, JsonIgnoreCondition.Never },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!), "{\"StructProperty\":0}", null, JsonIgnoreCondition.WhenWritingNull },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, null, null!), "{\"StructProperty\":1}", null, JsonIgnoreCondition.WhenWritingDefault },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!), "{}", null, JsonIgnoreCondition.WhenWritingDefault },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty), "{\"StructProperty\":0,\"NullableStructProperty\":0,\"ReferenceProperty\":\"\"}", null, JsonIgnoreCondition.Never },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty), "{\"StructProperty\":0,\"NullableStructProperty\":0,\"ReferenceProperty\":\"\"}", null, JsonIgnoreCondition.WhenWritingNull },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty), "{\"NullableStructProperty\":0,\"ReferenceProperty\":\"\"}", null, JsonIgnoreCondition.WhenWritingDefault },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"StructProperty\":1,\"NullableStructProperty\":42,\"ReferenceProperty\":\"Value\"}", null, JsonIgnoreCondition.Never },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"StructProperty\":1,\"NullableStructProperty\":42,\"ReferenceProperty\":\"Value\"}", null, JsonIgnoreCondition.WhenWritingNull },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"StructProperty\":1,\"NullableStructProperty\":42,\"ReferenceProperty\":\"Value\"}", null, JsonIgnoreCondition.WhenWritingDefault },
+                                                                                         new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"structProperty\":1,\"nullableStructProperty\":42,\"referenceProperty\":\"Value\"}", JsonNamingPolicy.CamelCase, JsonIgnoreCondition.Never }
                                                                                       };
 
       [Theory]
@@ -91,9 +97,9 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConv
          ValueObjectWithMultipleProperties valueObject,
          string expectedJson,
          JsonNamingPolicy namingPolicy = null,
-         bool ignoreNullValues = false)
+         JsonIgnoreCondition jsonIgnoreCondition = JsonIgnoreCondition.Never)
       {
-         var json = Serialize<ValueObjectWithMultipleProperties, ValueObjectWithMultipleProperties.ValueObjectJsonConverterFactory>(valueObject, namingPolicy, ignoreNullValues);
+         var json = Serialize<ValueObjectWithMultipleProperties, ValueObjectWithMultipleProperties.ValueObjectJsonConverterFactory>(valueObject, namingPolicy, jsonIgnoreCondition);
 
          json.Should().Be(expectedJson);
       }
@@ -104,12 +110,21 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConv
          bool ignoreNullValues = false)
          where TConverterFactory : JsonConverterFactory, new()
       {
+         return Serialize<T, TConverterFactory>(value, namingPolicy, ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never);
+      }
+
+      private static string Serialize<T, TConverterFactory>(
+         T value,
+         JsonNamingPolicy namingPolicy,
+         JsonIgnoreCondition jsonIgnoreCondition)
+         where TConverterFactory : JsonConverterFactory, new()
+      {
          var factory = new TConverterFactory();
          var options = new JsonSerializerOptions
                        {
                           Converters = { factory },
                           PropertyNamingPolicy = namingPolicy,
-                          IgnoreNullValues = ignoreNullValues
+                          DefaultIgnoreCondition = jsonIgnoreCondition
                        };
 
          return JsonSerializer.Serialize(value, options);

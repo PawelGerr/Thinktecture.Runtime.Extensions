@@ -12,8 +12,8 @@ namespace Thinktecture
       [Fact]
       public void Should_throw_if_items_is_null()
       {
-         ((IEnumerable<int>)null).Invoking(e => e.ToReadOnlyCollection(42))
-                                 .Should().Throw<ArgumentNullException>();
+         0.Invoking(_ => ((IEnumerable<int>)null).ToReadOnlyCollection(42))
+          .Should().Throw<ArgumentNullException>();
       }
 
       [Fact]

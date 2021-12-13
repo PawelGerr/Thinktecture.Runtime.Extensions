@@ -120,7 +120,7 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConv
                           Converters = { factory },
                           PropertyNamingPolicy = namingPolicy,
                           PropertyNameCaseInsensitive = propertyNameCaseInsensitive,
-                          IgnoreNullValues = ignoreNullValues
+                          DefaultIgnoreCondition = ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never
                        };
 
          return JsonSerializer.Deserialize<T>(json, options);

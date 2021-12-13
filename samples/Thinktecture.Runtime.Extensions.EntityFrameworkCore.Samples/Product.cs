@@ -1,5 +1,5 @@
 ﻿using System;
-using Thinktecture.EnumLikeClasses;
+using Thinktecture.SmartEnums;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture

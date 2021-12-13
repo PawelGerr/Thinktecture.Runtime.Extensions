@@ -2,11 +2,14 @@ using System;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Xunit;
+
+#if !NET6_0
+using Microsoft.EntityFrameworkCore;
+#endif
 
 // ReSharper disable InconsistentNaming
 namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests

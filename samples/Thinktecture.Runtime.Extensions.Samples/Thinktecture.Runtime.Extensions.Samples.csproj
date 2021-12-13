@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <NoWarn>$(NoWarn);CS1591;CA1052;CA1801;CA1052;CA1707;CA1062</NoWarn>
         <IsPackable>false</IsPackable>
@@ -10,6 +10,6 @@
         <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
     </ItemGroup>
 </Project>

@@ -120,8 +120,8 @@ namespace Thinktecture
          if (!entityType.IsOwned())
             return (modelBuilder.Entity(entityType.Name), null);
 
-         var ownership = entityType.FindOwnership();
-         var navigation = ownership.GetNavigation(false).Name;
+         var ownership = entityType.FindOwnership() ?? throw new Exception($"Ownership of the owned entity '{entityType.Name}' not found.");
+         var navigation = ownership.GetNavigation(false)?.Name ?? throw new Exception($"Navigation of the owned entity '{entityType.Name}' not found.");
          var (entityTypeBuilder, ownedNavigationBuilder) = modelBuilder.FindEntityBuilder(ownership.PrincipalEntityType);
 
          if (entityTypeBuilder is not null)

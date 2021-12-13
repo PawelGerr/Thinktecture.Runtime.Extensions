@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
       [Fact]
       public void Should_be_empty()
       {
-         SUT.Should().BeEmpty();
+         SUT.Cast<object>().Should().BeEmpty();
       }
    }
 }
