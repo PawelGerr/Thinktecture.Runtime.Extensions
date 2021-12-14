@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestValueObjects;
 
 // ReSharper disable InconsistentNaming
 #pragma warning disable 8618
@@ -10,6 +11,7 @@ public class TestEntity_with_OwnedTypes
    public Guid Id { get; set; }
 
    public TestEnum TestEnum { get; set; }
+   public Boundary Boundary { get; set; }
 
    public OwnedEntity_Owns_Inline Inline_Inline { get; set; }
    public OwnedEntity_Owns_SeparateOne Inline_SeparateOne { get; set; }
@@ -27,6 +29,8 @@ public class TestEntity_with_OwnedTypes
    {
       modelBuilder.Entity<TestEntity_with_OwnedTypes>(builder =>
                                                       {
+                                                         builder.OwnsOne(e => e.Boundary, boundaryBuilder => boundaryBuilder.Property(b => b.Lower));
+
                                                          builder.OwnsOne(e => e.Inline_Inline,
                                                                          navigationBuilder => navigationBuilder.OwnsOne(e => e.InlineEntity));
 

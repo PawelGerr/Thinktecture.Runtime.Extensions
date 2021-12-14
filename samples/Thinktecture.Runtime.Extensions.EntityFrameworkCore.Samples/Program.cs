@@ -55,6 +55,7 @@ public class Program
                     .Options;
 
       var ctx = new ProductsDbContext(options);
+      ctx.Database.EnsureDeleted();
       ctx.Database.EnsureCreated();
       DeleteAllProducts(ctx);
 

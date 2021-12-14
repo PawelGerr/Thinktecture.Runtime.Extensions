@@ -47,12 +47,15 @@ public static class ModelBuilderExtensions
 
       var ctorAttr = entity.ClrType.GetCustomAttribute<ValueObjectConstructorAttribute>();
 
-      if (ctorAttr is not null && ctorAttr.Members.Length != 0)
+      if (ctorAttr is null || ctorAttr.Members.Length == 0)
+         return;
+
+      foreach (var memberName in ctorAttr.Members)
       {
-         foreach (string memberName in ctorAttr.Members)
-         {
+         var property = entity.FindProperty(memberName);
+
+         if (property is null)
             entity.AddProperty(memberName);
-         }
       }
    }
 
