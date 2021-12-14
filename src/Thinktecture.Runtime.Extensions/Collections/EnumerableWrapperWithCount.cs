@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Thinktecture.Collections;
 
-internal readonly struct EnumerableWrapperWithCount<T> : IReadOnlyCollection<T>
+internal class EnumerableWrapperWithCount<T> : IReadOnlyCollection<T>
 {
    private readonly IEnumerable<T> _items;
 
