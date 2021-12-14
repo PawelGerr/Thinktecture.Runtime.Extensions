@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Internal;
 
@@ -19,24 +20,25 @@ public static class ModelBuilderExtensions
    /// </summary>
    /// <param name="modelBuilder">EF model builder.</param>
    /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
-   /// <param name="configure">Action for further configuration of the property.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <exception cref="ArgumentNullException">If <paramref name="modelBuilder"/> is <c>null</c>.</exception>
    public static void AddEnumAndValueObjectConverters(
       this ModelBuilder modelBuilder,
       bool validateOnWrite,
-      Action<IMutableProperty>? configure = null)
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
    {
       if (modelBuilder is null)
          throw new ArgumentNullException(nameof(modelBuilder));
 
-      configure ??= Empty.Action;
+      configureEnumsAndKeyedValueObjects ??= Empty.Action;
+      var converterLookup = new Dictionary<Type, ValueConverter>();
 
       foreach (var entity in modelBuilder.Model.GetEntityTypes())
       {
          AddNonKeyedValueObjectMembers(entity);
 
-         AddConverterForScalarProperties(entity, validateOnWrite, configure);
-         AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, configure);
+         AddConverterForScalarProperties(entity, validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects);
+         AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects);
       }
    }
 
@@ -63,6 +65,7 @@ public static class ModelBuilderExtensions
       IMutableEntityType entity,
       ModelBuilder modelBuilder,
       bool validateOnWrite,
+      Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure)
    {
       List<IMutableNavigation>? navigationsToConvert = null;
@@ -80,7 +83,14 @@ public static class ModelBuilderExtensions
 
       foreach (var navigation in navigationsToConvert)
       {
-         var valueConverter = ValueObjectValueConverterFactory.Create(navigation.ClrType, validateOnWrite);
+         var naviType = navigation.ClrType;
+
+         if (!converterLookup.TryGetValue(naviType, out var valueConverter))
+         {
+            valueConverter = ValueObjectValueConverterFactory.Create(naviType, validateOnWrite);
+            converterLookup.Add(naviType, valueConverter);
+         }
+
          var property = FindPropertyBuilder(builders, entity, navigation.Name);
          property.HasConversion(valueConverter);
          configure(property.Metadata);
@@ -90,6 +100,7 @@ public static class ModelBuilderExtensions
    private static void AddConverterForScalarProperties(
       IMutableEntityType entity,
       bool validateOnWrite,
+      Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure)
    {
       foreach (var property in entity.GetProperties())
@@ -102,7 +113,14 @@ public static class ModelBuilderExtensions
          if (ValueObjectMetadataLookup.Find(property.ClrType) is null)
             continue;
 
-         valueConverter = ValueObjectValueConverterFactory.Create(property.ClrType, validateOnWrite);
+         var propertyType = property.ClrType;
+
+         if (!converterLookup.TryGetValue(propertyType, out valueConverter))
+         {
+            valueConverter = ValueObjectValueConverterFactory.Create(propertyType, validateOnWrite);
+            converterLookup.Add(propertyType, valueConverter);
+         }
+
          property.SetValueConverter(valueConverter);
          configure(property);
       }
