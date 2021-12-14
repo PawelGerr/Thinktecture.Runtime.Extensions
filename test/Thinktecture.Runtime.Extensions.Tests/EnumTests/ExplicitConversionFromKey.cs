@@ -63,22 +63,13 @@ public class ExplicitConversionFromKey
    [Fact]
    public void Should_throw_if_non_validable_enum_has_no_such_key()
    {
-      Action action = () =>
-                      {
-                         var item = (ValidTestEnum)"invalid";
-                      };
+      Action action = () => _ = (ValidTestEnum)"invalid";
       action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
 
-      action = () =>
-               {
-                  var item = (ExtensibleTestEnum)"invalid";
-               };
+      action = () => _ = (ExtensibleTestEnum)"invalid";
       action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtensibleTestEnum' with the identifier 'invalid'.");
 
-      action = () =>
-               {
-                  var item = (ExtendedTestEnum)"invalid";
-               };
+      action = () => _ = (ExtendedTestEnum)"invalid";
       action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
    }
 }

@@ -6,7 +6,7 @@ public class SplitInBuckets
    [Fact]
    public void Should_throw_if_collection_is_null()
    {
-      0.Invoking(c => ((IReadOnlyCollection<int>)null).SplitInBuckets(5).ToList())
+      0.Invoking(_ => ((IReadOnlyCollection<int>)null).SplitInBuckets(5).ToList())
        .Should().Throw<ArgumentNullException>()
        .WithMessage("Value cannot be null. (Parameter 'collection')");
    }

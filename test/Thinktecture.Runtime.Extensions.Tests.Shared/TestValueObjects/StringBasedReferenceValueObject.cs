@@ -16,9 +16,6 @@ public partial class StringBasedReferenceValueObject
       }
 
       if (property.Length == 1)
-      {
          validationResult = new ValidationResult("Property cannot be 1 character long.");
-         return;
-      }
    }
 }

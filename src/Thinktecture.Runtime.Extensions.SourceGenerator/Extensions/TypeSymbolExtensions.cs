@@ -38,7 +38,7 @@ public static class TypeSymbolExtensions
    public static bool IsEnum(this ITypeSymbol enumType, out IReadOnlyList<INamedTypeSymbol> enumInterfaces)
    {
       var implementedInterfaces = new List<INamedTypeSymbol>();
-      enumInterfaces = implementedInterfaces!;
+      enumInterfaces = implementedInterfaces;
 
       foreach (var @interface in enumType.Interfaces)
       {
@@ -126,7 +126,7 @@ public static class TypeSymbolExtensions
 
    public static IReadOnlyList<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType)
    {
-      return enumType.EnumerateEnumItems().ToList()!;
+      return enumType.EnumerateEnumItems().ToList();
    }
 
    public static IEnumerable<IFieldSymbol> EnumerateEnumItems(this ITypeSymbol enumType)

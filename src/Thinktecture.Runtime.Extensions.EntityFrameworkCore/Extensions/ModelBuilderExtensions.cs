@@ -73,17 +73,17 @@ public static class ModelBuilderExtensions
             (navigationsToConvert ??= new List<IMutableNavigation>()).Add(navigation);
       }
 
-      if (navigationsToConvert is not null)
-      {
-         var builders = modelBuilder.FindEntityBuilder(entity);
+      if (navigationsToConvert is null)
+         return;
 
-         foreach (var navigation in navigationsToConvert)
-         {
-            var valueConverter = ValueObjectValueConverterFactory.Create(navigation.ClrType, validateOnWrite);
-            var property = FindPropertyBuilder(builders, entity, navigation.Name);
-            property.HasConversion(valueConverter);
-            configure(property.Metadata);
-         }
+      var builders = modelBuilder.FindEntityBuilder(entity);
+
+      foreach (var navigation in navigationsToConvert)
+      {
+         var valueConverter = ValueObjectValueConverterFactory.Create(navigation.ClrType, validateOnWrite);
+         var property = FindPropertyBuilder(builders, entity, navigation.Name);
+         property.HasConversion(valueConverter);
+         configure(property.Metadata);
       }
    }
 
@@ -112,7 +112,7 @@ public static class ModelBuilderExtensions
    {
       return builders.Item1?.Property(propertyName)
              ?? builders.Item2?.Property(propertyName)
-             ?? throw new Exception($"Property '{propertyName}' in der Entity '{entityType.Name}' nicht gefunden.");
+             ?? throw new Exception($"Property '{propertyName}' not found in the entity '{entityType.Name}'.");
    }
 
    private static (EntityTypeBuilder?, OwnedNavigationBuilder?) FindEntityBuilder(this ModelBuilder modelBuilder, IMutableEntityType entityType)
@@ -138,7 +138,7 @@ public static class ModelBuilderExtensions
       }
       else
       {
-         throw new Exception($"Entity Builder für Owned Type '{entityType.Name}' nicht gefunden.");
+         throw new Exception($"Entity Builder for Owned Type '{entityType.Name}' not found.");
       }
 
       return (null, ownedNavigationBuilder);
