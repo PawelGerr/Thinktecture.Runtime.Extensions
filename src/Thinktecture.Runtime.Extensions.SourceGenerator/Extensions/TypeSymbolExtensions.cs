@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Thinktecture.CodeAnalysis;
 
-// ReSharper disable once CheckNamespace
 namespace Thinktecture;
 
 public static class TypeSymbolExtensions

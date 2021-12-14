@@ -8,11 +8,13 @@ public partial class Empty
    /// <returns>An <see cref="IDisposable"/> with empty method body.</returns>
    public static IDisposable Disposable()
    {
-      return new EmptyDisposable();
+      return EmptyDisposable.Instance;
    }
 
-   private readonly struct EmptyDisposable : IDisposable
+   private class EmptyDisposable : IDisposable
    {
+      public static readonly IDisposable Instance = new EmptyDisposable();
+
       public void Dispose()
       {
       }
@@ -24,11 +26,13 @@ public partial class Empty
    /// <returns>An <see cref="IAsyncDisposable"/> with empty method body.</returns>
    public static IAsyncDisposable AsyncDisposable()
    {
-      return new EmptyAsyncDisposable();
+      return EmptyAsyncDisposable.Instance;
    }
 
-   private struct EmptyAsyncDisposable : IAsyncDisposable
+   private class EmptyAsyncDisposable : IAsyncDisposable
    {
+      public static readonly IAsyncDisposable Instance = new EmptyAsyncDisposable();
+
       public ValueTask DisposeAsync()
       {
          return default;

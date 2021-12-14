@@ -1,6 +1,5 @@
 using Thinktecture.Collections;
 
-// ReSharper disable once CheckNamespace
 namespace Thinktecture;
 
 /// <summary>

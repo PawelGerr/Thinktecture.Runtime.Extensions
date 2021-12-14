@@ -3,7 +3,6 @@ namespace Thinktecture;
 /// <summary>
 /// Extensions methods for <see cref="String"/>.
 /// </summary>
-// ReSharper disable once CheckNamespace
 public static class StringExtensions
 {
    /// <summary>

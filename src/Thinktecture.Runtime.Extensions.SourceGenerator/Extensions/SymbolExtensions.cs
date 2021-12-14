@@ -1,6 +1,5 @@
 using Microsoft.CodeAnalysis;
 
-// ReSharper disable once CheckNamespace
 namespace Thinktecture;
 
 public static class SymbolExtensions

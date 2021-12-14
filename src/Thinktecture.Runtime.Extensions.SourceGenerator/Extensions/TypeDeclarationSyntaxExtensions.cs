@@ -2,7 +2,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-// ReSharper disable once CheckNamespace
 namespace Thinktecture;
 
 internal static class TypeDeclarationSyntaxExtensions

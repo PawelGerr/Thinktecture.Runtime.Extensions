@@ -3,7 +3,6 @@ using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 // ReSharper disable InconsistentNaming
-#pragma warning disable 8618
 namespace Thinktecture.Runtime.Tests.TestEntities;
 
 public class TestEntity_with_OwnedTypes

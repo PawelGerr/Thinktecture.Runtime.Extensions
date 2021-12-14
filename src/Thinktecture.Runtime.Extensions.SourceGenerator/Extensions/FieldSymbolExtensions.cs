@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-// ReSharper disable once CheckNamespace
 namespace Thinktecture;
 
 public static class FieldSymbolExtensions

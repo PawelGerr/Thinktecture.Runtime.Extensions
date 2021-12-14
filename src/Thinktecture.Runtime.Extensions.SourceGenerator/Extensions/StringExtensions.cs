@@ -1,6 +1,3 @@
-
-
-// ReSharper disable once CheckNamespace
 namespace Thinktecture;
 
 public static class StringExtensions

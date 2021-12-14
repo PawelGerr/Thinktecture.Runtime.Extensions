@@ -36,7 +36,6 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
       // ReSharper disable once StaticMemberInGenericType
       public static readonly string? InitError;
 
-#pragma warning disable CA1810
       static Cache()
       {
          var type = typeof(T);

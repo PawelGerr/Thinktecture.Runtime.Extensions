@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture;
 
-[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public partial class Empty
 {
    /// <summary>

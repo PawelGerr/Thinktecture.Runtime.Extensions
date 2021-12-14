@@ -1,13 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Thinktecture;
+﻿namespace Thinktecture;
 
 /// <summary>
 /// Partial class containing convenience members.
 /// </summary>
-[SuppressMessage("ReSharper", "UnusedMember.Global")]
-[SuppressMessage("ReSharper", "UnusedParameter.Global")]
-#pragma warning disable CA1801
 public sealed partial class Empty
 {
    /// <summary>

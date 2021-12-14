@@ -22,12 +22,10 @@ public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGener
    private IReadOnlyList<EqualityInstanceMemberInfo>? _equalityMembers;
    public IReadOnlyList<EqualityInstanceMemberInfo> EqualityMembers => _equalityMembers ??= GetEqualityMembers();
 
-#pragma warning disable CS8775
    [MemberNotNullWhen(true, nameof(KeyMember))]
    public bool HasKeyMember => EqualityMembers.Count == 1 &&
                                AssignableInstanceFieldsAndProperties.Count == 1 &&
                                SymbolEqualityComparer.Default.Equals(EqualityMembers[0].Member.Symbol, AssignableInstanceFieldsAndProperties[0].Symbol);
-#pragma warning restore CS8775
 
    public EqualityInstanceMemberInfo? KeyMember => HasKeyMember ? EqualityMembers[0] : null;
 

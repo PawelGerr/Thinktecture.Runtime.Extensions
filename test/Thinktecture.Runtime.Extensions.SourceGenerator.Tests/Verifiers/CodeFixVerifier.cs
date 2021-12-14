@@ -50,7 +50,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
 #if NET6_0
          ReferenceAssemblies = new ReferenceAssemblies("net6.0", new PackageIdentity("Microsoft.NETCore.App.Ref","6.0.0"), Path.Combine("ref", "net6.0"));
 #else
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
+         ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
 #endif
 
          foreach (var additionalReference in additionalReferences)

@@ -1,7 +1,3 @@
-#pragma warning disable CA1823, RCS1213 // Remove unused member declaration.
-// ReSharper disable InconsistentNaming
-// ReSharper disable UnusedMember.Local
-
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 public partial class TestEnum : IValidatableEnum<string>
