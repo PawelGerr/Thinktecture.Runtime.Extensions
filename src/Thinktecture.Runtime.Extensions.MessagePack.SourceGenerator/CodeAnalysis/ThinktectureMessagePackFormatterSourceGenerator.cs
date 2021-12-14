@@ -68,7 +68,7 @@ using Thinktecture;
       public {(requiresNew ? "new " : null)}class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<{typeName}, {keyType}>
       {{
          public ValueObjectMessagePackFormatter()
-            : base({typeName}.{factoryMethod}, obj => obj.{keyMember})
+            : base({typeName}.{factoryMethod}, static obj => obj.{keyMember})
          {{
          }}
       }}

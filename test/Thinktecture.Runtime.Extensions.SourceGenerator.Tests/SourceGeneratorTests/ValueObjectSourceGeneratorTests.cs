@@ -443,10 +443,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<string, TestValueObject>(TestValueObject.Create);
-         Expression<Func<string, TestValueObject>> convertFromKeyExpression = referenceField => new TestValueObject(referenceField);
+         Expression<Func<string, TestValueObject>> convertFromKeyExpression = static referenceField => new TestValueObject(referenceField);
 
-         var convertToKey = new Func<TestValueObject, string>(item => item.ReferenceField);
-         Expression<Func<TestValueObject, string>> convertToKeyExpression = obj => obj.ReferenceField;
+         var convertToKey = new Func<TestValueObject, string>(static item => item.ReferenceField);
+         Expression<Func<TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, string>(TestValueObject.TryCreate);
 
@@ -647,10 +647,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<string, TestValueObject>(TestValueObject.Create);
-         Expression<Func<string, TestValueObject>> convertFromKeyExpression = referenceField => new TestValueObject(referenceField);
+         Expression<Func<string, TestValueObject>> convertFromKeyExpression = static referenceField => new TestValueObject(referenceField);
 
-         var convertToKey = new Func<TestValueObject, string>(item => item.ReferenceField);
-         Expression<Func<TestValueObject, string>> convertToKeyExpression = obj => obj.ReferenceField;
+         var convertToKey = new Func<TestValueObject, string>(static item => item.ReferenceField);
+         Expression<Func<TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, string>(TestValueObject.TryCreate);
 
@@ -851,10 +851,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<string, TestValueObject>(TestValueObject.Create);
-         Expression<Func<string, TestValueObject>> convertFromKeyExpression = referenceField => new TestValueObject(referenceField);
+         Expression<Func<string, TestValueObject>> convertFromKeyExpression = static referenceField => new TestValueObject(referenceField);
 
-         var convertToKey = new Func<TestValueObject, string>(item => item.ReferenceField);
-         Expression<Func<TestValueObject, string>> convertToKeyExpression = obj => obj.ReferenceField;
+         var convertToKey = new Func<TestValueObject, string>(static item => item.ReferenceField);
+         Expression<Func<TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, string>(TestValueObject.TryCreate);
 
@@ -1068,10 +1068,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<int, TestValueObject>(TestValueObject.Create);
-         Expression<Func<int, TestValueObject>> convertFromKeyExpression = structField => new TestValueObject(structField);
+         Expression<Func<int, TestValueObject>> convertFromKeyExpression = static structField => new TestValueObject(structField);
 
-         var convertToKey = new Func<TestValueObject, int>(item => item.StructField);
-         Expression<Func<TestValueObject, int>> convertToKeyExpression = obj => obj.StructField;
+         var convertToKey = new Func<TestValueObject, int>(static item => item.StructField);
+         Expression<Func<TestValueObject, int>> convertToKeyExpression = static obj => obj.StructField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, int>(TestValueObject.TryCreate);
 
@@ -1302,10 +1302,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<string, TestValueObject>(TestValueObject.Create);
-         Expression<Func<string, TestValueObject>> convertFromKeyExpression = referenceField => new TestValueObject(referenceField);
+         Expression<Func<string, TestValueObject>> convertFromKeyExpression = static referenceField => new TestValueObject(referenceField);
 
-         var convertToKey = new Func<TestValueObject, string>(item => item.ReferenceField);
-         Expression<Func<TestValueObject, string>> convertToKeyExpression = obj => obj.ReferenceField;
+         var convertToKey = new Func<TestValueObject, string>(static item => item.ReferenceField);
+         Expression<Func<TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, string>(TestValueObject.TryCreate);
 
@@ -1529,10 +1529,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<int, TestValueObject>(TestValueObject.Create);
-         Expression<Func<int, TestValueObject>> convertFromKeyExpression = structField => new TestValueObject(structField);
+         Expression<Func<int, TestValueObject>> convertFromKeyExpression = static structField => new TestValueObject(structField);
 
-         var convertToKey = new Func<TestValueObject, int>(item => item.StructField);
-         Expression<Func<TestValueObject, int>> convertToKeyExpression = obj => obj.StructField;
+         var convertToKey = new Func<TestValueObject, int>(static item => item.StructField);
+         Expression<Func<TestValueObject, int>> convertToKeyExpression = static obj => obj.StructField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, int>(TestValueObject.TryCreate);
 
@@ -1766,10 +1766,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<string, TestValueObject>(TestValueObject.Create);
-         Expression<Func<string, TestValueObject>> convertFromKeyExpression = referenceField => new TestValueObject(referenceField);
+         Expression<Func<string, TestValueObject>> convertFromKeyExpression = static referenceField => new TestValueObject(referenceField);
 
-         var convertToKey = new Func<TestValueObject, string>(item => item.ReferenceField);
-         Expression<Func<TestValueObject, string>> convertToKeyExpression = obj => obj.ReferenceField;
+         var convertToKey = new Func<TestValueObject, string>(static item => item.ReferenceField);
+         Expression<Func<TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, string>(TestValueObject.TryCreate);
 
@@ -1984,10 +1984,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {
          var convertFromKey = new Func<int, TestValueObject>(TestValueObject.Create);
-         Expression<Func<int, TestValueObject>> convertFromKeyExpression = referenceField => new TestValueObject(referenceField);
+         Expression<Func<int, TestValueObject>> convertFromKeyExpression = static referenceField => new TestValueObject(referenceField);
 
-         var convertToKey = new Func<TestValueObject, int>(item => item.ReferenceField);
-         Expression<Func<TestValueObject, int>> convertToKeyExpression = obj => obj.ReferenceField;
+         var convertToKey = new Func<TestValueObject, int>(static item => item.ReferenceField);
+         Expression<Func<TestValueObject, int>> convertToKeyExpression = static obj => obj.ReferenceField;
 
          var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, int>(TestValueObject.TryCreate);
 
@@ -2556,7 +2556,7 @@ namespace Thinktecture.Tests
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestValueObject, string>(TestValueObject.Create, obj => obj.ReferenceField, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestValueObject, string>(TestValueObject.Create, static obj => obj.ReferenceField, options);
          }
       }
    }
@@ -2615,7 +2615,7 @@ namespace Thinktecture.Tests
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestValueObject, string>(TestValueObject.Create, obj => obj.ReferenceField, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestValueObject, string>(TestValueObject.Create, static obj => obj.ReferenceField, options);
          }
       }
    }
@@ -3005,7 +3005,7 @@ namespace Thinktecture.Tests
       public class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestValueObject, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
-            : base(TestValueObject.Create, obj => obj.ReferenceField)
+            : base(TestValueObject.Create, static obj => obj.ReferenceField)
          {
          }
       }
@@ -3050,7 +3050,7 @@ namespace Thinktecture.Tests
       public class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestValueObject, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
-            : base(TestValueObject.Create, obj => obj.ReferenceField)
+            : base(TestValueObject.Create, static obj => obj.ReferenceField)
          {
          }
       }
@@ -3373,7 +3373,7 @@ namespace Thinktecture.Tests
       public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<TestValueObject, string>
       {
          public ValueObjectMessagePackFormatter()
-            : base(TestValueObject.Create, obj => obj.ReferenceField)
+            : base(TestValueObject.Create, static obj => obj.ReferenceField)
          {
          }
       }
@@ -3418,7 +3418,7 @@ namespace Thinktecture.Tests
       public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<TestValueObject, string>
       {
          public ValueObjectMessagePackFormatter()
-            : base(TestValueObject.Create, obj => obj.ReferenceField)
+            : base(TestValueObject.Create, static obj => obj.ReferenceField)
          {
          }
       }

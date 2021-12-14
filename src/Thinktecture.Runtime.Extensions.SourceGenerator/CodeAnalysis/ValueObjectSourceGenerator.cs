@@ -128,10 +128,10 @@ using Thinktecture;
       internal static void ModuleInit()
       {{
          var convertFromKey = new Func<{keyMember.Type}, {_state.Type.Name}>({_state.Type.Name}.Create);
-         Expression<Func<{keyMember.Type}, {_state.Type.Name}>> convertFromKeyExpression = {keyMember.ArgumentName} => new {_state.Type.Name}({keyMember.ArgumentName});
+         Expression<Func<{keyMember.Type}, {_state.Type.Name}>> convertFromKeyExpression = static {keyMember.ArgumentName} => new {_state.Type.Name}({keyMember.ArgumentName});
 
-         var convertToKey = new Func<{_state.Type.Name}, {keyMember.Type}>(item => item.{keyMember.Identifier});
-         Expression<Func<{_state.Type.Name}, {keyMember.Type}>> convertToKeyExpression = obj => obj.{keyMember.Identifier};
+         var convertToKey = new Func<{_state.Type.Name}, {keyMember.Type}>(static item => item.{keyMember.Identifier});
+         Expression<Func<{_state.Type.Name}, {keyMember.Type}>> convertToKeyExpression = static obj => obj.{keyMember.Identifier};
 
          var tryCreate = new Thinktecture.Internal.Validate<{_state.Type.Name}, {_state.KeyMember.Member.Type}>({_state.Type.Name}.TryCreate);
 

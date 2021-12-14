@@ -2085,7 +2085,7 @@ namespace Thinktecture.Tests
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestEnum, string>(TestEnum.Get, static obj => obj.Key, options);
          }
       }
    }
@@ -2143,7 +2143,7 @@ namespace Thinktecture.Tests
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestEnum, string>(TestEnum.Get, obj => obj.Key, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestEnum, string>(TestEnum.Get, static obj => obj.Key, options);
          }
       }
    }
@@ -2222,7 +2222,7 @@ namespace Thinktecture.Tests
       public class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestEnum, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
-            : base(TestEnum.Get, obj => obj.Key)
+            : base(TestEnum.Get, static obj => obj.Key)
          {
          }
       }
@@ -2266,7 +2266,7 @@ namespace Thinktecture.Tests
       public class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestEnum, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
-            : base(TestEnum.Get, obj => obj.Key)
+            : base(TestEnum.Get, static obj => obj.Key)
          {
          }
       }
@@ -2340,7 +2340,7 @@ namespace Thinktecture.Tests
       public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<TestEnum, string>
       {
          public ValueObjectMessagePackFormatter()
-            : base(TestEnum.Get, obj => obj.Key)
+            : base(TestEnum.Get, static obj => obj.Key)
          {
          }
       }
@@ -2384,7 +2384,7 @@ namespace Thinktecture.Tests
       public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<TestEnum, string>
       {
          public ValueObjectMessagePackFormatter()
-            : base(TestEnum.Get, obj => obj.Key)
+            : base(TestEnum.Get, static obj => obj.Key)
          {
          }
       }

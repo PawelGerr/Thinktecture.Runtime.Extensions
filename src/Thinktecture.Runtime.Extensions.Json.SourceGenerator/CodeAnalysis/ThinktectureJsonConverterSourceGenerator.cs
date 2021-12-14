@@ -83,7 +83,7 @@ using Thinktecture;
             if (options is null)
                throw new ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{typeName}, {keyType}>({typeName}.{factoryMethod}, obj => obj.{keyMember}, options);
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{typeName}, {keyType}>({typeName}.{factoryMethod}, static obj => obj.{keyMember}, options);
          }}
       }}
    }}

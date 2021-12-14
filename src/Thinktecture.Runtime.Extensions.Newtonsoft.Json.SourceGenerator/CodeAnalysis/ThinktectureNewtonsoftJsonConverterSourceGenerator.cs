@@ -68,7 +68,7 @@ using Thinktecture;
       public {(requiresNew ? "new " : null)}class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{typeName}, {keyType}>
       {{
          public ValueObjectNewtonsoftJsonConverter()
-            : base({typeName}.{factoryMethod}, obj => obj.{keyMember})
+            : base({typeName}.{factoryMethod}, static obj => obj.{keyMember})
          {{
          }}
       }}

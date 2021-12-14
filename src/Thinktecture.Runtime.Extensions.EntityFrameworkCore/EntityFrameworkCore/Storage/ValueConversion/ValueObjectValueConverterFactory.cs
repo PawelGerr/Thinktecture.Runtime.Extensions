@@ -107,10 +107,9 @@ public class ValueObjectValueConverterFactory
 
       private static Expression<Func<TEnum, TKey>> GetKeyProvider(bool validateOnWrite)
       {
-         if (validateOnWrite)
-            return item => GetKeyIfValid(item);
-
-         return item => item.GetKey();
+         return validateOnWrite
+                   ? static item => GetKeyIfValid(item)
+                   : static item => item.GetKey();
       }
 
       private static TKey GetKeyIfValid(TEnum item)
