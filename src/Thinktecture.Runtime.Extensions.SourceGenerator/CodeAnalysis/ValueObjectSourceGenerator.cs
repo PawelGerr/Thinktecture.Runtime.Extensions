@@ -24,8 +24,11 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq.Expressions;
-using System.ComponentModel.DataAnnotations;
 using Thinktecture;
+using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
+using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+using ArgumentException = System.ArgumentException;
+using NullReferenceException = System.NullReferenceException;
 
 {(String.IsNullOrWhiteSpace(_state.Namespace) ? null : $"namespace {_state.Namespace}")}
 {{");
@@ -144,7 +147,7 @@ using Thinktecture;
       }
 
       _sb.Append($@"
-      private static readonly Type _type = typeof({_state.Type.Name});");
+      private static readonly System.Type _type = typeof({_state.Type.Name});");
 
       if (_state.Type.IsValueType)
       {

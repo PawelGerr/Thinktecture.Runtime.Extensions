@@ -67,16 +67,16 @@ using Thinktecture;
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
-      public {(requiresNew ? "new " : null)}class ValueObjectJsonConverterFactory : JsonConverterFactory
+      public {(requiresNew ? "new " : null)}class ValueObjectJsonConverterFactory : System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
-         public override bool CanConvert(Type typeToConvert)
+         public override bool CanConvert(System.Type typeToConvert)
          {{
             return typeof({typeName}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />
-         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         public override System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
          {{
             if (typeToConvert is null)
                throw new ArgumentNullException(nameof(typeToConvert));
@@ -106,13 +106,18 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Thinktecture.Text.Json.Serialization;
+using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
+using JsonTokenType = System.Text.Json.JsonTokenType;
+using JsonException = System.Text.Json.JsonException;
+using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
+using JsonIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueObjectJsonConverter : JsonConverter<{state.Type.Name}>
+      public class ValueObjectJsonConverter : System.Text.Json.Serialization.JsonConverter<{state.Type.Name}>
       {{");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -123,7 +128,7 @@ using Thinktecture.Text.Json.Serialization;
          if (needsConverter)
          {
             sb.Append(@$"
-         private readonly JsonConverter<{memberInfo.Type}> _{memberInfo.ArgumentName}Converter;");
+         private readonly System.Text.Json.Serialization.JsonConverter<{memberInfo.Type}> _{memberInfo.ArgumentName}Converter;");
          }
 
          sb.Append(@$"
@@ -148,7 +153,7 @@ using Thinktecture.Text.Json.Serialization;
          if (needsConverter)
          {
             sb.Append(@$"
-            this._{memberInfo.ArgumentName}Converter = (JsonConverter<{memberInfo.Type}>)options.GetConverter(typeof({memberInfo.Type}));");
+            this._{memberInfo.ArgumentName}Converter = (System.Text.Json.Serialization.JsonConverter<{memberInfo.Type}>)options.GetConverter(typeof({memberInfo.Type}));");
          }
 
          sb.Append(@$"
@@ -159,7 +164,7 @@ using Thinktecture.Text.Json.Serialization;
          }}
 
          /// <inheritdoc />
-         public override {state.Type.Name}{state.NullableQuestionMark} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+         public override {state.Type.Name}{state.NullableQuestionMark} Read(ref Utf8JsonReader reader, System.Type typeToConvert, JsonSerializerOptions options)
          {{
             if (reader.TokenType == JsonTokenType.Null)
                return default;
@@ -178,7 +183,7 @@ using Thinktecture.Text.Json.Serialization;
 
       sb.Append(@$"
 
-            var comparer = options.PropertyNameCaseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+            var comparer = options.PropertyNameCaseInsensitive ? System.StringComparer.OrdinalIgnoreCase : System.StringComparer.Ordinal;
 
             while (reader.Read())
             {{
@@ -294,16 +299,16 @@ using Thinktecture.Text.Json.Serialization;
          }}
       }}
 
-      public class ValueObjectJsonConverterFactory : JsonConverterFactory
+      public class ValueObjectJsonConverterFactory : System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
-         public override bool CanConvert(Type typeToConvert)
+         public override bool CanConvert(System.Type typeToConvert)
          {{
             return typeof({state.Type.Name}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />
-         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+         public override System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, JsonSerializerOptions options)
          {{
             if (typeToConvert is null)
                throw new ArgumentNullException(nameof(typeToConvert));

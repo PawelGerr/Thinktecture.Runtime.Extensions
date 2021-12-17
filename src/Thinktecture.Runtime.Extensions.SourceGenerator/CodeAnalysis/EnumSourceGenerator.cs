@@ -21,10 +21,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Linq.Expressions;
 using Thinktecture;
+using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
+using ArgumentException = System.ArgumentException;
+using ArgumentNullException = System.ArgumentNullException;
+using InvalidOperationException = System.InvalidOperationException;
 
 {(String.IsNullOrWhiteSpace(_state.Namespace) ? null : $"namespace {_state.Namespace}")}
 {{");
@@ -90,23 +93,23 @@ using Thinktecture;
 
       if (_state.NeedsDefaultComparer)
       {
-         var defaultComparer = _state.KeyType.IsString() ? "StringComparer.OrdinalIgnoreCase" : $"EqualityComparer<{_state.KeyType}>.Default";
+         var defaultComparer = _state.KeyType.IsString() ? "System.StringComparer.OrdinalIgnoreCase" : $"System.Collections.Generic.EqualityComparer<{_state.KeyType}>.Default";
 
          _sb.Append($@"
-      {(_state.IsExtensible ? "protected" : "private")} static readonly IEqualityComparer<{_state.KeyType}{_state.NullableQuestionMarkKey}> _defaultKeyComparerMember = {defaultComparer};");
+      {(_state.IsExtensible ? "protected" : "private")} static readonly System.Collections.Generic.IEqualityComparer<{_state.KeyType}{_state.NullableQuestionMarkKey}> _defaultKeyComparerMember = {defaultComparer};");
       }
 
       _sb.Append($@"
 
-      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}>? _itemsLookup;
-      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static System.Collections.Generic.IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}>? _itemsLookup;
+      private static System.Collections.Generic.IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}> ItemsLookup => _itemsLookup ??= GetLookup();
 
-      private static IReadOnlyList<{_state.EnumType.Name}>? _items;
+      private static System.Collections.Generic.IReadOnlyList<{_state.EnumType.Name}>? _items;
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public {newKeyword}static IReadOnlyList<{_state.EnumType.Name}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();");
+      public {newKeyword}static System.Collections.Generic.IReadOnlyList<{_state.EnumType.Name}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();");
 
       if (!_state.HasBaseEnum)
       {
@@ -407,9 +410,9 @@ using Thinktecture;
    {
       _sb.Append($@"
 
-      private static IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}> GetLookup()
+      private static System.Collections.Generic.IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}> GetLookup()
       {{
-         var lookup = new Dictionary<{_state.KeyType}, {_state.EnumType.Name}>({_state.KeyComparerMember});");
+         var lookup = new System.Collections.Generic.Dictionary<{_state.KeyType}, {_state.EnumType.Name}>({_state.KeyComparerMember});");
 
       if (_state.Items.Count > 0)
       {

@@ -98,10 +98,10 @@ using Thinktecture;
    [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueObjectMessagePackFormatter : IMessagePackFormatter<{state.Type.Name}{state.NullableQuestionMark}>
+      public class ValueObjectMessagePackFormatter : MessagePack.Formatters.IMessagePackFormatter<{state.Type.Name}{state.NullableQuestionMark}>
       {{
          /// <inheritdoc />
-         public {state.Type.Name}{state.NullableQuestionMark} Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+         public {state.Type.Name}{state.NullableQuestionMark} Deserialize(ref MessagePack.MessagePackReader reader, MessagePack.MessagePackSerializerOptions options)
          {{
             if (reader.TryReadNil())
                return default;
@@ -109,9 +109,9 @@ using Thinktecture;
             var count = reader.ReadArrayHeader();
 
             if (count != {state.AssignableInstanceFieldsAndProperties.Count})
-               throw new MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
+               throw new MessagePack.MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
 
-            IFormatterResolver resolver = options.Resolver;
+            MessagePack.IFormatterResolver resolver = options.Resolver;
             options.Security.DepthStep(ref reader);
 
             try
@@ -141,8 +141,8 @@ using Thinktecture;
       sb.Append(@$"
                                           out var obj);
 
-               if (validationResult != ValidationResult.Success)
-                  throw new MessagePackSerializationException($""Unable to deserialize '{state.Type.Name}'. Error: {{validationResult!.ErrorMessage}}."");
+               if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                  throw new MessagePack.MessagePackSerializationException($""Unable to deserialize '{state.Type.Name}'. Error: {{validationResult!.ErrorMessage}}."");
 
                return obj;
             }}
@@ -153,7 +153,7 @@ using Thinktecture;
          }}
 
          /// <inheritdoc />
-         public void Serialize(ref MessagePackWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, MessagePackSerializerOptions options)
+         public void Serialize(ref MessagePack.MessagePackWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, MessagePack.MessagePackSerializerOptions options)
          {{");
 
       if (state.Type.IsReferenceType)

@@ -93,23 +93,25 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Thinktecture;
+using JsonException = Newtonsoft.Json.JsonException;
+using JsonToken = Newtonsoft.Json.JsonToken;
 
 {(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
 {{
    [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueObjectNewtonsoftJsonConverter : JsonConverter<{state.Type.Name}{state.NullableQuestionMark}>
+      public class ValueObjectNewtonsoftJsonConverter : Newtonsoft.Json.JsonConverter<{state.Type.Name}{state.NullableQuestionMark}>
       {{");
 
       sb.Append(@$"
          /// <inheritdoc />
-         public override {state.Type.Name}{state.NullableQuestionMark} ReadJson(JsonReader reader, Type objectType, {state.Type.Name}{state.NullableQuestionMark} existingValue, bool hasExistingValue, JsonSerializer serializer)
+         public override {state.Type.Name}{state.NullableQuestionMark} ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, {state.Type.Name}{state.NullableQuestionMark} existingValue, bool hasExistingValue, Newtonsoft.Json.JsonSerializer serializer)
          {{
             if (reader is null)
-               throw new ArgumentNullException(nameof(reader));
+               throw new System.ArgumentNullException(nameof(reader));
             if (serializer is null)
-               throw new ArgumentNullException(nameof(serializer));
+               throw new System.ArgumentNullException(nameof(serializer));
 
             if (reader.TokenType == JsonToken.Null)
                return default;
@@ -128,7 +130,7 @@ using Thinktecture;
 
       sb.Append(@$"
 
-            var comparer = StringComparer.OrdinalIgnoreCase;
+            var comparer = System.StringComparer.OrdinalIgnoreCase;
 
             while (reader.Read())
             {{
@@ -190,14 +192,14 @@ using Thinktecture;
       sb.Append(@$"
                                        out var obj);
 
-            if (validationResult != ValidationResult.Success)
+            if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
                throw new JsonException($""Unable to deserialize '{state.Type.Name}'. Error: {{validationResult!.ErrorMessage}}."");
 
             return obj;
          }}
 
          /// <inheritdoc />
-         public override void WriteJson(JsonWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, JsonSerializer serializer)
+         public override void WriteJson(Newtonsoft.Json.JsonWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, Newtonsoft.Json.JsonSerializer serializer)
          {{");
 
       if (state.Type.IsReferenceType)
@@ -212,7 +214,7 @@ using Thinktecture;
       }
 
       sb.Append(@$"
-            var resolver = serializer.ContractResolver as DefaultContractResolver;
+            var resolver = serializer.ContractResolver as Newtonsoft.Json.Serialization.DefaultContractResolver;
 
             writer.WriteStartObject();");
 
@@ -227,7 +229,7 @@ using Thinktecture;
          if (memberInfo.IsReferenceTypeOrNullableStruct)
          {
             sb.Append(@$"
-            if(serializer.NullValueHandling != NullValueHandling.Ignore || {memberInfo.ArgumentName}PropertyValue is not null)
+            if(serializer.NullValueHandling != Newtonsoft.Json.NullValueHandling.Ignore || {memberInfo.ArgumentName}PropertyValue is not null)
             {{
                ");
          }
