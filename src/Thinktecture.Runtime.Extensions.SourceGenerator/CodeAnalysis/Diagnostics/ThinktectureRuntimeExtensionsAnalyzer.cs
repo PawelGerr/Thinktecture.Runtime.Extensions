@@ -42,7 +42,8 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
                                                                                                               DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty,
                                                                                                               DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic,
-                                                                                                              DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly);
+                                                                                                              DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
+                                                                                                              DiagnosticsDescriptors.ExtendedEnumMustHaveSameKeyPropertyName);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -191,10 +192,9 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
 
       var assignableMembers = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic);
-
-      var hasBaseEnum = ValidateBaseEnum(context, enumType, locationOfFirstDeclaration, isValidatable);
-
       var enumAttr = enumType.FindEnumGenerationAttribute();
+
+      var hasBaseEnum = ValidateBaseEnum(context, enumType, enumAttr, locationOfFirstDeclaration, isValidatable);
 
       if (enumAttr is not null)
       {
@@ -308,6 +308,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static bool ValidateBaseEnum(
       SymbolAnalysisContext context,
       INamedTypeSymbol enumType,
+      AttributeData? enumAttribute,
       Location location,
       bool isValidatable)
    {
@@ -330,6 +331,14 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (!isBaseEnumExtensible)
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.BaseEnumMustBeExtensible, location, enumType.BaseType.Name));
+
+      var baseKeyPropName = baseEnumAttr?.FindKeyPropertyName();
+      var enumKeyPropName = enumAttribute?.FindKeyPropertyName();
+
+      if (!String.IsNullOrWhiteSpace(baseKeyPropName)
+          && !String.IsNullOrWhiteSpace(enumKeyPropName)
+          && baseKeyPropName != enumKeyPropName)
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ExtendedEnumMustHaveSameKeyPropertyName, location, enumType.Name, enumType.BaseType.Name));
 
       return true;
    }
