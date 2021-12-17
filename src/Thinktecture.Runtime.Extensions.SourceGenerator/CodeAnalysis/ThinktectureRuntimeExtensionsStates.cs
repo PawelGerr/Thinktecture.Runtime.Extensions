@@ -1,15 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct ThinktectureRuntimeExtensionsStates
+public readonly record struct ThinktectureRuntimeExtensionsStates(EnumSourceGeneratorState? EnumState, ValueObjectSourceGeneratorState? ValueObjectState)
 {
-   public readonly EnumSourceGeneratorState? EnumState;
-   public readonly ValueObjectSourceGeneratorState? ValueObjectState;
-
    public bool IsEmpty => EnumState is null && ValueObjectState is null;
-
-   public ThinktectureRuntimeExtensionsStates(EnumSourceGeneratorState? enumState, ValueObjectSourceGeneratorState? valueObjectState)
-   {
-      EnumState = enumState;
-      ValueObjectState = valueObjectState;
-   }
 }
