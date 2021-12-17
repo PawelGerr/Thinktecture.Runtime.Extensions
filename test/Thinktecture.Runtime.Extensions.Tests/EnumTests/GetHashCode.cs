@@ -14,7 +14,7 @@ public class GetHashCode
 
       hashCode = ExtensibleTestEnum.Item1.GetHashCode();
       typeHashCode = typeof(ExtensibleTestEnum).GetHashCode();
-      keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(ExtensibleTestEnum.Item1.Key);
+      keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(ExtensibleTestEnum.Item1.Id);
       hashCode.Should().Be((typeHashCode * 397) ^ keyHashCode);
    }
 
@@ -24,15 +24,15 @@ public class GetHashCode
       var baseTypeHashCode = typeof(ExtensibleTestEnum).GetHashCode();
 
       var hashCode = ExtendedTestEnum.Item1.GetHashCode();
-      var keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(ExtendedTestEnum.Item1.Key);
+      var keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(ExtendedTestEnum.Item1.Id);
       hashCode.Should().Be((baseTypeHashCode * 397) ^ keyHashCode);
 
       hashCode = ExtendedSiblingTestEnum.Item1.GetHashCode();
-      keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(ExtendedSiblingTestEnum.Item1.Key);
+      keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(ExtendedSiblingTestEnum.Item1.Id);
       hashCode.Should().Be((baseTypeHashCode * 397) ^ keyHashCode);
 
       hashCode = DifferentAssemblyExtendedTestEnum.Item1.GetHashCode();
-      keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(DifferentAssemblyExtendedTestEnum.Item1.Key);
+      keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(DifferentAssemblyExtendedTestEnum.Item1.Id);
       hashCode.Should().Be((baseTypeHashCode * 397) ^ keyHashCode);
    }
 

@@ -28,18 +28,18 @@ public class ImplicitConversionToKey
       key.Should().Be(TestEnum.Item1.Key);
 
       key = ExtensibleTestEnum.Item1;
-      key.Should().Be(ExtensibleTestEnum.Item1.Key);
+      key.Should().Be(ExtensibleTestEnum.Item1.Id);
 
       key = ExtendedTestEnum.Item1;
-      key.Should().Be(ExtendedTestEnum.Item1.Key);
+      key.Should().Be(ExtendedTestEnum.Item1.Id);
 
       key = ExtendedTestEnum.Item2;
-      key.Should().Be(ExtendedTestEnum.Item2.Key);
+      key.Should().Be(ExtendedTestEnum.Item2.Id);
 
       key = DifferentAssemblyExtendedTestEnum.Item1;
-      key.Should().Be(DifferentAssemblyExtendedTestEnum.Item1.Key);
+      key.Should().Be(DifferentAssemblyExtendedTestEnum.Item1.Id);
 
       key = DifferentAssemblyExtendedTestEnum.Item2;
-      key.Should().Be(DifferentAssemblyExtendedTestEnum.Item2.Key);
+      key.Should().Be(DifferentAssemblyExtendedTestEnum.Item2.Id);
    }
 }

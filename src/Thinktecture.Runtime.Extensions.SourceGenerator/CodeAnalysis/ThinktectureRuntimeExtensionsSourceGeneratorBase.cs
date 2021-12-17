@@ -163,7 +163,7 @@ public abstract class ThinktectureRuntimeExtensionsSourceGeneratorBase : IIncrem
       if (enumInterface is null)
          return null;
 
-      return new EnumSourceGeneratorState(model, type, enumInterface);
+      return new EnumSourceGeneratorState(type, enumInterface);
    }
 
    private void EmitFile(SourceProductionContext context, string typeName, string? generatedCode)

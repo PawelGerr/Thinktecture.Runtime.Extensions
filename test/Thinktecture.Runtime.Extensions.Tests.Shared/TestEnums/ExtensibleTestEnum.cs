@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-[EnumGeneration(IsExtensible = true, KeyComparer = nameof(EqualityComparer))]
+[EnumGeneration(IsExtensible = true, KeyPropertyName = "Id", KeyComparer = nameof(EqualityComparer))]
 public partial class ExtensibleTestEnum : IEnum<string>
 {
    protected static readonly IEqualityComparer<string> EqualityComparer = StringComparer.OrdinalIgnoreCase;

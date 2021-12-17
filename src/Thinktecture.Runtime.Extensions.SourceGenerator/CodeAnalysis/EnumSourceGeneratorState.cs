@@ -6,8 +6,6 @@ namespace Thinktecture.CodeAnalysis;
 public class EnumSourceGeneratorState
    : IEquatable<EnumSourceGeneratorState>, IComparable<EnumSourceGeneratorState>
 {
-   public SemanticModel Model { get; }
-
    public string? Namespace { get; }
    public INamedTypeSymbol EnumType { get; }
    public ITypeSymbol KeyType { get; }
@@ -22,21 +20,7 @@ public class EnumSourceGeneratorState
 
    public bool IsValidatable { get; }
 
-   private bool _isBaseItemDetermined;
-   private IBaseEnumState? _baseEnum;
-
-   public IBaseEnumState? BaseEnum
-   {
-      get
-      {
-         if (_isBaseItemDetermined)
-            return _baseEnum;
-
-         DetermineBaseEnum();
-
-         return _baseEnum;
-      }
-   }
+   public IBaseEnumState? BaseEnum { get; private set; }
 
    [MemberNotNullWhen(true, nameof(BaseEnum))]
    public bool HasBaseEnum => BaseEnum is not null;
@@ -51,14 +35,11 @@ public class EnumSourceGeneratorState
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties => _assignableInstanceFieldsAndProperties ??= EnumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
 
    public EnumSourceGeneratorState(
-      SemanticModel model,
       INamedTypeSymbol enumType,
       INamedTypeSymbol enumInterface)
    {
       if (enumInterface is null)
          throw new ArgumentNullException(nameof(enumInterface));
-
-      Model = model ?? throw new ArgumentNullException(nameof(model));
 
       EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
       Namespace = enumType.ContainingNamespace.ToString();
@@ -70,7 +51,9 @@ public class EnumSourceGeneratorState
 
       var enumSettings = enumType.FindEnumGenerationAttribute();
 
-      InitializeFromSettings(enumSettings, false);
+      if (!DetermineBaseEnum())
+         InitializeFromSettings(enumSettings, false);
+
       IsExtensible = enumType.IsReferenceType && (enumSettings?.IsExtensible() ?? false);
 
       RuntimeTypeName = IsExtensible ? "{GetType().Name}" : enumType.Name;
@@ -108,34 +91,34 @@ public class EnumSourceGeneratorState
 
    public void SetBaseType(EnumSourceGeneratorState other)
    {
-      if (_baseEnum is SameAssemblyBaseEnumState)
+      if (BaseEnum is SameAssemblyBaseEnumState)
          return;
 
       SetBaseTypeInternal(new SameAssemblyBaseEnumState(other));
    }
 
-   private void DetermineBaseEnum()
+   [MemberNotNullWhen(true, nameof(KeyComparerMember), nameof(KeyPropertyName), nameof(KeyArgumentName))]
+   private bool DetermineBaseEnum()
    {
-      _isBaseItemDetermined = true;
-
       if (EnumType.BaseType is null)
-         return;
+         return false;
 
       if (!EnumType.BaseType.IsEnum(out var enumInterfaces))
-         return;
+         return false;
 
       var baseInterface = enumInterfaces.GetValidEnumInterface(EnumType.BaseType);
 
       if (baseInterface is null)
-         return;
+         return false;
 
       SetBaseTypeInternal(new BaseEnumState(EnumType.BaseType));
+      return true;
    }
 
+   [MemberNotNull(nameof(KeyComparerMember), nameof(KeyPropertyName), nameof(KeyArgumentName))]
    private void SetBaseTypeInternal(IBaseEnumState other)
    {
-      _baseEnum = other;
-      _isBaseItemDetermined = true;
+      BaseEnum = other;
 
       var enumSettings = other.Type.FindEnumGenerationAttribute();
       InitializeFromSettings(enumSettings, true);

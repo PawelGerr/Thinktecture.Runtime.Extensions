@@ -590,26 +590,26 @@ namespace Thinktecture.Tests
    public class ExtendedTestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<ExtendedTestEnum, string>
    {{
       /// <inheritdoc />
-      [return: NotNullIfNotNull(""key"")]
-      protected override ExtendedTestEnum? ConvertFrom(string? key)
+      [return: NotNullIfNotNull(""id"")]
+      protected override ExtendedTestEnum? ConvertFrom(string? id)
       {{
-         if(key is null)
+         if(id is null)
             return default;
 
-         if(ExtendedTestEnum.TryGet(key, out var item))
+         if(ExtendedTestEnum.TryGet(id, out var item))
             return item;
 
-         throw new FormatException($""There is no item of type 'ExtendedTestEnum' with the identifier '{{key}}'."");
+         throw new FormatException($""There is no item of type 'ExtendedTestEnum' with the identifier '{{id}}'."");
       }}
 
       /// <inheritdoc />
       protected override string GetKeyValue(ExtendedTestEnum item)
       {{
-         return item.Key;
+         return item.Id;
       }}
    }}
 
-   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Id))]
    [Thinktecture.Internal.KeyedValueObject]
    [System.ComponentModel.TypeConverter(typeof(ExtendedTestEnum_EnumTypeConverter))]
    partial class ExtendedTestEnum : IEquatable<ExtendedTestEnum?>
@@ -618,10 +618,10 @@ namespace Thinktecture.Tests
       internal static void ModuleInit()
       {{
          var convertFromKey = new Func<string?, ExtendedTestEnum?>(ExtendedTestEnum.Get);
-         Expression<Func<string?, ExtendedTestEnum?>> convertFromKeyExpression = key => ExtendedTestEnum.Get(key);
+         Expression<Func<string?, ExtendedTestEnum?>> convertFromKeyExpression = id => ExtendedTestEnum.Get(id);
 
-         var convertToKey = new Func<ExtendedTestEnum, string?>(item => item.Key);
-         Expression<Func<ExtendedTestEnum, string?>> convertToKeyExpression = item => item.Key;
+         var convertToKey = new Func<ExtendedTestEnum, string?>(item => item.Id);
+         Expression<Func<ExtendedTestEnum, string?>> convertToKeyExpression = item => item.Id;
 
          var validate = new Thinktecture.Internal.Validate<ExtendedTestEnum, string>(ExtendedTestEnum.Validate);
 
@@ -645,89 +645,89 @@ namespace Thinktecture.Tests
 
       private readonly bool _isBaseEnumItem;
 
-      public new static readonly Thinktecture.Tests.ExtendedTestEnum DerivedItem = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Key, Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Foo);
-      public new static readonly Thinktecture.Tests.ExtendedTestEnum Item1 = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Key, Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Foo);
+      public new static readonly Thinktecture.Tests.ExtendedTestEnum DerivedItem = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Id, Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Foo);
+      public new static readonly Thinktecture.Tests.ExtendedTestEnum Item1 = new Thinktecture.Tests.ExtendedTestEnum(Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Id, Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Foo);
 
-      private ExtendedTestEnum(string key, System.Action foo)
-         : base(key, foo)
+      private ExtendedTestEnum(string id, System.Action foo)
+         : base(id, foo)
       {{
-         ValidateConstructorArguments(ref key, ref foo);
+         ValidateConstructorArguments(ref id, ref foo);
 
-         this._isBaseEnumItem = Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.TryGet(key, out _);
+         this._isBaseEnumItem = Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.TryGet(id, out _);
       }}
 
-      static partial void ValidateConstructorArguments(ref string key, ref System.Action foo);
+      static partial void ValidateConstructorArguments(ref string id, ref System.Action foo);
 
       /// <summary>
-      /// Gets an enumeration item for provided <paramref name=""key""/>.
+      /// Gets an enumeration item for provided <paramref name=""id""/>.
       /// </summary>
-      /// <param name=""key"">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of <see cref=""ExtendedTestEnum"" /> if <paramref name=""key""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""key""/>.</exception>
-      [return: NotNullIfNotNull(""key"")]
-      public new static ExtendedTestEnum? Get(string? key)
+      /// <param name=""id"">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of <see cref=""ExtendedTestEnum"" /> if <paramref name=""id""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""id""/>.</exception>
+      [return: NotNullIfNotNull(""id"")]
+      public new static ExtendedTestEnum? Get(string? id)
       {{
-        if (key is null)
+        if (id is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(key, out var item))
+         if (!ItemsLookup.TryGetValue(id, out var item))
          {{
-            throw new UnknownEnumIdentifierException(typeof(ExtendedTestEnum), key);
+            throw new UnknownEnumIdentifierException(typeof(ExtendedTestEnum), id);
          }}
 
          return item;
       }}
 
       /// <summary>
-      /// Gets a valid enumeration item for provided <paramref name=""key""/> if a valid item exists.
+      /// Gets a valid enumeration item for provided <paramref name=""id""/> if a valid item exists.
       /// </summary>
-      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <param name=""id"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""ExtendedTestEnum""/>; otherwise <c>null</c>.</param>
-      /// <returns><c>true</c> if a valid item with provided <paramref name=""key""/> exists; <c>false</c> otherwise.</returns>
-      public static bool TryGet([AllowNull] string key, [MaybeNullWhen(false)] out ExtendedTestEnum item)
+      /// <returns><c>true</c> if a valid item with provided <paramref name=""id""/> exists; <c>false</c> otherwise.</returns>
+      public static bool TryGet([AllowNull] string id, [MaybeNullWhen(false)] out ExtendedTestEnum item)
       {{
-         if (key is null)
+         if (id is null)
          {{
             item = default;
             return false;
          }}
 
-         return ItemsLookup.TryGetValue(key, out item);
+         return ItemsLookup.TryGetValue(id, out item);
       }}
 
       /// <summary>
-      /// Validates the provided <paramref name=""key""/> and returns a valid enumeration item if found.
+      /// Validates the provided <paramref name=""id""/> and returns a valid enumeration item if found.
       /// </summary>
-      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <param name=""id"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""ExtendedTestEnum""/>; otherwise <c>null</c>.</param>
-      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
-      public static ValidationResult? Validate(string key, [MaybeNull] out ExtendedTestEnum item)
+      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""id""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
+      public static ValidationResult? Validate(string id, [MaybeNull] out ExtendedTestEnum item)
       {{
-         return ExtendedTestEnum.TryGet(key, out item)
+         return ExtendedTestEnum.TryGet(id, out item)
                ? ValidationResult.Success
-               : new ValidationResult($""The enumeration item of type 'ExtendedTestEnum' with identifier '{{key}}' is not valid."");
+               : new ValidationResult($""The enumeration item of type 'ExtendedTestEnum' with identifier '{{id}}' is not valid."");
       }}
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""string""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Id""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: NotNullIfNotNull(""item"")]
       public static implicit operator string?(ExtendedTestEnum? item)
       {{
-         return item is null ? default : item.Key;
+         return item is null ? default : item.Id;
       }}
 
       /// <summary>
       /// Explicit conversion from the type <see cref=""string""/>.
       /// </summary>
-      /// <param name=""key"">Value to covert.</param>
-      /// <returns>An instance of <see cref=""ExtendedTestEnum""/> if the <paramref name=""key""/> is a known item or implements <see cref=""IValidatableEnum{{TKey}}""/>.</returns>
-      [return: NotNullIfNotNull(""key"")]
-      public static explicit operator ExtendedTestEnum?(string? key)
+      /// <param name=""id"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""ExtendedTestEnum""/> if the <paramref name=""id""/> is a known item or implements <see cref=""IValidatableEnum{{TKey}}""/>.</returns>
+      [return: NotNullIfNotNull(""id"")]
+      public static explicit operator ExtendedTestEnum?(string? id)
       {{
-         return ExtendedTestEnum.Get(key);
+         return ExtendedTestEnum.Get(id);
       }}
 
       /// <summary>
@@ -773,7 +773,7 @@ namespace Thinktecture.Tests
          if (ReferenceEquals(this, other))
             return true;
 
-         return EqualityComparer.Equals(this.Key, other.Key);
+         return EqualityComparer.Equals(this.Id, other.Id);
       }}
 
       /// <inheritdoc />
@@ -785,7 +785,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {{
-         return _typeHashCode ^ EqualityComparer.GetHashCode(this.Key);
+         return _typeHashCode ^ EqualityComparer.GetHashCode(this.Id);
       }}
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, ExtendedTestEnum> GetLookup()
@@ -797,13 +797,13 @@ namespace Thinktecture.Tests
             if(item is null)
                throw new ArgumentNullException($""The item \""{{itemName}}\"" of type \""ExtendedTestEnum\"" must not be null."");
 
-            if(item.Key is null)
-               throw new ArgumentException($""The \""Key\"" of the item \""{{itemName}}\"" of type \""ExtendedTestEnum\"" must not be null."");
+            if(item.Id is null)
+               throw new ArgumentException($""The \""Id\"" of the item \""{{itemName}}\"" of type \""ExtendedTestEnum\"" must not be null."");
 
-            if (lookup.ContainsKey(item.Key))
-               throw new ArgumentException($""The type \""ExtendedTestEnum\"" has multiple items with the identifier \""{{item.Key}}\""."");
+            if (lookup.ContainsKey(item.Id))
+               throw new ArgumentException($""The type \""ExtendedTestEnum\"" has multiple items with the identifier \""{{item.Id}}\""."");
 
-            lookup.Add(item.Key, item);
+            lookup.Add(item.Id, item);
          }}
 
          AddItem(DerivedItem, nameof(DerivedItem));
