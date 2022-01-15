@@ -32,6 +32,12 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       IEnumerable<Assembly> additionalReferences,
       params DiagnosticResult[] expected)
    {
+      if (Environment.NewLine == "\n")
+      {
+         source = source.Replace("\r\n", Environment.NewLine);
+         fixedSource = fixedSource.Replace("\r\n", Environment.NewLine);
+      }
+
       var test = new CodeFixTest(source, fixedSource, additionalReferences, expected);
       await test.RunAsync(CancellationToken.None);
    }

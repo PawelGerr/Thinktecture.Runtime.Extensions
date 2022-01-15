@@ -5,15 +5,15 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
-                    
+
       - name: install .NET Core 3.1 SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-          
+
       - name: install .NET 5 SDK
         uses: actions/setup-dotnet@v1
         with:
@@ -26,28 +26,29 @@ jobs:
 
       - name: .NET info
         run: dotnet --info
-        shell: powershell
-        
-      - uses: actions/checkout@v2
-        
+        shell: pwsh
+
+      - name: checkout repository
+        uses: actions/checkout@v2
+
       - name: set version
         run: |
           . ./.github/workflows/ci.ps1          
           Set-VersionSuffixOnTag "$Env:GITHUB_WORKSPACE/src" "$Env:GITHUB_REF"
-        shell: powershell
+        shell: pwsh
 
       - name: dotnet restore
         run: dotnet restore
-        
+
       - name: build
         run: dotnet build --configuration Release --no-restore
-    
+
       - name: test
         run: dotnet test --configuration Release --no-build
-      
+
       - name: pack
         run: dotnet pack --configuration Release --no-build --output out
-        
+
       - uses: actions/upload-artifact@v2
         with:
           name: nuget-packages
@@ -60,6 +61,6 @@ jobs:
         run: |
           cd out
           dotnet nuget push "*.nupkg" -k "$env:API_KEY"
-        shell: powershell
+        shell: pwsh
         env:
           API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
