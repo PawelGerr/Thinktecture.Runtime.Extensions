@@ -2057,6 +2057,218 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
+   public void Should_generate_IComperable_if_member_is_not_IComperable_but_has_custom_comparer()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public partial class TestValueObject
+	{
+      [ValueObjectEqualityMember(Comparer = ""Comparer<Foo>.Default"")]
+      public readonly Foo ReferenceField;
+   }
+
+   public class Foo
+   {
+   }
+}
+";
+      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      AssertStrings(output, $@"{_GENERATED_HEADER}
+namespace Thinktecture.Tests
+{{
+   public class TestValueObject_ValueObjectTypeConverter : Thinktecture.ValueObjectTypeConverter<TestValueObject, Thinktecture.Tests.Foo>
+   {{
+      /// <inheritdoc />
+      [return: NotNullIfNotNull(""referenceField"")]
+      protected override TestValueObject? ConvertFrom(Thinktecture.Tests.Foo? referenceField)
+      {{
+         if(referenceField is null)
+            return default(TestValueObject);
+
+         return TestValueObject.Create(referenceField);
+      }}
+
+      /// <inheritdoc />
+      protected override Thinktecture.Tests.Foo GetKeyValue(TestValueObject obj)
+      {{
+         return (Thinktecture.Tests.Foo) obj;
+      }}
+   }}
+
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
+   [Thinktecture.Internal.KeyedValueObject]
+   [System.ComponentModel.TypeConverter(typeof(TestValueObject_ValueObjectTypeConverter))]
+   partial class TestValueObject : System.IEquatable<TestValueObject?>, System.IComparable, System.IComparable<TestValueObject>
+   {{
+      [System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {{
+         var convertFromKey = new Func<Thinktecture.Tests.Foo, TestValueObject>(TestValueObject.Create);
+         Expression<Func<Thinktecture.Tests.Foo, TestValueObject>> convertFromKeyExpression = static referenceField => new TestValueObject(referenceField);
+
+         var convertToKey = new Func<TestValueObject, Thinktecture.Tests.Foo>(static item => item.ReferenceField);
+         Expression<Func<TestValueObject, Thinktecture.Tests.Foo>> convertToKeyExpression = static obj => obj.ReferenceField;
+
+         var tryCreate = new Thinktecture.Internal.Validate<TestValueObject, Thinktecture.Tests.Foo>(TestValueObject.TryCreate);
+
+         var type = typeof(TestValueObject);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(type, typeof(Thinktecture.Tests.Foo), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
+      }}
+
+      private static readonly System.Type _type = typeof(TestValueObject);
+
+      public static TestValueObject Create(Thinktecture.Tests.Foo referenceField)
+      {{
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref referenceField);
+
+         if(validationResult != ValidationResult.Success)
+            throw new ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
+
+         return new TestValueObject(referenceField);
+      }}
+
+      public static ValidationResult? TryCreate(
+         Thinktecture.Tests.Foo referenceField,
+         [MaybeNull] out TestValueObject? obj)
+      {{
+         var validationResult = ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref referenceField);
+
+         obj = validationResult == ValidationResult.Success
+               ? new TestValueObject(referenceField)
+               : default;
+
+         return validationResult;
+      }}
+
+      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref Thinktecture.Tests.Foo referenceField);
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref=""Thinktecture.Tests.Foo""/>.
+      /// </summary>
+      /// <param name=""obj"">Object to covert.</param>
+      /// <returns>The <see cref=""ReferenceField""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
+      [return: NotNullIfNotNull(""obj"")]
+      public static implicit operator Thinktecture.Tests.Foo?(TestValueObject? obj)
+      {{
+         return obj is null ? null : obj.ReferenceField;
+      }}
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""Thinktecture.Tests.Foo""/>.
+      /// </summary>
+      /// <param name=""referenceField"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""TestValueObject""/>.</returns>
+      [return: NotNullIfNotNull(""referenceField"")]
+      public static explicit operator TestValueObject?(Thinktecture.Tests.Foo? referenceField)
+      {{
+         if(referenceField is null)
+            return null;
+
+         return TestValueObject.Create(referenceField);
+      }}
+
+      private TestValueObject(Thinktecture.Tests.Foo referenceField)
+      {{
+         ValidateConstructorArguments(ref referenceField);
+
+         this.ReferenceField = referenceField;
+      }}
+
+      static partial void ValidateConstructorArguments(ref Thinktecture.Tests.Foo referenceField);
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(TestValueObject? obj, TestValueObject? other)
+      {{
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }}
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(TestValueObject? obj, TestValueObject? other)
+      {{
+         return !(obj == other);
+      }}
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {{
+         return other is TestValueObject obj && Equals(obj);
+      }}
+
+      /// <inheritdoc />
+      public bool Equals(TestValueObject? other)
+      {{
+         if (other is null)
+            return false;
+
+         if (!ReferenceEquals(GetType(), other.GetType()))
+            return false;
+
+         if (ReferenceEquals(this, other))
+            return true;
+
+         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+      }}
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {{
+         return HashCode.Combine(this.ReferenceField);
+      }}
+
+      /// <inheritdoc />
+      public override string? ToString()
+      {{
+         return this.ReferenceField?.ToString();
+      }}
+
+      /// <inheritdoc />
+      public int CompareTo(object? obj)
+      {{
+         if(obj is null)
+            return 1;
+
+         if(obj is not TestValueObject valueObject)
+            throw new ArgumentException(""Argument must be of type 'TestValueObject'."", nameof(obj));
+
+         return this.CompareTo(valueObject);
+      }}
+
+      /// <inheritdoc />
+      public int CompareTo(TestValueObject? obj)
+      {{
+         if(obj is null)
+            return 1;
+
+         return Comparer<Foo>.Default.Compare(this.ReferenceField, obj.ReferenceField);
+      }}
+   }}
+}}
+");
+   }
+
+   [Fact]
    public void Should_generate_class_with_8_members()
    {
       var source = @"

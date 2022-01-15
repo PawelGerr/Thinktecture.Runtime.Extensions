@@ -88,7 +88,7 @@ using NullReferenceException = System.NullReferenceException;
    private void GenerateValueObject()
    {
       var isFormattable = _state.HasKeyMember && _state.KeyMember.Member.Type.IsFormattable();
-      var isComparable = !_state.SkipCompareTo && _state.HasKeyMember && _state.KeyMember.Member.Type.IsComparable();
+      var isComparable = !_state.SkipCompareTo && _state.HasKeyMember && (_state.KeyMember.Member.Type.IsComparable() || _state.KeyMember.Comparer is not null);
 
       _sb.Append(@"
    [Thinktecture.Internal.ValueObjectConstructor(");
