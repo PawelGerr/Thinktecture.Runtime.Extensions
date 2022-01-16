@@ -59,9 +59,9 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Thinktecture;
-
-{(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
-{{
+{(@namespace is null ? null : $@"
+namespace {@namespace}
+{{")}
    [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
@@ -73,8 +73,8 @@ using Thinktecture;
          }}
       }}
    }}
-}}
-";
+{(@namespace is null ? null : @"}
+")}";
    }
 
    private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state)
@@ -92,9 +92,9 @@ using System.Reflection;
 using MessagePack;
 using MessagePack.Formatters;
 using Thinktecture;
-
-{(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
-{{
+{(state.Namespace is null ? null : $@"
+namespace {state.Namespace}
+{{")}
    [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
@@ -184,8 +184,8 @@ using Thinktecture;
          }}
       }}
    }}
-}}
-");
+{(state.Namespace is null ? null : @"}
+")}");
 
       return sb.ToString();
    }

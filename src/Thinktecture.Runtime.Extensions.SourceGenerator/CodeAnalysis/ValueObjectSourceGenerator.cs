@@ -29,16 +29,29 @@ using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 using ArgumentException = System.ArgumentException;
 using NullReferenceException = System.NullReferenceException;
+");
 
-{(String.IsNullOrWhiteSpace(_state.Namespace) ? null : $"namespace {_state.Namespace}")}
-{{");
+      var hasNamespace = _state.Namespace is not null;
+
+      if (hasNamespace)
+      {
+         _sb.Append(@"
+namespace ").Append(_state.Namespace).Append(@"
+{");
+      }
+
       if (_state.HasKeyMember)
          GenerateTypeConverter(_state.KeyMember);
 
       GenerateValueObject();
 
-      _sb.Append($@"
-}}
+      if (hasNamespace)
+      {
+         _sb.Append(@"
+}");
+      }
+
+      _sb.Append(@"
 ");
 
       return _sb.ToString();

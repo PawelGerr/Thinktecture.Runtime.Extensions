@@ -61,9 +61,9 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Thinktecture;
-
-{(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
-{{
+{(@namespace is null ? null : $@"
+namespace {@namespace}
+{{")}
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
@@ -87,8 +87,8 @@ using Thinktecture;
          }}
       }}
    }}
-}}
-";
+{(@namespace is null ? null : @"}
+")}";
    }
 
    private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state)
@@ -111,9 +111,9 @@ using JsonTokenType = System.Text.Json.JsonTokenType;
 using JsonException = System.Text.Json.JsonException;
 using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
 using JsonIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition;
-
-{(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
-{{
+{(state.Namespace is null ? null : $@"
+namespace {state.Namespace}
+{{")}
    [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
@@ -319,8 +319,8 @@ using JsonIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition;
          }}
       }}
    }}
-}}
-");
+{(state.Namespace is null ? null : @"}
+")}");
 
       return sb.ToString();
    }

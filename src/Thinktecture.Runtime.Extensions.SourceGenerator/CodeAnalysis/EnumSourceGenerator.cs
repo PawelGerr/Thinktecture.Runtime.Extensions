@@ -28,14 +28,27 @@ using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 using ArgumentException = System.ArgumentException;
 using ArgumentNullException = System.ArgumentNullException;
 using InvalidOperationException = System.InvalidOperationException;
+");
 
-{(String.IsNullOrWhiteSpace(_state.Namespace) ? null : $"namespace {_state.Namespace}")}
-{{");
+      var hasNamespace = _state.Namespace is not null;
+
+      if (hasNamespace)
+      {
+         _sb.Append(@"
+namespace ").Append(_state.Namespace).Append(@"
+{");
+      }
+
       GenerateTypeConverter();
       GenerateEnum();
 
-      _sb.Append($@"
-}}
+      if (hasNamespace)
+      {
+         _sb.Append(@"
+}");
+      }
+
+      _sb.Append(@"
 ");
 
       return _sb.ToString();

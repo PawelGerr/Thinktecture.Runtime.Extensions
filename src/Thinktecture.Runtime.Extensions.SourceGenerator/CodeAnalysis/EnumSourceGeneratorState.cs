@@ -42,7 +42,7 @@ public class EnumSourceGeneratorState
          throw new ArgumentNullException(nameof(enumInterface));
 
       EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
-      Namespace = enumType.ContainingNamespace.ToString();
+      Namespace = enumType.ContainingNamespace.IsGlobalNamespace ? null : enumType.ContainingNamespace.ToString();
       KeyType = enumInterface.TypeArguments[0];
       IsValidatable = enumInterface.IsValidatableEnumInterface();
 

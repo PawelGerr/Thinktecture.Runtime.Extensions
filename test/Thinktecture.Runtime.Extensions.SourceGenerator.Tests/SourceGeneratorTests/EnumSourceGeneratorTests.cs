@@ -311,6 +311,261 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
+   public void Should_generate_simple_enum_which_has_no_namespace()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+public partial class TestEnum : IEnum<string>
+{
+   public static readonly TestEnum Item1 = new(""Item1"");
+   public static readonly TestEnum Item2 = new(""Item2"");
+}
+";
+      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      AssertStrings(output, $@"{_GENERATED_HEADER}
+   public class TestEnum_EnumTypeConverter : Thinktecture.ValueObjectTypeConverter<TestEnum, string>
+   {{
+      /// <inheritdoc />
+      [return: NotNullIfNotNull(""key"")]
+      protected override TestEnum? ConvertFrom(string? key)
+      {{
+         if(key is null)
+            return default;
+
+         if(TestEnum.TryGet(key, out var item))
+            return item;
+
+         throw new FormatException($""There is no item of type 'TestEnum' with the identifier '{{key}}'."");
+      }}
+
+      /// <inheritdoc />
+      protected override string GetKeyValue(TestEnum item)
+      {{
+         return item.Key;
+      }}
+   }}
+
+   [Thinktecture.Internal.ValueObjectConstructor(nameof(Key))]
+   [Thinktecture.Internal.KeyedValueObject]
+   [System.ComponentModel.TypeConverter(typeof(TestEnum_EnumTypeConverter))]
+   partial class TestEnum : IEquatable<TestEnum?>
+   {{
+      [System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {{
+         var convertFromKey = new Func<string?, TestEnum?>(TestEnum.Get);
+         Expression<Func<string?, TestEnum?>> convertFromKeyExpression = key => TestEnum.Get(key);
+
+         var convertToKey = new Func<TestEnum, string?>(item => item.Key);
+         Expression<Func<TestEnum, string?>> convertToKeyExpression = item => item.Key;
+
+         var validate = new Thinktecture.Internal.Validate<TestEnum, string>(TestEnum.Validate);
+
+         var enumType = typeof(TestEnum);
+         var metadata = new Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+
+         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+      }}
+
+      private static readonly int _typeHashCode = typeof(TestEnum).GetHashCode() * 397;
+      private static readonly System.Collections.Generic.IEqualityComparer<string?> _defaultKeyComparerMember = System.StringComparer.OrdinalIgnoreCase;
+
+      private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum>? _itemsLookup;
+      private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
+
+      private static System.Collections.Generic.IReadOnlyList<TestEnum>? _items;
+
+      /// <summary>
+      /// Gets all valid items.
+      /// </summary>
+      public static System.Collections.Generic.IReadOnlyList<TestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+
+      /// <summary>
+      /// The identifier of the item.
+      /// </summary>
+      [NotNull]
+      public string Key {{ get; }}
+
+      private TestEnum(string key)
+      {{
+         ValidateConstructorArguments(ref key);
+
+         if (key is null)
+            throw new ArgumentNullException(nameof(key));
+
+         this.Key = key;
+      }}
+
+      static partial void ValidateConstructorArguments(ref string key);
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      string IEnum<string>.GetKey()
+      {{
+         return this.Key;
+      }}
+
+      /// <summary>
+      /// Gets an enumeration item for provided <paramref name=""key""/>.
+      /// </summary>
+      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of <see cref=""TestEnum"" /> if <paramref name=""key""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref=""UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""key""/>.</exception>
+      [return: NotNullIfNotNull(""key"")]
+      public static TestEnum? Get(string? key)
+      {{
+        if (key is null)
+            return default;
+
+         if (!ItemsLookup.TryGetValue(key, out var item))
+         {{
+            throw new UnknownEnumIdentifierException(typeof(TestEnum), key);
+         }}
+
+         return item;
+      }}
+
+      /// <summary>
+      /// Gets a valid enumeration item for provided <paramref name=""key""/> if a valid item exists.
+      /// </summary>
+      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
+      /// <returns><c>true</c> if a valid item with provided <paramref name=""key""/> exists; <c>false</c> otherwise.</returns>
+      public static bool TryGet([AllowNull] string key, [MaybeNullWhen(false)] out TestEnum item)
+      {{
+         if (key is null)
+         {{
+            item = default;
+            return false;
+         }}
+
+         return ItemsLookup.TryGetValue(key, out item);
+      }}
+
+      /// <summary>
+      /// Validates the provided <paramref name=""key""/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name=""key"">The identifier to return an enumeration item for.</param>
+      /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref=""ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""ValidationResult""/> with an error message otherwise.</returns>
+      public static ValidationResult? Validate(string key, [MaybeNull] out TestEnum item)
+      {{
+         return TestEnum.TryGet(key, out item)
+               ? ValidationResult.Success
+               : new ValidationResult($""The enumeration item of type 'TestEnum' with identifier '{{key}}' is not valid."");
+      }}
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref=""string""/>.
+      /// </summary>
+      /// <param name=""item"">Item to covert.</param>
+      /// <returns>The <see cref=""TestEnum.Key""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      [return: NotNullIfNotNull(""item"")]
+      public static implicit operator string?(TestEnum? item)
+      {{
+         return item is null ? default : item.Key;
+      }}
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref=""string""/>.
+      /// </summary>
+      /// <param name=""key"">Value to covert.</param>
+      /// <returns>An instance of <see cref=""TestEnum""/> if the <paramref name=""key""/> is a known item or implements <see cref=""IValidatableEnum{{TKey}}""/>.</returns>
+      [return: NotNullIfNotNull(""key"")]
+      public static explicit operator TestEnum?(string? key)
+      {{
+         return TestEnum.Get(key);
+      }}
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestEnum""/>.
+      /// </summary>
+      /// <param name=""item1"">Instance to compare.</param>
+      /// <param name=""item2"">Another instance to compare.</param>
+      /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(TestEnum? item1, TestEnum? item2)
+      {{
+         if (item1 is null)
+            return item2 is null;
+
+         return item1.Equals(item2);
+      }}
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestEnum""/>.
+      /// </summary>
+      /// <param name=""item1"">Instance to compare.</param>
+      /// <param name=""item2"">Another instance to compare.</param>
+      /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(TestEnum? item1, TestEnum? item2)
+      {{
+         return !(item1 == item2);
+      }}
+
+      /// <inheritdoc />
+      public bool Equals(TestEnum? other)
+      {{
+         if (other is null)
+            return false;
+
+         if (!ReferenceEquals(GetType(), other.GetType()))
+            return false;
+
+         if (ReferenceEquals(this, other))
+            return true;
+
+         return _defaultKeyComparerMember.Equals(this.Key, other.Key);
+      }}
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {{
+         return other is TestEnum item && Equals(item);
+      }}
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {{
+         return _typeHashCode ^ _defaultKeyComparerMember.GetHashCode(this.Key);
+      }}
+
+      /// <inheritdoc />
+      public override string? ToString()
+      {{
+         return this.Key.ToString();
+      }}
+
+      private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> GetLookup()
+      {{
+         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(_defaultKeyComparerMember);
+
+         void AddItem(TestEnum item, string itemName)
+         {{
+            if(item is null)
+               throw new ArgumentNullException($""The item \""{{itemName}}\"" of type \""TestEnum\"" must not be null."");
+
+            if(item.Key is null)
+               throw new ArgumentException($""The \""Key\"" of the item \""{{itemName}}\"" of type \""TestEnum\"" must not be null."");
+
+            if (lookup.ContainsKey(item.Key))
+               throw new ArgumentException($""The type \""TestEnum\"" has multiple items with the identifier \""{{item.Key}}\""."");
+
+            lookup.Add(item.Key, item);
+         }}
+
+         AddItem(Item1, nameof(Item1));
+         AddItem(Item2, nameof(Item2));
+
+         return lookup;
+      }}
+   }}
+");
+   }
+
+   [Fact]
    public void Should_generate_simple_extensible_class_which_implements_IEnum()
    {
       var source = @"
@@ -2033,6 +2288,59 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
+   public void Should_generate_JsonConverter_for_enum_without_namespace()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+public partial class TestEnum : IEnum<string>
+{
+   public static readonly TestEnum Item1 = new(""Item1"");
+   public static readonly TestEnum Item2 = new(""Item2"");
+}
+";
+      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      AssertStrings(output, @"// <auto-generated />
+#nullable enable
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Thinktecture;
+
+   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
+   partial class TestEnum
+   {
+      public class ValueObjectJsonConverterFactory : System.Text.Json.Serialization.JsonConverterFactory
+      {
+         /// <inheritdoc />
+         public override bool CanConvert(System.Type typeToConvert)
+         {
+            return typeof(TestEnum).IsAssignableFrom(typeToConvert);
+         }
+
+         /// <inheritdoc />
+         public override System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
+         {
+            if (typeToConvert is null)
+               throw new ArgumentNullException(nameof(typeToConvert));
+            if (options is null)
+               throw new ArgumentNullException(nameof(options));
+
+            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<TestEnum, string>(TestEnum.Get, static obj => obj.Key, options);
+         }
+      }
+   }
+");
+   }
+
+   [Fact]
    public void Should_generate_JsonConverter_and_Attribute_for_struct_if_Attribute_is_missing()
    {
       var source = @"
@@ -2171,6 +2479,45 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
+   public void Should_generate_NewtonsoftJsonConverter_for_enum_without_namespace()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+public partial class TestEnum : IEnum<string>
+{
+   public static readonly TestEnum Item1 = new(""Item1"");
+   public static readonly TestEnum Item2 = new(""Item2"");
+}
+";
+      var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      AssertStrings(output, @"// <auto-generated />
+#nullable enable
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using Thinktecture;
+
+   [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
+   partial class TestEnum
+   {
+      public class ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestEnum, string>
+      {
+         public ValueObjectNewtonsoftJsonConverter()
+            : base(TestEnum.Get, static obj => obj.Key)
+         {
+         }
+      }
+   }
+");
+   }
+
+   [Fact]
    public void Should_generate_NewtonsoftJsonConverter_and_Attribute_for_struct_if_Attribute_is_missing()
    {
       var source = @"
@@ -2285,6 +2632,45 @@ namespace Thinktecture.Tests
       }
    }
 }
+");
+   }
+
+   [Fact]
+   public void Should_generate_MessagePackFormatter_for_enum_without_namespace()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+public partial class TestEnum : IEnum<string>
+{
+   public static readonly TestEnum Item1 = new(""Item1"");
+   public static readonly TestEnum Item2 = new(""Item2"");
+}
+";
+      var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      AssertStrings(output, @"// <auto-generated />
+#nullable enable
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using Thinktecture;
+
+   [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
+   partial class TestEnum
+   {
+      public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<TestEnum, string>
+      {
+         public ValueObjectMessagePackFormatter()
+            : base(TestEnum.Get, static obj => obj.Key)
+         {
+         }
+      }
+   }
 ");
    }
 

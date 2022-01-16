@@ -59,9 +59,9 @@ using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Thinktecture;
-
-{(String.IsNullOrWhiteSpace(@namespace) ? null : $"namespace {@namespace}")}
-{{
+{(@namespace is null ? null : $@"
+namespace {@namespace}
+{{")}
    [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(type.IsValueType ? "struct" : "class")} {typeName}
    {{
@@ -73,8 +73,8 @@ using Thinktecture;
          }}
       }}
    }}
-}}
-";
+{(@namespace is null ? null : @"}
+")}";
    }
 
    private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state)
@@ -95,9 +95,9 @@ using Newtonsoft.Json.Serialization;
 using Thinktecture;
 using JsonException = Newtonsoft.Json.JsonException;
 using JsonToken = Newtonsoft.Json.JsonToken;
-
-{(String.IsNullOrWhiteSpace(state.Namespace) ? null : $"namespace {state.Namespace}")}
-{{
+{(state.Namespace is null ? null : $@"
+namespace {state.Namespace}
+{{")}
    [Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
@@ -257,8 +257,8 @@ using JsonToken = Newtonsoft.Json.JsonToken;
          }}
       }}
    }}
-}}
-");
+{(state.Namespace is null ? null : @"}
+")}");
 
       return sb.ToString();
    }
