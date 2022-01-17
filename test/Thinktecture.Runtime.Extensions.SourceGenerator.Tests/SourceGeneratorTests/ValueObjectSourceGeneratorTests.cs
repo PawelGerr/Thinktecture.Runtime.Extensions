@@ -138,7 +138,26 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      AssertStrings(output, _SIMPLE_VALUE_TYPE_OUTPUT);
+   }
+
+   [Fact]
+   public void Should_generate_code_for_class_with_generic()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public partial class TestValueObject<T>
+	{
+   }
+}
+";
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, _SIMPLE_VALUE_TYPE_OUTPUT);
    }
 
@@ -154,7 +173,7 @@ public partial class TestValueObject
 {
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
    [Thinktecture.Internal.ValueObjectConstructor()]
    partial class TestValueObject : System.IEquatable<TestValueObject?>
@@ -263,7 +282,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, _SIMPLE_VALUE_TYPE_OUTPUT);
    }
 
@@ -281,7 +300,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, _SIMPLE_VALUE_TYPE_OUTPUT);
    }
 
@@ -300,7 +319,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -386,7 +405,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -489,7 +508,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -682,7 +701,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -875,7 +894,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -1085,7 +1104,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -1304,7 +1323,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -1524,7 +1543,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -1746,7 +1765,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -1957,7 +1976,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -2183,7 +2202,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -2414,7 +2433,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -2555,7 +2574,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureRuntimeExtensionsSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
       AssertStrings(output, $@"{_GENERATED_HEADER}
 namespace Thinktecture.Tests
 {{
@@ -2712,7 +2731,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+      var output = GetGeneratedOutput<JsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -2768,7 +2787,7 @@ public partial class TestValueObject
    public readonly string ReferenceField;
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+      var output = GetGeneratedOutput<JsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -2824,7 +2843,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+      var output = GetGeneratedOutput<JsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -2885,7 +2904,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+      var output = GetGeneratedOutput<JsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3063,7 +3082,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+      var output = GetGeneratedOutput<JsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3241,7 +3260,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+      var output = GetGeneratedOutput<JsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3416,7 +3435,7 @@ public readonly partial struct TestValueObject
    public decimal? NullableStructProperty { get; }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+      var output = GetGeneratedOutput<JsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3589,7 +3608,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<NewtonsoftJsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3631,7 +3650,7 @@ public partial class TestValueObject
    public readonly string ReferenceField;
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<NewtonsoftJsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3673,7 +3692,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<NewtonsoftJsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3720,7 +3739,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<NewtonsoftJsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -3861,7 +3880,7 @@ public partial class TestValueObject
    public decimal? NullableStructProperty { get; }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<NewtonsoftJsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -4002,7 +4021,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureNewtonsoftJsonConverterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<NewtonsoftJsonValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -4138,7 +4157,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<MessagePackValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -4180,7 +4199,7 @@ public partial class TestValueObject
    public readonly string ReferenceField;
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<MessagePackValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -4222,7 +4241,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<MessagePackValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -4269,7 +4288,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<MessagePackValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -4366,7 +4385,7 @@ public partial class TestValueObject
    public decimal? NullableStructProperty { get; }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<MessagePackValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable
@@ -4463,7 +4482,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ThinktectureMessagePackFormatterSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<MessagePackValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       AssertStrings(output, @"// <auto-generated />
 #nullable enable

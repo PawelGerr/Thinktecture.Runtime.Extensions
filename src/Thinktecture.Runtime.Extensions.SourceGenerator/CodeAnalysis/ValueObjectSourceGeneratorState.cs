@@ -5,7 +5,6 @@ namespace Thinktecture.CodeAnalysis;
 
 public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGeneratorState>
 {
-   public SemanticModel Model { get; }
    public INamedTypeSymbol Type { get; }
    public AttributeData ValueObjectAttribute { get; }
 
@@ -29,9 +28,8 @@ public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGener
 
    public EqualityInstanceMemberInfo? KeyMember => HasKeyMember ? EqualityMembers[0] : null;
 
-   public ValueObjectSourceGeneratorState(SemanticModel model, INamedTypeSymbol type, AttributeData valueObjectAttribute)
+   public ValueObjectSourceGeneratorState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
    {
-      Model = model ?? throw new ArgumentNullException(nameof(model));
       Type = type ?? throw new ArgumentNullException(nameof(type));
       ValueObjectAttribute = valueObjectAttribute;
       Namespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString();
