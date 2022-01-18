@@ -1,7 +1,7 @@
 namespace Thinktecture;
 
 /// <summary>
-/// Marks the type as a value object.
+/// Marks the type as a Value Object.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public class ValueObjectAttribute : Attribute

@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Thinktecture.CodeAnalysis;
 
 /// <summary>
-/// Base class for source generator for smart enums.
+/// Base class for source generator for Smart Enums.
 /// </summary>
 public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {

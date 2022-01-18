@@ -6,7 +6,7 @@ using Thinktecture.Internal;
 namespace Thinktecture;
 
 /// <summary>
-/// MessagePack formatter resolver for value objects.
+/// MessagePack formatter resolver for Value Objects.
 /// </summary>
 public class ValueObjectMessageFormatterResolver : IFormatterResolver
 {

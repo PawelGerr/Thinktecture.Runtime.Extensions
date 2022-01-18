@@ -7,7 +7,7 @@ using Thinktecture.Internal;
 namespace Thinktecture.Json;
 
 /// <summary>
-/// Non-generic converter for value objects.
+/// Non-generic converter for Value Objects.
 /// </summary>
 public class ValueObjectNewtonsoftJsonConverter : JsonConverter
 {
@@ -60,7 +60,7 @@ public class ValueObjectNewtonsoftJsonConverter : JsonConverter
 }
 
 /// <summary>
-/// <see cref="JsonConverter"/> for value objects.
+/// <see cref="JsonConverter"/> for Value Objects.
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>

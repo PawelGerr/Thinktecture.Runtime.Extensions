@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Thinktecture.CodeAnalysis;
 
 /// <summary>
-/// Base class for source generator for value objects.
+/// Base class for source generator for Value Objects.
 /// </summary>
 public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {

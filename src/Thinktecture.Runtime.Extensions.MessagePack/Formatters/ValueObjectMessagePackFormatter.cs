@@ -4,7 +4,7 @@ using MessagePack.Formatters;
 namespace Thinktecture.Formatters;
 
 /// <summary>
-/// MessagePack formatter for value objects.
+/// MessagePack formatter for Value Objects.
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>

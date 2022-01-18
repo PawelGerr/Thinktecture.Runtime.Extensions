@@ -1,7 +1,7 @@
 namespace Thinktecture;
 
 /// <summary>
-/// Base class for enum-like classes.
+/// Interface of a Smart Enum.
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public interface IEnum<out TKey>

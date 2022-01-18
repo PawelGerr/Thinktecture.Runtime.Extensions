@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 namespace Thinktecture.CodeAnalysis;
 
 /// <summary>
-/// Source generator for enum-like class and value object.
+/// Source generator for Smart Enums.
 /// </summary>
 [Generator]
 public class SmartEnumSourceGenerator : SmartEnumSourceGeneratorBase

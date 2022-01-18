@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Thinktecture.Text.Json.Serialization;
 
 /// <summary>
-/// JSON converter for value objects.
+/// JSON converter for Value Objects.
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>

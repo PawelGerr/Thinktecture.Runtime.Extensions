@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 namespace Thinktecture.CodeAnalysis;
 
 /// <summary>
-/// Source generator for JsonConverter for an enum-like class.
+/// Source generator for JsonConverter for Smart Enums.
 /// </summary>
 [Generator]
 public class NewtonsoftJsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase

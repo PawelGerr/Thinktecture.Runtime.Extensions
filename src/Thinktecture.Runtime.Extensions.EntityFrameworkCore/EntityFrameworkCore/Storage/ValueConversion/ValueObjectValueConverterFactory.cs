@@ -5,7 +5,7 @@ using Thinktecture.Internal;
 namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 
 /// <summary>
-/// Value converter for value objects and <see cref="IEnum{TKey}"/>.
+/// Value converter for Value Objects and <see cref="IEnum{TKey}"/>.
 /// </summary>
 public class ValueObjectValueConverterFactory
 {
@@ -49,7 +49,7 @@ public class ValueObjectValueConverterFactory
       var metadata = ValueObjectMetadataLookup.Find(type);
 
       if (metadata is null)
-         throw new ArgumentException($"The provided type '{type.Name}' is neither an enumeration nor a value object with a key member.");
+         throw new ArgumentException($"The provided type '{type.Name}' is neither an Smart Enum nor a Value Object with a key member.");
 
       object converter;
 

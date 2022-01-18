@@ -9,7 +9,7 @@ namespace Thinktecture.Internal;
 public sealed class ValueObjectMetadata
 {
    /// <summary>
-   /// The type of the value object.
+   /// The type of the Value Object or a Smart Enum.
    /// </summary>
    public Type Type { get; }
 
@@ -51,7 +51,7 @@ public sealed class ValueObjectMetadata
    /// <summary>
    /// Initializes new instance of <see cref="ValueObjectMetadata"/>.
    /// </summary>
-   /// <param name="type">The type of the value object.</param>
+   /// <param name="type">The type of the value object or a smart enum.</param>
    /// <param name="keyType">The type of the key property.</param>
    /// <param name="isValidatableEnum">An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.</param>
    /// <param name="convertFromKey">A delegate for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>

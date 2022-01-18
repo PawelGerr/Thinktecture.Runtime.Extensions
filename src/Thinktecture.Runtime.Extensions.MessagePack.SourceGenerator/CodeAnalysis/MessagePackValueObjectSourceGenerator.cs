@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 namespace Thinktecture.CodeAnalysis;
 
 /// <summary>
-/// Source generator for JsonConverter for an enum-like class.
+/// Source generator for JsonConverter for Value Objects.
 /// </summary>
 [Generator]
 public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
