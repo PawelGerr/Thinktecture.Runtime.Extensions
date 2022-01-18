@@ -37,6 +37,7 @@ internal static class DiagnosticsDescriptors
    public static readonly DiagnosticDescriptor KeyComparerMustBeStaticFieldOrProperty = new("TTRESG030", "The key comparer must a static field or property", "The key comparer '{0}' must be a static field or property", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
    public static readonly DiagnosticDescriptor ComparerApplicableOnKeyMemberOnly = new("TTRESG031", "A comparer is applicable on a key member only", "A comparer like '{0}' is applicable on a key member only", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
    public static readonly DiagnosticDescriptor ExtendedEnumMustHaveSameKeyPropertyName = new("TTRESG032", "Enumeration must have the same key property name as its base class", "Enumeration '{0}' must have the same key property name as its base class '{1}'", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
+   public static readonly DiagnosticDescriptor EnumMustNotBeGeneric = new("TTRESG033", "Enumeration must not be generic", "Enumeration '{0}' must not be generic", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
    public static readonly DiagnosticDescriptor ErrorDuringGeneration = new("TTRESG099", "Error during code generation", "Error during code generation for '{0}': '{1}'", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 

@@ -20,6 +20,14 @@ internal static class TypeDeclarationSyntaxExtensions
       return false;
    }
 
+   public static bool IsGeneric(this TypeDeclarationSyntax tds)
+   {
+      if (tds is null)
+         throw new ArgumentNullException(nameof(tds));
+
+      return tds.TypeParameterList is { Parameters.Count: > 0 };
+   }
+
    public static bool IsValueObjectCandidate(this TypeDeclarationSyntax tds)
    {
       for (var i = 0; i < tds.AttributeLists.Count; i++)

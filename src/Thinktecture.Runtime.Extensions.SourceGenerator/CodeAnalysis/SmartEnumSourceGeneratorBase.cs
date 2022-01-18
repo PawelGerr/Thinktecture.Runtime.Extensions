@@ -29,10 +29,17 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
    {
       return syntaxNode switch
       {
-         ClassDeclarationSyntax classDeclaration when classDeclaration.IsPartial() && classDeclaration.IsEnumCandidate() => true,
-         StructDeclarationSyntax structDeclaration when structDeclaration.IsPartial() && structDeclaration.IsEnumCandidate() => true,
+         ClassDeclarationSyntax classDeclaration when IsEnumCandidate(classDeclaration) => true,
+         StructDeclarationSyntax structDeclaration when IsEnumCandidate(structDeclaration) => true,
          _ => false
       };
+   }
+
+   private static bool IsEnumCandidate(TypeDeclarationSyntax typeDeclaration)
+   {
+      return typeDeclaration.IsPartial()
+             && !typeDeclaration.IsGeneric()
+             && typeDeclaration.IsEnumCandidate();
    }
 
    private static EnumSourceGeneratorState? GetEnumStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)

@@ -271,6 +271,44 @@ namespace Thinktecture.Tests
 ";
 
    [Fact]
+   public void Should_not_generate_if_class_is_not_partial()
+   {
+      var source = @"
+using System;
+
+namespace Thinktecture.Tests
+{
+	public class TestEnum : IEnum<string>
+	{
+      public static readonly TestEnum Item1 = new(""Item1"");
+      public static readonly TestEnum Item2 = new(""Item2"");
+   }
+}
+";
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      AssertOutput(output, null);
+   }
+
+   [Fact]
+   public void Should_not_generate_if_generic()
+   {
+      var source = @"
+using System;
+
+namespace Thinktecture.Tests
+{
+	public partial class TestEnum<T> : IEnum<string>
+	{
+      public static readonly TestEnum Item1 = new(""Item1"");
+      public static readonly TestEnum Item2 = new(""Item2"");
+   }
+}
+";
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      AssertOutput(output, null);
+   }
+
+   [Fact]
    public void Should_generate_simple_class_which_implements_IEnum()
    {
       var source = @"
