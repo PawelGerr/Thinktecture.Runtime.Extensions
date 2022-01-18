@@ -53,8 +53,8 @@ public abstract class SourceGeneratorTestsBase
    {
       if (Environment.NewLine == "\n")
       {
-         output = output.Replace("\r\n", Environment.NewLine);
-         expectedOutput = expectedOutput.Replace("\r\n", Environment.NewLine);
+         output = output?.Replace("\r\n", Environment.NewLine);
+         expectedOutput = expectedOutput?.Replace("\r\n", Environment.NewLine);
       }
 
       output.Should().Be(expectedOutput);

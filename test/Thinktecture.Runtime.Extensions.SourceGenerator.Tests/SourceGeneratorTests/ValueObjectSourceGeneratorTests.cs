@@ -183,7 +183,7 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
-   public void Should_generate_code_for_class_with_generic()
+   public void Should_not_generate_code_for_class_with_generic()
    {
       var source = @"
 using System;
@@ -198,7 +198,7 @@ namespace Thinktecture.Tests
 }
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      AssertOutput(output, _SIMPLE_VALUE_TYPE_OUTPUT);
+      AssertOutput(output, null);
    }
 
    [Fact]
