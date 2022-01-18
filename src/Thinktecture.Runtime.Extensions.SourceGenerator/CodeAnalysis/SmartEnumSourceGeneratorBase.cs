@@ -80,7 +80,7 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
          {
             var generatedCode = GenerateEnum(enumState);
 
-            EmitFile(context, type.ContainingNamespace, type.Name, generatedCode);
+            EmitFile(context, enumState.Namespace, type.Name, generatedCode);
          }
          catch (Exception ex)
          {

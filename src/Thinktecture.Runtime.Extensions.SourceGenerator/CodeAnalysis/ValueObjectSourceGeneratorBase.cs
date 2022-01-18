@@ -57,15 +57,15 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
       if (valueObjectStates.IsDefaultOrEmpty)
          return;
 
-      foreach (var states in valueObjectStates.Distinct())
+      foreach (var valueObjectState in valueObjectStates.Distinct())
       {
-         var type = states.Type;
+         var type = valueObjectState.Type;
 
          try
          {
-            var generatedCode = GenerateValueObject(states);
+            var generatedCode = GenerateValueObject(valueObjectState);
 
-            EmitFile(context, type.ContainingNamespace, type.Name, generatedCode);
+            EmitFile(context, valueObjectState.Namespace, type.Name, generatedCode);
          }
          catch (Exception ex)
          {

@@ -11,21 +11,38 @@ internal static class TypeDeclarationSyntaxExtensions
       if (tds is null)
          throw new ArgumentNullException(nameof(tds));
 
-      return tds.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+      for (var i = 0; i < tds.Modifiers.Count; i++)
+      {
+         if (tds.Modifiers[i].IsKind(SyntaxKind.PartialKeyword))
+            return true;
+      }
+
+      return false;
    }
 
    public static bool IsValueObjectCandidate(this TypeDeclarationSyntax tds)
    {
-      return tds.AttributeLists.Any(l => l.Attributes.Any(a => CouldBeValueObject(a.Name)));
+      for (var i = 0; i < tds.AttributeLists.Count; i++)
+      {
+         var attributes = tds.AttributeLists[i].Attributes;
+
+         for (var j = 0; j < attributes.Count; j++)
+         {
+            if (CouldBeValueObjectAttribute(attributes[j].Name))
+               return true;
+         }
+      }
+
+      return false;
    }
 
-   private static bool CouldBeValueObject(TypeSyntax? type)
+   private static bool CouldBeValueObjectAttribute(NameSyntax type)
    {
       var typeName = ExtractTypeName(type);
       return typeName is "ValueObjectAttribute" or "ValueObject";
    }
 
-   private static string? ExtractTypeName(TypeSyntax? type)
+   private static string? ExtractTypeName(NameSyntax? type)
    {
       while (type is not null)
       {
@@ -48,14 +65,24 @@ internal static class TypeDeclarationSyntaxExtensions
 
    public static bool IsEnumCandidate(this TypeDeclarationSyntax tds)
    {
-      if (tds.AttributeLists.Any(l => l.Attributes.Any(a => CouldBeEnumType(a.Name))))
-         return true;
+      for (var i = 0; i < tds.AttributeLists.Count; i++)
+      {
+         var attributes = tds.AttributeLists[i].Attributes;
+
+         for (var j = 0; j < attributes.Count; j++)
+         {
+            if (CouldBeEnumGenerationAttribute(attributes[j].Name))
+               return true;
+         }
+      }
 
       if (tds.BaseList?.Types.Count > 0)
       {
-         foreach (var baseType in tds.BaseList.Types)
+         var baseTypes = tds.BaseList.Types;
+
+         for (var i = 0; i < baseTypes.Count; i++)
          {
-            if (CouldBeEnumInterface(baseType))
+            if (CouldBeEnumInterface(baseTypes[i]))
                return true;
          }
       }
@@ -63,10 +90,10 @@ internal static class TypeDeclarationSyntaxExtensions
       return false;
    }
 
-   private static bool CouldBeEnumType(TypeSyntax? type)
+   private static bool CouldBeEnumGenerationAttribute(NameSyntax type)
    {
       var typeName = ExtractTypeName(type);
-      return typeName is "EnumGeneration" or "EnumGeneration";
+      return typeName is "EnumGeneration" or "EnumGenerationAttribute";
    }
 
    private static bool CouldBeEnumInterface(BaseTypeSyntax? baseType)

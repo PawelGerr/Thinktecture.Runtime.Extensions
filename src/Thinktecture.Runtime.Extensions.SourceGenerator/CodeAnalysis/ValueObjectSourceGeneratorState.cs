@@ -32,7 +32,7 @@ public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGener
    {
       Type = type ?? throw new ArgumentNullException(nameof(type));
       ValueObjectAttribute = valueObjectAttribute;
-      Namespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString();
+      Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
    }
 
    private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()

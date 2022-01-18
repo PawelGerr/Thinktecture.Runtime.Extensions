@@ -113,14 +113,16 @@ public static class TypeSymbolExtensions
 
    public static bool IsNonValidatableEnumInterface(this ITypeSymbol type)
    {
-      return type.ContainingNamespace?.Name == "Thinktecture"
-             && type.Name == "IEnum";
+      return type.Name == "IEnum"
+             && type.ContainingNamespace?.Name == "Thinktecture"
+             && type.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true;
    }
 
    public static bool IsValidatableEnumInterface(this ITypeSymbol type)
    {
-      return type.ContainingNamespace?.Name == "Thinktecture"
-             && type.Name == "IValidatableEnum";
+      return type.Name == "IValidatableEnum"
+             && type.ContainingNamespace?.Name == "Thinktecture"
+             && type.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true;
    }
 
    public static IReadOnlyList<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType)
@@ -146,13 +148,17 @@ public static class TypeSymbolExtensions
 
    public static bool IsFormattable(this ITypeSymbol type)
    {
-      return type.AllInterfaces.Any(i => i.ContainingNamespace?.Name == "System" && i.Name == "IFormattable");
+      return type.AllInterfaces.Any(i => i.Name == "IFormattable"
+                                         && i.ContainingNamespace?.Name == "System"
+                                         && i.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true);
    }
 
    public static bool IsComparable(this ITypeSymbol type)
    {
-      return type.AllInterfaces.Any(i => i.ContainingNamespace?.Name == "System" && i.Name == "IComparable" &&
-                                         (!i.IsGenericType || i.IsGenericType && SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], type)));
+      return type.AllInterfaces.Any(i => i.Name == "IComparable"
+                                         && i.ContainingNamespace?.Name == "System"
+                                         && i.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true
+                                         && (!i.IsGenericType || i.IsGenericType && SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], type)));
    }
 
    public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
