@@ -29,10 +29,17 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
    {
       return syntaxNode switch
       {
-         ClassDeclarationSyntax classDeclaration when classDeclaration.IsPartial() && classDeclaration.IsValueObjectCandidate() => true,
-         StructDeclarationSyntax structDeclaration when structDeclaration.IsPartial() && structDeclaration.IsValueObjectCandidate() => true,
+         ClassDeclarationSyntax classDeclaration when IsValueObjectCandidate(classDeclaration) => true,
+         StructDeclarationSyntax structDeclaration when IsValueObjectCandidate(structDeclaration) => true,
          _ => false
       };
+   }
+
+   private static bool IsValueObjectCandidate(TypeDeclarationSyntax typeDeclaration)
+   {
+      return typeDeclaration.IsPartial()
+             && !typeDeclaration.IsGeneric()
+             && typeDeclaration.IsValueObjectCandidate();
    }
 
    private static ValueObjectSourceGeneratorState? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)

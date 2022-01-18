@@ -44,7 +44,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic,
                                                                                                               DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
                                                                                                               DiagnosticsDescriptors.ExtendedEnumMustHaveSameKeyPropertyName,
-                                                                                                              DiagnosticsDescriptors.EnumMustNotBeGeneric);
+                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -102,6 +102,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       TypeMustBePartial(context, type, declarations);
+      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
       var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic)
@@ -167,9 +168,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       TypeMustBePartial(context, enumType, declarations);
-
-      if (enumType.TypeParameters.Length > 0)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumMustNotBeGeneric, locationOfFirstDeclaration, enumType);
+      TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
       var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, locationOfFirstDeclaration, context.ReportDiagnostic);
 
@@ -238,6 +237,12 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       ValidateDerivedTypes(context, enumType);
+   }
+
+   private static void TypeMustNotBeGeneric(SymbolAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
+   {
+      if (type.TypeParameters.Length > 0)
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
    }
 
    private static void CheckKeyComparer(SymbolAnalysisContext context, IEnumerable<ISymbol> comparerMembers, bool isExtensible)

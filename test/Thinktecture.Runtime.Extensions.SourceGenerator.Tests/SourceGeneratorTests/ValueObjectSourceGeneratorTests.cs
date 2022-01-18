@@ -126,6 +126,44 @@ namespace Thinktecture.Tests
 ";
 
    [Fact]
+   public void Should_not_generate_code_if_not_partial()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public class TestValueObject
+	{
+   }
+}
+";
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      AssertOutput(output, null);
+   }
+
+   [Fact]
+   public void Should_not_generate_code_if_generic()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public partial class TestValueObject<T>
+	{
+   }
+}
+";
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      AssertOutput(output, null);
+   }
+
+   [Fact]
    public void Should_generate_simple_class_with_ValueObjectAttribute()
    {
       var source = @"
