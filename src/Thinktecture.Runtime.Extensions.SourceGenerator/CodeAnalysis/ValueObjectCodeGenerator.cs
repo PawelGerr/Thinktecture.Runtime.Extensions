@@ -453,9 +453,6 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-      if (fieldsAndProperties.Count == 0)
-         return;
-
       _sb.Append($@"
 
       private {_state.Type.Name}(");
@@ -465,30 +462,36 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@")
       {{");
 
-      _sb.Append($@"
-         ValidateConstructorArguments(");
-
-      _sb.RenderArguments(fieldsAndProperties, "ref ");
-
-      _sb.Append($@");
-");
-
-      foreach (var memberInfo in fieldsAndProperties)
+      if (fieldsAndProperties.Count > 0)
       {
          _sb.Append($@"
+         ValidateConstructorArguments(");
+
+         _sb.RenderArguments(fieldsAndProperties, "ref ");
+
+         _sb.Append($@");
+");
+
+         foreach (var memberInfo in fieldsAndProperties)
+         {
+            _sb.Append($@"
          this.{memberInfo.Identifier} = {memberInfo.ArgumentName};");
+         }
       }
 
       _sb.Append($@"
       }}");
 
-      _sb.Append($@"
+      if (fieldsAndProperties.Count > 0)
+      {
+         _sb.Append($@"
 
       static partial void ValidateConstructorArguments(");
 
-      _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ");
+         _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ");
 
-      _sb.Append($@");");
+         _sb.Append($@");");
+      }
    }
 
    private void GenerateEquals()

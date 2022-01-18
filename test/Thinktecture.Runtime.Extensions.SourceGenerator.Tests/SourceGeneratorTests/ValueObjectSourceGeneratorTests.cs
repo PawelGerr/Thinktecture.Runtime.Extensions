@@ -60,6 +60,10 @@ namespace Thinktecture.Tests
 
       static partial void ValidateFactoryArguments(ref ValidationResult? validationResult);
 
+      private TestValueObject()
+      {{
+      }}
+
       /// <summary>
       /// Compares to instances of <see cref=""TestValueObject""/>.
       /// </summary>
@@ -204,6 +208,10 @@ public partial class TestValueObject
 
       static partial void ValidateFactoryArguments(ref ValidationResult? validationResult);
 
+      private TestValueObject()
+      {{
+      }}
+
       /// <summary>
       /// Compares to instances of <see cref=""TestValueObject""/>.
       /// </summary>
@@ -326,6 +334,10 @@ namespace Thinktecture.Tests
    {{
       private static readonly System.Type _type = typeof(TestValueObject);
 
+      private TestValueObject()
+      {{
+      }}
+
       /// <summary>
       /// Compares to instances of <see cref=""TestValueObject""/>.
       /// </summary>
@@ -439,6 +451,10 @@ namespace Thinktecture.Tests
       }}
 
       static partial void ValidateFactoryArguments(ref ValidationResult? validationResult);
+
+      private TestValueObject()
+      {{
+      }}
 
       /// <summary>
       /// Compares to instances of <see cref=""TestValueObject""/>.
