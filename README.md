@@ -71,7 +71,7 @@ public partial class ProductType : IEnum<string>
 
       public override void Do()
       {
-         // do special else
+         // do special stuff
       }
    }
 }
