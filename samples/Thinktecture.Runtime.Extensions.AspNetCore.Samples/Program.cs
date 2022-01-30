@@ -60,7 +60,7 @@ public class Program
       await DoRequestAsync(logger, client, "productName/a"); // invalid
       await DoRequestAsync(logger, client, "productName", "bread");
       await DoRequestAsync(logger, client, "productName", "a"); // invalid
-      await DoRequestAsync(logger, client, "boundary", Boundary.Create(1, 2));
+      await DoRequestAsync(logger, client, "boundary", BoundaryWithJsonConverter.Create(1, 2));
       await DoRequestAsync(logger, client, "boundary", jsonBody: "{ \"lower\": 2, \"upper\": 1 }");
    }
 

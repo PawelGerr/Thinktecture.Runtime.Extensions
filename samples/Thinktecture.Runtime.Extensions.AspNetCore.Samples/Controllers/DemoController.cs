@@ -93,7 +93,7 @@ public class DemoController : Controller
    }
 
    [HttpPost("boundary")]
-   public IActionResult RoundTrip([FromBody] Boundary boundary)
+   public IActionResult RoundTrip([FromBody] BoundaryWithJsonConverter boundary)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
