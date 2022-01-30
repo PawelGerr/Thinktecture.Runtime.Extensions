@@ -110,10 +110,10 @@ public static class ModelBuilderExtensions
          if (valueConverter is not null)
             continue;
 
-         if (ValueObjectMetadataLookup.Find(property.ClrType) is null)
-            continue;
-
          var propertyType = property.ClrType;
+
+         if (ValueObjectMetadataLookup.Find(propertyType) is null)
+            continue;
 
          if (!converterLookup.TryGetValue(propertyType, out valueConverter))
          {

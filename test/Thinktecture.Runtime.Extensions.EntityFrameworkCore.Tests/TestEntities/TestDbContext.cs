@@ -4,11 +4,13 @@ namespace Thinktecture.Runtime.Tests.TestEntities;
 
 public class TestDbContext : DbContext
 {
+   private readonly bool _registerConverters;
    public DbSet<TestEntity_with_OwnedTypes> TestEntities_with_OwnedTypes { get; set; }
    public DbSet<TestEntity_with_Enum_and_ValueObjects> TestEntities_with_Enum_and_ValueObjects { get; set; }
 
-   public TestDbContext()
+   public TestDbContext(bool registerConverters)
    {
+      _registerConverters = registerConverters;
    }
 
    public TestDbContext(DbContextOptions<TestDbContext> options)
@@ -30,6 +32,7 @@ public class TestDbContext : DbContext
       TestEntity_with_OwnedTypes.Configure(modelBuilder);
       TestEntity_with_Enum_and_ValueObjects.Configure(modelBuilder);
 
-      modelBuilder.AddEnumAndValueObjectConverters(true);
+      if (_registerConverters)
+         modelBuilder.AddEnumAndValueObjectConverters(true);
    }
 }

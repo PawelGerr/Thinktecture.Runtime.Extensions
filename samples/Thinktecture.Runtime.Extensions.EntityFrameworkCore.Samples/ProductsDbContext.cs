@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Thinktecture.SmartEnums;
 
 namespace Thinktecture;
 
@@ -28,18 +27,10 @@ public class ProductsDbContext : DbContext
                                                       });
                                    });
 
-      modelBuilder.AddEnumAndValueObjectConverters(true, property =>
-                                                         {
-                                                            if (property.ClrType == typeof(SpecialProductType))
-                                                            {
-                                                               var maxLength = SpecialProductType.Items.Max(i => i.Key.Length);
-                                                               property.SetMaxLength(RoundUp(maxLength));
-                                                            }
-                                                         });
-   }
-
-   private static int RoundUp(int value)
-   {
-      return value + (10 - value % 10);
+      // Alternative way to apply ValueConverters to Smart Enums and Value Objects
+      // modelBuilder.AddEnumAndValueObjectConverters(true, property =>
+      //                                                    {
+      //
+      //                                                    });
    }
 }

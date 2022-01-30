@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
@@ -8,14 +8,18 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+
+       <Compile Include="..\..\shared\IsExternalInit.cs">
+          <Link>IsExternalInit.cs</Link>
+       </Compile>
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0'">
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.13" />
     </ItemGroup>
    
    <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.1" />
     </ItemGroup>
 
 </Project>

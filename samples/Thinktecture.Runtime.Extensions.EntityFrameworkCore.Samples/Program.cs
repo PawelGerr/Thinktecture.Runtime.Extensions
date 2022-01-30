@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
@@ -10,70 +11,101 @@ namespace Thinktecture;
 
 public class Program
 {
-   public static void Main()
+   public static async Task Main()
    {
-      var loggerFactory = GetLoggerFactory(out var loggingLevelSwitch);
-      var logger = loggerFactory.CreateLogger<Program>();
+      var loggingLevelSwitch = new LoggingLevelSwitch();
+      var serviceProvider = CreateServiceProvider(loggingLevelSwitch);
 
-      using var ctx = CreateContext(loggerFactory);
+      await InitializeAsync(serviceProvider);
 
-      InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, SpecialProductType.Special, Boundary.Create(1, 2)));
+      await DoDatabaseRequestsAsync(serviceProvider, loggingLevelSwitch);
+   }
+
+   private static async Task InitializeAsync(IServiceProvider serviceProvider)
+   {
+      await using var scope = serviceProvider.CreateAsyncScope();
+      var ctx = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
+
+      await ctx.Database.EnsureDeletedAsync();
+      await ctx.Database.EnsureCreatedAsync();
+
+      await DeleteAllProductsAsync(ctx);
+   }
+
+   private static async Task DoDatabaseRequestsAsync(IServiceProvider serviceProvider, LoggingLevelSwitch loggingLevelSwitch)
+   {
+      await using var scope = serviceProvider.CreateAsyncScope();
+
+      var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+      var ctx = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
+
+      await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, SpecialProductType.Special, Boundary.Create(1, 2)));
 
       try
       {
          loggingLevelSwitch.MinimumLevel = LogEventLevel.Fatal;
-         InsertProduct(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), SpecialProductType.Special, Boundary.Create(1, 2)));
+         await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), SpecialProductType.Special, Boundary.Create(1, 2)));
          loggingLevelSwitch.MinimumLevel = LogEventLevel.Information;
       }
       catch (DbUpdateException)
       {
-         logger.LogError("Error during persistence of invalid category.");
+         logger.LogError("Error during persistence of invalid category");
       }
 
-      var products = ctx.Products.AsNoTracking().Where(p => p.Category == ProductCategory.Fruits).ToList();
+      var products = await ctx.Products.AsNoTracking().Where(p => p.Category == ProductCategory.Fruits).ToListAsync();
       logger.LogInformation("Loaded products: {@Products}", products);
    }
 
-   private static void InsertProduct(ProductsDbContext ctx, Product apple)
+   private static async Task InsertProductAsync(ProductsDbContext ctx, Product apple)
    {
       ctx.Products.Add(apple);
-      ctx.SaveChanges();
+      await ctx.SaveChangesAsync();
    }
 
-   private static void DeleteAllProducts(ProductsDbContext ctx)
+   private static async Task DeleteAllProductsAsync(ProductsDbContext ctx)
    {
       ctx.Products.RemoveRange(ctx.Products.ToList());
-      ctx.SaveChanges();
+      await ctx.SaveChangesAsync();
    }
 
-   private static ProductsDbContext CreateContext(ILoggerFactory loggerFactory)
+   private static IServiceProvider CreateServiceProvider(LoggingLevelSwitch loggingLevelSwitch)
    {
-      var options = new DbContextOptionsBuilder<ProductsDbContext>()
-                    .UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true")
-                    .UseLoggerFactory(loggerFactory)
-                    .EnableSensitiveDataLogging()
-                    .Options;
+      return new ServiceCollection()
+             .AddLogging(builder =>
+                         {
+                            var serilogLogger = new LoggerConfiguration()
+                                                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
+                                                .Destructure.AsScalar<ProductCategory>()
+                                                .Destructure.AsScalar<ProductName>()
+                                                .MinimumLevel.ControlledBy(loggingLevelSwitch)
+                                                .CreateLogger();
 
-      var ctx = new ProductsDbContext(options);
-      ctx.Database.EnsureDeleted();
-      ctx.Database.EnsureCreated();
-      DeleteAllProducts(ctx);
-
-      return ctx;
+                            builder.AddSerilog(serilogLogger);
+                         })
+             .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true")
+                                                                .EnableSensitiveDataLogging()
+                                                                .UseValueObjectValueConverter(configureEnumsAndKeyedValueObjects: property =>
+                                                                                                                                  {
+                                                                                                                                     if (property.ClrType == typeof(SpecialProductType))
+                                                                                                                                     {
+                                                                                                                                        var maxLength = SpecialProductType.Items.Max(i => i.Key.Length);
+                                                                                                                                        property.SetMaxLength(RoundUp(maxLength));
+                                                                                                                                     }
+                                                                                                                                     else if (property.ClrType == typeof(ProductCategory))
+                                                                                                                                     {
+                                                                                                                                        var maxLength = ProductCategory.Items.Max(i => i.Name.Length);
+                                                                                                                                        property.SetMaxLength(RoundUp(maxLength));
+                                                                                                                                     }
+                                                                                                                                     else if (property.ClrType == typeof(ProductName))
+                                                                                                                                     {
+                                                                                                                                        property.SetMaxLength(200);
+                                                                                                                                     }
+                                                                                                                                  }))
+             .BuildServiceProvider();
    }
 
-   private static ILoggerFactory GetLoggerFactory(out LoggingLevelSwitch loggingLevelSwitch)
+   private static int RoundUp(int value)
    {
-      loggingLevelSwitch = new LoggingLevelSwitch();
-
-      var serilog = new LoggerConfiguration()
-                    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
-                    .Destructure.AsScalar<ProductCategory>()
-                    .Destructure.AsScalar<ProductName>()
-                    .MinimumLevel.ControlledBy(loggingLevelSwitch)
-                    .CreateLogger();
-
-      return new LoggerFactory()
-         .AddSerilog(serilog);
+      return value + (10 - value % 10);
    }
 }

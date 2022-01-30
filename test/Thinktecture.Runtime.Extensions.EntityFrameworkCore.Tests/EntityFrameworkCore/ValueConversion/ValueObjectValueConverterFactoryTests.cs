@@ -11,7 +11,7 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
 
    public ValueObjectValueConverterFactoryTests()
    {
-      _ctx = new();
+      _ctx = new(true);
       _ctx.Database.OpenConnection();
       _ctx.Database.EnsureCreated();
    }

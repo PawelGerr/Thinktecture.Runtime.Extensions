@@ -15,7 +15,7 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
       private static readonly Type _converterType = typeof(ValueObjectValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
                                                                                             .Single(t => t.Name.StartsWith("ValidatableEnumValueConverter", StringComparison.Ordinal));
 
-      private readonly TestDbContext _ctx = new();
+      private readonly TestDbContext _ctx = new(true);
 
       [Fact]
       public void Should_add_converters_for_owned_types()
