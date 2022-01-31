@@ -69,6 +69,9 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
       if (enumStates.IsDefaultOrEmpty)
          return;
 
+      if (enumStates.Length > 1)
+         enumStates = enumStates.Distinct().ToImmutableArray();
+
       try
       {
          Prepare(enumStates);
@@ -79,7 +82,7 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
          return;
       }
 
-      foreach (var enumState in enumStates.Distinct())
+      foreach (var enumState in enumStates)
       {
          var type = enumState.EnumType;
 
@@ -102,9 +105,6 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
    {
       foreach (var enumState in states)
       {
-         if (enumState is null)
-            continue;
-
          if (enumState.EnumType.BaseType is null || enumState.EnumType.BaseType.SpecialType == SpecialType.System_Object)
             continue;
 
