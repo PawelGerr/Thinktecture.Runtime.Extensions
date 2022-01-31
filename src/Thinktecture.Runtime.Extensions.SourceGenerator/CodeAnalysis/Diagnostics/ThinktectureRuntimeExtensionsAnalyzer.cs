@@ -495,16 +495,14 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       foreach (var tds in declarations)
       {
          if (!tds.IsPartial())
-            ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBePartial, tds.Identifier.GetLocation(), type)
-               ;
+            ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBePartial, tds.Identifier.GetLocation(), type);
       }
    }
 
    private static void StructMustBeReadOnly(SymbolAnalysisContext context, INamedTypeSymbol type, Location location)
    {
       if (type.IsValueType && !type.IsReadOnly)
-         ReportDiagnostic(context, DiagnosticsDescriptors.StructMustBeReadOnly, location, type)
-            ;
+         ReportDiagnostic(context, DiagnosticsDescriptors.StructMustBeReadOnly, location, type);
    }
 
    private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, INamedTypeSymbol type)
