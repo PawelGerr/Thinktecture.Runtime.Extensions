@@ -109,7 +109,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var defaultComparer = _state.KeyType.IsString() ? "System.StringComparer.OrdinalIgnoreCase" : $"System.Collections.Generic.EqualityComparer<{_state.KeyType}>.Default";
 
          _sb.Append($@"
-      {(_state.IsExtensible ? "protected" : "private")} static readonly System.Collections.Generic.IEqualityComparer<{_state.KeyType}{_state.NullableQuestionMarkKey}> _defaultKeyComparerMember = {defaultComparer};");
+      {(_state.IsExtensible ? "protected" : "private")} static readonly System.Collections.Generic.IEqualityComparer<{_state.KeyType}{_state.NullableQuestionMarkKey}> {_state.KeyComparerMember} = {defaultComparer};");
       }
 
       _sb.Append($@"
