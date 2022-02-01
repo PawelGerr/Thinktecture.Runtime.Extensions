@@ -18,11 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{21EB22
 		.github\workflows\ci.ps1 = .github\workflows\ci.ps1
 		.github\workflows\main.yml = .github\workflows\main.yml
 		.gitignore = .gitignore
-		NuGet.config = NuGet.config
 		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E6F200ED-86D2-4D5C-9D5F-34592908B107}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Directory.Build.props = samples\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Samples", "samples\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj", "{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}"
 EndProject
