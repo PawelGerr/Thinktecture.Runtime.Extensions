@@ -35,10 +35,42 @@ public static class ModelBuilderExtensions
 
       foreach (var entity in modelBuilder.Model.GetEntityTypes())
       {
+         AddSmartEnumAndKeyedValueObjects(validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects, entity);
          AddNonKeyedValueObjectMembers(entity);
 
          AddConverterForScalarProperties(entity, validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects);
          AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects);
+      }
+   }
+
+   private static void AddSmartEnumAndKeyedValueObjects(
+      bool validateOnWrite,
+      Dictionary<Type, ValueConverter> converterLookup,
+      Action<IMutableProperty> configure,
+      IMutableEntityType entity)
+   {
+      foreach (var propertyInfo in entity.ClrType.GetRuntimeProperties())
+      {
+         // will be handled by "AddConvertersForNavigations"
+         if (entity.FindNavigation(propertyInfo) is not null)
+            continue;
+
+         // wil be handled by AddConverterForScalarProperties
+         if (entity.FindProperty(propertyInfo) is not null)
+            continue;
+
+         if (!propertyInfo.IsCandidateProperty())
+            continue;
+
+         var propertyType = propertyInfo.PropertyType;
+         var metadata = ValueObjectMetadataLookup.Find(propertyType);
+
+         if (metadata is null)
+            continue;
+
+         var property = entity.AddProperty(propertyInfo);
+
+         SetConverterAndExecuteCallback(validateOnWrite, converterLookup, configure, property);
       }
    }
 
@@ -83,17 +115,9 @@ public static class ModelBuilderExtensions
 
       foreach (var navigation in navigationsToConvert)
       {
-         var naviType = navigation.ClrType;
-
-         if (!converterLookup.TryGetValue(naviType, out var valueConverter))
-         {
-            valueConverter = ValueObjectValueConverterFactory.Create(naviType, validateOnWrite);
-            converterLookup.Add(naviType, valueConverter);
-         }
-
          var property = FindPropertyBuilder(builders, entity, navigation.Name);
-         property.HasConversion(valueConverter);
-         configure(property.Metadata);
+
+         SetConverterAndExecuteCallback(validateOnWrite, converterLookup, configure, property.Metadata);
       }
    }
 
@@ -115,14 +139,7 @@ public static class ModelBuilderExtensions
          if (ValueObjectMetadataLookup.Find(propertyType) is null)
             continue;
 
-         if (!converterLookup.TryGetValue(propertyType, out valueConverter))
-         {
-            valueConverter = ValueObjectValueConverterFactory.Create(propertyType, validateOnWrite);
-            converterLookup.Add(propertyType, valueConverter);
-         }
-
-         property.SetValueConverter(valueConverter);
-         configure(property);
+         SetConverterAndExecuteCallback(validateOnWrite, converterLookup, configure, property);
       }
    }
 
@@ -160,5 +177,28 @@ public static class ModelBuilderExtensions
       }
 
       return (null, ownedNavigationBuilder);
+   }
+
+   private static void SetConverterAndExecuteCallback(
+      bool validateOnWrite,
+      Dictionary<Type, ValueConverter> converterLookup,
+      Action<IMutableProperty> configure,
+      IMutableProperty property)
+   {
+      var valueConverter = GetValueConverter(validateOnWrite, converterLookup, property.ClrType);
+
+      property.SetValueConverter(valueConverter);
+      configure(property);
+   }
+
+   private static ValueConverter GetValueConverter(bool validateOnWrite, Dictionary<Type, ValueConverter> converterLookup, Type naviType)
+   {
+      if (!converterLookup.TryGetValue(naviType, out var valueConverter))
+      {
+         valueConverter = ValueObjectValueConverterFactory.Create(naviType, validateOnWrite);
+         converterLookup.Add(naviType, valueConverter);
+      }
+
+      return valueConverter;
    }
 }

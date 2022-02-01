@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Runtime.Tests.TestEntities;
+using Thinktecture.Runtime.Tests.TestEnums;
 
 #if !NET6_0
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,28 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
 {
    public class AddEnumAndValueObjectConverters : IDisposable
    {
+      private static readonly Type _validateableConverterType = typeof(ValueObjectValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
+                                                                                                        .Single(t => t.Name.StartsWith("ValidatableEnumValueConverter", StringComparison.Ordinal));
+
+      private static readonly Type _testEnumConverterType = _validateableConverterType.MakeGenericType(typeof(TestEnum), typeof(string));
+
       private static readonly Type _converterType = typeof(ValueObjectValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
-                                                                                            .Single(t => t.Name.StartsWith("ValidatableEnumValueConverter", StringComparison.Ordinal));
+                                                                                            .Single(t => t.Name.StartsWith("ValueObjectValueConverter", StringComparison.Ordinal));
 
       private readonly TestDbContext _ctx = new(true);
+
+      [Fact]
+      public void Should_add_converters_for_structs_and_classes()
+      {
+         var entityType = _ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
+
+         ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestEnum), _testEnumConverterType);
+
+         ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestSmartEnum_Class_IntBased), _converterType.MakeGenericType(typeof(TestSmartEnum_Class_IntBased), typeof(int)));
+         ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestSmartEnum_Class_StringBased), _converterType.MakeGenericType(typeof(TestSmartEnum_Class_StringBased), typeof(string)));
+         ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestSmartEnum_Struct_IntBased), _validateableConverterType.MakeGenericType(typeof(TestSmartEnum_Struct_IntBased), typeof(int)));
+         ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestSmartEnum_Struct_StringBased), _validateableConverterType.MakeGenericType(typeof(TestSmartEnum_Struct_StringBased), typeof(string)));
+      }
 
       [Fact]
       public void Should_add_converters_for_owned_types()
@@ -69,9 +88,9 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
          ValidateConverter(separateOne_SeparateMany_inner, nameof(TestEntity_with_OwnedTypes.TestEnum));
       }
 
-      private static void ValidateConverter(IEntityType entityType, string propertyName)
+      private static void ValidateConverter(IEntityType entityType, string propertyName, Type converterType = null)
       {
-         entityType.FindProperty(propertyName).GetValueConverter().Should().BeOfType(_converterType);
+         entityType.FindProperty(propertyName).GetValueConverter().Should().BeOfType(converterType ?? _testEnumConverterType);
       }
 
       public void Dispose()

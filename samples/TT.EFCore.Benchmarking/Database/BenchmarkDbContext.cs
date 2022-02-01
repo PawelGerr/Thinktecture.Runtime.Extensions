@@ -38,10 +38,7 @@ public class BenchmarkDbContext : DbContext
       modelBuilder.Entity<Entity_SmartEnum_Struct_StringBased>(builder =>
                                                                {
                                                                   builder.Property(e => e.Id).ValueGeneratedNever();
-                                                                  builder.Property(e => e.Enum)
-                                                                         .HasMaxLength(20)
-                                                                         .HasConversion(e => e.Key,
-                                                                                        key => TestSmartEnum_Struct_StringBased.Get(key));
+                                                                  builder.Property(e => e.Enum).HasMaxLength(20);
                                                                });
       modelBuilder.Entity<Entity_SmartEnum_Class_IntBased>(builder =>
                                                            {
@@ -50,9 +47,6 @@ public class BenchmarkDbContext : DbContext
       modelBuilder.Entity<Entity_SmartEnum_Struct_IntBased>(builder =>
                                                             {
                                                                builder.Property(e => e.Id).ValueGeneratedNever();
-                                                               builder.Property(e => e.Enum)
-                                                                      .HasConversion(e => e.Key,
-                                                                                     key => TestSmartEnum_Struct_IntBased.Get(key));
                                                             });
    }
 }

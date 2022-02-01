@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -29,7 +30,49 @@ internal class ValueObjectConventionPlugin : INavigationAddedConvention, IProper
 
    public void ProcessEntityTypeAdded(IConventionEntityTypeBuilder entityTypeBuilder, IConventionContext<IConventionEntityTypeBuilder> context)
    {
+      if (entityTypeBuilder.Metadata.ClrType is null)
+         return;
+
+      AddSmartEnumAndKeyedValueObjects(entityTypeBuilder);
       AddNonKeyedValueObjectMembers(entityTypeBuilder);
+   }
+
+   private void AddSmartEnumAndKeyedValueObjects(IConventionEntityTypeBuilder entityTypeBuilder)
+   {
+      var entity = entityTypeBuilder.Metadata;
+
+      foreach (var propertyInfo in entity.ClrType.GetRuntimeProperties())
+      {
+         var navigation = entity.FindNavigation(propertyInfo);
+
+         if (navigation is not null)
+         {
+            ProcessNavigation(navigation);
+            continue;
+         }
+
+         var property = entity.FindProperty(propertyInfo);
+
+         if (property is not null)
+         {
+            ProcessProperty(property);
+            continue;
+         }
+
+         if (!propertyInfo.IsCandidateProperty())
+            continue;
+
+         var propertyType = propertyInfo.PropertyType;
+         var metadata = ValueObjectMetadataLookup.Find(propertyType);
+
+         if (metadata is null)
+            continue;
+
+         property = entity.AddProperty(propertyInfo);
+
+         if (property is not null)
+            SetConverterAndExecuteCallback(property);
+      }
    }
 
    private static void AddNonKeyedValueObjectMembers(IConventionEntityTypeBuilder entityTypeBuilder)
@@ -56,16 +99,21 @@ internal class ValueObjectConventionPlugin : INavigationAddedConvention, IProper
    public void ProcessNavigationAdded(IConventionNavigationBuilder navigationBuilder, IConventionContext<IConventionNavigationBuilder> context)
    {
       var navigation = navigationBuilder.Metadata;
+      ProcessNavigation(navigation);
+   }
+
+   public void ProcessPropertyAdded(IConventionPropertyBuilder propertyBuilder, IConventionContext<IConventionPropertyBuilder> context)
+   {
+      var property = propertyBuilder.Metadata;
+      ProcessProperty(property);
+   }
+
+   private void ProcessNavigation(IConventionNavigation navigation)
+   {
       var naviType = navigation.ClrType;
 
       if (ValueObjectMetadataLookup.Find(naviType) is null)
          return;
-
-      if (!_converterLookup.TryGetValue(naviType, out var valueConverter))
-      {
-         valueConverter = ValueObjectValueConverterFactory.Create(naviType, _validateOnWrite);
-         _converterLookup.Add(naviType, valueConverter);
-      }
 
       var property = navigation.DeclaringEntityType.Builder
                                .Property(naviType, navigation.Name)?
@@ -74,31 +122,36 @@ internal class ValueObjectConventionPlugin : INavigationAddedConvention, IProper
       if (property is null)
          return;
 
-      property.SetValueConverter(valueConverter);
-
-      _configureEnumsAndKeyedValueObjects(property);
+      SetConverterAndExecuteCallback(property);
    }
 
-   public void ProcessPropertyAdded(IConventionPropertyBuilder propertyBuilder, IConventionContext<IConventionPropertyBuilder> context)
+   private void ProcessProperty(IConventionProperty property)
    {
-      var property = propertyBuilder.Metadata;
       var valueConverter = property.GetValueConverter();
 
       if (valueConverter is not null)
          return;
 
-      var propertyType = property.ClrType;
-
-      if (ValueObjectMetadataLookup.Find(propertyType) is null)
+      if (ValueObjectMetadataLookup.Find(property.ClrType) is null)
          return;
 
-      if (!_converterLookup.TryGetValue(propertyType, out valueConverter))
-      {
-         valueConverter = ValueObjectValueConverterFactory.Create(propertyType, _validateOnWrite);
-         _converterLookup.Add(propertyType, valueConverter);
-      }
+      SetConverterAndExecuteCallback(property);
+   }
 
-      propertyBuilder.Metadata.SetValueConverter(valueConverter);
+   private void SetConverterAndExecuteCallback(IConventionProperty property)
+   {
+      property.SetValueConverter(GetValueConverter(property.ClrType));
       _configureEnumsAndKeyedValueObjects(property);
+   }
+
+   private ValueConverter GetValueConverter(Type type)
+   {
+      if (_converterLookup.TryGetValue(type, out var valueConverter))
+         return valueConverter;
+
+      valueConverter = ValueObjectValueConverterFactory.Create(type, _validateOnWrite);
+      _converterLookup.Add(type, valueConverter);
+
+      return valueConverter;
    }
 }

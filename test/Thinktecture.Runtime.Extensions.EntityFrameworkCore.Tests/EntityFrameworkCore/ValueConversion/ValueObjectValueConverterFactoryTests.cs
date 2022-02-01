@@ -27,6 +27,8 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       IntBasedStructValueObject = IntBasedStructValueObject.Create(43),
                       StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value 1"),
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("value 2"),
+                      TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased.Value1,
+                      TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
                       Boundary = Boundary.Create(10, 20)
                    };
       _ctx.Add(entity);
@@ -45,6 +47,8 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       Id = new Guid("A53F60CD-B53E-40E3-B16F-05E9A223E238"),
                       StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value"),
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("other value"),
+                      TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased.Value1,
+                      TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
                       Boundary = Boundary.Create(10, 20)
                    };
       _ctx.Add(entity);
