@@ -10,7 +10,7 @@ public static class StringBuilderExtensions
    {
       if (type.IsValueType && !type.HasStructLayoutAttribute())
       {
-         sb.Append($@"
+         sb.Append(@"
    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]");
       }
    }

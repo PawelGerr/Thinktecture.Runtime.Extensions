@@ -16,7 +16,7 @@ public class SmartEnumCodeGenerator
    public string Generate()
    {
       _sb.Clear();
-      _sb.Append($@"
+      _sb.Append(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,17 +136,17 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (_state.IsValidatable)
          {
-            _sb.Append($@"
+            _sb.Append(@"
 
       /// <inheritdoc />
-      public bool IsValid {{ get; }}");
+      public bool IsValid { get; }");
 
             GenerateEnsureValid();
          }
       }
       else
       {
-         _sb.Append($@"
+         _sb.Append(@"
 
       private readonly bool _isBaseEnumItem;");
       }
@@ -215,13 +215,13 @@ namespace ").Append(_state.Namespace).Append(@"
          for (var i = 0; i < baseEnum.ConstructorArguments.Count; i++)
          {
             if (i > 0)
-               _sb.Append($@", ");
+               _sb.Append(@", ");
 
             var arg = baseEnum.ConstructorArguments[i];
             _sb.Append($@"{baseEnum.Type}.{item.Identifier}.{arg.Identifier}");
          }
 
-         _sb.Append($@");");
+         _sb.Append(@");");
       }
    }
 
@@ -333,8 +333,8 @@ namespace ").Append(_state.Namespace).Append(@"
          return item.{_state.KeyPropertyName};");
       }
 
-      _sb.Append($@"
-      }}");
+      _sb.Append(@"
+      }");
    }
 
    private void GenerateExplicitConversion()
@@ -408,7 +408,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.IsValidatable)
       {
-         _sb.Append($@"
+         _sb.Append(@"
          if (this.IsValid != other.IsValid)
             return false;
 ");
@@ -484,11 +484,11 @@ namespace ").Append(_state.Namespace).Append(@"
          }
       }
 
-      _sb.Append($@"
+      _sb.Append(@"
 
          return lookup;
-      }}
-   }}");
+      }
+   }");
    }
 
    private void GenerateEnsureValid()
@@ -584,11 +584,11 @@ namespace ").Append(_state.Namespace).Append(@"
             throw new UnknownEnumIdentifierException(typeof({_state.EnumType.Name}), {_state.KeyArgumentName});");
       }
 
-      _sb.Append($@"
-         }}
+      _sb.Append(@"
+         }
 
          return item;
-      }}");
+      }");
    }
 
    private void GenerateCreateInvalidItem()
@@ -618,8 +618,8 @@ namespace ").Append(_state.Namespace).Append(@"
          }
       }
 
-      _sb.Append($@");
-      }}");
+      _sb.Append(@");
+      }");
    }
 
    private void GenerateConstructors()
@@ -648,9 +648,9 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append($@", {members.ArgumentName}");
          }
 
-         _sb.Append($@")
-      {{
-      }}");
+         _sb.Append(@")
+      {
+      }");
       }
 
       _sb.Append($@"
@@ -665,7 +665,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append($@", {member.Type} {member.ArgumentName}");
       }
 
-      _sb.Append($@")");
+      _sb.Append(@")");
 
       if (_state.HasBaseEnum)
       {
@@ -673,18 +673,18 @@ namespace ").Append(_state.Namespace).Append(@"
          : base({_state.KeyArgumentName}");
 
          if (_state.IsValidatable)
-            _sb.Append($@", isValid");
+            _sb.Append(@", isValid");
 
          foreach (var baseArg in baseCtorArgs)
          {
             _sb.Append($@", {baseArg.ArgumentName}");
          }
 
-         _sb.Append($@")");
+         _sb.Append(@")");
       }
 
-      _sb.Append($@"
-      {{");
+      _sb.Append(@"
+      {");
 
       _sb.Append($@"
          ValidateConstructorArguments(ref {_state.KeyArgumentName}");
@@ -697,7 +697,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append($@", ref {members.ArgumentName}");
       }
 
-      _sb.Append($@");
+      _sb.Append(@");
 ");
 
       if (!_state.HasBaseEnum && _state.KeyType.IsReferenceType)
@@ -744,7 +744,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append($@", ref {members.Type} {members.ArgumentName}");
       }
 
-      _sb.Append($@");");
+      _sb.Append(@");");
    }
 
    private void GenerateTypeConverter()

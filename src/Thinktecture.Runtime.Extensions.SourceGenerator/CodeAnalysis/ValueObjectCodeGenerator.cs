@@ -17,7 +17,7 @@ public class ValueObjectCodeGenerator
    public string Generate()
    {
       _sb.Clear();
-      _sb.Append($@"
+      _sb.Append(@"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -132,8 +132,8 @@ namespace ").Append(_state.Namespace).Append(@"
       if (isComparable)
          _sb.Append($", System.IComparable, System.IComparable<{_state.Type.Name}>");
 
-      _sb.Append($@"
-   {{");
+      _sb.Append(@"
+   {");
 
       if (_state.HasKeyMember)
       {
@@ -200,8 +200,8 @@ namespace ").Append(_state.Namespace).Append(@"
             GenerateCompareTo(_state.KeyMember);
       }
 
-      _sb.Append($@"
-   }}");
+      _sb.Append(@"
+   }");
    }
 
    private void GenerateImplicitConversionToKey(EqualityInstanceMemberInfo keyMemberInfo)
@@ -231,8 +231,8 @@ namespace ").Append(_state.Namespace).Append(@"
          return obj.{keyMember.Identifier};");
       }
 
-      _sb.Append($@"
-      }}");
+      _sb.Append(@"
+      }");
    }
 
    private void GenerateExplicitConversionToKey(EqualityInstanceMemberInfo keyMemberInfo)
@@ -300,7 +300,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-      _sb.Append($@"
+      _sb.Append(@"
 ");
 
       if (allowNullKeyMember)
@@ -314,8 +314,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, useNullableTypes: allowNullKeyMember);
 
-      _sb.Append($@")
-      {{");
+      _sb.Append(@")
+      {");
 
       if (allowNullKeyMember)
       {
@@ -325,13 +325,13 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
-      _sb.Append($@"
+      _sb.Append(@"
          var validationResult = ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
-      _sb.Append($@");
+      _sb.Append(@");
 
          if(validationResult != ValidationResult.Success)
             throw new ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
@@ -340,15 +340,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       GenerateConstructCall();
 
-      _sb.Append($@";
-      }}");
+      _sb.Append(@";
+      }");
    }
 
    private void GenerateTryCreateMethod(bool allowNullKeyMember)
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-      _sb.Append($@"
+      _sb.Append(@"
 
       public static ValidationResult? TryCreate(");
 
@@ -370,37 +370,37 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
-      _sb.Append($@"
+      _sb.Append(@"
          var validationResult = ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
-      _sb.Append($@");
+      _sb.Append(@");
 
          obj = validationResult == ValidationResult.Success
                ? ");
 
       GenerateConstructCall();
 
-      _sb.Append($@"
+      _sb.Append(@"
                : default;
 
          return validationResult;
-      }}");
+      }");
    }
 
    private void GenerateValidateFactoryArguments()
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-      _sb.Append($@"
+      _sb.Append(@"
 
       static partial void ValidateFactoryArguments(ref ValidationResult? validationResult");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true);
 
-      _sb.Append($@");");
+      _sb.Append(@");");
    }
 
    private void GenerateConstructCall()
@@ -409,7 +409,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"new {_state.Type.Name}(");
       _sb.RenderArguments(fieldsAndProperties);
-      _sb.Append($@")");
+      _sb.Append(@")");
    }
 
    private void GenerateEqualityOperators()
@@ -459,17 +459,17 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.RenderArgumentsWithType(fieldsAndProperties);
 
-      _sb.Append($@")
-      {{");
+      _sb.Append(@")
+      {");
 
       if (fieldsAndProperties.Count > 0)
       {
-         _sb.Append($@"
+         _sb.Append(@"
          ValidateConstructorArguments(");
 
          _sb.RenderArguments(fieldsAndProperties, "ref ");
 
-         _sb.Append($@");
+         _sb.Append(@");
 ");
 
          foreach (var memberInfo in fieldsAndProperties)
@@ -479,18 +479,18 @@ namespace ").Append(_state.Namespace).Append(@"
          }
       }
 
-      _sb.Append($@"
-      }}");
+      _sb.Append(@"
+      }");
 
       if (fieldsAndProperties.Count > 0)
       {
-         _sb.Append($@"
+         _sb.Append(@"
 
       static partial void ValidateConstructorArguments(");
 
          _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ");
 
-         _sb.Append($@");");
+         _sb.Append(@");");
       }
    }
 
@@ -530,12 +530,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
             if (i == 0)
             {
-               _sb.Append($@"
+               _sb.Append(@"
          return ");
             }
             else
             {
-               _sb.Append($@"
+               _sb.Append(@"
              && ");
             }
 
@@ -556,25 +556,25 @@ namespace ").Append(_state.Namespace).Append(@"
             }
          }
 
-         _sb.Append($@";");
+         _sb.Append(@";");
       }
       else
       {
-         _sb.Append($@"
+         _sb.Append(@"
          return true;");
       }
 
-      _sb.Append($@"
-      }}");
+      _sb.Append(@"
+      }");
    }
 
    private void GenerateGetHashCode()
    {
-      _sb.Append($@"
+      _sb.Append(@"
 
       /// <inheritdoc />
       public override int GetHashCode()
-      {{");
+      {");
 
       if (_state.EqualityMembers.Count > 0)
       {
@@ -582,12 +582,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (useShortForm)
          {
-            _sb.Append($@"
+            _sb.Append(@"
          return HashCode.Combine(");
          }
          else
          {
-            _sb.Append($@"
+            _sb.Append(@"
          var hashCode = new HashCode();");
          }
 
@@ -613,37 +613,37 @@ namespace ").Append(_state.Namespace).Append(@"
                if (equalityComparer is not null)
                   _sb.Append($@", {equalityComparer}");
 
-               _sb.Append($@");");
+               _sb.Append(@");");
             }
          }
 
          if (useShortForm)
          {
-            _sb.Append($@");");
+            _sb.Append(@");");
          }
          else
          {
-            _sb.Append($@"
+            _sb.Append(@"
          return hashCode.ToHashCode();");
          }
       }
       else
       {
-         _sb.Append($@"
+         _sb.Append(@"
          return _type.GetHashCode();");
       }
 
-      _sb.Append($@"
-      }}");
+      _sb.Append(@"
+      }");
    }
 
    private void GenerateToString()
    {
-      _sb.Append($@"
+      _sb.Append(@"
 
       /// <inheritdoc />
       public override string? ToString()
-      {{");
+      {");
 
       if (_state.HasKeyMember)
       {
@@ -675,8 +675,8 @@ namespace ").Append(_state.Namespace).Append(@"
          return ""{_state.Type.Name}"";");
       }
 
-      _sb.Append($@"
-      }}");
+      _sb.Append(@"
+      }");
    }
 
    private void GenerateToStringFormat(EqualityInstanceMemberInfo keyMemberInfo)
@@ -717,7 +717,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.Type.IsReferenceType)
       {
-         _sb.Append($@"
+         _sb.Append(@"
          if(obj is null)
             return 1;
 ");
@@ -742,7 +742,7 @@ namespace ").Append(_state.Namespace).Append(@"
          return {comparer}.Compare(this.{keyMember.Identifier}, obj.{keyMember.Identifier});");
       }
 
-      _sb.Append($@"
-      }}");
+      _sb.Append(@"
+      }");
    }
 }
