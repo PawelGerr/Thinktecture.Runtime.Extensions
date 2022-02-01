@@ -421,11 +421,13 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateGetLookup()
    {
+      var totalNumberOfItems = (_state.BaseEnum?.Items.Count ?? 0) + _state.Items.Count;
+
       _sb.Append($@"
 
       private static System.Collections.Generic.IReadOnlyDictionary<{_state.KeyType}, {_state.EnumType.Name}> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<{_state.KeyType}, {_state.EnumType.Name}>({_state.KeyComparerMember});");
+         var lookup = new System.Collections.Generic.Dictionary<{_state.KeyType}, {_state.EnumType.Name}>({totalNumberOfItems}, {_state.KeyComparerMember});");
 
       if (_state.Items.Count > 0)
       {

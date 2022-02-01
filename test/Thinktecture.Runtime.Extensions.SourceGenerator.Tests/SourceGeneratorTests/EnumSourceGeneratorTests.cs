@@ -245,7 +245,7 @@ namespace Thinktecture.Tests
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(_defaultKeyComparerMember);
+         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(2, _defaultKeyComparerMember);
 
          void AddItem(TestEnum item, string itemName)
          {{
@@ -576,7 +576,7 @@ public partial class TestEnum : IEnum<string>
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(_defaultKeyComparerMember);
+         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(2, _defaultKeyComparerMember);
 
          void AddItem(TestEnum item, string itemName)
          {{
@@ -833,7 +833,7 @@ namespace Thinktecture.Tests
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(_defaultKeyComparerMember);
+         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(2, _defaultKeyComparerMember);
 
          void AddItem(TestEnum item, string itemName)
          {{
@@ -1081,7 +1081,7 @@ namespace Thinktecture.Tests
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, ExtendedTestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, ExtendedTestEnum>(EqualityComparer);
+         var lookup = new System.Collections.Generic.Dictionary<string, ExtendedTestEnum>(3, EqualityComparer);
 
          void AddItem(ExtendedTestEnum item, string itemName)
          {{
@@ -1347,7 +1347,7 @@ namespace Thinktecture.Tests
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, ExtendedTestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, ExtendedTestEnum>(EqualityComparer);
+         var lookup = new System.Collections.Generic.Dictionary<string, ExtendedTestEnum>(3, EqualityComparer);
 
          void AddItem(ExtendedTestEnum item, string itemName)
          {{
@@ -1635,7 +1635,7 @@ namespace Thinktecture.Tests
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(_defaultKeyComparerMember);
+         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(2, _defaultKeyComparerMember);
 
          void AddItem(TestEnum item, string itemName)
          {{
@@ -1911,7 +1911,7 @@ namespace Thinktecture.Tests
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(_defaultKeyComparerMember);
+         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(2, _defaultKeyComparerMember);
 
          void AddItem(TestEnum item, string itemName)
          {{
@@ -2236,7 +2236,7 @@ namespace Thinktecture.Tests
 
       private static System.Collections.Generic.IReadOnlyDictionary<string, TestEnum> GetLookup()
       {{
-         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(_testEqualityComparer);
+         var lookup = new System.Collections.Generic.Dictionary<string, TestEnum>(2, _testEqualityComparer);
 
          void AddItem(TestEnum item, string itemName)
          {{
