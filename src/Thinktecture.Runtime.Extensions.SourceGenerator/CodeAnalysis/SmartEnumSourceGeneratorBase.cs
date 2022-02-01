@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,20 +20,29 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetEnumStateOrNull)
-                              .Where(static state => state is not null)!
-                              .Collect<EnumSourceGeneratorState>();
+                              .Where(static state => state.HasValue)
+                              .Select((state, _) => state!.Value)
+                              .Collect();
 
       context.RegisterSourceOutput(candidates, GenerateCode);
    }
 
    private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
-      return syntaxNode switch
+      try
       {
-         ClassDeclarationSyntax classDeclaration when IsEnumCandidate(classDeclaration) => true,
-         StructDeclarationSyntax structDeclaration when IsEnumCandidate(structDeclaration) => true,
-         _ => false
-      };
+         return syntaxNode switch
+         {
+            ClassDeclarationSyntax classDeclaration when IsEnumCandidate(classDeclaration) => true,
+            StructDeclarationSyntax structDeclaration when IsEnumCandidate(structDeclaration) => true,
+            _ => false
+         };
+      }
+      catch (Exception ex)
+      {
+         Debug.Write(ex);
+         return false;
+      }
    }
 
    private static bool IsEnumCandidate(TypeDeclarationSyntax typeDeclaration)
@@ -42,43 +52,54 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
              && typeDeclaration.IsEnumCandidate();
    }
 
-   private static EnumSourceGeneratorState? GetEnumStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private static SourceGenState<EnumSourceGeneratorState>? GetEnumStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
-      var tds = (TypeDeclarationSyntax)context.Node;
-      var type = context.SemanticModel.GetDeclaredSymbol(tds);
+      try
+      {
+         var tds = (TypeDeclarationSyntax)context.Node;
+         var type = context.SemanticModel.GetDeclaredSymbol(tds);
 
-      if (type is null)
-         return null;
+         if (type is null)
+            return null;
 
-      if (!type.IsEnum(out var enumInterfaces))
-         return null;
+         if (!type.IsEnum(out var enumInterfaces))
+            return null;
 
-      if (type.ContainingType is not null)
-         return null;
+         if (type.ContainingType is not null)
+            return null;
 
-      var enumInterface = enumInterfaces.GetValidEnumInterface(type);
+         var enumInterface = enumInterfaces.GetValidEnumInterface(type);
 
-      if (enumInterface is null)
-         return null;
+         if (enumInterface is null)
+            return null;
 
-      return new EnumSourceGeneratorState(type, enumInterface);
+         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, enumInterface), null);
+      }
+      catch (Exception ex)
+      {
+         return new SourceGenState<EnumSourceGeneratorState>(null, ex);
+      }
    }
 
-   private void GenerateCode(SourceProductionContext context, ImmutableArray<EnumSourceGeneratorState> enumStates)
+   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<EnumSourceGeneratorState>> states)
    {
-      if (enumStates.IsDefaultOrEmpty)
+      if (states.IsDefaultOrEmpty)
          return;
 
-      if (enumStates.Length > 1)
-         enumStates = enumStates.Distinct().ToImmutableArray();
+      IReadOnlyList<EnumSourceGeneratorState> enumStates;
 
       try
       {
+         enumStates = states.GetDistinctInnerStates(context);
+
+         if (enumStates.Count == 0)
+            return;
+
          Prepare(enumStates);
       }
       catch (Exception ex)
       {
-         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration, null, new object?[] { null, ex.Message }));
+         context.ReportException(ex);
          return;
       }
 
@@ -95,13 +116,13 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
          catch (Exception ex)
          {
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                       type.DeclaringSyntaxReferences.First().GetSyntax().GetLocation(), // pick one location as the representative,
+                                                       type.GetLocationOrNullSafe(context),
                                                        type.Name, ex.Message));
          }
       }
    }
 
-   private static void Prepare(ImmutableArray<EnumSourceGeneratorState> states)
+   private static void Prepare(IReadOnlyList<EnumSourceGeneratorState> states)
    {
       foreach (var enumState in states)
       {

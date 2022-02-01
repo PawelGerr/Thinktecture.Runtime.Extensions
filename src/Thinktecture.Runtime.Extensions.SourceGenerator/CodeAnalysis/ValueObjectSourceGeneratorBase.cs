@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,20 +20,29 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetValueObjectStateOrNull)
-                              .Where(static state => state is not null)!
-                              .Collect<ValueObjectSourceGeneratorState>();
+                              .Where(static state => state.HasValue)
+                              .Select((state, _) => state!.Value)
+                              .Collect();
 
       context.RegisterSourceOutput(candidates, GenerateCode);
    }
 
    private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
-      return syntaxNode switch
+      try
       {
-         ClassDeclarationSyntax classDeclaration when IsValueObjectCandidate(classDeclaration) => true,
-         StructDeclarationSyntax structDeclaration when IsValueObjectCandidate(structDeclaration) => true,
-         _ => false
-      };
+         return syntaxNode switch
+         {
+            ClassDeclarationSyntax classDeclaration when IsValueObjectCandidate(classDeclaration) => true,
+            StructDeclarationSyntax structDeclaration when IsValueObjectCandidate(structDeclaration) => true,
+            _ => false
+         };
+      }
+      catch (Exception ex)
+      {
+         Debug.Write(ex);
+         return false;
+      }
    }
 
    private static bool IsValueObjectCandidate(TypeDeclarationSyntax typeDeclaration)
@@ -42,29 +52,48 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
              && typeDeclaration.IsValueObjectCandidate();
    }
 
-   private static ValueObjectSourceGeneratorState? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private static SourceGenState<ValueObjectSourceGeneratorState>? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
-      var tds = (TypeDeclarationSyntax)context.Node;
-      var type = context.SemanticModel.GetDeclaredSymbol(tds);
+      try
+      {
+         var tds = (TypeDeclarationSyntax)context.Node;
+         var type = context.SemanticModel.GetDeclaredSymbol(tds);
 
-      if (type is null)
-         return null;
+         if (type is null)
+            return null;
 
-      if (!type.HasValueObjectAttribute(out var valueObjectAttribute))
-         return null;
+         if (!type.HasValueObjectAttribute(out var valueObjectAttribute))
+            return null;
 
-      if (type.ContainingType is not null)
-         return null;
+         if (type.ContainingType is not null)
+            return null;
 
-      return new ValueObjectSourceGeneratorState(type, valueObjectAttribute);
+         return new SourceGenState<ValueObjectSourceGeneratorState>(new ValueObjectSourceGeneratorState(type, valueObjectAttribute), null);
+      }
+      catch (Exception ex)
+      {
+         return new SourceGenState<ValueObjectSourceGeneratorState>(null, ex);
+      }
    }
 
-   private void GenerateCode(SourceProductionContext context, ImmutableArray<ValueObjectSourceGeneratorState> valueObjectStates)
+   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<ValueObjectSourceGeneratorState>> states)
    {
-      if (valueObjectStates.IsDefaultOrEmpty)
+      if (states.IsDefaultOrEmpty)
          return;
 
-      foreach (var valueObjectState in valueObjectStates.Distinct())
+      IReadOnlyList<ValueObjectSourceGeneratorState> valueObjectStates;
+
+      try
+      {
+         valueObjectStates = states.GetDistinctInnerStates(context);
+      }
+      catch (Exception ex)
+      {
+         context.ReportException(ex);
+         return;
+      }
+
+      foreach (var valueObjectState in valueObjectStates)
       {
          var type = valueObjectState.Type;
 
@@ -77,7 +106,7 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
          catch (Exception ex)
          {
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                       type.DeclaringSyntaxReferences.First().GetSyntax().GetLocation(), // pick one location as the representative,
+                                                       type.GetLocationOrNullSafe(context),
                                                        type.Name, ex.Message));
          }
       }
