@@ -56,7 +56,7 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
       if (type.ContainingType is not null)
          return null;
 
-      var enumInterface = enumInterfaces.GetValidEnumInterface(type, tds.Identifier.GetLocation());
+      var enumInterface = enumInterfaces.GetValidEnumInterface(type);
 
       if (enumInterface is null)
          return null;
