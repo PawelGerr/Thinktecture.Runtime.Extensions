@@ -15,7 +15,7 @@ public class JsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase
    }
 
    /// <inheritdoc />
-   protected override string GenerateEnum(EnumSourceGeneratorState state)
+   protected override string GenerateEnum(EnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
@@ -29,7 +29,7 @@ public class JsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase
       var typeName = state.EnumType.Name;
       var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectJsonConverterFactory").Any());
 
-      return $@"
+      return $@"{GENERATED_CODE_PREFIX}
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -103,13 +103,18 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
          return;
       }
 
+      var stringBuilderProvider = new StringBuilderProvider();
+
       foreach (var enumState in enumStates)
       {
+         if (context.CancellationToken.IsCancellationRequested)
+            return;
+
          var type = enumState.EnumType;
 
          try
          {
-            var generatedCode = GenerateEnum(enumState);
+            var generatedCode = GenerateEnum(enumState, stringBuilderProvider);
 
             EmitFile(context, enumState.Namespace, type.Name, generatedCode);
          }
@@ -136,7 +141,7 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
       }
    }
 
-   protected virtual string? GenerateEnum(EnumSourceGeneratorState state)
+   protected virtual string? GenerateEnum(EnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       return null;
    }

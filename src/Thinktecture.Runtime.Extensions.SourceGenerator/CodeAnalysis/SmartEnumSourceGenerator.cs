@@ -15,8 +15,8 @@ public class SmartEnumSourceGenerator : SmartEnumSourceGeneratorBase
    }
 
    /// <inheritdoc />
-   protected override string GenerateEnum(EnumSourceGeneratorState state)
+   protected override string GenerateEnum(EnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
-      return new SmartEnumCodeGenerator(state).Generate();
+      return new SmartEnumCodeGenerator(state, stringBuilderProvider.GetStringBuilder(12_000)).Generate();
    }
 }

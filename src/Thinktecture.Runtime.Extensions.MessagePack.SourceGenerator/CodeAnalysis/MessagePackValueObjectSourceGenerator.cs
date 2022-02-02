@@ -16,7 +16,7 @@ public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorB
    }
 
    /// <inheritdoc />
-   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
+   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
@@ -25,7 +25,7 @@ public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorB
          return GenerateFormatter(state, state.KeyMember);
 
       if (!state.SkipFactoryMethods)
-         return GenerateValueObjectFormatter(state);
+         return GenerateValueObjectFormatter(state, stringBuilderProvider.GetStringBuilder(5_000));
 
       return null;
    }
@@ -40,7 +40,7 @@ public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorB
       var @namespace = state.Namespace;
       var typeName = state.Type.Name;
 
-      return $@"
+      return $@"{GENERATED_CODE_PREFIX}
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,12 +65,12 @@ namespace {@namespace}
 ")}";
    }
 
-   private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state)
+   private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
       if (state.Type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
          return String.Empty;
 
-      var sb = new StringBuilder($@"
+      sb.Append($@"{GENERATED_CODE_PREFIX}
 using System;
 using System.Collections.Generic;
 using System.Linq;

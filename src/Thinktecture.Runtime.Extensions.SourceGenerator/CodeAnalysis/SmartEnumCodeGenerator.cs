@@ -7,15 +7,15 @@ public class SmartEnumCodeGenerator
    private readonly EnumSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
-   public SmartEnumCodeGenerator(EnumSourceGeneratorState state)
+   public SmartEnumCodeGenerator(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
       _state = state ?? throw new ArgumentNullException(nameof(state));
-      _sb = new StringBuilder();
+      _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
    }
 
    public string Generate()
    {
-      _sb.Clear();
+      _sb.Append(ThinktectureSourceGeneratorBase.GENERATED_CODE_PREFIX);
       _sb.Append(@"
 using System;
 using System.Collections.Generic;

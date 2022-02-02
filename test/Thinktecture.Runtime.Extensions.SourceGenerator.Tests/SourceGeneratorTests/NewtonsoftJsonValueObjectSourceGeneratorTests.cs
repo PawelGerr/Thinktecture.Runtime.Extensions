@@ -284,7 +284,7 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
-   public void Should_generate_NewtonsoftJsonConverter_for_non_key_value_object_whithout_namespace()
+   public void Should_generate_NewtonsoftJsonConverter_for_non_key_value_object_without_namespace()
    {
       var source = @"
 using System;

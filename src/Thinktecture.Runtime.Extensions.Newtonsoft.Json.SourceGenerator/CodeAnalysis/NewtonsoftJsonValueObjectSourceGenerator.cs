@@ -16,7 +16,7 @@ public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGenerat
    }
 
    /// <inheritdoc />
-   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state)
+   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
@@ -25,7 +25,7 @@ public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGenerat
          return GenerateJsonConverter(state, state.KeyMember);
 
       if (!state.SkipFactoryMethods)
-         return GenerateValueObjectJsonConverter(state);
+         return GenerateValueObjectJsonConverter(state, stringBuilderProvider.GetStringBuilder(8_000));
 
       return null;
    }
@@ -40,7 +40,7 @@ public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGenerat
       var ns = state.Namespace;
       var typeName = state.Type.Name;
 
-      return $@"
+      return $@"{GENERATED_CODE_PREFIX}
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,12 +65,12 @@ namespace {ns}
 ")}";
    }
 
-   private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state)
+   private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
       if (state.Type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
          return String.Empty;
 
-      var sb = new StringBuilder($@"
+      sb.Append($@"{GENERATED_CODE_PREFIX}
 using System;
 using System.Collections.Generic;
 using System.Linq;

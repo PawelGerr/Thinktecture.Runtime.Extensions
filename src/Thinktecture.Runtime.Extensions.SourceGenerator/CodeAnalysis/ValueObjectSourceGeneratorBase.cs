@@ -93,13 +93,18 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
          return;
       }
 
+      var stringBuilderProvider = new StringBuilderProvider();
+
       foreach (var valueObjectState in valueObjectStates)
       {
+         if (context.CancellationToken.IsCancellationRequested)
+            return;
+
          var type = valueObjectState.Type;
 
          try
          {
-            var generatedCode = GenerateValueObject(valueObjectState);
+            var generatedCode = GenerateValueObject(valueObjectState, stringBuilderProvider);
 
             EmitFile(context, valueObjectState.Namespace, type.Name, generatedCode);
          }
@@ -112,7 +117,7 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
       }
    }
 
-   protected virtual string? GenerateValueObject(ValueObjectSourceGeneratorState state)
+   protected virtual string? GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       return null;
    }

@@ -15,8 +15,8 @@ public class ValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
    }
 
    /// <inheritdoc />
-   protected override string GenerateValueObject(ValueObjectSourceGeneratorState state)
+   protected override string GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
-      return new ValueObjectCodeGenerator(state).Generate();
+      return new ValueObjectCodeGenerator(state, stringBuilderProvider.GetStringBuilder(10_000)).Generate();
    }
 }
