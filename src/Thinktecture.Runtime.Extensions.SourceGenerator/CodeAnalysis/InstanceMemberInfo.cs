@@ -5,7 +5,11 @@ namespace Thinktecture.CodeAnalysis;
 public class InstanceMemberInfo : ISymbolState
 {
    public ISymbol Symbol { get; }
+
    public ITypeSymbol Type { get; }
+   public string TypeFullyQualified { get; }
+   public string TypeMinimallyQualified { get; }
+
    public SyntaxToken Identifier { get; }
    public Accessibility ReadAccessibility { get; }
    public string ArgumentName { get; }
@@ -25,6 +29,8 @@ public class InstanceMemberInfo : ISymbolState
    {
       Symbol = symbol;
       Type = type;
+      TypeFullyQualified = Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeMinimallyQualified = Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       Identifier = identifier;
       ReadAccessibility = readAccessibility;
       IsStatic = isStatic;

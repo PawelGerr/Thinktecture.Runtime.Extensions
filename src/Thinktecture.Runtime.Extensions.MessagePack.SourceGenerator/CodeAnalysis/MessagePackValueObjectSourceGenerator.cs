@@ -37,31 +37,24 @@ public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorB
       if (type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
          return String.Empty;
 
-      var @namespace = state.Namespace;
-      var typeName = state.Type.Name;
+      var ns = state.Namespace;
 
       return $@"{GENERATED_CODE_PREFIX}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using Thinktecture;
-{(@namespace is null ? null : $@"
-namespace {@namespace}
+{(ns is null ? null : $@"
+namespace {ns}
 {{")}
-   [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-   partial {(type.IsValueType ? "struct" : "class")} {typeName}
+   [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
+   partial {(type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueObjectMessagePackFormatter : Thinktecture.Formatters.ValueObjectMessagePackFormatter<{typeName}, {keyMember.Member.Type}>
+      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>
       {{
          public ValueObjectMessagePackFormatter()
-            : base({typeName}.Create, static obj => obj.{keyMember.Member.Identifier})
+            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Identifier})
          {{
          }}
       }}
    }}
-{(@namespace is null ? null : @"}
+{(ns is null ? null : @"}
 ")}";
    }
 
@@ -71,25 +64,16 @@ namespace {@namespace}
          return String.Empty;
 
       sb.Append($@"{GENERATED_CODE_PREFIX}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics.CodeAnalysis;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using MessagePack;
-using MessagePack.Formatters;
-using Thinktecture;
 {(state.Namespace is null ? null : $@"
 namespace {state.Namespace}
 {{")}
-   [MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
+   [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueObjectMessagePackFormatter : MessagePack.Formatters.IMessagePackFormatter<{state.Type.Name}{state.NullableQuestionMark}>
+      public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualified}{state.NullableQuestionMark}>
       {{
          /// <inheritdoc />
-         public {state.Type.Name}{state.NullableQuestionMark} Deserialize(ref MessagePack.MessagePackReader reader, MessagePack.MessagePackSerializerOptions options)
+         public {state.TypeFullyQualified}{state.NullableQuestionMark} Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
          {{
             if (reader.TryReadNil())
                return default;
@@ -97,9 +81,9 @@ namespace {state.Namespace}
             var count = reader.ReadArrayHeader();
 
             if (count != {state.AssignableInstanceFieldsAndProperties.Count})
-               throw new MessagePack.MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
+               throw new global::MessagePack.MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
 
-            MessagePack.IFormatterResolver resolver = options.Resolver;
+            global::MessagePack.IFormatterResolver resolver = options.Resolver;
             options.Security.DepthStep(ref reader);
 
             try
@@ -116,7 +100,7 @@ namespace {state.Namespace}
 
       sb.Append(@$"
 
-               var validationResult = {state.Type.Name}.TryCreate(");
+               var validationResult = {state.TypeFullyQualified}.TryCreate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
@@ -129,8 +113,8 @@ namespace {state.Namespace}
       sb.Append(@$"
                                           out var obj);
 
-               if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                  throw new MessagePack.MessagePackSerializationException($""Unable to deserialize '{state.Type.Name}'. Error: {{validationResult!.ErrorMessage}}."");
+               if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                  throw new global::MessagePack.MessagePackSerializationException($""Unable to deserialize \""{state.TypeMinimallyQualified}\"". Error: {{validationResult!.ErrorMessage}}."");
 
                return obj;
             }}
@@ -141,7 +125,7 @@ namespace {state.Namespace}
          }}
 
          /// <inheritdoc />
-         public void Serialize(ref MessagePack.MessagePackWriter writer, {state.Type.Name}{state.NullableQuestionMark} value, MessagePack.MessagePackSerializerOptions options)
+         public void Serialize(ref global::MessagePack.MessagePackWriter writer, {state.TypeFullyQualified}{state.NullableQuestionMark} value, global::MessagePack.MessagePackSerializerOptions options)
          {{");
 
       if (state.Type.IsReferenceType)
@@ -202,7 +186,7 @@ namespace {state.Namespace}
       if (command is not null)
          return $"writer.{command}(value.{memberInfo.Identifier})";
 
-      return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Serialize(ref writer, value.{memberInfo.Identifier}, options)";
+      return @$"global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<{memberInfo.TypeFullyQualified}>(resolver).Serialize(ref writer, value.{memberInfo.Identifier}, options)";
    }
 
    private static string GenerateReadValue(InstanceMemberInfo memberInfo)
@@ -236,6 +220,6 @@ namespace {state.Namespace}
       if (command is not null)
          return @$"reader.{command}()";
 
-      return @$"resolver.GetFormatterWithVerify<{memberInfo.Type}>().Deserialize(ref reader, options)";
+      return @$"global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<{memberInfo.TypeFullyQualified}>(resolver).Deserialize(ref reader, options)";
    }
 }

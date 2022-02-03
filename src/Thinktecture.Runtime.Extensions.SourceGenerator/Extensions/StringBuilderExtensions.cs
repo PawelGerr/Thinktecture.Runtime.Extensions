@@ -11,7 +11,7 @@ public static class StringBuilderExtensions
       if (type.IsValueType && !type.HasStructLayoutAttribute())
       {
          sb.Append(@"
-   [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]");
+   [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
       }
    }
 
@@ -46,7 +46,7 @@ public static class StringBuilderExtensions
             sb.Append(comma);
 
          var member = members[i];
-         sb.Append(prefix).Append(member.Type);
+         sb.Append(prefix).Append(member.TypeFullyQualified);
 
          if (useNullableTypes && !member.IsNullableStruct)
             sb.Append("?");

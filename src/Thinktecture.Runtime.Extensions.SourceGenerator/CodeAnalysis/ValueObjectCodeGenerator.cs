@@ -16,20 +16,7 @@ public class ValueObjectCodeGenerator
 
    public string Generate()
    {
-      _sb.Append(ThinktectureSourceGeneratorBase.GENERATED_CODE_PREFIX);
-      _sb.Append(@"
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using System.Linq.Expressions;
-using Thinktecture;
-using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
-using ArgumentException = System.ArgumentException;
-using NullReferenceException = System.NullReferenceException;
-");
+      _sb.AppendLine(ThinktectureSourceGeneratorBase.GENERATED_CODE_PREFIX);
 
       var hasNamespace = _state.Namespace is not null;
 
@@ -60,39 +47,38 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateTypeConverter(EqualityInstanceMemberInfo keyMemberInfo)
    {
       var keyMember = keyMemberInfo.Member;
-      var nullableKeyType = keyMember.Type.WithNullableAnnotation(NullableAnnotation.Annotated);
 
       _sb.Append($@"
-   public class {_state.Type.Name}_ValueObjectTypeConverter : Thinktecture.ValueObjectTypeConverter<{_state.Type.Name}, {keyMember.Type}>
+   public class {_state.Type.Name}_ValueObjectTypeConverter : global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {keyMember.TypeFullyQualified}>
    {{
       /// <inheritdoc />");
 
       if (keyMember.Type.IsReferenceType)
       {
          _sb.Append($@"
-      [return: NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
       }
 
       _sb.Append($@"
-      protected override {_state.Type.Name}{(keyMember.Type.IsReferenceType ? _state.NullableQuestionMark : null)} ConvertFrom({nullableKeyType} {keyMember.ArgumentName})
+      protected override {_state.TypeFullyQualified}{(keyMember.Type.IsReferenceType ? _state.NullableQuestionMark : null)} ConvertFrom({keyMember.TypeFullyQualified}{keyMember.NullableQuestionMark} {keyMember.ArgumentName})
       {{");
 
       if (keyMember.Type.IsReferenceType)
       {
          _sb.Append($@"
          if({keyMember.ArgumentName} is null)
-            return default({_state.Type.Name});
+            return default({_state.TypeFullyQualified});
 ");
       }
 
       _sb.Append($@"
-         return {_state.Type.Name}.Create({keyMember.ArgumentName});
+         return {_state.TypeFullyQualified}.Create({keyMember.ArgumentName});
       }}
 
       /// <inheritdoc />
-      protected override {keyMember.Type} GetKeyValue({_state.Type.Name} obj)
+      protected override {keyMember.TypeFullyQualified} GetKeyValue({_state.TypeFullyQualified} obj)
       {{
-         return ({keyMember.Type}) obj;
+         return ({keyMember.TypeFullyQualified}) obj;
       }}
    }}
 ");
@@ -104,7 +90,7 @@ namespace ").Append(_state.Namespace).Append(@"
       var isComparable = !_state.SkipCompareTo && _state.HasKeyMember && (_state.KeyMember.Member.Type.IsComparable() || _state.KeyMember.Comparer is not null);
 
       _sb.Append(@"
-   [Thinktecture.Internal.ValueObjectConstructor(");
+   [global::Thinktecture.Internal.ValueObjectConstructor(");
 
       for (var i = 0; i < _state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
@@ -119,18 +105,18 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.HasKeyMember)
       {
          _sb.Append($@"
-   [Thinktecture.Internal.KeyedValueObject]
-   [System.ComponentModel.TypeConverter(typeof({_state.Type.Name}_ValueObjectTypeConverter))]");
+   [global::Thinktecture.Internal.KeyedValueObject]
+   [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_ValueObjectTypeConverter))]");
       }
 
       _sb.Append($@"
-   partial {(_state.Type.IsValueType ? "struct" : "class")} {_state.Type.Name} : System.IEquatable<{_state.Type.Name}{_state.NullableQuestionMark}>");
+   partial {(_state.Type.IsValueType ? "struct" : "class")} {_state.Type.Name} : global::System.IEquatable<{_state.TypeFullyQualified}{_state.NullableQuestionMark}>");
 
       if (isFormattable)
-         _sb.Append(", System.IFormattable");
+         _sb.Append(", global::System.IFormattable");
 
       if (isComparable)
-         _sb.Append($", System.IComparable, System.IComparable<{_state.Type.Name}>");
+         _sb.Append($", global::System.IComparable, global::System.IComparable<{_state.TypeFullyQualified}>");
 
       _sb.Append(@"
    {");
@@ -140,33 +126,33 @@ namespace ").Append(_state.Namespace).Append(@"
          var keyMember = _state.KeyMember.Member;
 
          _sb.Append($@"
-      [System.Runtime.CompilerServices.ModuleInitializer]
+      [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {{
-         var convertFromKey = new Func<{keyMember.Type}, {_state.Type.Name}>({_state.Type.Name}.Create);
-         Expression<Func<{keyMember.Type}, {_state.Type.Name}>> convertFromKeyExpression = static {keyMember.ArgumentName} => new {_state.Type.Name}({keyMember.ArgumentName});
+         var convertFromKey = new global::System.Func<{keyMember.TypeFullyQualified}, {_state.TypeFullyQualified}>({_state.TypeFullyQualified}.Create);
+         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualified}, {_state.TypeFullyQualified}>> convertFromKeyExpression = static {keyMember.ArgumentName} => new {_state.TypeFullyQualified}({keyMember.ArgumentName});
 
-         var convertToKey = new Func<{_state.Type.Name}, {keyMember.Type}>(static item => item.{keyMember.Identifier});
-         Expression<Func<{_state.Type.Name}, {keyMember.Type}>> convertToKeyExpression = static obj => obj.{keyMember.Identifier};
+         var convertToKey = new global::System.Func<{_state.TypeFullyQualified}, {keyMember.TypeFullyQualified}>(static item => item.{keyMember.Identifier});
+         global::System.Linq.Expressions.Expression<global::System.Func<{_state.TypeFullyQualified}, {keyMember.TypeFullyQualified}>> convertToKeyExpression = static obj => obj.{keyMember.Identifier};
 
-         var tryCreate = new Thinktecture.Internal.Validate<{_state.Type.Name}, {_state.KeyMember.Member.Type}>({_state.Type.Name}.TryCreate);
+         var tryCreate = new global::Thinktecture.Internal.Validate<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualified}>({_state.TypeFullyQualified}.TryCreate);
 
-         var type = typeof({_state.Type.Name});
-         var metadata = new Thinktecture.Internal.ValueObjectMetadata(type, typeof({keyMember.Type}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var type = typeof({_state.TypeFullyQualified});
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof({keyMember.TypeFullyQualified}), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
-         Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
+         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }}
 ");
       }
 
       _sb.Append($@"
-      private static readonly System.Type _type = typeof({_state.Type.Name});");
+      private static readonly global::System.Type _type = typeof({_state.TypeFullyQualified});");
 
       if (_state.Type.IsValueType)
       {
          _sb.Append($@"
 
-      public static readonly {_state.Type.Name} Empty = default;");
+      public static readonly {_state.TypeFullyQualified} Empty = default;");
       }
 
       if (!_state.SkipFactoryMethods)
@@ -212,12 +198,12 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""{keyMember.Type}""/>.
+      /// Implicit conversion to the type <see cref=""{keyMember.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""{keyMember.Identifier}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
-      [return: NotNullIfNotNull(""obj"")]
-      public static implicit operator {keyMember.Type}{returnTypeNullableQuestionMark}({_state.Type.Name}{_state.NullableQuestionMark} obj)
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
+      public static implicit operator {keyMember.TypeFullyQualified}{returnTypeNullableQuestionMark}({_state.TypeFullyQualified}{_state.NullableQuestionMark} obj)
       {{");
 
       if (_state.Type.IsReferenceType)
@@ -245,15 +231,15 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <summary>
-      /// Explicit conversion to the type <see cref=""{keyMember.Type}""/>.
+      /// Explicit conversion to the type <see cref=""{keyMember.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""{keyMember.Identifier}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
-      [return: NotNullIfNotNull(""obj"")]
-      public static explicit operator {keyMember.Type}({_state.Type.Name} obj)
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
+      public static explicit operator {keyMember.TypeFullyQualified}({_state.TypeFullyQualified} obj)
       {{
          if(obj is null)
-            throw new NullReferenceException();
+            throw new global::System.NullReferenceException();
 
          return obj.{keyMember.Identifier};
       }}");
@@ -268,19 +254,19 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <summary>
-      /// Explicit conversion from the type <see cref=""{keyMember.Type}""/>.
+      /// Explicit conversion from the type <see cref=""{keyMember.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""{keyMember.ArgumentName}"">Value to covert.</param>
-      /// <returns>An instance of <see cref=""{_state.Type.Name}""/>.</returns>");
+      /// <returns>An instance of <see cref=""{_state.TypeMinimallyQualified}""/>.</returns>");
 
       if (bothAreReferenceTypes)
       {
          _sb.Append($@"
-      [return: NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
       }
 
       _sb.Append($@"
-      public static explicit operator {_state.Type.Name}{nullableQuestionMark}({keyMember.Type}{nullableQuestionMark} {keyMember.ArgumentName})
+      public static explicit operator {_state.TypeFullyQualified}{nullableQuestionMark}({keyMember.TypeFullyQualified}{nullableQuestionMark} {keyMember.ArgumentName})
       {{");
 
       if (bothAreReferenceTypes)
@@ -292,7 +278,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         return {_state.Type.Name}.Create({keyMember.ArgumentName});
+         return {_state.TypeFullyQualified}.Create({keyMember.ArgumentName});
       }}");
    }
 
@@ -306,11 +292,11 @@ namespace ").Append(_state.Namespace).Append(@"
       if (allowNullKeyMember)
       {
          _sb.Append($@"
-      [return: NotNullIfNotNull(""{_state.KeyMember!.Member.ArgumentName}"")]");
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyMember!.Member.ArgumentName}"")]");
       }
 
       _sb.Append($@"
-      public static {_state.Type.Name}{(allowNullKeyMember ? "?" : null)} Create(");
+      public static {_state.TypeFullyQualified}{(allowNullKeyMember ? "?" : null)} Create(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, useNullableTypes: allowNullKeyMember);
 
@@ -326,15 +312,15 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-         var validationResult = ValidationResult.Success;
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
       _sb.Append(@");
 
-         if(validationResult != ValidationResult.Success)
-            throw new ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
+         if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
          return ");
 
@@ -350,13 +336,13 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      public static ValidationResult? TryCreate(");
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
          ", ",", trailingComma: true, useNullableTypes: allowNullKeyMember);
 
       _sb.Append($@"
-         [MaybeNull] out {_state.Type.Name}{_state.NullableQuestionMark} obj)
+         [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.TypeFullyQualified}{_state.NullableQuestionMark} obj)
       {{");
 
       if (allowNullKeyMember)
@@ -371,14 +357,14 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-         var validationResult = ValidationResult.Success;
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
       _sb.Append(@");
 
-         obj = validationResult == ValidationResult.Success
+         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
                ? ");
 
       GenerateConstructCall();
@@ -396,7 +382,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      static partial void ValidateFactoryArguments(ref ValidationResult? validationResult");
+      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true);
 
@@ -407,7 +393,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-      _sb.Append($@"new {_state.Type.Name}(");
+      _sb.Append($@"new {_state.TypeFullyQualified}(");
       _sb.RenderArguments(fieldsAndProperties);
       _sb.Append(@")");
    }
@@ -417,12 +403,12 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.Type.Name}""/>.
+      /// Compares to instances of <see cref=""{_state.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==({_state.Type.Name}{_state.NullableQuestionMark} obj, {_state.Type.Name}{_state.NullableQuestionMark} other)
+      public static bool operator ==({_state.TypeFullyQualified}{_state.NullableQuestionMark} obj, {_state.TypeFullyQualified}{_state.NullableQuestionMark} other)
       {{");
 
       if (_state.Type.IsReferenceType)
@@ -438,12 +424,12 @@ namespace ").Append(_state.Namespace).Append(@"
       }}
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.Type.Name}""/>.
+      /// Compares to instances of <see cref=""{_state.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=({_state.Type.Name}{_state.NullableQuestionMark} obj, {_state.Type.Name}{_state.NullableQuestionMark} other)
+      public static bool operator !=({_state.TypeFullyQualified}{_state.NullableQuestionMark} obj, {_state.TypeFullyQualified}{_state.NullableQuestionMark} other)
       {{
          return !(obj == other);
       }}");
@@ -501,11 +487,11 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override bool Equals(object? other)
       {{
-         return other is {_state.Type.Name} obj && Equals(obj);
+         return other is {_state.TypeFullyQualified} obj && Equals(obj);
       }}
 
       /// <inheritdoc />
-      public bool Equals({_state.Type.Name}{_state.NullableQuestionMark} other)
+      public bool Equals({_state.TypeFullyQualified}{_state.NullableQuestionMark} other)
       {{");
 
       if (_state.Type.IsReferenceType)
@@ -514,10 +500,10 @@ namespace ").Append(_state.Namespace).Append(@"
          if (other is null)
             return false;
 
-         if (!ReferenceEquals(GetType(), other.GetType()))
+         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
-         if (ReferenceEquals(this, other))
+         if (global::System.Object.ReferenceEquals(this, other))
             return true;
 ");
       }
@@ -583,12 +569,12 @@ namespace ").Append(_state.Namespace).Append(@"
          if (useShortForm)
          {
             _sb.Append(@"
-         return HashCode.Combine(");
+         return global::System.HashCode.Combine(");
          }
          else
          {
             _sb.Append(@"
-         var hashCode = new HashCode();");
+         var hashCode = new global::System.HashCode();");
          }
 
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
@@ -672,7 +658,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append($@"
-         return ""{_state.Type.Name}"";");
+         return ""{_state.TypeMinimallyQualified}"";");
       }
 
       _sb.Append(@"
@@ -686,7 +672,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <inheritdoc />
-      public string ToString(string? format, IFormatProvider? formatProvider = null)
+      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
       {{
          return this.{keyMember.Identifier}.ToString(format, formatProvider);
       }}");
@@ -705,14 +691,14 @@ namespace ").Append(_state.Namespace).Append(@"
          if(obj is null)
             return 1;
 
-         if(obj is not {_state.Type.Name} valueObject)
-            throw new ArgumentException(""Argument must be of type '{_state.Type.Name}'."", nameof(obj));
+         if(obj is not {_state.TypeFullyQualified} valueObject)
+            throw new global::System.ArgumentException(""Argument must be of type \""{_state.TypeMinimallyQualified}\""."", nameof(obj));
 
          return this.CompareTo(valueObject);
       }}
 
       /// <inheritdoc />
-      public int CompareTo({_state.Type.Name}{_state.NullableQuestionMark} obj)
+      public int CompareTo({_state.TypeFullyQualified}{_state.NullableQuestionMark} obj)
       {{");
 
       if (_state.Type.IsReferenceType)

@@ -6,6 +6,9 @@ namespace Thinktecture.CodeAnalysis;
 public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGeneratorState>
 {
    public INamedTypeSymbol Type { get; }
+   public string TypeFullyQualified { get; }
+   public string TypeMinimallyQualified { get; }
+
    public AttributeData ValueObjectAttribute { get; }
 
    public bool SkipFactoryMethods => ValueObjectAttribute.FindSkipFactoryMethods() ?? false;
@@ -31,6 +34,9 @@ public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGener
    public ValueObjectSourceGeneratorState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
    {
       Type = type ?? throw new ArgumentNullException(nameof(type));
+      TypeFullyQualified = Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeMinimallyQualified = Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
       ValueObjectAttribute = valueObjectAttribute;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
    }

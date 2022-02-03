@@ -34,46 +34,35 @@ public class JsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
       ValueObjectSourceGeneratorState state,
       EqualityInstanceMemberInfo keyMember)
    {
-      var type = state.Type;
-
-      if (type.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
+      if (state.Type.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
          return String.Empty;
 
       var ns = state.Namespace;
-      var typeName = state.Type.Name;
 
       return $@"{GENERATED_CODE_PREFIX}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Thinktecture;
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-   partial {(type.IsValueType ? "struct" : "class")} {typeName}
+   [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
+   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueObjectJsonConverterFactory : System.Text.Json.Serialization.JsonConverterFactory
+      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
-         public override bool CanConvert(System.Type typeToConvert)
+         public override bool CanConvert(global::System.Type typeToConvert)
          {{
-            return typeof({typeName}).IsAssignableFrom(typeToConvert);
+            return typeof({state.TypeFullyQualified}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />
-         public override System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
+         public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
          {{
             if (typeToConvert is null)
-               throw new ArgumentNullException(nameof(typeToConvert));
+               throw new global::System.ArgumentNullException(nameof(typeToConvert));
             if (options is null)
-               throw new ArgumentNullException(nameof(options));
+               throw new global::System.ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{typeName}, {keyMember.Member.Type}>({typeName}.Create, static obj => obj.{keyMember.Member.Identifier}, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Identifier}, options);
          }}
       }}
    }}
@@ -87,27 +76,13 @@ namespace {ns}
          return String.Empty;
 
       sb.Append($@"{GENERATED_CODE_PREFIX}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics.CodeAnalysis;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Thinktecture.Text.Json.Serialization;
-using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
-using JsonTokenType = System.Text.Json.JsonTokenType;
-using JsonException = System.Text.Json.JsonException;
-using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
-using JsonIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition;
 {(state.Namespace is null ? null : $@"
 namespace {state.Namespace}
 {{")}
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
+   [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
    {{
-      public class ValueObjectJsonConverter : System.Text.Json.Serialization.JsonConverter<{state.Type.Name}>
+      public class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<{state.TypeFullyQualified}>
       {{");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -118,19 +93,19 @@ namespace {state.Namespace}
          if (needsConverter)
          {
             sb.Append(@$"
-         private readonly System.Text.Json.Serialization.JsonConverter<{memberInfo.Type}> _{memberInfo.ArgumentName}Converter;");
+         private readonly global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualified}> _{memberInfo.ArgumentName}Converter;");
          }
 
          sb.Append(@$"
          private readonly string _{memberInfo.ArgumentName}PropertyName;");
       }
 
-      sb.Append(@$"
+      sb.Append(@"
 
-         public ValueObjectJsonConverter(JsonSerializerOptions options)
-         {{
+         public ValueObjectJsonConverter(global::System.Text.Json.JsonSerializerOptions options)
+         {
             if(options is null)
-               throw new ArgumentNullException(nameof(options));
+               throw new global::System.ArgumentNullException(nameof(options));
 
             var namingPolicy = options.PropertyNamingPolicy;
 ");
@@ -143,7 +118,7 @@ namespace {state.Namespace}
          if (needsConverter)
          {
             sb.Append(@$"
-            this._{memberInfo.ArgumentName}Converter = (System.Text.Json.Serialization.JsonConverter<{memberInfo.Type}>)options.GetConverter(typeof({memberInfo.Type}));");
+            this._{memberInfo.ArgumentName}Converter = (global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualified}>)options.GetConverter(typeof({memberInfo.TypeFullyQualified}));");
          }
 
          sb.Append(@$"
@@ -154,13 +129,13 @@ namespace {state.Namespace}
          }}
 
          /// <inheritdoc />
-         public override {state.Type.Name}{state.NullableQuestionMark} Read(ref Utf8JsonReader reader, System.Type typeToConvert, JsonSerializerOptions options)
+         public override {state.TypeFullyQualified}{state.NullableQuestionMark} Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
          {{
-            if (reader.TokenType == JsonTokenType.Null)
+            if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
                return default;
 
-            if (reader.TokenType != JsonTokenType.StartObject)
-               throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.Type.Name}'. Expected token: '{{JsonTokenType.StartObject}}'."");
+            if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
+               throw new global::System.Text.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::System.Text.Json.JsonTokenType.StartObject)}}\""."");
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -168,25 +143,25 @@ namespace {state.Namespace}
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            {memberInfo.Type}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
+            {memberInfo.TypeFullyQualified}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
       }
 
       sb.Append(@$"
 
-            var comparer = options.PropertyNameCaseInsensitive ? System.StringComparer.OrdinalIgnoreCase : System.StringComparer.Ordinal;
+            var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
             while (reader.Read())
             {{
-               if (reader.TokenType == JsonTokenType.EndObject)
+               if (reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
                   break;
 
-               if (reader.TokenType != JsonTokenType.PropertyName)
-                  throw new JsonException($""Unexpected token '{{reader.TokenType}}' when trying to deserialize '{state.Type.Name}'. Expected token: '{{JsonTokenType.PropertyName}}'."");
+               if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
+                  throw new global::System.Text.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::System.Text.Json.JsonTokenType.PropertyName)}}\""."");
 
                var propName = reader.GetString();
 
                if(!reader.Read())
-                  throw new JsonException($""Unexpected end of the JSON message when trying the read the value of '{{propName}}' during deserialization of '{state.Type.Name}'."");
+                  throw new global::System.Text.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{{propName}}\"" during deserialization of \""{state.TypeMinimallyQualified}\""."");
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -195,12 +170,12 @@ namespace {state.Namespace}
 
          if (i == 0)
          {
-            sb.Append(@$"
+            sb.Append(@"
                if ");
          }
          else
          {
-            sb.Append(@$"
+            sb.Append(@"
                else if ");
          }
 
@@ -215,14 +190,14 @@ namespace {state.Namespace}
          sb.Append(@$"
                else
                {{
-                  throw new JsonException($""Unknown member '{{propName}}' encountered when trying to deserialize '{state.Type.Name}'."");
+                  throw new global::System.Text.Json.JsonException($""Unknown member \""{{propName}}\"" encountered when trying to deserialize \""{state.TypeMinimallyQualified}\""."");
                }}");
       }
 
       sb.Append(@$"
             }}
 
-            var validationResult = {state.Type.Name}.TryCreate(");
+            var validationResult = {state.TypeFullyQualified}.TryCreate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
@@ -235,19 +210,19 @@ namespace {state.Namespace}
       sb.Append(@$"
                                        out var obj);
 
-            if (validationResult != ValidationResult.Success)
-               throw new JsonException($""Unable to deserialize '{state.Type.Name}'. Error: {{validationResult!.ErrorMessage}}."");
+            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+               throw new global::System.Text.Json.JsonException($""Unable to deserialize \""{state.Type.Name}\"". Error: {{validationResult!.ErrorMessage}}."");
 
             return obj;
          }}
 
          /// <inheritdoc />
-         public override void Write(Utf8JsonWriter writer, {state.Type.Name} value, JsonSerializerOptions options)
+         public override void Write(global::System.Text.Json.Utf8JsonWriter writer, {state.TypeFullyQualified} value, global::System.Text.Json.JsonSerializerOptions options)
          {{
             writer.WriteStartObject();
 
-            var ignoreNullValues = options.DefaultIgnoreCondition is JsonIgnoreCondition.WhenWritingNull or JsonIgnoreCondition.WhenWritingDefault;
-            var ignoreDefaultValues = options.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault;
+            var ignoreNullValues = options.DefaultIgnoreCondition is global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull or global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
+            var ignoreDefaultValues = options.DefaultIgnoreCondition == global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -268,7 +243,7 @@ namespace {state.Namespace}
          else
          {
             sb.Append(@$"
-            if(!ignoreDefaultValues || !{memberInfo.ArgumentName}PropertyValue.Equals(default({memberInfo.Type})))
+            if(!ignoreDefaultValues || !{memberInfo.ArgumentName}PropertyValue.Equals(default({memberInfo.TypeFullyQualified})))
             {{
                ");
          }
@@ -276,12 +251,12 @@ namespace {state.Namespace}
          sb.Append(@$"writer.WritePropertyName(this._{memberInfo.ArgumentName}PropertyName);
             ");
 
-         sb.Append(@$"   ");
+         sb.Append(@"   ");
 
          GenerateWriteValue(sb, memberInfo);
 
-         sb.Append(@$"
-            }}");
+         sb.Append(@"
+            }");
       }
 
       sb.Append($@"
@@ -289,21 +264,21 @@ namespace {state.Namespace}
          }}
       }}
 
-      public class ValueObjectJsonConverterFactory : System.Text.Json.Serialization.JsonConverterFactory
+      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
-         public override bool CanConvert(System.Type typeToConvert)
+         public override bool CanConvert(global::System.Type typeToConvert)
          {{
-            return typeof({state.Type.Name}).IsAssignableFrom(typeToConvert);
+            return typeof({state.TypeFullyQualified}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />
-         public override System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, JsonSerializerOptions options)
+         public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
          {{
             if (typeToConvert is null)
-               throw new ArgumentNullException(nameof(typeToConvert));
+               throw new global::System.ArgumentNullException(nameof(typeToConvert));
             if (options is null)
-               throw new ArgumentNullException(nameof(options));
+               throw new global::System.ArgumentNullException(nameof(options));
 
             return new ValueObjectJsonConverter(options);
          }}

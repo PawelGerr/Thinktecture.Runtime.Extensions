@@ -7,8 +7,14 @@ public class EnumSourceGeneratorState
    : IEquatable<EnumSourceGeneratorState>, IComparable<EnumSourceGeneratorState>
 {
    public string? Namespace { get; }
+
    public INamedTypeSymbol EnumType { get; }
+   public string EnumTypeFullyQualified { get; }
+   public string EnumTypeMinimallyQualified { get; }
+
    public ITypeSymbol KeyType { get; }
+   public string KeyTypeFullyQualified { get; }
+   public string KeyTypeMinimallyQualified { get; }
 
    public string RuntimeTypeName { get; }
 
@@ -42,8 +48,15 @@ public class EnumSourceGeneratorState
          throw new ArgumentNullException(nameof(enumInterface));
 
       EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
+      EnumTypeFullyQualified = EnumType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      EnumTypeMinimallyQualified = EnumType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
       Namespace = enumType.ContainingNamespace?.IsGlobalNamespace == true ? null : enumType.ContainingNamespace?.ToString();
+
       KeyType = enumInterface.TypeArguments[0];
+      KeyTypeFullyQualified = KeyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      KeyTypeMinimallyQualified = KeyType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
       IsValidatable = enumInterface.IsValidatableEnumInterface();
 
       NullableQuestionMarkEnum = EnumType.IsReferenceType ? "?" : null;

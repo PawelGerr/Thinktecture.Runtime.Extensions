@@ -8,6 +8,8 @@ public class SameAssemblyBaseEnumState : IBaseEnumState
 
    public bool IsSameAssembly => true;
    public INamedTypeSymbol Type => _baseState.EnumType;
+   public string TypeFullyQualified => _baseState.EnumTypeFullyQualified;
+   public string TypeMinimallyQualified => _baseState.EnumTypeMinimallyQualified;
    public string? NullableQuestionMark => Type.IsReferenceType ? "?" : null;
 
    private IReadOnlyList<ISymbolState>? _ctorArgs;

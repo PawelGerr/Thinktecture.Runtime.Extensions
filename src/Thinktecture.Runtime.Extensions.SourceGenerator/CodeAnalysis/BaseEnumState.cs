@@ -6,6 +6,8 @@ public class BaseEnumState : IBaseEnumState
 {
    public bool IsSameAssembly => false;
    public INamedTypeSymbol Type { get; }
+   public string TypeFullyQualified { get; }
+   public string TypeMinimallyQualified { get; }
    public string? NullableQuestionMark => Type.IsReferenceType ? "?" : null;
 
    private IReadOnlyList<ISymbolState>? _items;
@@ -68,5 +70,7 @@ public class BaseEnumState : IBaseEnumState
    public BaseEnumState(INamedTypeSymbol type)
    {
       Type = type;
+      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
    }
 }

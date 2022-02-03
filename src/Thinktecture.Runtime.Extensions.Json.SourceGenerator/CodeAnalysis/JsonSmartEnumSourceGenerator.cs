@@ -20,47 +20,36 @@ public class JsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase
       if (state is null)
          throw new ArgumentNullException(nameof(state));
 
-      var type = state.EnumType;
-
-      if (type.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
+      if (state.EnumType.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
          return String.Empty;
 
       var ns = state.Namespace;
-      var typeName = state.EnumType.Name;
       var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectJsonConverterFactory").Any());
 
       return $@"{GENERATED_CODE_PREFIX}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Thinktecture;
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
-   [System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-   partial {(type.IsValueType ? "struct" : "class")} {typeName}
+   [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
+   partial {(state.EnumType.IsValueType ? "struct" : "class")} {state.EnumType.Name}
    {{
-      public {(requiresNew ? "new " : null)}class ValueObjectJsonConverterFactory : System.Text.Json.Serialization.JsonConverterFactory
+      public {(requiresNew ? "new " : null)}class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
-         public override bool CanConvert(System.Type typeToConvert)
+         public override bool CanConvert(global::System.Type typeToConvert)
          {{
-            return typeof({typeName}).IsAssignableFrom(typeToConvert);
+            return typeof({state.EnumTypeFullyQualified}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />
-         public override System.Text.Json.Serialization.JsonConverter CreateConverter(System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
+         public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
          {{
             if (typeToConvert is null)
-               throw new ArgumentNullException(nameof(typeToConvert));
+               throw new global::System.ArgumentNullException(nameof(typeToConvert));
             if (options is null)
-               throw new ArgumentNullException(nameof(options));
+               throw new global::System.ArgumentNullException(nameof(options));
 
-            return new Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{typeName}, {state.KeyType}>({typeName}.Get, static obj => obj.{state.KeyPropertyName}, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.EnumTypeFullyQualified}, {state.KeyTypeFullyQualified}>({state.EnumTypeFullyQualified}.Get, static obj => obj.{state.KeyPropertyName}, options);
          }}
       }}
    }}
