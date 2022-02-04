@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTests;
 
@@ -17,6 +18,42 @@ public class ReadJson : JsonTestsBase
                                                                                       new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"structProperty\":1,\"nullableStructProperty\":42,\"referenceProperty\":\"Value\"}", new CamelCaseNamingStrategy() },
                                                                                       new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"structproperty\":1,\"NULLABLESTRUCTPROPERTY\":42,\"ReFeReNCePRoPeRTy\":\"Value\"}" }
                                                                                    };
+
+   [Fact]
+   public void Should_deserialize_enum_when_null_and_default_unless_enum_and_underlying_are_both_null()
+   {
+      Deserialize<TestSmartEnum_Class_IntBased, TestSmartEnum_Class_IntBased.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Class_StringBased, TestSmartEnum_Class_StringBased.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Struct_IntBased?, TestSmartEnum_Struct_IntBased.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Struct_StringBased?, TestSmartEnum_Struct_StringBased.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Struct_IntBased, TestSmartEnum_Struct_IntBased.ValueObjectNewtonsoftJsonConverter>("0").Should().Be(default(TestSmartEnum_Struct_IntBased)); // default(int) is 0
+      Deserialize<TestSmartEnum_Struct_StringBased, TestSmartEnum_Struct_StringBased.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(default(TestSmartEnum_Struct_StringBased));
+
+      FluentActions.Invoking(() => Deserialize<TestSmartEnum_Struct_IntBased, TestSmartEnum_Struct_IntBased.ValueObjectNewtonsoftJsonConverter>("null")).Should()
+                   .Throw<JsonException>().WithMessage("Cannot convert 'Null' to a struct of type 'Int32'.");
+   }
+
+   [Fact]
+   public void Should_deserialize_keyed_value_object_when_null_and_default_unless_enum_and_underlying_are_both_null()
+   {
+      Deserialize<IntBasedReferenceValueObject, IntBasedReferenceValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObject, StringBasedReferenceValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<IntBasedStructValueObject?, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<StringBasedStructValueObject?, StringBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("0").Should().Be(default(IntBasedStructValueObject)); // default(int) is 0
+      Deserialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(default(StringBasedStructValueObject));
+
+      FluentActions.Invoking(() => Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null")).Should()
+                   .Throw<JsonException>().WithMessage("Cannot convert 'Null' to a struct of type 'Int32'.");
+   }
+
+   [Fact]
+   public void Should_deserialize_value_object_if_null_and_default()
+   {
+      Deserialize<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<TestValueObject_Complex_Struct?, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<TestValueObject_Complex_Struct, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(default(TestValueObject_Complex_Struct));
+   }
 
    [Theory]
    [MemberData(nameof(DataForStringBasedEnumTest))]
@@ -76,17 +113,27 @@ public class ReadJson : JsonTestsBase
    }
 
    [Fact]
-   public void Should_throw_JsonSerializationException_if_enum_parsing_throws_UnknownEnumIdentifierException()
+   public void Should_throw_JsonException_if_enum_parsing_throws_UnknownEnumIdentifierException()
    {
-      Action action = () => Deserialize<ValidTestEnum, ValidTestEnum.ValueObjectNewtonsoftJsonConverter>("\"invalid\"");
+      FluentActions.Invoking(() => Deserialize<ValidTestEnum, ValidTestEnum.ValueObjectNewtonsoftJsonConverter>("\"invalid\""))
+                   .Should().Throw<JsonException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+   }
 
-      action.Should().Throw<JsonSerializationException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+   [Fact]
+   public void Should_throw_JsonException_if_complex_value_object_is_not_a_json_object()
+   {
+      FluentActions.Invoking(() => Deserialize<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectNewtonsoftJsonConverter>("\"invalid\""))
+                   .Should().Throw<JsonException>().WithMessage("Unexpected token \"String\" when trying to deserialize \"TestValueObject_Complex_Class\". Expected token: \"StartObject\".");
+      FluentActions.Invoking(() => Deserialize<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectNewtonsoftJsonConverter>("42"))
+                   .Should().Throw<JsonException>().WithMessage("Unexpected token \"Integer\" when trying to deserialize \"TestValueObject_Complex_Class\". Expected token: \"StartObject\".");
+      FluentActions.Invoking(() => Deserialize<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectNewtonsoftJsonConverter>("[]"))
+                   .Should().Throw<JsonException>().WithMessage("Unexpected token \"StartArray\" when trying to deserialize \"TestValueObject_Complex_Class\". Expected token: \"StartObject\".");
    }
 
    private static T Deserialize<T, TConverter>(
       string json,
       NamingStrategy namingStrategy = null)
-      where TConverter : JsonConverter<T>, new()
+      where TConverter : JsonConverter, new()
    {
       using var reader = new StringReader(json);
       using var jsonReader = new JsonTextReader(reader);

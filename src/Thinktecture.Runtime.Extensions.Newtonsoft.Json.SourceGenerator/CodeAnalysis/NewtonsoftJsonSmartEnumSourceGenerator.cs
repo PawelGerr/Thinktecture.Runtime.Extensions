@@ -20,7 +20,7 @@ public class NewtonsoftJsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBa
       if (state is null)
          throw new ArgumentNullException(nameof(state));
 
-      if (state.EnumType.HasAttribute("global::Newtonsoft.Json.JsonConverterAttribute"))
+      if (state.EnumType.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
          return String.Empty;
 
       var ns = state.Namespace;
