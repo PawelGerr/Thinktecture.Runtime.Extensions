@@ -44,7 +44,10 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
          if (metadata is null)
             return;
 
-         var formatterType = typeof(ValueObjectMessagePackFormatter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
+         var formatterGenericTypeDefinition = Nullable.GetUnderlyingType(type) == metadata.Type
+                                                 ? typeof(NullableStructValueObjectMessagePackFormatter<,>)
+                                                 : typeof(ValueObjectMessagePackFormatter<,>);
+         var formatterType = formatterGenericTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
          var formatter = Activator.CreateInstance(formatterType, metadata.ConvertFromKey, metadata.ConvertToKey);
 
          if (formatter is null)

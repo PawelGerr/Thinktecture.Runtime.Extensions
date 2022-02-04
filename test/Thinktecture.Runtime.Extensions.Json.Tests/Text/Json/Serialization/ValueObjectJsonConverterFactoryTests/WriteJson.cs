@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestValueObjects;
 using Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests.TestClasses;
 
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests;
@@ -22,6 +23,36 @@ public class WriteJson : JsonTestsBase
                                                                                       new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"StructProperty\":1,\"NullableStructProperty\":42,\"ReferenceProperty\":\"Value\"}", null, JsonIgnoreCondition.WhenWritingDefault },
                                                                                       new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value"), "{\"structProperty\":1,\"nullableStructProperty\":42,\"referenceProperty\":\"Value\"}", JsonNamingPolicy.CamelCase, JsonIgnoreCondition.Never }
                                                                                    };
+
+   [Fact]
+   public void Should_deserialize_enum_if_null_and_default()
+   {
+      Serialize<TestSmartEnum_Class_IntBased, TestSmartEnum_Class_IntBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Class_StringBased, TestSmartEnum_Class_StringBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Struct_IntBased?, TestSmartEnum_Struct_IntBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Struct_StringBased?, TestSmartEnum_Struct_StringBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Struct_IntBased, TestSmartEnum_Struct_IntBased.ValueObjectJsonConverterFactory>(default).Should().Be("0");
+      Serialize<TestSmartEnum_Struct_StringBased, TestSmartEnum_Struct_StringBased.ValueObjectJsonConverterFactory>(default).Should().Be("null");
+   }
+
+   [Fact]
+   public void Should_deserialize_keyed_value_object_if_null_and_default()
+   {
+      Serialize<IntBasedReferenceValueObject, IntBasedReferenceValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<StringBasedReferenceValueObject, StringBasedReferenceValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<IntBasedStructValueObject?, IntBasedStructValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<StringBasedStructValueObject?, StringBasedStructValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectJsonConverterFactory>(default).Should().Be("0");
+      Serialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectJsonConverterFactory>(default).Should().Be("null");
+   }
+
+   [Fact]
+   public void Should_deserialize_value_object_if_null_and_default()
+   {
+      Serialize<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<TestValueObject_Complex_Struct?, TestValueObject_Complex_Struct.ValueObjectJsonConverterFactory>(null).Should().Be("null");
+      Serialize<TestValueObject_Complex_Struct, TestValueObject_Complex_Struct.ValueObjectJsonConverterFactory>(default).Should().Be("{\"Property1\":null,\"Property2\":null}");
+   }
 
    [Theory]
    [MemberData(nameof(DataForStringBasedEnumTest))]

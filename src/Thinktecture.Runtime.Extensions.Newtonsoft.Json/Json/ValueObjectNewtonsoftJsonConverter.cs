@@ -64,9 +64,12 @@ public class ValueObjectNewtonsoftJsonConverter : JsonConverter
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter<T?>
+public class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
    where TKey : notnull
 {
+   private static readonly Type _type = typeof(T);
+   private static readonly Type _keyType = typeof(TKey);
+
    private readonly Func<TKey, T> _convertFromKey;
    private readonly Func<T, TKey> _convertToKey;
 
@@ -84,7 +87,7 @@ public class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter<T?>
    }
 
    /// <inheritdoc />
-   public override void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
+   public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
    {
       if (writer is null)
          throw new ArgumentNullException(nameof(writer));
@@ -97,12 +100,12 @@ public class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter<T?>
       }
       else
       {
-         serializer.Serialize(writer, _convertToKey(value));
+         serializer.Serialize(writer, _convertToKey((T)value));
       }
    }
 
    /// <inheritdoc />
-   public override T? ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer)
+   public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
    {
       if (reader is null)
          throw new ArgumentNullException(nameof(reader));
@@ -110,17 +113,25 @@ public class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter<T?>
          throw new ArgumentNullException(nameof(serializer));
 
       if (reader.TokenType == JsonToken.Null)
-         return default;
+      {
+         if (objectType.IsClass || Nullable.GetUnderlyingType(objectType) == _type)
+            return null;
+
+         if (_keyType.IsClass)
+            return default(T);
+
+         throw new JsonException($"Cannot convert 'Null' to a struct of type '{_keyType.Name}'.");
+      }
 
       var token = serializer.Deserialize<JToken>(reader);
 
       if (token is null || token.Type == JTokenType.Null)
-         return default;
+         return null;
 
       var key = token.ToObject<TKey>(serializer);
 
       if (key is null)
-         return default;
+         return null;
 
       try
       {
@@ -134,5 +145,11 @@ public class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter<T?>
       {
          throw new JsonSerializationException(ex.ValidationResult.ErrorMessage!, ex);
       }
+   }
+
+   /// <inheritdoc />
+   public override bool CanConvert(Type objectType)
+   {
+      return _type.IsAssignableFrom(objectType);
    }
 }

@@ -1,18 +1,53 @@
+using System.Reflection;
 using MessagePack;
 using MessagePack.Resolvers;
 using Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests;
 
 public class Serialize
 {
+   private static readonly MethodInfo _serializeRoundTripMethodInfo = typeof(Serialize).GetMethod(nameof(RoundTripSerializeWithCustomOptions), BindingFlags.Instance | BindingFlags.NonPublic)
+                                                                      ?? throw new Exception($"Method '{nameof(RoundTripSerializeWithCustomOptions)}' not found.");
+
    private readonly MessagePackSerializerOptions _options;
 
    public Serialize()
    {
       var resolver = CompositeResolver.Create(ValueObjectMessageFormatterResolver.Instance, StandardResolver.Instance);
       _options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
+   }
+
+   [Fact]
+   public void Should_deserialize_enum_if_null_and_default()
+   {
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Class_IntBased>(null);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Class_StringBased>(null);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_IntBased?>(null);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_StringBased?>(null);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_IntBased>(default);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_StringBased>(default);
+   }
+
+   [Fact]
+   public void Should_deserialize_keyed_value_object_when_null_and_default_unless_enum_and_underlying_are_both_null()
+   {
+      RoundTripSerializeWithCustomOptions<IntBasedReferenceValueObject>(null);
+      RoundTripSerializeWithCustomOptions<StringBasedReferenceValueObject>(null);
+      RoundTripSerializeWithCustomOptions<IntBasedStructValueObject?>(null);
+      RoundTripSerializeWithCustomOptions<StringBasedStructValueObject?>(null);
+      RoundTripSerializeWithCustomOptions<IntBasedStructValueObject>(default);
+      RoundTripSerializeWithCustomOptions<StringBasedStructValueObject>(default);
+   }
+
+   [Fact]
+   public void Should_deserialize_value_object_if_null_and_default()
+   {
+      RoundTripSerializeWithCustomOptions<TestValueObject_Complex_Class_WithFormatter>(null);
+      RoundTripSerializeWithCustomOptions<TestValueObject_Complex_Struct_WithFormatter?>(null);
+      RoundTripSerializeWithCustomOptions<TestValueObject_Complex_Struct_WithFormatter>(default);
    }
 
    [Fact]
@@ -33,71 +68,30 @@ public class Serialize
       value.Should().Be(IntBasedEnumWithFormatter.Value1);
    }
 
-   [Fact]
-   public void Should_roundtrip_serialize_string_based_enum_providing_resolver()
-   {
-      var bytes = MessagePackSerializer.Serialize(TestEnum.Item1, _options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<TestEnum>(bytes, _options, CancellationToken.None);
+   public static IEnumerable<object[]> DataForValueObject => new[]
+                                                             {
+                                                                new object[] { new ClassWithIntBasedEnum(IntegerEnum.Item1) },
+                                                                new object[] { new ClassWithStringBasedEnum(TestEnum.Item1) },
+                                                                new object[] { TestEnum.Item1 },
+                                                                new object[] { IntegerEnum.Item1 },
+                                                                new object[] { DifferentAssemblyExtendedTestEnum.Item1 },
+                                                                new object[] { ExtendedTestEnum.Item1 },
+                                                                new object[] { ExtensibleTestEnum.Item1 },
+                                                             };
 
-      value.Should().Be(TestEnum.Item1);
+   [Theory]
+   [MemberData(nameof(DataForValueObject))]
+   public void Should_roundtrip_serialize(object value)
+   {
+      _serializeRoundTripMethodInfo.MakeGenericMethod(value.GetType()).Invoke(this, new[] { value });
    }
 
-   [Fact]
-   public void Should_roundtrip_serialize_ExtensibleTestEnum()
+   private void RoundTripSerializeWithCustomOptions<T>(T value)
    {
-      var bytes = MessagePackSerializer.Serialize(ExtensibleTestEnum.Item1, _options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<ExtensibleTestEnum>(bytes, _options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(value, _options, CancellationToken.None);
+      var deserializedValue = MessagePackSerializer.Deserialize<T>(bytes, _options, CancellationToken.None);
 
-      value.Should().Be(ExtensibleTestEnum.Item1);
-   }
-
-   [Fact]
-   public void Should_roundtrip_serialize_ExtendedTestEnum()
-   {
-      var bytes = MessagePackSerializer.Serialize(ExtendedTestEnum.Item1, _options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<ExtendedTestEnum>(bytes, _options, CancellationToken.None);
-
-      value.Should().Be(ExtendedTestEnum.Item1);
-   }
-
-   [Fact]
-   public void Should_roundtrip_serialize_DifferentAssemblyExtendedTestEnum()
-   {
-      var bytes = MessagePackSerializer.Serialize(DifferentAssemblyExtendedTestEnum.Item1, _options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<DifferentAssemblyExtendedTestEnum>(bytes, _options, CancellationToken.None);
-
-      value.Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
-   }
-
-   [Fact]
-   public void Should_roundtrip_serialize_int_based_enum_providing_resolver()
-   {
-      var bytes = MessagePackSerializer.Serialize(IntegerEnum.Item1, _options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<IntegerEnum>(bytes, _options, CancellationToken.None);
-
-      value.Should().Be(IntegerEnum.Item1);
-   }
-
-   [Fact]
-   public void Should_roundtrip_serialize_class_with_string_based_enum_providing_resolver()
-   {
-      var instance = new ClassWithStringBasedEnum(TestEnum.Item1);
-
-      var bytes = MessagePackSerializer.Serialize(instance, _options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<ClassWithStringBasedEnum>(bytes, _options, CancellationToken.None);
-
-      value.Should().BeEquivalentTo(instance);
-   }
-
-   [Fact]
-   public void Should_roundtrip_serialize_class_with_int_based_enum_providing_resolver()
-   {
-      var instance = new ClassWithIntBasedEnum(IntegerEnum.Item1);
-
-      var bytes = MessagePackSerializer.Serialize(instance, _options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<ClassWithIntBasedEnum>(bytes, _options, CancellationToken.None);
-
-      value.Should().BeEquivalentTo(instance);
+      deserializedValue.Should().Be(value);
    }
 
    public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties => new[]
