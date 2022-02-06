@@ -1,3 +1,4 @@
+using System;
 using MessagePack;
 using Thinktecture.Runtime.Tests.TestEnums;
 

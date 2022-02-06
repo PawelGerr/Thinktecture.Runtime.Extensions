@@ -1,3 +1,5 @@
+using System;
+
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 public partial class TestEnum : IValidatableEnum<string>

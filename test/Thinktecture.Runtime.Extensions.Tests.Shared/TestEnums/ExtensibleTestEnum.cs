@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [EnumGeneration(IsExtensible = true, KeyPropertyName = "Id", KeyComparer = nameof(EqualityComparer))]

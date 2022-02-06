@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;

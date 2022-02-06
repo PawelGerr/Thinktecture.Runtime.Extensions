@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTests;

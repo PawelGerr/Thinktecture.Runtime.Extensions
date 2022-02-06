@@ -1,4 +1,7 @@
-﻿namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
 
 // ReSharper disable once InconsistentNaming
 public class Empty_Collection

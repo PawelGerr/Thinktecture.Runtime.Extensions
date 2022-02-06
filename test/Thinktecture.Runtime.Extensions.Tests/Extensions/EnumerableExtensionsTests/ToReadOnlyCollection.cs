@@ -1,6 +1,10 @@
 
 
 // ReSharper disable once CheckNamespace
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Thinktecture;
 
 public class ToReadOnlyCollection

@@ -1,3 +1,5 @@
+using System;
+
 namespace Thinktecture.Runtime.Tests.Extensions.StringExtensionsTests;
 
 public class TrimOrNullify

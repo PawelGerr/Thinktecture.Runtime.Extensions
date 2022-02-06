@@ -73,7 +73,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       /// <summary>
       /// The identifier of the item.
@@ -404,7 +404,7 @@ public partial class TestEnum : IEnum<string>
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::TestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       /// <summary>
       /// The identifier of the item.
@@ -664,7 +664,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       /// <summary>
       /// The identifier of the item.
@@ -920,7 +920,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       private readonly bool _isBaseEnumItem;
 
@@ -1186,7 +1186,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       private readonly bool _isBaseEnumItem;
 
@@ -1431,7 +1431,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       /// <summary>
       /// The identifier of the item.
@@ -1722,7 +1722,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       /// <summary>
       /// The identifier of the item.
@@ -2028,7 +2028,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
 
       /// <summary>
       /// The identifier of the item.

@@ -1,4 +1,6 @@
-﻿namespace Thinktecture.EmptyClass;
+﻿using System;
+
+namespace Thinktecture.EmptyClass;
 
 // ReSharper disable UnusedParameter.Local
 public class EmptyActionDemos

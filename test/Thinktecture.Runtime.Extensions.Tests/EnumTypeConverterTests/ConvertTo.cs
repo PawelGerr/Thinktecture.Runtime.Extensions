@@ -1,3 +1,4 @@
+using System;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests;

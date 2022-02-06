@@ -2567,7 +2567,7 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return StringComparer.OrdinalIgnoreCase.Equals(this.ReferenceField, other.ReferenceField)
+         return global::System.StringComparer.OrdinalIgnoreCase.Equals(this.ReferenceField, other.ReferenceField)
              && this.StructField.Equals(other.StructField);
       }
 
@@ -2575,7 +2575,7 @@ namespace Thinktecture.Tests
       public override int GetHashCode()
       {
          var hashCode = new global::System.HashCode();
-         hashCode.Add(this.ReferenceField, StringComparer.OrdinalIgnoreCase);
+         hashCode.Add(this.ReferenceField, global::System.StringComparer.OrdinalIgnoreCase);
          hashCode.Add(this.StructField);
          return hashCode.ToHashCode();
       }

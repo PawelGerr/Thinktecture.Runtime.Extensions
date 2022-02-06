@@ -33,12 +33,12 @@ public class EqualityInstanceMemberInfo
    {
       return comparer switch
       {
-         nameof(StringComparer.Ordinal) => "StringComparer.Ordinal",
-         nameof(StringComparer.OrdinalIgnoreCase) => "StringComparer.OrdinalIgnoreCase",
-         nameof(StringComparer.InvariantCulture) => "StringComparer.InvariantCulture",
-         nameof(StringComparer.InvariantCultureIgnoreCase) => "StringComparer.InvariantCultureIgnoreCase",
-         nameof(StringComparer.CurrentCulture) => "StringComparer.CurrentCulture",
-         nameof(StringComparer.CurrentCultureIgnoreCase) => "StringComparer.CurrentCultureIgnoreCase",
+         nameof(StringComparer.Ordinal) => "global::System.StringComparer.Ordinal",
+         nameof(StringComparer.OrdinalIgnoreCase) => "global::System.StringComparer.OrdinalIgnoreCase",
+         nameof(StringComparer.InvariantCulture) => "global::System.StringComparer.InvariantCulture",
+         nameof(StringComparer.InvariantCultureIgnoreCase) => "global::System.StringComparer.InvariantCultureIgnoreCase",
+         nameof(StringComparer.CurrentCulture) => "global::System.StringComparer.CurrentCulture",
+         nameof(StringComparer.CurrentCultureIgnoreCase) => "global::System.StringComparer.CurrentCultureIgnoreCase",
          _ => comparer
       };
    }

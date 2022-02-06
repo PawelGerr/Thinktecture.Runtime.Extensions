@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using MessagePack;
 using MessagePack.Resolvers;
 using Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;

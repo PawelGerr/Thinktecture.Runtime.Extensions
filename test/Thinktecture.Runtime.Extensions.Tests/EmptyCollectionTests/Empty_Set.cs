@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 #if !NETCOREAPP3_1
 namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
 {

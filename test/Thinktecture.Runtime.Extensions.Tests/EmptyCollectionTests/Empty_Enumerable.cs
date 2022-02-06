@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 
 namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
 

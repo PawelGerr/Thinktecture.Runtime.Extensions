@@ -1,3 +1,4 @@
+using System;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;

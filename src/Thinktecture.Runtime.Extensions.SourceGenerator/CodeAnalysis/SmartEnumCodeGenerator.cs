@@ -109,7 +109,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public {newKeyword}static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}> Items => _items ??= ItemsLookup.Values.ToList().AsReadOnly();");
+      public {newKeyword}static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();");
 
       if (!_state.HasBaseEnum)
       {

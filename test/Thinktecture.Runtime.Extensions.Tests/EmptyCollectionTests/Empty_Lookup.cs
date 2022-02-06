@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
 
 // ReSharper disable once InconsistentNaming

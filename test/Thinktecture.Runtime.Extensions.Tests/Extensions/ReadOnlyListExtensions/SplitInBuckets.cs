@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 #if !NET6_0
 namespace Thinktecture.Runtime.Tests.Extensions.ReadOnlyListExtensions;
 

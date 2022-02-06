@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Thinktecture.CodeAnalysis.CodeFixes;
 using Thinktecture.CodeAnalysis.Diagnostics;
 using Thinktecture.Runtime.Tests.Verifiers;
