@@ -86,30 +86,30 @@ namespace ").Append(_state.Namespace).Append(@"
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof({derivedType.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}), metadata);");
       }
 
-      _sb.Append($@"
-      }}
-
-      private static readonly int _typeHashCode = typeof({(_state.HasBaseEnum ? _state.BaseEnum.TypeFullyQualified : _state.EnumTypeFullyQualified)}).GetHashCode() * 397;");
+      _sb.Append(@"
+      }");
 
       if (_state.NeedsDefaultComparer)
       {
          var defaultComparer = _state.KeyType.IsString() ? "global::System.StringComparer.OrdinalIgnoreCase" : $"global::System.Collections.Generic.EqualityComparer<{_state.KeyTypeFullyQualified}>.Default";
 
          _sb.Append($@"
+
       {(_state.IsExtensible ? "protected" : "private")} static readonly global::System.Collections.Generic.IEqualityComparer<{_state.KeyTypeFullyQualified}{_state.NullableQuestionMarkKey}> {_state.KeyComparerMember} = {defaultComparer};");
       }
 
       _sb.Append($@"
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyTypeFullyQualified}, {_state.EnumTypeFullyQualified}>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyTypeFullyQualified}, {_state.EnumTypeFullyQualified}> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyTypeFullyQualified}, {_state.EnumTypeFullyQualified}>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyTypeFullyQualified}, {_state.EnumTypeFullyQualified}>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public {newKeyword}static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();");
+      public {newKeyword}static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}> Items => _items.Value;");
 
       if (!_state.HasBaseEnum)
       {
@@ -137,6 +137,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private readonly bool _isBaseEnumItem;");
       }
+
+      _sb.Append(@"
+
+      private readonly global::System.Lazy<int> _hashCode;");
 
       if (_state.HasBaseEnum)
          GenerateBaseItems(_state.BaseEnum);
@@ -169,7 +173,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override int GetHashCode()
       {{
-         return _typeHashCode ^ {_state.KeyComparerMember}.GetHashCode(this.{_state.KeyPropertyName});
+         return _hashCode.Value;
       }}");
 
       if (!_state.HasBaseEnum)
@@ -237,7 +241,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         return ItemsLookup.TryGetValue({_state.KeyArgumentName}, out item);
+         return _itemsLookup.Value.TryGetValue({_state.KeyArgumentName}, out item);
       }}");
    }
 
@@ -536,7 +540,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         if (!ItemsLookup.TryGetValue({_state.KeyArgumentName}, out var item))
+         if (!_itemsLookup.Value.TryGetValue({_state.KeyArgumentName}, out var item))
          {{");
 
       if (_state.IsValidatable)
@@ -718,6 +722,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
+         this._hashCode = new global::System.Lazy<int>(() => typeof({(_state.HasBaseEnum ? _state.BaseEnum.TypeFullyQualified : _state.EnumTypeFullyQualified)}).GetHashCode() * 397 ^ {_state.KeyComparerMember}.GetHashCode({_state.KeyArgumentName}));
       }}
 
       static partial void ValidateConstructorArguments(ref {_state.KeyTypeFullyQualified} {_state.KeyArgumentName}");

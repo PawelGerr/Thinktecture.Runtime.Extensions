@@ -62,24 +62,26 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397;
       private static readonly global::System.Collections.Generic.IEqualityComparer<string?> _defaultKeyComparerMember = global::System.StringComparer.OrdinalIgnoreCase;
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
       /// </summary>
       [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
+
+      private readonly global::System.Lazy<int> _hashCode;
 
       private TestEnum(string key)
       {
@@ -89,6 +91,7 @@ namespace Thinktecture.Tests
             throw new global::System.ArgumentNullException(nameof(key));
 
          this.Key = key;
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397 ^ _defaultKeyComparerMember.GetHashCode(key));
       }
 
       static partial void ValidateConstructorArguments(ref string key);
@@ -113,7 +116,7 @@ namespace Thinktecture.Tests
         if (key is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(key, out var item))
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
          {
             throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
          }
@@ -135,7 +138,7 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         return ItemsLookup.TryGetValue(key, out item);
+         return _itemsLookup.Value.TryGetValue(key, out item);
       }
 
       /// <summary>
@@ -222,7 +225,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ _defaultKeyComparerMember.GetHashCode(this.Key);
+         return _hashCode.Value;
       }
 
       /// <inheritdoc />
@@ -393,24 +396,26 @@ public partial class TestEnum : IEnum<string>
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::TestEnum).GetHashCode() * 397;
       private static readonly global::System.Collections.Generic.IEqualityComparer<string?> _defaultKeyComparerMember = global::System.StringComparer.OrdinalIgnoreCase;
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyList<global::TestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::TestEnum> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
       /// </summary>
       [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
+
+      private readonly global::System.Lazy<int> _hashCode;
 
       private TestEnum(string key)
       {
@@ -420,6 +425,7 @@ public partial class TestEnum : IEnum<string>
             throw new global::System.ArgumentNullException(nameof(key));
 
          this.Key = key;
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::TestEnum).GetHashCode() * 397 ^ _defaultKeyComparerMember.GetHashCode(key));
       }
 
       static partial void ValidateConstructorArguments(ref string key);
@@ -444,7 +450,7 @@ public partial class TestEnum : IEnum<string>
         if (key is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(key, out var item))
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
          {
             throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::TestEnum), key);
          }
@@ -466,7 +472,7 @@ public partial class TestEnum : IEnum<string>
             return false;
          }
 
-         return ItemsLookup.TryGetValue(key, out item);
+         return _itemsLookup.Value.TryGetValue(key, out item);
       }
 
       /// <summary>
@@ -553,7 +559,7 @@ public partial class TestEnum : IEnum<string>
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ _defaultKeyComparerMember.GetHashCode(this.Key);
+         return _hashCode.Value;
       }
 
       /// <inheritdoc />
@@ -653,24 +659,26 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397;
       protected static readonly global::System.Collections.Generic.IEqualityComparer<string?> _defaultKeyComparerMember = global::System.StringComparer.OrdinalIgnoreCase;
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
       /// </summary>
       [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
+
+      private readonly global::System.Lazy<int> _hashCode;
 
       protected TestEnum(string key)
       {
@@ -680,6 +688,7 @@ namespace Thinktecture.Tests
             throw new global::System.ArgumentNullException(nameof(key));
 
          this.Key = key;
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397 ^ _defaultKeyComparerMember.GetHashCode(key));
       }
 
       static partial void ValidateConstructorArguments(ref string key);
@@ -704,7 +713,7 @@ namespace Thinktecture.Tests
         if (key is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(key, out var item))
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
          {
             throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
          }
@@ -726,7 +735,7 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         return ItemsLookup.TryGetValue(key, out item);
+         return _itemsLookup.Value.TryGetValue(key, out item);
       }
 
       /// <summary>
@@ -810,7 +819,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ _defaultKeyComparerMember.GetHashCode(this.Key);
+         return _hashCode.Value;
       }
 
       /// <inheritdoc />
@@ -910,19 +919,20 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum).GetHashCode() * 397;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
-
-      private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items.Value;
 
       private readonly bool _isBaseEnumItem;
+
+      private readonly global::System.Lazy<int> _hashCode;
 
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum DerivedItem = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Id, global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Foo);
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum Item1 = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Id, global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Foo);
@@ -933,6 +943,7 @@ namespace Thinktecture.Tests
          ValidateConstructorArguments(ref id, ref foo);
 
          this._isBaseEnumItem = global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.TryGet(id, out _);
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum).GetHashCode() * 397 ^ EqualityComparer.GetHashCode(id));
       }
 
       static partial void ValidateConstructorArguments(ref string id, ref System.Action foo);
@@ -949,7 +960,7 @@ namespace Thinktecture.Tests
         if (id is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(id, out var item))
+         if (!_itemsLookup.Value.TryGetValue(id, out var item))
          {
             throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.ExtendedTestEnum), id);
          }
@@ -971,7 +982,7 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         return ItemsLookup.TryGetValue(id, out item);
+         return _itemsLookup.Value.TryGetValue(id, out item);
       }
 
       /// <summary>
@@ -1064,7 +1075,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ EqualityComparer.GetHashCode(this.Id);
+         return _hashCode.Value;
       }
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum> GetLookup()
@@ -1176,19 +1187,20 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.ExtensibleTestEnum).GetHashCode() * 397;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
-
-      private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public new static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.ExtendedTestEnum> Items => _items.Value;
 
       private readonly bool _isBaseEnumItem;
+
+      private readonly global::System.Lazy<int> _hashCode;
 
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum DerivedItem = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Tests.ExtensibleTestEnum.DerivedItem.Key, global::Thinktecture.Tests.ExtensibleTestEnum.DerivedItem.Foo);
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum Item1 = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Tests.ExtensibleTestEnum.Item1.Key, global::Thinktecture.Tests.ExtensibleTestEnum.Item1.Foo);
@@ -1199,6 +1211,7 @@ namespace Thinktecture.Tests
          ValidateConstructorArguments(ref key, ref foo);
 
          this._isBaseEnumItem = global::Thinktecture.Tests.ExtensibleTestEnum.TryGet(key, out _);
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Tests.ExtensibleTestEnum).GetHashCode() * 397 ^ EqualityComparer.GetHashCode(key));
       }
 
       static partial void ValidateConstructorArguments(ref string key, ref System.Action foo);
@@ -1215,7 +1228,7 @@ namespace Thinktecture.Tests
         if (key is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(key, out var item))
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
          {
             throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.ExtendedTestEnum), key);
          }
@@ -1237,7 +1250,7 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         return ItemsLookup.TryGetValue(key, out item);
+         return _itemsLookup.Value.TryGetValue(key, out item);
       }
 
       /// <summary>
@@ -1330,7 +1343,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ EqualityComparer.GetHashCode(this.Key);
+         return _hashCode.Value;
       }
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.ExtendedTestEnum> GetLookup()
@@ -1420,18 +1433,18 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397;
       private static readonly global::System.Collections.Generic.IEqualityComparer<string?> _defaultKeyComparerMember = global::System.StringComparer.OrdinalIgnoreCase;
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
@@ -1452,6 +1465,8 @@ namespace Thinktecture.Tests
             throw new global::System.InvalidOperationException($""The current enumeration item of type \""TestEnum\"" with identifier \""{this.Key}\"" is not valid."");
       }
 
+      private readonly global::System.Lazy<int> _hashCode;
+
       private TestEnum(string key)
          : this(key, true)
       {
@@ -1466,6 +1481,7 @@ namespace Thinktecture.Tests
 
          this.Key = key;
          this.IsValid = isValid;
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397 ^ _defaultKeyComparerMember.GetHashCode(key));
       }
 
       static partial void ValidateConstructorArguments(ref string key, bool isValid);
@@ -1489,7 +1505,7 @@ namespace Thinktecture.Tests
         if (key is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(key, out var item))
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
          {
             item = CreateInvalidItem(key);
 
@@ -1522,7 +1538,7 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         return ItemsLookup.TryGetValue(key, out item);
+         return _itemsLookup.Value.TryGetValue(key, out item);
       }
 
       /// <summary>
@@ -1612,7 +1628,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ _defaultKeyComparerMember.GetHashCode(this.Key);
+         return _hashCode.Value;
       }
 
       /// <inheritdoc />
@@ -1711,18 +1727,18 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397;
       private static readonly global::System.Collections.Generic.IEqualityComparer<string?> _defaultKeyComparerMember = global::System.StringComparer.OrdinalIgnoreCase;
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
@@ -1743,6 +1759,8 @@ namespace Thinktecture.Tests
             throw new global::System.InvalidOperationException($""The current enumeration item of type \""TestEnum\"" with identifier \""{this.Key}\"" is not valid."");
       }
 
+      private readonly global::System.Lazy<int> _hashCode;
+
       private TestEnum(string key)
          : this(key, true)
       {
@@ -1757,6 +1775,7 @@ namespace Thinktecture.Tests
 
          this.Key = key;
          this.IsValid = isValid;
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397 ^ _defaultKeyComparerMember.GetHashCode(key));
       }
 
       static partial void ValidateConstructorArguments(ref string key, bool isValid);
@@ -1780,7 +1799,7 @@ namespace Thinktecture.Tests
         if (key is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(key, out var item))
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
          {
             item = CreateInvalidItem(key);
 
@@ -1810,7 +1829,7 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         return ItemsLookup.TryGetValue(key, out item);
+         return _itemsLookup.Value.TryGetValue(key, out item);
       }
 
       /// <summary>
@@ -1888,7 +1907,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ _defaultKeyComparerMember.GetHashCode(this.Key);
+         return _hashCode.Value;
       }
 
       /// <inheritdoc />
@@ -2018,17 +2037,16 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup);
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>? _itemsLookup;
-      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> ItemsLookup => _itemsLookup ??= GetLookup();
-
-      private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>? _items;
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items ??= global::System.Linq.Enumerable.ToList(ItemsLookup.Values).AsReadOnly();
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
@@ -2048,6 +2066,8 @@ namespace Thinktecture.Tests
          if (!IsValid)
             throw new global::System.InvalidOperationException($""The current enumeration item of type \""TestEnum\"" with identifier \""{this.Name}\"" is not valid."");
       }
+
+      private readonly global::System.Lazy<int> _hashCode;
 
       private TestEnum(string name, int structProperty, int? nullableStructProperty, string referenceProperty, string? nullableReferenceProperty, int structField, string referenceField)
          : this(name, true, structProperty, nullableStructProperty, referenceProperty, nullableReferenceProperty, structField, referenceField)
@@ -2069,6 +2089,7 @@ namespace Thinktecture.Tests
          this.NullableReferenceProperty = nullableReferenceProperty;
          this.StructField = structField;
          this.ReferenceField = referenceField;
+         this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Tests.TestEnum).GetHashCode() * 397 ^ _testEqualityComparer.GetHashCode(name));
       }
 
       static partial void ValidateConstructorArguments(ref string name, bool isValid, ref int structProperty, ref int? nullableStructProperty, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structField, ref string referenceField);
@@ -2092,7 +2113,7 @@ namespace Thinktecture.Tests
         if (name is null)
             return default;
 
-         if (!ItemsLookup.TryGetValue(name, out var item))
+         if (!_itemsLookup.Value.TryGetValue(name, out var item))
          {
             item = CreateInvalidItem(name);
 
@@ -2123,7 +2144,7 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         return ItemsLookup.TryGetValue(name, out item);
+         return _itemsLookup.Value.TryGetValue(name, out item);
       }
 
       /// <summary>
@@ -2213,7 +2234,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode ^ _testEqualityComparer.GetHashCode(this.Name);
+         return _hashCode.Value;
       }
 
       /// <inheritdoc />
