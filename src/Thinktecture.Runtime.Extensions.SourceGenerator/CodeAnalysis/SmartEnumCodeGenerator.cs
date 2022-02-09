@@ -91,7 +91,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.NeedsDefaultComparer)
       {
-         var defaultComparer = _state.KeyType.IsString() ? "global::System.StringComparer.OrdinalIgnoreCase" : $"global::System.Collections.Generic.EqualityComparer<{_state.KeyTypeFullyQualified}>.Default";
+         var defaultComparer = _state.KeyType.IsString() ? "global::System.StringComparer.OrdinalIgnoreCase" : $"global::System.Collections.Generic.EqualityComparer<{_state.KeyTypeFullyQualified}{_state.NullableQuestionMarkKey}>.Default";
 
          _sb.Append($@"
 
