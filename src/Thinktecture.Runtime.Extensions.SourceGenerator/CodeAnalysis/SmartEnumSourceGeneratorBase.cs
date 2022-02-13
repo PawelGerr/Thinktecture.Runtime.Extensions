@@ -107,8 +107,7 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
 
       foreach (var enumState in enumStates)
       {
-         if (context.CancellationToken.IsCancellationRequested)
-            return;
+         context.CancellationToken.ThrowIfCancellationRequested();
 
          var type = enumState.EnumType;
 

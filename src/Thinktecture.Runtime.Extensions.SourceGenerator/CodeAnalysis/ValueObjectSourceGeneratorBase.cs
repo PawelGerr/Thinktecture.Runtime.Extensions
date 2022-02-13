@@ -97,8 +97,7 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
 
       foreach (var valueObjectState in valueObjectStates)
       {
-         if (context.CancellationToken.IsCancellationRequested)
-            return;
+         context.CancellationToken.ThrowIfCancellationRequested();
 
          var type = valueObjectState.Type;
 
