@@ -50,25 +50,14 @@ internal static class TypeDeclarationSyntaxExtensions
       return typeName is "ValueObjectAttribute" or "ValueObject";
    }
 
-   private static string? ExtractTypeName(NameSyntax? type)
+   private static string? ExtractTypeName(NameSyntax? name)
    {
-      while (type is not null)
+      return name switch
       {
-         switch (type)
-         {
-            case IdentifierNameSyntax ins:
-               return ins.Identifier.Text;
-
-            case QualifiedNameSyntax qns:
-               type = qns.Right;
-               break;
-
-            default:
-               return null;
-         }
-      }
-
-      return null;
+         SimpleNameSyntax ins => ins.Identifier.Text,
+         QualifiedNameSyntax qns => qns.Right.Identifier.Text,
+         _ => null
+      };
    }
 
    public static bool IsEnumCandidate(this TypeDeclarationSyntax tds)
@@ -98,9 +87,9 @@ internal static class TypeDeclarationSyntaxExtensions
       return false;
    }
 
-   private static bool CouldBeEnumGenerationAttribute(NameSyntax type)
+   private static bool CouldBeEnumGenerationAttribute(NameSyntax name)
    {
-      var typeName = ExtractTypeName(type);
+      var typeName = ExtractTypeName(name);
       return typeName is "EnumGeneration" or "EnumGenerationAttribute";
    }
 
@@ -108,23 +97,17 @@ internal static class TypeDeclarationSyntaxExtensions
    {
       var type = baseType?.Type;
 
-      while (type is not null)
+      return type switch
       {
-         switch (type)
-         {
-            case QualifiedNameSyntax qns:
-               type = qns.Right;
-               break;
+         QualifiedNameSyntax { Right: GenericNameSyntax gns } => CouldBeEnumInterface(gns),
+         GenericNameSyntax gns => CouldBeEnumInterface(gns),
+         _ => false
+      };
+   }
 
-            case GenericNameSyntax genericNameSyntax:
-               return genericNameSyntax.Identifier.Text is "IEnum" or "IValidatableEnum" &&
-                      genericNameSyntax.TypeArgumentList.Arguments.Count == 1;
-
-            default:
-               return false;
-         }
-      }
-
-      return false;
+   private static bool CouldBeEnumInterface(GenericNameSyntax genericNameSyntax)
+   {
+      return genericNameSyntax.Identifier.Text is "IEnum" or "IValidatableEnum" &&
+             genericNameSyntax.TypeArgumentList.Arguments.Count == 1;
    }
 }
