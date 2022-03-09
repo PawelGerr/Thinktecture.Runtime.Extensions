@@ -9,7 +9,7 @@
       <NoWarn>$(NoWarn);NU5128</NoWarn>
    </PropertyGroup>
    <ItemGroup>
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.1.0" PrivateAssets="all" />
 
       <Compile Include="..\..\shared\IsExternalInit.cs">
          <Link>IsExternalInit.cs</Link>
