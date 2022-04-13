@@ -11,6 +11,9 @@ public class BenchmarkDbContext : DbContext
    public DbSet<Entity_SmartEnum_Class_IntBased> Entity_SmartEnum_Class_IntBased { get; set; } = null!;
    public DbSet<Entity_SmartEnum_Struct_IntBased> Entity_SmartEnum_Struct_IntBased { get; set; } = null!;
 
+   public DbSet<Entity_with_ValueObjects> Entity_with_ValueObjects { get; set; } = null!;
+   public DbSet<Entity_without_ValueObjects> Entity_without_ValueObjects { get; set; } = null!;
+
    public BenchmarkDbContext(DbContextOptions<BenchmarkDbContext> options)
       : base(options)
    {
@@ -48,5 +51,19 @@ public class BenchmarkDbContext : DbContext
                                                             {
                                                                builder.Property(e => e.Id).ValueGeneratedNever();
                                                             });
+
+      modelBuilder.Entity<Entity_with_ValueObjects>(builder =>
+                                                    {
+                                                       builder.Property(e => e.Id).ValueGeneratedNever();
+                                                       builder.Property(e => e.Name).HasMaxLength(100);
+                                                       builder.Property(e => e.Description).HasMaxLength(200);
+                                                    });
+
+      modelBuilder.Entity<Entity_without_ValueObjects>(builder =>
+                                                       {
+                                                          builder.Property(e => e.Id).ValueGeneratedNever();
+                                                          builder.Property(e => e.Name).HasMaxLength(100);
+                                                          builder.Property(e => e.Description).HasMaxLength(200);
+                                                       });
    }
 }

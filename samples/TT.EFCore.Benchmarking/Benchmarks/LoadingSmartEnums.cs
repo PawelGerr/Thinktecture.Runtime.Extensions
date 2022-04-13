@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Thinktecture.Database;
 
-namespace Thinktecture;
+namespace Thinktecture.Benchmarks;
 
 [MemoryDiagnoser]
 public class LoadingSmartEnums

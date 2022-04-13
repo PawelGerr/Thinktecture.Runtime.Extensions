@@ -1,4 +1,5 @@
 using BenchmarkDotNet.Running;
-using Thinktecture;
+using Thinktecture.Benchmarks;
 
-BenchmarkRunner.Run<LoadingSmartEnums>();
+// BenchmarkRunner.Run<LoadingSmartEnums>();
+BenchmarkRunner.Run<LoadingValueObjects>();

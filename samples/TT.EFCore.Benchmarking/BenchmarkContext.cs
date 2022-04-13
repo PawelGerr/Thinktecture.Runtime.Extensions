@@ -16,7 +16,7 @@ public class BenchmarkContext : IDisposable
       var services = new ServiceCollection()
                      .AddLogging(builder => builder.AddConsole())
                      .AddDbContext<BenchmarkDbContext>(builder => builder
-                                                                  .UseSqlServer("Server=localhost;Database=SmartEnumEfBenchmarking;Integrated Security=true;")
+                                                                  .UseSqlServer("Server=localhost;Database=TT_RE_Benchmarking;Integrated Security=true;")
                                                                   .UseLoggerFactory(NullLoggerFactory.Instance)
                                                                   .UseValueObjectValueConverter());
 
