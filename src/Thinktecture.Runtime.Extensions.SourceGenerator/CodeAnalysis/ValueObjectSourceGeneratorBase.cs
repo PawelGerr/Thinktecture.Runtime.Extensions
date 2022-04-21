@@ -9,7 +9,8 @@ namespace Thinktecture.CodeAnalysis;
 /// <summary>
 /// Base class for source generator for Value Objects.
 /// </summary>
-public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public abstract class ValueObjectSourceGeneratorBase<T> : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+   where T : ValueObjectSourceGeneratorState, IEquatable<T>
 {
    protected ValueObjectSourceGeneratorBase(string? generatedFileSuffix)
       : base(generatedFileSuffix)
@@ -52,7 +53,7 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
              && typeDeclaration.IsValueObjectCandidate();
    }
 
-   private static SourceGenState<ValueObjectSourceGeneratorState>? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenState<T>? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
       try
       {
@@ -68,20 +69,22 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
          if (type.ContainingType is not null)
             return null;
 
-         return new SourceGenState<ValueObjectSourceGeneratorState>(new ValueObjectSourceGeneratorState(type, valueObjectAttribute), null);
+         return new SourceGenState<T>(CreateState(type, valueObjectAttribute), null);
       }
       catch (Exception ex)
       {
-         return new SourceGenState<ValueObjectSourceGeneratorState>(null, ex);
+         return new SourceGenState<T>(null, ex);
       }
    }
 
-   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<ValueObjectSourceGeneratorState>> states)
+   protected abstract T CreateState(INamedTypeSymbol type, AttributeData valueObjectAttribute);
+
+   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<T>> states)
    {
       if (states.IsDefaultOrEmpty)
          return;
 
-      IReadOnlyList<ValueObjectSourceGeneratorState> valueObjectStates;
+      IReadOnlyList<T> valueObjectStates;
 
       try
       {
@@ -99,24 +102,22 @@ public abstract class ValueObjectSourceGeneratorBase : ThinktectureSourceGenerat
       {
          context.CancellationToken.ThrowIfCancellationRequested();
 
-         var type = valueObjectState.Type;
-
          try
          {
             var generatedCode = GenerateValueObject(valueObjectState, stringBuilderProvider);
 
-            EmitFile(context, valueObjectState.Namespace, type.Name, generatedCode);
+            EmitFile(context, valueObjectState.Namespace, valueObjectState.Name, generatedCode);
          }
          catch (Exception ex)
          {
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                       type.GetLocationOrNullSafe(context),
-                                                       type.Name, ex.Message));
+                                                       valueObjectState.GetLocationOrNullSafe(context),
+                                                       valueObjectState.Name, ex.Message));
          }
       }
    }
 
-   protected virtual string? GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
+   protected virtual string? GenerateValueObject(T state, StringBuilderProvider stringBuilderProvider)
    {
       return null;
    }

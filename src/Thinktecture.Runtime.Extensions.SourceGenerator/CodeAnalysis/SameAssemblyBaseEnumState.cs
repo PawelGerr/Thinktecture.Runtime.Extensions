@@ -2,56 +2,91 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class SameAssemblyBaseEnumState : IBaseEnumState
+public sealed class SameAssemblyBaseEnumState<TExtension> : IBaseEnumState<TExtension>, IEquatable<SameAssemblyBaseEnumState<TExtension>>
+   where TExtension : IEquatable<TExtension>
 {
-   private readonly EnumSourceGeneratorState _baseState;
+   private readonly EnumSourceGeneratorStateBase<TExtension> _baseEnumState;
 
    public bool IsSameAssembly => true;
-   public INamedTypeSymbol Type => _baseState.EnumType;
-   public string TypeFullyQualified => _baseState.EnumTypeFullyQualified;
-   public string TypeMinimallyQualified => _baseState.EnumTypeMinimallyQualified;
-   public string? NullableQuestionMark => Type.IsReferenceType ? "?" : null;
 
-   private IReadOnlyList<ISymbolState>? _ctorArgs;
+   public string TypeFullyQualified => _baseEnumState.EnumTypeFullyQualified;
+   public string TypeMinimallyQualified => _baseEnumState.EnumTypeMinimallyQualified;
 
-   public IReadOnlyList<ISymbolState> ConstructorArguments
+   public string? NullableQuestionMark => _baseEnumState.IsReferenceType ? "?" : null;
+
+   public IReadOnlyList<IMemberState> ConstructorArguments { get; }
+   public IReadOnlyList<IMemberState> Items { get; }
+
+   public TExtension Extension { get; }
+   public EnumSettings Settings => _baseEnumState.Settings;
+
+   public SameAssemblyBaseEnumState(EnumSourceGeneratorStateBase<TExtension> baseEnumState, INamedTypeSymbol baseType, TExtension extension)
    {
-      get
-      {
-         if (_ctorArgs is null)
-         {
-            var args = new List<ISymbolState>
-                       {
-                          new DefaultSymbolState(_baseState.KeyPropertyName, _baseState.KeyType, _baseState.KeyArgumentName, false)
-                       };
+      Extension = extension;
+      _baseEnumState = baseEnumState;
 
-            foreach (var member in _baseState.AssignableInstanceFieldsAndProperties)
-            {
-               var memberAttr = member.Symbol.FindEnumGenerationMemberAttribute();
-               var mappedMemberName = memberAttr?.FindMapsToMember();
-
-               if (mappedMemberName is not null)
-               {
-                  args.Add(new DefaultSymbolState(mappedMemberName, member.Type, mappedMemberName.MakeArgumentName(), member.IsStatic));
-               }
-               else
-               {
-                  args.Add(member);
-               }
-            }
-
-            _ctorArgs = args;
-         }
-
-         return _ctorArgs;
-      }
+      ConstructorArguments = GetConstructorArguments(baseEnumState);
+      Items = baseType.EnumerateEnumItems().Select(InstanceMemberInfo.CreateFrom).ToList();
    }
 
-   private IReadOnlyList<ISymbolState>? _items;
-   public IReadOnlyList<ISymbolState> Items => _items ??= Type.EnumerateEnumItems().Select(InstanceMemberInfo.CreateFrom).ToList();
-
-   public SameAssemblyBaseEnumState(EnumSourceGeneratorState baseState)
+   private static List<IMemberState> GetConstructorArguments(EnumSourceGeneratorStateBase<TExtension> baseEnumState)
    {
-      _baseState = baseState;
+      var args = new List<IMemberState> { baseEnumState.KeyProperty };
+
+      foreach (var member in baseEnumState.AssignableInstanceFieldsAndProperties)
+      {
+         var mappedMemberName = member.Settings.MappedMemberName;
+
+         if (mappedMemberName is not null)
+         {
+            args.Add(member.CreateSymbolState(mappedMemberName, member.IsStatic));
+         }
+         else
+         {
+            args.Add(member);
+         }
+      }
+
+      return args;
+   }
+
+   public override bool Equals(object? obj)
+   {
+      return obj is SameAssemblyBaseEnumState<TExtension> other && Equals(other);
+   }
+
+   public bool Equals(IBaseEnumState<TExtension>? obj)
+   {
+      return obj is SameAssemblyBaseEnumState<TExtension> other && Equals(other);
+   }
+
+   public bool Equals(SameAssemblyBaseEnumState<TExtension>? other)
+   {
+      if (ReferenceEquals(null, other))
+         return false;
+      if (ReferenceEquals(this, other))
+         return true;
+
+      return TypeFullyQualified == other.TypeFullyQualified
+             && _baseEnumState.IsReferenceType.Equals(other._baseEnumState.IsReferenceType)
+             && Equals(Extension, other.Extension)
+             && Settings.Equals(other.Settings)
+             && ConstructorArguments.EqualsTo(other.ConstructorArguments)
+             && Items.EqualsTo(other.Items);
+   }
+
+   public override int GetHashCode()
+   {
+      unchecked
+      {
+         var hashCode = TypeFullyQualified.GetHashCode();
+         hashCode = (hashCode * 397) ^ _baseEnumState.IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ (Extension?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ Settings.GetHashCode();
+         hashCode = (hashCode * 397) ^ ConstructorArguments.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ Items.ComputeHashCode();
+
+         return hashCode;
+      }
    }
 }

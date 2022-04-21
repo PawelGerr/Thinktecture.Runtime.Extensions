@@ -106,15 +106,15 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
       var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic)
-                                  .Where(m => !m.Symbol.IsStatic)
+                                  .Where(m => !m.IsStatic)
                                   .ToList();
 
       if (assignableMembers.Count == 1)
       {
          var keyMember = assignableMembers[0];
 
-         if (keyMember.Type.NullableAnnotation == NullableAnnotation.Annotated || keyMember.IsNullableStruct)
-            ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.Identifier.GetLocation(), keyMember.Identifier.ToString());
+         if (keyMember.NullableAnnotation == NullableAnnotation.Annotated || keyMember.IsNullableStruct)
+            ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.GetIdentifierLocation(), keyMember.Name);
       }
       else
       {
@@ -126,18 +126,13 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       foreach (var assignableMember in assignableMembers)
       {
-         var memberAttr = assignableMember.Symbol.FindValueObjectEqualityMemberAttribute();
-
-         if (memberAttr is null)
-            continue;
-
-         var comparer = memberAttr.FindComparer();
+         var comparer = assignableMember.ValueObjectMemberSettings.Comparer;
 
          if (comparer is not null)
          {
             ReportDiagnostic(context,
                              DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
-                             memberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? assignableMember.Identifier.GetLocation(),
+                             assignableMember.ValueObjectMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(),
                              comparer);
          }
       }
@@ -184,7 +179,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       ConstructorsMustBePrivate(context, enumType);
 
-      var items = enumType.GetEnumItems();
+      var items = enumType.EnumerateEnumItems().ToList();
 
       if (items.Count == 0)
          ReportDiagnostic(context, DiagnosticsDescriptors.NoItemsWarning, locationOfFirstDeclaration, enumType);
@@ -363,7 +358,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             continue;
 
          ReportDiagnostic(context, DiagnosticsDescriptors.ExtensibleEnumMemberMustBePublicOrHaveMapping,
-                          memberInfo.Identifier.GetLocation(), memberInfo.Identifier.ToString());
+                          memberInfo.GetIdentifierLocation(), memberInfo.Name);
       }
    }
 
@@ -372,12 +367,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       INamedTypeSymbol enumType,
       InstanceMemberInfo memberInfo)
    {
-      var enumMemberAttr = memberInfo.Symbol.FindEnumGenerationMemberAttribute();
-
-      if (enumMemberAttr is null)
-         return false;
-
-      var mappedMemberName = enumMemberAttr.FindMapsToMember();
+      var mappedMemberName = memberInfo.Settings.MappedMemberName;
 
       if (mappedMemberName is null)
          return false;
@@ -395,12 +385,12 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (mappedMembers.Count == 0)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.MemberNotFound,
-                          enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(), mappedMemberName);
+                          memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
       }
       else if (mappedMembers.Count > 1)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.MultipleMembersWithSameName,
-                          enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(), mappedMemberName);
+                          memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
       }
       else
       {
@@ -409,13 +399,13 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (mappedMember.DeclaredAccessibility != Accessibility.Public)
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.MappedMemberMustBePublic,
-                             enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(), mappedMemberName);
+                             memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
          }
 
          if (mappedMember is IMethodSymbol { TypeParameters: { Length: > 0 } })
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.MappedMethodMustBeNotBeGeneric,
-                             enumMemberAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? memberInfo.Identifier.GetLocation(), mappedMemberName);
+                             memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
          }
       }
 

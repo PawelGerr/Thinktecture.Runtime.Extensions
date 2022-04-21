@@ -1,8 +1,6 @@
-using Microsoft.CodeAnalysis;
-
 namespace Thinktecture.CodeAnalysis;
 
-public class EqualityInstanceMemberInfo
+public class EqualityInstanceMemberInfo : IEquatable<EqualityInstanceMemberInfo>
 {
    public InstanceMemberInfo Member { get; }
    public string? EqualityComparer { get; }
@@ -14,16 +12,16 @@ public class EqualityInstanceMemberInfo
       string? comparer)
    {
       Member = member;
-      EqualityComparer = AdjustEqualityComparer(member.Type, equalityComparer);
+      EqualityComparer = AdjustEqualityComparer(member, equalityComparer);
       Comparer = comparer;
    }
 
-   private static string? AdjustEqualityComparer(ITypeSymbol memberType, string? equalityComparer)
+   private static string? AdjustEqualityComparer(InstanceMemberInfo member, string? equalityComparer)
    {
       if (equalityComparer is null)
          return null;
 
-      if (memberType.IsString())
+      if (member.IsString())
          return AdjustStringComparer(equalityComparer);
 
       return equalityComparer;
@@ -48,5 +46,34 @@ public class EqualityInstanceMemberInfo
       member = Member;
       equalityComparer = EqualityComparer;
       comparer = Comparer;
+   }
+
+   public override bool Equals(object? obj)
+   {
+      return obj is EqualityInstanceMemberInfo other && Equals(other);
+   }
+
+   public bool Equals(EqualityInstanceMemberInfo? other)
+   {
+      if (ReferenceEquals(null, other))
+         return false;
+      if (ReferenceEquals(this, other))
+         return true;
+
+      return Member.Equals(other.Member)
+             && EqualityComparer == other.EqualityComparer
+             && Comparer == other.Comparer;
+   }
+
+   public override int GetHashCode()
+   {
+      unchecked
+      {
+         var hashCode = Member.GetHashCode();
+         hashCode = (hashCode * 397) ^ (EqualityComparer != null ? EqualityComparer.GetHashCode() : 0);
+         hashCode = (hashCode * 397) ^ (Comparer != null ? Comparer.GetHashCode() : 0);
+
+         return hashCode;
+      }
    }
 }

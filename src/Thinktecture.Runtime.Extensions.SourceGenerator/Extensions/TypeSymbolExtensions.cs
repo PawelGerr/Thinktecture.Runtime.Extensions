@@ -125,11 +125,6 @@ public static class TypeSymbolExtensions
              && type.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true;
    }
 
-   public static IReadOnlyList<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType)
-   {
-      return enumType.EnumerateEnumItems().ToList();
-   }
-
    public static IEnumerable<IFieldSymbol> EnumerateEnumItems(this ITypeSymbol enumType)
    {
       return enumType.GetNonIgnoredMembers()
@@ -149,16 +144,14 @@ public static class TypeSymbolExtensions
    public static bool IsFormattable(this ITypeSymbol type)
    {
       return type.AllInterfaces.Any(i => i.Name == "IFormattable"
-                                         && i.ContainingNamespace?.Name == "System"
-                                         && i.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true);
+                                         && i.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true });
    }
 
    public static bool IsComparable(this ITypeSymbol type)
    {
       return type.AllInterfaces.Any(i => i.Name == "IComparable"
-                                         && i.ContainingNamespace?.Name == "System"
-                                         && i.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true
-                                         && (!i.IsGenericType || i.IsGenericType && SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], type)));
+                                         && i.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true }
+                                         && (!i.IsGenericType || (i.IsGenericType && SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], type))));
    }
 
    public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)

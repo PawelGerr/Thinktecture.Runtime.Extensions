@@ -6,7 +6,7 @@ namespace Thinktecture.CodeAnalysis;
 /// Source generator for JsonConverter for Smart Enums.
 /// </summary>
 [Generator]
-public class JsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase
+public class JsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase<JsonEnumSourceGeneratorState, JsonBaseEnumExtension>
 {
    /// <inheritdoc />
    public JsonSmartEnumSourceGenerator()
@@ -14,24 +14,28 @@ public class JsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase
    {
    }
 
-   /// <inheritdoc />
-   protected override string GenerateEnum(EnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
+   protected override JsonEnumSourceGeneratorState CreateState(INamedTypeSymbol type, INamedTypeSymbol enumInterface)
+   {
+      return new JsonEnumSourceGeneratorState(type, enumInterface);
+   }
+
+   protected override string GenerateEnum(JsonEnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
 
-      if (state.EnumType.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
+      if (state.HasJsonConverterAttribute)
          return String.Empty;
 
       var ns = state.Namespace;
-      var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectJsonConverterFactory").Any());
+      var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Extension.HasValueObjectJsonConverterFactory);
 
       return $@"{GENERATED_CODE_PREFIX}
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-   partial {(state.EnumType.IsValueType ? "struct" : "class")} {state.EnumType.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
       public {(requiresNew ? "new " : null)}class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
@@ -49,7 +53,7 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.EnumTypeFullyQualified}, {state.KeyTypeFullyQualified}>({state.EnumTypeFullyQualified}.Get, static obj => obj.{state.KeyPropertyName}, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.EnumTypeFullyQualified}, {state.KeyProperty.TypeFullyQualifiedWithNullability}>({state.EnumTypeFullyQualified}.Get, static obj => obj.{state.KeyProperty.Name}, options);
          }}
       }}
    }}

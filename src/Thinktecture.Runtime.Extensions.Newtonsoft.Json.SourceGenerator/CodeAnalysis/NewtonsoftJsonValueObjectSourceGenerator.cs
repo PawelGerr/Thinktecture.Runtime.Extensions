@@ -3,11 +3,8 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-/// <summary>
-/// Source generator for JsonConverter for Value Objects.
-/// </summary>
 [Generator]
-public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
+public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase<NewtonsoftJsonValueObjectSourceGeneratorState>
 {
    /// <inheritdoc />
    public NewtonsoftJsonValueObjectSourceGenerator()
@@ -15,8 +12,12 @@ public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGenerat
    {
    }
 
-   /// <inheritdoc />
-   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
+   protected override NewtonsoftJsonValueObjectSourceGeneratorState CreateState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
+   {
+      return new NewtonsoftJsonValueObjectSourceGeneratorState(type, valueObjectAttribute);
+   }
+
+   protected override string? GenerateValueObject(NewtonsoftJsonValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
@@ -24,15 +25,15 @@ public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGenerat
       if (state.HasKeyMember)
          return GenerateJsonConverter(state, state.KeyMember);
 
-      if (!state.SkipFactoryMethods)
+      if (!state.Settings.SkipFactoryMethods)
          return GenerateValueObjectJsonConverter(state, stringBuilderProvider.GetStringBuilder(8_000));
 
       return null;
    }
 
-   private static string GenerateJsonConverter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
+   private static string GenerateJsonConverter(NewtonsoftJsonValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
    {
-      if (state.Type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
+      if (state.HasJsonConverterAttribute)
          return String.Empty;
 
       var ns = state.Namespace;
@@ -42,12 +43,12 @@ public class NewtonsoftJsonValueObjectSourceGenerator : ValueObjectSourceGenerat
 namespace {ns}
 {{")}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>
+      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
          public ValueObjectNewtonsoftJsonConverter()
-            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Identifier})
+            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
          {{
          }}
       }}
@@ -56,9 +57,9 @@ namespace {ns}
 ")}";
    }
 
-   private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
+   private static string GenerateValueObjectJsonConverter(NewtonsoftJsonValueObjectSourceGeneratorState state, StringBuilder sb)
    {
-      if (state.Type.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
+      if (state.HasJsonConverterAttribute)
          return String.Empty;
 
       sb.Append($@"{GENERATED_CODE_PREFIX}
@@ -66,7 +67,7 @@ namespace {ns}
 namespace {state.Namespace}
 {{")}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
       public class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
       {{
@@ -141,7 +142,7 @@ namespace {state.Namespace}
 
          sb.Append(@$"(comparer.Equals(propName, ""{memberInfo.ArgumentName}""))
                {{
-                  {memberInfo.ArgumentName} = serializer.Deserialize<{memberInfo.TypeFullyQualified}>(reader);
+                  {memberInfo.ArgumentName} = serializer.Deserialize<{memberInfo.TypeFullyQualifiedWithNullability}>(reader);
                }}");
       }
 
@@ -195,7 +196,7 @@ namespace {state.Namespace}
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            var {memberInfo.ArgumentName}PropertyValue = obj.{memberInfo.Identifier};
+            var {memberInfo.ArgumentName}PropertyValue = obj.{memberInfo.Name};
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
@@ -211,7 +212,7 @@ namespace {state.Namespace}
             ");
          }
 
-         sb.Append(@$"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""{memberInfo.Identifier}"") : ""{memberInfo.Identifier}"");
+         sb.Append(@$"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""{memberInfo.Name}"") : ""{memberInfo.Name}"");
             ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
@@ -237,7 +238,7 @@ namespace {state.Namespace}
 
    private static void GenerateWriteValue(StringBuilder? sb, InstanceMemberInfo memberInfo)
    {
-      var command = memberInfo.Type.SpecialType switch
+      var command = memberInfo.SpecialType switch
       {
          SpecialType.System_Boolean => "WriteValue",
 
@@ -261,11 +262,11 @@ namespace {state.Namespace}
 
       if (command is null)
       {
-         switch (memberInfo.Type.Name)
+         switch (memberInfo.TypeFullyQualified)
          {
-            case "System.Guid":
-            case "System.TimeSpan":
-            case "System.DateTimeOffset":
+            case "global::System.Guid":
+            case "global::System.TimeSpan":
+            case "global::System.DateTimeOffset":
                command = "WriteValue";
                break;
 

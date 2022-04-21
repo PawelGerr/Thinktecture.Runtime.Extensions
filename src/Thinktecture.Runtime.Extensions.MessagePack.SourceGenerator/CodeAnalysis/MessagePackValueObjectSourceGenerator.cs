@@ -3,20 +3,20 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-/// <summary>
-/// Source generator for JsonConverter for Value Objects.
-/// </summary>
 [Generator]
-public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
+public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorBase<MessagePackValueObjectSourceGeneratorState>
 {
-   /// <inheritdoc />
    public MessagePackValueObjectSourceGenerator()
       : base("_MessagePack")
    {
    }
 
-   /// <inheritdoc />
-   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
+   protected override MessagePackValueObjectSourceGeneratorState CreateState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
+   {
+      return new MessagePackValueObjectSourceGeneratorState(type, valueObjectAttribute);
+   }
+
+   protected override string? GenerateValueObject(MessagePackValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
@@ -24,17 +24,15 @@ public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorB
       if (state.HasKeyMember)
          return GenerateFormatter(state, state.KeyMember);
 
-      if (!state.SkipFactoryMethods)
+      if (!state.Settings.SkipFactoryMethods)
          return GenerateValueObjectFormatter(state, stringBuilderProvider.GetStringBuilder(5_000));
 
       return null;
    }
 
-   private static string GenerateFormatter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
+   private static string GenerateFormatter(MessagePackValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
    {
-      var type = state.Type;
-
-      if (type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
+      if (state.HasMessagePackFormatterAttribute)
          return String.Empty;
 
       var ns = state.Namespace;
@@ -44,12 +42,12 @@ public class MessagePackValueObjectSourceGenerator : ValueObjectSourceGeneratorB
 namespace {ns}
 {{")}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-   partial {(type.IsValueType ? "struct" : "class")} {state.Type.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>
+      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
          public ValueObjectMessagePackFormatter()
-            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Identifier})
+            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
          {{
          }}
       }}
@@ -58,9 +56,9 @@ namespace {ns}
 ")}";
    }
 
-   private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb)
+   private static string GenerateValueObjectFormatter(MessagePackValueObjectSourceGeneratorState state, StringBuilder sb)
    {
-      if (state.Type.HasAttribute("MessagePack.MessagePackFormatterAttribute"))
+      if (state.HasMessagePackFormatterAttribute)
          return String.Empty;
 
       sb.Append($@"{GENERATED_CODE_PREFIX}
@@ -68,7 +66,7 @@ namespace {ns}
 namespace {state.Namespace}
 {{")}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
       public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualified}{state.NullableQuestionMark}>
       {{
@@ -128,7 +126,7 @@ namespace {state.Namespace}
          public void Serialize(ref global::MessagePack.MessagePackWriter writer, {state.TypeFullyQualified}{state.NullableQuestionMark} value, global::MessagePack.MessagePackSerializerOptions options)
          {{");
 
-      if (state.Type.IsReferenceType)
+      if (state.IsReferenceType)
       {
          sb.Append(@$"
             if(value is null)
@@ -164,7 +162,7 @@ namespace {state.Namespace}
 
    private static string GenerateWriteValue(InstanceMemberInfo memberInfo)
    {
-      var command = memberInfo.Type.SpecialType switch
+      var command = memberInfo.SpecialType switch
       {
          SpecialType.System_Boolean => "Write",
          SpecialType.System_Char => "Write",
@@ -184,14 +182,14 @@ namespace {state.Namespace}
       };
 
       if (command is not null)
-         return $"writer.{command}(value.{memberInfo.Identifier})";
+         return $"writer.{command}(value.{memberInfo.Name})";
 
-      return @$"global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<{memberInfo.TypeFullyQualified}>(resolver).Serialize(ref writer, value.{memberInfo.Identifier}, options)";
+      return @$"global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<{memberInfo.TypeFullyQualifiedWithNullability}>(resolver).Serialize(ref writer, value.{memberInfo.Name}, options)";
    }
 
    private static string GenerateReadValue(InstanceMemberInfo memberInfo)
    {
-      var command = memberInfo.Type.SpecialType switch
+      var command = memberInfo.SpecialType switch
       {
          SpecialType.System_Boolean => "ReadBoolean",
 
@@ -220,6 +218,6 @@ namespace {state.Namespace}
       if (command is not null)
          return @$"reader.{command}()";
 
-      return @$"global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<{memberInfo.TypeFullyQualified}>(resolver).Deserialize(ref reader, options)";
+      return @$"global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<{memberInfo.TypeFullyQualifiedWithNullability}>(resolver).Deserialize(ref reader, options)";
    }
 }

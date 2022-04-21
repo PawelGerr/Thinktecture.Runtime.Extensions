@@ -3,11 +3,8 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-/// <summary>
-/// Source generator for JsonConverter for a Value Object.
-/// </summary>
 [Generator]
-public class JsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
+public class JsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase<JsonValueObjectSourceGeneratorState>
 {
    /// <inheritdoc />
    public JsonValueObjectSourceGenerator()
@@ -15,8 +12,12 @@ public class JsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
    {
    }
 
-   /// <inheritdoc />
-   protected override string? GenerateValueObject(ValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
+   protected override JsonValueObjectSourceGeneratorState CreateState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
+   {
+      return new JsonValueObjectSourceGeneratorState(type, valueObjectAttribute);
+   }
+
+   protected override string? GenerateValueObject(JsonValueObjectSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
@@ -24,17 +25,17 @@ public class JsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
       if (state.HasKeyMember)
          return GenerateJsonConverter(state, state.KeyMember);
 
-      if (!state.SkipFactoryMethods)
+      if (!state.Settings.SkipFactoryMethods)
          return GenerateValueObjectJsonConverter(state, stringBuilderProvider.GetStringBuilder(10_000));
 
       return null;
    }
 
    private static string GenerateJsonConverter(
-      ValueObjectSourceGeneratorState state,
+      JsonValueObjectSourceGeneratorState state,
       EqualityInstanceMemberInfo keyMember)
    {
-      if (state.Type.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
+      if (state.HasJsonConverterAttribute)
          return String.Empty;
 
       var ns = state.Namespace;
@@ -44,7 +45,7 @@ public class JsonValueObjectSourceGenerator : ValueObjectSourceGeneratorBase
 namespace {ns}
 {{")}
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
       public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
@@ -62,7 +63,7 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Identifier}, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name}, options);
          }}
       }}
    }}
@@ -70,9 +71,9 @@ namespace {ns}
 ")}";
    }
 
-   private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
+   private static string GenerateValueObjectJsonConverter(JsonValueObjectSourceGeneratorState state, StringBuilder sb)
    {
-      if (state.Type.HasAttribute("System.Text.Json.Serialization.JsonConverterAttribute"))
+      if (state.HasJsonConverterAttribute)
          return String.Empty;
 
       sb.Append($@"{GENERATED_CODE_PREFIX}
@@ -80,7 +81,7 @@ namespace {ns}
 namespace {state.Namespace}
 {{")}
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-   partial {(state.Type.IsValueType ? "struct" : "class")} {state.Type.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
       public class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<{state.TypeFullyQualified}>
       {{");
@@ -93,7 +94,7 @@ namespace {state.Namespace}
          if (needsConverter)
          {
             sb.Append(@$"
-         private readonly global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualified}> _{memberInfo.ArgumentName}Converter;");
+         private readonly global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualifiedWithNullability}> _{memberInfo.ArgumentName}Converter;");
          }
 
          sb.Append(@$"
@@ -118,11 +119,11 @@ namespace {state.Namespace}
          if (needsConverter)
          {
             sb.Append(@$"
-            this._{memberInfo.ArgumentName}Converter = (global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualified}>)options.GetConverter(typeof({memberInfo.TypeFullyQualified}));");
+            this._{memberInfo.ArgumentName}Converter = (global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualifiedWithNullability}>)options.GetConverter(typeof({memberInfo.TypeFullyQualifiedWithNullability}));");
          }
 
          sb.Append(@$"
-            this._{memberInfo.ArgumentName}PropertyName = namingPolicy?.ConvertName(""{memberInfo.Identifier}"") ?? ""{memberInfo.Identifier}"";");
+            this._{memberInfo.ArgumentName}PropertyName = namingPolicy?.ConvertName(""{memberInfo.Name}"") ?? ""{memberInfo.Name}"";");
       }
 
       sb.Append(@$"
@@ -211,7 +212,7 @@ namespace {state.Namespace}
                                        out var obj);
 
             if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-               throw new global::System.Text.Json.JsonException($""Unable to deserialize \""{state.Type.Name}\"". Error: {{validationResult!.ErrorMessage}}."");
+               throw new global::System.Text.Json.JsonException($""Unable to deserialize \""{state.Name}\"". Error: {{validationResult!.ErrorMessage}}."");
 
             return obj;
          }}
@@ -230,7 +231,7 @@ namespace {state.Namespace}
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            var {memberInfo.ArgumentName}PropertyValue = value.{memberInfo.Identifier};
+            var {memberInfo.ArgumentName}PropertyValue = value.{memberInfo.Name};
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
@@ -243,7 +244,7 @@ namespace {state.Namespace}
          else
          {
             sb.Append(@$"
-            if(!ignoreDefaultValues || !{memberInfo.ArgumentName}PropertyValue.Equals(default({memberInfo.TypeFullyQualified})))
+            if(!ignoreDefaultValues || !{memberInfo.ArgumentName}PropertyValue.Equals(default({memberInfo.TypeFullyQualifiedWithNullability})))
             {{
                ");
          }
@@ -292,7 +293,7 @@ namespace {state.Namespace}
 
    private static bool GenerateWriteValue(StringBuilder? sb, InstanceMemberInfo memberInfo)
    {
-      var command = memberInfo.Type.SpecialType switch
+      var command = memberInfo.SpecialType switch
       {
          SpecialType.System_Boolean => "WriteBooleanValue",
 
@@ -315,11 +316,11 @@ namespace {state.Namespace}
 
       if (command is null)
       {
-         if (memberInfo.Type.Name == "System.Guid")
+         if (memberInfo.TypeFullyQualified == "global::System.Guid")
          {
             command = "WriteStringValue";
          }
-         else if (memberInfo.Type.Name == "System.DateTimeOffset")
+         else if (memberInfo.TypeFullyQualified == "global::System.DateTimeOffset")
          {
             command = "WriteStringValue";
          }
@@ -338,7 +339,7 @@ namespace {state.Namespace}
 
    private static string GenerateReadValue(InstanceMemberInfo memberInfo)
    {
-      var command = memberInfo.Type.SpecialType switch
+      var command = memberInfo.SpecialType switch
       {
          SpecialType.System_Boolean => "GetBoolean",
 
@@ -365,17 +366,17 @@ namespace {state.Namespace}
 
       if (command is null)
       {
-         if (memberInfo.Type.Name == "System.Guid")
+         if (memberInfo.TypeFullyQualified == "global::System.Guid")
          {
             command = "GetGuid";
          }
-         else if (memberInfo.Type.Name == "System.DateTimeOffset")
+         else if (memberInfo.TypeFullyQualified == "global::System.DateTimeOffset")
          {
             command = "GetDateTimeOffset";
          }
          else
          {
-            return @$"this._{memberInfo.ArgumentName}Converter.Read(ref reader, typeof({memberInfo.Type}), options)";
+            return @$"this._{memberInfo.ArgumentName}Converter.Read(ref reader, typeof({memberInfo.TypeFullyQualifiedWithNullability}), options)";
          }
       }
 

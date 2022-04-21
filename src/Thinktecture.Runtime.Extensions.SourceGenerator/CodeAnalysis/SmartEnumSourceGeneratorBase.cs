@@ -6,17 +6,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture.CodeAnalysis;
 
-/// <summary>
-/// Base class for source generator for Smart Enums.
-/// </summary>
-public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public abstract class SmartEnumSourceGeneratorBase<T, TBaseEnumExtension> : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+   where T : EnumSourceGeneratorStateBase<TBaseEnumExtension>, IEquatable<T>
+   where TBaseEnumExtension : IEquatable<TBaseEnumExtension>
 {
    protected SmartEnumSourceGeneratorBase(string? generatedFileSuffix)
       : base(generatedFileSuffix)
    {
    }
 
-   /// <inheritdoc />
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetEnumStateOrNull)
@@ -52,7 +50,7 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
              && typeDeclaration.IsEnumCandidate();
    }
 
-   private static SourceGenState<EnumSourceGeneratorState>? GetEnumStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenState<T>? GetEnumStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
       try
       {
@@ -73,20 +71,22 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
          if (enumInterface is null)
             return null;
 
-         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, enumInterface), null);
+         return new SourceGenState<T>(CreateState(type, enumInterface), null);
       }
       catch (Exception ex)
       {
-         return new SourceGenState<EnumSourceGeneratorState>(null, ex);
+         return new SourceGenState<T>(null, ex);
       }
    }
 
-   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<EnumSourceGeneratorState>> states)
+   protected abstract T CreateState(INamedTypeSymbol type, INamedTypeSymbol enumInterface);
+
+   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<T>> states)
    {
       if (states.IsDefaultOrEmpty)
          return;
 
-      IReadOnlyList<EnumSourceGeneratorState> enumStates;
+      IReadOnlyList<T> enumStates;
 
       try
       {
@@ -109,38 +109,36 @@ public abstract class SmartEnumSourceGeneratorBase : ThinktectureSourceGenerator
       {
          context.CancellationToken.ThrowIfCancellationRequested();
 
-         var type = enumState.EnumType;
-
          try
          {
             var generatedCode = GenerateEnum(enumState, stringBuilderProvider);
 
-            EmitFile(context, enumState.Namespace, type.Name, generatedCode);
+            EmitFile(context, enumState.Namespace, enumState.Name, generatedCode);
          }
          catch (Exception ex)
          {
             context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                       type.GetLocationOrNullSafe(context),
-                                                       type.Name, ex.Message));
+                                                       enumState.GetLocationOrNullSafe(context),
+                                                       enumState.Name, ex.Message));
          }
       }
    }
 
-   private static void Prepare(IReadOnlyList<EnumSourceGeneratorState> states)
+   private static void Prepare(IReadOnlyList<T> states)
    {
       foreach (var enumState in states)
       {
-         if (enumState.EnumType.BaseType is null || enumState.EnumType.BaseType.SpecialType == SpecialType.System_Object)
+         if (!enumState.HasBaseType())
             continue;
 
-         var baseEnum = states.FirstOrDefault(s => SymbolEqualityComparer.Default.Equals(enumState.EnumType.BaseType, s.EnumType));
+         var baseEnum = states.FirstOrDefault(s => enumState.IsBaseType(s));
 
          if (baseEnum is not null)
             enumState.SetBaseType(baseEnum);
       }
    }
 
-   protected virtual string? GenerateEnum(EnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
+   protected virtual string? GenerateEnum(T state, StringBuilderProvider stringBuilderProvider)
    {
       return null;
    }

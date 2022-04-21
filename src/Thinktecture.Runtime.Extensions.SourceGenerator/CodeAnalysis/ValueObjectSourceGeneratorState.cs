@@ -3,42 +3,47 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGeneratorState>
+public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable<ValueObjectSourceGeneratorState>
 {
-   public INamedTypeSymbol Type { get; }
+   private readonly INamedTypeSymbol _type;
+
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
 
-   public AttributeData ValueObjectAttribute { get; }
-
-   public bool SkipFactoryMethods => ValueObjectAttribute.FindSkipFactoryMethods() ?? false;
-   public bool NullInFactoryMethodsYieldsNull => ValueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false;
-   public bool SkipCompareTo => ValueObjectAttribute.FindSkipCompareTo() ?? false;
-
    public string? Namespace { get; }
-   public string? NullableQuestionMark => Type.IsReferenceType ? "?" : null;
+   public string? NullableQuestionMark => _type.IsReferenceType ? "?" : null;
+   public string Name => _type.Name;
+   public bool IsReferenceType => _type.IsReferenceType;
 
-   private IReadOnlyList<InstanceMemberInfo>? _assignableInstanceFieldsAndProperties;
-   public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties => _assignableInstanceFieldsAndProperties ??= Type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
-
-   private IReadOnlyList<EqualityInstanceMemberInfo>? _equalityMembers;
-   public IReadOnlyList<EqualityInstanceMemberInfo> EqualityMembers => _equalityMembers ??= GetEqualityMembers();
+   public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
+   public IReadOnlyList<EqualityInstanceMemberInfo> EqualityMembers { get; }
 
    [MemberNotNullWhen(true, nameof(KeyMember))]
-   public bool HasKeyMember => EqualityMembers.Count == 1 &&
-                               AssignableInstanceFieldsAndProperties.Count == 1 &&
-                               SymbolEqualityComparer.Default.Equals(EqualityMembers[0].Member.Symbol, AssignableInstanceFieldsAndProperties[0].Symbol);
+   public bool HasKeyMember => EqualityMembers.Count == 1
+                               && AssignableInstanceFieldsAndProperties.Count == 1
+                               && EqualityMembers[0].Member.Equals(AssignableInstanceFieldsAndProperties[0]);
 
    public EqualityInstanceMemberInfo? KeyMember => HasKeyMember ? EqualityMembers[0] : null;
 
+   public ValueObjectSettings Settings { get; }
+
    public ValueObjectSourceGeneratorState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
    {
-      Type = type ?? throw new ArgumentNullException(nameof(type));
-      TypeFullyQualified = Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeMinimallyQualified = Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      _type = type ?? throw new ArgumentNullException(nameof(type));
 
-      ValueObjectAttribute = valueObjectAttribute;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
+      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+      AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
+      EqualityMembers = GetEqualityMembers();
+
+      Settings = new ValueObjectSettings(valueObjectAttribute);
+   }
+
+   public Location GetFirstLocation()
+   {
+      return _type.DeclaringSyntaxReferences.First().GetSyntax().GetLocation();
    }
 
    private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()
@@ -52,12 +57,12 @@ public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGener
 
       foreach (var member in members)
       {
-         var attribute = member.Symbol.FindValueObjectEqualityMemberAttribute();
+         var settings = member.ValueObjectMemberSettings;
 
-         if (attribute is not null)
+         if (settings.IsExplicitlyDeclared)
          {
-            var equalityComparer = attribute.FindEqualityComparer().TrimAndNullify();
-            var comparer = attribute.FindComparer().TrimAndNullify();
+            var equalityComparer = settings.EqualityComparer;
+            var comparer = settings.Comparer;
             var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer, comparer);
 
             (equalityMembers ??= new List<EqualityInstanceMemberInfo>()).Add(equalityMember);
@@ -67,24 +72,36 @@ public class ValueObjectSourceGeneratorState : IEquatable<ValueObjectSourceGener
       return equalityMembers ?? members.Select(m => new EqualityInstanceMemberInfo(m, null, null)).ToList();
    }
 
-   public bool Equals(ValueObjectSourceGeneratorState? other)
-   {
-      return SymbolEqualityComparer.Default.Equals(Type, other?.Type);
-   }
-
    public override bool Equals(object? obj)
    {
-      if (ReferenceEquals(null, obj))
+      return obj is ValueObjectSourceGeneratorState other && Equals(other);
+   }
+
+   public bool Equals(ValueObjectSourceGeneratorState? other)
+   {
+      if (ReferenceEquals(null, other))
          return false;
-      if (ReferenceEquals(this, obj))
+      if (ReferenceEquals(this, other))
          return true;
-      if (obj.GetType() != GetType())
-         return false;
-      return Equals((ValueObjectSourceGeneratorState)obj);
+
+      return TypeFullyQualified == other.TypeFullyQualified
+             && IsReferenceType == other.IsReferenceType
+             && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
+             && EqualityMembers.EqualsTo(other.EqualityMembers)
+             && Settings.Equals(other.Settings);
    }
 
    public override int GetHashCode()
    {
-      return SymbolEqualityComparer.Default.GetHashCode(Type);
+      unchecked
+      {
+         var hashCode = TypeFullyQualified.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ Settings.GetHashCode();
+
+         return hashCode;
+      }
    }
 }

@@ -1,176 +1,31 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class EnumSourceGeneratorState
-   : IEquatable<EnumSourceGeneratorState>, IComparable<EnumSourceGeneratorState>
+public class EnumSourceGeneratorState : EnumSourceGeneratorStateBase<int>, IEquatable<EnumSourceGeneratorState>
 {
-   public string? Namespace { get; }
-
-   public INamedTypeSymbol EnumType { get; }
-   public string EnumTypeFullyQualified { get; }
-   public string EnumTypeMinimallyQualified { get; }
-
-   public ITypeSymbol KeyType { get; }
-   public string KeyTypeFullyQualified { get; }
-   public string KeyTypeMinimallyQualified { get; }
-
-   public string RuntimeTypeName { get; }
-
-   public string KeyPropertyName { get; private set; }
-   public string KeyArgumentName { get; private set; }
-   public string KeyComparerMember { get; private set; }
-   public bool NeedsDefaultComparer { get; private set; }
-   public bool IsExtensible { get; private set; }
-
-   public bool IsValidatable { get; }
-
-   public IBaseEnumState? BaseEnum { get; private set; }
-
-   [MemberNotNullWhen(true, nameof(BaseEnum))]
-   public bool HasBaseEnum => BaseEnum is not null;
-
-   public string? NullableQuestionMarkEnum { get; }
-   public string? NullableQuestionMarkKey { get; }
-
-   private IReadOnlyList<IFieldSymbol>? _items;
-   public IReadOnlyList<IFieldSymbol> Items => _items ??= EnumType.GetEnumItems();
-
-   private IReadOnlyList<InstanceMemberInfo>? _assignableInstanceFieldsAndProperties;
-   public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties => _assignableInstanceFieldsAndProperties ??= EnumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
-
-   public EnumSourceGeneratorState(
-      INamedTypeSymbol enumType,
-      INamedTypeSymbol enumInterface)
+   public EnumSourceGeneratorState(INamedTypeSymbol type, INamedTypeSymbol enumInterface)
+      : base(type, enumInterface)
    {
-      if (enumInterface is null)
-         throw new ArgumentNullException(nameof(enumInterface));
-
-      EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
-      EnumTypeFullyQualified = EnumType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      EnumTypeMinimallyQualified = EnumType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-
-      Namespace = enumType.ContainingNamespace?.IsGlobalNamespace == true ? null : enumType.ContainingNamespace?.ToString();
-
-      KeyType = enumInterface.TypeArguments[0];
-      KeyTypeFullyQualified = KeyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      KeyTypeMinimallyQualified = KeyType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-
-      IsValidatable = enumInterface.IsValidatableEnumInterface();
-
-      NullableQuestionMarkEnum = EnumType.IsReferenceType ? "?" : null;
-      NullableQuestionMarkKey = KeyType.IsReferenceType ? "?" : null;
-
-      var enumSettings = enumType.FindEnumGenerationAttribute();
-
-      if (!DetermineBaseEnum())
-         InitializeFromSettings(enumSettings, false);
-
-      IsExtensible = enumType.IsReferenceType && (enumSettings?.IsExtensible() ?? false);
-
-      RuntimeTypeName = IsExtensible ? "{GetType().Name}" : enumType.Name;
    }
 
-   [MemberNotNull(nameof(KeyComparerMember), nameof(KeyPropertyName), nameof(KeyArgumentName))]
-   private void InitializeFromSettings(AttributeData? enumSettings, bool isFromBaseEnum)
+   protected override int GetBaseEnumExtension(INamedTypeSymbol baseType)
    {
-      KeyComparerMember = GetKeyComparerMember(enumSettings, out var needsDefaultComparer);
-      KeyPropertyName = GetKeyPropertyName(enumSettings);
-      KeyArgumentName = KeyPropertyName.MakeArgumentName();
-      NeedsDefaultComparer = !isFromBaseEnum && needsDefaultComparer;
-   }
-
-   private static string GetKeyComparerMember(AttributeData? enumSettingsAttribute, out bool needsDefaultComparer)
-   {
-      var comparerMemberName = enumSettingsAttribute?.FindKeyComparer();
-
-      needsDefaultComparer = comparerMemberName is null;
-      return comparerMemberName ?? "_defaultKeyComparerMember";
-   }
-
-   private static string GetKeyPropertyName(AttributeData? enumSettingsAttribute)
-   {
-      var name = enumSettingsAttribute?.FindKeyPropertyName();
-
-      if (name is not null)
-      {
-         if (!StringComparer.OrdinalIgnoreCase.Equals(name, "item"))
-            return name;
-      }
-
-      return "Key";
-   }
-
-   public void SetBaseType(EnumSourceGeneratorState other)
-   {
-      if (BaseEnum is SameAssemblyBaseEnumState)
-         return;
-
-      SetBaseTypeInternal(new SameAssemblyBaseEnumState(other));
-   }
-
-   [MemberNotNullWhen(true, nameof(KeyComparerMember), nameof(KeyPropertyName), nameof(KeyArgumentName))]
-   private bool DetermineBaseEnum()
-   {
-      if (EnumType.BaseType is null)
-         return false;
-
-      if (!EnumType.BaseType.IsEnum(out var enumInterfaces))
-         return false;
-
-      var baseInterface = enumInterfaces.GetValidEnumInterface(EnumType.BaseType);
-
-      if (baseInterface is null)
-         return false;
-
-      SetBaseTypeInternal(new BaseEnumState(EnumType.BaseType));
-      return true;
-   }
-
-   [MemberNotNull(nameof(KeyComparerMember), nameof(KeyPropertyName), nameof(KeyArgumentName))]
-   private void SetBaseTypeInternal(IBaseEnumState other)
-   {
-      BaseEnum = other;
-
-      var enumSettings = other.Type.FindEnumGenerationAttribute();
-      InitializeFromSettings(enumSettings, true);
-
-      IsExtensible = false;
-   }
-
-   public bool Equals(EnumSourceGeneratorState? other)
-   {
-      return SymbolEqualityComparer.Default.Equals(EnumType, other?.EnumType);
+      return default;
    }
 
    public override bool Equals(object? obj)
    {
-      if (ReferenceEquals(null, obj))
-         return false;
-      if (ReferenceEquals(this, obj))
-         return true;
-      if (obj.GetType() != GetType())
-         return false;
-      return Equals((EnumSourceGeneratorState)obj);
+      return obj is EnumSourceGeneratorState other && Equals(other);
+   }
+
+   public bool Equals(EnumSourceGeneratorState? other)
+   {
+      return base.Equals(other);
    }
 
    public override int GetHashCode()
    {
-      return SymbolEqualityComparer.Default.GetHashCode(EnumType);
-   }
-
-   public int CompareTo(EnumSourceGeneratorState? other)
-   {
-      if (other is null || SymbolEqualityComparer.Default.Equals(EnumType.BaseType, other.EnumType))
-         return 1;
-
-      if (SymbolEqualityComparer.Default.Equals(other.EnumType.BaseType, EnumType))
-         return -1;
-
-      if (EnumType.BaseType is null)
-         return other.EnumType.BaseType is null ? 0 : -1;
-
-      return other.EnumType.BaseType is null ? 1 : 0;
+      return base.GetHashCode();
    }
 }

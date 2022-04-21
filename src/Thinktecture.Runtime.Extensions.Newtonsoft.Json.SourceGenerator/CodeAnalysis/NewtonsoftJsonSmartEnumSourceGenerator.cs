@@ -2,41 +2,41 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-/// <summary>
-/// Source generator for JsonConverter for Smart Enums.
-/// </summary>
 [Generator]
-public class NewtonsoftJsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase
+public class NewtonsoftJsonSmartEnumSourceGenerator : SmartEnumSourceGeneratorBase<NewtonsoftJsonEnumSourceGeneratorState, NewtonsoftJsonBaseEnumExtension>
 {
-   /// <inheritdoc />
    public NewtonsoftJsonSmartEnumSourceGenerator()
       : base("_NewtonsoftJson")
    {
    }
 
-   /// <inheritdoc />
-   protected override string GenerateEnum(EnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
+   protected override NewtonsoftJsonEnumSourceGeneratorState CreateState(INamedTypeSymbol type, INamedTypeSymbol enumInterface)
+   {
+      return new NewtonsoftJsonEnumSourceGeneratorState(type, enumInterface);
+   }
+
+   protected override string GenerateEnum(NewtonsoftJsonEnumSourceGeneratorState state, StringBuilderProvider stringBuilderProvider)
    {
       if (state is null)
          throw new ArgumentNullException(nameof(state));
 
-      if (state.EnumType.HasAttribute("Newtonsoft.Json.JsonConverterAttribute"))
+      if (state.HasJsonConverterAttribute)
          return String.Empty;
 
       var ns = state.Namespace;
-      var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Type.GetTypeMembers("ValueObjectNewtonsoftJsonConverter").Any());
+      var requiresNew = state.HasBaseEnum && (state.BaseEnum.IsSameAssembly || state.BaseEnum.Extension.HasValueObjectNewtonsoftJsonConverter);
 
       return $@"{GENERATED_CODE_PREFIX}
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-   partial {(state.EnumType.IsValueType ? "struct" : "class")} {state.EnumType.Name}
+   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public {(requiresNew ? "new " : null)}class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{state.EnumTypeFullyQualified}, {state.KeyTypeFullyQualified}>
+      public {(requiresNew ? "new " : null)}class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{state.EnumTypeFullyQualified}, {state.KeyProperty.TypeFullyQualifiedWithNullability}>
       {{
          public ValueObjectNewtonsoftJsonConverter()
-            : base({state.EnumTypeFullyQualified}.Get, static obj => obj.{state.KeyPropertyName})
+            : base({state.EnumTypeFullyQualified}.Get, static obj => obj.{state.KeyProperty.Name})
          {{
          }}
       }}

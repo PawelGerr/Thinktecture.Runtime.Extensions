@@ -937,7 +937,7 @@ namespace Thinktecture.Tests
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum DerivedItem = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Id, global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.DerivedItem.Foo);
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum Item1 = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Id, global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum.Item1.Foo);
 
-      private ExtendedTestEnum(string id, System.Action foo)
+      private ExtendedTestEnum(string id, global::System.Action foo)
          : base(id, foo)
       {
          ValidateConstructorArguments(ref id, ref foo);
@@ -946,7 +946,7 @@ namespace Thinktecture.Tests
          this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Runtime.Tests.TestEnums.ExtensibleTestEnum).GetHashCode() * 397 ^ EqualityComparer.GetHashCode(id));
       }
 
-      static partial void ValidateConstructorArguments(ref string id, ref System.Action foo);
+      static partial void ValidateConstructorArguments(ref string id, ref global::System.Action foo);
 
       /// <summary>
       /// Gets an enumeration item for provided <paramref name=""id""/>.
@@ -1205,7 +1205,7 @@ namespace Thinktecture.Tests
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum DerivedItem = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Tests.ExtensibleTestEnum.DerivedItem.Key, global::Thinktecture.Tests.ExtensibleTestEnum.DerivedItem.Foo);
       public new static readonly global::Thinktecture.Tests.ExtendedTestEnum Item1 = new global::Thinktecture.Tests.ExtendedTestEnum(global::Thinktecture.Tests.ExtensibleTestEnum.Item1.Key, global::Thinktecture.Tests.ExtensibleTestEnum.Item1.Foo);
 
-      private ExtendedTestEnum(string key, System.Action foo)
+      private ExtendedTestEnum(string key, global::System.Action foo)
          : base(key, foo)
       {
          ValidateConstructorArguments(ref key, ref foo);
@@ -1214,7 +1214,7 @@ namespace Thinktecture.Tests
          this._hashCode = new global::System.Lazy<int>(() => typeof(global::Thinktecture.Tests.ExtensibleTestEnum).GetHashCode() * 397 ^ EqualityComparer.GetHashCode(key));
       }
 
-      static partial void ValidateConstructorArguments(ref string key, ref System.Action foo);
+      static partial void ValidateConstructorArguments(ref string key, ref global::System.Action foo);
 
       /// <summary>
       /// Gets an enumeration item for provided <paramref name=""key""/>.

@@ -1,14 +1,14 @@
 using System.Text;
-using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture;
 
 public static class StringBuilderExtensions
 {
-   public static void GenerateStructLayoutAttributeIfRequired(this StringBuilder sb, ITypeSymbol type)
+   public static void GenerateStructLayoutAttributeIfRequired<TBaseEnumExtension>(this StringBuilder sb, EnumSourceGeneratorStateBase<TBaseEnumExtension> state)
+      where TBaseEnumExtension : IEquatable<TBaseEnumExtension>
    {
-      if (type.IsValueType && !type.HasStructLayoutAttribute())
+      if (!state.IsReferenceType && !state.HasStructLayoutAttribute)
       {
          sb.Append(@"
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
@@ -46,7 +46,7 @@ public static class StringBuilderExtensions
             sb.Append(comma);
 
          var member = members[i];
-         sb.Append(prefix).Append(member.TypeFullyQualified);
+         sb.Append(prefix).Append(member.TypeFullyQualifiedWithNullability);
 
          if (useNullableTypes && !member.IsNullableStruct)
             sb.Append("?");
