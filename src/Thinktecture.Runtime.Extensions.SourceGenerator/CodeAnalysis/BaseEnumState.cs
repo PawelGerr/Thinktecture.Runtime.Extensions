@@ -36,15 +36,15 @@ public sealed class BaseEnumState<TExtension> : IBaseEnumState<TExtension>, IEqu
 
    private static IReadOnlyList<DefaultMemberState> GetConstructorArguments(INamedTypeSymbol type)
    {
+      var ctorAttrArgs = GetCtorParameterNames(type);
+
       var ctor = type.Constructors
-                     .Where(c => c.MethodKind == MethodKind.Constructor && c.DeclaredAccessibility == Accessibility.Protected)
-                     .OrderBy(c => c.Parameters.Length)
-                     .FirstOrDefault();
+                     .FirstOrDefault(c => c.MethodKind == MethodKind.Constructor
+                                          && c.DeclaredAccessibility == Accessibility.Protected
+                                          && c.Parameters.Length == ctorAttrArgs.Count);
 
       if (ctor is null)
-         throw new Exception($"'{type.Name}' doesn't have a protected constructor.");
-
-      var ctorAttrArgs = GetCtorParameterNames(type, ctor);
+         throw new Exception($"'{type.Name}' doesn't have a protected constructor with {ctorAttrArgs.Count} arguments.");
 
       return ctor.Parameters
                  .Select((p, i) =>
@@ -59,7 +59,7 @@ public sealed class BaseEnumState<TExtension> : IBaseEnumState<TExtension>, IEqu
                  .ToList();
    }
 
-   private static IReadOnlyList<TypedConstant> GetCtorParameterNames(INamedTypeSymbol type, IMethodSymbol ctor)
+   private static IReadOnlyList<TypedConstant> GetCtorParameterNames(INamedTypeSymbol type)
    {
       var ctorAttr = type.FindValueObjectConstructorAttribute();
 
@@ -69,12 +69,7 @@ public sealed class BaseEnumState<TExtension> : IBaseEnumState<TExtension>, IEqu
       if (ctorAttr.ConstructorArguments.Length != 1)
          throw new Exception($"'ValueObjectConstructorAttribute' of '{type.Name}' must have exactly 1 argument.");
 
-      var ctorAttrArgs = ctorAttr.ConstructorArguments[0].Values;
-
-      if (ctorAttrArgs.Length != ctor.Parameters.Length)
-         throw new Exception($"'ValueObjectConstructorAttribute' of '{type.Name}' specifies {ctorAttrArgs.Length} parameters but the constructor takes {ctor.Parameters.Length} arguments.");
-
-      return ctorAttrArgs;
+      return ctorAttr.ConstructorArguments[0].Values;
    }
 
    public override bool Equals(object? obj)

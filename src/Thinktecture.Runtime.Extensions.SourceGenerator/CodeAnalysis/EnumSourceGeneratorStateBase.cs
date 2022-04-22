@@ -17,7 +17,7 @@ public abstract class EnumSourceGeneratorStateBase<TBaseEnumExtension>
 
    public bool IsValidatable { get; }
 
-   public IBaseEnumState<TBaseEnumExtension>? BaseEnum { get; private set; }
+   public IBaseEnumState<TBaseEnumExtension>? BaseEnum { get; }
 
    [MemberNotNullWhen(true, nameof(BaseEnum))]
    public bool HasBaseEnum => BaseEnum is not null;
@@ -53,13 +53,11 @@ public abstract class EnumSourceGeneratorStateBase<TBaseEnumExtension>
       IsValidatable = enumInterface.IsValidatableEnumInterface();
       Settings = new EnumSettings(type.FindEnumGenerationAttribute());
 
+      BaseEnum = GetBaseEnum(type);
+
       var keyType = enumInterface.TypeArguments[0];
+      KeyProperty = (BaseEnum?.Settings ?? Settings).CreateKeyProperty(keyType);
       HasCreateInvalidImplementation = type.HasCreateInvalidImplementation(keyType);
-
-      DetermineBaseEnum();
-
-      var keyPropertyName = GetKeyPropertyName(HasBaseEnum ? BaseEnum.Settings : Settings);
-      KeyProperty = new DefaultMemberState(keyPropertyName, keyType, keyPropertyName.MakeArgumentName(), false);
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
@@ -71,53 +69,26 @@ public abstract class EnumSourceGeneratorStateBase<TBaseEnumExtension>
       return _enumType.DeclaringSyntaxReferences.First().GetSyntax().GetLocation();
    }
 
-   private static string GetKeyPropertyName(EnumSettings enumSettingsAttribute)
-   {
-      var name = enumSettingsAttribute.KeyPropertyName;
-
-      if (name is not null)
-      {
-         if (!StringComparer.OrdinalIgnoreCase.Equals(name, "item"))
-            return name;
-      }
-
-      return "Key";
-   }
-
-   public void SetBaseType(EnumSourceGeneratorStateBase<TBaseEnumExtension> other)
-   {
-      if (BaseEnum is SameAssemblyBaseEnumState<TBaseEnumExtension>)
-         return;
-
-      BaseEnum = new SameAssemblyBaseEnumState<TBaseEnumExtension>(other, other._enumType, GetBaseEnumExtension(other._enumType));
-   }
-
    protected abstract TBaseEnumExtension GetBaseEnumExtension(INamedTypeSymbol baseType);
 
-   private void DetermineBaseEnum()
+   private IBaseEnumState<TBaseEnumExtension>? GetBaseEnum(INamedTypeSymbol type)
    {
-      if (_enumType.BaseType is null)
-         return;
+      if (type.BaseType is null)
+         return null;
 
-      if (!_enumType.BaseType.IsEnum(out var enumInterfaces))
-         return;
+      if (!type.BaseType.IsEnum(out var enumInterfaces))
+         return null;
 
-      var baseInterface = enumInterfaces.GetValidEnumInterface(_enumType.BaseType);
+      var baseInterface = enumInterfaces.GetValidEnumInterface(type.BaseType);
 
       if (baseInterface is null)
-         return;
+         return null;
 
-      BaseEnum = new BaseEnumState<TBaseEnumExtension>(_enumType.BaseType, GetBaseEnumExtension(_enumType.BaseType));
-   }
+      var extension = GetBaseEnumExtension(type.BaseType);
 
-   internal bool HasBaseType()
-   {
-      return _enumType.BaseType is not null && _enumType.BaseType.SpecialType != SpecialType.System_Object;
-   }
-
-   internal bool IsBaseType(EnumSourceGeneratorStateBase<TBaseEnumExtension> baseTypeCandidate)
-   {
-      return SymbolEqualityComparer.Default.Equals(_enumType.BaseType, baseTypeCandidate._enumType);
+      return SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, type.BaseType.ContainingAssembly)
+                ? new SameAssemblyBaseEnumState<TBaseEnumExtension>(type.BaseType, extension, baseInterface.TypeArguments[0])
+                : new BaseEnumState<TBaseEnumExtension>(type.BaseType, extension);
    }
 
    public override bool Equals(object? obj)

@@ -5,35 +5,41 @@ namespace Thinktecture.CodeAnalysis;
 public sealed class SameAssemblyBaseEnumState<TExtension> : IBaseEnumState<TExtension>, IEquatable<SameAssemblyBaseEnumState<TExtension>>
    where TExtension : IEquatable<TExtension>
 {
-   private readonly EnumSourceGeneratorStateBase<TExtension> _baseEnumState;
+   private readonly INamedTypeSymbol _type;
 
    public bool IsSameAssembly => true;
 
-   public string TypeFullyQualified => _baseEnumState.EnumTypeFullyQualified;
-   public string TypeMinimallyQualified => _baseEnumState.EnumTypeMinimallyQualified;
+   public string TypeFullyQualified { get; }
+   public string TypeMinimallyQualified { get; }
 
-   public string? NullableQuestionMark => _baseEnumState.IsReferenceType ? "?" : null;
+   public string? NullableQuestionMark => _type.IsReferenceType ? "?" : null;
 
    public IReadOnlyList<IMemberState> ConstructorArguments { get; }
    public IReadOnlyList<IMemberState> Items { get; }
 
    public TExtension Extension { get; }
-   public EnumSettings Settings => _baseEnumState.Settings;
+   public EnumSettings Settings { get; }
 
-   public SameAssemblyBaseEnumState(EnumSourceGeneratorStateBase<TExtension> baseEnumState, INamedTypeSymbol baseType, TExtension extension)
+   public SameAssemblyBaseEnumState(INamedTypeSymbol type, TExtension extension, ITypeSymbol keyType)
    {
       Extension = extension;
-      _baseEnumState = baseEnumState;
+      _type = type;
 
-      ConstructorArguments = GetConstructorArguments(baseEnumState);
-      Items = baseType.EnumerateEnumItems().Select(InstanceMemberInfo.CreateFrom).ToList();
+      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+      Settings = new EnumSettings(type.FindEnumGenerationAttribute());
+
+      ConstructorArguments = GetConstructorArguments(type, Settings.CreateKeyProperty(keyType));
+      Items = type.EnumerateEnumItems().Select(InstanceMemberInfo.CreateFrom).ToList();
    }
 
-   private static List<IMemberState> GetConstructorArguments(EnumSourceGeneratorStateBase<TExtension> baseEnumState)
+   private static List<IMemberState> GetConstructorArguments(INamedTypeSymbol type, IMemberState keyProperty)
    {
-      var args = new List<IMemberState> { baseEnumState.KeyProperty };
+      var args = new List<IMemberState> { keyProperty };
+      var assignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
 
-      foreach (var member in baseEnumState.AssignableInstanceFieldsAndProperties)
+      foreach (var member in assignableInstanceFieldsAndProperties)
       {
          var mappedMemberName = member.Settings.MappedMemberName;
 
@@ -68,7 +74,7 @@ public sealed class SameAssemblyBaseEnumState<TExtension> : IBaseEnumState<TExte
          return true;
 
       return TypeFullyQualified == other.TypeFullyQualified
-             && _baseEnumState.IsReferenceType.Equals(other._baseEnumState.IsReferenceType)
+             && _type.IsReferenceType.Equals(other._type.IsReferenceType)
              && Equals(Extension, other.Extension)
              && Settings.Equals(other.Settings)
              && ConstructorArguments.EqualsTo(other.ConstructorArguments)
@@ -80,7 +86,7 @@ public sealed class SameAssemblyBaseEnumState<TExtension> : IBaseEnumState<TExte
       unchecked
       {
          var hashCode = TypeFullyQualified.GetHashCode();
-         hashCode = (hashCode * 397) ^ _baseEnumState.IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ _type.IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ (Extension?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ ConstructorArguments.ComputeHashCode();

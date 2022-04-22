@@ -94,8 +94,6 @@ public abstract class SmartEnumSourceGeneratorBase<T, TBaseEnumExtension> : Thin
 
          if (enumStates.Count == 0)
             return;
-
-         Prepare(enumStates);
       }
       catch (Exception ex)
       {
@@ -121,20 +119,6 @@ public abstract class SmartEnumSourceGeneratorBase<T, TBaseEnumExtension> : Thin
                                                        enumState.GetLocationOrNullSafe(context),
                                                        enumState.Name, ex.Message));
          }
-      }
-   }
-
-   private static void Prepare(IReadOnlyList<T> states)
-   {
-      foreach (var enumState in states)
-      {
-         if (!enumState.HasBaseType())
-            continue;
-
-         var baseEnum = states.FirstOrDefault(s => enumState.IsBaseType(s));
-
-         if (baseEnum is not null)
-            enumState.SetBaseType(baseEnum);
       }
    }
 
