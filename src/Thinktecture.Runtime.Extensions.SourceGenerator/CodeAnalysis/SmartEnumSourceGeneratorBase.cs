@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -20,7 +19,8 @@ public abstract class SmartEnumSourceGeneratorBase<T, TBaseEnumExtension> : Thin
       var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetEnumStateOrNull)
                               .Where(static state => state.HasValue)
                               .Select((state, _) => state!.Value)
-                              .Collect();
+                              .Collect()
+                              .SelectMany((states, _) => states.Distinct());
 
       context.RegisterSourceOutput(candidates, GenerateCode);
    }
@@ -81,44 +81,32 @@ public abstract class SmartEnumSourceGeneratorBase<T, TBaseEnumExtension> : Thin
 
    protected abstract T CreateState(INamedTypeSymbol type, INamedTypeSymbol enumInterface);
 
-   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<T>> states)
+   private void GenerateCode(SourceProductionContext context, SourceGenState<T> state)
    {
-      if (states.IsDefaultOrEmpty)
-         return;
-
-      IReadOnlyList<T> enumStates;
-
-      try
+      if (state.Exception is not null)
       {
-         enumStates = states.GetDistinctInnerStates(context);
-
-         if (enumStates.Count == 0)
-            return;
-      }
-      catch (Exception ex)
-      {
-         context.ReportException(ex);
+         context.ReportException(state.Exception);
          return;
       }
+
+      var enumState = state.State;
+
+      if (enumState is null)
+         return;
 
       var stringBuilderProvider = new StringBuilderProvider();
 
-      foreach (var enumState in enumStates)
+      try
       {
-         context.CancellationToken.ThrowIfCancellationRequested();
+         var generatedCode = GenerateEnum(enumState, stringBuilderProvider);
 
-         try
-         {
-            var generatedCode = GenerateEnum(enumState, stringBuilderProvider);
-
-            EmitFile(context, enumState.Namespace, enumState.Name, generatedCode);
-         }
-         catch (Exception ex)
-         {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                       enumState.GetLocationOrNullSafe(context),
-                                                       enumState.Name, ex.Message));
-         }
+         EmitFile(context, enumState.Namespace, enumState.Name, generatedCode);
+      }
+      catch (Exception ex)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
+                                                    enumState.GetLocationOrNullSafe(context),
+                                                    enumState.Name, ex.Message));
       }
    }
 

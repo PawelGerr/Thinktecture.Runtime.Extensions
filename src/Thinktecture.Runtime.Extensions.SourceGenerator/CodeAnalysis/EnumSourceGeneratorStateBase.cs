@@ -114,7 +114,7 @@ public abstract class EnumSourceGeneratorStateBase<TBaseEnumExtension>
              && Settings.Equals(other.Settings)
              && ItemNames.EqualsTo(other.ItemNames)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
-             && FullyQualifiedDerivedTypes.Equals(other.FullyQualifiedDerivedTypes);
+             && FullyQualifiedDerivedTypes.EqualsTo(other.FullyQualifiedDerivedTypes);
    }
 
    public override int GetHashCode()

@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -23,7 +22,8 @@ public abstract class ValueObjectSourceGeneratorBase<T> : ThinktectureSourceGene
       var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetValueObjectStateOrNull)
                               .Where(static state => state.HasValue)
                               .Select((state, _) => state!.Value)
-                              .Collect();
+                              .Collect()
+                              .SelectMany((states, _) => states.Distinct());
 
       context.RegisterSourceOutput(candidates, GenerateCode);
    }
@@ -79,41 +79,32 @@ public abstract class ValueObjectSourceGeneratorBase<T> : ThinktectureSourceGene
 
    protected abstract T CreateState(INamedTypeSymbol type, AttributeData valueObjectAttribute);
 
-   private void GenerateCode(SourceProductionContext context, ImmutableArray<SourceGenState<T>> states)
+   private void GenerateCode(SourceProductionContext context, SourceGenState<T> state)
    {
-      if (states.IsDefaultOrEmpty)
-         return;
-
-      IReadOnlyList<T> valueObjectStates;
-
-      try
+      if (state.Exception is not null)
       {
-         valueObjectStates = states.GetDistinctInnerStates(context);
-      }
-      catch (Exception ex)
-      {
-         context.ReportException(ex);
+         context.ReportException(state.Exception);
          return;
       }
+
+      var valueObjectState = state.State;
+
+      if (valueObjectState is null)
+         return;
 
       var stringBuilderProvider = new StringBuilderProvider();
 
-      foreach (var valueObjectState in valueObjectStates)
+      try
       {
-         context.CancellationToken.ThrowIfCancellationRequested();
+         var generatedCode = GenerateValueObject(valueObjectState, stringBuilderProvider);
 
-         try
-         {
-            var generatedCode = GenerateValueObject(valueObjectState, stringBuilderProvider);
-
-            EmitFile(context, valueObjectState.Namespace, valueObjectState.Name, generatedCode);
-         }
-         catch (Exception ex)
-         {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                       valueObjectState.GetLocationOrNullSafe(context),
-                                                       valueObjectState.Name, ex.Message));
-         }
+         EmitFile(context, valueObjectState.Namespace, valueObjectState.Name, generatedCode);
+      }
+      catch (Exception ex)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
+                                                    valueObjectState.GetLocationOrNullSafe(context),
+                                                    valueObjectState.Name, ex.Message));
       }
    }
 
