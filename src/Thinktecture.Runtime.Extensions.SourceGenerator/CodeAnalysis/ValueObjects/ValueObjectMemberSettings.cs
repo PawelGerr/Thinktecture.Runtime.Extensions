@@ -27,7 +27,7 @@ public class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
 
    public static ValueObjectMemberSettings Create(ISymbol member)
    {
-      var attr = member.FindAttribute("Thinktecture.ValueObjectEqualityMemberAttribute");
+      var attr = member.FindAttribute(static type => type.Name == "ValueObjectEqualityMemberAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
 
       return attr is null ? None : new ValueObjectMemberSettings(attr);
    }

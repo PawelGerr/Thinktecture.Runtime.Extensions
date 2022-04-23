@@ -4,18 +4,23 @@ namespace Thinktecture;
 
 public static class SymbolExtensions
 {
-   public static AttributeData? FindAttribute(this ISymbol type, string attributeType)
+   public static AttributeData? FindAttribute(this ISymbol type, Func<ITypeSymbol, bool> predicate)
    {
-      return type.GetAttributes().FirstOrDefault(a => a.AttributeClass?.ToString() == attributeType);
+      return type.GetAttributes().FirstOrDefault(a => a.AttributeClass is not null && predicate(a.AttributeClass));
    }
 
-   public static bool HasAttribute(this ISymbol symbol, string attributeType)
+   public static bool HasAttribute(this ISymbol symbol, Func<ITypeSymbol, bool> predicate)
    {
-      return symbol.FindAttribute(attributeType) is not null;
+      return symbol.FindAttribute(predicate) is not null;
    }
 
    public static AttributeData? FindValueObjectConstructorAttribute(this ISymbol symbol)
    {
-      return symbol.FindAttribute("Thinktecture.Internal.ValueObjectConstructorAttribute");
+      return symbol.FindAttribute(static type => type.Name == "ValueObjectConstructorAttribute"
+                                                 && type.ContainingNamespace is
+                                                 {
+                                                    Name: "Internal",
+                                                    ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
+                                                 });
    }
 }

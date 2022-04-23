@@ -22,7 +22,7 @@ public class EnumMemberSettings : IEquatable<EnumMemberSettings>
 
    public static EnumMemberSettings Create(ISymbol member)
    {
-      var attr = member.FindAttribute("Thinktecture.EnumGenerationMemberAttribute");
+      var attr = member.FindAttribute(static type => type.Name == "EnumGenerationMemberAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
 
       return attr is null ? None : new EnumMemberSettings(attr);
    }

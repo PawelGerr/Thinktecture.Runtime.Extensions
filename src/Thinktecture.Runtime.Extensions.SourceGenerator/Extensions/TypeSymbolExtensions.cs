@@ -214,12 +214,12 @@ public static class TypeSymbolExtensions
 
    public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
    {
-      return type.FindAttribute("Thinktecture.EnumGenerationAttribute");
+      return type.FindAttribute(static attrType => attrType.Name == "EnumGenerationAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
    }
 
    public static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)
    {
-      return type.FindAttribute("Thinktecture.ValueObjectAttribute");
+      return type.FindAttribute(static attrType => attrType.Name == "ValueObjectAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
    }
 
    public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(this ITypeSymbol enumType)
@@ -266,7 +266,7 @@ public static class TypeSymbolExtensions
    public static IEnumerable<ISymbol> GetNonIgnoredMembers(this ITypeSymbol type, string? name = null)
    {
       return (name is not null ? type.GetMembers(name) : type.GetMembers())
-         .Where(m => !m.HasAttribute("Thinktecture.ValueObjectIgnoreAttribute"));
+         .Where(m => !m.HasAttribute(static attrType => attrType.Name == "ValueObjectIgnoreAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }));
    }
 
    public static IReadOnlyList<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
