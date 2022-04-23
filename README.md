@@ -13,6 +13,24 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
+# Required SDK/Compiler Version
+* Compiler version: 4.1.0
+
+Verify the version by placing `#error version` into any of your cs-files and build the project/solution.  
+The build output should display the compiler version: 
+```
+MyFile.cs(15, 8): [CS1029] #error: 'version'
+MyFile.cs(15, 8): [CS8304] Compiler version: '4.1.0-5.22165.10 (e555772d)'. Language version: 10.0.
+```
+
+Update your IDE and SDK to newest version.  
+Works/tested with:
+* SDK: 6.0.202
+* Visual Studio: 17.1.5
+* JetBrains Rider: 2022.1 
+
+> Please note: For developers having both, JetBrains Rider and Visual Studio, please update Visual Studio as well, because Rider is using the SDK of Visual Studio by default.
+
 
 # Smart Enums
 
