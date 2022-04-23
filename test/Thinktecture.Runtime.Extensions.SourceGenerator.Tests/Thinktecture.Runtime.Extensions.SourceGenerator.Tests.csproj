@@ -2,11 +2,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.AspNetCore\Thinktecture.Runtime.Extensions.AspNetCore.csproj" />
-      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Json.SourceGenerator.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json\Thinktecture.Runtime.Extensions.Json.csproj" />
-      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator\Thinktecture.Runtime.Extensions.MessagePack.SourceGenerator.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack\Thinktecture.Runtime.Extensions.MessagePack.csproj" />
-      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator\Thinktecture.Runtime.Extensions.Newtonsoft.Json.SourceGenerator.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Newtonsoft.Json\Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />

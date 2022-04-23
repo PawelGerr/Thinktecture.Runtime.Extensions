@@ -1,14 +1,14 @@
 using System.Text;
 using Thinktecture.CodeAnalysis;
+using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture;
 
 public static class StringBuilderExtensions
 {
-   public static void GenerateStructLayoutAttributeIfRequired<TBaseEnumExtension>(this StringBuilder sb, EnumSourceGeneratorStateBase<TBaseEnumExtension> state)
-      where TBaseEnumExtension : IEquatable<TBaseEnumExtension>
+   public static void GenerateStructLayoutAttributeIfRequired(this StringBuilder sb, EnumSourceGeneratorState state)
    {
-      if (!state.IsReferenceType && !state.HasStructLayoutAttribute)
+      if (!state.IsReferenceType && !state.AttributeInfo.HasStructLayoutAttribute)
       {
          sb.Append(@"
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");

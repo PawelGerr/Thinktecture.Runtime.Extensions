@@ -13,8 +13,6 @@
       <Compile Include="..\..\shared\IsExternalInit.cs">
          <Link>IsExternalInit.cs</Link>
       </Compile>
-
-      <PackageReference Include="Moq" Version="4.17.2" />
    </ItemGroup>
    <ItemGroup>
       <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />

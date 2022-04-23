@@ -1,4 +1,5 @@
 using Thinktecture.CodeAnalysis;
+using Thinktecture.CodeAnalysis.SmartEnums;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit.Abstractions;
 
@@ -1139,7 +1140,7 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, "ExtendedTestEnum", typeof(IEnum<>).Assembly);
       AssertOutput(output, _GENERATED_HEADER + @"
 namespace Thinktecture.Tests
 {

@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
+using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture;
 

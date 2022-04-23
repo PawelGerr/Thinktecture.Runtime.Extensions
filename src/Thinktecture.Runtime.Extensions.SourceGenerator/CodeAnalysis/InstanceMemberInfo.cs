@@ -1,4 +1,6 @@
 using Microsoft.CodeAnalysis;
+using Thinktecture.CodeAnalysis.SmartEnums;
+using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
 

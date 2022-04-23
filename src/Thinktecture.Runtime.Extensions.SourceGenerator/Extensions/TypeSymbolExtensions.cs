@@ -114,15 +114,73 @@ public static class TypeSymbolExtensions
    public static bool IsNonValidatableEnumInterface(this ITypeSymbol type)
    {
       return type.Name == "IEnum"
-             && type.ContainingNamespace?.Name == "Thinktecture"
-             && type.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true;
+             && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true };
    }
 
    public static bool IsValidatableEnumInterface(this ITypeSymbol type)
    {
       return type.Name == "IValidatableEnum"
-             && type.ContainingNamespace?.Name == "Thinktecture"
-             && type.ContainingNamespace.ContainingNamespace?.IsGlobalNamespace == true;
+             && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true };
+   }
+
+   public static bool IsMessagePackFormatterAttribute(this ITypeSymbol type)
+   {
+      return type.Name == "MessagePackFormatterAttribute"
+             && type.ContainingNamespace is { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true };
+   }
+
+   public static bool IsStructLayoutAttribute(this ITypeSymbol type)
+   {
+      return type.Name == "StructLayoutAttribute"
+             && type.ContainingNamespace is
+             {
+                Name: "InteropServices",
+                ContainingNamespace:
+                {
+                   Name: "Runtime",
+                   ContainingNamespace:
+                   {
+                      Name: "System",
+                      ContainingNamespace.IsGlobalNamespace: true
+                   }
+                }
+             };
+   }
+
+   public static bool IsNewtonsoftJsonConverterAttribute(this ITypeSymbol type)
+   {
+      return type.Name == "JsonConverterAttribute"
+             && type.ContainingNamespace is
+             {
+                Name: "Json",
+                ContainingNamespace:
+                {
+                   Name: "Newtonsoft",
+                   ContainingNamespace.IsGlobalNamespace: true
+                }
+             };
+   }
+
+   public static bool IsJsonConverterAttribute(this ITypeSymbol type)
+   {
+      return type.Name == "JsonConverterAttribute"
+             && type.ContainingNamespace is
+             {
+                Name: "Serialization",
+                ContainingNamespace:
+                {
+                   Name: "Json",
+                   ContainingNamespace:
+                   {
+                      Name: "Text",
+                      ContainingNamespace:
+                      {
+                         Name: "System",
+                         ContainingNamespace.IsGlobalNamespace: true
+                      }
+                   }
+                }
+             };
    }
 
    public static IEnumerable<IFieldSymbol> EnumerateEnumItems(this ITypeSymbol enumType)
@@ -162,11 +220,6 @@ public static class TypeSymbolExtensions
    public static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)
    {
       return type.FindAttribute("Thinktecture.ValueObjectAttribute");
-   }
-
-   public static bool HasStructLayoutAttribute(this ITypeSymbol enumType)
-   {
-      return enumType.HasAttribute("System.Runtime.InteropServices.StructLayoutAttribute");
    }
 
    public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(this ITypeSymbol enumType)
@@ -224,8 +277,7 @@ public static class TypeSymbolExtensions
       return type.GetNonIgnoredMembers()
                  .Select(m =>
                          {
-                            if (instanceMembersOnly && m.IsStatic
-                                || !m.CanBeReferencedByName)
+                            if ((instanceMembersOnly && m.IsStatic) || !m.CanBeReferencedByName)
                                return null;
 
                             if (m is IFieldSymbol fds)

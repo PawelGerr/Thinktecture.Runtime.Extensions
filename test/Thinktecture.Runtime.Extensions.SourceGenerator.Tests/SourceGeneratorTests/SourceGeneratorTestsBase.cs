@@ -17,11 +17,22 @@ public abstract class SourceGeneratorTestsBase
       _output = output ?? throw new ArgumentNullException(nameof(output));
    }
 
-   protected string GetGeneratedOutput<T>(string source, params Assembly[] furtherAssemblies)
+   protected string GetGeneratedOutput<T>(
+      string source,
+      params Assembly[] furtherAssemblies)
+      where T : IIncrementalGenerator, new()
+   {
+      return GetGeneratedOutput<T>(source, null, furtherAssemblies);
+   }
+
+   protected string GetGeneratedOutput<T>(
+      string source,
+      string generatedFileNameFragment,
+      params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
-      var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies())
+      var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName?.Contains("Thinktecture") != true))
                        {
                           typeof(T).Assembly
                        };
@@ -45,7 +56,10 @@ public abstract class SourceGeneratorTestsBase
       var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
       errors.Should().BeEmpty();
 
-      var output = outputCompilation.SyntaxTrees.Skip(1).LastOrDefault()?.ToString();
+      var output = outputCompilation.SyntaxTrees
+                                    .Skip(1)
+                                    .SingleOrDefault(t => generatedFileNameFragment is null || t.FilePath.Contains(generatedFileNameFragment))?
+                                    .ToString();
 
       _output.WriteLine(output ?? "No output provided.");
 
