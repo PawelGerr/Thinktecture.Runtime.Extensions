@@ -12,10 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="MessagePack" Version="2.3.85" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'nestandard2.1' ">
-        <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+        <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     </ItemGroup>
 
 </Project>

@@ -26,7 +26,7 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
          return;
       }
 
-      if (state is null || generatorFactories.IsEmpty)
+      if (state is null || generatorFactories.IsDefaultOrEmpty)
          return;
 
       try

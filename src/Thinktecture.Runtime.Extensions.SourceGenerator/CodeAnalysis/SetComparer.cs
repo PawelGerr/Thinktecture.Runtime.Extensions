@@ -7,8 +7,8 @@ public class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
 {
    public bool Equals(ImmutableArray<T> x, ImmutableArray<T> y)
    {
-      if (x.IsEmpty)
-         return y.IsEmpty;
+      if (x.IsDefaultOrEmpty)
+         return y.IsDefaultOrEmpty;
 
       if (x.Length != y.Length)
          return false;
