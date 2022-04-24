@@ -19,14 +19,14 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
    {
       var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetEnumStateOrNull)
                               .Where(static state => state.HasValue)
-                              .Select((state, _) => state!.Value)
+                              .Select(static (state, _) => state!.Value)
                               .Collect()
-                              .SelectMany((states, _) => states.Distinct());
+                              .SelectMany(static (states, _) => states.Distinct());
 
       var generators = context.MetadataReferencesProvider
-                              .SelectMany((reference, _) => TryGetCodeGeneratorFactory(reference, out var factory)
-                                                               ? ImmutableArray.Create(factory)
-                                                               : ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty)
+                              .SelectMany(static (reference, _) => TryGetCodeGeneratorFactory(reference, out var factory)
+                                                                      ? ImmutableArray.Create(factory)
+                                                                      : ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty)
                               .Collect()
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
@@ -103,9 +103,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
       {
          var tds = (TypeDeclarationSyntax)context.Node;
          var type = context.SemanticModel.GetDeclaredSymbol(tds);
-
-         if (type is null)
-            return null;
 
          if (!type.IsEnum(out var enumInterfaces))
             return null;

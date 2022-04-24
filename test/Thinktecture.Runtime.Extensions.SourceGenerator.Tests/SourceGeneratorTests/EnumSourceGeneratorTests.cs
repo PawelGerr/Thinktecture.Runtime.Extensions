@@ -1,4 +1,3 @@
-using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Xunit.Abstractions;

@@ -107,7 +107,7 @@ internal static class TypeDeclarationSyntaxExtensions
 
    private static bool CouldBeEnumInterface(GenericNameSyntax genericNameSyntax)
    {
-      return genericNameSyntax.Identifier.Text is "IEnum" or "IValidatableEnum" &&
-             genericNameSyntax.TypeArgumentList.Arguments.Count == 1;
+      return genericNameSyntax.Identifier.Text is "IEnum" or "IValidatableEnum"
+             && genericNameSyntax.TypeArgumentList.Arguments.Count == 1;
    }
 }

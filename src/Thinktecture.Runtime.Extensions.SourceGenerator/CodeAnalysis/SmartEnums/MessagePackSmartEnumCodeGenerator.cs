@@ -4,20 +4,20 @@ public class MessagePackSmartEnumCodeGenerator : CodeGeneratorBase
 {
    private readonly EnumSourceGeneratorState _state;
 
-   public override string FileNameSuffix => "_MessagePack";
+   public override string FileNameSuffix => ".MessagePack";
 
    public MessagePackSmartEnumCodeGenerator(EnumSourceGeneratorState state)
    {
       _state = state;
    }
 
-   public override string Generate()
+   public override string? Generate()
    {
       if (_state.AttributeInfo.HasMessagePackFormatterAttribute)
-         return String.Empty;
+         return null;
 
       var ns = _state.Namespace;
-      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.HasMessagePackFormatter);
+      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.InnerTypesInfo.HasMessagePackFormatter);
 
       return $@"{GENERATED_CODE_PREFIX}
 {(ns is null ? null : $@"

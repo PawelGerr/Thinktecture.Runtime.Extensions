@@ -9,7 +9,6 @@ public class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
    private readonly AttributeData? _attributeData;
 
    public bool IsExplicitlyDeclared { get; }
-
    public string? Comparer { get; }
    public string? EqualityComparer { get; }
 
@@ -20,6 +19,7 @@ public class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
    private ValueObjectMemberSettings(AttributeData attributeData)
    {
       _attributeData = attributeData;
+
       IsExplicitlyDeclared = true;
       Comparer = attributeData.FindComparer().TrimAndNullify();
       EqualityComparer = attributeData.FindEqualityComparer().TrimAndNullify();

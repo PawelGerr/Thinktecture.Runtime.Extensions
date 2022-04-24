@@ -1,4 +1,3 @@
-using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.ValueObjects;
 using Xunit.Abstractions;
 

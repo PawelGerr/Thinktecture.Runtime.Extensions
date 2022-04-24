@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -8,11 +9,16 @@ namespace Thinktecture;
 
 public static class TypeSymbolExtensions
 {
+   public static bool IsNullOrObject([NotNullWhen(false)] this ITypeSymbol? type)
+   {
+      return type is null || type.SpecialType == SpecialType.System_Object;
+   }
+
    public static bool IsSelfOrBaseTypesAnEnum(this ITypeSymbol? type)
    {
       while (type is not null)
       {
-         if (type.IsEnum(out _))
+         if (type.IsEnum())
             return true;
 
          type = type.BaseType;
@@ -21,7 +27,9 @@ public static class TypeSymbolExtensions
       return false;
    }
 
-   public static bool HasValueObjectAttribute(this ITypeSymbol? type, [MaybeNullWhen(false)] out AttributeData valueObjectAttribute)
+   public static bool HasValueObjectAttribute(
+      [NotNullWhen(true)] this ITypeSymbol? type,
+      [MaybeNullWhen(false)] out AttributeData valueObjectAttribute)
    {
       if (type is null)
       {
@@ -34,40 +42,69 @@ public static class TypeSymbolExtensions
       return valueObjectAttribute is not null;
    }
 
-   public static bool IsEnum(this ITypeSymbol enumType, out IReadOnlyList<INamedTypeSymbol> enumInterfaces)
+   public static bool IsEnum([NotNullWhen(true)] this ITypeSymbol? enumType)
    {
-      var implementedInterfaces = new List<INamedTypeSymbol>();
-      enumInterfaces = implementedInterfaces;
+      return enumType.IsEnum(false, out _);
+   }
 
-      foreach (var @interface in enumType.Interfaces)
+   public static bool IsEnum(
+      [NotNullWhen(true)] this ITypeSymbol? enumType,
+      [MaybeNullWhen(false)] out IReadOnlyList<INamedTypeSymbol> enumInterfaces)
+   {
+      return enumType.IsEnum(true, out enumInterfaces);
+   }
+
+   private static bool IsEnum(
+      [NotNullWhen(true)] this ITypeSymbol? enumType,
+      bool collectFoundInterfaces,
+      [MaybeNullWhen(false)] out IReadOnlyList<INamedTypeSymbol> foundEnumInterfaces)
+   {
+      // The type is an enum, if
+      // a) it directly implements IEnum/IValidatableEnum OR
+      // b) it has EnumGenerationAttribute and one of its base classes is an enum
+
+      if (enumType.IsNullOrObject())
       {
-         if (@interface.IsNonValidatableEnumInterface() || @interface.IsValidatableEnumInterface())
-            implementedInterfaces.Add(@interface);
+         foundEnumInterfaces = null;
+         return false;
       }
 
-      if (implementedInterfaces.Count > 0)
-      {
-         if (enumType.BaseType is not null)
-         {
-            foreach (var @interface in enumType.BaseType.AllInterfaces)
-            {
-               if (@interface.IsNonValidatableEnumInterface() || @interface.IsValidatableEnumInterface())
-                  implementedInterfaces.Add(@interface);
-            }
-         }
+      List<INamedTypeSymbol>? implementedInterfaces = null;
 
+      if (SearchForEnumInterfaces(enumType.Interfaces, collectFoundInterfaces, ref implementedInterfaces))
+      {
+         if (!enumType.BaseType.IsNullOrObject())
+            SearchForEnumInterfaces(enumType.BaseType.AllInterfaces, collectFoundInterfaces, ref implementedInterfaces);
+
+         foundEnumInterfaces = implementedInterfaces ?? (IReadOnlyList<INamedTypeSymbol>)Array.Empty<INamedTypeSymbol>();
          return true;
       }
 
       var enumGenerationAttr = enumType.FindEnumGenerationAttribute();
 
       if (enumGenerationAttr is null)
+      {
+         foundEnumInterfaces = null;
          return false;
+      }
 
-      if (enumType.BaseType is null)
-         return false;
+      return enumType.BaseType.IsEnum(collectFoundInterfaces, out foundEnumInterfaces);
+   }
 
-      return enumType.BaseType.IsEnum(out enumInterfaces);
+   private static bool SearchForEnumInterfaces(ImmutableArray<INamedTypeSymbol> interfaces, bool collectFoundInterfaces, ref List<INamedTypeSymbol>? foundEnumInterfaces)
+   {
+      foreach (var @interface in interfaces)
+      {
+         if (@interface.IsNonValidatableEnumInterface() || @interface.IsValidatableEnumInterface())
+         {
+            if (!collectFoundInterfaces)
+               return true;
+
+            (foundEnumInterfaces ??= new List<INamedTypeSymbol>()).Add(@interface);
+         }
+      }
+
+      return foundEnumInterfaces?.Count > 0;
    }
 
    public static INamedTypeSymbol? GetValidEnumInterface(
@@ -100,11 +137,10 @@ public static class TypeSymbolExtensions
                return null;
             }
 
+            // if the type implements both, IEnum and IValidatableEnum
+            // then it is considered an IValidatableEnum.
             if (enumInterface.IsValidatableEnumInterface())
-            {
                validInterface = enumInterface;
-               validKeyType = keyType;
-            }
          }
       }
 
@@ -199,17 +235,17 @@ public static class TypeSymbolExtensions
                      .Where(field => field is not null)!;
    }
 
-   public static bool IsFormattable(this ITypeSymbol type)
+   public static bool IsFormattableInterface(this INamedTypeSymbol @interface)
    {
-      return type.AllInterfaces.Any(i => i.Name == "IFormattable"
-                                         && i.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true });
+      return @interface.Name == "IFormattable"
+             && @interface.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true };
    }
 
-   public static bool IsComparable(this ITypeSymbol type)
+   public static bool IsComparableInterface(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return type.AllInterfaces.Any(i => i.Name == "IComparable"
-                                         && i.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true }
-                                         && (!i.IsGenericType || (i.IsGenericType && SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], type))));
+      return @interface.Name == "IComparable"
+             && @interface.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true }
+             && (!@interface.IsGenericType || (@interface.IsGenericType && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)));
    }
 
    public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
@@ -222,39 +258,47 @@ public static class TypeSymbolExtensions
       return type.FindAttribute(static attrType => attrType.Name == "ValueObjectAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
    }
 
-   public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(this ITypeSymbol enumType)
+   public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerEnums(this ITypeSymbol enumType)
    {
-      var derivedTypes = new List<(INamedTypeSymbol, int Level)>();
+      List<(INamedTypeSymbol, int Level)>? derivedTypes = null;
 
-      FindDerivedTypes(enumType, 0, enumType, derivedTypes);
+      FindDerivedInnerEnums(enumType, 0, enumType, ref derivedTypes);
 
-      return derivedTypes;
+      return derivedTypes ?? (IReadOnlyList<(INamedTypeSymbol Type, int Level)>)Array.Empty<(INamedTypeSymbol Type, int Level)>();
    }
 
-   private static void FindDerivedTypes(ITypeSymbol typeToCheck, int currentLevel, ITypeSymbol enumType, List<(INamedTypeSymbol, int Level)> derivedTypes)
+   private static void FindDerivedInnerEnums(ITypeSymbol typeToCheck, int currentLevel, ITypeSymbol enumType, ref List<(INamedTypeSymbol, int Level)>? derivedTypes)
    {
       currentLevel++;
 
       foreach (var innerType in typeToCheck.GetTypeMembers())
       {
-         if (IsDerivedFrom(innerType, enumType))
-            derivedTypes.Add((innerType, currentLevel));
+         // enums can be structs or classes only
+         if (innerType.TypeKind is not (TypeKind.Class or TypeKind.Struct))
+            continue;
 
-         FindDerivedTypes(innerType, currentLevel, enumType, derivedTypes);
+         if (IsDerivedFrom(innerType, enumType))
+            (derivedTypes ??= new List<(INamedTypeSymbol, int Level)>()).Add((innerType, currentLevel));
+
+         FindDerivedInnerEnums(innerType, currentLevel, enumType, ref derivedTypes);
       }
    }
 
-   public static bool IsDerivedFrom(this ITypeSymbol? type, ITypeSymbol baseType)
+   private static bool IsDerivedFrom(this ITypeSymbol? type, ITypeSymbol baseType)
    {
-      while (type is not null)
+      while (!type.IsNullOrObject())
       {
-         if (SymbolEqualityComparer.Default.Equals(type.BaseType, baseType))
-            return true;
-
-         foreach (var @interface in type.Interfaces)
+         if (baseType.TypeKind == TypeKind.Interface)
          {
-            if (SymbolEqualityComparer.Default.Equals(@interface, baseType))
-               return true;
+            foreach (var @interface in type.Interfaces)
+            {
+               if (SymbolEqualityComparer.Default.Equals(@interface, baseType))
+                  return true;
+            }
+         }
+         else if (SymbolEqualityComparer.Default.Equals(type.BaseType, baseType))
+         {
+            return true;
          }
 
          type = type.BaseType;
@@ -269,94 +313,65 @@ public static class TypeSymbolExtensions
          .Where(m => !m.HasAttribute(static attrType => attrType.Name == "ValueObjectIgnoreAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }));
    }
 
-   public static IReadOnlyList<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
+   public static IEnumerable<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
       bool instanceMembersOnly,
       Action<Diagnostic>? reportDiagnostic = null)
    {
       return type.GetNonIgnoredMembers()
-                 .Select(m =>
+                 .Select(member =>
                          {
-                            if ((instanceMembersOnly && m.IsStatic) || !m.CanBeReferencedByName)
+                            if ((instanceMembersOnly && member.IsStatic) || !member.CanBeReferencedByName)
                                return null;
 
-                            if (m is IFieldSymbol fds)
+                            switch (member)
                             {
-                               var identifier = fds.GetIdentifier();
-
-                               if (!fds.IsReadOnly && !fds.IsConst)
+                               case IFieldSymbol field:
                                {
-                                  reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
-                                                                             identifier.GetLocation(),
-                                                                             fds.Name,
-                                                                             type.Name));
+                                  if (!field.IsReadOnly && !field.IsConst)
+                                  {
+                                     reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
+                                                                                field.GetIdentifier().GetLocation(),
+                                                                                field.Name,
+                                                                                type.Name));
+                                  }
+
+                                  return InstanceMemberInfo.CreateFrom(field);
                                }
 
-                               return InstanceMemberInfo.CreateFrom(fds);
-                            }
-
-                            if (m is IPropertySymbol pds)
-                            {
-                               var syntax = (PropertyDeclarationSyntax)pds.DeclaringSyntaxReferences.Single().GetSyntax();
-
-                               if (syntax.ExpressionBody is not null) // public int Foo => 42;
-                                  return null;
-
-                               var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
-
-                               if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
-                                  return null;
-
-                               var identifier = pds.GetIdentifier();
-
-                               if (pds.SetMethod is not null)
+                               case IPropertySymbol property:
                                {
-                                  var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+                                  var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax();
 
-                                  if (!IsDefaultImplementation(setter))
+                                  if (syntax.ExpressionBody is not null) // public int Foo => 42;
                                      return null;
 
-                                  reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
-                                                                             identifier.GetLocation(),
-                                                                             pds.Name,
-                                                                             type.Name));
+                                  var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
+
+                                  if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
+                                     return null;
+
+                                  if (property.SetMethod is not null)
+                                  {
+                                     var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+
+                                     if (!IsDefaultImplementation(setter))
+                                        return null;
+
+                                     reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
+                                                                                property.GetIdentifier().GetLocation(),
+                                                                                property.Name,
+                                                                                type.Name));
+                                  }
+
+                                  return InstanceMemberInfo.CreateFrom(property);
                                }
 
-                               return InstanceMemberInfo.CreateFrom(pds);
+                               default:
+                                  return null;
                             }
-
-                            return null;
                          })
-                 .Where(m => m is not null)
-                 .ToList()!;
-   }
-
-   public static IReadOnlyList<InstanceMemberInfo> GetReadableInstanceFieldsAndProperties(this ITypeSymbol type)
-   {
-      return type.GetNonIgnoredMembers()
-                 .Select(m =>
-                         {
-                            if (m.IsStatic || !m.CanBeReferencedByName)
-                               return null;
-
-                            switch (m)
-                            {
-                               case IFieldSymbol fds:
-                                  return InstanceMemberInfo.CreateFrom(fds);
-
-                               case IPropertySymbol pds:
-                               {
-                                  if (!pds.IsWriteOnly)
-                                     return InstanceMemberInfo.CreateFrom(pds);
-
-                                  break;
-                               }
-                            }
-
-                            return null;
-                         })
-                 .Where(m => m is not null)
-                 .ToList()!;
+                 .Where(m => m is not null)!;
    }
 
    private static bool IsDefaultImplementation(AccessorDeclarationSyntax? accessor)

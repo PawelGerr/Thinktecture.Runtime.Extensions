@@ -25,8 +25,8 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
 
    public EqualityInstanceMemberInfo? KeyMember => HasKeyMember ? EqualityMembers[0] : null;
 
-   public ValueObjectSettings Settings { get; }
    public AttributeInfo AttributeInfo { get; }
+   public ValueObjectSettings Settings { get; }
 
    public ValueObjectSourceGeneratorState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
    {
@@ -36,11 +36,11 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-      AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
+      AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true).ToList();
       EqualityMembers = GetEqualityMembers();
 
-      Settings = new ValueObjectSettings(valueObjectAttribute);
       AttributeInfo = new AttributeInfo(type);
+      Settings = new ValueObjectSettings(valueObjectAttribute);
    }
 
    public Location GetFirstLocation()
@@ -89,9 +89,9 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
              && AttributeInfo.Equals(other.AttributeInfo)
+             && Settings.Equals(other.Settings)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
-             && EqualityMembers.EqualsTo(other.EqualityMembers)
-             && Settings.Equals(other.Settings);
+             && EqualityMembers.EqualsTo(other.EqualityMembers);
    }
 
    public override int GetHashCode()
@@ -101,9 +101,9 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
+         hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
-         hashCode = (hashCode * 397) ^ Settings.GetHashCode();
 
          return hashCode;
       }

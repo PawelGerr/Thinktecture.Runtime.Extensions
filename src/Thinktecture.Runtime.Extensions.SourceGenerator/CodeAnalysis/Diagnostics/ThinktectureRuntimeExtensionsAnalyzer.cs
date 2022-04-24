@@ -146,8 +146,8 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       var locationOfFirstDeclaration = declarations[0].Identifier.GetLocation(); // a representative for all
 
-      if (enumType.IsRecord ||
-          enumType.TypeKind != TypeKind.Class && enumType.TypeKind != TypeKind.Struct)
+      if (enumType.IsRecord
+          || (enumType.TypeKind != TypeKind.Class && enumType.TypeKind != TypeKind.Struct))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, enumType);
          return;
@@ -190,10 +190,13 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
 
-      var assignableMembers = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic);
+      var assignableMembers = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic).ToList();
       var enumAttr = enumType.FindEnumGenerationAttribute();
 
-      var hasBaseEnum = ValidateBaseEnum(context, enumType, enumAttr, locationOfFirstDeclaration, isValidatable);
+      // don't validate base-enum of nested classes because
+      // a) the base class will be either another nested class OR
+      // b) the public enum, which is validated separately
+      var hasBaseEnum = enumType.ContainingType is null && ValidateBaseEnum(context, enumType, enumAttr, locationOfFirstDeclaration, isValidatable);
 
       if (enumAttr is not null)
       {
@@ -313,12 +316,6 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       Location location,
       bool isValidatable)
    {
-      if (enumType.BaseType is null)
-         return false;
-
-      if (enumType.ContainingType is not null) // inner enum
-         return false;
-
       if (!enumType.BaseType.IsEnum(out var baseEnumInterfaces))
          return false;
 
@@ -367,7 +364,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       INamedTypeSymbol enumType,
       InstanceMemberInfo memberInfo)
    {
-      var mappedMemberName = memberInfo.Settings.MappedMemberName;
+      var mappedMemberName = memberInfo.EnumMemberSettings.MappedMemberName;
 
       if (mappedMemberName is null)
          return false;
@@ -385,12 +382,12 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (mappedMembers.Count == 0)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.MemberNotFound,
-                          memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
+                          memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
       }
       else if (mappedMembers.Count > 1)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.MultipleMembersWithSameName,
-                          memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
+                          memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
       }
       else
       {
@@ -399,13 +396,13 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (mappedMember.DeclaredAccessibility != Accessibility.Public)
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.MappedMemberMustBePublic,
-                             memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
+                             memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
          }
 
          if (mappedMember is IMethodSymbol { TypeParameters: { Length: > 0 } })
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.MappedMethodMustBeNotBeGeneric,
-                             memberInfo.Settings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
+                             memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
          }
       }
 
@@ -414,11 +411,11 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void ValidateDerivedTypes(SymbolAnalysisContext context, INamedTypeSymbol enumType)
    {
-      var derivedTypes = enumType.FindDerivedInnerTypes();
+      var derivedTypes = enumType.FindDerivedInnerEnums();
 
       foreach (var derivedType in derivedTypes)
       {
-         if (derivedType.Type.IsEnum(out _))
+         if (derivedType.Type.IsEnum())
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
                              ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(), derivedType.Type);

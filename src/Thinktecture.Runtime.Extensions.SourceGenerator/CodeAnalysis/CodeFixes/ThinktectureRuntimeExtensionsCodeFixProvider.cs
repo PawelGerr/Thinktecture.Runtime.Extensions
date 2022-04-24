@@ -186,7 +186,7 @@ public class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
 
       var enumType = model.GetDeclaredSymbol(declaration);
 
-      if (enumType is null || !enumType.IsEnum(out var enumInterfaces))
+      if (!enumType.IsEnum(out var enumInterfaces))
          return document;
 
       var enumInterface = enumInterfaces.GetValidEnumInterface(enumType, declaration.Identifier.GetLocation());

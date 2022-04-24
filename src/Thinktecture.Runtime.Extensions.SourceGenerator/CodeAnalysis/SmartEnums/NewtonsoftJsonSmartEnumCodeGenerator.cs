@@ -4,20 +4,20 @@ public class NewtonsoftJsonSmartEnumCodeGenerator : CodeGeneratorBase
 {
    private readonly EnumSourceGeneratorState _state;
 
-   public override string FileNameSuffix => "_NewtonsoftJson";
+   public override string FileNameSuffix => ".NewtonsoftJson";
 
    public NewtonsoftJsonSmartEnumCodeGenerator(EnumSourceGeneratorState state)
    {
       _state = state;
    }
 
-   public override string Generate()
+   public override string? Generate()
    {
       if (_state.AttributeInfo.HasNewtonsoftJsonConverterAttribute)
-         return String.Empty;
+         return null;
 
       var ns = _state.Namespace;
-      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.HasNewtonsoftJsonConverter);
+      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.InnerTypesInfo.HasNewtonsoftJsonConverter);
 
       return $@"{GENERATED_CODE_PREFIX}
 {(ns is null ? null : $@"

@@ -58,8 +58,8 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
       HasCreateInvalidImplementation = type.HasCreateInvalidImplementation(keyType);
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true);
-      FullyQualifiedDerivedTypes = type.FindDerivedInnerTypes().Select(t => t.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)).ToList();
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true).ToList();
+      FullyQualifiedDerivedTypes = type.FindDerivedInnerEnums().Select(t => t.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)).ToList();
 
       AttributeInfo = new AttributeInfo(type);
    }
@@ -69,11 +69,8 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
       return _enumType.DeclaringSyntaxReferences.First().GetSyntax().GetLocation();
    }
 
-   private IBaseEnumState? GetBaseEnum(INamedTypeSymbol type)
+   private static IBaseEnumState? GetBaseEnum(INamedTypeSymbol type)
    {
-      if (type.BaseType is null)
-         return null;
-
       if (!type.BaseType.IsEnum(out var enumInterfaces))
          return null;
 
@@ -110,7 +107,6 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
              && Settings.Equals(other.Settings)
              && ItemNames.EqualsTo(other.ItemNames)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
-             && FullyQualifiedDerivedTypes.EqualsTo(other.FullyQualifiedDerivedTypes)
              && FullyQualifiedDerivedTypes.EqualsTo(other.FullyQualifiedDerivedTypes);
    }
 
@@ -133,19 +129,5 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
 
          return hashCode;
       }
-   }
-
-   public int CompareTo(EnumSourceGeneratorState? other)
-   {
-      if (other is null || SymbolEqualityComparer.Default.Equals(_enumType.BaseType, other._enumType))
-         return 1;
-
-      if (SymbolEqualityComparer.Default.Equals(other._enumType.BaseType, _enumType))
-         return -1;
-
-      if (_enumType.BaseType is null)
-         return other._enumType.BaseType is null ? 0 : -1;
-
-      return other._enumType.BaseType is null ? 1 : 0;
    }
 }

@@ -9,8 +9,5 @@ public interface IBaseEnumState : IEquatable<IBaseEnumState>
    IReadOnlyList<IMemberState> Items { get; }
    IReadOnlyList<IMemberState> ConstructorArguments { get; }
    EnumSettings Settings { get; }
-
-   bool HasJsonConverterFactory { get; }
-   bool HasNewtonsoftJsonConverter { get; }
-   bool HasMessagePackFormatter { get; }
+   TypeMemberInfo InnerTypesInfo { get; }
 }

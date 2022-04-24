@@ -1,7 +1,23 @@
 // ReSharper disable once CheckNamespace
 namespace System.Diagnostics.CodeAnalysis;
 
-[AttributeUsageAttribute(AttributeTargets.Parameter)]
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property)]
+internal sealed class AllowNullAttribute : Attribute
+{
+}
+
+[AttributeUsage(AttributeTargets.Parameter)]
+internal sealed class NotNullWhenAttribute : Attribute
+{
+   public bool ReturnValue { get; }
+
+   public NotNullWhenAttribute(bool returnValue)
+   {
+      ReturnValue = returnValue;
+   }
+}
+
+[AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class MaybeNullWhenAttribute : Attribute
 {
    public bool ReturnValue { get; }

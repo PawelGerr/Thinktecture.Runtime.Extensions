@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class AttributeInfo : IEquatable<AttributeInfo>
+public readonly struct AttributeInfo : IEquatable<AttributeInfo>
 {
    public bool HasStructLayoutAttribute { get; }
    public bool HasJsonConverterAttribute { get; }
@@ -11,6 +11,11 @@ public class AttributeInfo : IEquatable<AttributeInfo>
 
    public AttributeInfo(INamedTypeSymbol type)
    {
+      HasStructLayoutAttribute = default;
+      HasJsonConverterAttribute = default;
+      HasNewtonsoftJsonConverterAttribute = default;
+      HasMessagePackFormatterAttribute = default;
+
       foreach (var attribute in type.GetAttributes())
       {
          if (attribute.AttributeClass is null)
@@ -40,13 +45,8 @@ public class AttributeInfo : IEquatable<AttributeInfo>
       return obj is AttributeInfo other && Equals(other);
    }
 
-   public bool Equals(AttributeInfo? other)
+   public bool Equals(AttributeInfo other)
    {
-      if (ReferenceEquals(null, other))
-         return false;
-      if (ReferenceEquals(this, other))
-         return true;
-
       return HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && HasJsonConverterAttribute == other.HasJsonConverterAttribute
              && HasNewtonsoftJsonConverterAttribute == other.HasNewtonsoftJsonConverterAttribute

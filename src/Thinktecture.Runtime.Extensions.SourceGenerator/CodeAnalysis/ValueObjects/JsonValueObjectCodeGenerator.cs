@@ -8,7 +8,7 @@ public class JsonValueObjectCodeGenerator : CodeGeneratorBase
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _stringBuilder;
 
-   public override string FileNameSuffix => "_Json";
+   public override string FileNameSuffix => ".Json";
 
    public JsonValueObjectCodeGenerator(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
@@ -18,6 +18,9 @@ public class JsonValueObjectCodeGenerator : CodeGeneratorBase
 
    public override string? Generate()
    {
+      if (_state.AttributeInfo.HasJsonConverterAttribute)
+         return null;
+
       if (_state.HasKeyMember)
          return GenerateJsonConverter(_state, _state.KeyMember);
 
@@ -27,13 +30,10 @@ public class JsonValueObjectCodeGenerator : CodeGeneratorBase
       return null;
    }
 
-   private static string GenerateJsonConverter(
+   private static string? GenerateJsonConverter(
       ValueObjectSourceGeneratorState state,
       EqualityInstanceMemberInfo keyMember)
    {
-      if (state.AttributeInfo.HasJsonConverterAttribute)
-         return String.Empty;
-
       var ns = state.Namespace;
 
       return $@"{GENERATED_CODE_PREFIX}
@@ -69,9 +69,6 @@ namespace {ns}
 
    private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
-      if (state.AttributeInfo.HasJsonConverterAttribute)
-         return String.Empty;
-
       sb.Append($@"{GENERATED_CODE_PREFIX}
 {(state.Namespace is null ? null : $@"
 namespace {state.Namespace}

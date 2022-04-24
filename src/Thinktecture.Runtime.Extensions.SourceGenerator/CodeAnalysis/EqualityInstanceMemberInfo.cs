@@ -41,11 +41,10 @@ public class EqualityInstanceMemberInfo : IEquatable<EqualityInstanceMemberInfo>
       };
    }
 
-   public void Deconstruct(out InstanceMemberInfo member, out string? equalityComparer, out string? comparer)
+   public void Deconstruct(out InstanceMemberInfo member, out string? equalityComparer)
    {
       member = Member;
       equalityComparer = EqualityComparer;
-      comparer = Comparer;
    }
 
    public override bool Equals(object? obj)
@@ -70,8 +69,8 @@ public class EqualityInstanceMemberInfo : IEquatable<EqualityInstanceMemberInfo>
       unchecked
       {
          var hashCode = Member.GetHashCode();
-         hashCode = (hashCode * 397) ^ (EqualityComparer != null ? EqualityComparer.GetHashCode() : 0);
-         hashCode = (hashCode * 397) ^ (Comparer != null ? Comparer.GetHashCode() : 0);
+         hashCode = (hashCode * 397) ^ (EqualityComparer?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ (Comparer?.GetHashCode() ?? 0);
 
          return hashCode;
       }

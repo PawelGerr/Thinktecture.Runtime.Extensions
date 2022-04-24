@@ -26,7 +26,7 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
 
-   public EnumMemberSettings Settings { get; }
+   public EnumMemberSettings EnumMemberSettings { get; }
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
 
    private InstanceMemberInfo(
@@ -41,16 +41,25 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
       TypeFullyQualifiedWithNullability = type.IsReferenceType && type.NullableAnnotation == NullableAnnotation.Annotated ? $"{TypeFullyQualified}?" : TypeFullyQualified;
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-      IsFormattable = _type.IsFormattable();
-      IsComparable = _type.IsComparable();
-
       _identifier = identifier;
       ArgumentName = identifier.Text.MakeArgumentName();
 
       ReadAccessibility = readAccessibility;
       IsStatic = isStatic;
-      Settings = EnumMemberSettings.Create(member);
+      EnumMemberSettings = EnumMemberSettings.Create(member);
       ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member);
+
+      foreach (var @interface in type.AllInterfaces)
+      {
+         if (@interface.IsFormattableInterface())
+         {
+            IsFormattable = true;
+         }
+         else if (@interface.IsComparableInterface(_type))
+         {
+            IsComparable = true;
+         }
+      }
    }
 
    public static InstanceMemberInfo CreateFrom(IFieldSymbol field)
@@ -94,7 +103,8 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
              && SpecialType == other.SpecialType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
-             && Settings.Equals(other.Settings);
+             && EnumMemberSettings.Equals(other.EnumMemberSettings)
+             && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
    public override int GetHashCode()
@@ -110,7 +120,8 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
          hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
-         hashCode = (hashCode * 397) ^ Settings.GetHashCode();
+         hashCode = (hashCode * 397) ^ EnumMemberSettings.GetHashCode();
+         hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;
       }

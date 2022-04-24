@@ -17,10 +17,7 @@ public sealed class BaseEnumState : IBaseEnumState, IEquatable<BaseEnumState>
    public IReadOnlyList<IMemberState> Items { get; }
 
    public EnumSettings Settings { get; }
-
-   public bool HasJsonConverterFactory { get; }
-   public bool HasNewtonsoftJsonConverter { get; }
-   public bool HasMessagePackFormatter { get; }
+   public TypeMemberInfo InnerTypesInfo { get; }
 
    public BaseEnumState(INamedTypeSymbol type)
    {
@@ -29,14 +26,11 @@ public sealed class BaseEnumState : IBaseEnumState, IEquatable<BaseEnumState>
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
+      Settings = new EnumSettings(type.FindEnumGenerationAttribute());
+      InnerTypesInfo = new TypeMemberInfo(type);
+
       ConstructorArguments = GetConstructorArguments(type);
       Items = _type.EnumerateEnumItems().Select(DefaultMemberState.CreateFrom).ToList();
-
-      Settings = new EnumSettings(type.FindEnumGenerationAttribute());
-
-      HasJsonConverterFactory = type.GetTypeMembers("ValueObjectJsonConverterFactory").Any();
-      HasNewtonsoftJsonConverter = type.GetTypeMembers("ValueObjectNewtonsoftJsonConverter").Any();
-      HasMessagePackFormatter = type.GetTypeMembers("ValueObjectMessagePackFormatter").Any();
    }
 
    private static IReadOnlyList<DefaultMemberState> GetConstructorArguments(INamedTypeSymbol type)
@@ -96,9 +90,7 @@ public sealed class BaseEnumState : IBaseEnumState, IEquatable<BaseEnumState>
 
       return TypeFullyQualified == other.TypeFullyQualified
              && _type.IsReferenceType.Equals(other._type.IsReferenceType)
-             && HasJsonConverterFactory.Equals(other.HasJsonConverterFactory)
-             && HasNewtonsoftJsonConverter.Equals(other.HasNewtonsoftJsonConverter)
-             && HasMessagePackFormatter.Equals(other.HasMessagePackFormatter)
+             && InnerTypesInfo.Equals(other.InnerTypesInfo)
              && Settings.Equals(other.Settings)
              && ConstructorArguments.EqualsTo(other.ConstructorArguments)
              && Items.EqualsTo(other.Items);
@@ -110,9 +102,7 @@ public sealed class BaseEnumState : IBaseEnumState, IEquatable<BaseEnumState>
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ _type.IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasJsonConverterFactory.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasNewtonsoftJsonConverter.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasMessagePackFormatter.GetHashCode();
+         hashCode = (hashCode * 397) ^ InnerTypesInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ ConstructorArguments.ComputeHashCode();
          hashCode = (hashCode * 397) ^ Items.ComputeHashCode();

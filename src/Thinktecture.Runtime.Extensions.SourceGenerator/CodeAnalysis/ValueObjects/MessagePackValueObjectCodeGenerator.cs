@@ -8,7 +8,7 @@ public class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _stringBuilder;
 
-   public override string FileNameSuffix => "_MessagePack";
+   public override string FileNameSuffix => ".MessagePack";
 
    public MessagePackValueObjectCodeGenerator(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
@@ -18,6 +18,9 @@ public class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
 
    public override string? Generate()
    {
+      if (_state.AttributeInfo.HasMessagePackFormatterAttribute)
+         return null;
+
       if (_state.HasKeyMember)
          return GenerateFormatter(_state, _state.KeyMember);
 
@@ -29,9 +32,6 @@ public class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
 
    private static string GenerateFormatter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
    {
-      if (state.AttributeInfo.HasMessagePackFormatterAttribute)
-         return String.Empty;
-
       var ns = state.Namespace;
 
       return $@"{GENERATED_CODE_PREFIX}
@@ -55,9 +55,6 @@ namespace {ns}
 
    private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
-      if (state.AttributeInfo.HasMessagePackFormatterAttribute)
-         return String.Empty;
-
       sb.Append($@"{GENERATED_CODE_PREFIX}
 {(state.Namespace is null ? null : $@"
 namespace {state.Namespace}

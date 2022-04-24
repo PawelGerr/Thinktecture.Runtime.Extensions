@@ -4,20 +4,20 @@ public class JsonSmartEnumCodeGenerator : CodeGeneratorBase
 {
    private readonly EnumSourceGeneratorState _state;
 
-   public override string FileNameSuffix => "_Json";
+   public override string FileNameSuffix => ".Json";
 
    public JsonSmartEnumCodeGenerator(EnumSourceGeneratorState state)
    {
       _state = state;
    }
 
-   public override string Generate()
+   public override string? Generate()
    {
       if (_state.AttributeInfo.HasJsonConverterAttribute)
-         return String.Empty;
+         return null;
 
       var ns = _state.Namespace;
-      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.HasJsonConverterFactory);
+      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.InnerTypesInfo.HasJsonConverterFactory);
 
       return $@"{GENERATED_CODE_PREFIX}
 {(ns is null ? null : $@"

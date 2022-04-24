@@ -8,7 +8,7 @@ public class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _stringBuilder;
 
-   public override string FileNameSuffix => "_NewtonsoftJson";
+   public override string FileNameSuffix => ".NewtonsoftJson";
 
    public NewtonsoftJsonValueObjectCodeGenerator(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
@@ -18,6 +18,9 @@ public class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
 
    public override string? Generate()
    {
+      if (_state.AttributeInfo.HasNewtonsoftJsonConverterAttribute)
+         return null;
+
       if (_state.HasKeyMember)
          return GenerateJsonConverter(_state, _state.KeyMember);
 
@@ -29,9 +32,6 @@ public class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
 
    private static string GenerateJsonConverter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
    {
-      if (state.AttributeInfo.HasNewtonsoftJsonConverterAttribute)
-         return String.Empty;
-
       var ns = state.Namespace;
 
       return $@"{GENERATED_CODE_PREFIX}
@@ -55,9 +55,6 @@ namespace {ns}
 
    private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
-      if (state.AttributeInfo.HasJsonConverterAttribute)
-         return String.Empty;
-
       sb.Append($@"{GENERATED_CODE_PREFIX}
 {(state.Namespace is null ? null : $@"
 namespace {state.Namespace}

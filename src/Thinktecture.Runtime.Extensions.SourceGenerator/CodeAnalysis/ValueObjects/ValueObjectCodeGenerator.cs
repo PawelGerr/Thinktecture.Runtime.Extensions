@@ -513,7 +513,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
          {
-            var (member, equalityComparer, _) = _state.EqualityMembers[i];
+            var (member, equalityComparer) = _state.EqualityMembers[i];
 
             if (i == 0)
             {
@@ -580,7 +580,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
          {
-            var (member, equalityComparer, _) = _state.EqualityMembers[i];
+            var (member, equalityComparer) = _state.EqualityMembers[i];
 
             if (useShortForm)
             {
@@ -646,7 +646,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
          {
-            var (member, _, _) = _state.EqualityMembers[i];
+            var member = _state.EqualityMembers[i].Member;
 
             if (i > 0)
                _sb.Append(',');

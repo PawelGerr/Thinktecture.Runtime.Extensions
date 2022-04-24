@@ -12,6 +12,7 @@ public class SmartEnumCodeGenerator : CodeGeneratorBase
    private bool IsExtensible => _state.IsExtensible();
    private bool NeedsDefaultComparer => !_state.HasBaseEnum && _state.Settings.KeyComparer is null;
    private string KeyComparerMember => (_state.HasBaseEnum ? _state.BaseEnum.Settings.KeyComparer : _state.Settings.KeyComparer) ?? "_defaultKeyComparerMember";
+   private string RuntimeTypeName => _state.GetRuntimeTypeName();
 
    public override string? FileNameSuffix => null;
 
@@ -61,7 +62,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       foreach (var member in _state.AssignableInstanceFieldsAndProperties)
       {
-         var memberName = member.Settings.MappedMemberName ?? member.Name;
+         var memberName = member.EnumMemberSettings.MappedMemberName ?? member.Name;
 
          _sb.Append($@", nameof({memberName})");
       }
@@ -500,7 +501,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public void EnsureValid()
       {{
          if (!IsValid)
-            throw new global::System.InvalidOperationException($""The current enumeration item of type \""{_state.GetRuntimeTypeName()}\"" with identifier \""{{this.{_state.KeyProperty.Name}}}\"" is not valid."");
+            throw new global::System.InvalidOperationException($""The current enumeration item of type \""{RuntimeTypeName}\"" with identifier \""{{this.{_state.KeyProperty.Name}}}\"" is not valid."");
       }}");
    }
 
@@ -622,6 +623,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateConstructors()
    {
+      // Skip(1) - skip the key property
       var baseCtorArgs = _state.BaseEnum?.ConstructorArguments.Skip(1) ?? Array.Empty<IMemberState>();
       var ctorArgs = _state.AssignableInstanceFieldsAndProperties.Concat(baseCtorArgs);
       var accessibilityModifier = IsExtensible ? "protected" : "private";
@@ -774,7 +776,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if({_state.EnumTypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out var item))
             return item;
 
-         throw new global::System.FormatException($""There is no item of type '{_state.GetRuntimeTypeName()}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");");
+         throw new global::System.FormatException($""There is no item of type '{RuntimeTypeName}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");");
       }
 
       _sb.Append($@"
