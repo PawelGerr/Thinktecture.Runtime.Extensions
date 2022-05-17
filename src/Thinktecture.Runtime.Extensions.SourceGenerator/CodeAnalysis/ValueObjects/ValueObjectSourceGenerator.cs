@@ -23,7 +23,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                               .Collect()
                               .SelectMany(static (states, _) => states.Distinct());
 
-      var generators = context.MetadataReferencesProvider
+      var generators = context.GetMetadataReferencesProvider()
                               .SelectMany(static (reference, _) => TryGetCodeGeneratorFactory(reference, out var factory)
                                                                       ? ImmutableArray.Create(factory)
                                                                       : ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>.Empty)

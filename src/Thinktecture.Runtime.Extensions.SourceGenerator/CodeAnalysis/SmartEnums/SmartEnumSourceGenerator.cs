@@ -23,7 +23,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                               .Collect()
                               .SelectMany(static (states, _) => states.Distinct());
 
-      var generators = context.MetadataReferencesProvider
+      var generators = context.GetMetadataReferencesProvider()
                               .SelectMany(static (reference, _) => TryGetCodeGeneratorFactory(reference, out var factory)
                                                                       ? ImmutableArray.Create(factory)
                                                                       : ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty)
