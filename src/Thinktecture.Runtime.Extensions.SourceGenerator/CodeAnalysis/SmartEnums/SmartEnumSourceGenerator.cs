@@ -37,38 +37,29 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
       MetadataReference reference,
       [MaybeNullWhen(false)] out ICodeGeneratorFactory<EnumSourceGeneratorState> factory)
    {
-      factory = null;
-
-      if (reference is not PortableExecutableReference portable)
-         return false;
-
-      if (portable.GetMetadata() is not AssemblyMetadata assemblyMetadata)
-         return false;
-
-      var modules = assemblyMetadata.GetModules();
-
-      foreach (var module in modules)
+      foreach (var module in reference.GetModules())
       {
          switch (module.Name)
          {
-            case "Thinktecture.Runtime.Extensions.dll":
+            case THINKTECTURE_RUNTIME_EXTENSIONS:
                factory = new SmartEnumCodeGeneratorFactory();
                return true;
 
-            case "Thinktecture.Runtime.Extensions.Json.dll":
+            case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
                factory = new JsonSmartEnumCodeGeneratorFactory();
                return true;
 
-            case "Thinktecture.Runtime.Extensions.Newtonsoft.Json.dll":
+            case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
                factory = new NewtonsoftJsonSmartEnumCodeGeneratorFactory();
                return true;
 
-            case "Thinktecture.Runtime.Extensions.MessagePack.dll":
+            case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
                factory = new MessagePackSmartEnumCodeGeneratorFactory();
                return true;
          }
       }
 
+      factory = null;
       return false;
    }
 

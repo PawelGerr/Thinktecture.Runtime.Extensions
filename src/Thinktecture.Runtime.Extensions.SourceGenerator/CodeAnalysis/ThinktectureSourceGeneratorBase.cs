@@ -7,6 +7,11 @@ namespace Thinktecture.CodeAnalysis;
 public abstract class ThinktectureSourceGeneratorBase<TState>
    where TState : ISourceGeneratorState, IEquatable<TState>
 {
+   internal const string THINKTECTURE_RUNTIME_EXTENSIONS = "Thinktecture.Runtime.Extensions.dll";
+   internal const string THINKTECTURE_RUNTIME_EXTENSIONS_JSON = "Thinktecture.Runtime.Extensions.Json.dll";
+   internal const string THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.dll";
+   internal const string THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK = "Thinktecture.Runtime.Extensions.MessagePack.dll";
+
    private readonly int _stringBuilderInitialSize;
 
    protected ThinktectureSourceGeneratorBase(int stringBuilderInitialSize)
