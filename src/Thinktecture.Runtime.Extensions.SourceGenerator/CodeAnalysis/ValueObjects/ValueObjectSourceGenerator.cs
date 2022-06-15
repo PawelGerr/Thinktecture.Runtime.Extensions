@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -24,43 +23,40 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                               .SelectMany(static (states, _) => states.Distinct());
 
       var generators = context.GetMetadataReferencesProvider()
-                              .SelectMany(static (reference, _) => TryGetCodeGeneratorFactory(reference, out var factory)
-                                                                      ? ImmutableArray.Create(factory)
-                                                                      : ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>.Empty)
+                              .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
                               .Collect()
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>());
 
       context.RegisterSourceOutput(candidates.Combine(generators), GenerateCode);
    }
 
-   private static bool TryGetCodeGeneratorFactory(
-      MetadataReference reference,
-      [MaybeNullWhen(false)] out ICodeGeneratorFactory<ValueObjectSourceGeneratorState> factory)
+   private static ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)
    {
+      var factories = ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>.Empty;
+
       foreach (var module in reference.GetModules())
       {
          switch (module.Name)
          {
             case THINKTECTURE_RUNTIME_EXTENSIONS:
-               factory = new ValueObjectCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new ValueObjectCodeGeneratorFactory());
+               break;
 
             case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
-               factory = new JsonValueObjectCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new JsonValueObjectCodeGeneratorFactory());
+               break;
 
             case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
-               factory = new NewtonsoftJsonValueObjectCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new NewtonsoftJsonValueObjectCodeGeneratorFactory());
+               break;
 
             case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
-               factory = new MessagePackValueObjectCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new MessagePackValueObjectCodeGeneratorFactory());
+               break;
          }
       }
 
-      factory = null;
-      return false;
+      return factories;
    }
 
    private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)

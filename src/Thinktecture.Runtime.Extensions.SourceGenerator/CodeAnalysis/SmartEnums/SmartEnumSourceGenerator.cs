@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -24,43 +23,40 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                               .SelectMany(static (states, _) => states.Distinct());
 
       var generators = context.GetMetadataReferencesProvider()
-                              .SelectMany(static (reference, _) => TryGetCodeGeneratorFactory(reference, out var factory)
-                                                                      ? ImmutableArray.Create(factory)
-                                                                      : ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty)
+                              .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
                               .Collect()
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
       context.RegisterSourceOutput(candidates.Combine(generators), GenerateCode);
    }
 
-   private static bool TryGetCodeGeneratorFactory(
-      MetadataReference reference,
-      [MaybeNullWhen(false)] out ICodeGeneratorFactory<EnumSourceGeneratorState> factory)
+   private static ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)
    {
+      var factories = ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty;
+
       foreach (var module in reference.GetModules())
       {
          switch (module.Name)
          {
             case THINKTECTURE_RUNTIME_EXTENSIONS:
-               factory = new SmartEnumCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new SmartEnumCodeGeneratorFactory());
+               break;
 
             case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
-               factory = new JsonSmartEnumCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new JsonSmartEnumCodeGeneratorFactory());
+               break;
 
             case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
-               factory = new NewtonsoftJsonSmartEnumCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new NewtonsoftJsonSmartEnumCodeGeneratorFactory());
+               break;
 
             case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
-               factory = new MessagePackSmartEnumCodeGeneratorFactory();
-               return true;
+               factories = factories.Add(new MessagePackSmartEnumCodeGeneratorFactory());
+               break;
          }
       }
 
-      factory = null;
-      return false;
+      return factories;
    }
 
    private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
