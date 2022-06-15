@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MessagePack" Version="2.3.85" />
+        <PackageReference Include="MessagePack" Version="2.3.112" />
         <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     </ItemGroup>
 
