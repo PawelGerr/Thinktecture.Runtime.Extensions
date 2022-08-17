@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -8,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture.CodeAnalysis.CodeFixes;
 
-[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ThinktectureRuntimeExtensionsCodeFixProvider)), Shared]
+[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ThinktectureRuntimeExtensionsCodeFixProvider))]
 public class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
 {
    private const string _MAKE_PARTIAL = "Make the type partial";
