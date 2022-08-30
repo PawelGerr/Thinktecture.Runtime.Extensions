@@ -588,7 +588,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -781,7 +781,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -974,7 +974,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -1180,7 +1180,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -1403,7 +1403,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -1619,7 +1619,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -1845,7 +1845,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -2052,7 +2052,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -2282,7 +2282,7 @@ namespace Thinktecture.Tests
          var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>(global::Thinktecture.Tests.TestValueObject.TryCreate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(global::Thinktecture.Tests.Foo), false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(global::Thinktecture.Tests.Foo), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }

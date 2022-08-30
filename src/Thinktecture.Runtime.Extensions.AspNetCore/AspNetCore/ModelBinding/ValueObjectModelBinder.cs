@@ -34,6 +34,7 @@ public class ValueObjectModelBinder<T, TKey> : SimpleTypeModelBinder
    {
       if (model is TKey key)
       {
+         key = Prepare(key);
          var validationResult = _validate(key, out var obj);
 
          if (validationResult != ValidationResult.Success)
@@ -49,5 +50,15 @@ public class ValueObjectModelBinder<T, TKey> : SimpleTypeModelBinder
       {
          base.CheckModel(bindingContext, valueProviderResult, model);
       }
+   }
+
+   /// <summary>
+   /// Prepares the key before validation.
+   /// </summary>
+   /// <param name="key">Key to prepare.</param>
+   /// <returns>Prepared key.</returns>
+   protected virtual TKey Prepare(TKey key)
+   {
+      return key;
    }
 }

@@ -84,7 +84,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var validate = new global::Thinktecture.Internal.Validate<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualifiedWithNullability}>({_state.EnumTypeFullyQualified}.Validate);
 
          var enumType = typeof({_state.EnumTypeFullyQualified});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({_state.KeyProperty.TypeFullyQualifiedWithNullability}), {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({_state.KeyProperty.TypeFullyQualifiedWithNullability}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
 

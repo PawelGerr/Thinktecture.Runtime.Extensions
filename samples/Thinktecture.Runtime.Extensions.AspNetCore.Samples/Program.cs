@@ -55,7 +55,7 @@ public class Program
       await DoRequestAsync(logger, client, "group/42"); // invalid
       await DoRequestAsync(logger, client, "groupWithConverter/1");
       await DoRequestAsync(logger, client, "groupWithConverter/42"); // invalid
-      await DoRequestAsync(logger, client, "productType/groceries");
+      await DoRequestAsync(logger, client, "productType/groceries?type=groceries");
       await DoRequestAsync(logger, client, "productType/invalid");                                 // invalid
       await DoRequestAsync(logger, client, "productType", "invalid");                              // invalid
       await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid

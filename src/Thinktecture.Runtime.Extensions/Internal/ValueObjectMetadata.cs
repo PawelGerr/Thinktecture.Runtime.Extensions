@@ -44,6 +44,11 @@ public sealed class ValueObjectMetadata
    public Delegate Validate { get; }
 
    /// <summary>
+   /// An indication whether the type implements <see cref="IEnum{TKey}"/> or <see cref="IValidatableEnum{TKey}"/>.
+   /// </summary>
+   public bool IsEnumeration { get; }
+
+   /// <summary>
    /// An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.
    /// </summary>
    public bool IsValidatableEnum { get; }
@@ -53,6 +58,7 @@ public sealed class ValueObjectMetadata
    /// </summary>
    /// <param name="type">The type of the value object or a smart enum.</param>
    /// <param name="keyType">The type of the key property.</param>
+   /// <param name="isEnumeration">An indication whether the type implements <see cref="IEnum{TKey}"/> or <see cref="IValidatableEnum{TKey}"/>.</param>
    /// <param name="isValidatableEnum">An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.</param>
    /// <param name="convertFromKey">A delegate for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>
    /// <param name="convertFromKeyExpression">An expression for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>
@@ -62,6 +68,7 @@ public sealed class ValueObjectMetadata
    public ValueObjectMetadata(
       Type type,
       Type keyType,
+      bool isEnumeration,
       bool isValidatableEnum,
       Delegate convertFromKey,
       LambdaExpression convertFromKeyExpression,
@@ -71,6 +78,7 @@ public sealed class ValueObjectMetadata
    {
       Type = type ?? throw new ArgumentNullException(nameof(type));
       KeyType = keyType ?? throw new ArgumentNullException(nameof(keyType));
+      IsEnumeration = isEnumeration;
       IsValidatableEnum = isValidatableEnum;
       ConvertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));
       ConvertFromKeyExpression = convertFromKeyExpression ?? throw new ArgumentNullException(nameof(convertFromKeyExpression));

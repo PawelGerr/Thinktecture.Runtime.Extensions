@@ -41,7 +41,9 @@ public class DemoController : Controller
    }
 
    [HttpGet("productType/{productType}")]
-   public IActionResult RoundTrip(ProductType productType)
+   public IActionResult RoundTrip(
+      [FromRoute] ProductType productType,
+      [FromQuery] ProductType? type)
    {
       return RoundTrip<ProductType, string>(productType);
    }
