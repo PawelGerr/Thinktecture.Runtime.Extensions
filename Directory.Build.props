@@ -2,7 +2,7 @@
 
    <PropertyGroup>
       <Copyright>(c) $([System.DateTime]::Now.Year), Pawel Gerr. All rights reserved.</Copyright>
-      <VersionPrefix>4.3.3</VersionPrefix>
+      <VersionPrefix>4.4.0</VersionPrefix>
       <Authors>Pawel Gerr</Authors>
       <GenerateDocumentationFile>true</GenerateDocumentationFile>
       <PackageProjectUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions</PackageProjectUrl>
