@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
@@ -34,6 +35,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
 
    public EnumSourceGeneratorState(
       INamedTypeSymbol type,
+      ImmutableArray<INamedTypeSymbol> genericEnumTypes,
       INamedTypeSymbol enumInterface)
    {
       if (enumInterface is null)
@@ -59,7 +61,12 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true).ToList();
-      FullyQualifiedDerivedTypes = type.FindDerivedInnerEnums().Select(t => t.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)).ToList();
+      FullyQualifiedDerivedTypes = type.FindDerivedInnerEnums()
+                                       .Select(t => t.Type)
+                                       .Concat(genericEnumTypes)
+                                       .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
+                                       .Select(t => t.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
+                                       .ToList();
 
       AttributeInfo = new AttributeInfo(type);
    }

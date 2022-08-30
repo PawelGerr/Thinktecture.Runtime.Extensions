@@ -277,7 +277,7 @@ public static class TypeSymbolExtensions
          if (innerType.TypeKind is not (TypeKind.Class or TypeKind.Struct))
             continue;
 
-         if (IsDerivedFrom(innerType, enumType))
+         if ((!innerType.IsGenericType || innerType.IsUnboundGenericType) && IsDerivedFrom(innerType, enumType))
             (derivedTypes ??= new List<(INamedTypeSymbol, int Level)>()).Add((innerType, currentLevel));
 
          FindDerivedInnerEnums(innerType, currentLevel, enumType, ref derivedTypes);

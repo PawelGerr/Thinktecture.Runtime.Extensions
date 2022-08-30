@@ -16,18 +16,55 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
-      var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetEnumStateOrNull)
-                              .Where(static state => state.HasValue)
-                              .Select(static (state, _) => state!.Value)
-                              .Collect()
-                              .SelectMany(static (states, _) => states.Distinct());
+      IncrementalValuesProvider<INamedTypeSymbol> candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetEnumType)
+                                                                      .Where(type => type is not null)!;
+
+      var genericTypes = context.SyntaxProvider.CreateSyntaxProvider(IsInstanceCreation, GetDerivedGenericEnums)
+                                .Where(static tuple => tuple is not null)
+                                .Select(static (tuple, _) => tuple!.Value)
+                                .Collect()
+                                .Select(static (tuple, _) => tuple.Distinct());
+
+      var enumTypes = candidates.Combine(genericTypes)
+                                .Select(GetEnumStateOrNull)
+                                .Where(static state => state.HasValue)
+                                .Select(static (state, _) => state!.Value)
+                                .Collect()
+                                .SelectMany(static (states, _) => states.Distinct());
 
       var generators = context.GetMetadataReferencesProvider()
                               .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
                               .Collect()
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
-      context.RegisterSourceOutput(candidates.Combine(generators), GenerateCode);
+      context.RegisterSourceOutput(enumTypes.Combine(generators), GenerateCode);
+   }
+
+   private static bool IsInstanceCreation(SyntaxNode node, CancellationToken _)
+   {
+      return node is BaseObjectCreationExpressionSyntax;
+   }
+
+   private static GenericEnumInfo? GetDerivedGenericEnums(
+      GeneratorSyntaxContext context,
+      CancellationToken cancellationToken)
+   {
+      var typeInfo = context.SemanticModel.GetTypeInfo(context.Node, cancellationToken);
+
+      // search for generic inner enums
+      if (typeInfo.Type is INamedTypeSymbol { IsGenericType: true, IsUnboundGenericType: false, ContainingSymbol: INamedTypeSymbol enumType } type)
+      {
+         // the enum is always the most outer class
+         while (enumType.ContainingSymbol is INamedTypeSymbol namedTypeSymbol)
+         {
+            enumType = namedTypeSymbol;
+         }
+
+         if (enumType.IsEnum())
+            return new(enumType, type);
+      }
+
+      return null;
    }
 
    private static ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)
@@ -84,17 +121,33 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
              && typeDeclaration.IsEnumCandidate();
    }
 
-   private static SourceGenState<EnumSourceGeneratorState>? GetEnumStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private static INamedTypeSymbol? GetEnumType(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   {
+      var tds = (TypeDeclarationSyntax)context.Node;
+      var type = context.SemanticModel.GetDeclaredSymbol(tds, cancellationToken);
+
+      if (type?.ContainingType is not null)
+         return null;
+
+      return type;
+   }
+
+   private static SourceGenState<EnumSourceGeneratorState>? GetEnumStateOrNull(
+      (INamedTypeSymbol, IEnumerable<GenericEnumInfo>) tuple,
+      CancellationToken cancellationToken)
    {
       try
       {
-         var tds = (TypeDeclarationSyntax)context.Node;
-         var type = context.SemanticModel.GetDeclaredSymbol(tds);
+         var (type, genericEnums) = tuple;
+         var genericEnumTypes = ImmutableArray<INamedTypeSymbol>.Empty;
+
+         foreach (var genericEnum in genericEnums)
+         {
+            if (SymbolEqualityComparer.Default.Equals(genericEnum.EnumType, type))
+               genericEnumTypes = genericEnumTypes.Add(genericEnum.GenericEnumType);
+         }
 
          if (!type.IsEnum(out var enumInterfaces))
-            return null;
-
-         if (type.ContainingType is not null)
             return null;
 
          var enumInterface = enumInterfaces.GetValidEnumInterface(type);
@@ -102,11 +155,46 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
          if (enumInterface is null)
             return null;
 
-         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, enumInterface), null);
+         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, genericEnumTypes, enumInterface), null);
       }
       catch (Exception ex)
       {
          return new SourceGenState<EnumSourceGeneratorState>(null, ex);
+      }
+   }
+
+   private struct GenericEnumInfo : IEquatable<GenericEnumInfo>
+   {
+      public INamedTypeSymbol EnumType { get; }
+      public INamedTypeSymbol GenericEnumType { get; }
+
+      public GenericEnumInfo(INamedTypeSymbol enumType, INamedTypeSymbol genericEnumType)
+      {
+         EnumType = enumType;
+         GenericEnumType = genericEnumType;
+      }
+
+      public bool Equals(GenericEnumInfo other)
+      {
+         var comparer = SymbolEqualityComparer.Default;
+
+         return comparer.Equals(EnumType, other.EnumType)
+                && comparer.Equals(GenericEnumType, other.GenericEnumType);
+      }
+
+      public override bool Equals(object? obj)
+      {
+         return obj is GenericEnumInfo other && Equals(other);
+      }
+
+      public override int GetHashCode()
+      {
+         var comparer = SymbolEqualityComparer.Default;
+
+         unchecked
+         {
+            return (comparer.GetHashCode(EnumType) * 397) ^ comparer.GetHashCode(GenericEnumType);
+         }
       }
    }
 }
