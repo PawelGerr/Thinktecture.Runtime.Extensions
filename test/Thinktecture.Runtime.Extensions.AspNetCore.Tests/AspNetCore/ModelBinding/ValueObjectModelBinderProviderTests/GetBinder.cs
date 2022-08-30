@@ -21,11 +21,11 @@ public class GetBinder
    [Fact]
    public void Should_return_binder_for_string_based_enum()
    {
-      GetModelBinder<TestEnum>().Should().BeOfType<ValueObjectModelBinder<TestEnum, string>>();
+      GetModelBinder<TestEnum>().Should().BeOfType<TrimmingSmartEnumModelBinder<TestEnum>>();
 
-      GetModelBinder<ExtensibleTestEnum>().Should().BeOfType<ValueObjectModelBinder<ExtensibleTestEnum, string>>();
-      GetModelBinder<ExtendedTestEnum>().Should().BeOfType<ValueObjectModelBinder<ExtendedTestEnum, string>>();
-      GetModelBinder<DifferentAssemblyExtendedTestEnum>().Should().BeOfType<ValueObjectModelBinder<DifferentAssemblyExtendedTestEnum, string>>();
+      GetModelBinder<ExtensibleTestEnum>().Should().BeOfType<TrimmingSmartEnumModelBinder<ExtensibleTestEnum>>();
+      GetModelBinder<ExtendedTestEnum>().Should().BeOfType<TrimmingSmartEnumModelBinder<ExtendedTestEnum>>();
+      GetModelBinder<DifferentAssemblyExtendedTestEnum>().Should().BeOfType<TrimmingSmartEnumModelBinder<DifferentAssemblyExtendedTestEnum>>();
    }
 
    [Fact]

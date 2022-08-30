@@ -30,7 +30,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject();
+         var obj = new global::Thinktecture.Tests.TestValueObject();
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -39,14 +42,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject()
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject();
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+
+      partial void FactoryPostInit();
 
       private TestValueObject()
       {
@@ -171,6 +182,270 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
+   public void Should_generate_post_init_method_if_validation_method_returns_struct()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public partial class TestValueObject
+	{
+      static partial int ValidateFactoryArguments(ref ValidationResult? validationResult)
+      {
+         return 42;
+      }
+   }
+}
+";
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      AssertOutput(output, _GENERATED_HEADER + @"
+namespace Thinktecture.Tests
+{
+   [global::Thinktecture.Internal.ValueObjectConstructor()]
+   partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>
+   {
+      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
+
+      public static global::Thinktecture.Tests.TestValueObject Create()
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         var factoryArgumentsValidationResult = ValidateFactoryArguments(ref validationResult);
+
+         if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
+
+         var obj = new global::Thinktecture.Tests.TestValueObject();
+         obj.FactoryPostInit(factoryArgumentsValidationResult);
+
+         return obj;
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
+         [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         var factoryArgumentsValidationResult = ValidateFactoryArguments(ref validationResult);
+
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject();
+            obj.FactoryPostInit(factoryArgumentsValidationResult);
+         }
+         else
+         {
+            obj = default;
+         }
+
+         return validationResult;
+      }
+
+      private static partial int ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+
+      partial void FactoryPostInit(int factoryArgumentsValidationResult);
+
+      private TestValueObject()
+      {
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         return !(obj == other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (other is null)
+            return false;
+
+         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
+            return false;
+
+         if (global::System.Object.ReferenceEquals(this, other))
+            return true;
+
+         return true;
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         return _type.GetHashCode();
+      }
+
+      /// <inheritdoc />
+      public override string? ToString()
+      {
+         return ""TestValueObject"";
+      }
+   }
+}
+");
+   }
+
+   [Fact]
+   public void Should_generate_post_init_method_if_validation_method_returns_nullable_string()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+#nullable enable
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public partial class TestValueObject
+	{
+      static partial string? ValidateFactoryArguments(ref ValidationResult? validationResult)
+      {
+         return String.Empty;
+      }
+   }
+}
+";
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      AssertOutput(output, _GENERATED_HEADER + @"
+namespace Thinktecture.Tests
+{
+   [global::Thinktecture.Internal.ValueObjectConstructor()]
+   partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>
+   {
+      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
+
+      public static global::Thinktecture.Tests.TestValueObject Create()
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         var factoryArgumentsValidationResult = ValidateFactoryArguments(ref validationResult);
+
+         if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
+
+         var obj = new global::Thinktecture.Tests.TestValueObject();
+         obj.FactoryPostInit(factoryArgumentsValidationResult);
+
+         return obj;
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
+         [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         var factoryArgumentsValidationResult = ValidateFactoryArguments(ref validationResult);
+
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject();
+            obj.FactoryPostInit(factoryArgumentsValidationResult);
+         }
+         else
+         {
+            obj = default;
+         }
+
+         return validationResult;
+      }
+
+      private static partial string? ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+
+      partial void FactoryPostInit(string? factoryArgumentsValidationResult);
+
+      private TestValueObject()
+      {
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         return !(obj == other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (other is null)
+            return false;
+
+         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
+            return false;
+
+         if (global::System.Object.ReferenceEquals(this, other))
+            return true;
+
+         return true;
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         return _type.GetHashCode();
+      }
+
+      /// <inheritdoc />
+      public override string? ToString()
+      {
+         return ""TestValueObject"";
+      }
+   }
+}
+");
+   }
+
+   [Fact]
    public void Should_not_generate_code_for_class_with_generic()
    {
       var source = @"
@@ -216,7 +491,10 @@ public partial class TestValueObject
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::TestValueObject();
+         var obj = new global::TestValueObject();
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -225,14 +503,22 @@ public partial class TestValueObject
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::TestValueObject()
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::TestValueObject();
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+
+      partial void FactoryPostInit();
 
       private TestValueObject()
       {
@@ -460,7 +746,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject();
+         var obj = new global::Thinktecture.Tests.TestValueObject();
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -469,14 +758,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject()
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject();
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+
+      partial void FactoryPostInit();
 
       private TestValueObject()
       {
@@ -605,7 +902,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -615,14 +915,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""string""/>.
@@ -798,7 +1106,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -808,14 +1119,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""string""/>.
@@ -989,7 +1308,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -999,14 +1321,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""string""/>.
@@ -1195,7 +1525,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(structField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(structField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -1205,14 +1538,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(structField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(structField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""int""/>.
@@ -1422,7 +1763,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -1438,14 +1782,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""string""/>.
@@ -1634,7 +1986,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(structField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(structField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -1644,14 +1999,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(structField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(structField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""int""/>.
@@ -1860,7 +2223,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -1870,14 +2236,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""string""/>.
@@ -2067,7 +2441,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -2077,14 +2454,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int referenceField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""int""/>.
@@ -2297,7 +2682,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -2307,14 +2695,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref global::Thinktecture.Tests.Foo referenceField);
+
+      partial void FactoryPostInit();
 
       /// <summary>
       /// Implicit conversion to the type <see cref=""Foo""/>.
@@ -2490,7 +2886,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, structProperty);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, structProperty);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -2503,14 +2902,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField, ref structField, ref referenceProperty, ref structProperty);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, structProperty)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, structProperty);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField, ref int structField, ref string referenceProperty, ref int structProperty);
+
+      partial void FactoryPostInit();
 
       private TestValueObject(string referenceField, int structField, string referenceProperty, int structProperty)
       {
@@ -2631,7 +3038,10 @@ namespace Thinktecture.Tests
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return new global::Thinktecture.Tests.TestValueObject(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9);
+         var obj = new global::Thinktecture.Tests.TestValueObject(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9);
+         obj.FactoryPostInit();
+
+         return obj;
       }
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
@@ -2649,14 +3059,22 @@ namespace Thinktecture.Tests
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField1, ref referenceField2, ref referenceField3, ref referenceField4, ref referenceField5, ref referenceField6, ref referenceField7, ref referenceField8, ref referenceField9);
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? new global::Thinktecture.Tests.TestValueObject(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9)
-               : default;
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }
 
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField1, ref string referenceField2, ref string referenceField3, ref string referenceField4, ref string referenceField5, ref string referenceField6, ref string referenceField7, ref string referenceField8, ref string referenceField9);
+
+      partial void FactoryPostInit();
 
       private TestValueObject(string referenceField1, string referenceField2, string referenceField3, string referenceField4, string referenceField5, string referenceField6, string referenceField7, string referenceField8, string referenceField9)
       {

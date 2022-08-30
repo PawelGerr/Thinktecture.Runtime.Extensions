@@ -4,6 +4,9 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public class ValueObjectCodeGenerator : CodeGeneratorBase
 {
+   private const string _FACTORY_ARGUMENTS_VALIDATION_RESULT = "factoryArgumentsValidationResult";
+   private const string _FACTORY_POST_INIT = "FactoryPostInit";
+
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
@@ -163,6 +166,7 @@ namespace ").Append(_state.Namespace).Append(@"
          GenerateCreateMethod(allowNullKeyMember);
          GenerateTryCreateMethod(allowNullKeyMember);
          GenerateValidateFactoryArguments();
+         GenerateFactoryPostInit();
       }
 
       if (_state.HasKeyMember)
@@ -314,7 +318,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-         ValidateFactoryArguments(ref validationResult");
+         ");
+
+      if (_state.FactoryValidationReturnType is not null)
+         _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT).Append(" = ");
+
+      _sb.Append(@"ValidateFactoryArguments(ref validationResult");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
@@ -323,11 +332,19 @@ namespace ").Append(_state.Namespace).Append(@"
          if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
 
-         return ");
+         var obj = ");
 
       GenerateConstructCall();
 
       _sb.Append(@";
+         obj.").Append(_FACTORY_POST_INIT).Append("(");
+
+      if (_state.FactoryValidationReturnType is not null)
+         _sb.Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT);
+
+      _sb.Append(@");
+
+         return obj;
       }");
    }
 
@@ -359,19 +376,35 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-         ValidateFactoryArguments(ref validationResult");
+         ");
+
+      if (_state.FactoryValidationReturnType is not null)
+         _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT).Append(" = ");
+
+      _sb.Append(@"ValidateFactoryArguments(ref validationResult");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
       _sb.Append(@");
 
-         obj = validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               ? ");
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = ");
 
       GenerateConstructCall();
 
-      _sb.Append(@"
-               : default;
+      _sb.Append(@";
+            obj.").Append(_FACTORY_POST_INIT).Append("(");
+
+      if (_state.FactoryValidationReturnType is not null)
+         _sb.Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT);
+
+      _sb.Append(@");
+         }
+         else
+         {
+            obj = default;
+         }
 
          return validationResult;
       }");
@@ -383,9 +416,26 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult");
+      ");
+
+      if (_state.FactoryValidationReturnType is not null)
+         _sb.Append("private ");
+
+      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true);
+
+      _sb.Append(@");");
+   }
+
+   private void GenerateFactoryPostInit()
+   {
+      _sb.Append(@"
+
+      partial void ").Append(_FACTORY_POST_INIT).Append("(");
+
+      if (_state.FactoryValidationReturnType is not null)
+         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT);
 
       _sb.Append(@");");
    }
@@ -396,6 +446,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"new {_state.TypeFullyQualified}(");
       _sb.RenderArguments(fieldsAndProperties);
+
       _sb.Append(@")");
    }
 

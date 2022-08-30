@@ -15,6 +15,8 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
    public string Name => _type.Name;
    public bool IsReferenceType => _type.IsReferenceType;
 
+   public string? FactoryValidationReturnType { get; }
+
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
    public IReadOnlyList<EqualityInstanceMemberInfo> EqualityMembers { get; }
 
@@ -38,6 +40,19 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
 
       AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true).ToList();
       EqualityMembers = GetEqualityMembers();
+
+      var factoryValidationReturnType = _type.GetMembers()
+                                             .OfType<IMethodSymbol>()
+                                             .FirstOrDefault(m => m.IsStatic && m.ReturnType.SpecialType != SpecialType.System_Void && m.Name == "ValidateFactoryArguments")?
+                                             .ReturnType;
+
+      if (factoryValidationReturnType is not null)
+      {
+         FactoryValidationReturnType = factoryValidationReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+         if (factoryValidationReturnType.NullableAnnotation == NullableAnnotation.Annotated)
+            FactoryValidationReturnType += "?";
+      }
 
       AttributeInfo = new AttributeInfo(type);
       Settings = new ValueObjectSettings(valueObjectAttribute);
@@ -88,6 +103,7 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
+             && FactoryValidationReturnType == other.FactoryValidationReturnType
              && AttributeInfo.Equals(other.AttributeInfo)
              && Settings.Equals(other.Settings)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
@@ -100,6 +116,7 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ FactoryValidationReturnType?.GetHashCode() ?? 0;
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();
