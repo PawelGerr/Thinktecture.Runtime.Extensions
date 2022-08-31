@@ -623,10 +623,44 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateConstructors()
    {
-      // Skip(1) - skip the key property
-      var baseCtorArgs = _state.BaseEnum?.ConstructorArguments.Skip(1) ?? Array.Empty<IMemberState>();
-      var ctorArgs = _state.AssignableInstanceFieldsAndProperties.Concat(baseCtorArgs);
+      if (_state.BaseType is null)
+      {
+         GenerateConstructor(_state.AssignableInstanceFieldsAndProperties, Array.Empty<IMemberState>());
+         return;
+      }
+
+      foreach (var baseTypeConstructor in _state.BaseType.Constructors)
+      {
+         GenerateConstructor(_state.AssignableInstanceFieldsAndProperties,
+                             baseTypeConstructor.ConstructorArguments);
+      }
+   }
+
+   private void GenerateConstructor(
+      IReadOnlyList<IMemberState> ownCtorArgs,
+      IReadOnlyList<IMemberState> baseCtorArgs)
+   {
       var accessibilityModifier = IsExtensible ? "protected" : "private";
+
+      var ctorArgs = ownCtorArgs.Select(a => (a.TypeFullyQualifiedWithNullability, a.ArgumentName));
+      IReadOnlyList<(string TypeFullyQualifiedWithNullability, string ArgumentName)> preparedBaseCtorArgs = Array.Empty<(string TypeFullyQualifiedWithNullability, string)>();
+
+      if (baseCtorArgs.Count != 0)
+      {
+         var counter = 1;
+         preparedBaseCtorArgs = baseCtorArgs
+                                // we skip the 1st argument of the base enum, if it is the key
+                                .Where((a, i) => !_state.HasBaseEnum || i != 0 || _state.KeyProperty.ArgumentName != a.ArgumentName)
+                                .Select(a =>
+                                        {
+                                           if (_state.KeyProperty.ArgumentName == a.ArgumentName || ownCtorArgs.Any(ownArg => ownArg.ArgumentName == a.ArgumentName))
+                                              return (a.TypeFullyQualifiedWithNullability, a.ArgumentName + counter++);
+
+                                           return (a.TypeFullyQualifiedWithNullability, a.ArgumentName);
+                                        }).ToList();
+
+         ctorArgs = ctorArgs.Concat(preparedBaseCtorArgs);
+      }
 
       if (_state.IsValidatable)
       {
@@ -674,9 +708,24 @@ namespace ").Append(_state.Namespace).Append(@"
          if (_state.IsValidatable)
             _sb.Append(@", isValid");
 
-         foreach (var baseArg in baseCtorArgs)
+         foreach (var baseArg in preparedBaseCtorArgs)
          {
             _sb.Append($@", {baseArg.ArgumentName}");
+         }
+
+         _sb.Append(@")");
+      }
+      else if (preparedBaseCtorArgs.Count > 0)
+      {
+         _sb.Append($@"
+         : base(");
+
+         for (var i = 0; i < preparedBaseCtorArgs.Count; i++)
+         {
+            if (i != 0)
+               _sb.Append(", ");
+
+            _sb.Append(preparedBaseCtorArgs[i].ArgumentName);
          }
 
          _sb.Append(@")");

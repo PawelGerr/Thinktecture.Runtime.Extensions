@@ -17,6 +17,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
    public bool IsValidatable { get; }
 
    public IBaseEnumState? BaseEnum { get; }
+   public BaseTypeState? BaseType { get; }
 
    [MemberNotNullWhen(true, nameof(BaseEnum))]
    public bool HasBaseEnum => BaseEnum is not null;
@@ -54,6 +55,9 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
       Settings = new EnumSettings(type.FindEnumGenerationAttribute());
 
       BaseEnum = GetBaseEnum(type);
+      BaseType = type.BaseType is null || type.BaseType.SpecialType == SpecialType.System_Object
+                    ? null
+                    : new BaseTypeState(type.BaseType, BaseEnum);
 
       var keyType = enumInterface.TypeArguments[0];
       KeyProperty = (BaseEnum?.Settings ?? Settings).CreateKeyProperty(keyType);
@@ -111,6 +115,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
              && AttributeInfo.Equals(other.AttributeInfo)
              && KeyProperty.Equals(other.KeyProperty)
              && Equals(BaseEnum, other.BaseEnum)
+             && Equals(BaseType, other.BaseType)
              && Settings.Equals(other.Settings)
              && ItemNames.EqualsTo(other.ItemNames)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
@@ -129,6 +134,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseEnum?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
