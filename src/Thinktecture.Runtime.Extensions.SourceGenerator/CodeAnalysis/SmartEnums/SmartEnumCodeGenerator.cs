@@ -623,44 +623,50 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateConstructors()
    {
+      var ownCtorArgs = _state.AssignableInstanceFieldsAndProperties
+                              .Select(a => new ConstructorArgument(a.TypeFullyQualifiedWithNullability, a.ArgumentName))
+                              .ToList();
+
       if (_state.BaseType is null)
       {
-         GenerateConstructor(_state.AssignableInstanceFieldsAndProperties, Array.Empty<IMemberState>());
+         GenerateConstructor(ownCtorArgs, Array.Empty<ConstructorArgument>());
          return;
       }
 
-      foreach (var baseTypeConstructor in _state.BaseType.Constructors)
+      var baseCtorArgs = _state.BaseType.Constructors
+                               .Select(ctor =>
+                                       {
+                                          return ctor.ConstructorArguments
+                                                     // we skip the 1st argument of the base enum, if it is the key
+                                                     .Where((a, i) => !_state.HasBaseEnum || i != 0 || _state.KeyProperty.ArgumentName != a.ArgumentName)
+                                                     .Select(a =>
+                                                             {
+                                                                var argName = a.ArgumentName;
+                                                                var counter = 0;
+
+                                                                while (_state.KeyProperty.ArgumentName == argName || ownCtorArgs.Any(ownArg => ownArg.ArgumentName == argName))
+                                                                {
+                                                                   counter++;
+                                                                   argName = $"{a.ArgumentName}{counter}"; // rename the argument name if it collides with another argument
+                                                                }
+
+                                                                return new ConstructorArgument(a.TypeFullyQualifiedWithNullability, argName);
+                                                             }).ToList();
+                                       })
+                               .Distinct(ConstructorArgumentsComparer.Instance)
+                               .ToList();
+
+      foreach (var baseArgs in baseCtorArgs)
       {
-         GenerateConstructor(_state.AssignableInstanceFieldsAndProperties,
-                             baseTypeConstructor.ConstructorArguments);
+         GenerateConstructor(ownCtorArgs.Concat(baseArgs).ToList(), baseArgs);
       }
    }
 
    private void GenerateConstructor(
-      IReadOnlyList<IMemberState> ownCtorArgs,
-      IReadOnlyList<IMemberState> baseCtorArgs)
+      IReadOnlyList<ConstructorArgument> ctorArgs,
+      IReadOnlyList<ConstructorArgument> baseCtorArgs)
    {
       var accessibilityModifier = IsExtensible ? "protected" : "private";
-
-      var ctorArgs = ownCtorArgs.Select(a => (a.TypeFullyQualifiedWithNullability, a.ArgumentName));
-      IReadOnlyList<(string TypeFullyQualifiedWithNullability, string ArgumentName)> preparedBaseCtorArgs = Array.Empty<(string TypeFullyQualifiedWithNullability, string)>();
-
-      if (baseCtorArgs.Count != 0)
-      {
-         var counter = 1;
-         preparedBaseCtorArgs = baseCtorArgs
-                                // we skip the 1st argument of the base enum, if it is the key
-                                .Where((a, i) => !_state.HasBaseEnum || i != 0 || _state.KeyProperty.ArgumentName != a.ArgumentName)
-                                .Select(a =>
-                                        {
-                                           if (_state.KeyProperty.ArgumentName == a.ArgumentName || ownCtorArgs.Any(ownArg => ownArg.ArgumentName == a.ArgumentName))
-                                              return (a.TypeFullyQualifiedWithNullability, a.ArgumentName + counter++);
-
-                                           return (a.TypeFullyQualifiedWithNullability, a.ArgumentName);
-                                        }).ToList();
-
-         ctorArgs = ctorArgs.Concat(preparedBaseCtorArgs);
-      }
 
       if (_state.IsValidatable)
       {
@@ -708,24 +714,24 @@ namespace ").Append(_state.Namespace).Append(@"
          if (_state.IsValidatable)
             _sb.Append(@", isValid");
 
-         foreach (var baseArg in preparedBaseCtorArgs)
+         foreach (var baseArg in baseCtorArgs)
          {
             _sb.Append($@", {baseArg.ArgumentName}");
          }
 
          _sb.Append(@")");
       }
-      else if (preparedBaseCtorArgs.Count > 0)
+      else if (baseCtorArgs.Count > 0)
       {
          _sb.Append($@"
          : base(");
 
-         for (var i = 0; i < preparedBaseCtorArgs.Count; i++)
+         for (var i = 0; i < baseCtorArgs.Count; i++)
          {
             if (i != 0)
                _sb.Append(", ");
 
-            _sb.Append(preparedBaseCtorArgs[i].ArgumentName);
+            _sb.Append(baseCtorArgs[i].ArgumentName);
          }
 
          _sb.Append(@")");
@@ -838,5 +844,34 @@ namespace ").Append(_state.Namespace).Append(@"
       }}
    }}
 ");
+   }
+
+   private record struct ConstructorArgument(string TypeFullyQualifiedWithNullability, string ArgumentName);
+
+   private class ConstructorArgumentsComparer : IEqualityComparer<IReadOnlyList<ConstructorArgument>>
+   {
+      public static readonly ConstructorArgumentsComparer Instance = new();
+
+      public bool Equals(IReadOnlyList<ConstructorArgument> x, IReadOnlyList<ConstructorArgument> y)
+      {
+         if (x.Count != y.Count)
+            return false;
+
+         for (var i = 0; i < x.Count; i++)
+         {
+            var arg = x[i];
+            var otherArg = y[i];
+
+            if (arg.TypeFullyQualifiedWithNullability != otherArg.TypeFullyQualifiedWithNullability)
+               return false;
+         }
+
+         return true;
+      }
+
+      public int GetHashCode(IReadOnlyList<ConstructorArgument> args)
+      {
+         return args.Count;
+      }
    }
 }
