@@ -44,7 +44,8 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic,
                                                                                                               DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
                                                                                                               DiagnosticsDescriptors.ExtendedEnumMustHaveSameKeyPropertyName,
-                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric);
+                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
+                                                                                                              DiagnosticsDescriptors.ConstructorsMustBePrivateOrProtected);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -89,7 +90,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var locationOfFirstDeclaration = declarations[0].Identifier.GetLocation(); // a representative for all
 
       if (type.IsRecord ||
-          type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Struct)
+          (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Struct))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, type);
          return;
@@ -177,8 +178,6 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (enumType.IsValueType && !isValidatable)
          ReportDiagnostic(context, DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType);
 
-      ConstructorsMustBePrivate(context, enumType);
-
       var items = enumType.EnumerateEnumItems().ToList();
 
       if (items.Count == 0)
@@ -197,6 +196,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       // a) the base class will be either another nested class OR
       // b) the public enum, which is validated separately
       var hasBaseEnum = enumType.ContainingType is null && ValidateBaseEnum(context, enumType, enumAttr, locationOfFirstDeclaration, isValidatable);
+      var isExtensible = false;
 
       if (enumAttr is not null)
       {
@@ -205,7 +205,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          var comparer = enumAttr.FindKeyComparer();
          var comparerMembers = comparer is null ? Array.Empty<ISymbol>() : enumType.GetNonIgnoredMembers(comparer);
 
-         var isExtensible = enumAttr.IsExtensible() ?? false;
+         isExtensible = enumAttr.IsExtensible() ?? false;
 
          CheckKeyComparer(context, comparerMembers, isExtensible);
 
@@ -234,6 +234,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          }
       }
 
+      ConstructorsMustBePrivate(context, enumType, isExtensible);
       ValidateDerivedTypes(context, enumType);
    }
 
@@ -492,15 +493,21 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.StructMustBeReadOnly, location, type);
    }
 
-   private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, INamedTypeSymbol type)
+   private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, INamedTypeSymbol type, bool isExtensible)
    {
       foreach (var ctor in type.Constructors)
       {
          if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
             continue;
 
+         if (ctor.DeclaredAccessibility == Accessibility.Protected && isExtensible)
+            continue;
+
          var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.Single().GetSyntax()).Identifier.GetLocation();
-         ReportDiagnostic(context, DiagnosticsDescriptors.ConstructorsMustBePrivate, location, type);
+         ReportDiagnostic(context,
+                          isExtensible ? DiagnosticsDescriptors.ConstructorsMustBePrivateOrProtected : DiagnosticsDescriptors.ConstructorsMustBePrivate,
+                          location,
+                          type);
       }
    }
 
