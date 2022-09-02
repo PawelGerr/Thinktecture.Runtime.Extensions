@@ -62,12 +62,6 @@ public class DemoController : Controller
       return RoundTrip<ProductType, string>(productType.ProductType);
    }
 
-   [HttpGet("specialProductType/{specialProductType}")]
-   public IActionResult RoundTrip(SpecialProductType specialProductType)
-   {
-      return RoundTrip<SpecialProductType, string>(specialProductType);
-   }
-
    [HttpGet("productTypeWithJsonConverter/{productType}")]
    public IActionResult RoundTrip(ProductTypeWithJsonConverter productType)
    {

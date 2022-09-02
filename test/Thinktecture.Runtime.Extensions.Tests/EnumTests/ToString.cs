@@ -8,12 +8,6 @@ public class ToString
    public void Should_return_string_representation_of_the_key()
    {
       TestEnum.Item1.ToString().Should().Be("item1");
-
-      ExtensibleTestEnum.Item1.ToString().Should().Be("Item1");
-      ExtendedTestEnum.Item1.ToString().Should().Be("Item1");
-      ExtendedTestEnum.Item2.ToString().Should().Be("Item2");
-      DifferentAssemblyExtendedTestEnum.Item1.ToString().Should().Be("Item1");
-      DifferentAssemblyExtendedTestEnum.Item2.ToString().Should().Be("Item2");
    }
 
    [Fact]

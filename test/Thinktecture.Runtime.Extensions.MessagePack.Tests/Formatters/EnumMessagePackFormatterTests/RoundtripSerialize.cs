@@ -76,10 +76,7 @@ public class Serialize
                                                                 new object[] { new ClassWithIntBasedEnum(IntegerEnum.Item1) },
                                                                 new object[] { new ClassWithStringBasedEnum(TestEnum.Item1) },
                                                                 new object[] { TestEnum.Item1 },
-                                                                new object[] { IntegerEnum.Item1 },
-                                                                new object[] { DifferentAssemblyExtendedTestEnum.Item1 },
-                                                                new object[] { ExtendedTestEnum.Item1 },
-                                                                new object[] { ExtensibleTestEnum.Item1 },
+                                                                new object[] { IntegerEnum.Item1 }
                                                              };
 
    [Theory]

@@ -11,12 +11,6 @@ public class Get
    {
       TestEnum.Get(null).Should().BeNull();
       ValidTestEnum.Get(null).Should().BeNull();
-
-      ExtensibleTestEnum.Get(null).Should().BeNull();
-      ExtendedTestEnum.Get(null).Should().BeNull();
-      DifferentAssemblyExtendedTestEnum.Get(null).Should().BeNull();
-      ExtensibleTestValidatableEnum.Get(null).Should().BeNull();
-      ExtendedTestValidatableEnum.Get(null).Should().BeNull();
    }
 
    [Fact]
@@ -45,14 +39,6 @@ public class Get
       var item = TestEnum.Get("unknown");
       item.IsValid.Should().BeFalse();
       item.Key.Should().Be("unknown");
-
-      var extensibleItem = ExtensibleTestValidatableEnum.Get("unknown");
-      extensibleItem.IsValid.Should().BeFalse();
-      extensibleItem.Key.Should().Be("unknown");
-
-      var extendedItem = ExtendedTestValidatableEnum.Get("unknown");
-      extendedItem.IsValid.Should().BeFalse();
-      extendedItem.Key.Should().Be("unknown");
    }
 
    [Fact]
@@ -82,16 +68,6 @@ public class Get
       TestEnum.Get("item2").Should().Be(TestEnum.Item2);
 
       ValidTestEnum.Get("item1").Should().Be(ValidTestEnum.Item1);
-
-      ExtensibleTestEnum.Get("Item1").Should().Be(ExtensibleTestEnum.Item1);
-      ExtendedTestEnum.Get("Item1").Should().Be(ExtendedTestEnum.Item1);
-      ExtendedTestEnum.Get("Item2").Should().Be(ExtendedTestEnum.Item2);
-      DifferentAssemblyExtendedTestEnum.Get("Item1").Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
-      DifferentAssemblyExtendedTestEnum.Get("Item2").Should().Be(DifferentAssemblyExtendedTestEnum.Item2);
-
-      ExtensibleTestValidatableEnum.Get("Item1").Should().Be(ExtensibleTestValidatableEnum.Item1);
-      ExtendedTestValidatableEnum.Get("Item1").Should().Be(ExtendedTestValidatableEnum.Item1);
-      ExtendedTestValidatableEnum.Get("Item2").Should().Be(ExtendedTestValidatableEnum.Item2);
    }
 
    [Fact]
@@ -115,10 +91,6 @@ public class Get
       EnumWithDerivedType.Get(2).Should().Be(EnumWithDerivedType.ItemOfDerivedType);
 
       AbstractEnum.Get(1).Should().Be(AbstractEnum.Item);
-
-      ExtensibleTestEnum.Get("DerivedItem").Should().Be(ExtensibleTestEnum.DerivedItem);
-      ExtendedTestEnum.Get("DerivedItem").Should().Be(ExtendedTestEnum.DerivedItem);
-      DifferentAssemblyExtendedTestEnum.Get("DerivedItem").Should().Be(DifferentAssemblyExtendedTestEnum.DerivedItem);
    }
 
    [Fact]
@@ -126,14 +98,5 @@ public class Get
    {
       Action action = () => ValidTestEnum.Get("invalid");
       action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
-
-      action = () => ExtensibleTestEnum.Get("invalid");
-      action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtensibleTestEnum' with the identifier 'invalid'.");
-
-      action = () => ExtendedTestEnum.Get("invalid");
-      action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ExtendedTestEnum' with the identifier 'invalid'.");
-
-      action = () => DifferentAssemblyExtendedTestEnum.Get("invalid");
-      action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'DifferentAssemblyExtendedTestEnum' with the identifier 'invalid'.");
    }
 }

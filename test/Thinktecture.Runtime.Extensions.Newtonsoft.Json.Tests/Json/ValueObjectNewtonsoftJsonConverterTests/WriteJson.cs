@@ -62,33 +62,6 @@ public class WriteJson : JsonTestsBase
    }
 
    [Theory]
-   [MemberData(nameof(DataForExtensibleTestEnumTest))]
-   public void Should_serialize_ExtensibleTestEnum(ExtensibleTestEnum enumValue, string expectedJson)
-   {
-      var json = Serialize<ExtensibleTestEnum, ExtensibleTestEnum.ValueObjectNewtonsoftJsonConverter>(enumValue);
-
-      json.Should().Be(expectedJson);
-   }
-
-   [Theory]
-   [MemberData(nameof(DataForExtendedTestEnumTest))]
-   public void Should_serialize_ExtendedTestEnum(ExtendedTestEnum enumValue, string expectedJson)
-   {
-      var json = Serialize<ExtendedTestEnum, ExtendedTestEnum.ValueObjectNewtonsoftJsonConverter>(enumValue);
-
-      json.Should().Be(expectedJson);
-   }
-
-   [Theory]
-   [MemberData(nameof(DataForDifferentAssemblyExtendedTestEnumTest))]
-   public void Should_serialize_DifferentAssemblyExtendedTestEnum(DifferentAssemblyExtendedTestEnum enumValue, string expectedJson)
-   {
-      var json = Serialize<DifferentAssemblyExtendedTestEnum, DifferentAssemblyExtendedTestEnum.ValueObjectNewtonsoftJsonConverter>(enumValue);
-
-      json.Should().Be(expectedJson);
-   }
-
-   [Theory]
    [MemberData(nameof(DataForIntBasedEnumTest))]
    public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
    {

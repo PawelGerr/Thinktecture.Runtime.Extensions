@@ -11,20 +11,12 @@ public class ConvertFrom : TypeConverterTestsBase
    public void Should_return_null_if_key_is_null()
    {
       StringBasedTypeConverter.ConvertFrom(null, null, null).Should().BeNull();
-
-      ExtensibleTestEnumTypeConverter.ConvertFrom(null, null, null).Should().BeNull();
-      ExtendedTestEnumTypeConverter.ConvertFrom(null, null, null).Should().BeNull();
-      DifferentAssemblyExtendedTestEnumTypeConverter.ConvertFrom(null, null, null).Should().BeNull();
    }
 
    [Fact]
    public void Should_return_item_if_parameter_matches_the_key_type_and_item_exists()
    {
       StringBasedTypeConverter.ConvertFrom(null, null, "item1").Should().Be(TestEnum.Item1);
-
-      ExtensibleTestEnumTypeConverter.ConvertFrom(null, null, "item1").Should().Be(ExtensibleTestEnum.Item1);
-      ExtendedTestEnumTypeConverter.ConvertFrom(null, null, "item1").Should().Be(ExtendedTestEnum.Item1);
-      DifferentAssemblyExtendedTestEnumTypeConverter.ConvertFrom(null, null, "item1").Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
    }
 
    [Fact]
@@ -33,39 +25,18 @@ public class ConvertFrom : TypeConverterTestsBase
       var item = (TestEnum)StringBasedTypeConverter.ConvertFrom(null, null, "item 1");
       item.Key.Should().Be("item 1");
       item.IsValid.Should().BeFalse();
-
-      var extensibleItem = (ExtensibleTestValidatableEnum)ExtensibleTestValidatableEnumTypeConverter.ConvertFrom(null, null, "item 1");
-      extensibleItem.Key.Should().Be("item 1");
-      extensibleItem.IsValid.Should().BeFalse();
-
-      var extendedItem = (ExtendedTestValidatableEnum)ExtendedTestValidatableEnumTypeConverter.ConvertFrom(null, null, "item 1");
-      extendedItem.Key.Should().Be("item 1");
-      extendedItem.IsValid.Should().BeFalse();
    }
 
    [Fact]
    public void Should_return_item_if_parameter_is_enum_already()
    {
       StringBasedTypeConverter.ConvertFrom(null, null, TestEnum.Item1).Should().Be(TestEnum.Item1);
-
-      ExtensibleTestEnumTypeConverter.ConvertFrom(null, null, ExtensibleTestEnum.Item1).Should().Be(ExtensibleTestEnum.Item1);
-      ExtendedTestEnumTypeConverter.ConvertFrom(null, null, ExtendedTestEnum.Item1).Should().Be(ExtendedTestEnum.Item1);
-      DifferentAssemblyExtendedTestEnumTypeConverter.ConvertFrom(null, null, DifferentAssemblyExtendedTestEnum.Item1).Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
    }
 
    [Fact]
    public void Should_throw_if_parameter_type_doesnt_match_the_enum_and_key()
    {
       Action action = () => StringBasedTypeConverter.ConvertFrom(Guid.Empty);
-      action.Should().Throw<NotSupportedException>();
-
-      action = () => ExtensibleTestEnumTypeConverter.ConvertFrom(Guid.Empty);
-      action.Should().Throw<NotSupportedException>();
-
-      action = () => ExtendedTestEnumTypeConverter.ConvertFrom(Guid.Empty);
-      action.Should().Throw<NotSupportedException>();
-
-      action = () => DifferentAssemblyExtendedTestEnumTypeConverter.ConvertFrom(Guid.Empty);
       action.Should().Throw<NotSupportedException>();
    }
 

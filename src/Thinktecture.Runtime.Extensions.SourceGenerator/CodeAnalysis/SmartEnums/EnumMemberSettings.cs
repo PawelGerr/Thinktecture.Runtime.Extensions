@@ -27,11 +27,6 @@ public class EnumMemberSettings : IEquatable<EnumMemberSettings>
       return attr is null ? None : new EnumMemberSettings(attr);
    }
 
-   public Location? GetAttributeLocationOrNull(CancellationToken cancellationToken)
-   {
-      return _attributeData?.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation();
-   }
-
    public override bool Equals(object? obj)
    {
       return obj is EnumMemberSettings other && Equals(other);

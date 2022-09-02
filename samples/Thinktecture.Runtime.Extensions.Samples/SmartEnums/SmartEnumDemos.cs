@@ -15,7 +15,6 @@ public class SmartEnumDemos
       logger.Information("==== Demo for IEnum<T> ====");
 
       logger.Information("Product types: {Types}", ProductType.Items);
-      logger.Information("Special product types: {Types}", SpecialProductType.Items);
 
       var productType = ProductType.Get("Groceries");
       logger.Information("Product type: {Type}", productType);

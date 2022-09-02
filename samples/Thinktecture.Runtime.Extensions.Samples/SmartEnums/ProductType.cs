@@ -1,6 +1,5 @@
 namespace Thinktecture.SmartEnums;
 
-[EnumGeneration(IsExtensible = true)]
 public partial class ProductType : IEnum<string>
 {
    public static readonly ProductType Groceries = new("Groceries");

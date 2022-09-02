@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
@@ -16,11 +15,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
 
    public bool IsValidatable { get; }
 
-   public IBaseEnumState? BaseEnum { get; }
    public BaseTypeState? BaseType { get; }
-
-   [MemberNotNullWhen(true, nameof(BaseEnum))]
-   public bool HasBaseEnum => BaseEnum is not null;
 
    public bool HasCreateInvalidImplementation { get; }
    public bool IsReferenceType { get; }
@@ -54,13 +49,10 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
       IsValidatable = enumInterface.IsValidatableEnumInterface();
       Settings = new EnumSettings(type.FindEnumGenerationAttribute());
 
-      BaseEnum = GetBaseEnum(type);
-      BaseType = type.BaseType is null || type.BaseType.SpecialType == SpecialType.System_Object
-                    ? null
-                    : new BaseTypeState(type.BaseType, BaseEnum);
+      BaseType = type.GetBaseType();
 
       var keyType = enumInterface.TypeArguments[0];
-      KeyProperty = (BaseEnum?.Settings ?? Settings).CreateKeyProperty(keyType);
+      KeyProperty = Settings.CreateKeyProperty(keyType);
       HasCreateInvalidImplementation = type.HasCreateInvalidImplementation(keyType);
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
@@ -78,21 +70,6 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
    public Location GetFirstLocation()
    {
       return _enumType.DeclaringSyntaxReferences.First().GetSyntax().GetLocation();
-   }
-
-   private static IBaseEnumState? GetBaseEnum(INamedTypeSymbol type)
-   {
-      if (!type.BaseType.IsEnum(out var enumInterfaces))
-         return null;
-
-      var baseInterface = enumInterfaces.GetValidEnumInterface(type.BaseType);
-
-      if (baseInterface is null)
-         return null;
-
-      return SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, type.BaseType.ContainingAssembly)
-                ? new SameAssemblyBaseEnumState(type.BaseType, baseInterface.TypeArguments[0])
-                : new BaseEnumState(type.BaseType);
    }
 
    public override bool Equals(object? obj)
@@ -114,7 +91,6 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
              && IsAbstract == other.IsAbstract
              && AttributeInfo.Equals(other.AttributeInfo)
              && KeyProperty.Equals(other.KeyProperty)
-             && Equals(BaseEnum, other.BaseEnum)
              && Equals(BaseType, other.BaseType)
              && Settings.Equals(other.Settings)
              && ItemNames.EqualsTo(other.ItemNames)
@@ -133,7 +109,6 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
-         hashCode = (hashCode * 397) ^ (BaseEnum?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();

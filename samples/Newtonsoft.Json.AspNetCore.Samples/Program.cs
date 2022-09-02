@@ -34,9 +34,6 @@ public class Program
       // 	http://localhost:5000/api/productType/invalid
       // 	http://localhost:5000/api/productTypeWithJsonConverter/groceries
       // 	http://localhost:5000/api/productTypeWithJsonConverter/invalid
-      // 	http://localhost:5000/api/specialProductType/groceries
-      // 	http://localhost:5000/api/specialProductType/special
-      // 	http://localhost:5000/api/specialProductType/invalid
       // 	http://localhost:5000/api/productName/bread
       // 	http://localhost:5000/api/productName/a
       await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
@@ -60,9 +57,6 @@ public class Program
       await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid
       await DoRequestAsync(logger, client, "productTypeWithJsonConverter/groceries");
       await DoRequestAsync(logger, client, "productTypeWithJsonConverter/invalid"); // invalid
-      await DoRequestAsync(logger, client, "specialProductType/groceries");
-      await DoRequestAsync(logger, client, "specialProductType/special");
-      await DoRequestAsync(logger, client, "specialProductType/invalid"); // invalid
       await DoRequestAsync(logger, client, "productName/bread");
       await DoRequestAsync(logger, client, "productName/a"); // invalid
    }

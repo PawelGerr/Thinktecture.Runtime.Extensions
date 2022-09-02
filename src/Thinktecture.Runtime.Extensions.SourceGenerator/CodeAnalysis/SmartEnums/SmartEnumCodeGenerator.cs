@@ -9,10 +9,8 @@ public class SmartEnumCodeGenerator : CodeGeneratorBase
 
    private string? NullableQuestionMarkEnum => _state.IsReferenceType ? "?" : null;
    private string? NullableQuestionMarkKey => _state.KeyProperty.IsReferenceType ? "?" : null;
-   private bool IsExtensible => _state.IsExtensible();
-   private bool NeedsDefaultComparer => !_state.HasBaseEnum && _state.Settings.KeyComparer is null;
-   private string KeyComparerMember => (_state.HasBaseEnum ? _state.BaseEnum.Settings.KeyComparer : _state.Settings.KeyComparer) ?? "_defaultKeyComparerMember";
-   private string RuntimeTypeName => _state.GetRuntimeTypeName();
+   private bool NeedsDefaultComparer => _state.Settings.KeyComparer is null;
+   private string KeyComparerMember => _state.Settings.KeyComparer ?? "_defaultKeyComparerMember";
 
    public override string? FileNameSuffix => null;
 
@@ -53,7 +51,6 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateEnum()
    {
       var needCreateInvalidImplementation = _state.IsValidatable && !_state.HasCreateInvalidImplementation;
-      var newKeyword = _state.HasBaseEnum ? "new " : null;
 
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
@@ -73,7 +70,7 @@ namespace ").Append(_state.Namespace).Append(@"
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>
    {{
       [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal {(_state.HasBaseEnum && _state.BaseEnum.IsSameAssembly ? newKeyword : null)}static void ModuleInit()
+      internal static void ModuleInit()
       {{
          var convertFromKey = new global::System.Func<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>({_state.EnumTypeFullyQualified}.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>> convertFromKeyExpression = {_state.KeyProperty.ArgumentName} => {_state.EnumTypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});
@@ -103,7 +100,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append($@"
 
-      {(IsExtensible ? "protected" : "private")} static readonly global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}> {KeyComparerMember} = {defaultComparer};");
+      private static readonly global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}> {KeyComparerMember} = {defaultComparer};");
       }
 
       _sb.Append($@"
@@ -117,11 +114,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public {newKeyword}static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}> Items => _items.Value;");
-
-      if (!_state.HasBaseEnum)
-      {
-         _sb.Append($@"
+      public static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
@@ -129,35 +122,22 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Diagnostics.CodeAnalysis.NotNull]
       public {_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.Name} {{ get; }}");
 
-         if (_state.IsValidatable)
-         {
-            _sb.Append(@"
+      if (_state.IsValidatable)
+      {
+         _sb.Append(@"
 
       /// <inheritdoc />
       public bool IsValid { get; }");
 
-            GenerateEnsureValid();
-         }
-      }
-      else
-      {
-         _sb.Append(@"
-
-      private readonly bool _isBaseEnumItem;");
+         GenerateEnsureValid();
       }
 
       _sb.Append(@"
 
       private readonly global::System.Lazy<int> _hashCode;");
 
-      if (_state.HasBaseEnum)
-         GenerateBaseItems(_state.BaseEnum);
-
       GenerateConstructors();
-
-      if (!_state.HasBaseEnum)
-         GenerateGetKey();
-
+      GenerateGetKey();
       GenerateGet(needCreateInvalidImplementation);
 
       if (needCreateInvalidImplementation && !_state.IsAbstract)
@@ -175,53 +155,22 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override bool Equals(object? other)
       {{
-         return other is {(_state.HasBaseEnum ? _state.BaseEnum.TypeFullyQualified : _state.EnumTypeFullyQualified)} item && Equals(item);
+         return other is {_state.EnumTypeFullyQualified} item && Equals(item);
       }}
 
       /// <inheritdoc />
       public override int GetHashCode()
       {{
          return _hashCode.Value;
-      }}");
-
-      if (!_state.HasBaseEnum)
-      {
-         _sb.Append($@"
+      }}
 
       /// <inheritdoc />
       public override string? ToString()
       {{
          return this.{_state.KeyProperty.Name}{(!_state.IsReferenceType && _state.KeyProperty.IsReferenceType ? "?" : null)}.ToString();
       }}");
-      }
 
       GenerateGetLookup();
-   }
-
-   private void GenerateBaseItems(IBaseEnumState baseEnum)
-   {
-      if (baseEnum.Items.Count == 0)
-         return;
-
-      _sb.Append(@"
-");
-
-      foreach (var item in baseEnum.Items)
-      {
-         _sb.Append($@"
-      public new static readonly {_state.EnumTypeFullyQualified} {item.Name} = new {_state.EnumTypeFullyQualified}(");
-
-         for (var i = 0; i < baseEnum.ConstructorArguments.Count; i++)
-         {
-            if (i > 0)
-               _sb.Append(@", ");
-
-            var arg = baseEnum.ConstructorArguments[i];
-            _sb.Append($@"{baseEnum.TypeFullyQualified}.{item.Name}.{arg.Name}");
-         }
-
-         _sb.Append(@");");
-      }
    }
 
    private void GenerateTryGet()
@@ -316,7 +265,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Implicit conversion to the type <see cref=""{_state.KeyProperty.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""{(_state.HasBaseEnum ? _state.BaseEnum.TypeMinimallyQualified : _state.EnumTypeMinimallyQualified)}.{_state.KeyProperty.Name}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""{_state.EnumTypeMinimallyQualified}.{_state.KeyProperty.Name}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
       public static implicit operator {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}({_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} item)
       {{");
@@ -354,52 +303,21 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateTypedEquals()
    {
-      if (_state.HasBaseEnum)
-      {
-         _sb.Append($@"
+      _sb.Append($@"
 
       /// <inheritdoc />
       public bool Equals({_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} other)
-      {{
-         return Equals(({_state.BaseEnum.TypeFullyQualified}{_state.BaseEnum.NullableQuestionMark})other);
-      }}
-
-      /// <inheritdoc />
-      public override bool Equals({_state.BaseEnum.TypeFullyQualified}{_state.BaseEnum.NullableQuestionMark} other)
       {{");
-      }
-      else
-      {
-         _sb.Append($@"
-
-      /// <inheritdoc />
-      public {(IsExtensible ? "virtual " : null)}bool Equals({_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} other)
-      {{");
-      }
 
       if (_state.IsReferenceType)
       {
          _sb.Append(@"
          if (other is null)
             return false;
-");
 
-         if (!IsExtensible && !_state.HasBaseEnum)
-         {
-            _sb.Append(@"
          if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
-");
-         }
-         else if (_state.HasBaseEnum)
-         {
-            _sb.Append(@"
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()) && !this._isBaseEnumItem)
-            return false;
-");
-         }
 
-         _sb.Append(@"
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 ");
@@ -420,7 +338,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateGetLookup()
    {
-      var totalNumberOfItems = (_state.BaseEnum?.Items.Count ?? 0) + _state.ItemNames.Count;
+      var totalNumberOfItems = _state.ItemNames.Count;
 
       _sb.Append($@"
 
@@ -467,15 +385,6 @@ namespace ").Append(_state.Namespace).Append(@"
          }}
 ");
 
-         if (_state.HasBaseEnum)
-         {
-            foreach (var item in _state.BaseEnum.Items)
-            {
-               _sb.Append($@"
-         AddItem({item.Name}, nameof({item.Name}));");
-            }
-         }
-
          foreach (var itemName in _state.ItemNames)
          {
             _sb.Append($@"
@@ -501,7 +410,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public void EnsureValid()
       {{
          if (!IsValid)
-            throw new global::System.InvalidOperationException($""The current enumeration item of type \""{RuntimeTypeName}\"" with identifier \""{{this.{_state.KeyProperty.Name}}}\"" is not valid."");
+            throw new global::System.InvalidOperationException($""The current enumeration item of type \""{_state.Name}\"" with identifier \""{{this.{_state.KeyProperty.Name}}}\"" is not valid."");
       }}");
    }
 
@@ -536,7 +445,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      public {(_state.HasBaseEnum ? "new " : null)}static {_state.EnumTypeFullyQualified}{(_state.KeyProperty.IsReferenceType ? NullableQuestionMarkEnum : null)} Get({_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey} {_state.KeyProperty.ArgumentName})
+      public static {_state.EnumTypeFullyQualified}{(_state.KeyProperty.IsReferenceType ? NullableQuestionMarkEnum : null)} Get({_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey} {_state.KeyProperty.ArgumentName})
       {{");
 
       if (_state.KeyProperty.IsReferenceType)
@@ -606,17 +515,6 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append('!');
       }
 
-      if (_state.HasBaseEnum)
-      {
-         foreach (var arg in _state.BaseEnum.ConstructorArguments.Skip(1))
-         {
-            _sb.Append(", default");
-
-            if (arg.IsReferenceType)
-               _sb.Append('!');
-         }
-      }
-
       _sb.Append(@");
       }");
    }
@@ -636,9 +534,7 @@ namespace ").Append(_state.Namespace).Append(@"
       var baseCtorArgs = _state.BaseType.Constructors
                                .Select(ctor =>
                                        {
-                                          return ctor.ConstructorArguments
-                                                     // we skip the 1st argument of the base enum, if it is the key
-                                                     .Where((a, i) => !_state.HasBaseEnum || i != 0 || _state.KeyProperty.ArgumentName != a.ArgumentName)
+                                          return ctor.Arguments
                                                      .Select(a =>
                                                              {
                                                                 var argName = a.ArgumentName;
@@ -666,13 +562,11 @@ namespace ").Append(_state.Namespace).Append(@"
       IReadOnlyList<ConstructorArgument> ctorArgs,
       IReadOnlyList<ConstructorArgument> baseCtorArgs)
    {
-      var accessibilityModifier = IsExtensible ? "protected" : "private";
-
       if (_state.IsValidatable)
       {
          _sb.Append($@"
 
-      {accessibilityModifier} {_state.Name}({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
+      private {_state.Name}({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
 
          foreach (var member in ctorArgs)
          {
@@ -694,7 +588,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
 
-      {accessibilityModifier} {_state.Name}({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
+      private {_state.Name}({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
 
       if (_state.IsValidatable)
          _sb.Append(", bool isValid");
@@ -706,22 +600,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@")");
 
-      if (_state.HasBaseEnum)
-      {
-         _sb.Append($@"
-         : base({_state.KeyProperty.ArgumentName}");
-
-         if (_state.IsValidatable)
-            _sb.Append(@", isValid");
-
-         foreach (var baseArg in baseCtorArgs)
-         {
-            _sb.Append($@", {baseArg.ArgumentName}");
-         }
-
-         _sb.Append(@")");
-      }
-      else if (baseCtorArgs.Count > 0)
+      if (baseCtorArgs.Count > 0)
       {
          _sb.Append($@"
          : base(");
@@ -754,7 +633,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@");
 ");
 
-      if (!_state.HasBaseEnum && _state.KeyProperty.IsReferenceType)
+      if (_state.KeyProperty.IsReferenceType)
       {
          _sb.Append($@"
          if ({_state.KeyProperty.ArgumentName} is null)
@@ -762,21 +641,13 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
-      if (!_state.HasBaseEnum)
-      {
-         _sb.Append($@"
+      _sb.Append($@"
          this.{_state.KeyProperty.Name} = {_state.KeyProperty.ArgumentName};");
 
-         if (_state.IsValidatable)
-         {
-            _sb.Append(@"
-         this.IsValid = isValid;");
-         }
-      }
-      else
+      if (_state.IsValidatable)
       {
-         _sb.Append($@"
-         this._isBaseEnumItem = {_state.BaseEnum.TypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out _);");
+         _sb.Append(@"
+         this.IsValid = isValid;");
       }
 
       foreach (var memberInfo in _state.AssignableInstanceFieldsAndProperties)
@@ -786,7 +657,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         this._hashCode = new global::System.Lazy<int>(() => typeof({(_state.HasBaseEnum ? _state.BaseEnum.TypeFullyQualified : _state.EnumTypeFullyQualified)}).GetHashCode() * 397 ^ {KeyComparerMember}.GetHashCode({_state.KeyProperty.ArgumentName}));
+         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.EnumTypeFullyQualified}).GetHashCode() * 397 ^ {KeyComparerMember}.GetHashCode({_state.KeyProperty.ArgumentName}));
       }}
 
       static partial void ValidateConstructorArguments(ref {_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
@@ -831,7 +702,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if({_state.EnumTypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out var item))
             return item;
 
-         throw new global::System.FormatException($""There is no item of type '{RuntimeTypeName}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");");
+         throw new global::System.FormatException($""There is no item of type '{_state.Name}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");");
       }
 
       _sb.Append($@"

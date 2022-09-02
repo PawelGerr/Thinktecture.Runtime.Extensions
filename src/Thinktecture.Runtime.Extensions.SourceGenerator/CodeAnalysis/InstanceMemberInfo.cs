@@ -126,9 +126,4 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
          return hashCode;
       }
    }
-
-   public IMemberState CreateSymbolState(string name, bool isStatic)
-   {
-      return new DefaultMemberState(name, _type, name.MakeArgumentName(), isStatic);
-   }
 }

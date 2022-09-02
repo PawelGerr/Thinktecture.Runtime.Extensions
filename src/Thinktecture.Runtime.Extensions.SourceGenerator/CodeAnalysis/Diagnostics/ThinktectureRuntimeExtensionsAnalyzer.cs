@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -28,24 +27,10 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic,
                                                                                                               DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
-                                                                                                              DiagnosticsDescriptors.ExtensibleEnumMemberMustBePublicOrHaveMapping,
-                                                                                                              DiagnosticsDescriptors.MemberNotFound,
-                                                                                                              DiagnosticsDescriptors.MultipleMembersWithSameName,
-                                                                                                              DiagnosticsDescriptors.MappedMemberMustBePublic,
-                                                                                                              DiagnosticsDescriptors.MappedMethodMustBeNotBeGeneric,
-                                                                                                              DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableIfBaseEnumIsNot,
-                                                                                                              DiagnosticsDescriptors.DerivedEnumMustNotBeExtensible,
-                                                                                                              DiagnosticsDescriptors.BaseEnumMustBeExtensible,
-                                                                                                              DiagnosticsDescriptors.ExtensibleEnumCannotBeStruct,
-                                                                                                              DiagnosticsDescriptors.ExtensibleEnumCannotBeAbstract,
-                                                                                                              DiagnosticsDescriptors.ExtensibleEnumMustNotHaveVirtualMembers,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
                                                                                                               DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty,
-                                                                                                              DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic,
                                                                                                               DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
-                                                                                                              DiagnosticsDescriptors.ExtendedEnumMustHaveSameKeyPropertyName,
-                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
-                                                                                                              DiagnosticsDescriptors.ConstructorsMustBePrivateOrProtected);
+                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -163,6 +148,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          }
       }
 
+      ConstructorsMustBePrivate(context, enumType);
       TypeMustBePartial(context, enumType, declarations);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
@@ -189,14 +175,8 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
 
-      var assignableMembers = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic).ToList();
+      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic).ToList();
       var enumAttr = enumType.FindEnumGenerationAttribute();
-
-      // don't validate base-enum of nested classes because
-      // a) the base class will be either another nested class OR
-      // b) the public enum, which is validated separately
-      var hasBaseEnum = enumType.ContainingType is null && ValidateBaseEnum(context, enumType, enumAttr, locationOfFirstDeclaration, isValidatable);
-      var isExtensible = false;
 
       if (enumAttr is not null)
       {
@@ -205,36 +185,9 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          var comparer = enumAttr.FindKeyComparer();
          var comparerMembers = comparer is null ? Array.Empty<ISymbol>() : enumType.GetNonIgnoredMembers(comparer);
 
-         isExtensible = enumAttr.IsExtensible() ?? false;
-
-         CheckKeyComparer(context, comparerMembers, isExtensible);
-
-         if (isExtensible)
-         {
-            AssignableMembersMustBePublicOrBeMapped(context, enumType, assignableMembers);
-            InstanceMembersMustNotBeVirtual(context, enumType, locationOfFirstDeclaration);
-
-            if (hasBaseEnum)
-            {
-               ReportDiagnostic(context, DiagnosticsDescriptors.DerivedEnumMustNotBeExtensible,
-                                enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? locationOfFirstDeclaration, enumType);
-            }
-
-            if (enumType.IsValueType)
-            {
-               ReportDiagnostic(context, DiagnosticsDescriptors.ExtensibleEnumCannotBeStruct,
-                                enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? locationOfFirstDeclaration, enumType);
-            }
-
-            if (enumType.IsAbstract)
-            {
-               ReportDiagnostic(context, DiagnosticsDescriptors.ExtensibleEnumCannotBeAbstract,
-                                enumAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? locationOfFirstDeclaration, enumType);
-            }
-         }
+         CheckKeyComparer(context, comparerMembers);
       }
 
-      ConstructorsMustBePrivate(context, enumType, isExtensible);
       ValidateDerivedTypes(context, enumType);
    }
 
@@ -244,7 +197,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
    }
 
-   private static void CheckKeyComparer(SymbolAnalysisContext context, IEnumerable<ISymbol> comparerMembers, bool isExtensible)
+   private static void CheckKeyComparer(SymbolAnalysisContext context, IEnumerable<ISymbol> comparerMembers)
    {
       foreach (var comparerMember in comparerMembers)
       {
@@ -255,18 +208,12 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                if (!field.IsStatic)
                   ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, field.GetIdentifier().GetLocation(), field.Name);
 
-               if (isExtensible && !field.DeclaredAccessibility.IsAtLeastProtected())
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic, field.GetIdentifier().GetLocation(), field.Name);
-
                break;
 
             case IPropertySymbol property:
 
                if (!property.IsStatic)
                   ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, property.GetIdentifier().GetLocation(), property.Name);
-
-               if (isExtensible && !property.DeclaredAccessibility.IsAtLeastProtected())
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerOfExtensibleEnumMustBeProtectedOrPublic, property.GetIdentifier().GetLocation(), property.Name);
 
                break;
 
@@ -286,128 +233,6 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier().GetLocation(), property.Name);
          }
       }
-   }
-
-   private static void InstanceMembersMustNotBeVirtual(SymbolAnalysisContext context, INamedTypeSymbol enumType, Location location)
-   {
-      foreach (var member in enumType.GetMembers())
-      {
-         if (!member.IsVirtual)
-            continue;
-
-         var virtualKeyword = member.DeclaringSyntaxReferences
-                                    .Select(r =>
-                                            {
-                                               var node = (MemberDeclarationSyntax)r.GetSyntax();
-                                               var keyword = node.Modifiers.FirstOrDefault(m => m.IsKind(SyntaxKind.VirtualKeyword));
-
-                                               return keyword == default ? (SyntaxToken?)null : keyword;
-                                            })
-                                    .SingleOrDefault(n => n is not null);
-
-         ReportDiagnostic(context, DiagnosticsDescriptors.ExtensibleEnumMustNotHaveVirtualMembers,
-                          virtualKeyword?.GetLocation() ?? location, enumType);
-      }
-   }
-
-   private static bool ValidateBaseEnum(
-      SymbolAnalysisContext context,
-      INamedTypeSymbol enumType,
-      AttributeData? enumAttribute,
-      Location location,
-      bool isValidatable)
-   {
-      if (!enumType.BaseType.IsEnum(out var baseEnumInterfaces))
-         return false;
-
-      var isBaseEnumValidatable = baseEnumInterfaces.GetValidEnumInterface(enumType.BaseType)?.IsValidatableEnumInterface() ?? false;
-
-      if (isValidatable != isBaseEnumValidatable)
-         ReportDiagnostic(context, DiagnosticsDescriptors.ExtendedEnumCannotBeValidatableIfBaseEnumIsNot, location, enumType);
-
-      var baseEnumAttr = enumType.BaseType.FindEnumGenerationAttribute();
-      var isBaseEnumExtensible = baseEnumAttr?.IsExtensible() ?? false;
-
-      if (!isBaseEnumExtensible)
-         ReportDiagnostic(context, DiagnosticsDescriptors.BaseEnumMustBeExtensible, location, enumType.BaseType);
-
-      var baseKeyPropName = baseEnumAttr?.FindKeyPropertyName();
-      var enumKeyPropName = enumAttribute?.FindKeyPropertyName();
-
-      if (!String.IsNullOrWhiteSpace(baseKeyPropName)
-          && !String.IsNullOrWhiteSpace(enumKeyPropName)
-          && baseKeyPropName != enumKeyPropName)
-         ReportDiagnostic(context, DiagnosticsDescriptors.ExtendedEnumMustHaveSameKeyPropertyName, location, enumType, enumType.BaseType);
-
-      return true;
-   }
-
-   private static void AssignableMembersMustBePublicOrBeMapped(
-      SymbolAnalysisContext context,
-      INamedTypeSymbol enumType,
-      IReadOnlyList<InstanceMemberInfo> assignableMembers)
-   {
-      foreach (var memberInfo in assignableMembers)
-      {
-         if (memberInfo.ReadAccessibility == Accessibility.Public || memberInfo.IsStatic)
-            continue;
-
-         if (HasMemberMapping(context, enumType, memberInfo))
-            continue;
-
-         ReportDiagnostic(context, DiagnosticsDescriptors.ExtensibleEnumMemberMustBePublicOrHaveMapping,
-                          memberInfo.GetIdentifierLocation(), memberInfo.Name);
-      }
-   }
-
-   private static bool HasMemberMapping(
-      SymbolAnalysisContext context,
-      INamedTypeSymbol enumType,
-      InstanceMemberInfo memberInfo)
-   {
-      var mappedMemberName = memberInfo.EnumMemberSettings.MappedMemberName;
-
-      if (mappedMemberName is null)
-         return false;
-
-      var mappedMembers = enumType.GetMembers()
-                                  .Where(m => m switch
-                                  {
-                                     IFieldSymbol field => field.Name == mappedMemberName,
-                                     IPropertySymbol property => property.Name == mappedMemberName,
-                                     IMethodSymbol method => method.Name == mappedMemberName,
-                                     _ => false
-                                  })
-                                  .ToList();
-
-      if (mappedMembers.Count == 0)
-      {
-         ReportDiagnostic(context, DiagnosticsDescriptors.MemberNotFound,
-                          memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
-      }
-      else if (mappedMembers.Count > 1)
-      {
-         ReportDiagnostic(context, DiagnosticsDescriptors.MultipleMembersWithSameName,
-                          memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
-      }
-      else
-      {
-         var mappedMember = mappedMembers[0];
-
-         if (mappedMember.DeclaredAccessibility != Accessibility.Public)
-         {
-            ReportDiagnostic(context, DiagnosticsDescriptors.MappedMemberMustBePublic,
-                             memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
-         }
-
-         if (mappedMember is IMethodSymbol { TypeParameters: { Length: > 0 } })
-         {
-            ReportDiagnostic(context, DiagnosticsDescriptors.MappedMethodMustBeNotBeGeneric,
-                             memberInfo.EnumMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? memberInfo.GetIdentifierLocation(), mappedMemberName);
-         }
-      }
-
-      return true;
    }
 
    private static void ValidateDerivedTypes(SymbolAnalysisContext context, INamedTypeSymbol enumType)
@@ -493,21 +318,15 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.StructMustBeReadOnly, location, type);
    }
 
-   private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, INamedTypeSymbol type, bool isExtensible)
+   private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, INamedTypeSymbol type)
    {
       foreach (var ctor in type.Constructors)
       {
          if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
             continue;
 
-         if (ctor.DeclaredAccessibility == Accessibility.Protected && isExtensible)
-            continue;
-
          var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.Single().GetSyntax()).Identifier.GetLocation();
-         ReportDiagnostic(context,
-                          isExtensible ? DiagnosticsDescriptors.ConstructorsMustBePrivateOrProtected : DiagnosticsDescriptors.ConstructorsMustBePrivate,
-                          location,
-                          type);
+         ReportDiagnostic(context, DiagnosticsDescriptors.ConstructorsMustBePrivate, location, type);
       }
    }
 

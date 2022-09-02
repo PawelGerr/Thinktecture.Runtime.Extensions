@@ -13,14 +13,4 @@ public static class SymbolExtensions
    {
       return symbol.FindAttribute(predicate) is not null;
    }
-
-   public static AttributeData? FindValueObjectConstructorAttribute(this ISymbol symbol)
-   {
-      return symbol.FindAttribute(static type => type.Name == "ValueObjectConstructorAttribute"
-                                                 && type.ContainingNamespace is
-                                                 {
-                                                    Name: "Internal",
-                                                    ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
-                                                 });
-   }
 }

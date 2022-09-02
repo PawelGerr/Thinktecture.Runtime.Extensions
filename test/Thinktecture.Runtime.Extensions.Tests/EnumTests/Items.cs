@@ -19,23 +19,6 @@ public class Items
       enums.Should().HaveCount(2);
       enums.Should().Contain(TestEnum.Item1);
       enums.Should().Contain(TestEnum.Item2);
-
-      var extensibleItems = ExtensibleTestEnum.Items;
-      extensibleItems.Should().HaveCount(2);
-      extensibleItems.Should().Contain(ExtensibleTestEnum.Item1);
-      extensibleItems.Should().Contain(ExtensibleTestEnum.DerivedItem);
-
-      var extendedItems = ExtendedTestEnum.Items;
-      extendedItems.Should().HaveCount(3);
-      extendedItems.Should().Contain(ExtendedTestEnum.Item1);
-      extendedItems.Should().Contain(ExtendedTestEnum.Item2);
-      extendedItems.Should().Contain(ExtendedTestEnum.DerivedItem);
-
-      var differentAssemblyExtendedItem = DifferentAssemblyExtendedTestEnum.Items;
-      differentAssemblyExtendedItem.Should().HaveCount(3);
-      differentAssemblyExtendedItem.Should().Contain(DifferentAssemblyExtendedTestEnum.Item1);
-      differentAssemblyExtendedItem.Should().Contain(DifferentAssemblyExtendedTestEnum.Item2);
-      differentAssemblyExtendedItem.Should().Contain(DifferentAssemblyExtendedTestEnum.DerivedItem);
    }
 
    [Fact]

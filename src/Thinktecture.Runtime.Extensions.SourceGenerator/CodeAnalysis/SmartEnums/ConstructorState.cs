@@ -2,11 +2,11 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public class ConstructorState : IEquatable<ConstructorState>
 {
-   public IReadOnlyList<IMemberState> ConstructorArguments { get; }
+   public IReadOnlyList<IMemberState> Arguments { get; }
 
-   public ConstructorState(IReadOnlyList<IMemberState> constructorArguments)
+   public ConstructorState(IReadOnlyList<IMemberState> arguments)
    {
-      ConstructorArguments = constructorArguments;
+      Arguments = arguments;
    }
 
    public bool Equals(ConstructorState? other)
@@ -16,7 +16,7 @@ public class ConstructorState : IEquatable<ConstructorState>
       if (ReferenceEquals(this, other))
          return true;
 
-      return ConstructorArguments.EqualsTo(other.ConstructorArguments);
+      return Arguments.EqualsTo(other.Arguments);
    }
 
    public override bool Equals(object? obj)
@@ -31,6 +31,6 @@ public class ConstructorState : IEquatable<ConstructorState>
 
    public override int GetHashCode()
    {
-      return ConstructorArguments.GetHashCode();
+      return Arguments.GetHashCode();
    }
 }

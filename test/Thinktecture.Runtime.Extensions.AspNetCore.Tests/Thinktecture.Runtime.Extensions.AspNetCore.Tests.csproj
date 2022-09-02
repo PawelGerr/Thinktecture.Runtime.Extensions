@@ -6,10 +6,4 @@
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
    </ItemGroup>
 
-   <ItemGroup>
-      <Compile Include="..\Thinktecture.Runtime.Extensions.Tests\TestEnums\*.*">
-         <Link>%(RecursiveDir)TestEnums/%(FileName)%(Extension)</Link>
-      </Compile>
-   </ItemGroup>
-   
 </Project>

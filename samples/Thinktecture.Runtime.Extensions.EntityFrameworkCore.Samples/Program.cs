@@ -42,12 +42,12 @@ public class Program
       var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
       var ctx = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
 
-      await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, SpecialProductType.Special, Boundary.Create(1, 2)));
+      await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, ProductType.Groceries, Boundary.Create(1, 2)));
 
       try
       {
          loggingLevelSwitch.MinimumLevel = LogEventLevel.Fatal;
-         await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), SpecialProductType.Special, Boundary.Create(1, 2)));
+         await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), ProductType.Groceries, Boundary.Create(1, 2)));
          loggingLevelSwitch.MinimumLevel = LogEventLevel.Information;
       }
       catch (DbUpdateException)
@@ -89,9 +89,9 @@ public class Program
                                                                 .EnableSensitiveDataLogging()
                                                                 .UseValueObjectValueConverter(configureEnumsAndKeyedValueObjects: property =>
                                                                                                                                   {
-                                                                                                                                     if (property.ClrType == typeof(SpecialProductType))
+                                                                                                                                     if (property.ClrType == typeof(ProductType))
                                                                                                                                      {
-                                                                                                                                        var maxLength = SpecialProductType.Items.Max(i => i.Key.Length);
+                                                                                                                                        var maxLength = ProductType.Items.Max(i => i.Key.Length);
                                                                                                                                         property.SetMaxLength(RoundUp(maxLength));
                                                                                                                                      }
                                                                                                                                      else if (property.ClrType == typeof(ProductCategory))

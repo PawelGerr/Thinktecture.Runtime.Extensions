@@ -69,33 +69,6 @@ public class ReadJson : JsonTestsBase
    }
 
    [Theory]
-   [MemberData(nameof(DataForExtensibleEnumTest))]
-   public void Should_deserialize_ExtensibleTestEnum(ExtensibleTestEnum expectedValue, string json)
-   {
-      var value = Deserialize<ExtensibleTestEnum, ExtensibleTestEnum.ValueObjectJsonConverterFactory>(json);
-
-      value.Should().Be(expectedValue);
-   }
-
-   [Theory]
-   [MemberData(nameof(DataForExtendedEnumTest))]
-   public void Should_deserialize_ExtendedTestEnum(ExtendedTestEnum expectedValue, string json)
-   {
-      var value = Deserialize<ExtendedTestEnum, ExtendedTestEnum.ValueObjectJsonConverterFactory>(json);
-
-      value.Should().Be(expectedValue);
-   }
-
-   [Theory]
-   [MemberData(nameof(DataForDifferentAssemblyExtendedTestEnumTest))]
-   public void Should_deserialize_DifferentAssemblyExtendedTestEnum(DifferentAssemblyExtendedTestEnum expectedValue, string json)
-   {
-      var value = Deserialize<DifferentAssemblyExtendedTestEnum, DifferentAssemblyExtendedTestEnum.ValueObjectJsonConverterFactory>(json);
-
-      value.Should().Be(expectedValue);
-   }
-
-   [Theory]
    [MemberData(nameof(DataForIntBasedEnumTest))]
    public void Should_deserialize_int_based_enum(IntegerEnum expectedValue, string json)
    {

@@ -13,26 +13,6 @@ public class JsonTestsBase
                                                                         new object[] { TestEnum.Item2, "\"item2\"" }
                                                                      };
 
-   public static IEnumerable<object[]> DataForExtensibleEnumTest => new[]
-                                                                    {
-                                                                       new object[] { null, "null" },
-                                                                       new object[] { ExtensibleTestEnum.Item1, "\"Item1\"" },
-                                                                    };
-
-   public static IEnumerable<object[]> DataForExtendedEnumTest => new[]
-                                                                  {
-                                                                     new object[] { null, "null" },
-                                                                     new object[] { ExtendedTestEnum.Item1, "\"Item1\"" },
-                                                                     new object[] { ExtendedTestEnum.Item2, "\"Item2\"" }
-                                                                  };
-
-   public static IEnumerable<object[]> DataForDifferentAssemblyExtendedTestEnumTest => new[]
-                                                                                       {
-                                                                                          new object[] { null, "null" },
-                                                                                          new object[] { DifferentAssemblyExtendedTestEnum.Item1, "\"Item1\"" },
-                                                                                          new object[] { DifferentAssemblyExtendedTestEnum.Item2, "\"Item2\"" }
-                                                                                       };
-
    public static IEnumerable<object[]> DataForClassWithStringBasedEnumTest => new[]
                                                                               {
                                                                                  new object[] { null, "null" },

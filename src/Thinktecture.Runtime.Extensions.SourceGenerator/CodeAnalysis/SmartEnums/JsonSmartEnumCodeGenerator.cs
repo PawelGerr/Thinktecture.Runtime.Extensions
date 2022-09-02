@@ -17,7 +17,6 @@ public class JsonSmartEnumCodeGenerator : CodeGeneratorBase
          return null;
 
       var ns = _state.Namespace;
-      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.InnerTypesInfo.HasJsonConverterFactory);
 
       return $@"{GENERATED_CODE_PREFIX}
 {(ns is null ? null : $@"
@@ -26,7 +25,7 @@ namespace {ns}
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public {(requiresNew ? "new " : null)}class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)

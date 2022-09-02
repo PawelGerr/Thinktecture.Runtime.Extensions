@@ -31,16 +31,6 @@ public class DefaultMemberState : IMemberState, IEquatable<DefaultMemberState>
       IsStatic = isStatic;
    }
 
-   public static DefaultMemberState CreateFrom(IFieldSymbol field)
-   {
-      return new(field.Name, field.Type, field.Name.MakeArgumentName(), field.IsStatic);
-   }
-
-   public static DefaultMemberState CreateFrom(IPropertySymbol property)
-   {
-      return new(property.Name, property.Type, property.Name.MakeArgumentName(), property.IsStatic);
-   }
-
    public override bool Equals(object? obj)
    {
       return obj is DefaultMemberState other && Equals(other);

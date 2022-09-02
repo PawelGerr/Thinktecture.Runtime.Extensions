@@ -17,7 +17,6 @@ public class NewtonsoftJsonSmartEnumCodeGenerator : CodeGeneratorBase
          return null;
 
       var ns = _state.Namespace;
-      var requiresNew = _state.HasBaseEnum && (_state.BaseEnum.IsSameAssembly || _state.BaseEnum.InnerTypesInfo.HasNewtonsoftJsonConverter);
 
       return $@"{GENERATED_CODE_PREFIX}
 {(ns is null ? null : $@"
@@ -26,7 +25,7 @@ namespace {ns}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public {(requiresNew ? "new " : null)}class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualifiedWithNullability}>
+      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualifiedWithNullability}>
       {{
          public ValueObjectNewtonsoftJsonConverter()
             : base({_state.EnumTypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})

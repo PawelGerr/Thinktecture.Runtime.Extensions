@@ -6,13 +6,11 @@ public class EnumSettings : IEquatable<EnumSettings>
 {
    public string? KeyComparer { get; }
    public string? KeyPropertyName { get; }
-   public bool IsExtensible { get; }
 
    public EnumSettings(AttributeData? attribute)
    {
       KeyComparer = attribute?.FindKeyComparer().TrimAndNullify();
       KeyPropertyName = attribute?.FindKeyPropertyName().TrimAndNullify();
-      IsExtensible = attribute?.IsExtensible() ?? false;
    }
 
    public override bool Equals(object? obj)
@@ -28,8 +26,7 @@ public class EnumSettings : IEquatable<EnumSettings>
          return true;
 
       return KeyComparer == other.KeyComparer
-             && KeyPropertyName == other.KeyPropertyName
-             && IsExtensible == other.IsExtensible;
+             && KeyPropertyName == other.KeyPropertyName;
    }
 
    public override int GetHashCode()
@@ -38,7 +35,6 @@ public class EnumSettings : IEquatable<EnumSettings>
       {
          var hashCode = KeyComparer?.GetHashCode() ?? 0;
          hashCode = (hashCode * 397) ^ (KeyPropertyName?.GetHashCode() ?? 0);
-         hashCode = (hashCode * 397) ^ IsExtensible.GetHashCode();
 
          return hashCode;
       }

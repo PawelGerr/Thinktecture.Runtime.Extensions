@@ -29,11 +29,6 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, "MapsToMember");
    }
 
-   public static bool? IsExtensible(this AttributeData attributeData)
-   {
-      return GetBooleanParameterValue(attributeData, "IsExtensible");
-   }
-
    public static bool? FindSkipFactoryMethods(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");

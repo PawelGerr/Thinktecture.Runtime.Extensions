@@ -9,30 +9,18 @@ public class CanConvertFrom : TypeConverterTestsBase
    public void Should_return_true_if_type_matches_the_key()
    {
       StringBasedTypeConverter.CanConvertFrom(typeof(string)).Should().BeTrue();
-
-      ExtensibleTestEnumTypeConverter.CanConvertFrom(typeof(string)).Should().BeTrue();
-      ExtendedTestEnumTypeConverter.CanConvertFrom(typeof(string)).Should().BeTrue();
-      DifferentAssemblyExtendedTestEnumTypeConverter.CanConvertFrom(typeof(string)).Should().BeTrue();
    }
 
    [Fact]
    public void Should_return_true_if_type_matches_the_enum()
    {
       StringBasedTypeConverter.CanConvertFrom(typeof(TestEnum)).Should().BeTrue();
-
-      ExtensibleTestEnumTypeConverter.CanConvertFrom(typeof(ExtensibleTestEnum)).Should().BeTrue();
-      ExtendedTestEnumTypeConverter.CanConvertFrom(typeof(ExtendedTestEnum)).Should().BeTrue();
-      DifferentAssemblyExtendedTestEnumTypeConverter.CanConvertFrom(typeof(DifferentAssemblyExtendedTestEnum)).Should().BeTrue();
    }
 
    [Fact]
    public void Should_return_false_if_type_doesnt_match_the_enum_and_key()
    {
       StringBasedTypeConverter.CanConvertFrom(typeof(Guid)).Should().BeFalse();
-
-      ExtensibleTestEnumTypeConverter.CanConvertFrom(typeof(Guid)).Should().BeFalse();
-      ExtendedTestEnumTypeConverter.CanConvertFrom(typeof(Guid)).Should().BeFalse();
-      DifferentAssemblyExtendedTestEnumTypeConverter.CanConvertFrom(typeof(Guid)).Should().BeFalse();
    }
 
    [Fact]

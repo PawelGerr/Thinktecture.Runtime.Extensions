@@ -72,21 +72,6 @@ public class BindModelAsync
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
       ctx.Result.Model.Should().Be(TestEnum.Item1);
-
-      ctx = await BindAsync<ExtensibleTestEnum, string>(ExtensibleTestEnum.Validate, "item1");
-      ctx.ModelState.ErrorCount.Should().Be(0);
-      ctx.Result.IsModelSet.Should().BeTrue();
-      ctx.Result.Model.Should().Be(ExtensibleTestEnum.Item1);
-
-      ctx = await BindAsync<ExtendedTestEnum, string>(ExtendedTestEnum.Validate, "item1");
-      ctx.ModelState.ErrorCount.Should().Be(0);
-      ctx.Result.IsModelSet.Should().BeTrue();
-      ctx.Result.Model.Should().Be(ExtendedTestEnum.Item1);
-
-      ctx = await BindAsync<DifferentAssemblyExtendedTestEnum, string>(DifferentAssemblyExtendedTestEnum.Validate, "item1");
-      ctx.ModelState.ErrorCount.Should().Be(0);
-      ctx.Result.IsModelSet.Should().BeTrue();
-      ctx.Result.Model.Should().Be(DifferentAssemblyExtendedTestEnum.Item1);
    }
 
    [Fact]
