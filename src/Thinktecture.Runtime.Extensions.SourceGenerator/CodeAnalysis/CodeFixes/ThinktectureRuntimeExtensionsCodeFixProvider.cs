@@ -22,12 +22,12 @@ public class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
                                                                                                 DiagnosticsDescriptors.StructMustBeReadOnly.Id,
-                                                                                                DiagnosticsDescriptors.FieldMustBePublic.Id,
+                                                                                                DiagnosticsDescriptors.EnumItemMustBePublic.Id,
                                                                                                 DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
                                                                                                 DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
                                                                                                 DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id,
-                                                                                                DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate.Id,
-                                                                                                DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic.Id);
+                                                                                                DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
+                                                                                                DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id);
 
    /// <inheritdoc />
    public override FixAllProvider GetFixAllProvider()
@@ -60,7 +60,7 @@ public class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_READONLY, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().FieldDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_FIELD_READONLY), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.FieldMustBePublic.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.EnumItemMustBePublic.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_MEMBER_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().FieldDeclaration, SyntaxKind.PublicKeyword), _MAKE_MEMBER_PUBLIC), diagnostic);
          }
@@ -72,11 +72,11 @@ public class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
          {
             context.RegisterCodeFix(CodeAction.Create(_IMPLEMENT_CREATE_INVALID, t => AddCreateInvalidItemAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _IMPLEMENT_CREATE_INVALID), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PrivateKeyword), _MAKE_TYPE_PRIVATE), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), diagnostic);
          }

@@ -4,7 +4,7 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG014_First_level_inner_types_must_be_private
+public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
 {
    private const string _DIAGNOSTIC_ID = "TTRESG014";
 

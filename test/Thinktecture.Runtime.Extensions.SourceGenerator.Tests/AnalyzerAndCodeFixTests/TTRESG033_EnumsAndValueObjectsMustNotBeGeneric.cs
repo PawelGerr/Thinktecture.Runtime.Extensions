@@ -6,7 +6,7 @@ using Thinktecture.Runtime.Tests.Verifiers;
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable InconsistentNaming
-public class TTRESG033
+public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
 {
    private const string _DIAGNOSTIC_ID = "TTRESG033";
 

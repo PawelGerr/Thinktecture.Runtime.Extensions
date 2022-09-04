@@ -4,12 +4,12 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG012_KeyPropertyName_not_allowed
+public class TTRESG100_EnumerationHasNoItems
 {
-   private const string _DIAGNOSTIC_ID = "TTRESG012";
+   private const string _DIAGNOSTIC_ID = "TTRESG100";
 
    [Fact]
-   public async Task Should_trigger_if_name_is_item()
+   public async Task Should_trigger_if_enumeration_has_no_items()
    {
       var code = @"
 using System;
@@ -17,19 +17,17 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [EnumGeneration{|#0:(KeyPropertyName = ""Item"")|}]
-	public partial class TestEnum : IValidatableEnum<string>
+	public partial class {|#0:TestEnum|} : IValidatableEnum<string>
 	{
-      public static readonly TestEnum Item1 = default;
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item");
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 
    [Fact]
-   public async Task Should_not_trigger_if_name_is_not_item()
+   public async Task Should_not_trigger_if_enumeration_has_items()
    {
       var code = @"
 using System;
@@ -37,8 +35,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-   [EnumGeneration{|#0:(KeyPropertyName = ""Foo"")|}]
-	public partial class TestEnum : IValidatableEnum<string>
+	public partial class {|#0:TestEnum|} : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }

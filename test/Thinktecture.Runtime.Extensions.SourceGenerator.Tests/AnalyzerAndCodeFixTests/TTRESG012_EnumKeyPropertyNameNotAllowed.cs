@@ -4,12 +4,12 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG010_NonValidatable_Enum_must_be_class
+public class TTRESG012_EnumKeyPropertyNameNotAllowed
 {
-   private const string _DIAGNOSTIC_ID = "TTRESG010";
+   private const string _DIAGNOSTIC_ID = "TTRESG012";
 
    [Fact]
-   public async Task Should_trigger_if_IEnum_is_struct()
+   public async Task Should_trigger_if_name_is_item()
    {
       var code = @"
 using System;
@@ -17,18 +17,19 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public readonly partial struct {|#0:TestEnum|} : IEnum<string>
+   [EnumGeneration{|#0:(KeyPropertyName = ""Item"")|}]
+	public partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 
    [Fact]
-   public async Task Should_not_trigger_if_IEnum_is_class()
+   public async Task Should_not_trigger_if_name_is_not_item()
    {
       var code = @"
 using System;
@@ -36,7 +37,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IEnum<string>
+   [EnumGeneration{|#0:(KeyPropertyName = ""Foo"")|}]
+	public partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }

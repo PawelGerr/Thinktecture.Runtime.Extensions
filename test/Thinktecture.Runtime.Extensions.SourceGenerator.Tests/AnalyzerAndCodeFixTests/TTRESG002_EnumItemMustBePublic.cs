@@ -4,7 +4,7 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG002_Field_must_be_public
+public class TTRESG002_EnumItemMustBePublic
 {
    private const string _DIAGNOSTIC_ID = "TTRESG002";
 
@@ -40,7 +40,7 @@ namespace TestNamespace
    }
 
    [Fact]
-   public async Task Should_trigger_if_modifier_is_not_first_one()
+   public async Task Should_trigger_even_if_modifier_is_not_first_one()
    {
       var code = @"
 using System;

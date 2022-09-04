@@ -4,7 +4,7 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG005_Multiple_interfaces_with_different_key_types
+public class TTRESG005_MultipleIncompatibleEnumInterfaces
 {
    private const string _DIAGNOSTIC_ID = "TTRESG005";
 

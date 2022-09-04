@@ -4,12 +4,12 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG009_Constructor_must_be_private
+public class TTRESG013_DerivedTypeMustNotImplementEnumInterfaces
 {
-   private const string _DIAGNOSTIC_ID = "TTRESG009";
+   private const string _DIAGNOSTIC_ID = "TTRESG013";
 
    [Fact]
-   public async Task Should_trigger_if_constructor_is_protected()
+   public async Task Should_trigger_if_derived_type_implements_IEnum()
    {
       var code = @"
 using System;
@@ -21,18 +21,19 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      protected {|#0:TestEnum|}()
-      {
+      private partial class {|#0:InnerTestEnum|} : TestEnum, IEnum<string>
+	   {
+         public static readonly InnerTestEnum Item1 = default;
       }
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InnerTestEnum");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 
    [Fact]
-   public async Task Should_trigger_if_constructor_is_private_protected()
+   public async Task Should_trigger_if_derived_type_implements_IValidatableEnum()
    {
       var code = @"
 using System;
@@ -44,18 +45,19 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private protected {|#0:TestEnum|}()
-      {
+      private partial class {|#0:InnerTestEnum|} : TestEnum, IValidatableEnum<string>
+	   {
+         public static readonly InnerTestEnum Item1 = default;
       }
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InnerTestEnum");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 
    [Fact]
-   public async Task Should_not_trigger_if_constructor_is_private()
+   public async Task Should_not_trigger_if_derived_type_doesnt_implements_enum_interfaces()
    {
       var code = @"
 using System;
@@ -67,8 +69,9 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private {|#0:TestEnum|}()
-      {
+      private partial class {|#0:InnerTestEnum|} : TestEnum
+	   {
+         public static readonly InnerTestEnum Item1 = default;
       }
    }
 }";

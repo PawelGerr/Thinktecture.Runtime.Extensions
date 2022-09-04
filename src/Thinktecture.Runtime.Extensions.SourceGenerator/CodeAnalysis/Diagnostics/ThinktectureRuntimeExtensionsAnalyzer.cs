@@ -13,18 +13,18 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.StructMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.TypeMustBeClassOrStruct,
                                                                                                               DiagnosticsDescriptors.NonValidatableEnumsMustBeClass,
-                                                                                                              DiagnosticsDescriptors.ConstructorsMustBePrivate,
-                                                                                                              DiagnosticsDescriptors.NoItemsWarning,
-                                                                                                              DiagnosticsDescriptors.FieldMustBePublic,
+                                                                                                              DiagnosticsDescriptors.EnumConstructorsMustBePrivate,
+                                                                                                              DiagnosticsDescriptors.EnumerationHasNoItems,
+                                                                                                              DiagnosticsDescriptors.EnumItemMustBePublic,
                                                                                                               DiagnosticsDescriptors.FieldMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.PropertyMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
                                                                                                               DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
-                                                                                                              DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
+                                                                                                              DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
                                                                                                               DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces,
                                                                                                               DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
-                                                                                                              DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate,
-                                                                                                              DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic,
+                                                                                                              DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
+                                                                                                              DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
                                                                                                               DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
@@ -167,10 +167,10 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var items = enumType.EnumerateEnumItems().ToList();
 
       if (items.Count == 0)
-         ReportDiagnostic(context, DiagnosticsDescriptors.NoItemsWarning, locationOfFirstDeclaration, enumType);
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumerationHasNoItems, locationOfFirstDeclaration, enumType);
 
       Check_ItemLike_StaticProperties(context, enumType);
-      FieldsMustBePublic(context, enumType, items);
+      EnumItemsMustBePublic(context, enumType, items);
 
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
@@ -251,13 +251,13 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          {
             if (derivedType.Type.DeclaredAccessibility != Accessibility.Private)
             {
-               ReportDiagnostic(context, DiagnosticsDescriptors.FirstLevelInnerTypeMustBePrivate,
+               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
                                 ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(), derivedType.Type);
             }
          }
          else if (derivedType.Type.DeclaredAccessibility != Accessibility.Public)
          {
-            ReportDiagnostic(context, DiagnosticsDescriptors.NonFirstLevelInnerTypeMustBePublic,
+            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
                              ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(), derivedType.Type);
          }
       }
@@ -286,17 +286,17 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax();
 
-      ReportDiagnostic(context, DiagnosticsDescriptors.KeyPropertyNameNotAllowed,
+      ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
                        attributeSyntax?.ArgumentList?.GetLocation() ?? location, keyPropName);
    }
 
-   private static void FieldsMustBePublic(SymbolAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<IFieldSymbol> items)
+   private static void EnumItemsMustBePublic(SymbolAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<IFieldSymbol> items)
    {
       foreach (var item in items)
       {
          if (item.DeclaredAccessibility != Accessibility.Public)
          {
-            ReportDiagnostic(context, DiagnosticsDescriptors.FieldMustBePublic,
+            ReportDiagnostic(context, DiagnosticsDescriptors.EnumItemMustBePublic,
                              item.GetIdentifier().GetLocation(),
                              item.Name, BuildTypeName(type));
          }
@@ -326,7 +326,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             continue;
 
          var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.Single().GetSyntax()).Identifier.GetLocation();
-         ReportDiagnostic(context, DiagnosticsDescriptors.ConstructorsMustBePrivate, location, type);
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumConstructorsMustBePrivate, location, type);
       }
    }
 

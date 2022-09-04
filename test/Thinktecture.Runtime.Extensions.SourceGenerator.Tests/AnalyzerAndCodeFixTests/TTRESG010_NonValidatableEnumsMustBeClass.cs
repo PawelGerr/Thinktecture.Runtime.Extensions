@@ -4,12 +4,12 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG100_Enumeration_is_empty
+public class TTRESG010_NonValidatableEnumsMustBeClass
 {
-   private const string _DIAGNOSTIC_ID = "TTRESG100";
+   private const string _DIAGNOSTIC_ID = "TTRESG010";
 
    [Fact]
-   public async Task Should_trigger_if_enumeration_has_no_items()
+   public async Task Should_trigger_if_IEnum_is_struct()
    {
       var code = @"
 using System;
@@ -17,8 +17,9 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IValidatableEnum<string>
+	public readonly partial struct {|#0:TestEnum|} : IEnum<string>
 	{
+      public static readonly TestEnum Item1 = default;
    }
 }";
 
@@ -27,7 +28,7 @@ namespace TestNamespace
    }
 
    [Fact]
-   public async Task Should_not_trigger_if_enumeration_has_items()
+   public async Task Should_not_trigger_if_IEnum_is_class()
    {
       var code = @"
 using System;
@@ -35,7 +36,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IValidatableEnum<string>
+	public partial class {|#0:TestEnum|} : IEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }

@@ -4,7 +4,7 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable once InconsistentNaming
-public class TTRESG007_Invalid_signature_of_CreateInvalidItem
+public class TTRESG007_InvalidSignatureOfCreateInvalidItem
 {
    private const string _DIAGNOSTIC_ID = "TTRESG007";
 
