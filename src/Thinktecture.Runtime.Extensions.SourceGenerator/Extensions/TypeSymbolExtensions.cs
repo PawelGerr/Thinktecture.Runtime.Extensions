@@ -318,60 +318,125 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       Action<Diagnostic>? reportDiagnostic = null)
    {
+      return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(instanceMembersOnly, null, reportDiagnostic)
+                 .Select(tuple =>
+                         {
+                            return tuple switch
+                            {
+                               ({ } field, _) => InstanceMemberInfo.CreateFrom(field),
+                               (_, { } property) => InstanceMemberInfo.CreateFrom(property),
+                               _ => throw new Exception("Either field or property must be set.")
+                            };
+                         });
+   }
+
+   public static IEnumerable<(IFieldSymbol? Field, IPropertySymbol? Property)> IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(
+      this ITypeSymbol type,
+      bool instanceMembersOnly,
+      Location? locationOfDerivedType = null,
+      Action<Diagnostic>? reportDiagnostic = null)
+   {
+      void ReportField(IFieldSymbol field)
+      {
+         if (reportDiagnostic is null)
+            return;
+
+         DiagnosticDescriptor descriptor;
+         Location location;
+
+         if (locationOfDerivedType is null)
+         {
+            descriptor = DiagnosticsDescriptors.FieldMustBeReadOnly;
+            location = field.GetIdentifier().GetLocation();
+         }
+         else
+         {
+            descriptor = DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly;
+            location = locationOfDerivedType;
+         }
+
+         reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, field.Name, type.Name));
+      }
+
+      void ReportProperty(IPropertySymbol property, DiagnosticSeverity? severity = null)
+      {
+         if (reportDiagnostic is null)
+            return;
+
+         DiagnosticDescriptor descriptor;
+         Location location;
+
+         if (locationOfDerivedType is null)
+         {
+            descriptor = DiagnosticsDescriptors.PropertyMustBeReadOnly;
+            location = property.GetIdentifier().GetLocation();
+         }
+         else
+         {
+            descriptor = DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly;
+            location = locationOfDerivedType;
+         }
+
+         reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, effectiveSeverity: severity ?? descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
+      }
+
       return type.GetNonIgnoredMembers()
                  .Select(member =>
                          {
                             if ((instanceMembersOnly && member.IsStatic) || !member.CanBeReferencedByName)
-                               return null;
+                               return ((IFieldSymbol?, IPropertySymbol?)?)null;
 
                             switch (member)
                             {
                                case IFieldSymbol field:
                                {
                                   if (!field.IsReadOnly && !field.IsConst)
-                                  {
-                                     reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.FieldMustBeReadOnly,
-                                                                                field.GetIdentifier().GetLocation(),
-                                                                                field.Name,
-                                                                                type.Name));
-                                  }
+                                     ReportField(field);
 
-                                  return InstanceMemberInfo.CreateFrom(field);
+                                  return (field, null);
                                }
 
                                case IPropertySymbol property:
                                {
-                                  var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax();
-
-                                  if (syntax.ExpressionBody is not null) // public int Foo => 42;
-                                     return null;
-
-                                  var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
-
-                                  if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
-                                     return null;
-
-                                  if (property.SetMethod is not null)
+                                  // other assembly
+                                  if (property.DeclaringSyntaxReferences.Length == 0)
                                   {
-                                     var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+                                     if (!property.IsReadOnly && !property.IsWriteOnly)
+                                        ReportProperty(property, DiagnosticSeverity.Warning);
+                                  }
+                                  // same assembly
+                                  else
+                                  {
+                                     var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax();
 
-                                     if (!IsDefaultImplementation(setter))
+                                     if (syntax.ExpressionBody is not null) // public int Foo => 42;
                                         return null;
 
-                                     reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.PropertyMustBeReadOnly,
-                                                                                property.GetIdentifier().GetLocation(),
-                                                                                property.Name,
-                                                                                type.Name));
+                                     var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
+
+                                     if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
+                                        return null;
+
+                                     if (property.SetMethod is not null)
+                                     {
+                                        var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+
+                                        if (!IsDefaultImplementation(setter))
+                                           return null;
+
+                                        ReportProperty(property);
+                                     }
                                   }
 
-                                  return InstanceMemberInfo.CreateFrom(property);
+                                  return (null, property);
                                }
 
                                default:
                                   return null;
                             }
                          })
-                 .Where(m => m is not null)!;
+                 .Where(m => m is not null)
+                 .Select(m => m!.Value);
    }
 
    private static bool IsDefaultImplementation(AccessorDeclarationSyntax? accessor)

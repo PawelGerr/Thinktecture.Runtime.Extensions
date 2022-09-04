@@ -30,7 +30,9 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
                                                                                                               DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty,
                                                                                                               DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
-                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric);
+                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
+                                                                                                              DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
+                                                                                                              DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -94,6 +96,15 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic)
                                   .Where(m => !m.IsStatic)
                                   .ToList();
+
+      var baseClass = type.BaseType;
+
+      while (!baseClass.IsNullOrObject())
+      {
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
+
+         baseClass = baseClass.BaseType;
+      }
 
       if (assignableMembers.Count == 1)
       {
@@ -175,7 +186,16 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic).ToList();
+      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic).Enumerate();
+      var baseClass = enumType.BaseType;
+
+      while (!baseClass.IsNullOrObject())
+      {
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
+
+         baseClass = baseClass.BaseType;
+      }
+
       var enumAttr = enumType.FindEnumGenerationAttribute();
 
       if (enumAttr is not null)
