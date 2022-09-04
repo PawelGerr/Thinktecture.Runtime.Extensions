@@ -55,16 +55,6 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
       _sb.Append($@"
-   [global::Thinktecture.Internal.ValueObjectConstructor(nameof({_state.KeyProperty.Name})");
-
-      foreach (var member in _state.AssignableInstanceFieldsAndProperties)
-      {
-         var memberName = member.EnumMemberSettings.MappedMemberName ?? member.Name;
-
-         _sb.Append($@", nameof({memberName})");
-      }
-
-      _sb.Append($@")]
    [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof({_state.EnumTypeFullyQualified}_EnumTypeConverter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>
