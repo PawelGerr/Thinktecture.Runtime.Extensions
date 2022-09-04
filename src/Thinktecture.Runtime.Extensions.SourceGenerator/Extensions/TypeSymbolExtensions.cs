@@ -110,6 +110,7 @@ public static class TypeSymbolExtensions
    public static INamedTypeSymbol? GetValidEnumInterface(
       this IReadOnlyList<INamedTypeSymbol> enumInterfaces,
       ITypeSymbol enumType,
+      CancellationToken cancellationToken,
       Location? location = null,
       Action<Diagnostic>? reportDiagnostic = null)
    {
@@ -132,7 +133,7 @@ public static class TypeSymbolExtensions
          {
             if (!SymbolEqualityComparer.Default.Equals(validKeyType, keyType))
             {
-               location ??= ((TypeDeclarationSyntax)enumType.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation();
+               location ??= ((TypeDeclarationSyntax)enumType.DeclaringSyntaxReferences.First().GetSyntax(cancellationToken)).Identifier.GetLocation();
                reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces, location, enumType.Name));
                return null;
             }
@@ -316,15 +317,16 @@ public static class TypeSymbolExtensions
    public static IEnumerable<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
       bool instanceMembersOnly,
+      CancellationToken cancellationToken,
       Action<Diagnostic>? reportDiagnostic = null)
    {
-      return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(instanceMembersOnly, null, reportDiagnostic)
+      return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(instanceMembersOnly, cancellationToken, null, reportDiagnostic)
                  .Select(tuple =>
                          {
                             return tuple switch
                             {
-                               ({ } field, _) => InstanceMemberInfo.CreateFrom(field),
-                               (_, { } property) => InstanceMemberInfo.CreateFrom(property),
+                               ({ } field, _) => InstanceMemberInfo.CreateFrom(field, cancellationToken),
+                               (_, { } property) => InstanceMemberInfo.CreateFrom(property, cancellationToken),
                                _ => throw new Exception("Either field or property must be set.")
                             };
                          });
@@ -333,6 +335,7 @@ public static class TypeSymbolExtensions
    public static IEnumerable<(IFieldSymbol? Field, IPropertySymbol? Property)> IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
       bool instanceMembersOnly,
+      CancellationToken cancellationToken,
       Location? locationOfDerivedType = null,
       Action<Diagnostic>? reportDiagnostic = null)
    {
@@ -347,7 +350,7 @@ public static class TypeSymbolExtensions
          if (locationOfDerivedType is null)
          {
             descriptor = DiagnosticsDescriptors.FieldMustBeReadOnly;
-            location = field.GetIdentifier().GetLocation();
+            location = field.GetIdentifier(cancellationToken).GetLocation();
          }
          else
          {
@@ -369,7 +372,7 @@ public static class TypeSymbolExtensions
          if (locationOfDerivedType is null)
          {
             descriptor = DiagnosticsDescriptors.PropertyMustBeReadOnly;
-            location = property.GetIdentifier().GetLocation();
+            location = property.GetIdentifier(cancellationToken).GetLocation();
          }
          else
          {
@@ -407,7 +410,7 @@ public static class TypeSymbolExtensions
                                   // same assembly
                                   else
                                   {
-                                     var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax();
+                                     var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
 
                                      if (syntax.ExpressionBody is not null) // public int Foo => 42;
                                         return null;
@@ -450,6 +453,7 @@ public static class TypeSymbolExtensions
    public static bool HasCreateInvalidImplementation(
       this ITypeSymbol enumType,
       ITypeSymbol keyType,
+      CancellationToken cancellationToken,
       Action<Diagnostic>? reportDiagnostic = null)
    {
       foreach (var member in enumType.GetNonIgnoredMembers())
@@ -475,7 +479,7 @@ public static class TypeSymbolExtensions
          }
 
          reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
-                                                    method.GetIdentifier().GetLocation(),
+                                                    method.GetIdentifier(cancellationToken).GetLocation(),
                                                     enumType.Name,
                                                     keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
 

@@ -6,9 +6,9 @@ namespace Thinktecture;
 
 public static class FieldSymbolExtensions
 {
-   public static SyntaxToken GetIdentifier(this IFieldSymbol field)
+   public static SyntaxToken GetIdentifier(this IFieldSymbol field, CancellationToken cancellationToken)
    {
-      var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax();
+      var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
       return syntax.Identifier;
    }
 

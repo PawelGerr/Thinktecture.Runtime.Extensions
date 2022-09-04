@@ -32,7 +32,8 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
    public EnumSourceGeneratorState(
       INamedTypeSymbol type,
       ImmutableArray<INamedTypeSymbol> genericEnumTypes,
-      INamedTypeSymbol enumInterface)
+      INamedTypeSymbol enumInterface,
+      CancellationToken cancellationToken)
    {
       if (enumInterface is null)
          throw new ArgumentNullException(nameof(enumInterface));
@@ -53,10 +54,10 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
 
       var keyType = enumInterface.TypeArguments[0];
       KeyProperty = Settings.CreateKeyProperty(keyType);
-      HasCreateInvalidImplementation = type.HasCreateInvalidImplementation(keyType);
+      HasCreateInvalidImplementation = type.HasCreateInvalidImplementation(keyType, cancellationToken);
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true).ToList();
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
       FullyQualifiedDerivedTypes = type.FindDerivedInnerEnums()
                                        .Select(t => t.Type)
                                        .Concat(genericEnumTypes)
@@ -67,9 +68,9 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
       AttributeInfo = new AttributeInfo(type);
    }
 
-   public Location GetFirstLocation()
+   public Location GetFirstLocation(CancellationToken cancellationToken)
    {
-      return _enumType.DeclaringSyntaxReferences.First().GetSyntax().GetLocation();
+      return _enumType.DeclaringSyntaxReferences.First().GetSyntax(cancellationToken).GetLocation();
    }
 
    public override bool Equals(object? obj)

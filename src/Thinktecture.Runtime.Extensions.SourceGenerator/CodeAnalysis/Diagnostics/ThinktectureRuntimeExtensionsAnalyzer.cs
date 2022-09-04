@@ -56,7 +56,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var syntaxRef = type.DeclaringSyntaxReferences[i];
 
-         if (syntaxRef.GetSyntax() is not TypeDeclarationSyntax tds)
+         if (syntaxRef.GetSyntax(context.CancellationToken) is not TypeDeclarationSyntax tds)
             return;
 
          declarations[i] = tds;
@@ -93,7 +93,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
-      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic)
+      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, context.ReportDiagnostic)
                                   .Where(m => !m.IsStatic)
                                   .ToList();
 
@@ -101,7 +101,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -163,7 +163,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, enumType, declarations);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
-      var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, locationOfFirstDeclaration, context.ReportDiagnostic);
+      var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, context.CancellationToken, locationOfFirstDeclaration, context.ReportDiagnostic);
 
       if (validEnumInterface is null)
          return;
@@ -186,12 +186,12 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.ReportDiagnostic).Enumerate();
+      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, context.ReportDiagnostic).Enumerate();
       var baseClass = enumType.BaseType;
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -226,19 +226,20 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             case IFieldSymbol field:
 
                if (!field.IsStatic)
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, field.GetIdentifier().GetLocation(), field.Name);
+                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, field.GetIdentifier(context.CancellationToken).GetLocation(), field.Name);
 
                break;
 
             case IPropertySymbol property:
 
                if (!property.IsStatic)
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, property.GetIdentifier().GetLocation(), property.Name);
+                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, property.GetIdentifier(context.CancellationToken).GetLocation(), property.Name);
 
                break;
 
             default:
-               ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, comparerMember.DeclaringSyntaxReferences.Single().GetSyntax().GetLocation(), comparerMember.Name);
+               var location = comparerMember.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken).GetLocation();
+               ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, location, comparerMember.Name);
                break;
          }
       }
@@ -250,7 +251,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          if (member.IsStatic && member is IPropertySymbol property && SymbolEqualityComparer.Default.Equals(property.Type, enumType))
          {
-            ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier().GetLocation(), property.Name);
+            ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier(context.CancellationToken).GetLocation(), property.Name);
          }
       }
    }
@@ -264,7 +265,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (derivedType.Type.IsEnum())
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
-                             ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(), derivedType.Type);
+                             ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation(), derivedType.Type);
          }
 
          if (derivedType.Level == 1)
@@ -272,13 +273,13 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             if (derivedType.Type.DeclaredAccessibility != Accessibility.Private)
             {
                ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
-                                ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(), derivedType.Type);
+                                ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation(), derivedType.Type);
             }
          }
          else if (derivedType.Type.DeclaredAccessibility != Accessibility.Public)
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
-                             ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax()).Identifier.GetLocation(), derivedType.Type);
+                             ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation(), derivedType.Type);
          }
       }
    }
@@ -286,7 +287,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, INamedTypeSymbol validEnumInterface, Location location)
    {
       var keyType = validEnumInterface.TypeArguments[0];
-      var hasCreateInvalidImplementation = enumType.HasCreateInvalidImplementation(keyType, context.ReportDiagnostic);
+      var hasCreateInvalidImplementation = enumType.HasCreateInvalidImplementation(keyType, context.CancellationToken, context.ReportDiagnostic);
 
       if (!hasCreateInvalidImplementation && enumType.IsAbstract)
       {
@@ -304,7 +305,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (!StringComparer.OrdinalIgnoreCase.Equals(keyPropName, "Item"))
          return;
 
-      var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax();
+      var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken);
 
       ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
                        attributeSyntax?.ArgumentList?.GetLocation() ?? location, keyPropName);
@@ -317,7 +318,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (item.DeclaredAccessibility != Accessibility.Public)
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.EnumItemMustBePublic,
-                             item.GetIdentifier().GetLocation(),
+                             item.GetIdentifier(context.CancellationToken).GetLocation(),
                              item.Name, BuildTypeName(type));
          }
       }
@@ -345,7 +346,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
             continue;
 
-         var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.Single().GetSyntax()).Identifier.GetLocation();
+         var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken)).Identifier.GetLocation();
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumConstructorsMustBePrivate, location, type);
       }
    }

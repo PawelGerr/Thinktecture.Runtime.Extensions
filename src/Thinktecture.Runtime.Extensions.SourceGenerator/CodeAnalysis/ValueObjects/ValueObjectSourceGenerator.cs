@@ -97,7 +97,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          if (type.ContainingType is not null)
             return null;
 
-         return new SourceGenState<ValueObjectSourceGeneratorState>(new ValueObjectSourceGeneratorState(type, valueObjectAttribute), null);
+         return new SourceGenState<ValueObjectSourceGeneratorState>(new ValueObjectSourceGeneratorState(type, valueObjectAttribute, cancellationToken), null);
       }
       catch (Exception ex)
       {

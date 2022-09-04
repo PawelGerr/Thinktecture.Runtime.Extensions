@@ -10,7 +10,7 @@ public static class SourceGeneratorStateExtensions
       try
       {
          // pick one location as the representative
-         return enumState.GetFirstLocation();
+         return enumState.GetFirstLocation(context.CancellationToken);
       }
       catch (Exception ex)
       {

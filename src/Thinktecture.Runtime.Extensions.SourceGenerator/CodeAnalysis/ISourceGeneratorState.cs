@@ -7,5 +7,5 @@ public interface ISourceGeneratorState
    string? Namespace { get; }
    string Name { get; }
 
-   Location GetFirstLocation();
+   Location GetFirstLocation(CancellationToken cancellationToken);
 }

@@ -150,12 +150,12 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
          if (!type.IsEnum(out var enumInterfaces))
             return null;
 
-         var enumInterface = enumInterfaces.GetValidEnumInterface(type);
+         var enumInterface = enumInterfaces.GetValidEnumInterface(type, cancellationToken);
 
          if (enumInterface is null)
             return null;
 
-         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, genericEnumTypes, enumInterface), null);
+         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, genericEnumTypes, enumInterface, cancellationToken), null);
       }
       catch (Exception ex)
       {

@@ -62,14 +62,14 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
       }
    }
 
-   public static InstanceMemberInfo CreateFrom(IFieldSymbol field)
+   public static InstanceMemberInfo CreateFrom(IFieldSymbol field, CancellationToken cancellationToken)
    {
-      return new(field, field.Type, field.GetIdentifier(), field.DeclaredAccessibility, field.IsStatic);
+      return new(field, field.Type, field.GetIdentifier(cancellationToken), field.DeclaredAccessibility, field.IsStatic);
    }
 
-   public static InstanceMemberInfo CreateFrom(IPropertySymbol property)
+   public static InstanceMemberInfo CreateFrom(IPropertySymbol property, CancellationToken cancellationToken)
    {
-      return new(property, property.Type, property.GetIdentifier(), property.DeclaredAccessibility, property.IsStatic);
+      return new(property, property.Type, property.GetIdentifier(cancellationToken), property.DeclaredAccessibility, property.IsStatic);
    }
 
    public Location GetIdentifierLocation()

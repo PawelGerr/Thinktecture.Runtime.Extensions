@@ -30,7 +30,10 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
    public AttributeInfo AttributeInfo { get; }
    public ValueObjectSettings Settings { get; }
 
-   public ValueObjectSourceGeneratorState(INamedTypeSymbol type, AttributeData valueObjectAttribute)
+   public ValueObjectSourceGeneratorState(
+      INamedTypeSymbol type,
+      AttributeData valueObjectAttribute,
+      CancellationToken cancellationToken)
    {
       _type = type ?? throw new ArgumentNullException(nameof(type));
 
@@ -38,7 +41,7 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-      AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true).ToList();
+      AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
       EqualityMembers = GetEqualityMembers();
 
       var factoryValidationReturnType = _type.GetMembers()
@@ -58,9 +61,9 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
       Settings = new ValueObjectSettings(valueObjectAttribute);
    }
 
-   public Location GetFirstLocation()
+   public Location GetFirstLocation(CancellationToken cancellationToken)
    {
-      return _type.DeclaringSyntaxReferences.First().GetSyntax().GetLocation();
+      return _type.DeclaringSyntaxReferences.First().GetSyntax(cancellationToken).GetLocation();
    }
 
    private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()
