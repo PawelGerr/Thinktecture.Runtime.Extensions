@@ -1,17 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+   <PropertyGroup>
+      <TargetFramework>net6.0</TargetFramework>
+      <DefineConstants>$(DefineConstants);EFCORE6</DefineConstants>
+   </PropertyGroup>
+
    <ItemGroup>
-      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore\Thinktecture.Runtime.Extensions.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore6\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
    </ItemGroup>
 
-   <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0'">
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
-   </ItemGroup>
-   
-   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
-     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
+   <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
    </ItemGroup>
 
 </Project>

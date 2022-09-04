@@ -37,7 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples", "samples\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples.csproj", "{8663F6FA-AC39-4D1D-A0A0-226E574A5202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore\Thinktecture.Runtime.Extensions.EntityFrameworkCore.csproj", "{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore6", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore6\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.csproj", "{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Newtonsoft.Json", "src\Thinktecture.Runtime.Extensions.Newtonsoft.Json\Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj", "{914196F5-6208-4710-9A75-201E17457D2B}"
 EndProject
@@ -65,11 +65,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Tests.Shared", "test\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj", "{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore.Tests", "test\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Tests.csproj", "{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests", "test\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests.csproj", "{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.MessagePack.Samples", "samples\Thinktecture.Runtime.Extensions.MessagePack.Samples\Thinktecture.Runtime.Extensions.MessagePack.Samples.csproj", "{B1E357B7-7F91-4558-85BA-F6784C33FF97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.EFCore.Benchmarking", "samples\TT.EFCore.Benchmarking\TT.EFCore.Benchmarking.csproj", "{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore5", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore5\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.csproj", "{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore5.Tests", "test\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.Tests.csproj", "{70C5A190-2227-473B-B54B-89082A041240}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +165,14 @@ Global
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C5A190-2227-473B-B54B-89082A041240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C5A190-2227-473B-B54B-89082A041240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C5A190-2227-473B-B54B-89082A041240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C5A190-2227-473B-B54B-89082A041240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,6 +199,8 @@ Global
 		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{B1E357B7-7F91-4558-85BA-F6784C33FF97} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
+		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F} = {8F117684-7943-4DCE-8861-F2B854924837}
+		{70C5A190-2227-473B-B54B-89082A041240} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C34F508-A60B-4C0E-AFA0-0F4CFFB23603}

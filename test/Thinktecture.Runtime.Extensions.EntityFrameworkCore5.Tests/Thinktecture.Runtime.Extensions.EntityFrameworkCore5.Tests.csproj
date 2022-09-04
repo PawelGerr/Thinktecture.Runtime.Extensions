@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+   <PropertyGroup>
+      <DefineConstants>$(DefineConstants);EFCORE5</DefineConstants>
+   </PropertyGroup>
+   
+   <ItemGroup>
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore5\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+      <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests\**\*.cs" />
+      <Compile Remove="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests\obj\**\*.cs" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
+   </ItemGroup>
+
+</Project>
