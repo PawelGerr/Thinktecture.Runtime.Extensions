@@ -20,11 +20,13 @@ public static class ModelBuilderExtensions
    /// </summary>
    /// <param name="modelBuilder">EF model builder.</param>
    /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <exception cref="ArgumentNullException">If <paramref name="modelBuilder"/> is <c>null</c>.</exception>
    public static void AddEnumAndValueObjectConverters(
       this ModelBuilder modelBuilder,
       bool validateOnWrite,
+      bool useConstructorForRead = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
    {
       if (modelBuilder is null)
@@ -35,16 +37,17 @@ public static class ModelBuilderExtensions
 
       foreach (var entity in modelBuilder.Model.GetEntityTypes())
       {
-         AddSmartEnumAndKeyedValueObjects(validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects, entity);
+         AddSmartEnumAndKeyedValueObjects(validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects, entity);
          AddNonKeyedValueObjectMembers(entity);
 
-         AddConverterForScalarProperties(entity, validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects);
-         AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, converterLookup, configureEnumsAndKeyedValueObjects);
+         AddConverterForScalarProperties(entity, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
+         AddConvertersForNavigations(entity, modelBuilder, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
       }
    }
 
    private static void AddSmartEnumAndKeyedValueObjects(
       bool validateOnWrite,
+      bool useConstructorForRead,
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure,
       IMutableEntityType entity)
@@ -70,7 +73,7 @@ public static class ModelBuilderExtensions
 
          var property = entity.AddProperty(propertyInfo);
 
-         SetConverterAndExecuteCallback(validateOnWrite, converterLookup, configure, property);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);
       }
    }
 
@@ -97,6 +100,7 @@ public static class ModelBuilderExtensions
       IMutableEntityType entity,
       ModelBuilder modelBuilder,
       bool validateOnWrite,
+      bool useConstructorForRead,
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure)
    {
@@ -117,13 +121,14 @@ public static class ModelBuilderExtensions
       {
          var property = FindPropertyBuilder(builders, entity, navigation.Name);
 
-         SetConverterAndExecuteCallback(validateOnWrite, converterLookup, configure, property.Metadata);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property.Metadata);
       }
    }
 
    private static void AddConverterForScalarProperties(
       IMutableEntityType entity,
       bool validateOnWrite,
+      bool useConstructorForRead,
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure)
    {
@@ -139,7 +144,7 @@ public static class ModelBuilderExtensions
          if (ValueObjectMetadataLookup.Find(propertyType) is null)
             continue;
 
-         SetConverterAndExecuteCallback(validateOnWrite, converterLookup, configure, property);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);
       }
    }
 
@@ -181,21 +186,25 @@ public static class ModelBuilderExtensions
 
    private static void SetConverterAndExecuteCallback(
       bool validateOnWrite,
+      bool useConstructorForRead,
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure,
       IMutableProperty property)
    {
-      var valueConverter = GetValueConverter(validateOnWrite, converterLookup, property.ClrType);
+      var valueConverter = GetValueConverter(validateOnWrite, useConstructorForRead, converterLookup, property.ClrType);
 
       property.SetValueConverter(valueConverter);
       configure(property);
    }
 
-   private static ValueConverter GetValueConverter(bool validateOnWrite, Dictionary<Type, ValueConverter> converterLookup, Type naviType)
+   private static ValueConverter GetValueConverter(
+      bool validateOnWrite,
+      bool useConstructorForRead,
+      Dictionary<Type, ValueConverter> converterLookup, Type naviType)
    {
       if (!converterLookup.TryGetValue(naviType, out var valueConverter))
       {
-         valueConverter = ValueObjectValueConverterFactory.Create(naviType, validateOnWrite);
+         valueConverter = ValueObjectValueConverterFactory.Create(naviType, validateOnWrite, useConstructorForRead);
          converterLookup.Add(naviType, valueConverter);
       }
 

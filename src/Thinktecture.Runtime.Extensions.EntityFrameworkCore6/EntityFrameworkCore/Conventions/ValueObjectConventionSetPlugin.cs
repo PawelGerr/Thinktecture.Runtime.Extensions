@@ -17,7 +17,7 @@ internal class ValueObjectConventionSetPlugin : IConventionSetPlugin
    {
       if (_settings?.IsEnabled == true)
       {
-         var convention = new ValueObjectConventionPlugin(_settings.ValidateOnWrite, _settings.ConfigureEnumsAndKeyedValueObjects);
+         var convention = new ValueObjectConventionPlugin(_settings.ValidateOnWrite, _settings.UseConstructorForRead, _settings.ConfigureEnumsAndKeyedValueObjects);
 
          conventionSet.NavigationAddedConventions.Add(convention);
          conventionSet.PropertyAddedConventions.Add(convention);

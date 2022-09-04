@@ -17,16 +17,18 @@ public static class ValueObjectDbContextOptionsBuilderExtensions
    /// <param name="builder">Options builder.</param>
    /// <param name="useValueObjectConventions">Indication whether to enable or disable the feature.</param>
    /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
    public static DbContextOptionsBuilder<T> UseValueObjectValueConverter<T>(
       this DbContextOptionsBuilder<T> builder,
       bool useValueObjectConventions = true,
       bool validateOnWrite = true,
+      bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
       where T : DbContext
    {
-      ((DbContextOptionsBuilder)builder).UseValueObjectValueConverter(useValueObjectConventions, validateOnWrite, configureEnumsAndKeyedValueObjects);
+      ((DbContextOptionsBuilder)builder).UseValueObjectValueConverter(useValueObjectConventions, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
       return builder;
    }
 
@@ -36,15 +38,17 @@ public static class ValueObjectDbContextOptionsBuilderExtensions
    /// <param name="builder">Options builder.</param>
    /// <param name="useValueObjectConventions">Indication whether to enable or disable the feature.</param>
    /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
    public static DbContextOptionsBuilder UseValueObjectValueConverter(
       this DbContextOptionsBuilder builder,
       bool useValueObjectConventions = true,
       bool validateOnWrite = true,
+      bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      builder.AddOrUpdateExtension(extension => extension.UseValueObjectValueConverter(useValueObjectConventions, validateOnWrite, configureEnumsAndKeyedValueObjects));
+      builder.AddOrUpdateExtension(extension => extension.UseValueObjectValueConverter(useValueObjectConventions, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects));
       return builder;
    }
 

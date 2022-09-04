@@ -15,12 +15,14 @@ namespace Thinktecture.EntityFrameworkCore.Conventions;
 internal class ValueObjectConventionPlugin : INavigationAddedConvention, IPropertyAddedConvention, IEntityTypeAddedConvention
 {
    private readonly bool _validateOnWrite;
+   private readonly bool _useConstructorForRead;
    private readonly Action<IConventionProperty> _configureEnumsAndKeyedValueObjects;
    private readonly Dictionary<Type, ValueConverter> _converterLookup;
 
-   public ValueObjectConventionPlugin(bool validateOnWrite, Action<IConventionProperty>? configureEnumsAndKeyedValueObjects)
+   public ValueObjectConventionPlugin(bool validateOnWrite, bool useConstructorForRead, Action<IConventionProperty>? configureEnumsAndKeyedValueObjects)
    {
       _validateOnWrite = validateOnWrite;
+      _useConstructorForRead = useConstructorForRead;
       _configureEnumsAndKeyedValueObjects = configureEnumsAndKeyedValueObjects ?? (_ =>
                                                                                    {
                                                                                    });
@@ -148,7 +150,7 @@ internal class ValueObjectConventionPlugin : INavigationAddedConvention, IProper
       if (_converterLookup.TryGetValue(type, out var valueConverter))
          return valueConverter;
 
-      valueConverter = ValueObjectValueConverterFactory.Create(type, _validateOnWrite);
+      valueConverter = ValueObjectValueConverterFactory.Create(type, _validateOnWrite, _useConstructorForRead);
       _converterLookup.Add(type, valueConverter);
 
       return valueConverter;

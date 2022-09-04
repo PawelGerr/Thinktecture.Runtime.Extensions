@@ -134,7 +134,8 @@ namespace ").Append(_state.Namespace).Append(@"
       internal static void ModuleInit()
       {{
          var convertFromKey = new global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {_state.TypeFullyQualified}>({_state.TypeFullyQualified}.Create);
-         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {_state.TypeFullyQualified}>> convertFromKeyExpression = static {keyMember.ArgumentName} => new {_state.TypeFullyQualified}({keyMember.ArgumentName});
+         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {_state.TypeFullyQualified}>> convertFromKeyExpression = static {keyMember.ArgumentName} => {_state.TypeFullyQualified}.Create({keyMember.ArgumentName});
+         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {_state.TypeFullyQualified}>> convertFromKeyExpressionViaCtor = static {keyMember.ArgumentName} => new {_state.TypeFullyQualified}({keyMember.ArgumentName});
 
          var convertToKey = new global::System.Func<{_state.TypeFullyQualified}, {keyMember.TypeFullyQualifiedWithNullability}>(static item => item.{keyMember.Name});
          global::System.Linq.Expressions.Expression<global::System.Func<{_state.TypeFullyQualified}, {keyMember.TypeFullyQualifiedWithNullability}>> convertToKeyExpression = static obj => obj.{keyMember.Name};
@@ -142,7 +143,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var tryCreate = new global::Thinktecture.Internal.Validate<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>({_state.TypeFullyQualified}.TryCreate);
 
          var type = typeof({_state.TypeFullyQualified});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof({keyMember.TypeFullyQualifiedWithNullability}), false, false, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof({keyMember.TypeFullyQualifiedWithNullability}), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }}

@@ -63,15 +63,15 @@ namespace ").Append(_state.Namespace).Append(@"
       internal static void ModuleInit()
       {{
          var convertFromKey = new global::System.Func<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>({_state.EnumTypeFullyQualified}.Get);
-         global::System.Linq.Expressions.Expression<global::System.Func<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>> convertFromKeyExpression = {_state.KeyProperty.ArgumentName} => {_state.EnumTypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});
+         global::System.Linq.Expressions.Expression<global::System.Func<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>> convertFromKeyExpression = static {_state.KeyProperty.ArgumentName} => {_state.EnumTypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});
 
-         var convertToKey = new global::System.Func<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}>(item => item.{_state.KeyProperty.Name});
-         global::System.Linq.Expressions.Expression<global::System.Func<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}>> convertToKeyExpression = item => item.{_state.KeyProperty.Name};
+         var convertToKey = new global::System.Func<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}>(static item => item.{_state.KeyProperty.Name});
+         global::System.Linq.Expressions.Expression<global::System.Func<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}>> convertToKeyExpression = static item => item.{_state.KeyProperty.Name};
 
          var validate = new global::Thinktecture.Internal.Validate<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualifiedWithNullability}>({_state.EnumTypeFullyQualified}.Validate);
 
          var enumType = typeof({_state.EnumTypeFullyQualified});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({_state.KeyProperty.TypeFullyQualifiedWithNullability}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({_state.KeyProperty.TypeFullyQualifiedWithNullability}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
 

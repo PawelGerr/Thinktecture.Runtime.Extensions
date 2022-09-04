@@ -17,15 +17,16 @@ internal class ValueObjectDbContextOptionsExtension : IDbContextOptionsExtension
 
    public ValueObjectDbContextOptionsExtension()
    {
-      ValueObjectValueConverterSettings = new ValueObjectValueConverterSettings(true, true, null);
+      ValueObjectValueConverterSettings = new ValueObjectValueConverterSettings(true, true, true, null);
    }
 
    public ValueObjectDbContextOptionsExtension UseValueObjectValueConverter(
       bool useValueObjectConventions,
       bool validateOnWrite = true,
+      bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      ValueObjectValueConverterSettings = new ValueObjectValueConverterSettings(useValueObjectConventions, validateOnWrite, configureEnumsAndKeyedValueObjects);
+      ValueObjectValueConverterSettings = new ValueObjectValueConverterSettings(useValueObjectConventions, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
 
       return this;
    }
