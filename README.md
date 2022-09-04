@@ -46,9 +46,8 @@ Features:
 * Provides means for lookup, cast and type conversion from key-type to Smart Enum and vice versa
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
 * Choice between always-valid `IEnum<T>` and maybe-valid `IValidatableEnum<T>`
-* Allows extensions of existing Smart Enums
 * Allows custom validation of constructor arguments
-* Allows changing the propery name `Key`, which holds the underlying value - thanks to [Roslyn Source Generator](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)
+* Allows changing the property name `Key`, which holds the underlying value - thanks to [Roslyn Source Generator](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)
 * Allows custom key comparer
 * JSON support (`System.Text.Json` and `Newtonsoft.Json`)
 * ASP.NET Core support (model binding and model validation)
@@ -111,7 +110,7 @@ Features:
 * Simple Value Objects: provides an implementation of `IComparable<T>` if the key-property/field is an `IComparable<T>` or has an `IComparer<T>`
 * Simple Value Objects: provides an implementation of `IFormattable` if the key-property/field is an `IFormattable`
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
-* Allows custom equlity comparison
+* Allows custom equality comparison
 * JSON support (`System.Text.Json` and `Newtonsoft.Json`)
 * ASP.NET Core support (model binding and model validation)
 * Entity Framework Core support (`ValueConverter`)
