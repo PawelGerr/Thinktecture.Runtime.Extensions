@@ -2,5 +2,5 @@ namespace Thinktecture.Runtime.Tests.BaseClasses;
 
 public class BaseClassWithInstancePropertyWithGetterOnly
 {
-   public object Property { get; }
+   public object? Property { get; }
 }
