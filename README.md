@@ -15,8 +15,9 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
-# Required SDK/Compiler Version
+# Required SDK/Compiler/Language Version
 * Compiler version: 4.2.0
+* C# language version: 9 or higher
 
 Verify the version by placing `#error version` into any of your cs-files and build the project/solution.  
 The build output should display the compiler version:
@@ -27,9 +28,9 @@ MyFile.cs(15, 8): [CS8304] Compiler version: '4.2.0-4.22220.2 (1e40aa11)'. Langu
 
 ## Update your IDE and SDK to newest version.  
 Works/tested with:
-* SDK: 6.0.300 / 6.0.301
-* Visual Studio: 17.2.4
-* JetBrains Rider: 2022.1.2
+* SDK: 6.0.300 / 6.0.301 / 6.0.400
+* Visual Studio: 17.2.4 / 17.3.0
+* JetBrains Rider: 2022.1.2 / 2022.2.2
 
 > Please note: For developers having both, JetBrains Rider and Visual Studio, please update Visual Studio as well, because Rider is using the SDK of Visual Studio by default.
 
