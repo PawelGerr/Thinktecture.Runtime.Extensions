@@ -1,5 +1,4 @@
 using Microsoft.CodeAnalysis;
-using Thinktecture.CodeAnalysis.SmartEnums;
 using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
@@ -26,7 +25,6 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
 
-   public EnumMemberSettings EnumMemberSettings { get; }
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
 
    private InstanceMemberInfo(
@@ -46,7 +44,6 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
 
       ReadAccessibility = readAccessibility;
       IsStatic = isStatic;
-      EnumMemberSettings = EnumMemberSettings.Create(member);
       ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member);
 
       foreach (var @interface in type.AllInterfaces)
@@ -103,7 +100,6 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
              && SpecialType == other.SpecialType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
-             && EnumMemberSettings.Equals(other.EnumMemberSettings)
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -120,7 +116,6 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
          hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
-         hashCode = (hashCode * 397) ^ EnumMemberSettings.GetHashCode();
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;

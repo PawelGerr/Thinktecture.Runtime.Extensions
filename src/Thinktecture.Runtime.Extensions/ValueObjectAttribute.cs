@@ -16,15 +16,19 @@ public class ValueObjectAttribute : Attribute
    /// If this property is set to <c>true</c>, then providing a <c>null</c> will return <c>null</c>.
    ///
    /// This setting has no effect on:
-   /// - non-keyed value objects
-   /// - if <see cref="SkipFactoryMethods"/> is <c>true</c>
-   /// - on value objects which are structs
-   /// - on key-members which are structs
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
+   /// - if the value object is a struct
+   /// - if key-member is a struct
    /// </summary>
    public bool NullInFactoryMethodsYieldsNull { get; set; }
 
    /// <summary>
    /// Indication whether the generator should implement <see cref="IComparable{T}"/> interface or not.
+   ///
+   /// This setting has no effect on:
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - if key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectEqualityMemberAttribute.Comparer"/> is not set.
    /// </summary>
    public bool SkipCompareTo { get; set; }
 }
