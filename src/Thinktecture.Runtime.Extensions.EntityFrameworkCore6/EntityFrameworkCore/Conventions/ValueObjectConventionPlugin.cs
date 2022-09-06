@@ -23,7 +23,7 @@ internal class ValueObjectConventionPlugin : INavigationAddedConvention, IProper
    {
       _validateOnWrite = validateOnWrite;
       _useConstructorForRead = useConstructorForRead;
-      _configureEnumsAndKeyedValueObjects = configureEnumsAndKeyedValueObjects ?? (_ =>
+      _configureEnumsAndKeyedValueObjects = configureEnumsAndKeyedValueObjects ?? (static _ =>
                                                                                    {
                                                                                    });
       _converterLookup = new Dictionary<Type, ValueConverter>();

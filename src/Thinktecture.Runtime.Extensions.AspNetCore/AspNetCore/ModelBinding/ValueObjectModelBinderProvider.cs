@@ -40,7 +40,8 @@ public class ValueObjectModelBinderProvider : IModelBinderProvider
       var modelBinderType = _trimStringBasedEnums && metadata.IsEnumeration && metadata.KeyType == typeof(string)
                                ? typeof(TrimmingSmartEnumModelBinder<>).MakeGenericType(metadata.Type)
                                : typeof(ValueObjectModelBinder<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-      var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory, metadata.Validate) ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
+      var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory, metadata.Validate)
+                        ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
 
       return (IModelBinder)modelBinder;
    }
