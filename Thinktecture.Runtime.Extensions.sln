@@ -69,7 +69,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.MessagePack.Samples", "samples\Thinktecture.Runtime.Extensions.MessagePack.Samples\Thinktecture.Runtime.Extensions.MessagePack.Samples.csproj", "{B1E357B7-7F91-4558-85BA-F6784C33FF97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT.EFCore.Benchmarking", "samples\TT.EFCore.Benchmarking\TT.EFCore.Benchmarking.csproj", "{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Benchmarking", "samples\Thinktecture.Runtime.Extensions.Benchmarking\Thinktecture.Runtime.Extensions.Benchmarking.csproj", "{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore5", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore5\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.csproj", "{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}"
 EndProject
