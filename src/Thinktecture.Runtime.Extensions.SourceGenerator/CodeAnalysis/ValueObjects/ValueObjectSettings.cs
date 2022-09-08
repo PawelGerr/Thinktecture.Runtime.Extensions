@@ -7,12 +7,14 @@ public class ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool SkipFactoryMethods { get; }
    public bool NullInFactoryMethodsYieldsNull { get; }
    public bool SkipCompareTo { get; }
+   public string DefaultInstancePropertyName { get; }
 
    public ValueObjectSettings(AttributeData valueObjectAttribute)
    {
       SkipFactoryMethods = valueObjectAttribute.FindSkipFactoryMethods() ?? false;
       NullInFactoryMethodsYieldsNull = valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false;
       SkipCompareTo = valueObjectAttribute.FindSkipCompareTo() ?? false;
+      DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
    }
 
    public override bool Equals(object? obj)
@@ -29,7 +31,8 @@ public class ValueObjectSettings : IEquatable<ValueObjectSettings>
 
       return SkipFactoryMethods == other.SkipFactoryMethods
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
-             && SkipCompareTo == other.SkipCompareTo;
+             && SkipCompareTo == other.SkipCompareTo
+             && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
 
    public override int GetHashCode()
@@ -39,6 +42,7 @@ public class ValueObjectSettings : IEquatable<ValueObjectSettings>
          var hashCode = SkipFactoryMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipCompareTo.GetHashCode();
+         hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 
          return hashCode;
       }

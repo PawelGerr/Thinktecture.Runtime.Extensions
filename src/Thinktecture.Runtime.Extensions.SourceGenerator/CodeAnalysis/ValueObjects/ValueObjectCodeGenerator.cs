@@ -157,7 +157,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append($@"
 
-      public static readonly {_state.TypeFullyQualified} Empty = default;");
+      public static readonly {_state.TypeFullyQualified} {_state.Settings.DefaultInstancePropertyName} = default;");
       }
 
       if (!_state.Settings.SkipFactoryMethods)

@@ -830,6 +830,123 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
+   public void Should_generate_struct_with_custom_default_instance_property_name()
+   {
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject(DefaultInstancePropertyName = ""Null"")]
+	public readonly partial struct TestValueObject
+	{
+   }
+}
+";
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      AssertOutput(output, _GENERATED_HEADER + @"
+namespace Thinktecture.Tests
+{
+   [global::Thinktecture.Internal.ValueObjectConstructor()]
+   partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>
+   {
+      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
+
+      public static readonly global::Thinktecture.Tests.TestValueObject Null = default;
+
+      public static global::Thinktecture.Tests.TestValueObject Create()
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult);
+
+         if(validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
+
+         var obj = new global::Thinktecture.Tests.TestValueObject();
+         obj.FactoryPostInit();
+
+         return obj;
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? TryCreate(
+         [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestValueObject obj)
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult);
+
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject();
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
+
+         return validationResult;
+      }
+
+      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+
+      partial void FactoryPostInit();
+
+      private TestValueObject()
+      {
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
+      {
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref=""TestValueObject""/>.
+      /// </summary>
+      /// <param name=""obj"">Instance to compare.</param>
+      /// <param name=""other"">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
+      {
+         return !(obj == other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestValueObject other)
+      {
+         return true;
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         return _type.GetHashCode();
+      }
+
+      /// <inheritdoc />
+      public override string? ToString()
+      {
+         return ""TestValueObject"";
+      }
+   }
+}
+");
+   }
+
+   [Fact]
    public void Should_generate_struct_with_string_key_member()
    {
       var source = @"

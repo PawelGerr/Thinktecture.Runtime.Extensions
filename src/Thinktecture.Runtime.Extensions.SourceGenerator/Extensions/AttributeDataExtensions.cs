@@ -24,9 +24,9 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, "KeyComparer");
    }
 
-   public static string? FindMapsToMember(this AttributeData attributeData)
+   public static string? FindDefaultInstancePropertyName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, "MapsToMember");
+      return GetStringParameterValue(attributeData, "DefaultInstancePropertyName");
    }
 
    public static bool? FindSkipFactoryMethods(this AttributeData attributeData)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject]
+[ValueObject(DefaultInstancePropertyName = "None")]
 public readonly partial struct ProductNameStruct
 {
    [ValueObjectEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]

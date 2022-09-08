@@ -31,4 +31,19 @@ public class ValueObjectAttribute : Attribute
    /// - if key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectEqualityMemberAttribute.Comparer"/> is not set.
    /// </summary>
    public bool SkipCompareTo { get; set; }
+
+   private string? _defaultInstancePropertyName;
+
+   /// <summary>
+   /// The name of the static property containing the <c>default</c> instance of the struct.
+   /// Default name is "Empty" (analogous to <c>Guid.Empty</c>).
+   ///
+   /// This setting has no effect on:
+   /// - value objects that are classes
+   /// </summary>
+   public string DefaultInstancePropertyName
+   {
+      get => _defaultInstancePropertyName ?? "Empty";
+      set => _defaultInstancePropertyName = value;
+   }
 }
