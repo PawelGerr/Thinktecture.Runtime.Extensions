@@ -3,7 +3,7 @@
 **/bin/**
 **/obj/**
 **/packages/**
+**/test-results/**
 
 *\.sln\.DotSettings\.user
 *\.csproj\.user
-samples/Thinktecture\.Runtime\.Extensions\.EntityFrameworkSamples/products\.db

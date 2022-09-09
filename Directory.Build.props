@@ -16,6 +16,9 @@
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>
       <NoWarn>$(NoWarn);CA1303;MSB3884;</NoWarn>
+
+      <VSTestLogger>trx%3bLogFileName=$(MSBuildProjectName).trx</VSTestLogger>
+      <VSTestResultsDirectory>$(MSBuildThisFileDirectory)test-results/$(TargetFramework)</VSTestResultsDirectory>
    </PropertyGroup>
 
 </Project>
