@@ -30,7 +30,7 @@ namespace {ns}
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)
          {{
-            return typeof({_state.EnumTypeFullyQualified}).IsAssignableFrom(typeToConvert);
+            return typeof({_state.TypeFullyQualified}).IsAssignableFrom(typeToConvert);
          }}
 
          /// <inheritdoc />
@@ -41,7 +41,7 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>({_state.EnumTypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name}, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>({_state.TypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name}, options);
          }}
       }}
    }}

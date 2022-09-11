@@ -25,10 +25,10 @@ namespace {ns}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
+      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
       {{
          public ValueObjectMessagePackFormatter()
-            : base({_state.EnumTypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})
+            : base({_state.TypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})
          {{
          }}
       }}

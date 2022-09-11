@@ -54,8 +54,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
    [global::Thinktecture.Internal.KeyedValueObject]
-   [global::System.ComponentModel.TypeConverter(typeof({_state.EnumTypeFullyQualified}_EnumTypeConverter))]
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.EnumTypeFullyQualifiedNullAnnotated}>
+   [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_EnumTypeConverter))]
+   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>
    {{");
 
       GenerateModuleInitializer(_state.KeyProperty);
@@ -71,16 +71,16 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
 
-      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}>> _itemsLookup
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}>>(GetLookup);
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>>(GetLookup);
 
-      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}>> _items
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.TypeFullyQualified}>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.TypeFullyQualified}>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}> Items => _items.Value;
+      public static global::System.Collections.Generic.IReadOnlyList<{_state.TypeFullyQualified}> Items => _items.Value;
 
       /// <summary>
       /// The identifier of the item.
@@ -120,7 +120,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override bool Equals(object? other)
       {{
-         return other is {_state.EnumTypeFullyQualified} item && Equals(item);
+         return other is {_state.TypeFullyQualified} item && Equals(item);
       }}
 
       /// <inheritdoc />
@@ -140,8 +140,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateModuleInitializer(IMemberState keyMember)
    {
-      var enumType = _state.EnumTypeFullyQualified;
-      var enumTypeNullAnnotated = _state.EnumTypeFullyQualifiedNullAnnotated;
+      var enumType = _state.TypeFullyQualified;
+      var enumTypeNullAnnotated = _state.TypeFullyQualifiedNullAnnotated;
 
       _sb.Append($@"
       [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -178,9 +178,9 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets a valid enumeration item for provided <paramref name=""{_state.KeyProperty.ArgumentName}""/> if a valid item exists.
       /// </summary>
       /// <param name=""{_state.KeyProperty.ArgumentName}"">The identifier to return an enumeration item for.</param>
-      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumTypeMinimallyQualified}""/>; otherwise <c>null</c>.</param>
+      /// <param name=""item"">A valid instance of <see cref=""{_state.TypeMinimallyQualified}""/>; otherwise <c>null</c>.</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""{_state.KeyProperty.ArgumentName}""/> exists; <c>false</c> otherwise.</returns>
-      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out {_state.EnumTypeFullyQualified} item)
+      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out {_state.TypeFullyQualified} item)
       {{");
 
       if (_state.KeyProperty.IsReferenceType)
@@ -207,13 +207,13 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Validates the provided <paramref name=""{_state.KeyProperty.ArgumentName}""/> and returns a valid enumeration item if found.
       /// </summary>
       /// <param name=""{_state.KeyProperty.ArgumentName}"">The identifier to return an enumeration item for.</param>
-      /// <param name=""item"">A valid instance of <see cref=""{_state.EnumTypeMinimallyQualified}""/>; otherwise <c>null</c>.</param>
+      /// <param name=""item"">A valid instance of <see cref=""{_state.TypeMinimallyQualified}""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""{_state.KeyProperty.ArgumentName}""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.EnumTypeFullyQualified} item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.TypeFullyQualified} item)
       {{
-         return {_state.EnumTypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out item)
+         return {_state.TypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               : new global::System.ComponentModel.DataAnnotations.ValidationResult($""The enumeration item of type \""{_state.EnumTypeMinimallyQualified}\"" with identifier \""{{{_state.KeyProperty.ArgumentName}}}\"" is not valid."");
+               : new global::System.ComponentModel.DataAnnotations.ValidationResult($""The enumeration item of type \""{_state.TypeMinimallyQualified}\"" with identifier \""{{{_state.KeyProperty.ArgumentName}}}\"" is not valid."");
       }}");
    }
 
@@ -222,12 +222,12 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.EnumTypeMinimallyQualified}""/>.
+      /// Compares to instances of <see cref=""{_state.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""item1"">Instance to compare.</param>
       /// <param name=""item2"">Another instance to compare.</param>
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==({_state.EnumTypeFullyQualifiedNullAnnotated} item1, {_state.EnumTypeFullyQualifiedNullAnnotated} item2)
+      public static bool operator ==({_state.TypeFullyQualifiedNullAnnotated} item1, {_state.TypeFullyQualifiedNullAnnotated} item2)
       {{");
 
       if (_state.IsReferenceType)
@@ -243,12 +243,12 @@ namespace ").Append(_state.Namespace).Append(@"
       }}
 
       /// <summary>
-      /// Compares to instances of <see cref=""{_state.EnumTypeMinimallyQualified}""/>.
+      /// Compares to instances of <see cref=""{_state.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""item1"">Instance to compare.</param>
       /// <param name=""item2"">Another instance to compare.</param>
       /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=({_state.EnumTypeFullyQualifiedNullAnnotated} item1, {_state.EnumTypeFullyQualifiedNullAnnotated} item2)
+      public static bool operator !=({_state.TypeFullyQualifiedNullAnnotated} item1, {_state.TypeFullyQualifiedNullAnnotated} item2)
       {{
          return !(item1 == item2);
       }}");
@@ -262,9 +262,9 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Implicit conversion to the type <see cref=""{_state.KeyProperty.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""{_state.EnumTypeMinimallyQualified}.{_state.KeyProperty.Name}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""{_state.TypeMinimallyQualified}.{_state.KeyProperty.Name}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
-      public static implicit operator {_state.KeyProperty.TypeFullyQualifiedNullAnnotated}({_state.EnumTypeFullyQualifiedNullAnnotated} item)
+      public static implicit operator {_state.KeyProperty.TypeFullyQualifiedNullAnnotated}({_state.TypeFullyQualifiedNullAnnotated} item)
       {{");
 
       if (_state.IsReferenceType)
@@ -290,11 +290,11 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Explicit conversion from the type <see cref=""{_state.KeyProperty.TypeMinimallyQualified}""/>.
       /// </summary>
       /// <param name=""{_state.KeyProperty.ArgumentName}"">Value to covert.</param>
-      /// <returns>An instance of <see cref=""{_state.EnumTypeMinimallyQualified}""/> if the <paramref name=""{_state.KeyProperty.ArgumentName}""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum{{TKey}}""/>.</returns>
+      /// <returns>An instance of <see cref=""{_state.TypeMinimallyQualified}""/> if the <paramref name=""{_state.KeyProperty.ArgumentName}""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum{{TKey}}""/>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      public static explicit operator {_state.EnumTypeFullyQualifiedNullAnnotated}({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
+      public static explicit operator {_state.TypeFullyQualifiedNullAnnotated}({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
       {{
-         return {_state.EnumTypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});
+         return {_state.TypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});
       }}");
    }
 
@@ -303,7 +303,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <inheritdoc />
-      public bool Equals({_state.EnumTypeFullyQualifiedNullAnnotated} other)
+      public bool Equals({_state.TypeFullyQualifiedNullAnnotated} other)
       {{");
 
       if (_state.IsReferenceType)
@@ -339,22 +339,22 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}> GetLookup()
+      private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}> GetLookup()
       {{
-         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}>({totalNumberOfItems}, {KeyComparerMember});");
+         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>({totalNumberOfItems}, {KeyComparerMember});");
 
       if (_state.ItemNames.Count > 0)
       {
          _sb.Append($@"
 
-         void AddItem({_state.EnumTypeFullyQualified} item, string itemName)
+         void AddItem({_state.TypeFullyQualified} item, string itemName)
          {{");
 
          if (_state.IsReferenceType)
          {
             _sb.Append($@"
             if(item is null)
-               throw new global::System.ArgumentNullException($""The item \""{{itemName}}\"" of type \""{_state.EnumTypeMinimallyQualified}\"" must not be null."");
+               throw new global::System.ArgumentNullException($""The item \""{{itemName}}\"" of type \""{_state.TypeMinimallyQualified}\"" must not be null."");
 ");
          }
 
@@ -362,7 +362,7 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append($@"
             if(item.{_state.KeyProperty.Name} is null)
-               throw new global::System.ArgumentException($""The \""{_state.KeyProperty.Name}\"" of the item \""{{itemName}}\"" of type \""{_state.EnumTypeMinimallyQualified}\"" must not be null."");
+               throw new global::System.ArgumentException($""The \""{_state.KeyProperty.Name}\"" of the item \""{{itemName}}\"" of type \""{_state.TypeMinimallyQualified}\"" must not be null."");
 ");
          }
 
@@ -370,13 +370,13 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append($@"
             if(!item.IsValid)
-               throw new global::System.ArgumentException($""All \""public static readonly\"" fields of type \""{_state.EnumTypeMinimallyQualified}\"" must be valid but the item \""{{itemName}}\"" with the identifier \""{{item.{_state.KeyProperty.Name}}}\"" is not."");
+               throw new global::System.ArgumentException($""All \""public static readonly\"" fields of type \""{_state.TypeMinimallyQualified}\"" must be valid but the item \""{{itemName}}\"" with the identifier \""{{item.{_state.KeyProperty.Name}}}\"" is not."");
 ");
          }
 
          _sb.Append($@"
             if (lookup.ContainsKey(item.{_state.KeyProperty.Name}))
-               throw new global::System.ArgumentException($""The type \""{_state.EnumTypeMinimallyQualified}\"" has multiple items with the identifier \""{{item.{_state.KeyProperty.Name}}}\""."");
+               throw new global::System.ArgumentException($""The type \""{_state.TypeMinimallyQualified}\"" has multiple items with the identifier \""{{item.{_state.KeyProperty.Name}}}\""."");
 
             lookup.Add(item.{_state.KeyProperty.Name}, item);
          }}
@@ -432,7 +432,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets an enumeration item for provided <paramref name=""{_state.KeyProperty.ArgumentName}""/>.
       /// </summary>
       /// <param name=""{_state.KeyProperty.ArgumentName}"">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of <see cref=""{_state.EnumTypeMinimallyQualified}"" /> if <paramref name=""{_state.KeyProperty.ArgumentName}""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
+      /// <returns>An instance of <see cref=""{_state.TypeMinimallyQualified}"" /> if <paramref name=""{_state.KeyProperty.ArgumentName}""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
 
       if (!_state.IsValidatable)
       {
@@ -442,7 +442,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      public static {(_state.KeyProperty.IsReferenceType ? _state.EnumTypeFullyQualifiedNullAnnotated : _state.EnumTypeFullyQualified)} Get({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
+      public static {(_state.KeyProperty.IsReferenceType ? _state.TypeFullyQualifiedNullAnnotated : _state.TypeFullyQualified)} Get({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
       {{");
 
       if (_state.KeyProperty.IsReferenceType)
@@ -479,14 +479,14 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append($@"
 
-            if ({_state.EnumTypeFullyQualified}.TryGet(item.{_state.KeyProperty.Name}, out _))
+            if ({_state.TypeFullyQualified}.TryGet(item.{_state.KeyProperty.Name}, out _))
                throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must not return an instance with property '{_state.KeyProperty.Name}' equals to one of a valid item."");");
          }
       }
       else
       {
          _sb.Append($@"
-            throw new global::Thinktecture.UnknownEnumIdentifierException(typeof({_state.EnumTypeFullyQualified}), {_state.KeyProperty.ArgumentName});");
+            throw new global::Thinktecture.UnknownEnumIdentifierException(typeof({_state.TypeFullyQualified}), {_state.KeyProperty.ArgumentName});");
       }
 
       _sb.Append(@"
@@ -500,9 +500,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append($@"
 
-      private static {_state.EnumTypeFullyQualified} CreateInvalidItem({_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName})
+      private static {_state.TypeFullyQualified} CreateInvalidItem({_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName})
       {{
-         return new {_state.EnumTypeFullyQualified}({_state.KeyProperty.ArgumentName}, false");
+         return new {_state.TypeFullyQualified}({_state.KeyProperty.ArgumentName}, false");
 
       foreach (var member in _state.AssignableInstanceFieldsAndProperties)
       {
@@ -654,7 +654,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.EnumTypeFullyQualified}).GetHashCode() * 397 ^ {KeyComparerMember}.GetHashCode({_state.KeyProperty.ArgumentName}));
+         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.TypeFullyQualified}).GetHashCode() * 397 ^ {KeyComparerMember}.GetHashCode({_state.KeyProperty.ArgumentName}));
       }}
 
       static partial void ValidateConstructorArguments(ref {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}");
@@ -673,17 +673,17 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateTypeConverter()
    {
       _sb.Append($@"
-   public class {_state.Name}_EnumTypeConverter : global::Thinktecture.ValueObjectTypeConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
+   public class {_state.Name}_EnumTypeConverter : global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
    {{
       /// <inheritdoc />
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      protected override {(_state.KeyProperty.IsReferenceType ? _state.EnumTypeFullyQualifiedNullAnnotated : _state.EnumTypeFullyQualified)} ConvertFrom({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
+      protected override {(_state.KeyProperty.IsReferenceType ? _state.TypeFullyQualifiedNullAnnotated : _state.TypeFullyQualified)} ConvertFrom({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
       {{");
 
       if (_state.IsValidatable)
       {
          _sb.Append($@"
-         return {_state.EnumTypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});");
+         return {_state.TypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});");
       }
       else
       {
@@ -696,7 +696,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append($@"
-         if({_state.EnumTypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out var item))
+         if({_state.TypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out var item))
             return item;
 
          throw new global::System.FormatException($""There is no item of type '{_state.Name}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");");
@@ -706,7 +706,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }}
 
       /// <inheritdoc />
-      protected override {_state.KeyProperty.TypeFullyQualified} GetKeyValue({_state.EnumTypeFullyQualified} item)
+      protected override {_state.KeyProperty.TypeFullyQualified} GetKeyValue({_state.TypeFullyQualified} item)
       {{
          return item.{_state.KeyProperty.Name};
       }}

@@ -3,14 +3,17 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSourceGeneratorState>
+public class EnumSourceGeneratorState :
+   ISourceGeneratorState,
+   ITypeInformation,
+   IEquatable<EnumSourceGeneratorState>
 {
    private readonly INamedTypeSymbol _enumType;
 
    public string? Namespace { get; }
-   public string EnumTypeFullyQualified { get; }
-   public string EnumTypeFullyQualifiedNullAnnotated { get; }
-   public string EnumTypeMinimallyQualified { get; }
+   public string TypeFullyQualified { get; }
+   public string TypeFullyQualifiedNullAnnotated { get; }
+   public string TypeMinimallyQualified { get; }
 
    public DefaultMemberState KeyProperty { get; }
 
@@ -42,9 +45,9 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
       _enumType = type ?? throw new ArgumentNullException(nameof(type));
 
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
-      EnumTypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      EnumTypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{EnumTypeFullyQualified}?" : EnumTypeFullyQualified;
-      EnumTypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{TypeFullyQualified}?" : TypeFullyQualified;
+      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       Name = type.Name;
 
       IsReferenceType = type.IsReferenceType;
@@ -87,7 +90,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
       if (ReferenceEquals(this, other))
          return true;
 
-      return EnumTypeFullyQualified == other.EnumTypeFullyQualified
+      return TypeFullyQualified == other.TypeFullyQualified
              && IsValidatable == other.IsValidatable
              && HasCreateInvalidImplementation == other.HasCreateInvalidImplementation
              && IsReferenceType == other.IsReferenceType
@@ -105,7 +108,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
    {
       unchecked
       {
-         var hashCode = EnumTypeFullyQualified.GetHashCode();
+         var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
          hashCode = (hashCode * 397) ^ HasCreateInvalidImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();

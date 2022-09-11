@@ -2,10 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public interface ISourceGeneratorState
+public interface ISourceGeneratorState : ITypeInformation
 {
-   string? Namespace { get; }
-   string Name { get; }
-
    Location GetFirstLocation(CancellationToken cancellationToken);
 }

@@ -90,8 +90,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValueObject()
    {
-      var isFormattable = _state.HasKeyMember && _state.KeyMember.Member.IsFormattable;
-      var isComparable = !_state.Settings.SkipCompareTo && _state.HasKeyMember && (_state.KeyMember.Member.IsComparable || _state.KeyMember.Comparer is not null);
+      var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
 
       _sb.Append(@"
    [global::Thinktecture.Internal.ValueObjectConstructor(");
@@ -116,11 +115,12 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>");
 
-      if (isFormattable)
-         _sb.Append(", global::System.IFormattable");
+      for (var i = 0; i < interfaceCodeGenerators.Length; i++)
+      {
+         _sb.Append(", ");
 
-      if (isComparable)
-         _sb.Append($", global::System.IComparable, global::System.IComparable<{_state.TypeFullyQualified}>");
+         interfaceCodeGenerators[i].GenerateBaseTypes(_sb, _state);
+      }
 
       _sb.Append(@"
    {");
@@ -163,11 +163,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.HasKeyMember)
       {
-         if (isFormattable)
-            GenerateToStringFormat(_state.KeyMember);
-
-         if (isComparable)
-            GenerateCompareTo(_state.KeyMember);
+         for (var i = 0; i < interfaceCodeGenerators.Length; i++)
+         {
+            interfaceCodeGenerators[i].GenerateImplementation(_sb, _state, _state.KeyMember.Member);
+         }
       }
 
       _sb.Append(@"
@@ -716,73 +715,6 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append($@"
          return ""{_state.TypeMinimallyQualified}"";");
-      }
-
-      _sb.Append(@"
-      }");
-   }
-
-   private void GenerateToStringFormat(EqualityInstanceMemberInfo keyMemberInfo)
-   {
-      var keyMember = keyMemberInfo.Member;
-
-      _sb.Append($@"
-
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {{
-         return this.{keyMember.Name}.ToString(format, formatProvider);
-      }}");
-   }
-
-   private void GenerateCompareTo(EqualityInstanceMemberInfo keyMemberInfo)
-   {
-      var keyMember = keyMemberInfo.Member;
-      var comparer = keyMemberInfo.Comparer;
-
-      _sb.Append($@"
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {{
-         if(obj is null)
-            return 1;
-
-         if(obj is not {_state.TypeFullyQualified} valueObject)
-            throw new global::System.ArgumentException(""Argument must be of type \""{_state.TypeMinimallyQualified}\""."", nameof(obj));
-
-         return this.CompareTo(valueObject);
-      }}
-
-      /// <inheritdoc />
-      public int CompareTo({_state.TypeFullyQualifiedNullAnnotated} obj)
-      {{");
-
-      if (_state.IsReferenceType)
-      {
-         _sb.Append(@"
-         if(obj is null)
-            return 1;
-");
-      }
-
-      if (comparer is null)
-      {
-         if (keyMember.IsReferenceType)
-         {
-            _sb.Append($@"
-         if(this.{keyMember.Name} is null)
-            return obj.{keyMember.Name} is null ? 0 : -1;
-");
-         }
-
-         _sb.Append($@"
-         return this.{keyMember.Name}.CompareTo(obj.{keyMember.Name});");
-      }
-      else
-      {
-         _sb.Append($@"
-         return {comparer}.Compare(this.{keyMember.Name}, obj.{keyMember.Name});");
       }
 
       _sb.Append(@"

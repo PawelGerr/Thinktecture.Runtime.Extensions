@@ -25,10 +25,10 @@ namespace {ns}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
+      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
       {{
          public ValueObjectNewtonsoftJsonConverter()
-            : base({_state.EnumTypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})
+            : base({_state.TypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})
          {{
          }}
       }}

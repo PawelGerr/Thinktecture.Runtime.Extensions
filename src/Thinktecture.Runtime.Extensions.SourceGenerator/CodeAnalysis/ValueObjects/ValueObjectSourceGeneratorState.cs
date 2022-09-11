@@ -1,9 +1,13 @@
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable<ValueObjectSourceGeneratorState>
+public class ValueObjectSourceGeneratorState :
+   ISourceGeneratorState,
+   ITypeInformation,
+   IEquatable<ValueObjectSourceGeneratorState>
 {
    private readonly INamedTypeSymbol _type;
 
@@ -128,5 +132,18 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
 
          return hashCode;
       }
+   }
+
+   public ImmutableArray<IInterfaceCodeGenerator> GetInterfaceCodeGenerators()
+   {
+      var generators = ImmutableArray<IInterfaceCodeGenerator>.Empty;
+
+      if (HasKeyMember && KeyMember.Member.IsFormattable)
+         generators = generators.Add(FormattableCodeGenerator.Instance);
+
+      if (!Settings.SkipCompareTo && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.Comparer is not null))
+         generators = generators.Add(new ComparableCodeGenerator(KeyMember.Comparer));
+
+      return generators;
    }
 }
