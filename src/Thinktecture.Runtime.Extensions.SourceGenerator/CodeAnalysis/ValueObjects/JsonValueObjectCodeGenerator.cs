@@ -123,7 +123,7 @@ namespace {state.Namespace}
          }}
 
          /// <inheritdoc />
-         public override {state.TypeFullyQualified}{state.NullableQuestionMark} Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+         public override {state.TypeFullyQualifiedNullAnnotated} Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
          {{
             if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
                return default;
@@ -137,7 +137,7 @@ namespace {state.Namespace}
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            {memberInfo.TypeFullyQualified}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
+            {memberInfo.TypeFullyQualifiedNullAnnotated} {memberInfo.ArgumentName} = default;");
       }
 
       sb.Append(@$"

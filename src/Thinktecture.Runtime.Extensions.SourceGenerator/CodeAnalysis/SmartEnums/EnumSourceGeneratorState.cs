@@ -9,6 +9,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
 
    public string? Namespace { get; }
    public string EnumTypeFullyQualified { get; }
+   public string EnumTypeFullyQualifiedNullAnnotated { get; }
    public string EnumTypeMinimallyQualified { get; }
 
    public DefaultMemberState KeyProperty { get; }
@@ -42,6 +43,7 @@ public class EnumSourceGeneratorState : ISourceGeneratorState, IEquatable<EnumSo
 
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       EnumTypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      EnumTypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{EnumTypeFullyQualified}?" : EnumTypeFullyQualified;
       EnumTypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       Name = type.Name;
 

@@ -62,10 +62,10 @@ namespace {state.Namespace}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualified}{state.NullableQuestionMark}>
+      public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualifiedNullAnnotated}>
       {{
          /// <inheritdoc />
-         public {state.TypeFullyQualified}{state.NullableQuestionMark} Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+         public {state.TypeFullyQualifiedNullAnnotated} Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
          {{
             if (reader.TryReadNil())
                return default;
@@ -117,7 +117,7 @@ namespace {state.Namespace}
          }}
 
          /// <inheritdoc />
-         public void Serialize(ref global::MessagePack.MessagePackWriter writer, {state.TypeFullyQualified}{state.NullableQuestionMark} value, global::MessagePack.MessagePackSerializerOptions options)
+         public void Serialize(ref global::MessagePack.MessagePackWriter writer, {state.TypeFullyQualifiedNullAnnotated} value, global::MessagePack.MessagePackSerializerOptions options)
          {{");
 
       if (state.IsReferenceType)

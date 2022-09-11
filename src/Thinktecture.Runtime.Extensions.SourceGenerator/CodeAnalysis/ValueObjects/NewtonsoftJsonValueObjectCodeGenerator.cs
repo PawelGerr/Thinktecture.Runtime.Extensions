@@ -97,7 +97,7 @@ namespace {state.Namespace}
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            {memberInfo.TypeFullyQualified}{memberInfo.NullableQuestionMark} {memberInfo.ArgumentName} = default;");
+            {memberInfo.TypeFullyQualifiedNullAnnotated} {memberInfo.ArgumentName} = default;");
       }
 
       sb.Append(@$"

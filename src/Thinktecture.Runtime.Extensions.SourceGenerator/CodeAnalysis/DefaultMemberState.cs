@@ -10,12 +10,16 @@ public class DefaultMemberState : IMemberState, IEquatable<DefaultMemberState>
    public string ArgumentName { get; }
 
    public string TypeFullyQualified { get; }
-   public string TypeFullyQualifiedWithNullability { get; }
+   public string TypeFullyQualifiedNullable { get; }
+   public string TypeFullyQualifiedNullAnnotated => _type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
+   public string TypeFullyQualifiedWithNullability => _type.IsReferenceType && _type.NullableAnnotation == NullableAnnotation.Annotated ? TypeFullyQualifiedNullAnnotated : TypeFullyQualified;
    public string TypeMinimallyQualified { get; }
 
    public bool IsStatic { get; }
    public SpecialType SpecialType => _type.SpecialType;
    public bool IsReferenceType => _type.IsReferenceType;
+   public bool IsNullableStruct => _type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+   public NullableAnnotation NullableAnnotation => _type.NullableAnnotation;
 
    public DefaultMemberState(string name, ITypeSymbol type, string argumentName, bool isStatic)
    {
@@ -25,7 +29,7 @@ public class DefaultMemberState : IMemberState, IEquatable<DefaultMemberState>
       ArgumentName = argumentName;
 
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeFullyQualifiedWithNullability = type.IsReferenceType && type.NullableAnnotation == NullableAnnotation.Annotated ? $"{TypeFullyQualified}?" : TypeFullyQualified;
+      TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
       IsStatic = isStatic;

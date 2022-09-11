@@ -8,10 +8,10 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
    private readonly INamedTypeSymbol _type;
 
    public string TypeFullyQualified { get; }
+   public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeMinimallyQualified { get; }
 
    public string? Namespace { get; }
-   public string? NullableQuestionMark => _type.IsReferenceType ? "?" : null;
    public string Name => _type.Name;
    public bool IsReferenceType => _type.IsReferenceType;
 
@@ -39,6 +39,7 @@ public class ValueObjectSourceGeneratorState : ISourceGeneratorState, IEquatable
 
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{TypeFullyQualified}?" : TypeFullyQualified;
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
       AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();

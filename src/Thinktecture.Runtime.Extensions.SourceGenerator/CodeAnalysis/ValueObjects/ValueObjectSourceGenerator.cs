@@ -17,7 +17,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetValueObjectStateOrNull)
-                              .Where(static state => state.HasValue)
+                              .Where(static state => state.HasValue && IsNotKeyedOrKeyNotNullable(state.Value))
                               .Select(static (state, _) => state!.Value)
                               .Collect()
                               .SelectMany(static (states, _) => states.Distinct());
@@ -28,6 +28,18 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>());
 
       context.RegisterSourceOutput(candidates.Combine(generators), GenerateCode);
+   }
+
+   private static bool IsNotKeyedOrKeyNotNullable(SourceGenState<ValueObjectSourceGeneratorState> state)
+   {
+      if (state.State is null)
+         return true;
+
+      if (!state.State.HasKeyMember)
+         return true;
+
+      return !state.State.KeyMember.Member.IsNullableStruct
+             && state.State.KeyMember.Member.NullableAnnotation != NullableAnnotation.Annotated;
    }
 
    private static ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)

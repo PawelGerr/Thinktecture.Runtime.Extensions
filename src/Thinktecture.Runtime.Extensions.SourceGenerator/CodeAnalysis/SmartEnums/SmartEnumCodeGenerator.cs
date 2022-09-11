@@ -7,8 +7,6 @@ public class SmartEnumCodeGenerator : CodeGeneratorBase
    private readonly EnumSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
-   private string? NullableQuestionMarkEnum => _state.IsReferenceType ? "?" : null;
-   private string? NullableQuestionMarkKey => _state.KeyProperty.IsReferenceType ? "?" : null;
    private bool NeedsDefaultComparer => _state.Settings.KeyComparer is null;
    private string KeyComparerMember => _state.Settings.KeyComparer ?? "_defaultKeyComparerMember";
 
@@ -57,46 +55,24 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
    [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof({_state.EnumTypeFullyQualified}_EnumTypeConverter))]
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>
-   {{
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
-      {{
-         var convertFromKey = new global::System.Func<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>({_state.EnumTypeFullyQualified}.Get);
-         global::System.Linq.Expressions.Expression<global::System.Func<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}>> convertFromKeyExpression = static {_state.KeyProperty.ArgumentName} => {_state.EnumTypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});
+   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.EnumTypeFullyQualifiedNullAnnotated}>
+   {{");
 
-         var convertToKey = new global::System.Func<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}>(static item => item.{_state.KeyProperty.Name});
-         global::System.Linq.Expressions.Expression<global::System.Func<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}>> convertToKeyExpression = static item => item.{_state.KeyProperty.Name};
-
-         var validate = new global::Thinktecture.Internal.Validate<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualifiedWithNullability}>({_state.EnumTypeFullyQualified}.Validate);
-
-         var enumType = typeof({_state.EnumTypeFullyQualified});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({_state.KeyProperty.TypeFullyQualifiedWithNullability}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
-
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
-
-      foreach (var derivedType in _state.FullyQualifiedDerivedTypes)
-      {
-         _sb.Append($@"
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof({derivedType}), metadata);");
-      }
-
-      _sb.Append(@"
-      }");
+      GenerateModuleInitializer(_state.KeyProperty);
 
       if (NeedsDefaultComparer)
       {
-         var defaultComparer = _state.KeyProperty.IsString() ? "global::System.StringComparer.OrdinalIgnoreCase" : $"global::System.Collections.Generic.EqualityComparer<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}>.Default";
+         var defaultComparer = _state.KeyProperty.IsString() ? "global::System.StringComparer.OrdinalIgnoreCase" : $"global::System.Collections.Generic.EqualityComparer<{_state.KeyProperty.TypeFullyQualifiedNullAnnotated}>.Default";
 
          _sb.Append($@"
 
-      private static readonly global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}> {KeyComparerMember} = {defaultComparer};");
+      private static readonly global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualifiedNullAnnotated}> {KeyComparerMember} = {defaultComparer};");
       }
 
       _sb.Append($@"
 
-      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualifiedWithNullability}, {_state.EnumTypeFullyQualified}>> _itemsLookup
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualifiedWithNullability}, {_state.EnumTypeFullyQualified}>>(GetLookup);
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}>>(GetLookup);
 
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}>> _items
                                              = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.EnumTypeFullyQualified}>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
@@ -109,8 +85,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
-      public {_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.Name} {{ get; }}");
+      public {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.Name} {{ get; }}");
 
       if (_state.IsValidatable)
       {
@@ -163,6 +138,38 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateGetLookup();
    }
 
+   private void GenerateModuleInitializer(IMemberState keyMember)
+   {
+      var enumType = _state.EnumTypeFullyQualified;
+      var enumTypeNullAnnotated = _state.EnumTypeFullyQualifiedNullAnnotated;
+
+      _sb.Append($@"
+      [global::System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {{
+         var convertFromKey = new global::System.Func<{keyMember.TypeFullyQualifiedNullAnnotated}, {enumTypeNullAnnotated}>({enumType}.Get);
+         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedNullAnnotated}, {enumTypeNullAnnotated}>> convertFromKeyExpression = static {keyMember.ArgumentName} => {enumType}.Get({keyMember.ArgumentName});
+
+         var convertToKey = new global::System.Func<{enumType}, {keyMember.TypeFullyQualified}>(static item => item.{keyMember.Name});
+         global::System.Linq.Expressions.Expression<global::System.Func<{enumType}, {keyMember.TypeFullyQualified}>> convertToKeyExpression = static item => item.{keyMember.Name};
+
+         var validate = new global::Thinktecture.Internal.Validate<{enumType}, {keyMember.TypeFullyQualified}>({enumType}.Validate);
+
+         var enumType = typeof({enumType});
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({keyMember.TypeFullyQualified}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+
+         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
+
+      foreach (var derivedType in _state.FullyQualifiedDerivedTypes)
+      {
+         _sb.Append($@"
+         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof({derivedType}), metadata);");
+      }
+
+      _sb.Append(@"
+      }");
+   }
+
    private void GenerateTryGet()
    {
       _sb.Append($@"
@@ -173,7 +180,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""{_state.KeyProperty.ArgumentName}"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""{_state.EnumTypeMinimallyQualified}""/>; otherwise <c>null</c>.</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""{_state.KeyProperty.ArgumentName}""/> exists; <c>false</c> otherwise.</returns>
-      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out {_state.EnumTypeFullyQualified} item)
+      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out {_state.EnumTypeFullyQualified} item)
       {{");
 
       if (_state.KeyProperty.IsReferenceType)
@@ -202,7 +209,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""{_state.KeyProperty.ArgumentName}"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""{_state.EnumTypeMinimallyQualified}""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""{_state.KeyProperty.ArgumentName}""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.EnumTypeFullyQualified} item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.EnumTypeFullyQualified} item)
       {{
          return {_state.EnumTypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
@@ -220,7 +227,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""item1"">Instance to compare.</param>
       /// <param name=""item2"">Another instance to compare.</param>
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==({_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} item1, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} item2)
+      public static bool operator ==({_state.EnumTypeFullyQualifiedNullAnnotated} item1, {_state.EnumTypeFullyQualifiedNullAnnotated} item2)
       {{");
 
       if (_state.IsReferenceType)
@@ -241,7 +248,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""item1"">Instance to compare.</param>
       /// <param name=""item2"">Another instance to compare.</param>
       /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=({_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} item1, {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} item2)
+      public static bool operator !=({_state.EnumTypeFullyQualifiedNullAnnotated} item1, {_state.EnumTypeFullyQualifiedNullAnnotated} item2)
       {{
          return !(item1 == item2);
       }}");
@@ -257,7 +264,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The <see cref=""{_state.EnumTypeMinimallyQualified}.{_state.KeyProperty.Name}""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
-      public static implicit operator {_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey}({_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} item)
+      public static implicit operator {_state.KeyProperty.TypeFullyQualifiedNullAnnotated}({_state.EnumTypeFullyQualifiedNullAnnotated} item)
       {{");
 
       if (_state.IsReferenceType)
@@ -285,7 +292,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""{_state.KeyProperty.ArgumentName}"">Value to covert.</param>
       /// <returns>An instance of <see cref=""{_state.EnumTypeMinimallyQualified}""/> if the <paramref name=""{_state.KeyProperty.ArgumentName}""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum{{TKey}}""/>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      public static explicit operator {_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum}({_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey} {_state.KeyProperty.ArgumentName})
+      public static explicit operator {_state.EnumTypeFullyQualifiedNullAnnotated}({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
       {{
          return {_state.EnumTypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});
       }}");
@@ -296,7 +303,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <inheritdoc />
-      public bool Equals({_state.EnumTypeFullyQualified}{NullableQuestionMarkEnum} other)
+      public bool Equals({_state.EnumTypeFullyQualifiedNullAnnotated} other)
       {{");
 
       if (_state.IsReferenceType)
@@ -332,9 +339,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualifiedWithNullability}, {_state.EnumTypeFullyQualified}> GetLookup()
+      private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}> GetLookup()
       {{
-         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualifiedWithNullability}, {_state.EnumTypeFullyQualified}>({totalNumberOfItems}, {KeyComparerMember});");
+         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.EnumTypeFullyQualified}>({totalNumberOfItems}, {KeyComparerMember});");
 
       if (_state.ItemNames.Count > 0)
       {
@@ -411,7 +418,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
-      {_state.KeyProperty.TypeFullyQualifiedWithNullability} global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualifiedWithNullability}>.GetKey()
+      {_state.KeyProperty.TypeFullyQualified} global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}>.GetKey()
       {{
          return this.{_state.KeyProperty.Name};
       }}");
@@ -435,7 +442,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      public static {_state.EnumTypeFullyQualified}{(_state.KeyProperty.IsReferenceType ? NullableQuestionMarkEnum : null)} Get({_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey} {_state.KeyProperty.ArgumentName})
+      public static {(_state.KeyProperty.IsReferenceType ? _state.EnumTypeFullyQualifiedNullAnnotated : _state.EnumTypeFullyQualified)} Get({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
       {{");
 
       if (_state.KeyProperty.IsReferenceType)
@@ -493,7 +500,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append($@"
 
-      private static {_state.EnumTypeFullyQualified} CreateInvalidItem({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName})
+      private static {_state.EnumTypeFullyQualified} CreateInvalidItem({_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName})
       {{
          return new {_state.EnumTypeFullyQualified}({_state.KeyProperty.ArgumentName}, false");
 
@@ -556,7 +563,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append($@"
 
-      private {_state.Name}({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
+      private {_state.Name}({_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}");
 
          foreach (var member in ctorArgs)
          {
@@ -578,7 +585,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
 
-      private {_state.Name}({_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
+      private {_state.Name}({_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}");
 
       if (_state.IsValidatable)
          _sb.Append(", bool isValid");
@@ -592,7 +599,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (baseCtorArgs.Count > 0)
       {
-         _sb.Append($@"
+         _sb.Append(@"
          : base(");
 
          for (var i = 0; i < baseCtorArgs.Count; i++)
@@ -650,7 +657,7 @@ namespace ").Append(_state.Namespace).Append(@"
          this._hashCode = new global::System.Lazy<int>(() => typeof({_state.EnumTypeFullyQualified}).GetHashCode() * 397 ^ {KeyComparerMember}.GetHashCode({_state.KeyProperty.ArgumentName}));
       }}
 
-      static partial void ValidateConstructorArguments(ref {_state.KeyProperty.TypeFullyQualifiedWithNullability} {_state.KeyProperty.ArgumentName}");
+      static partial void ValidateConstructorArguments(ref {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}");
 
       if (_state.IsValidatable)
          _sb.Append(", bool isValid");
@@ -666,11 +673,11 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateTypeConverter()
    {
       _sb.Append($@"
-   public class {_state.Name}_EnumTypeConverter : global::Thinktecture.ValueObjectTypeConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualifiedWithNullability}>
+   public class {_state.Name}_EnumTypeConverter : global::Thinktecture.ValueObjectTypeConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
    {{
       /// <inheritdoc />
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      protected override {_state.EnumTypeFullyQualified}{(_state.KeyProperty.IsReferenceType ? NullableQuestionMarkEnum : null)} ConvertFrom({_state.KeyProperty.TypeFullyQualified}{NullableQuestionMarkKey} {_state.KeyProperty.ArgumentName})
+      protected override {(_state.KeyProperty.IsReferenceType ? _state.EnumTypeFullyQualifiedNullAnnotated : _state.EnumTypeFullyQualified)} ConvertFrom({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
       {{");
 
       if (_state.IsValidatable)
@@ -699,7 +706,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }}
 
       /// <inheritdoc />
-      protected override {_state.KeyProperty.TypeFullyQualifiedWithNullability} GetKeyValue({_state.EnumTypeFullyQualified} item)
+      protected override {_state.KeyProperty.TypeFullyQualified} GetKeyValue({_state.EnumTypeFullyQualified} item)
       {{
          return item.{_state.KeyProperty.Name};
       }}

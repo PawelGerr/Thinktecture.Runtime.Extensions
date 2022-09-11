@@ -41,7 +41,7 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualifiedWithNullability}>({_state.EnumTypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name}, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{_state.EnumTypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>({_state.EnumTypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name}, options);
          }}
       }}
    }}

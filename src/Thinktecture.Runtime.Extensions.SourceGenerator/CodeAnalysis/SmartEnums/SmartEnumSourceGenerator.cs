@@ -27,7 +27,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
 
       var enumTypes = candidates.Combine(genericTypes)
                                 .Select(GetEnumStateOrNull)
-                                .Where(static state => state.HasValue)
+                                .Where(static state => state.HasValue && IsKeyNotNotNullable(state.Value))
                                 .Select(static (state, _) => state!.Value)
                                 .Collect()
                                 .SelectMany(static (states, _) => states.Distinct());
@@ -38,6 +38,15 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
       context.RegisterSourceOutput(enumTypes.Combine(generators), GenerateCode);
+   }
+
+   private static bool IsKeyNotNotNullable(SourceGenState<EnumSourceGeneratorState> state)
+   {
+      if (state.State is null)
+         return true;
+
+      return !state.State.KeyProperty.IsNullableStruct
+             && state.State.KeyProperty.NullableAnnotation != NullableAnnotation.Annotated;
    }
 
    private static bool IsInstanceCreation(SyntaxNode node, CancellationToken _)

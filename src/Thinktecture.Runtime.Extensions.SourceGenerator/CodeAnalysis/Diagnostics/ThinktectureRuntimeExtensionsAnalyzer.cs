@@ -32,7 +32,8 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
                                                                                                               DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
-                                                                                                              DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly);
+                                                                                                              DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
+                                                                                                              DiagnosticsDescriptors.EnumKeyShouldNotBeNullable);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -168,6 +169,11 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (validEnumInterface is null)
          return;
 
+      var keyType = validEnumInterface.TypeArguments[0];
+
+      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
+
       var isValidatable = validEnumInterface.IsValidatableEnumInterface();
 
       StructMustBeReadOnly(context, enumType, locationOfFirstDeclaration);
@@ -184,7 +190,7 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       EnumItemsMustBePublic(context, enumType, items);
 
       if (isValidatable)
-         ValidateCreateInvalidItem(context, enumType, validEnumInterface, locationOfFirstDeclaration);
+         ValidateCreateInvalidItem(context, enumType, keyType, locationOfFirstDeclaration);
 
       enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, context.ReportDiagnostic).Enumerate();
       var baseClass = enumType.BaseType;
@@ -284,9 +290,8 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, INamedTypeSymbol validEnumInterface, Location location)
+   private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, ITypeSymbol keyType, Location location)
    {
-      var keyType = validEnumInterface.TypeArguments[0];
       var hasCreateInvalidImplementation = enumType.HasCreateInvalidImplementation(keyType, context.CancellationToken, context.ReportDiagnostic);
 
       if (!hasCreateInvalidImplementation && enumType.IsAbstract)
@@ -359,6 +364,11 @@ public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, ITypeSymbol arg1)
    {
       ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0), BuildTypeName(arg1));
+   }
+
+   private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location));
    }
 
    private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0)

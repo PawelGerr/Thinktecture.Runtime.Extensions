@@ -8,8 +8,10 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
    private readonly ITypeSymbol _type;
    private readonly SyntaxToken _identifier;
 
-   public string TypeFullyQualifiedWithNullability { get; }
    public string TypeFullyQualified { get; }
+   public string TypeFullyQualifiedNullable { get; }
+   public string TypeFullyQualifiedNullAnnotated => _type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
+   public string TypeFullyQualifiedWithNullability => _type.IsReferenceType && _type.NullableAnnotation == NullableAnnotation.Annotated ? TypeFullyQualifiedNullAnnotated : TypeFullyQualified;
    public string TypeMinimallyQualified { get; }
    public NullableAnnotation NullableAnnotation => _type.NullableAnnotation;
 
@@ -20,7 +22,6 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
    public bool IsReferenceType => _type.IsReferenceType;
    public bool IsReferenceTypeOrNullableStruct => _type.IsReferenceType || _type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
    public bool IsNullableStruct => _type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
-   public string? NullableQuestionMark => IsReferenceType ? "?" : null;
    public SpecialType SpecialType => _type.SpecialType;
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
@@ -35,11 +36,12 @@ public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
       bool isStatic)
    {
       _type = type;
+      _identifier = identifier;
+
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeFullyQualifiedWithNullability = type.IsReferenceType && type.NullableAnnotation == NullableAnnotation.Annotated ? $"{TypeFullyQualified}?" : TypeFullyQualified;
+      TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-      _identifier = identifier;
       ArgumentName = identifier.Text.MakeArgumentName();
 
       ReadAccessibility = readAccessibility;

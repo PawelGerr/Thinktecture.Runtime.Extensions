@@ -49,8 +49,8 @@ namespace Thinktecture.Tests
          var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string?>(static item => item.Key);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string?>> convertToKeyExpression = static item => item.Key;
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
 
@@ -76,7 +76,6 @@ namespace Thinktecture.Tests
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
 
       private readonly global::System.Lazy<int> _hashCode;
@@ -145,7 +144,7 @@ namespace Thinktecture.Tests
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
       {
          return global::Thinktecture.Tests.TestEnum.TryGet(key, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
@@ -378,8 +377,8 @@ namespace Thinktecture.Tests
          var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string?>(static item => item.Key);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string?>> convertToKeyExpression = static item => item.Key;
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
 
@@ -405,7 +404,6 @@ namespace Thinktecture.Tests
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
 
       private readonly global::System.Lazy<int> _hashCode;
@@ -489,7 +487,7 @@ namespace Thinktecture.Tests
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
       {
          return global::Thinktecture.Tests.TestEnum.TryGet(key, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
@@ -670,8 +668,8 @@ public partial class TestEnum : IEnum<string>
          var convertFromKey = new global::System.Func<string?, global::TestEnum?>(global::TestEnum.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<string?, global::TestEnum?>> convertFromKeyExpression = static key => global::TestEnum.Get(key);
 
-         var convertToKey = new global::System.Func<global::TestEnum, string?>(static item => item.Key);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::TestEnum, string?>> convertToKeyExpression = static item => item.Key;
+         var convertToKey = new global::System.Func<global::TestEnum, string>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var validate = new global::Thinktecture.Internal.Validate<global::TestEnum, string>(global::TestEnum.Validate);
 
@@ -697,7 +695,6 @@ public partial class TestEnum : IEnum<string>
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
 
       private readonly global::System.Lazy<int> _hashCode;
@@ -766,7 +763,7 @@ public partial class TestEnum : IEnum<string>
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
       {
          return global::TestEnum.TryGet(key, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
@@ -941,8 +938,8 @@ namespace Thinktecture.Tests
          var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string?>(static item => item.Key);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string?>> convertToKeyExpression = static item => item.Key;
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
 
@@ -970,7 +967,6 @@ namespace Thinktecture.Tests
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
 
       private readonly global::System.Lazy<int> _hashCode;
@@ -1039,7 +1035,7 @@ namespace Thinktecture.Tests
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
       {
          return global::Thinktecture.Tests.TestEnum.TryGet(key, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
@@ -1202,8 +1198,8 @@ namespace Thinktecture.Tests
          var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string?>(static item => item.Key);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string?>> convertToKeyExpression = static item => item.Key;
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
 
@@ -1229,7 +1225,6 @@ namespace Thinktecture.Tests
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
 
       /// <inheritdoc />
@@ -1327,7 +1322,7 @@ namespace Thinktecture.Tests
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
       {
          return global::Thinktecture.Tests.TestEnum.TryGet(key, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
@@ -1495,8 +1490,8 @@ namespace Thinktecture.Tests
          var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum>(global::Thinktecture.Tests.TestEnum.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string?>(static item => item.Key);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string?>> convertToKeyExpression = static item => item.Key;
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
 
@@ -1522,7 +1517,6 @@ namespace Thinktecture.Tests
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Key { get; }
 
       /// <inheritdoc />
@@ -1617,7 +1611,7 @@ namespace Thinktecture.Tests
       /// <param name=""key"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""key""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
       {
          return global::Thinktecture.Tests.TestEnum.TryGet(key, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
@@ -1804,8 +1798,8 @@ namespace Thinktecture.Tests
          var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
          global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static name => global::Thinktecture.Tests.TestEnum.Get(name);
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string?>(static item => item.Name);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string?>> convertToKeyExpression = static item => item.Name;
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Name);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Name;
 
          var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
 
@@ -1829,7 +1823,6 @@ namespace Thinktecture.Tests
       /// <summary>
       /// The identifier of the item.
       /// </summary>
-      [global::System.Diagnostics.CodeAnalysis.NotNull]
       public string Name { get; }
 
       /// <inheritdoc />
@@ -1931,7 +1924,7 @@ namespace Thinktecture.Tests
       /// <param name=""name"">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">A valid instance of <see cref=""TestEnum""/>; otherwise <c>null</c>.</param>
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""name""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(string name, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
       {
          return global::Thinktecture.Tests.TestEnum.TryGet(name, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
