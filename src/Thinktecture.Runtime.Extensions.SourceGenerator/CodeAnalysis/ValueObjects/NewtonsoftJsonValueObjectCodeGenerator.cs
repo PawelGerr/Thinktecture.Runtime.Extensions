@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
+public sealed class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
 {
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _stringBuilder;
@@ -41,7 +41,7 @@ namespace {ns}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
          public ValueObjectNewtonsoftJsonConverter()
             : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
@@ -62,7 +62,7 @@ namespace {state.Namespace}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
       {{
          private static readonly global::System.Type _type = typeof({state.TypeFullyQualified});
 

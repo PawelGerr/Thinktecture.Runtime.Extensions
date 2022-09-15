@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class ValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<ValueObjectSourceGeneratorState>
+public sealed class ValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<ValueObjectSourceGeneratorState>
 {
    public CodeGeneratorBase Create(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {

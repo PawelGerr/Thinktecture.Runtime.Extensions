@@ -3,7 +3,7 @@ using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
+public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
 {
    private readonly ITypeSymbol _type;
    private readonly SyntaxToken _identifier;

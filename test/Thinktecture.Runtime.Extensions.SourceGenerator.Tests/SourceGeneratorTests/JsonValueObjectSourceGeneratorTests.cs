@@ -38,7 +38,7 @@ namespace Thinktecture.Tests
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial class TestValueObject
    {
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)
@@ -85,7 +85,7 @@ public partial class TestValueObject
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial class TestValueObject
    {
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)
@@ -136,7 +136,7 @@ namespace Thinktecture.Tests
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial struct TestValueObject
    {
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)
@@ -190,7 +190,7 @@ namespace Thinktecture.Tests
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial class TestValueObject
    {
-      public class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
+      public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
       {
          private readonly string _referenceFieldPropertyName;
          private readonly string _structPropertyPropertyName;
@@ -355,7 +355,7 @@ namespace Thinktecture.Tests
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial struct TestValueObject
    {
-      public class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
+      public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
       {
          private readonly string _referenceFieldPropertyName;
          private readonly string _structPropertyPropertyName;
@@ -520,7 +520,7 @@ namespace Thinktecture.Tests
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial struct TestValueObject
    {
-      public class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
+      public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
       {
          private readonly string _referenceFieldPropertyName;
          private readonly string _structPropertyPropertyName;
@@ -680,7 +680,7 @@ public readonly partial struct TestValueObject
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial struct TestValueObject
    {
-      public class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::TestValueObject>
+      public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::TestValueObject>
       {
          private readonly string _referenceFieldPropertyName;
          private readonly string _structPropertyPropertyName;

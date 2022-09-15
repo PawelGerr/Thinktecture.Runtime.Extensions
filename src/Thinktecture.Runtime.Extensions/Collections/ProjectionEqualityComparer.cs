@@ -5,7 +5,7 @@ namespace Thinktecture.Collections;
 /// </summary>
 /// <typeparam name="T">Type of the items to compare.</typeparam>
 /// <typeparam name="TItem">Type being compared.</typeparam>
-public class ProjectionEqualityComparer<T, TItem> : IEqualityComparer<T>
+public sealed class ProjectionEqualityComparer<T, TItem> : IEqualityComparer<T>
 {
    private readonly IEqualityComparer<TItem> _comparer;
    private readonly Func<T, TItem> _selector;

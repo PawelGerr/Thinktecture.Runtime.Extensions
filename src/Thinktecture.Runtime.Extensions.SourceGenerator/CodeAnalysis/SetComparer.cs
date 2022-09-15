@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
+public sealed class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
    where T : IEquatable<T>
 {
    public bool Equals(ImmutableArray<T> x, ImmutableArray<T> y)

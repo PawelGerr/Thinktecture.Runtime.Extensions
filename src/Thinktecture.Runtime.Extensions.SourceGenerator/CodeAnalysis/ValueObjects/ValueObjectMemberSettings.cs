@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
+public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
 {
    public static readonly ValueObjectMemberSettings None = new();
 

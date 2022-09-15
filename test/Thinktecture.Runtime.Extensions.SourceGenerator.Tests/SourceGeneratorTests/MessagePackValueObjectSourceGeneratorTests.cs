@@ -40,7 +40,7 @@ namespace Thinktecture.Tests
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial class TestValueObject
    {
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<global::Thinktecture.Tests.TestValueObject, string>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<global::Thinktecture.Tests.TestValueObject, string>
       {
          public ValueObjectMessagePackFormatter()
             : base(global::Thinktecture.Tests.TestValueObject.Create, static obj => obj.ReferenceField)
@@ -75,7 +75,7 @@ public partial class TestValueObject
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial class TestValueObject
    {
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<global::TestValueObject, string>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<global::TestValueObject, string>
       {
          public ValueObjectMessagePackFormatter()
             : base(global::TestValueObject.Create, static obj => obj.ReferenceField)
@@ -114,7 +114,7 @@ namespace Thinktecture.Tests
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial struct TestValueObject
    {
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<global::Thinktecture.Tests.TestValueObject, string>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<global::Thinktecture.Tests.TestValueObject, string>
       {
          public ValueObjectMessagePackFormatter()
             : base(global::Thinktecture.Tests.TestValueObject.Create, static obj => obj.ReferenceField)
@@ -156,7 +156,7 @@ namespace Thinktecture.Tests
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial class TestValueObject
    {
-      public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.TestValueObject?>
+      public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.TestValueObject?>
       {
          /// <inheritdoc />
          public global::Thinktecture.Tests.TestValueObject? Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -243,7 +243,7 @@ public partial class TestValueObject
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial class TestValueObject
    {
-      public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TestValueObject?>
+      public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::TestValueObject?>
       {
          /// <inheritdoc />
          public global::TestValueObject? Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -334,7 +334,7 @@ namespace Thinktecture.Tests
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial struct TestValueObject
    {
-      public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.TestValueObject>
+      public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.TestValueObject>
       {
          /// <inheritdoc />
          public global::Thinktecture.Tests.TestValueObject Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)

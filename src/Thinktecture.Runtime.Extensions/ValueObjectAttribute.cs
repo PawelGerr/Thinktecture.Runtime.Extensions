@@ -4,7 +4,7 @@ namespace Thinktecture;
 /// Marks the type as a Value Object.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public class ValueObjectAttribute : Attribute
+public sealed class ValueObjectAttribute : Attribute
 {
    /// <summary>
    /// Indication whether the methods "Create" and "TryCreate" should be generated or not.

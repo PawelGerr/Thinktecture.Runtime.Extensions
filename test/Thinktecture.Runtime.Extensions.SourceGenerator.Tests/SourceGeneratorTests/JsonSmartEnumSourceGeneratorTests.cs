@@ -37,7 +37,7 @@ namespace Thinktecture.Tests
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial class TestEnum
    {
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)
@@ -84,7 +84,7 @@ public partial class TestEnum : IEnum<string>
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial class TestEnum
    {
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)
@@ -134,7 +134,7 @@ namespace Thinktecture.Tests
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial struct TestEnum
    {
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)

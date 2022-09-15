@@ -9,7 +9,7 @@ namespace Thinktecture.Text.Json.Serialization;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
+public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
    where TKey : notnull
 {
    private readonly Func<TKey, T> _convertFromKey;

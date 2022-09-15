@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Thinktecture.EntityFrameworkCore.Conventions;
 
-internal class ValueObjectConventionPlugin : INavigationAddedConvention, IPropertyAddedConvention, IEntityTypeAddedConvention
+internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, IPropertyAddedConvention, IEntityTypeAddedConvention
 {
    private readonly bool _validateOnWrite;
    private readonly bool _useConstructorForRead;

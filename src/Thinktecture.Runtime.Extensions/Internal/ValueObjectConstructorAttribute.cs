@@ -4,7 +4,7 @@ namespace Thinktecture.Internal;
 /// For internal use only.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public class ValueObjectConstructorAttribute : Attribute
+public sealed class ValueObjectConstructorAttribute : Attribute
 {
    /// <summary>
    /// The names of the members of the constructor.

@@ -3,9 +3,8 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class EnumSourceGeneratorState :
+public sealed class EnumSourceGeneratorState :
    ISourceGeneratorState,
-   ITypeInformation,
    IEquatable<EnumSourceGeneratorState>
 {
    private readonly INamedTypeSymbol _enumType;

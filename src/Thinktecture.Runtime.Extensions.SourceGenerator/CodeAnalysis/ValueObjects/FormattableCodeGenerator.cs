@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class FormattableCodeGenerator : IInterfaceCodeGenerator
+public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
 {
    public static readonly IInterfaceCodeGenerator Instance = new FormattableCodeGenerator();
 

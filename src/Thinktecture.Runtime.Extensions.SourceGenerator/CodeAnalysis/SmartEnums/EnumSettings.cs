@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class EnumSettings : IEquatable<EnumSettings>
+public sealed class EnumSettings : IEquatable<EnumSettings>
 {
    public string? KeyComparer { get; }
    public string? KeyPropertyName { get; }

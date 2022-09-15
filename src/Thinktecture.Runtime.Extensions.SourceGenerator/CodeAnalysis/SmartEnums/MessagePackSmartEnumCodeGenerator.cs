@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class MessagePackSmartEnumCodeGenerator : CodeGeneratorBase
+public sealed class MessagePackSmartEnumCodeGenerator : CodeGeneratorBase
 {
    private readonly EnumSourceGeneratorState _state;
 
@@ -25,7 +25,7 @@ namespace {ns}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
       {{
          public ValueObjectMessagePackFormatter()
             : base({_state.TypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})

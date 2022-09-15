@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class DefaultMemberState : IMemberState, IEquatable<DefaultMemberState>
+public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberState>
 {
    private readonly ITypeSymbol _type;
 

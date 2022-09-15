@@ -8,7 +8,7 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// <summary>
 /// Provider for creation of model binders implementing <see cref="IEnum{TKey}"/> or for Value Objects with a key member.
 /// </summary>
-public class ValueObjectModelBinderProvider : IModelBinderProvider
+public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
 {
    private readonly bool _trimStringBasedEnums;
 

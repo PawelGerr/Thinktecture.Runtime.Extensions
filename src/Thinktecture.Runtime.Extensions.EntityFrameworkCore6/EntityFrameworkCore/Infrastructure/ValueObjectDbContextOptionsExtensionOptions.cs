@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Thinktecture.EntityFrameworkCore.Infrastructure;
 
-internal class ValueObjectDbContextOptionsExtensionOptions : ISingletonOptions
+internal sealed class ValueObjectDbContextOptionsExtensionOptions : ISingletonOptions
 {
    public ValueObjectValueConverterSettings? ValueObjectValueConverterSettings { get; private set; }
 

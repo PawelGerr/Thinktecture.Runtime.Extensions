@@ -4,7 +4,7 @@ namespace Thinktecture;
 /// Marks the member for equality comparison.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public class ValueObjectEqualityMemberAttribute : Attribute
+public sealed class ValueObjectEqualityMemberAttribute : Attribute
 {
    /// <summary>
    /// A field or property defining the <see cref="IEqualityComparer{T}"/> to use.

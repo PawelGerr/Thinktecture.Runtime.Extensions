@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture.Collections;
 
-internal class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+internal sealed class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
 {
    private readonly TKey _key;
    private readonly TValue _value;

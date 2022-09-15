@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
+public sealed class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
 {
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _stringBuilder;
@@ -41,7 +41,7 @@ namespace {ns}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
          public ValueObjectMessagePackFormatter()
             : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
@@ -62,7 +62,7 @@ namespace {state.Namespace}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualifiedNullAnnotated}>
+      public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualifiedNullAnnotated}>
       {{
          /// <inheritdoc />
          public {state.TypeFullyQualifiedNullAnnotated} Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)

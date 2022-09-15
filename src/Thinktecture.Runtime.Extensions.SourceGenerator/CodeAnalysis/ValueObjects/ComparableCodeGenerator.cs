@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class ComparableCodeGenerator : IInterfaceCodeGenerator
+public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 {
    private readonly string? _comparer;
 

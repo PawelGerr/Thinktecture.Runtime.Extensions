@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class ValueObjectSettings : IEquatable<ValueObjectSettings>
+public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
 {
    public bool SkipFactoryMethods { get; }
    public bool NullInFactoryMethodsYieldsNull { get; }

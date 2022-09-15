@@ -39,7 +39,7 @@ namespace Thinktecture.Tests
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial class TestEnum
    {
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<global::Thinktecture.Tests.TestEnum, string>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<global::Thinktecture.Tests.TestEnum, string>
       {
          public ValueObjectMessagePackFormatter()
             : base(global::Thinktecture.Tests.TestEnum.Get, static obj => obj.Key)
@@ -74,7 +74,7 @@ public partial class TestEnum : IEnum<string>
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial class TestEnum
    {
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<global::TestEnum, string>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<global::TestEnum, string>
       {
          public ValueObjectMessagePackFormatter()
             : base(global::TestEnum.Get, static obj => obj.Key)
@@ -112,7 +112,7 @@ namespace Thinktecture.Tests
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial struct TestEnum
    {
-      public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatter<global::Thinktecture.Tests.TestEnum, string>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<global::Thinktecture.Tests.TestEnum, string>
       {
          public ValueObjectMessagePackFormatter()
             : base(global::Thinktecture.Tests.TestEnum.Get, static obj => obj.Key)

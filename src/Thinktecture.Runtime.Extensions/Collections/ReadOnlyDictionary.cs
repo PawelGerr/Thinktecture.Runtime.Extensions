@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture.Collections;
 
-internal class ReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+internal sealed class ReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
    where TKey : notnull
 {
    public static readonly IReadOnlyDictionary<TKey, TValue> Instance = new ReadOnlyDictionary<TKey, TValue>();

@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class ConstructorState : IEquatable<ConstructorState>
+public sealed class ConstructorState : IEquatable<ConstructorState>
 {
    public IReadOnlyList<IMemberState> Arguments { get; }
 

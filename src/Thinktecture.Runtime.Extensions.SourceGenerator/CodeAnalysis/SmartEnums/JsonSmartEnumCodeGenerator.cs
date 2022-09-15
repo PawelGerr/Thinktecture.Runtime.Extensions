@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class JsonSmartEnumCodeGenerator : CodeGeneratorBase
+public sealed class JsonSmartEnumCodeGenerator : CodeGeneratorBase
 {
    private readonly EnumSourceGeneratorState _state;
 
@@ -25,7 +25,7 @@ namespace {ns}
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)

@@ -6,6 +6,6 @@ namespace Thinktecture;
 /// Please make sure that the corresponding member is immutable.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-public class ValueObjectIgnoreAttribute : Attribute
+public sealed class ValueObjectIgnoreAttribute : Attribute
 {
 }

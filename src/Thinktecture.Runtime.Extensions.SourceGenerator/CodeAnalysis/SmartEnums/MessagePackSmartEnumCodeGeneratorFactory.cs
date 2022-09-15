@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class MessagePackSmartEnumCodeGeneratorFactory : ICodeGeneratorFactory<EnumSourceGeneratorState>
+public sealed class MessagePackSmartEnumCodeGeneratorFactory : ICodeGeneratorFactory<EnumSourceGeneratorState>
 {
    public CodeGeneratorBase Create(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {

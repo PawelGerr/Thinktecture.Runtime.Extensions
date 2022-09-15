@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class ValueObjectCodeGenerator : CodeGeneratorBase
+public sealed class ValueObjectCodeGenerator : CodeGeneratorBase
 {
    private const string _FACTORY_ARGUMENTS_VALIDATION_RESULT = "factoryArgumentsValidationResult";
    private const string _FACTORY_POST_INIT = "FactoryPostInit";

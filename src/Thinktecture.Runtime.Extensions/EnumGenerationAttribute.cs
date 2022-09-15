@@ -4,7 +4,7 @@ namespace Thinktecture;
 /// Settings to be used by enum source generator.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public class EnumGenerationAttribute : Attribute
+public sealed class EnumGenerationAttribute : Attribute
 {
    /// <summary>
    /// The static member name containing the key equality comparer.

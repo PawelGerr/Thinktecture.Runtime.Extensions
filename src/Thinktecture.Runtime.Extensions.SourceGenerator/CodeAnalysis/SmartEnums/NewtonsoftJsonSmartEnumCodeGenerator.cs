@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class NewtonsoftJsonSmartEnumCodeGenerator : CodeGeneratorBase
+public sealed class NewtonsoftJsonSmartEnumCodeGenerator : CodeGeneratorBase
 {
    private readonly EnumSourceGeneratorState _state;
 
@@ -25,7 +25,7 @@ namespace {ns}
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
       {{
          public ValueObjectNewtonsoftJsonConverter()
             : base({_state.TypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})

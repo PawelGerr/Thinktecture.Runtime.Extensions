@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Thinktecture.Collections;
 
-internal class GroupingEnumerator<TKey, TElement> : IEnumerator<IGrouping<TKey, TElement>>, IGrouping<TKey, TElement>
+internal sealed class GroupingEnumerator<TKey, TElement> : IEnumerator<IGrouping<TKey, TElement>>, IGrouping<TKey, TElement>
 {
    private readonly IEnumerable<TElement> _elements;
 

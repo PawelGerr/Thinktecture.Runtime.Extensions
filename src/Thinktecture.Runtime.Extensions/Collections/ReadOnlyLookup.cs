@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Thinktecture.Collections;
 
-internal class ReadOnlyLookup<TKey, TValue> : ILookup<TKey, TValue>
+internal sealed class ReadOnlyLookup<TKey, TValue> : ILookup<TKey, TValue>
 {
    public static readonly ILookup<TKey, TValue> Instance = new ReadOnlyLookup<TKey, TValue>();
 

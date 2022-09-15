@@ -7,7 +7,7 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 /// <summary>
 /// Value converter for Value Objects and <see cref="IEnum{TKey}"/>.
 /// </summary>
-public class ValueObjectValueConverterFactory
+public sealed class ValueObjectValueConverterFactory
 {
    /// <summary>
    /// Creates a value converter for value objects with a key property and <see cref="IEnum{TKey}"/>.

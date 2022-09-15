@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Thinktecture.CodeAnalysis.CodeFixes;
 
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ThinktectureRuntimeExtensionsCodeFixProvider))]
-public class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
+public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
 {
    private const string _MAKE_PARTIAL = "Make the type partial";
    private const string _MAKE_STRUCT_READONLY = "Make the type read-only";

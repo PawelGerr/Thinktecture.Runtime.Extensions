@@ -3,7 +3,7 @@ namespace Thinktecture;
 /// <summary>
 /// The provided value doesn't match any enumeration item.
 /// </summary>
-public class UnknownEnumIdentifierException : KeyNotFoundException
+public sealed class UnknownEnumIdentifierException : KeyNotFoundException
 {
    /// <summary>
    /// Type of the enumeration.

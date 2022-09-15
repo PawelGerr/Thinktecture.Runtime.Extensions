@@ -37,7 +37,7 @@ namespace Thinktecture.Tests
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial class TestEnum
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<global::Thinktecture.Tests.TestEnum, string>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<global::Thinktecture.Tests.TestEnum, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
             : base(global::Thinktecture.Tests.TestEnum.Get, static obj => obj.Key)
@@ -72,7 +72,7 @@ public partial class TestEnum : IEnum<string>
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial class TestEnum
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<global::TestEnum, string>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<global::TestEnum, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
             : base(global::TestEnum.Get, static obj => obj.Key)
@@ -110,7 +110,7 @@ namespace Thinktecture.Tests
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial struct TestEnum
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<global::Thinktecture.Tests.TestEnum, string>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<global::Thinktecture.Tests.TestEnum, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
             : base(global::Thinktecture.Tests.TestEnum.Get, static obj => obj.Key)

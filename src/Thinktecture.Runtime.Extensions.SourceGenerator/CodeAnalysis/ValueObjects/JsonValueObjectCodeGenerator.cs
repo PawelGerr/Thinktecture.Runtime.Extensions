@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class JsonValueObjectCodeGenerator : CodeGeneratorBase
+public sealed class JsonValueObjectCodeGenerator : CodeGeneratorBase
 {
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _stringBuilder;
@@ -43,7 +43,7 @@ namespace {ns}
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
       {{
          /// <inheritdoc />
          public override bool CanConvert(global::System.Type typeToConvert)
@@ -76,7 +76,7 @@ namespace {state.Namespace}
    [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<{state.TypeFullyQualified}>
+      public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<{state.TypeFullyQualified}>
       {{");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)

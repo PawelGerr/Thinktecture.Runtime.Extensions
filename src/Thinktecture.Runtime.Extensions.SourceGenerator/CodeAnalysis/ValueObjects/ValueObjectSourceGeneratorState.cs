@@ -4,9 +4,8 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class ValueObjectSourceGeneratorState :
+public sealed class ValueObjectSourceGeneratorState :
    ISourceGeneratorState,
-   ITypeInformation,
    IEquatable<ValueObjectSourceGeneratorState>
 {
    private readonly INamedTypeSymbol _type;

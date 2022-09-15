@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace Thinktecture.Collections;
 
-internal class ReadOnlySet<T> : IReadOnlySet<T>
+internal sealed class ReadOnlySet<T> : IReadOnlySet<T>
 {
    public static readonly IReadOnlySet<T> Instance = new ReadOnlySet<T>();
 

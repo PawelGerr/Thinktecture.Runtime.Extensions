@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Thinktecture.CodeAnalysis.Diagnostics;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
+public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 {
    /// <inheritdoc />
    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial,

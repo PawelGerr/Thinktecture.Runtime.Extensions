@@ -4,7 +4,7 @@ using Thinktecture.EntityFrameworkCore.Infrastructure;
 
 namespace Thinktecture.EntityFrameworkCore.Conventions;
 
-internal class ValueObjectConventionSetPlugin : IConventionSetPlugin
+internal sealed class ValueObjectConventionSetPlugin : IConventionSetPlugin
 {
    private readonly ValueObjectValueConverterSettings? _settings;
 

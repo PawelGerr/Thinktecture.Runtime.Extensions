@@ -38,7 +38,7 @@ namespace Thinktecture.Tests
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial class TestValueObject
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<global::Thinktecture.Tests.TestValueObject, string>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<global::Thinktecture.Tests.TestValueObject, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
             : base(global::Thinktecture.Tests.TestValueObject.Create, static obj => obj.ReferenceField)
@@ -73,7 +73,7 @@ public partial class TestValueObject
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial class TestValueObject
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<global::TestValueObject, string>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<global::TestValueObject, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
             : base(global::TestValueObject.Create, static obj => obj.ReferenceField)
@@ -112,7 +112,7 @@ namespace Thinktecture.Tests
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial struct TestValueObject
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<global::Thinktecture.Tests.TestValueObject, string>
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<global::Thinktecture.Tests.TestValueObject, string>
       {
          public ValueObjectNewtonsoftJsonConverter()
             : base(global::Thinktecture.Tests.TestValueObject.Create, static obj => obj.ReferenceField)
@@ -154,7 +154,7 @@ namespace Thinktecture.Tests
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial class TestValueObject
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
       {
          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
@@ -296,7 +296,7 @@ public partial class TestValueObject
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial class TestValueObject
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
       {
          private static readonly global::System.Type _type = typeof(global::TestValueObject);
 
@@ -442,7 +442,7 @@ namespace Thinktecture.Tests
    [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
    partial struct TestValueObject
    {
-      public class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
+      public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
       {
          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 

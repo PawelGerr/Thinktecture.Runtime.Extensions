@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Thinktecture.Collections;
 
-internal class SingleItemLookup<TKey, TElement> : ILookup<TKey, TElement>
+internal sealed class SingleItemLookup<TKey, TElement> : ILookup<TKey, TElement>
 {
    private readonly TKey _key;
    private readonly IEnumerable<TElement> _elements;

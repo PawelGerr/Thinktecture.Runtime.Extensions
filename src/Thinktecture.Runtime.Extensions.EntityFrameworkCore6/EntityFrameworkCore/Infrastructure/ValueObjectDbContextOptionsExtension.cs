@@ -8,7 +8,7 @@ using Thinktecture.EntityFrameworkCore.Conventions;
 
 namespace Thinktecture.EntityFrameworkCore.Infrastructure;
 
-internal class ValueObjectDbContextOptionsExtension : IDbContextOptionsExtension
+internal sealed class ValueObjectDbContextOptionsExtension : IDbContextOptionsExtension
 {
    private DbContextOptionsExtensionInfo? _info;
    public DbContextOptionsExtensionInfo Info => _info ??= new ValueObjectDbContextOptionsExtensionInfo(this);

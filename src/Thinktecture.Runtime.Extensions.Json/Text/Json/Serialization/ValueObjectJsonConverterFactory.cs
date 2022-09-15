@@ -7,7 +7,7 @@ namespace Thinktecture.Text.Json.Serialization;
 /// <summary>
 /// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey}"/>.
 /// </summary>
-public class ValueObjectJsonConverterFactory : JsonConverterFactory
+public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
 {
    /// <inheritdoc />
    public override bool CanConvert(Type typeToConvert)
