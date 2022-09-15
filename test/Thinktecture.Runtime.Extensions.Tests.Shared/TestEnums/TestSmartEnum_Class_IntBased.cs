@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public partial class TestSmartEnum_Class_IntBased : IEnum<int>
+public sealed partial class TestSmartEnum_Class_IntBased : IEnum<int>
 {
    public static readonly TestSmartEnum_Class_IntBased Value1 = new(1);
    public static readonly TestSmartEnum_Class_IntBased Value2 = new(2);

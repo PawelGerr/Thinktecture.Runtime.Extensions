@@ -19,7 +19,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -33,7 +33,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -54,7 +54,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -68,7 +68,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -89,7 +89,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -113,7 +113,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -137,7 +137,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -161,7 +161,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -190,7 +190,7 @@ namespace TestNamespace
       public static int Property { get; set; }
    }
 
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -217,7 +217,7 @@ namespace TestNamespace
       public static int Property { get; set; }
    }
 
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -239,7 +239,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -262,7 +262,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
 
@@ -289,7 +289,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public int {|#0:InstanceProperty|} { get; set; }
    }
@@ -302,7 +302,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public int InstanceProperty { get; }
    }
@@ -322,7 +322,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public static int {|#0:InstanceProperty|} { get; set; }
    }
@@ -335,7 +335,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public static int InstanceProperty { get; }
    }

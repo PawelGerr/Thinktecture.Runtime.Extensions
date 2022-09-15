@@ -12,7 +12,7 @@ public class StringBasedEnumWithFormatterMessagePackFormatter : ValueObjectMessa
 }
 
 [MessagePackFormatter(typeof(StringBasedEnumWithFormatterMessagePackFormatter))]
-public partial class StringBasedEnumWithFormatter : IValidatableEnum<string>
+public sealed partial class StringBasedEnumWithFormatter : IValidatableEnum<string>
 {
    public static readonly StringBasedEnumWithFormatter ValueA = new("A");
    public static readonly StringBasedEnumWithFormatter ValueB = new("B");

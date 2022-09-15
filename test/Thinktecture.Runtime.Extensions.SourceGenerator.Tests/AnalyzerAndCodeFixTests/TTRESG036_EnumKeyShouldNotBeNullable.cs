@@ -20,7 +20,7 @@ using Thinktecture;
 namespace TestNamespace
 {
 #pragma warning disable CS8632
-	public partial class {|#0:TestEnum|} : IValidatableEnum<string?>
+	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string?>
 #pragma warning restore CS8632
 	{
       public static readonly TestEnum Item1 = default;
@@ -41,7 +41,7 @@ using Thinktecture;
 namespace TestNamespace
 {
 #pragma warning disable CS8632
-	public partial class {|#0:TestEnum|} : IEnum<string?>
+	public sealed partial class {|#0:TestEnum|} : IEnum<string?>
 #pragma warning restore CS8632
 	{
       public static readonly TestEnum Item1 = default;
@@ -62,7 +62,7 @@ using Thinktecture;
 namespace TestNamespace
 {
 #pragma warning disable CS8632
-	public partial class {|#0:TestEnum|} : IValidatableEnum<int?>
+	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<int?>
 #pragma warning restore CS8632
 	{
       public static readonly TestEnum Item1 = default;
@@ -83,7 +83,7 @@ using Thinktecture;
 namespace TestNamespace
 {
 #pragma warning disable CS8632
-	public partial class {|#0:TestEnum|} : IEnum<int?>
+	public sealed partial class {|#0:TestEnum|} : IEnum<int?>
 #pragma warning restore CS8632
 	{
       public static readonly TestEnum Item1 = default;
@@ -103,7 +103,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IValidatableEnum<string>
+	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -121,7 +121,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IEnum<string>
+	public sealed partial class {|#0:TestEnum|} : IEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -139,7 +139,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IValidatableEnum<int?>
+	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<int?>
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -158,7 +158,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IEnum<int>
+	public sealed partial class {|#0:TestEnum|} : IEnum<int>
 	{
       public static readonly TestEnum Item1 = default;
    }

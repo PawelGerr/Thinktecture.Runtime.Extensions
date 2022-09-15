@@ -21,7 +21,7 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      public class {|#0:InnerTestEnum|} : TestEnum
+      public sealed class {|#0:InnerTestEnum|} : TestEnum
 	   {
       }
    }
@@ -37,7 +37,7 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private class {|#0:InnerTestEnum|} : TestEnum
+      private sealed class {|#0:InnerTestEnum|} : TestEnum
 	   {
       }
    }
@@ -60,7 +60,7 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private class {|#0:InnerTestEnum|} : TestEnum
+      private sealed class {|#0:InnerTestEnum|} : TestEnum
 	   {
       }
    }
@@ -82,9 +82,9 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private class InnerTestEnum : TestEnum
+      private sealed class InnerTestEnum : TestEnum
 	   {
-         public class {|#0:MostInnerTestEnum|} : TestEnum
+         public sealed class {|#0:MostInnerTestEnum|} : TestEnum
 	      {
          }
       }

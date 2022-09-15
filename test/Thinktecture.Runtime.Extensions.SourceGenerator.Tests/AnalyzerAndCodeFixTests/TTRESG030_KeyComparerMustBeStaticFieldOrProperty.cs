@@ -21,7 +21,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [EnumGeneration(KeyComparer = nameof(_equalityComparer))]
-	public partial class TestEnum : IEnum<string>
+	public sealed partial class TestEnum : IEnum<string>
 	{
       private readonly IEqualityComparer<string> {|#0:_equalityComparer|} = StringComparer.Ordinal;
 
@@ -44,7 +44,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [EnumGeneration(KeyComparer = nameof(_equalityComparer))]
-	public partial class TestEnum : IEnum<string>
+	public sealed partial class TestEnum : IEnum<string>
 	{
       private static readonly IEqualityComparer<string> {|#0:_equalityComparer|} = StringComparer.Ordinal;
 

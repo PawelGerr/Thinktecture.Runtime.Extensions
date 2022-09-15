@@ -28,6 +28,7 @@ internal static class DiagnosticsDescriptors
    public static readonly DiagnosticDescriptor BaseClassFieldMustBeReadOnly = new("TTRESG034", "Field of the base class must be read-only", "The field '{0}' of the base class '{1}' must be read-only", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
    public static readonly DiagnosticDescriptor BaseClassPropertyMustBeReadOnly = new("TTRESG035", "Property of the base class must be read-only", "The property '{0}' of the base class '{1}' must be read-only", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
    public static readonly DiagnosticDescriptor EnumKeyShouldNotBeNullable = new("TTRESG036", "The key should not be nullable", "The generic type T of IEnum<T> and IValidatableEnum<T> should not be nullable", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
+   public static readonly DiagnosticDescriptor EnumWithoutDerivedTypesMustBeSealed = new("TTRESG037", "Enumeration without derived types must be sealed", "An enumeration without derived types must be sealed", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
    public static readonly DiagnosticDescriptor ErrorDuringGeneration = new("TTRESG099", "Error during code generation", "Error during code generation for '{0}': '{1}'", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 

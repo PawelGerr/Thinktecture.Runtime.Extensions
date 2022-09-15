@@ -9,7 +9,7 @@ public abstract partial class AbstractEnum : IValidatableEnum<int>
       return new InvalidItem(key);
    }
 
-   private class InvalidItem : AbstractEnum
+   private sealed class InvalidItem : AbstractEnum
    {
       public InvalidItem(int key)
          : base(key, false)
@@ -17,7 +17,7 @@ public abstract partial class AbstractEnum : IValidatableEnum<int>
       }
    }
 
-   private class ValidItem : AbstractEnum
+   private sealed class ValidItem : AbstractEnum
    {
       public ValidItem(int key)
          : base(key)

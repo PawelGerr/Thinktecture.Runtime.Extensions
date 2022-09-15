@@ -21,7 +21,7 @@ namespace TestNamespace
 {
 	public class SomeClass
 	{
-      public partial class {|#0:TestEnum|} : IValidatableEnum<string>
+      public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string>
 	   {
          public static readonly TestEnum Item1 = default;
       }

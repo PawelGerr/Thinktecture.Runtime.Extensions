@@ -21,7 +21,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|}<T> : IValidatableEnum<string>
+	public sealed partial class {|#0:TestEnum|}<T> : IValidatableEnum<string>
 	{
       public static readonly TestEnum<T> Item1 = default;
    }

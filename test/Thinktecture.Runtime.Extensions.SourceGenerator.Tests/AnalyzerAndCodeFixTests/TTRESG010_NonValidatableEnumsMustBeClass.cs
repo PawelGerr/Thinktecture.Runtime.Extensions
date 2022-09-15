@@ -36,7 +36,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class {|#0:TestEnum|} : IEnum<string>
+	public sealed partial class {|#0:TestEnum|} : IEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }

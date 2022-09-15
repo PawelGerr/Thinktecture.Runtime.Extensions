@@ -18,6 +18,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _IMPLEMENT_CREATE_INVALID = "Implement 'CreateInvalidItem'";
    private const string _MAKE_TYPE_PRIVATE = "Make type private";
    private const string _MAKE_TYPE_PUBLIC = "Make type public";
+   private const string _SEAL_CLASS = "Seal class";
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
@@ -27,7 +28,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
                                                                                                 DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
                                                                                                 DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id,
                                                                                                 DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
-                                                                                                DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id);
+                                                                                                DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
+                                                                                                DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id);
 
    /// <inheritdoc />
    public override FixAllProvider GetFixAllProvider()
@@ -79,6 +81,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          else if (diagnostic.Id == DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
          }
       }
    }

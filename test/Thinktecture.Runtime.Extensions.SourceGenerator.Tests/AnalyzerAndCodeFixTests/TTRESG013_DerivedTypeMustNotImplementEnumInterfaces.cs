@@ -21,7 +21,7 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private partial class {|#0:InnerTestEnum|} : TestEnum, IEnum<string>
+      private sealed partial class {|#0:InnerTestEnum|} : TestEnum, IEnum<string>
 	   {
          public static readonly InnerTestEnum Item1 = default;
       }
@@ -45,7 +45,7 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private partial class {|#0:InnerTestEnum|} : TestEnum, IValidatableEnum<string>
+      private sealed partial class {|#0:InnerTestEnum|} : TestEnum, IValidatableEnum<string>
 	   {
          public static readonly InnerTestEnum Item1 = default;
       }
@@ -69,7 +69,7 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
 
-      private partial class {|#0:InnerTestEnum|} : TestEnum
+      private sealed partial class {|#0:InnerTestEnum|} : TestEnum
 	   {
          public static readonly InnerTestEnum Item1 = default;
       }

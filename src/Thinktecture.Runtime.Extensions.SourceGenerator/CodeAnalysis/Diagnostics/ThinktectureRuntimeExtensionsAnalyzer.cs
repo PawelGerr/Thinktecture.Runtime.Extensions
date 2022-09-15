@@ -33,7 +33,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
-                                                                                                              DiagnosticsDescriptors.EnumKeyShouldNotBeNullable);
+                                                                                                              DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
+                                                                                                              DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -214,7 +215,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          CheckKeyComparer(context, comparerMembers);
       }
 
-      ValidateDerivedTypes(context, enumType);
+      var derivedTypes = ValidateDerivedTypes(context, enumType);
+
+      if (!enumType.IsSealed && !enumType.IsAbstract && derivedTypes.Count == 0)
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, locationOfFirstDeclaration, enumType);
    }
 
    private static void TypeMustNotBeGeneric(SymbolAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
@@ -262,32 +266,42 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ValidateDerivedTypes(SymbolAnalysisContext context, INamedTypeSymbol enumType)
+   private static IReadOnlyList<(INamedTypeSymbol Type, int Level)> ValidateDerivedTypes(SymbolAnalysisContext context, INamedTypeSymbol enumType)
    {
-      var derivedTypes = enumType.FindDerivedInnerEnums();
+      var derivedTypes = enumType.FindDerivedInnerEnums(true);
+      var typeToLeaveOpen = ImmutableArray.Create<INamedTypeSymbol>();
 
       foreach (var derivedType in derivedTypes)
       {
          if (derivedType.Type.IsEnum())
-         {
-            ReportDiagnostic(context, DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
-                             ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation(), derivedType.Type);
-         }
+            ReportDiagnostic(context, DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces, GetDerivedTypeLocation(derivedType.Type, context), derivedType.Type);
 
          if (derivedType.Level == 1)
          {
             if (derivedType.Type.DeclaredAccessibility != Accessibility.Private)
-            {
-               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
-                                ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation(), derivedType.Type);
-            }
+               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate, GetDerivedTypeLocation(derivedType.Type, context), derivedType.Type);
          }
          else if (derivedType.Type.DeclaredAccessibility != Accessibility.Public)
          {
-            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
-                             ((TypeDeclarationSyntax)derivedType.Type.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation(), derivedType.Type);
+            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(derivedType.Type, context), derivedType.Type);
          }
+
+         if (!derivedType.Type.BaseType.IsNullOrObject())
+            typeToLeaveOpen = typeToLeaveOpen.Add(derivedType.Type.BaseType);
       }
+
+      foreach (var derivedType in derivedTypes)
+      {
+         if (!derivedType.Type.IsSealed && !derivedType.Type.IsAbstract && !typeToLeaveOpen.Contains(derivedType.Type))
+            ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(derivedType.Type, context), derivedType.Type);
+      }
+
+      return derivedTypes;
+   }
+
+   private static Location GetDerivedTypeLocation(INamedTypeSymbol derivedType, SymbolAnalysisContext context)
+   {
+      return ((TypeDeclarationSyntax)derivedType.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation();
    }
 
    private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, ITypeSymbol keyType, Location location)

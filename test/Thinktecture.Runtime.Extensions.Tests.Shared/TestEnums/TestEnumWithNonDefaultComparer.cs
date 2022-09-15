@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [EnumGeneration(KeyComparer = nameof(_equalityComparer))]
-public partial class TestEnumWithNonDefaultComparer : IValidatableEnum<string>
+public sealed partial class TestEnumWithNonDefaultComparer : IValidatableEnum<string>
 {
    private static readonly IEqualityComparer<string> _equalityComparer = StringComparer.Ordinal;
 

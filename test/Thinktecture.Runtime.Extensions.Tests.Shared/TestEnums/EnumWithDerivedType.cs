@@ -13,7 +13,7 @@ public partial class EnumWithDerivedType : IValidatableEnum<int>
       {
       }
 
-      public class InnerType : DerivedEnum
+      public sealed class InnerType : DerivedEnum
       {
          public InnerType(int key)
             : base(key)

@@ -37,7 +37,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial record {|#0:TestEnum|} : IValidatableEnum<string>
+	public sealed partial record {|#0:TestEnum|} : IValidatableEnum<string>
 	{
    }
 }";
@@ -55,7 +55,7 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial class TestEnum : IValidatableEnum<string>
+	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -95,7 +95,7 @@ using Thinktecture;
 namespace TestNamespace
 {
 	[ValueObject]
-   public partial record {|#0:TestValueObject|}
+    public sealed partial record {|#0:TestValueObject|}
 	{
    }
 }";
@@ -114,7 +114,7 @@ using Thinktecture;
 namespace TestNamespace
 {
 	[ValueObject]
-   public partial class TestValueObject
+    public sealed partial class TestValueObject
 	{
    }
 }";

@@ -259,16 +259,23 @@ public static class TypeSymbolExtensions
       return type.FindAttribute(static attrType => attrType.Name == "ValueObjectAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
    }
 
-   public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerEnums(this ITypeSymbol enumType)
+   public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerEnums(
+      this ITypeSymbol enumType,
+      bool inclGenericTypeDefinitions = false)
    {
       List<(INamedTypeSymbol, int Level)>? derivedTypes = null;
 
-      FindDerivedInnerEnums(enumType, 0, enumType, ref derivedTypes);
+      FindDerivedInnerEnums(enumType, 0, enumType, inclGenericTypeDefinitions, ref derivedTypes);
 
       return derivedTypes ?? (IReadOnlyList<(INamedTypeSymbol Type, int Level)>)Array.Empty<(INamedTypeSymbol Type, int Level)>();
    }
 
-   private static void FindDerivedInnerEnums(ITypeSymbol typeToCheck, int currentLevel, ITypeSymbol enumType, ref List<(INamedTypeSymbol, int Level)>? derivedTypes)
+   private static void FindDerivedInnerEnums(
+      ITypeSymbol typeToCheck,
+      int currentLevel,
+      ITypeSymbol enumType,
+      bool inclGenericTypeDefinitions,
+      ref List<(INamedTypeSymbol, int Level)>? derivedTypes)
    {
       currentLevel++;
 
@@ -278,10 +285,10 @@ public static class TypeSymbolExtensions
          if (innerType.TypeKind is not (TypeKind.Class or TypeKind.Struct))
             continue;
 
-         if ((!innerType.IsGenericType || innerType.IsUnboundGenericType) && IsDerivedFrom(innerType, enumType))
+         if ((inclGenericTypeDefinitions || !innerType.IsGenericType || innerType.IsUnboundGenericType) && IsDerivedFrom(innerType, enumType))
             (derivedTypes ??= new List<(INamedTypeSymbol, int Level)>()).Add((innerType, currentLevel));
 
-         FindDerivedInnerEnums(innerType, currentLevel, enumType, ref derivedTypes);
+         FindDerivedInnerEnums(innerType, currentLevel, enumType, inclGenericTypeDefinitions, ref derivedTypes);
       }
    }
 
