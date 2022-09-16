@@ -34,7 +34,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
-                                                                                                              DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed);
+                                                                                                              DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
+                                                                                                              DiagnosticsDescriptors.ValueObjectMustBeSealed);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -52,23 +53,40 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (type.DeclaringSyntaxReferences.Length == 0)
          return;
 
-      var declarations = new TypeDeclarationSyntax[type.DeclaringSyntaxReferences.Length];
+      TypeDeclarationSyntax[]? declarations = null;
+
+      if (type.IsEnum(out var enumInterfaces))
+      {
+         if (!TryGetTypeDeclarations(context, type, out declarations))
+            return;
+
+         ValidateEnum(context, declarations, type, enumInterfaces);
+      }
+
+      if (type.HasValueObjectAttribute(out _))
+      {
+         if (declarations is null && !TryGetTypeDeclarations(context, type, out declarations))
+            return;
+
+         ValidateValueObject(context, declarations, type);
+      }
+   }
+
+   private static bool TryGetTypeDeclarations(SymbolAnalysisContext context, INamedTypeSymbol type, out TypeDeclarationSyntax[] declarations)
+   {
+      declarations = new TypeDeclarationSyntax[type.DeclaringSyntaxReferences.Length];
 
       for (var i = 0; i < type.DeclaringSyntaxReferences.Length; i++)
       {
          var syntaxRef = type.DeclaringSyntaxReferences[i];
 
          if (syntaxRef.GetSyntax(context.CancellationToken) is not TypeDeclarationSyntax tds)
-            return;
+            return false;
 
          declarations[i] = tds;
       }
 
-      if (type.IsEnum(out var enumInterfaces))
-         ValidateEnum(context, declarations, type, enumInterfaces);
-
-      if (type.HasValueObjectAttribute(out _))
-         ValidateValueObject(context, declarations, type);
+      return true;
    }
 
    private static void ValidateValueObject(
@@ -119,6 +137,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          CheckAssignableMembers(context, assignableMembers);
       }
+
+      if (!type.IsSealed && !type.IsAbstract)
+         ReportDiagnostic(context, DiagnosticsDescriptors.ValueObjectMustBeSealed, locationOfFirstDeclaration, type);
    }
 
    private static void CheckAssignableMembers(SymbolAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)

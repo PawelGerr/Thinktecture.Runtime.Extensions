@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture.Database;
 
 [ValueObject]
-public partial class Description
+public sealed partial class Description
 {
    private readonly string _value;
 

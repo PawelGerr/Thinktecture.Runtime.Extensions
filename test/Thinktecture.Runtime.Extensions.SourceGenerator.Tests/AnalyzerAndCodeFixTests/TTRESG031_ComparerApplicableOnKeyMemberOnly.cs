@@ -21,7 +21,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       [{|#0:ValueObjectEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
       public readonly int Field;
@@ -47,7 +47,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       [{|#0:ValueObjectEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
       public readonly int Field;

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture.ValueObjects;
 
 [ValueObject]
-public partial class Boundary
+public sealed partial class Boundary
 {
    public decimal Lower { get; }
    public decimal Upper { get; }

@@ -35,7 +35,7 @@ namespace TestNamespace
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 
@@ -66,7 +66,7 @@ namespace TestNamespace
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 
@@ -127,7 +127,7 @@ namespace TestNamespace
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_3");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 
@@ -188,7 +188,7 @@ namespace TestNamespace
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_4");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
    }
 

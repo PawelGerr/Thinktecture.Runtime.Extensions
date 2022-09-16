@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture;
 
 [ValueObject]
-public partial class BoundaryWithJsonConverter
+public sealed partial class BoundaryWithJsonConverter
 {
    public decimal Lower { get; }
    public decimal Upper { get; }

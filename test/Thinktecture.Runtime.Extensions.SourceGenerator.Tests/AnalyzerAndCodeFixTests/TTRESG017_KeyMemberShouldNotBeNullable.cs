@@ -22,7 +22,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public readonly string? {|#0:Field|};
    }
@@ -44,7 +44,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public readonly string {|#0:Field|};
 
@@ -65,7 +65,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public readonly string {|#0:Field|};
    }
@@ -86,7 +86,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public readonly int? {|#0:Field|};
    }
@@ -106,7 +106,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public readonly int? {|#0:Field|};
    }
@@ -128,7 +128,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class TestValueObject
+	public sealed partial class TestValueObject
 	{
       public readonly int {|#0:Field|};
    }

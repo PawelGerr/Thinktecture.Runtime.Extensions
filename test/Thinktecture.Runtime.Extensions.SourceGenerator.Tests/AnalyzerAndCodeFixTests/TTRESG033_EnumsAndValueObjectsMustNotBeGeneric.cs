@@ -63,7 +63,7 @@ using Thinktecture;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class {|#0:TestValueObject|}<T>
+	public sealed partial class {|#0:TestValueObject|}<T>
 	{
    }
 }";

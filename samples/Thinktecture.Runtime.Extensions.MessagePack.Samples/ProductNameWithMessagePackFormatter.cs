@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture;
 
 [ValueObject(NullInFactoryMethodsYieldsNull = true)]
-public partial class ProductNameWithMessagePackFormatter
+public sealed partial class ProductNameWithMessagePackFormatter
 {
    [ValueObjectEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]
    private string Value { get; }

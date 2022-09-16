@@ -29,7 +29,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
                                                                                                 DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id,
                                                                                                 DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
                                                                                                 DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
-                                                                                                DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id);
+                                                                                                DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
+                                                                                                DiagnosticsDescriptors.ValueObjectMustBeSealed.Id);
 
    /// <inheritdoc />
    public override FixAllProvider GetFixAllProvider()
@@ -82,7 +83,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id || diagnostic.Id == DiagnosticsDescriptors.ValueObjectMustBeSealed.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
          }

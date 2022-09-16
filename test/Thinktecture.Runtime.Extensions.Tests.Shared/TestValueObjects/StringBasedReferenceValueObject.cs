@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ValueObject]
-public partial class StringBasedReferenceValueObject
+public sealed partial class StringBasedReferenceValueObject
 {
    public string Property { get; }
 

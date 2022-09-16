@@ -586,7 +586,7 @@ namespace TestNamespace
    }
 
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClass
+	public sealed partial class {|#0:TestValueObject|} : BaseClass
 	{
    }
 }";
@@ -610,7 +610,7 @@ namespace TestNamespace
    }
 
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClass
+	public sealed partial class {|#0:TestValueObject|} : BaseClass
 	{
    }
 }";
@@ -633,7 +633,7 @@ namespace TestNamespace
    }
 
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClass
+	public sealed partial class {|#0:TestValueObject|} : BaseClass
 	{
    }
 }";
@@ -657,7 +657,7 @@ namespace TestNamespace
    }
 
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClass
+	public sealed partial class {|#0:TestValueObject|} : BaseClass
 	{
    }
 }";
@@ -679,7 +679,7 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
+	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
 	{
    }
 }";
@@ -699,7 +699,7 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
+	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
 	{
    }
 }";
@@ -718,7 +718,7 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
+	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
 	{
    }
 }";
@@ -738,7 +738,7 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 namespace TestNamespace
 {
    [ValueObject]
-	public partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
+	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
 	{
    }
 }";

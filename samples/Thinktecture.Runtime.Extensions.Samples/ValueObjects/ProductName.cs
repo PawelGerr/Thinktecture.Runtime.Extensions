@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture.ValueObjects;
 
 [ValueObject(NullInFactoryMethodsYieldsNull = true)]
-public partial class ProductName
+public sealed partial class ProductName
 {
    [ValueObjectEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]
    private string Value { get; }
