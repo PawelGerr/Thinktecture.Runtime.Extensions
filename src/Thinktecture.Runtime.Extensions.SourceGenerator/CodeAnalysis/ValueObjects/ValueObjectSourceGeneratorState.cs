@@ -11,6 +11,7 @@ public sealed class ValueObjectSourceGeneratorState :
    private readonly INamedTypeSymbol _type;
 
    public string TypeFullyQualified { get; }
+   public string TypeFullyQualifiedNullable { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeMinimallyQualified { get; }
 
@@ -42,7 +43,8 @@ public sealed class ValueObjectSourceGeneratorState :
 
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{TypeFullyQualified}?" : TypeFullyQualified;
+      TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
+      TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
       AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();

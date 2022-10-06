@@ -211,22 +211,27 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""{keyMember.Name}""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
-      public static implicit operator {keyMember.TypeFullyQualifiedNullable}({_state.TypeFullyQualifiedNullAnnotated} obj)
-      {{");
+      public static implicit operator {keyMember.TypeFullyQualifiedNullable}({(_state.IsReferenceType ? _state.TypeFullyQualifiedNullAnnotated : _state.TypeFullyQualifiedNullable)} obj)
+      {{
+         return obj?.{keyMember.Name};
+      }}");
 
-      if (_state.IsReferenceType)
-      {
-         _sb.Append($@"
-         return obj is null ? null : obj.{keyMember.Name};");
-      }
-      else
-      {
-         _sb.Append($@"
-         return obj.{keyMember.Name};");
-      }
+      if (_state.IsReferenceType || keyMember.IsReferenceType)
+         return;
 
-      _sb.Append(@"
-      }");
+      // if value object and key member are structs
+
+      _sb.Append($@"
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref=""{keyMember.TypeMinimallyQualified}""/>.
+      /// </summary>
+      /// <param name=""obj"">Object to covert.</param>
+      /// <returns>The <see cref=""{keyMember.Name}""/> of provided <paramref name=""obj""/>.</returns>
+      public static implicit operator {keyMember.TypeFullyQualified}({_state.TypeFullyQualified} obj)
+      {{
+         return obj.{keyMember.Name};
+      }}");
    }
 
    private void GenerateExplicitConversionToKey(EqualityInstanceMemberInfo keyMemberInfo)
