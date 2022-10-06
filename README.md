@@ -1,6 +1,5 @@
 ![Build](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/workflows/CI/badge.svg?branch=master)
-![TestResults](https://gist.githubusercontent.com/PawelGerr/043909cfb348b36187d02222da1f372e/raw/1e39e7f4369c92cf3afa36887af39a1564e5196f/badge.svg)
-
+![TestResults](https://gist.githubusercontent.com/PawelGerr/043909cfb348b36187d02222da1f372e/raw/badge.svg)
 
 [![Thinktecture.Runtime.Extensions](https://img.shields.io/nuget/vpre/Thinktecture.Runtime.Extensions.svg?maxAge=60&label=Thinktecture.Runtime.Extensions)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore+(DEPRECATED+in+v5))](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore/)  
