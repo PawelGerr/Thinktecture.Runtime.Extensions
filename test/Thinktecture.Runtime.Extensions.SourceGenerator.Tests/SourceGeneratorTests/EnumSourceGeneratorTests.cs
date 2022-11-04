@@ -231,6 +231,56 @@ namespace Thinktecture.Tests
          return this.Key.ToString();
       }
 
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
       {
          var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, _defaultKeyComparerMember);
@@ -574,6 +624,56 @@ namespace Thinktecture.Tests
          return this.Key.ToString();
       }
 
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
       {
          var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, _defaultKeyComparerMember);
@@ -850,6 +950,56 @@ public partial class TestEnum : IEnum<string>
          return this.Key.ToString();
       }
 
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum> GetLookup()
       {
          var lookup = new global::System.Collections.Generic.Dictionary<string, global::TestEnum>(2, _defaultKeyComparerMember);
@@ -1120,6 +1270,84 @@ namespace Thinktecture.Tests
       public override string? ToString()
       {
          return this.Key.ToString();
+      }
+
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      /// <param name=""testEnum3"">The item to compare to.</param>
+      /// <param name=""testEnumAction3"">The action to execute if the current item is equal to <paramref name=""testEnum3""/>.</param>
+      /// <param name=""testEnum4"">The item to compare to.</param>
+      /// <param name=""testEnumAction4"">The action to execute if the current item is equal to <paramref name=""testEnum4""/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2,
+         TestEnum testEnum3, global::System.Action testEnumAction3,
+         TestEnum testEnum4, global::System.Action testEnumAction4)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else if (this == testEnum3)
+         {
+            testEnumAction3();
+         }
+         else if (this == testEnum4)
+         {
+            testEnumAction4();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      /// <param name=""testEnum3"">The item to compare to.</param>
+      /// <param name=""testEnumFunc3"">The function to execute if the current item is equal to <paramref name=""testEnum3""/>.</param>
+      /// <param name=""testEnum4"">The item to compare to.</param>
+      /// <param name=""testEnumFunc4"">The function to execute if the current item is equal to <paramref name=""testEnum4""/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2,
+         TestEnum testEnum3, global::System.Func<T> testEnumFunc3,
+         TestEnum testEnum4, global::System.Func<T> testEnumFunc4)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else if (this == testEnum3)
+         {
+            return testEnumFunc3();
+         }
+         else if (this == testEnum4)
+         {
+            return testEnumFunc4();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
       }
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
@@ -1412,6 +1640,56 @@ namespace Thinktecture.Tests
          return this.Key.ToString();
       }
 
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
       {
          var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, _defaultKeyComparerMember);
@@ -1687,6 +1965,56 @@ namespace Thinktecture.Tests
       public override string? ToString()
       {
          return this.Key?.ToString();
+      }
+
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
       }
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
@@ -2012,6 +2340,56 @@ namespace Thinktecture.Tests
       public override string? ToString()
       {
          return this.Name.ToString();
+      }
+
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
       }
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()

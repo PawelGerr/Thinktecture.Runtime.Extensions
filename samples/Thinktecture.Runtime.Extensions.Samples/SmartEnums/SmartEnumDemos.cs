@@ -37,6 +37,14 @@ public class SmartEnumDemos
       {
          logger.Information("UnknownEnumIdentifierException is thrown because there is no product type with the key 'Unknown'.");
       }
+
+      productType.Switch(ProductType.Groceries, () => logger.Information("Switch with Action: Groceries"),
+                         ProductType.Housewares, () => logger.Information("Switch with Action: Housewares"));
+
+      var returnValue = productType.Switch(ProductType.Groceries, () => "Switch with Func<T>: Groceries",
+                                           ProductType.Housewares, () => "Switch with Func<T>: Housewares");
+
+      logger.Information(returnValue);
    }
 
    private static void DemoForValidatableEnum(ILogger logger)

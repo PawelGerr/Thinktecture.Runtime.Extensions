@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace Thinktecture.CodeAnalysis.Diagnostics;
 
@@ -35,7 +36,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
-                                                                                                              DiagnosticsDescriptors.ValueObjectMustBeSealed);
+                                                                                                              DiagnosticsDescriptors.ValueObjectMustBeSealed,
+                                                                                                              DiagnosticsDescriptors.SwitchMustCoverAllItems);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -44,6 +46,51 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.EnableConcurrentExecution();
 
       context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
+      context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
+   }
+
+   private static void AnalyzeMethodCall(OperationAnalysisContext context)
+   {
+      var operation = (IInvocationOperation)context.Operation;
+
+      if (operation.Instance is null
+          || operation.Arguments.Length == 0
+          || operation.Arguments.Length % 2 != 0
+          || operation.TargetMethod.IsStatic
+          || operation.TargetMethod.Name != "Switch")
+      {
+         return;
+      }
+
+      if (!operation.Instance.Type.IsEnum())
+         return;
+
+      var missingItemNames = ImmutableArray.Create<string>();
+
+      foreach (var item in operation.Instance.Type.EnumerateEnumItems())
+      {
+         var found = false;
+
+         for (var i = 0; i < operation.Arguments.Length; i += 2)
+         {
+            var argument = operation.Arguments[i];
+
+            if (argument.Value is IFieldReferenceOperation fieldReferenceOperation)
+            {
+               if (SymbolEqualityComparer.Default.Equals(fieldReferenceOperation.Field, item))
+               {
+                  found = true;
+                  break;
+               }
+            }
+         }
+
+         if (!found)
+            missingItemNames = missingItemNames.Add(item.Name);
+      }
+
+      if (missingItemNames.Length != 0)
+         ReportDiagnostic(context, DiagnosticsDescriptors.SwitchMustCoverAllItems, operation.Syntax.GetLocation(), operation.Instance.Type, String.Join(", ", missingItemNames));
    }
 
    private static void AnalyzeSymbol(SymbolAnalysisContext context)
@@ -414,6 +461,31 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0)
+   {
+      ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0));
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, string arg1)
+   {
+      ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0), arg1);
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0));
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location));
    }
 
    private static string BuildTypeName(ITypeSymbol type)

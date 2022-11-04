@@ -135,7 +135,123 @@ namespace ").Append(_state.Namespace).Append(@"
          return this.{_state.KeyProperty.Name}{(!_state.IsReferenceType && _state.KeyProperty.IsReferenceType ? "?" : null)}.ToString();
       }}");
 
+      GenerateSwitchForAction();
+      GenerateSwitchForFunc();
       GenerateGetLookup();
+   }
+
+   private void GenerateSwitchForAction()
+   {
+      if (_state.ItemNames.Count == 0)
+         return;
+
+      _sb.Append(@"
+
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>");
+
+      var itemNamePrefix = _state.Name.MakeArgumentName();
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         _sb.Append($@"
+      /// <param name=""{itemNamePrefix}{i + 1}"">The item to compare to.</param>
+      /// <param name=""{itemNamePrefix}Action{i + 1}"">The action to execute if the current item is equal to <paramref name=""{itemNamePrefix}{i + 1}""/>.</param>");
+      }
+
+      _sb.Append(@"
+      public void Switch(");
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         if (i != 0)
+            _sb.Append(",");
+
+         _sb.Append(@"
+         ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
+            .Append(", global::System.Action ").Append(itemNamePrefix).Append("Action").Append(i + 1);
+      }
+
+      _sb.Append(@")
+      {
+         ");
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         if (i != 0)
+            _sb.Append(@"
+         else ");
+
+         _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
+         {
+            ").Append(itemNamePrefix).Append("Action").Append(i + 1).Append(@"();
+         }");
+      }
+
+      _sb.Append(@"
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }");
+   }
+
+   private void GenerateSwitchForFunc()
+   {
+      if (_state.ItemNames.Count == 0)
+         return;
+
+      _sb.Append(@"
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>");
+
+      var itemNamePrefix = _state.Name.MakeArgumentName();
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         _sb.Append($@"
+      /// <param name=""{itemNamePrefix}{i + 1}"">The item to compare to.</param>
+      /// <param name=""{itemNamePrefix}Func{i + 1}"">The function to execute if the current item is equal to <paramref name=""{itemNamePrefix}{i + 1}""/>.</param>");
+      }
+
+      _sb.Append(@"
+      public T Switch<T>(");
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         if (i != 0)
+            _sb.Append(",");
+
+         _sb.Append(@"
+         ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
+            .Append(", global::System.Func<T> ").Append(itemNamePrefix).Append("Func").Append(i + 1);
+      }
+
+      _sb.Append(@")
+      {
+         ");
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         if (i != 0)
+            _sb.Append(@"
+         else ");
+
+         _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
+         {
+            return ").Append(itemNamePrefix).Append("Func").Append(i + 1).Append(@"();
+         }");
+      }
+
+      _sb.Append(@"
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }");
    }
 
    private void GenerateModuleInitializer(IMemberState keyMember)
