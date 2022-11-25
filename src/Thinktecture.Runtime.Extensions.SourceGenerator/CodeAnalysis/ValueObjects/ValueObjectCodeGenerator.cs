@@ -31,10 +31,12 @@ namespace ").Append(_state.Namespace).Append(@"
 {");
       }
 
-      if (_state.HasKeyMember)
-         GenerateTypeConverter(_state.KeyMember);
+      var emptyStringYieldsNull = _state.Settings.EmptyStringInFactoryMethodsYieldsNull && _state.IsReferenceType && _state.HasKeyMember && _state.KeyMember.Member.IsString();
 
-      GenerateValueObject();
+      if (_state.HasKeyMember)
+         GenerateTypeConverter(_state.KeyMember, emptyStringYieldsNull);
+
+      GenerateValueObject(emptyStringYieldsNull);
 
       if (hasNamespace)
       {
@@ -48,7 +50,7 @@ namespace ").Append(_state.Namespace).Append(@"
       return _sb.ToString();
    }
 
-   private void GenerateTypeConverter(EqualityInstanceMemberInfo keyMemberInfo)
+   private void GenerateTypeConverter(EqualityInstanceMemberInfo keyMemberInfo, bool emptyStringYieldsNull)
    {
       var keyMember = keyMemberInfo.Member;
 
@@ -57,7 +59,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {{
       /// <inheritdoc />");
 
-      if (keyMember.IsReferenceType)
+      // If emptyStringYieldsNull=true then an empty-string-argument (i.e. not null) will lead to null as return value,
+      // that's why we cannot use the NotNullIfNotNullAttribute.
+      if (keyMember.IsReferenceType && !emptyStringYieldsNull)
       {
          _sb.Append($@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
@@ -88,7 +92,7 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
    }
 
-   private void GenerateValueObject()
+   private void GenerateValueObject(bool emptyStringYieldsNull)
    {
       var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
 
@@ -126,7 +130,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {");
 
       if (_state.HasKeyMember)
-         GenerateModuleInitializer(_state.KeyMember.Member);
+         GenerateModuleInitializer(_state.KeyMember.Member, emptyStringYieldsNull);
 
       _sb.Append($@"
       private static readonly global::System.Type _type = typeof({_state.TypeFullyQualified});");
@@ -140,10 +144,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipFactoryMethods)
       {
-         var allowNullKeyMember = _state.HasKeyMember && _state.KeyMember.Member.IsReferenceType && _state.IsReferenceType && _state.Settings.NullInFactoryMethodsYieldsNull;
+         var allowNullKeyMember = _state.Settings.NullInFactoryMethodsYieldsNull && _state.HasKeyMember && _state.KeyMember.Member.IsReferenceType && _state.IsReferenceType;
 
-         GenerateCreateMethod(allowNullKeyMember);
-         GenerateTryCreateMethod(allowNullKeyMember);
+         GenerateCreateMethod(allowNullKeyMember, emptyStringYieldsNull);
+         GenerateTryCreateMethod(allowNullKeyMember, emptyStringYieldsNull);
          GenerateValidateFactoryArguments();
          GenerateFactoryPostInit();
       }
@@ -152,7 +156,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          GenerateImplicitConversionToKey(_state.KeyMember);
          GenerateExplicitConversionToKey(_state.KeyMember);
-         GenerateExplicitConversion(_state.KeyMember);
+         GenerateExplicitConversion(_state.KeyMember, emptyStringYieldsNull);
       }
 
       GenerateConstructor();
@@ -173,17 +177,18 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
-   private void GenerateModuleInitializer(IMemberState keyMember)
+   private void GenerateModuleInitializer(IMemberState keyMember, bool emptyStringYieldsNull)
    {
       var typeFullyQualified = _state.TypeFullyQualified;
+      var nullAnnotatedTypeFullyQualified = emptyStringYieldsNull ? _state.TypeFullyQualifiedNullAnnotated : typeFullyQualified;
       var keyMemberWithoutNullAnnotation = keyMember.IsReferenceType ? keyMember.TypeFullyQualified : keyMember.TypeFullyQualifiedWithNullability;
 
       _sb.Append($@"
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {{
-         var convertFromKey = new global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {typeFullyQualified}>({typeFullyQualified}.Create);
-         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {typeFullyQualified}>> convertFromKeyExpression = static {keyMember.ArgumentName} => {typeFullyQualified}.Create({keyMember.ArgumentName});
+         var convertFromKey = new global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {nullAnnotatedTypeFullyQualified}>({typeFullyQualified}.Create);
+         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {nullAnnotatedTypeFullyQualified}>> convertFromKeyExpression = static {keyMember.ArgumentName} => {typeFullyQualified}.Create({keyMember.ArgumentName});
          global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {typeFullyQualified}>> convertFromKeyExpressionViaCtor = static {keyMember.ArgumentName} => new {typeFullyQualified}({keyMember.ArgumentName});
 
          var convertToKey = new global::System.Func<{typeFullyQualified}, {keyMember.TypeFullyQualifiedWithNullability}>(static item => item.{keyMember.Name});
@@ -258,7 +263,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }}");
    }
 
-   private void GenerateExplicitConversion(EqualityInstanceMemberInfo keyMemberInfo)
+   private void GenerateExplicitConversion(EqualityInstanceMemberInfo keyMemberInfo, bool emptyStringYieldsNull)
    {
       var keyMember = keyMemberInfo.Member;
       var bothAreReferenceTypes = _state.IsReferenceType && keyMemberInfo.Member.IsReferenceType;
@@ -272,7 +277,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""{keyMember.ArgumentName}"">Value to covert.</param>
       /// <returns>An instance of <see cref=""{_state.TypeMinimallyQualified}""/>.</returns>");
 
-      if (bothAreReferenceTypes)
+      if (bothAreReferenceTypes && !emptyStringYieldsNull)
       {
          _sb.Append($@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
@@ -295,14 +300,16 @@ namespace ").Append(_state.Namespace).Append(@"
       }}");
    }
 
-   private void GenerateCreateMethod(bool allowNullKeyMember)
+   private void GenerateCreateMethod(bool allowNullKeyMember, bool emptyStringYieldsNull)
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
       _sb.Append(@"
 ");
 
-      if (allowNullKeyMember)
+      // If emptyStringYieldsNull=true then an empty-string-argument (i.e. not null) will lead to null as return value,
+      // that's why we cannot use the NotNullIfNotNullAttribute.
+      if (allowNullKeyMember && !emptyStringYieldsNull)
       {
          _sb.Append($@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyMember!.Member.ArgumentName}"")]");
@@ -316,7 +323,14 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@")
       {");
 
-      if (allowNullKeyMember)
+      if (emptyStringYieldsNull)
+      {
+         _sb.Append($@"
+         if(global::System.String.IsNullOrWhiteSpace({_state.KeyMember!.Member.ArgumentName}))
+            return default;
+");
+      }
+      else if (allowNullKeyMember)
       {
          _sb.Append($@"
          if({_state.KeyMember!.Member.ArgumentName} is null)
@@ -356,7 +370,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateTryCreateMethod(bool allowNullKeyMember)
+   private void GenerateTryCreateMethod(bool allowNullKeyMember, bool emptyStringYieldsNull)
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
@@ -371,7 +385,17 @@ namespace ").Append(_state.Namespace).Append(@"
          [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.TypeFullyQualifiedNullAnnotated} obj)
       {{");
 
-      if (allowNullKeyMember)
+      if (emptyStringYieldsNull)
+      {
+         _sb.Append($@"
+         if(global::System.String.IsNullOrWhiteSpace({_state.KeyMember!.Member.ArgumentName}))
+         {{
+            obj = default;
+            return null;
+         }}
+");
+      }
+      else if (allowNullKeyMember)
       {
          _sb.Append($@"
          if({_state.KeyMember!.Member.ArgumentName} is null)

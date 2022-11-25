@@ -85,12 +85,92 @@ public class BindModelAsync
    }
 
    [Fact]
+   public async Task Should_bind_string_based_value_type_with_NullInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, "Value");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Create("Value"));
+   }
+
+   [Fact]
+   public async Task Should_bind_null_with_NullInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, null);
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeFalse();
+      ctx.Result.Model.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_bind_empty_string_with_NullInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, String.Empty);
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_bind_whitespaces_with_NullInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, " ");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_bind_string_based_value_type_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, "Value");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Create("Value"));
+   }
+
+   [Fact]
+   public async Task Should_bind_null_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, null);
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeFalse();
+      ctx.Result.Model.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_bind_empty_string_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, String.Empty);
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_bind_whitespaces_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
+   {
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, " ");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().BeNull();
+   }
+
+   [Fact]
    public async Task Should_return_error_if_value_violates_validation_rules()
    {
       var ctx = await BindAsync<StringBasedReferenceValueObject, string>(StringBasedReferenceValueObject.TryCreate, "A");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("Property cannot be 1 character long.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Property cannot be 1 character long.") });
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -58,10 +59,20 @@ public class Program
       await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid
       await DoRequestAsync(logger, client, "productTypeWithJsonConverter/groceries");
       await DoRequestAsync(logger, client, "productTypeWithJsonConverter/invalid"); // invalid
+
       await DoRequestAsync(logger, client, "productName/bread");
-      await DoRequestAsync(logger, client, "productName/a"); // invalid
+      await DoRequestAsync(logger, client, "productName/a");   // invalid (Product name cannot be 1 character long.)
+      await DoRequestAsync(logger, client, "productName/%20"); // product name is null
       await DoRequestAsync(logger, client, "productName", "bread");
-      await DoRequestAsync(logger, client, "productName", "a"); // invalid
+      await DoRequestAsync(logger, client, "productName", "a"); // invalid (Product name cannot be 1 character long.)
+      await DoRequestAsync(logger, client, "productName", " "); // invalid (Product name cannot be empty.)
+
+      await DoRequestAsync(logger, client, "otherProductName/bread");
+      await DoRequestAsync(logger, client, "otherProductName/a");   // invalid (Product name cannot be 1 character long.)
+      await DoRequestAsync(logger, client, "otherProductName/%20"); // product name is null
+      await DoRequestAsync(logger, client, "otherProductName", "bread");
+      await DoRequestAsync(logger, client, "otherProductName", "a"); // invalid (Product name cannot be 1 character long.)
+
       await DoRequestAsync(logger, client, "boundary", BoundaryWithJsonConverter.Create(1, 2));
       await DoRequestAsync(logger, client, "boundary", jsonBody: "{ \"lower\": 2, \"upper\": 1 }");
    }

@@ -11,7 +11,7 @@ namespace Thinktecture.Formatters;
 public abstract class ValueObjectMessagePackFormatterBase<T, TKey> : IMessagePackFormatter<T>
    where TKey : notnull
 {
-   private readonly Func<TKey, T> _convertFromKey;
+   private readonly Func<TKey, T?> _convertFromKey;
    private readonly Func<T, TKey> _convertToKey;
 
    /// <summary>
@@ -20,7 +20,7 @@ public abstract class ValueObjectMessagePackFormatterBase<T, TKey> : IMessagePac
    /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
    /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
    protected ValueObjectMessagePackFormatterBase(
-      Func<TKey, T> convertFromKey,
+      Func<TKey, T?> convertFromKey,
       Func<T, TKey> convertToKey)
    {
       _convertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));

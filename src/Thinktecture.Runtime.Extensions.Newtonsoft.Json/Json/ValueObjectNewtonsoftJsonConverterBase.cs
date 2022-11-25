@@ -15,7 +15,7 @@ public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConv
    private static readonly Type _type = typeof(T);
    private static readonly Type _keyType = typeof(TKey);
 
-   private readonly Func<TKey, T> _convertFromKey;
+   private readonly Func<TKey, T?> _convertFromKey;
    private readonly Func<T, TKey> _convertToKey;
 
    /// <summary>
@@ -24,7 +24,7 @@ public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConv
    /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
    /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
    protected ValueObjectNewtonsoftJsonConverterBase(
-      Func<TKey, T> convertFromKey,
+      Func<TKey, T?> convertFromKey,
       Func<T, TKey> convertToKey)
    {
       _convertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));

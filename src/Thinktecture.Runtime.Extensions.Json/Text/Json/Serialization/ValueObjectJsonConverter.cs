@@ -12,7 +12,7 @@ namespace Thinktecture.Text.Json.Serialization;
 public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
    where TKey : notnull
 {
-   private readonly Func<TKey, T> _convertFromKey;
+   private readonly Func<TKey, T?> _convertFromKey;
    private readonly Func<T, TKey> _convertToKey;
    private readonly JsonConverter<TKey> _keyConverter;
 
@@ -23,7 +23,7 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
    /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
    /// <param name="options">JSON serializer options.</param>
    public ValueObjectJsonConverter(
-      Func<TKey, T> convertFromKey,
+      Func<TKey, T?> convertFromKey,
       Func<T, TKey> convertToKey,
       JsonSerializerOptions options)
    {

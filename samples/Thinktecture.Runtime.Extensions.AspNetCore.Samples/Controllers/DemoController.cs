@@ -69,23 +69,45 @@ public class DemoController : Controller
    }
 
    [HttpGet("productName/{name}")]
-   public IActionResult RoundTrip(ProductName name)
+   public IActionResult RoundTrip(ProductName? name)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
 
-      _logger.LogInformation("Round trip test with {Type}: {Name}", name.GetType().Name, name);
+      _logger.LogInformation("Round trip test with {Type}: {Name}", name?.GetType().Name, name);
 
       return Json(name);
    }
 
    [HttpPost("productName")]
-   public IActionResult RoundTripPost([FromBody] ProductName name)
+   public IActionResult RoundTripPost([FromBody] ProductName? name)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
 
-      _logger.LogInformation("Round trip test with {Type}: {Name}", name.GetType().Name, name);
+      _logger.LogInformation("Round trip test with {Type}: {Name}", name?.GetType().Name, name);
+
+      return Json(name);
+   }
+
+   [HttpGet("otherProductName/{name}")]
+   public IActionResult RoundTrip(OtherProductName? name)
+   {
+      if (!ModelState.IsValid)
+         return BadRequest(ModelState);
+
+      _logger.LogInformation("Round trip test with {Type}: {Name}", name?.GetType().Name, name);
+
+      return Json(name);
+   }
+
+   [HttpPost("otherProductName")]
+   public IActionResult RoundTripPost([FromBody] OtherProductName? name)
+   {
+      if (!ModelState.IsValid)
+         return BadRequest(ModelState);
+
+      _logger.LogInformation("Round trip test with {Type}: {Name}", name?.GetType().Name, name);
 
       return Json(name);
    }

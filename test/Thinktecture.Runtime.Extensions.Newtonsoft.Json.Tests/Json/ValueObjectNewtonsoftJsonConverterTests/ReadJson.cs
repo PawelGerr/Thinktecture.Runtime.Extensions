@@ -43,8 +43,20 @@ public class ReadJson : JsonTestsBase
       Deserialize<StringBasedReferenceValueObject, StringBasedReferenceValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
       Deserialize<IntBasedStructValueObject?, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
       Deserialize<StringBasedStructValueObject?, StringBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
-      Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("0").Should().Be(default(IntBasedStructValueObject)); // default(int) is 0
-      Deserialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(default(StringBasedStructValueObject));
+      Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("0").Should().Be(default); // default(int) is 0
+      Deserialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(default);
+
+      // NullInFactoryMethodsYieldsNull
+      Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectNewtonsoftJsonConverter>("\"\""))
+                   .Should().Throw<JsonSerializationException>().WithMessage("Property cannot be empty.");
+      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectNewtonsoftJsonConverter>("\" \""))
+                   .Should().Throw<JsonSerializationException>().WithMessage("Property cannot be empty.");
+
+      // EmptyStringInFactoryMethodsYieldsNull
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectNewtonsoftJsonConverter>("null").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectNewtonsoftJsonConverter>("\"\"").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectNewtonsoftJsonConverter>("\" \"").Should().Be(null);
 
       FluentActions.Invoking(() => Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>("null")).Should()
                    .Throw<JsonException>().WithMessage("Cannot convert 'Null' to a struct of type 'Int32'.");

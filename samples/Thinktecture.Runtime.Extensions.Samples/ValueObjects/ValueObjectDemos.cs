@@ -29,9 +29,17 @@ public class ValueObjectDemos
       if (validationResult == ValidationResult.Success)
          logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
 
-      // Thanks to setting "NullInFactoryMethodsYieldsNull = true"
+      // Thanks to setting "NullInFactoryMethodsYieldsNull = true" the method "Create" returns null
       var nullProduct = ProductName.Create(null);
       logger.Information("Null-Product name: {NullProduct}", nullProduct);
+
+      // Thanks to setting "EmptyStringInFactoryMethodsYieldsNull = true" the method "Create" returns null
+      var otherNullProductName = OtherProductName.Create(null);
+      logger.Information("Null-Product name: {NullProduct}", otherNullProductName);
+
+      // Thanks to setting "EmptyStringInFactoryMethodsYieldsNull = true" the method "Create" returns null
+      var otherNullProductName2 = OtherProductName.Create(" ");
+      logger.Information("Null-Product name: {NullProduct}", otherNullProductName2);
 
       var nullValidationResult = ProductName.TryCreate(null, out nullProduct);
       if (nullValidationResult == ValidationResult.Success)

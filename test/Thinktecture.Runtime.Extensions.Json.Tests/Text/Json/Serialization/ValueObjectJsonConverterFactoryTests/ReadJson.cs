@@ -43,8 +43,20 @@ public class ReadJson : JsonTestsBase
       Deserialize<StringBasedReferenceValueObject, StringBasedReferenceValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(null);
       Deserialize<IntBasedStructValueObject?, IntBasedStructValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(null);
       Deserialize<StringBasedStructValueObject?, StringBasedStructValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectJsonConverterFactory>("0").Should().Be(default(IntBasedStructValueObject)); // default(int) is 0
-      Deserialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(default(StringBasedStructValueObject));
+      Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectJsonConverterFactory>("0").Should().Be(default); // default(int) is 0
+      Deserialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(default);
+
+      // NullInFactoryMethodsYieldsNull
+      Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("null").Should().Be(null);
+      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\"\""))
+                   .Should().Throw<JsonException>().WithMessage("Property cannot be empty.");
+      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\" \""))
+                   .Should().Throw<JsonException>().WithMessage("Property cannot be empty.");
+
+      // EmptyStringInFactoryMethodsYieldsNull
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("null").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\"\"").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\" \"").Should().Be(null);
 
       FluentActions.Invoking(() => Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectJsonConverterFactory>("null")).Should()
                    .Throw<JsonException>()
