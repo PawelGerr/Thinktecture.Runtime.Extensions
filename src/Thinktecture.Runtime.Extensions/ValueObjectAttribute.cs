@@ -7,14 +7,14 @@ namespace Thinktecture;
 public sealed class ValueObjectAttribute : Attribute
 {
    /// <summary>
-   /// Indication whether the methods "Create" and "TryCreate" should be generated or not.
+   /// Indication whether the methods "Create", "Validate" and "TryCreate" should be generated or not.
    /// </summary>
    public bool SkipFactoryMethods { get; set; }
 
    private bool _nullInFactoryMethodsYieldsNull;
 
    /// <summary>
-   /// By default, providing <c>null</c> to methods "Create" and "TryCreate" of an keyed value object is not allowed.
+   /// By default, providing <c>null</c> to methods "Create", "Validate" and "TryCreate" of an keyed value object is not allowed.
    /// If this property is set to <c>true</c>, then providing a <c>null</c> will return <c>null</c>.
    ///
    /// This setting has no effect on:

@@ -19,7 +19,7 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, "Comparer");
    }
 
-   public static string? FindKeyComparer(this AttributeData attributeData)
+   public static string? FindKeyEqualityComparer(this AttributeData attributeData)
    {
       return GetStringParameterValue(attributeData, "KeyComparer");
    }

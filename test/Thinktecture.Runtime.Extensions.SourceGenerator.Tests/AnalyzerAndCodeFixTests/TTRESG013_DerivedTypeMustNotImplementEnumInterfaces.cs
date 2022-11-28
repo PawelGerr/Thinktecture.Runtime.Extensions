@@ -26,6 +26,12 @@ namespace TestNamespace
          public static readonly InnerTestEnum Item1 = default;
       }
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InnerTestEnum");
@@ -50,6 +56,12 @@ namespace TestNamespace
          public static readonly InnerTestEnum Item1 = default;
       }
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InnerTestEnum");
@@ -73,6 +85,12 @@ namespace TestNamespace
 	   {
          public static readonly InnerTestEnum Item1 = default;
       }
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

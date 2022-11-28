@@ -37,7 +37,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
                                                                                                               DiagnosticsDescriptors.ValueObjectMustBeSealed,
-                                                                                                              DiagnosticsDescriptors.SwitchMustCoverAllItems);
+                                                                                                              DiagnosticsDescriptors.SwitchMustCoverAllItems,
+                                                                                                              DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -233,7 +234,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, enumType, declarations);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
-      var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, context.CancellationToken, locationOfFirstDeclaration, context.ReportDiagnostic);
+      var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, (context.ReportDiagnostic, locationOfFirstDeclaration));
 
       if (validEnumInterface is null)
          return;
@@ -277,7 +278,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          EnumKeyPropertyNameMustNotBeItem(context, enumAttr, locationOfFirstDeclaration);
 
-         var comparer = enumAttr.FindKeyComparer();
+         var comparer = enumAttr.FindKeyEqualityComparer();
          var comparerMembers = comparer is null ? Array.Empty<ISymbol>() : enumType.GetNonIgnoredMembers(comparer);
 
          CheckKeyComparer(context, comparerMembers);

@@ -110,17 +110,37 @@ public static class TypeSymbolExtensions
    public static INamedTypeSymbol? GetValidEnumInterface(
       this IReadOnlyList<INamedTypeSymbol> enumInterfaces,
       ITypeSymbol enumType,
-      CancellationToken cancellationToken,
-      Location? location = null,
-      Action<Diagnostic>? reportDiagnostic = null)
+      (Action<Diagnostic> ReportDiagnostic, Location Location)? diagnostics = null)
    {
       INamedTypeSymbol? validInterface = null;
       ITypeSymbol? validKeyType = null;
 
+      var emittDontImplementEnumInterfaceWithTwoGenerics = false;
+      INamedTypeSymbol? enumInterfaceWithTwoGenerics = null;
+
       foreach (var enumInterface in enumInterfaces)
       {
-         if (!enumInterface.IsGenericType || enumInterface.TypeArguments.Length != 1)
+         if (!enumInterface.IsGenericType)
             continue;
+
+         if (enumInterface.TypeArguments.Length != 1)
+         {
+            if (diagnostics is not null && enumInterface.IsGenericType && enumInterface.TypeArguments.Length == 2)
+            {
+               if (enumInterfaceWithTwoGenerics is null)
+               {
+                  enumInterfaceWithTwoGenerics = enumInterface;
+               }
+               // forbid 2 different implementations of IEnum<TKey, T>
+               else if (!SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], enumInterface.TypeArguments[0])
+                        || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumInterface.TypeArguments[1]))
+               {
+                  emittDontImplementEnumInterfaceWithTwoGenerics = true;
+               }
+            }
+
+            continue;
+         }
 
          var keyType = enumInterface.TypeArguments[0];
 
@@ -133,8 +153,9 @@ public static class TypeSymbolExtensions
          {
             if (!SymbolEqualityComparer.Default.Equals(validKeyType, keyType))
             {
-               location ??= ((TypeDeclarationSyntax)enumType.DeclaringSyntaxReferences.First().GetSyntax(cancellationToken)).Identifier.GetLocation();
-               reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces, location, enumType.Name));
+               if (diagnostics.HasValue)
+                  diagnostics.Value.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces, diagnostics.Value.Location, enumType.Name));
+
                return null;
             }
 
@@ -143,6 +164,18 @@ public static class TypeSymbolExtensions
             if (enumInterface.IsValidatableEnumInterface())
                validInterface = enumInterface;
          }
+      }
+
+      // check the validity of IEnum<TKey, T>
+      if (diagnostics is not null && validInterface is not null && validKeyType is not null && enumInterfaceWithTwoGenerics is not null
+          && (emittDontImplementEnumInterfaceWithTwoGenerics
+              || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], validKeyType)
+              || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumType)))
+      {
+         diagnostics.Value.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics,
+                                                              diagnostics.Value.Location,
+                                                              validKeyType,
+                                                              enumType.Name));
       }
 
       return validInterface;

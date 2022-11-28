@@ -28,6 +28,18 @@ namespace TestNamespace
          throw new System.NotImplementedException();
       }
    }
+"
+#if NET7_0
+                 + @"
+   // simulate source gen
+	partial class TestEnum
+	{
+      static global::System.Collections.Generic.IEqualityComparer<string> IEnum<string>.KeyEqualityComparer => default;
+      static global::System.Collections.Generic.IEqualityComparer<int> IEnum<int>.KeyEqualityComparer => default;
+   }
+"
+#endif
+                 + @"
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
@@ -47,6 +59,17 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+"
+#if NET7_0
+                 + @"
+   // simulate source gen
+	partial class TestEnum
+	{
+      static global::System.Collections.Generic.IEqualityComparer<string> IEnum<string>.KeyEqualityComparer => default;
+      static global::System.Collections.Generic.IEqualityComparer<int> IEnum<int>.KeyEqualityComparer => default;
+   }"
+#endif
+                 + @"
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
@@ -66,6 +89,17 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+"
+#if NET7_0
+                 + @"
+   // simulate source gen
+	partial class TestEnum
+	{
+      static global::System.Collections.Generic.IEqualityComparer<string> IEnum<string>.KeyEqualityComparer => default;
+      static global::System.Collections.Generic.IEqualityComparer<int> IEnum<int>.KeyEqualityComparer => default;
+   }"
+#endif
+                 + @"
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
@@ -84,6 +118,12 @@ namespace TestNamespace
 	public sealed partial class {|#0:TestEnum|} : IEnum<int>, IValidatableEnum<int>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<int> KeyEqualityComparer => default;
    }
 }";
 

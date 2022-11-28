@@ -5,10 +5,17 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.Te
 
 public class StringBasedEnumWithFormatterMessagePackFormatter : ValueObjectMessagePackFormatterBase<StringBasedEnumWithFormatter, string>
 {
+#if NET7_0
    public StringBasedEnumWithFormatterMessagePackFormatter()
-      : base(StringBasedEnumWithFormatter.Get, obj => obj.Key)
+      : base(true)
    {
    }
+#else
+   public StringBasedEnumWithFormatterMessagePackFormatter()
+      : base(StringBasedEnumWithFormatter.Get)
+   {
+   }
+#endif
 }
 
 [MessagePackFormatter(typeof(StringBasedEnumWithFormatterMessagePackFormatter))]

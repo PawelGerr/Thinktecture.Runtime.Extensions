@@ -59,7 +59,11 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name}, options);
+#if NET7_0
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>(false, options);
+#else
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>({state.TypeFullyQualified}.Create, options);
+#endif
          }}
       }}
    }}
@@ -191,7 +195,7 @@ namespace {state.Namespace}
       sb.Append(@$"
             }}
 
-            var validationResult = {state.TypeFullyQualified}.TryCreate(");
+            var validationResult = {state.TypeFullyQualified}.Validate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {

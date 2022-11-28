@@ -4,12 +4,12 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class EnumSettings : IEquatable<EnumSettings>
 {
-   public string? KeyComparer { get; }
+   public string? KeyEqualityComparer { get; }
    public string? KeyPropertyName { get; }
 
    public EnumSettings(AttributeData? attribute)
    {
-      KeyComparer = attribute?.FindKeyComparer().TrimAndNullify();
+      KeyEqualityComparer = attribute?.FindKeyEqualityComparer().TrimAndNullify();
       KeyPropertyName = attribute?.FindKeyPropertyName().TrimAndNullify();
    }
 
@@ -25,7 +25,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
       if (ReferenceEquals(this, other))
          return true;
 
-      return KeyComparer == other.KeyComparer
+      return KeyEqualityComparer == other.KeyEqualityComparer
              && KeyPropertyName == other.KeyPropertyName;
    }
 
@@ -33,7 +33,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
    {
       unchecked
       {
-         var hashCode = KeyComparer?.GetHashCode() ?? 0;
+         var hashCode = KeyEqualityComparer?.GetHashCode() ?? 0;
          hashCode = (hashCode * 397) ^ (KeyPropertyName?.GetHashCode() ?? 0);
 
          return hashCode;

@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
@@ -72,6 +74,14 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          }
 
          this.DisableNullableReferenceWarnings();
+      }
+
+      protected override ParseOptions CreateParseOptions()
+      {
+         var options = (CSharpParseOptions)base.CreateParseOptions();
+         options = options.WithLanguageVersion(LanguageVersion.Preview);
+
+         return options;
       }
    }
 }

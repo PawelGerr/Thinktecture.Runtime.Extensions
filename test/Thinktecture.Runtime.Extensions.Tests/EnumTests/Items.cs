@@ -42,8 +42,8 @@ public class Items
    [Fact]
    public void Should_return_public_fields_only_via_reflection()
    {
-      var enums = (IReadOnlyList<IEnum<string>>)typeof(TestEnum).GetProperty("Items", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
-                                                                ?.GetValue(null);
+      var enums = (IReadOnlyList<TestEnum>)typeof(TestEnum).GetProperty("Items", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                                                           ?.GetValue(null);
 
       enums.Should().HaveCount(2);
       enums.Should().Contain(TestEnum.Item1);

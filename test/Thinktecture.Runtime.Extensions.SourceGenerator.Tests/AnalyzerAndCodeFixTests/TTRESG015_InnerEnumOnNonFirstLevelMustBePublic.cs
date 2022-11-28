@@ -28,6 +28,12 @@ namespace TestNamespace
          }
       }
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -46,6 +52,12 @@ namespace TestNamespace
 	      {
          }
       }
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -72,6 +84,12 @@ namespace TestNamespace
 	      {
          }
       }
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

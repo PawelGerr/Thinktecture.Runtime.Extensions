@@ -6,7 +6,7 @@ namespace Thinktecture;
 /// Interface of Smart Enum.
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public interface IValidatableEnum<out TKey> : IEnum<TKey>, IValidatableObject
+public interface IValidatableEnum<TKey> : IEnum<TKey>, IValidatableObject
    where TKey : notnull
 {
    /// <summary>
@@ -27,6 +27,6 @@ public interface IValidatableEnum<out TKey> : IEnum<TKey>, IValidatableObject
    {
       return IsValid
                 ? Enumerable.Empty<ValidationResult>()
-                : new[] { new ValidationResult($"The enumeration item of type '{GetType().Name}' with identifier '{GetKey()}' is not valid.") };
+                : new[] { new ValidationResult($"There is no item of type '{GetType().Name}' with the identifier '{GetKey()}'.") };
    }
 }

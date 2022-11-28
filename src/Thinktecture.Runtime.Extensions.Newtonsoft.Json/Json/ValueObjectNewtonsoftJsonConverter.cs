@@ -10,17 +10,31 @@ namespace Thinktecture.Json;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : ValueObjectNewtonsoftJsonConverterBase<T, TKey>
+   where T : IKeyedValueObject<TKey>
+#if NET7_0
+ , IKeyedValueObject<T, TKey>
+#endif
    where TKey : notnull
 {
+#if NET7_0
+   /// <summary>
+   /// Initializes a new instance of <see cref="ValueObjectNewtonsoftJsonConverter{T,TKey}"/>.
+   /// </summary>
+   /// <param name="mayReturnInvalidObjects">Indication whether invalid should be returned on deserialization. If <c>false</c> then a <see cref="JsonException"/> is thrown.</param>
+   public ValueObjectNewtonsoftJsonConverter(bool mayReturnInvalidObjects)
+      : base(mayReturnInvalidObjects)
+   {
+   }
+#else
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectNewtonsoftJsonConverter{T,TKey}"/>.
    /// </summary>
    /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
-   /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
-   public ValueObjectNewtonsoftJsonConverter(Func<TKey, T> convertFromKey, Func<T, TKey> convertToKey)
-      : base(convertFromKey, convertToKey)
+   public ValueObjectNewtonsoftJsonConverter(Func<TKey, T> convertFromKey)
+      : base(convertFromKey)
    {
    }
+#endif
 }
 
 /// <summary>
@@ -69,9 +83,13 @@ public sealed class ValueObjectNewtonsoftJsonConverter : JsonConverter
          throw new InvalidOperationException($"The provided type is not serializable by the '{nameof(ValueObjectNewtonsoftJsonConverter)}'. Type: {type.FullName}");
 
       var converterType = typeof(ValueObjectNewtonsoftJsonConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-      var converter = Activator.CreateInstance(converterType, metadata.ConvertFromKey, metadata.ConvertToKey)
-                      ?? throw new Exception($"Could not create a converter of type '{converterType.Name}'.");
 
-      return (JsonConverter)converter;
+#if NET7_0
+      var converter = Activator.CreateInstance(converterType, new object?[] { metadata.IsValidatableEnum });
+#else
+      var converter = Activator.CreateInstance(converterType, metadata.ConvertFromKey);
+#endif
+
+      return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));
    }
 }

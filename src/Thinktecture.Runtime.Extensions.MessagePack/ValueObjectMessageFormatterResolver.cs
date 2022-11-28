@@ -44,12 +44,16 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
          if (metadata is null)
             return;
 
-         var formatterGenericTypeDefinition = Nullable.GetUnderlyingType(type) == metadata.Type
-                                                 ? typeof(NullableStructValueObjectMessagePackFormatter<,>)
-                                                 : typeof(ValueObjectMessagePackFormatter<,>);
-         var formatterType = formatterGenericTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
-         var formatter = Activator.CreateInstance(formatterType, metadata.ConvertFromKey, metadata.ConvertToKey);
+         var formatterTypeDefinition = metadata.Type.IsClass
+                                          ? typeof(ValueObjectMessagePackFormatter<,>)
+                                          : typeof(StructValueObjectMessagePackFormatter<,>);
+         var formatterType = formatterTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
 
+#if NET7_0
+         var formatter = Activator.CreateInstance(formatterType, new object?[] { metadata.IsValidatableEnum });
+#else
+         var formatter = Activator.CreateInstance(formatterType, metadata.ConvertFromKey);
+#endif
          if (formatter is null)
          {
             InitError = $"The formatter of '{formatterType.Name}' could not be instantiated.";

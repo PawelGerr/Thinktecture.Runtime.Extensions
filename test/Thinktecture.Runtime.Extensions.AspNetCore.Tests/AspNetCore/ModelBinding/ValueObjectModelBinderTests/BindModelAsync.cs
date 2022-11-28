@@ -77,7 +77,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_string_based_value_type()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObject, string>(StringBasedReferenceValueObject.TryCreate, "Value");
+      var ctx = await BindAsync<StringBasedReferenceValueObject, string>(StringBasedReferenceValueObject.Validate, "Value");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -87,7 +87,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_string_based_value_type_with_NullInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, "Value");
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Validate, "Value");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -97,7 +97,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_null_with_NullInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, null);
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Validate, null);
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeFalse();
@@ -107,7 +107,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_empty_string_with_NullInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, String.Empty);
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Validate, String.Empty);
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -117,7 +117,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_whitespaces_with_NullInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate, " ");
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Validate, " ");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -127,7 +127,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_string_based_value_type_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, "Value");
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Validate, "Value");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -137,7 +137,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_null_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, null);
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Validate, null);
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeFalse();
@@ -147,7 +147,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_empty_string_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, String.Empty);
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Validate, String.Empty);
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -157,7 +157,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_whitespaces_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate, " ");
+      var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Validate, " ");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -167,7 +167,7 @@ public class BindModelAsync
    [Fact]
    public async Task Should_return_error_if_value_violates_validation_rules()
    {
-      var ctx = await BindAsync<StringBasedReferenceValueObject, string>(StringBasedReferenceValueObject.TryCreate, "A");
+      var ctx = await BindAsync<StringBasedReferenceValueObject, string>(StringBasedReferenceValueObject.Validate, "A");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
       ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Property cannot be 1 character long.") });

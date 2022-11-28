@@ -256,7 +256,7 @@ namespace Thinktecture.Tests
                }
             }
 
-            var validationResult = global::Thinktecture.Tests.TestValueObject.TryCreate(
+            var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(
                                        referenceField!,
                                        structProperty!,
                                        nullableStructProperty!,
@@ -421,7 +421,7 @@ namespace Thinktecture.Tests
                }
             }
 
-            var validationResult = global::Thinktecture.Tests.TestValueObject.TryCreate(
+            var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(
                                        referenceField!,
                                        structProperty!,
                                        nullableStructProperty!,
@@ -586,7 +586,7 @@ namespace Thinktecture.Tests
                }
             }
 
-            var validationResult = global::Thinktecture.Tests.TestValueObject.TryCreate(
+            var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(
                                        referenceField!,
                                        structProperty!,
                                        nullableStructProperty!,
@@ -746,7 +746,7 @@ public readonly partial struct TestValueObject
                }
             }
 
-            var validationResult = global::TestValueObject.TryCreate(
+            var validationResult = global::TestValueObject.Validate(
                                        referenceField!,
                                        structProperty!,
                                        nullableStructProperty!,

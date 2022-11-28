@@ -1,3 +1,4 @@
+#if !NET7_0
 using System.Threading.Tasks;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
@@ -11,7 +12,7 @@ public class TTRESG030_KeyComparerMustBeStaticFieldOrProperty
    public class ValueObject_key_member_should_not_be_nullable
    {
       [Fact]
-      public async Task Should_trigger_if_keycomparer_is_not_static()
+      public async Task Should_trigger_if_KeyComparer_is_not_static()
       {
          var code = @"
 using System;
@@ -34,7 +35,7 @@ namespace TestNamespace
       }
 
       [Fact]
-      public async Task Should_not_trigger_if_keycomparer_is_static()
+      public async Task Should_not_trigger_if_KeyComparer_is_static()
       {
          var code = @"
 using System;
@@ -55,3 +56,4 @@ namespace TestNamespace
       }
    }
 }
+#endif

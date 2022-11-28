@@ -26,6 +26,12 @@ namespace TestNamespace
          return null;
       }
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
@@ -49,6 +55,12 @@ namespace TestNamespace
       {
          return null;
       }
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -74,6 +86,12 @@ namespace TestNamespace
          return null;
       }
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
@@ -97,6 +115,12 @@ namespace TestNamespace
       {
          return null;
       }
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -122,6 +146,12 @@ namespace TestNamespace
          return null;
       }
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
@@ -145,6 +175,12 @@ namespace TestNamespace
       {
          return null;
       }
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

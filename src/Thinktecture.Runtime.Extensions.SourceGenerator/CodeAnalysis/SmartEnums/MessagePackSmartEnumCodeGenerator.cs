@@ -25,12 +25,19 @@ namespace {ns}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.{(_state.IsReferenceType ? "ValueObjectMessagePackFormatterBase" : "StructValueObjectMessagePackFormatterBase")}<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
       {{
+#if NET7_0
          public ValueObjectMessagePackFormatter()
-            : base({_state.TypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})
+            : base({(_state.IsValidatable ? "true" : "false")})
          {{
          }}
+#else
+         public ValueObjectMessagePackFormatter()
+            : base({_state.TypeFullyQualified}.Get)
+         {{
+         }}
+#endif
       }}
    }}
 {(ns is null ? null : @"}

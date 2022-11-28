@@ -21,6 +21,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -32,6 +38,12 @@ namespace TestNamespace
 	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -52,6 +64,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -63,6 +81,12 @@ namespace TestNamespace
 	public sealed partial class TestEnum : IEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -98,6 +122,12 @@ namespace TestNamespace
       {
       }
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -124,6 +154,12 @@ namespace TestNamespace
       private class Type_2 : Type_1
       {
       }
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -159,6 +195,12 @@ namespace TestNamespace
       {
       }
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -186,6 +228,12 @@ namespace TestNamespace
       {
       }
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_4");
@@ -209,6 +257,12 @@ namespace TestNamespace
       {
       }
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
@@ -230,6 +284,12 @@ namespace TestNamespace
       private sealed class DerivedType : TestEnum
       {
       }
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -253,6 +313,12 @@ namespace TestNamespace
       {
       }
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
@@ -274,6 +340,12 @@ namespace TestNamespace
       private sealed class DerivedType<T> : TestEnum
       {
       }
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -308,6 +380,12 @@ namespace TestNamespace
       {
       }
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
@@ -325,6 +403,12 @@ namespace TestNamespace
 	public abstract partial class {|#0:TestEnum|} : IEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -347,6 +431,12 @@ namespace TestNamespace
       private abstract class Type_1 : TestEnum
       {
       }
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

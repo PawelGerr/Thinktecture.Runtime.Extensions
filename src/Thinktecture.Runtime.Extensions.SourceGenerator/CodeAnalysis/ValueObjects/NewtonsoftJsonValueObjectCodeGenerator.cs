@@ -43,10 +43,17 @@ namespace {ns}
    {{
       public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
+#if NET7_0
          public ValueObjectNewtonsoftJsonConverter()
-            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
+            : base(false)
          {{
          }}
+#else
+         public ValueObjectNewtonsoftJsonConverter()
+            : base({state.TypeFullyQualified}.Create)
+         {{
+         }}
+#endif
       }}
    }}
 {(ns is null ? null : @"}
@@ -151,7 +158,7 @@ namespace {state.Namespace}
       sb.Append(@$"
             }}
 
-            var validationResult = {state.TypeFullyQualified}.TryCreate(");
+            var validationResult = {state.TypeFullyQualified}.Validate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {

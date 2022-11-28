@@ -25,8 +25,11 @@ public class ValueObjectDemos
          logger.Information("ValidationException is thrown because a product name cannot be an empty string.");
       }
 
-      var validationResult = ProductName.TryCreate("Milk", out var milk);
+      var validationResult = ProductName.Validate("Milk", out var milk);
       if (validationResult == ValidationResult.Success)
+         logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
+
+      if (ProductName.TryCreate("Milk", out milk))
          logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
 
       // Thanks to setting "NullInFactoryMethodsYieldsNull = true" the method "Create" returns null
@@ -41,8 +44,11 @@ public class ValueObjectDemos
       var otherNullProductName2 = OtherProductName.Create(" ");
       logger.Information("Null-Product name: {NullProduct}", otherNullProductName2);
 
-      var nullValidationResult = ProductName.TryCreate(null, out nullProduct);
+      var nullValidationResult = ProductName.Validate(null, out nullProduct);
       if (nullValidationResult == ValidationResult.Success)
+         logger.Information("Null-Product name: {NullProduct}", nullProduct);
+
+      if (ProductName.TryCreate(null, out nullProduct))
          logger.Information("Null-Product name: {NullProduct}", nullProduct);
    }
 }

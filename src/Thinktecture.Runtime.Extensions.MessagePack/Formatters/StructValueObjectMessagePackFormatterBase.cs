@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using MessagePack;
 using MessagePack.Formatters;
 
@@ -12,17 +13,17 @@ namespace Thinktecture.Formatters;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public abstract class ValueObjectMessagePackFormatterBase<T, TKey> : IMessagePackFormatter<T>
-   where T : IKeyedValueObject<TKey>?
+public abstract class StructValueObjectMessagePackFormatterBase<T, TKey> : IMessagePackFormatter<T>, IMessagePackFormatter<T?>
+   where T : struct, IKeyedValueObject<TKey>
 #if NET7_0
- , IKeyedValueObject<T, TKey>?
+ , IKeyedValueObject<T, TKey>
 #endif
    where TKey : notnull
 {
 #if NET7_0
    private readonly bool _mayReturnInvalidObjects;
 #else
-   private readonly Func<TKey, T?> _convertFromKey;
+   private readonly Func<TKey, T> _convertFromKey;
 #endif
 
 #if NET7_0
@@ -30,7 +31,7 @@ public abstract class ValueObjectMessagePackFormatterBase<T, TKey> : IMessagePac
    /// Initializes a new instance of <see cref="ValueObjectMessagePackFormatter{T,TKey}"/>.
    /// </summary>
    /// <param name="mayReturnInvalidObjects">Indication whether invalid should be returned on deserialization. If <c>false</c> then a <see cref="ValidationException"/> is thrown.</param>
-   protected ValueObjectMessagePackFormatterBase(bool mayReturnInvalidObjects)
+   protected StructValueObjectMessagePackFormatterBase(bool mayReturnInvalidObjects)
    {
       _mayReturnInvalidObjects = mayReturnInvalidObjects;
    }
@@ -39,11 +40,18 @@ public abstract class ValueObjectMessagePackFormatterBase<T, TKey> : IMessagePac
    /// Initializes a new instance of <see cref="ValueObjectMessagePackFormatter{T,TKey}"/>.
    /// </summary>
    /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
-   protected ValueObjectMessagePackFormatterBase(Func<TKey, T?> convertFromKey)
+   protected StructValueObjectMessagePackFormatterBase(Func<TKey, T> convertFromKey)
    {
       _convertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));
    }
 #endif
+
+   /// <inheritdoc />
+   public void Serialize(ref MessagePackWriter writer, T value, MessagePackSerializerOptions options)
+   {
+      var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
+      formatter.Serialize(ref writer, value.GetKey(), options);
+   }
 
    /// <inheritdoc />
    public void Serialize(ref MessagePackWriter writer, T? value, MessagePackSerializerOptions options)
@@ -54,29 +62,55 @@ public abstract class ValueObjectMessagePackFormatterBase<T, TKey> : IMessagePac
       }
       else
       {
-         var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
-         formatter.Serialize(ref writer, value.GetKey(), options);
+         Serialize(ref writer, value.Value, options);
       }
    }
 
    /// <inheritdoc />
 #pragma warning disable CS8766
-   public T? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+   public T Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
 #pragma warning restore CS8766
    {
-      if (reader.TryReadNil())
+      if (!TryReadKey(ref reader, options, out var key))
          return default;
+
+      return Deserialize(key);
+   }
+
+   /// <inheritdoc />
+#pragma warning disable CS8766
+   T? IMessagePackFormatter<T?>.Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+#pragma warning restore CS8766
+   {
+      if (!TryReadKey(ref reader, options, out var key))
+         return default;
+
+      return Deserialize(key);
+   }
+
+   private static bool TryReadKey(
+      ref MessagePackReader reader,
+      MessagePackSerializerOptions options,
+      [MaybeNullWhen(false)] out TKey key)
+   {
+      if (reader.TryReadNil())
+      {
+         key = default;
+         return false;
+      }
 
       var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
-      var key = formatter.Deserialize(ref reader, options);
+      key = formatter.Deserialize(ref reader, options);
 
-      if (key is null)
-         return default;
+      return key is not null;
+   }
 
+   private T Deserialize(TKey key)
+   {
 #if NET7_0
       var validationResult = T.Validate(key, out var obj);
 
-      if (validationResult != ValidationResult.Success)
+      if (validationResult != ValidationResult.Success && !_mayReturnInvalidObjects)
          throw new ValidationException(validationResult!.ErrorMessage ?? "MessagePack deserialization failed.");
 
       return obj;

@@ -6,10 +6,12 @@ namespace Thinktecture;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public sealed class EnumGenerationAttribute : Attribute
 {
+#if !NET7_0
    /// <summary>
    /// The static member name containing the key equality comparer.
    /// </summary>
    public string? KeyComparer { get; set; }
+#endif
 
    private string? _keyPropertyName;
 

@@ -24,6 +24,12 @@ namespace TestNamespace
       public static TestEnum {|#0:Item1|} = default;
       public static readonly TestEnum Item2 = default;
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          var expectedCode = @"
@@ -36,6 +42,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
       public static readonly TestEnum Item2 = default;
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -58,6 +70,12 @@ namespace TestNamespace
 
       public static object {|#0:SomeStaticField|} = default;
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          var expectedCode = @"
@@ -71,6 +89,12 @@ namespace TestNamespace
       public static readonly TestEnum Item1 = default;
 
       public static readonly object {|#0:SomeStaticField|} = default;
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -93,6 +117,12 @@ namespace TestNamespace
 
       public int {|#0:InstanceField|};
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          var expectedCode = @"
@@ -106,6 +136,12 @@ namespace TestNamespace
       public static readonly TestEnum Item1 = default;
 
       public readonly int InstanceField;
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -127,6 +163,12 @@ namespace TestNamespace
       public static readonly TestEnum Item1 = default;
 
       public readonly int {|#0:InstanceField|};
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

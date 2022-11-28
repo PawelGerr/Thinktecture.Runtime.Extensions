@@ -25,6 +25,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
@@ -45,6 +51,12 @@ namespace TestNamespace
 #pragma warning restore CS8632
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -67,6 +79,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<int?> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
@@ -88,6 +106,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<int?> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
@@ -107,6 +131,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
@@ -124,6 +154,12 @@ namespace TestNamespace
 	public sealed partial class {|#0:TestEnum|} : IEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -143,6 +179,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<int?> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
@@ -161,6 +203,12 @@ namespace TestNamespace
 	public sealed partial class {|#0:TestEnum|} : IEnum<int>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<int> KeyEqualityComparer => default;
    }
 }";
 

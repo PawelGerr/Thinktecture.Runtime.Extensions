@@ -10,26 +10,40 @@ namespace Thinktecture.Json;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConverter
+   where T : IKeyedValueObject<TKey>
+#if NET7_0
+ , IKeyedValueObject<T, TKey>
+#endif
    where TKey : notnull
 {
    private static readonly Type _type = typeof(T);
    private static readonly Type _keyType = typeof(TKey);
 
+#if NET7_0
+   private readonly bool _mayReturnInvalidObjects;
+#else
    private readonly Func<TKey, T?> _convertFromKey;
-   private readonly Func<T, TKey> _convertToKey;
+#endif
 
+#if NET7_0
+   /// <summary>
+   /// Initializes a new instance of <see cref="ValueObjectNewtonsoftJsonConverter{T,TKey}"/>.
+   /// </summary>
+   /// <param name="mayReturnInvalidObjects">Indication whether invalid should be returned on deserialization. If <c>false</c> then a <see cref="JsonSerializationException"/> is thrown.</param>
+   protected ValueObjectNewtonsoftJsonConverterBase(bool mayReturnInvalidObjects)
+   {
+      _mayReturnInvalidObjects = mayReturnInvalidObjects;
+   }
+#else
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectNewtonsoftJsonConverter{T,TKey}"/>.
    /// </summary>
    /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
-   /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
-   protected ValueObjectNewtonsoftJsonConverterBase(
-      Func<TKey, T?> convertFromKey,
-      Func<T, TKey> convertToKey)
+   protected ValueObjectNewtonsoftJsonConverterBase(Func<TKey, T?> convertFromKey)
    {
       _convertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));
-      _convertToKey = convertToKey ?? throw new ArgumentNullException(nameof(convertToKey));
    }
+#endif
 
    /// <inheritdoc />
    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
@@ -45,7 +59,7 @@ public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConv
       }
       else
       {
-         serializer.Serialize(writer, _convertToKey((T)value));
+         serializer.Serialize(writer, ((T)value).GetKey());
       }
    }
 
@@ -78,6 +92,14 @@ public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConv
       if (key is null)
          return null;
 
+#if NET7_0
+      var validationResult = T.Validate(key, out var obj);
+
+      if (validationResult != ValidationResult.Success && !_mayReturnInvalidObjects)
+         throw new JsonSerializationException(validationResult!.ErrorMessage ?? "JSON deserialization failed.");
+
+      return obj;
+#else
       try
       {
          return _convertFromKey(key);
@@ -90,6 +112,7 @@ public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConv
       {
          throw new JsonSerializationException(ex.ValidationResult.ErrorMessage!, ex);
       }
+#endif
    }
 
    /// <inheritdoc />

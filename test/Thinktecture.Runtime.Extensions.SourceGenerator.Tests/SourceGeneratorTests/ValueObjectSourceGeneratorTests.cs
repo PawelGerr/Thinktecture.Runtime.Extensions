@@ -1000,10 +1000,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, string>(static item => item.ReferenceField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -1419,10 +1419,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, string>(static item => item.ReferenceField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -1829,10 +1829,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, string>(static item => item.ReferenceField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -2047,10 +2047,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, int>(static item => item.StructField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, int>> convertToKeyExpression = static obj => obj.StructField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -2282,10 +2282,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, string>(static item => item.ReferenceField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -2739,10 +2739,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, int>(static item => item.StructField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, int>> convertToKeyExpression = static obj => obj.StructField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -3208,10 +3208,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, string>(static item => item.ReferenceField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, string>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -3427,10 +3427,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, int>(static item => item.ReferenceField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, int>> convertToKeyExpression = static obj => obj.ReferenceField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, int>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -3669,10 +3669,10 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>(static item => item.ReferenceField);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>> convertToKeyExpression = static obj => obj.ReferenceField;
 
-         var tryCreate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>(global::Thinktecture.Tests.TestValueObject.TryCreate);
+         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>(global::Thinktecture.Tests.TestValueObject.Validate);
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(global::Thinktecture.Tests.Foo), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, tryCreate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof(global::Thinktecture.Tests.Foo), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }

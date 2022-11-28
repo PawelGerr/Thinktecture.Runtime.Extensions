@@ -41,12 +41,19 @@ namespace {ns}
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.{(state.IsReferenceType ? "ValueObjectMessagePackFormatterBase" : "StructValueObjectMessagePackFormatterBase")}<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
+#if NET7_0
          public ValueObjectMessagePackFormatter()
-            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
+            : base(false)
          {{
          }}
+#else
+         public ValueObjectMessagePackFormatter()
+            : base({state.TypeFullyQualified}.Create)
+         {{
+         }}
+#endif
       }}
    }}
 {(ns is null ? null : @"}
@@ -92,7 +99,7 @@ namespace {state.Namespace}
 
       sb.Append(@$"
 
-               var validationResult = {state.TypeFullyQualified}.TryCreate(");
+               var validationResult = {state.TypeFullyQualified}.Validate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {

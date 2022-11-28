@@ -21,6 +21,9 @@ namespace TestNamespace
 {
 	public sealed class {|#0:TestEnum|} : IValidatableEnum<string>
 	{
+      // simulate source gen
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+
       public static readonly TestEnum Item1 = default;
    }
 }";
@@ -33,6 +36,9 @@ namespace TestNamespace
 {
 	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string>
 	{
+      // simulate source gen
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+
       public static readonly TestEnum Item1 = default;
    }
 }";
@@ -52,6 +58,9 @@ namespace TestNamespace
 {
 	public readonly struct {|#0:TestEnum|} : IValidatableEnum<string>
 	{
+      // simulate source gen
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+
       public static readonly TestEnum Item1 = default;
    }
 }";
@@ -64,6 +73,9 @@ namespace TestNamespace
 {
 	public readonly partial struct {|#0:TestEnum|} : IValidatableEnum<string>
 	{
+      // simulate source gen
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+
       public static readonly TestEnum Item1 = default;
    }
 }";
@@ -85,6 +97,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
@@ -102,6 +120,12 @@ namespace TestNamespace
 	public readonly partial struct {|#0:TestEnum|} : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+	partial struct TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

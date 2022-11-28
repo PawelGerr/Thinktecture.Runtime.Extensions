@@ -21,6 +21,12 @@ namespace TestNamespace
 	{
       internal static readonly TestEnum {|#0:Item1|} = default;
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -32,6 +38,12 @@ namespace TestNamespace
 	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -52,6 +64,12 @@ namespace TestNamespace
 	{
       static private readonly TestEnum {|#0:Item1|} = default;
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -63,6 +81,12 @@ namespace TestNamespace
 	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -83,6 +107,12 @@ namespace TestNamespace
 	{
       static readonly TestEnum {|#0:Item1|} = default;
    }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expectedCode = @"
@@ -94,6 +124,12 @@ namespace TestNamespace
 	public sealed partial class TestEnum : IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+	partial class TestEnum
+	{
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

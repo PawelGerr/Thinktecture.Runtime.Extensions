@@ -195,7 +195,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (!enumType.IsEnum(out var enumInterfaces))
          return document;
 
-      var enumInterface = enumInterfaces.GetValidEnumInterface(enumType, cancellationToken, declaration.Identifier.GetLocation());
+      var enumInterface = enumInterfaces.GetValidEnumInterface(enumType);
 
       if (enumInterface is null)
          return document;

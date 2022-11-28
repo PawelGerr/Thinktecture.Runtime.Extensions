@@ -114,7 +114,7 @@ namespace Thinktecture.Tests
    [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
    partial struct TestValueObject
    {
-      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<global::Thinktecture.Tests.TestValueObject, string>
+      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.StructValueObjectMessagePackFormatterBase<global::Thinktecture.Tests.TestValueObject, string>
       {
          public ValueObjectMessagePackFormatter()
             : base(global::Thinktecture.Tests.TestValueObject.Create, static obj => obj.ReferenceField)
@@ -179,7 +179,7 @@ namespace Thinktecture.Tests
                var structProperty = reader.ReadInt32()!;
                var nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
 
-               var validationResult = global::Thinktecture.Tests.TestValueObject.TryCreate(
+               var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(
                                           referenceField,
                                           structProperty,
                                           nullableStructProperty,
@@ -266,7 +266,7 @@ public partial class TestValueObject
                var structProperty = reader.ReadInt32()!;
                var nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
 
-               var validationResult = global::TestValueObject.TryCreate(
+               var validationResult = global::TestValueObject.Validate(
                                           referenceField,
                                           structProperty,
                                           nullableStructProperty,
@@ -357,7 +357,7 @@ namespace Thinktecture.Tests
                var structProperty = reader.ReadInt32()!;
                var nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
 
-               var validationResult = global::Thinktecture.Tests.TestValueObject.TryCreate(
+               var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(
                                           referenceField,
                                           structProperty,
                                           nullableStructProperty,

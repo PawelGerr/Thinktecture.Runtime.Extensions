@@ -7,6 +7,8 @@ public sealed class EnumSourceGeneratorState :
    ISourceGeneratorState,
    IEquatable<EnumSourceGeneratorState>
 {
+   internal const string KEY_EQUALITY_COMPARER_NAME = "KeyEqualityComparer";
+
    private readonly INamedTypeSymbol _enumType;
 
    public string? Namespace { get; }
@@ -21,6 +23,7 @@ public sealed class EnumSourceGeneratorState :
    public BaseTypeState? BaseType { get; }
 
    public bool HasCreateInvalidImplementation { get; }
+   public bool HasKeyComparerImplementation { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
    public string Name { get; }
@@ -59,6 +62,7 @@ public sealed class EnumSourceGeneratorState :
       var keyType = enumInterface.TypeArguments[0];
       KeyProperty = Settings.CreateKeyProperty(keyType);
       HasCreateInvalidImplementation = type.HasCreateInvalidImplementation(keyType, cancellationToken);
+      HasKeyComparerImplementation = HasHasKeyComparerImplementation(type);
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
@@ -70,6 +74,20 @@ public sealed class EnumSourceGeneratorState :
                                        .ToList();
 
       AttributeInfo = new AttributeInfo(type);
+   }
+
+   private static bool HasHasKeyComparerImplementation(INamedTypeSymbol enumType)
+   {
+      foreach (var member in enumType.GetMembers())
+      {
+         if (member is not IPropertySymbol property)
+            continue;
+
+         if (member.IsStatic && property.Name == KEY_EQUALITY_COMPARER_NAME)
+            return true;
+      }
+
+      return false;
    }
 
    public Location GetFirstLocation(CancellationToken cancellationToken)

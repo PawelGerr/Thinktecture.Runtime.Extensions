@@ -31,6 +31,7 @@ internal static class DiagnosticsDescriptors
    public static readonly DiagnosticDescriptor EnumWithoutDerivedTypesMustBeSealed = new("TTRESG037", "Enumeration without derived types must be sealed", "Enumeration '{0}' without derived types must be sealed", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
    public static readonly DiagnosticDescriptor ValueObjectMustBeSealed = new("TTRESG038", "Value objects must be sealed", "Value object '{0}' must be sealed", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
    public static readonly DiagnosticDescriptor SwitchMustCoverAllItems = new("TTRESG039", "Switch must cover all items", "The switch-case on the enumeration '{0}' does not cover all items. Following items are not covered: {1}.", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
+   public static readonly DiagnosticDescriptor DontImplementEnumInterfaceWithTwoGenerics = new("TTRESG040", "Don't implement \"IEnum<TKey, T>\", implement \"IEnum<TKey>\" only", "The interface \"IEnum<{0}, {1}>\" will be implemented by Source Generator, implement \"IEnum<{0}>\" only", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
    public static readonly DiagnosticDescriptor ErrorDuringGeneration = new("TTRESG099", "Error during code generation", "Error during code generation for '{0}': '{1}'", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 

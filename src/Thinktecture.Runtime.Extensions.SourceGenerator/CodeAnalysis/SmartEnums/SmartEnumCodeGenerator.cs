@@ -7,8 +7,8 @@ public sealed class SmartEnumCodeGenerator : CodeGeneratorBase
    private readonly EnumSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
-   private bool NeedsDefaultComparer => _state.Settings.KeyComparer is null;
-   private string KeyComparerMember => _state.Settings.KeyComparer ?? "_defaultKeyComparerMember";
+   private bool NeedsDefaultComparer => _state.Settings.KeyEqualityComparer is null && !_state.HasKeyComparerImplementation;
+   private string KeyEqualityComparerName => _state.Settings.KeyEqualityComparer ?? EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME;
 
    public override string? FileNameSuffix => null;
 
@@ -55,7 +55,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
    [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_EnumTypeConverter))]
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>
+   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>, global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>
    {{");
 
       GenerateModuleInitializer(_state.KeyProperty);
@@ -66,7 +66,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append($@"
 
-      private static readonly global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualifiedNullAnnotated}> {KeyComparerMember} = {defaultComparer};");
+      public static global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualifiedNullAnnotated}> {KeyEqualityComparerName} => {defaultComparer};");
       }
 
       _sb.Append($@"
@@ -381,7 +381,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {{
          return {_state.TypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out item)
                ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               : new global::System.ComponentModel.DataAnnotations.ValidationResult($""The enumeration item of type \""{_state.TypeMinimallyQualified}\"" with identifier \""{{{_state.KeyProperty.ArgumentName}}}\"" is not valid."");
+               : new global::System.ComponentModel.DataAnnotations.ValidationResult($""There is no item of type '{_state.TypeMinimallyQualified}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");
       }}");
    }
 
@@ -497,7 +497,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         return {KeyComparerMember}.Equals(this.{_state.KeyProperty.Name}, other.{_state.KeyProperty.Name});
+         return {KeyEqualityComparerName}.Equals(this.{_state.KeyProperty.Name}, other.{_state.KeyProperty.Name});
       }}");
    }
 
@@ -509,7 +509,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}> GetLookup()
       {{
-         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>({totalNumberOfItems}, {KeyComparerMember});");
+         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>({totalNumberOfItems}, {KeyEqualityComparerName});");
 
       if (_state.ItemNames.Count > 0)
       {
@@ -521,7 +521,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (_state.IsReferenceType)
          {
             _sb.Append($@"
-            if(item is null)
+            if (item is null)
                throw new global::System.ArgumentNullException($""The item \""{{itemName}}\"" of type \""{_state.TypeMinimallyQualified}\"" must not be null."");
 ");
          }
@@ -529,7 +529,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (_state.KeyProperty.IsReferenceType)
          {
             _sb.Append($@"
-            if(item.{_state.KeyProperty.Name} is null)
+            if (item.{_state.KeyProperty.Name} is null)
                throw new global::System.ArgumentException($""The \""{_state.KeyProperty.Name}\"" of the item \""{{itemName}}\"" of type \""{_state.TypeMinimallyQualified}\"" must not be null."");
 ");
          }
@@ -537,7 +537,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (_state.IsValidatable)
          {
             _sb.Append($@"
-            if(!item.IsValid)
+            if (!item.IsValid)
                throw new global::System.ArgumentException($""All \""public static readonly\"" fields of type \""{_state.TypeMinimallyQualified}\"" must be valid but the item \""{{itemName}}\"" with the identifier \""{{item.{_state.KeyProperty.Name}}}\"" is not."");
 ");
          }
@@ -586,7 +586,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
-      {_state.KeyProperty.TypeFullyQualified} global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}>.GetKey()
+      {_state.KeyProperty.TypeFullyQualified} global::Thinktecture.IKeyedValueObject<{_state.KeyProperty.TypeFullyQualified}>.GetKey()
       {{
          return this.{_state.KeyProperty.Name};
       }}");
@@ -616,7 +616,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyProperty.IsReferenceType)
       {
          _sb.Append($@"
-        if ({_state.KeyProperty.ArgumentName} is null)
+         if ({_state.KeyProperty.ArgumentName} is null)
             return default;
 ");
       }
@@ -822,7 +822,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.TypeFullyQualified}).GetHashCode() * 397 ^ {KeyComparerMember}.GetHashCode({_state.KeyProperty.ArgumentName}));
+         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.TypeFullyQualified}).GetHashCode() * 397 ^ {KeyEqualityComparerName}.GetHashCode({_state.KeyProperty.ArgumentName}));
       }}
 
       static partial void ValidateConstructorArguments(ref {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}");
