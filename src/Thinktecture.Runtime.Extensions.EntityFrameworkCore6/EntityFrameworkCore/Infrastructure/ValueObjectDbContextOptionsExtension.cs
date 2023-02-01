@@ -55,7 +55,7 @@ internal sealed class ValueObjectDbContextOptionsExtension : IDbContextOptionsEx
       throw new InvalidOperationException($"No service characteristics for service '{serviceType.Name}' found.");
    }
 
-   private class ValueObjectDbContextOptionsExtensionInfo : DbContextOptionsExtensionInfo
+   private sealed class ValueObjectDbContextOptionsExtensionInfo : DbContextOptionsExtensionInfo
    {
       private readonly ValueObjectDbContextOptionsExtension _extension;
       public override bool IsDatabaseProvider => false;

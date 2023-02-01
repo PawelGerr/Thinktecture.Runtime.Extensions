@@ -11,7 +11,7 @@ public partial class Empty
       return EmptyDisposable.Instance;
    }
 
-   private class EmptyDisposable : IDisposable
+   private sealed class EmptyDisposable : IDisposable
    {
       public static readonly IDisposable Instance = new EmptyDisposable();
 
@@ -29,7 +29,7 @@ public partial class Empty
       return EmptyAsyncDisposable.Instance;
    }
 
-   private class EmptyAsyncDisposable : IAsyncDisposable
+   private sealed class EmptyAsyncDisposable : IAsyncDisposable
    {
       public static readonly IAsyncDisposable Instance = new EmptyAsyncDisposable();
 

@@ -9,20 +9,14 @@ jobs:
 
     steps:
 
-      - name: install .NET Core 3.1 SDK
-        uses: actions/setup-dotnet@v1
+      - name: install .NET Core 3.1/5/6/7 SDKs
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 3.1.x
-
-      - name: install .NET 5 SDK
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.x
-
-      - name: install .NET 6 SDK
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
 
       - name: .NET info
         run: dotnet --info

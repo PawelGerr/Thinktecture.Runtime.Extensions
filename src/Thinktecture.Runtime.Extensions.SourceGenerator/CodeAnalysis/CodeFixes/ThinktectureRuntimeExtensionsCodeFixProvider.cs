@@ -225,7 +225,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return throwStatement;
    }
 
-   private class CodeFixesContext
+   private sealed class CodeFixesContext
    {
       private readonly Diagnostic _diagnostic;
       private readonly SyntaxNode _root;

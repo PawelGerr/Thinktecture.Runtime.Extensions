@@ -832,7 +832,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private record struct ConstructorArgument(string TypeFullyQualifiedWithNullability, string ArgumentName);
 
-   private class ConstructorArgumentsComparer : IEqualityComparer<IReadOnlyList<ConstructorArgument>>
+   private sealed class ConstructorArgumentsComparer : IEqualityComparer<IReadOnlyList<ConstructorArgument>>
    {
       public static readonly ConstructorArgumentsComparer Instance = new();
 

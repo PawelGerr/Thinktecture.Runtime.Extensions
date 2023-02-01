@@ -94,7 +94,7 @@ public sealed class ValueObjectValueConverterFactory
       return (Expression<Func<T, TKey>>)metadata.ConvertToKeyExpression;
    }
 
-   private class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
+   private sealed class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
       where TKey : notnull
    {
       public ValueObjectValueConverter(bool useConstructor)
@@ -103,7 +103,7 @@ public sealed class ValueObjectValueConverterFactory
       }
    }
 
-   private class ValidatableEnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
+   private sealed class ValidatableEnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
       where TEnum : IValidatableEnum<TKey>
       where TKey : notnull
    {
