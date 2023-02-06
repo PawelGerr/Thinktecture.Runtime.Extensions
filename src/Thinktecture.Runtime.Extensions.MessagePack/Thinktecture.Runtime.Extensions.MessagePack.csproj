@@ -11,8 +11,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MessagePack" Version="2.4.35" />
-        <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+        <PackageReference Include="MessagePack" Version="2.4.59" />
     </ItemGroup>
+
+   <ItemGroup Condition=" '$(TargetFramework)' != 'net7.0' ">
+      <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+   </ItemGroup>
+
+   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+      <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
+   </ItemGroup>
 
 </Project>

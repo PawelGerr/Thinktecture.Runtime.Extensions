@@ -10,8 +10,12 @@
         <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="6.0.6" />
-    </ItemGroup>
+   <ItemGroup Condition=" '$(TargetFramework)' != 'net7.0' ">
+      <PackageReference Include="System.Text.Json" Version="6.0.7" />
+   </ItemGroup>
+
+   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+      <PackageReference Include="System.Text.Json" Version="7.0.1" />
+   </ItemGroup>
 
 </Project>
