@@ -11,8 +11,8 @@
    </ItemGroup>
 
    <ItemGroup>
-      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests\**\*.cs" />
-      <Compile Remove="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests\obj\**\*.cs" />
+      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests\**\*.cs" />
+      <Compile Remove="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests\obj\**\*.cs" />
    </ItemGroup>
 
    <ItemGroup>

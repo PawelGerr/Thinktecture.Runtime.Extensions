@@ -14,8 +14,8 @@
          <Link>IsExternalInit.cs</Link>
       </Compile>
 
-      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore6\**\*.cs" />
-      <Compile Remove="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore6\obj\**\*.cs" />
+      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\**\*.cs" />
+      <Compile Remove="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\obj\**\*.cs" />
    </ItemGroup>
 
    <ItemGroup>

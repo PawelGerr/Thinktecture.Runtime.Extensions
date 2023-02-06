@@ -4,7 +4,7 @@
       <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
       <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
       <PackageTags>common;EntityFrameworkCore</PackageTags>
-      <DefineConstants>$(DefineConstants);EFCORE6</DefineConstants>
+      <DefineConstants>$(DefineConstants);EFCORE7</DefineConstants>
    </PropertyGroup>
 
    <ItemGroup>
@@ -13,13 +13,10 @@
       <Compile Include="..\..\shared\IsExternalInit.cs">
          <Link>IsExternalInit.cs</Link>
       </Compile>
-
-      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\**\*.cs" />
-      <Compile Remove="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\obj\**\*.cs" />
    </ItemGroup>
 
    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.13" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.2" />
    </ItemGroup>
 
 </Project>
