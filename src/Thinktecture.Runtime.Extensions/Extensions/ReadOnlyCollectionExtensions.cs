@@ -21,7 +21,7 @@ public static class ReadOnlyCollectionExtensions
       return items.Select(selector).ToReadOnlyCollection(items.Count);
    }
 
-#if !NET6_0
+#if !NET6_0_OR_GREATER
    /// <summary>
    /// Splits the <paramref name="collection"/> in buckets of provided <paramref name="bucketSize"/>.
    /// </summary>

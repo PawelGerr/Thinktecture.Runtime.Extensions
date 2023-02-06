@@ -1,8 +1,9 @@
+#if !NETSTANDARD2_1
+
 using System.Collections;
 
 namespace Thinktecture.Collections;
 
-#if !NETSTANDARD2_1
 internal sealed class SingleItemReadOnlySet<T> : IReadOnlySet<T>
 {
    private readonly T _item;

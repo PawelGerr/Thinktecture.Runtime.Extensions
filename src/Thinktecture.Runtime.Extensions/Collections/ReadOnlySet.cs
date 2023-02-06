@@ -1,6 +1,6 @@
-using System.Collections;
-
 #if !NETSTANDARD2_1
+
+using System.Collections;
 
 namespace Thinktecture.Collections;
 

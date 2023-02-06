@@ -12,7 +12,7 @@
       <RepositoryUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions</RepositoryUrl>
       <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
       <RootNamespace>Thinktecture</RootNamespace>
-      <LangVersion>10.0</LangVersion>
+      <LangVersion>11.0</LangVersion>
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>
       <NoWarn>$(NoWarn);CA1303;MSB3884;NETSDK1138;</NoWarn>

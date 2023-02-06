@@ -45,8 +45,10 @@ public static class AnalyzerVerifier<TAnalyzer>
       {
          TestCode = source;
          ExpectedDiagnostics.AddRange(expected);
-#if NET6_0
-         ReferenceAssemblies = new ReferenceAssemblies("net6.0", new PackageIdentity("Microsoft.NETCore.App.Ref","6.0.0"), Path.Combine("ref", "net6.0"));
+#if NET7_0
+         ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
+#elif NET6_0
+         ReferenceAssemblies = ReferenceAssemblies.Net.Net60;
 #else
          ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
 #endif
