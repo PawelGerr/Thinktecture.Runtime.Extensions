@@ -52,7 +52,6 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
       _sb.Append($@"
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_EnumTypeConverter))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>, global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>
    {{");

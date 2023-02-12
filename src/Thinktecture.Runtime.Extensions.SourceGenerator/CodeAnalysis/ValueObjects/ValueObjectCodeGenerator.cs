@@ -112,7 +112,6 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.HasKeyMember)
       {
          _sb.Append($@"
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_ValueObjectTypeConverter))]");
       }
 

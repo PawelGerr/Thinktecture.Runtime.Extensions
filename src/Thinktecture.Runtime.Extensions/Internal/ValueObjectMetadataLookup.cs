@@ -24,16 +24,13 @@ public static class ValueObjectMetadataLookup
 
       type = Nullable.GetUnderlyingType(type) ?? type;
 
-      if (type.IsPrimitive)
-         return null;
-
       if (_metadata.TryGetValue(type, out var metadata))
          return metadata;
 
-      if (type.GetCustomAttribute<KeyedValueObjectAttribute>() is null)
+      if (!typeof(IKeyedValueObject).IsAssignableFrom(type))
          return null;
 
-      // The initializer of the assembly/module containing the enum/value object is not executed yet
+      // The initializer of the assembly/module containing the smart enum/value object is not executed yet
       RuntimeHelpers.RunModuleConstructor(type.Assembly.ManifestModule.ModuleHandle);
       _metadata.TryGetValue(type, out metadata);
 

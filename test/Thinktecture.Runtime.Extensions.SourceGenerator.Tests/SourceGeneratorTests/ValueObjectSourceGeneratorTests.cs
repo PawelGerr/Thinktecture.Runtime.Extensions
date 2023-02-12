@@ -986,7 +986,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -1187,7 +1186,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(StructField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>, global::System.IFormattable, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -1405,7 +1403,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -1610,7 +1607,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -1815,7 +1811,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -2033,7 +2028,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(StructField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IFormattable, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -2268,7 +2262,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -2499,7 +2492,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -2725,7 +2717,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(StructField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IFormattable, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -2956,7 +2947,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(StructField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IFormattable, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -3194,7 +3184,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -3413,7 +3402,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IFormattable, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {
@@ -3655,7 +3643,6 @@ namespace Thinktecture.Tests
    }
 
    [global::Thinktecture.Internal.ValueObjectConstructor(nameof(ReferenceField))]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestValueObject_ValueObjectTypeConverter))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
    {

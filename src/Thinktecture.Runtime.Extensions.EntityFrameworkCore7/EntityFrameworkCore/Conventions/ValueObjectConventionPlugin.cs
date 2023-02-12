@@ -80,7 +80,7 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
    {
       var entity = entityTypeBuilder.Metadata;
 
-      if (entity.ClrType.GetCustomAttribute<KeyedValueObjectAttribute>() is not null)
+      if (typeof(IKeyedValueObject).IsAssignableFrom(entity.ClrType))
          return;
 
       var ctorAttr = entity.ClrType.GetCustomAttribute<ValueObjectConstructorAttribute>();

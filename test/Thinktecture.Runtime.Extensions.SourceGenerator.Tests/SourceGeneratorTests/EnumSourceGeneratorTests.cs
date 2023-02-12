@@ -39,7 +39,6 @@ namespace Thinktecture.Tests
       }
    }
 
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestEnum_EnumTypeConverter))]
    partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
@@ -471,7 +470,6 @@ namespace Thinktecture.Tests
       }
    }
 
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestEnum_EnumTypeConverter))]
    partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
@@ -866,7 +864,6 @@ public partial class TestEnum : IEnum<string>
       }
    }
 
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::TestEnum_EnumTypeConverter))]
    partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum>, global::System.IEquatable<global::TestEnum?>
    {
@@ -1240,7 +1237,6 @@ namespace Thinktecture.Tests
       }
    }
 
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestEnum_EnumTypeConverter))]
    partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
@@ -1660,7 +1656,6 @@ namespace Thinktecture.Tests
       }
    }
 
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestEnum_EnumTypeConverter))]
    partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
@@ -2056,7 +2051,6 @@ namespace Thinktecture.Tests
    }
 
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestEnum_EnumTypeConverter))]
    partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum>
    {
@@ -2472,7 +2466,6 @@ namespace Thinktecture.Tests
       }
    }
 
-   [global::Thinktecture.Internal.KeyedValueObject]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.Tests.TestEnum_EnumTypeConverter))]
    partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
