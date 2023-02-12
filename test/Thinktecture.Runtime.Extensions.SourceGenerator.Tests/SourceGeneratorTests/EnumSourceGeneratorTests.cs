@@ -51,10 +51,8 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
-         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
-
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -482,10 +480,8 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
-         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
-
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -876,10 +872,8 @@ public partial class TestEnum : IEnum<string>
          var convertToKey = new global::System.Func<global::TestEnum, string>(static item => item.Key);
          global::System.Linq.Expressions.Expression<global::System.Func<global::TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
-         var validate = new global::Thinktecture.Internal.Validate<global::TestEnum, string>(global::TestEnum.Validate);
-
          var enumType = typeof(global::TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -1249,10 +1243,8 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
-         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
-
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<int>), metadata);
@@ -1668,10 +1660,8 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
-         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
-
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -2063,10 +2053,8 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
-         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
-
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
@@ -2478,10 +2466,8 @@ namespace Thinktecture.Tests
          var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Name);
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Name;
 
-         var validate = new global::Thinktecture.Internal.Validate<global::Thinktecture.Tests.TestEnum, string>(global::Thinktecture.Tests.TestEnum.Validate);
-
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }

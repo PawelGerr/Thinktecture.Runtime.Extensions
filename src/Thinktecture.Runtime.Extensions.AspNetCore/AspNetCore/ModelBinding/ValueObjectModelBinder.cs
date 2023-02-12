@@ -10,17 +10,16 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
 public sealed class ValueObjectModelBinder<T, TKey> : ValueObjectModelBinderBase<T, TKey>
+   where T : IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey}"/>.
    /// </summary>
    /// <param name="loggerFactory">Logger factory.</param>
-   /// <param name="validate">Callback that performs the actual binding.</param>
    public ValueObjectModelBinder(
-      ILoggerFactory loggerFactory,
-      Validate<T, TKey> validate)
-      : base(loggerFactory, validate)
+      ILoggerFactory loggerFactory)
+      : base(loggerFactory)
    {
    }
 

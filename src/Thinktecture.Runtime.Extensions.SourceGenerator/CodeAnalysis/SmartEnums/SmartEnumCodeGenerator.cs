@@ -319,10 +319,8 @@ namespace ").Append(_state.Namespace).Append(@"
          var convertToKey = new global::System.Func<{enumType}, {keyMember.TypeFullyQualified}>(static item => item.{keyMember.Name});
          global::System.Linq.Expressions.Expression<global::System.Func<{enumType}, {keyMember.TypeFullyQualified}>> convertToKeyExpression = static item => item.{keyMember.Name};
 
-         var validate = new global::Thinktecture.Internal.Validate<{enumType}, {keyMember.TypeFullyQualified}>({enumType}.Validate);
-
          var enumType = typeof({enumType});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({keyMember.TypeFullyQualified}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({keyMember.TypeFullyQualified}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
 

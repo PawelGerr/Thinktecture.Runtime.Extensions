@@ -45,11 +45,6 @@ public sealed class ValueObjectMetadata
    public LambdaExpression ConvertToKeyExpression { get; }
 
    /// <summary>
-   /// A delegate of type <see cref="Validate"/> for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/>.
-   /// </summary>
-   public Delegate Validate { get; }
-
-   /// <summary>
    /// An indication whether the type implements <see cref="IEnum{TKey}"/> or <see cref="IValidatableEnum{TKey}"/>.
    /// </summary>
    public bool IsEnumeration { get; }
@@ -74,7 +69,6 @@ public sealed class ValueObjectMetadata
    /// </param>
    /// <param name="convertToKey">A delegate for conversion of values of type <paramref name="type"/> to type <paramref name="keyType"/>.</param>
    /// <param name="convertToKeyExpression">An expression for conversion of values of type <paramref name="type"/> to type <paramref name="keyType"/>.</param>
-   /// <param name="validate">A delegate for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/> returning a <see cref="ValidationResult"/>.</param>
    public ValueObjectMetadata(
       Type type,
       Type keyType,
@@ -84,8 +78,7 @@ public sealed class ValueObjectMetadata
       LambdaExpression convertFromKeyExpression,
       LambdaExpression? convertFromKeyExpressionViaConstructor,
       Delegate convertToKey,
-      LambdaExpression convertToKeyExpression,
-      Delegate validate)
+      LambdaExpression convertToKeyExpression)
    {
       Type = type ?? throw new ArgumentNullException(nameof(type));
       KeyType = keyType ?? throw new ArgumentNullException(nameof(keyType));
@@ -96,6 +89,5 @@ public sealed class ValueObjectMetadata
       ConvertFromKeyExpressionViaConstructor = convertFromKeyExpressionViaConstructor;
       ConvertToKey = convertToKey ?? throw new ArgumentNullException(nameof(convertToKey));
       ConvertToKeyExpression = convertToKeyExpression ?? throw new ArgumentNullException(nameof(convertToKeyExpression));
-      Validate = validate ?? throw new ArgumentNullException(nameof(validate));
    }
 }

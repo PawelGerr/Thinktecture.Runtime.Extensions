@@ -220,10 +220,8 @@ namespace ").Append(_state.Namespace).Append(@"
          var convertToKey = new global::System.Func<{typeFullyQualified}, {keyMember.TypeFullyQualifiedWithNullability}>(static item => item.{keyMember.Name});
          global::System.Linq.Expressions.Expression<global::System.Func<{typeFullyQualified}, {keyMember.TypeFullyQualifiedWithNullability}>> convertToKeyExpression = static obj => obj.{keyMember.Name};
 
-         var validate = new global::Thinktecture.Internal.Validate<{typeFullyQualified}, {keyMemberWithoutNullAnnotation}>({typeFullyQualified}.Validate);
-
          var type = typeof({typeFullyQualified});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof({keyMemberWithoutNullAnnotation}), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression, validate);
+         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof({keyMemberWithoutNullAnnotation}), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
       }}

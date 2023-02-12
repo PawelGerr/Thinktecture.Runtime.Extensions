@@ -13,7 +13,7 @@ public interface IKeyedValueObject
 /// Common interface of keyed value objects.
 /// </summary>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
-public interface IKeyedValueObject<TKey> : IKeyedValueObject
+public interface IKeyedValueObject<out TKey> : IKeyedValueObject
    where TKey : notnull
 {
    /// <summary>
