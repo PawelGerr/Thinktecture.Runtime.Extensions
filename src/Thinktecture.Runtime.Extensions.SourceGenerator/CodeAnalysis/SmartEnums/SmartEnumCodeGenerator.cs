@@ -320,14 +320,14 @@ namespace ").Append(_state.Namespace).Append(@"
          global::System.Linq.Expressions.Expression<global::System.Func<{enumType}, {keyMember.TypeFullyQualified}>> convertToKeyExpression = static item => item.{keyMember.Name};
 
          var enumType = typeof({enumType});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof({keyMember.TypeFullyQualified}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof({keyMember.TypeFullyQualified}), true, {(_state.IsValidatable ? "true" : "false")}, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
 
       foreach (var derivedType in _state.FullyQualifiedDerivedTypes)
       {
          _sb.Append($@"
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof({derivedType}), metadata);");
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof({derivedType}), metadata);");
       }
 
       _sb.Append(@"

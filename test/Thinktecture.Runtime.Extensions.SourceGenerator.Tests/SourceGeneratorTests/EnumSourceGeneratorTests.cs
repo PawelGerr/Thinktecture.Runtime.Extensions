@@ -52,9 +52,9 @@ namespace Thinktecture.Tests
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -481,9 +481,9 @@ namespace Thinktecture.Tests
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -873,9 +873,9 @@ public partial class TestEnum : IEnum<string>
          global::System.Linq.Expressions.Expression<global::System.Func<global::TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var enumType = typeof(global::TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -1244,11 +1244,11 @@ namespace Thinktecture.Tests
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<int>), metadata);
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<decimal>), metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<int>), metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<decimal>), metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -1661,9 +1661,9 @@ namespace Thinktecture.Tests
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -2054,9 +2054,9 @@ namespace Thinktecture.Tests
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
 
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -2467,9 +2467,9 @@ namespace Thinktecture.Tests
          global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Name;
 
          var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;

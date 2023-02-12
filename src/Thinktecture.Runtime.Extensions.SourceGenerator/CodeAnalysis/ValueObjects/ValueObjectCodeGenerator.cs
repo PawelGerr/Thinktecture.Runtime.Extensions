@@ -215,9 +215,9 @@ namespace ").Append(_state.Namespace).Append(@"
          global::System.Linq.Expressions.Expression<global::System.Func<{typeFullyQualified}, {keyMember.TypeFullyQualifiedWithNullability}>> convertToKeyExpression = static obj => obj.{keyMember.Name};
 
          var type = typeof({typeFullyQualified});
-         var metadata = new global::Thinktecture.Internal.ValueObjectMetadata(type, typeof({keyMemberWithoutNullAnnotation}), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof({keyMemberWithoutNullAnnotation}), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(type, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
       }}
 ");
    }

@@ -65,10 +65,7 @@ public static class ModelBuilderExtensions
          if (!propertyInfo.IsCandidateProperty())
             continue;
 
-         var propertyType = propertyInfo.PropertyType;
-         var metadata = KeyedValueObjectMetadataLookup.Find(propertyType);
-
-         if (metadata is null)
+         if (!typeof(IKeyedValueObject).IsAssignableFrom(propertyInfo.PropertyType))
             continue;
 
          var property = entity.AddProperty(propertyInfo);
@@ -103,7 +100,7 @@ public static class ModelBuilderExtensions
 
       foreach (var navigation in entity.GetNavigations())
       {
-         if (KeyedValueObjectMetadataLookup.Find(navigation.ClrType) is not null)
+         if (typeof(IKeyedValueObject).IsAssignableFrom(navigation.ClrType))
             (navigationsToConvert ??= new List<IMutableNavigation>()).Add(navigation);
       }
 
@@ -134,9 +131,7 @@ public static class ModelBuilderExtensions
          if (valueConverter is not null)
             continue;
 
-         var propertyType = property.ClrType;
-
-         if (KeyedValueObjectMetadataLookup.Find(propertyType) is null)
+         if (!typeof(IKeyedValueObject).IsAssignableFrom(property.ClrType))
             continue;
 
          SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);

@@ -63,10 +63,7 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
          if (!propertyInfo.IsCandidateProperty())
             continue;
 
-         var propertyType = propertyInfo.PropertyType;
-         var metadata = KeyedValueObjectMetadataLookup.Find(propertyType);
-
-         if (metadata is null)
+         if (!typeof(IKeyedValueObject).IsAssignableFrom(propertyInfo.PropertyType))
             continue;
 
          property = entity.AddProperty(propertyInfo);
@@ -108,7 +105,7 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
    {
       var naviType = navigation.ClrType;
 
-      if (KeyedValueObjectMetadataLookup.Find(naviType) is null)
+      if (!typeof(IKeyedValueObject).IsAssignableFrom(naviType))
          return;
 
       var property = navigation.DeclaringEntityType.Builder
@@ -128,7 +125,7 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
       if (valueConverter is not null)
          return;
 
-      if (KeyedValueObjectMetadataLookup.Find(property.ClrType) is null)
+      if (!typeof(IKeyedValueObject).IsAssignableFrom(property.ClrType))
          return;
 
       SetConverterAndExecuteCallback(property);

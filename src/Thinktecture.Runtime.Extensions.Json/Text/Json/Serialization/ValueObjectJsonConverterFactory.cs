@@ -12,7 +12,7 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
    /// <inheritdoc />
    public override bool CanConvert(Type typeToConvert)
    {
-      return KeyedValueObjectMetadataLookup.Find(typeToConvert) is not null;
+      return typeof(IKeyedValueObject).IsAssignableFrom(typeToConvert);
    }
 
    /// <inheritdoc />
