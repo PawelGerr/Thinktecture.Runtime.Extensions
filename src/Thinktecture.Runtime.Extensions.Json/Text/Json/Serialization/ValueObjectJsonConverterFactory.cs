@@ -12,7 +12,7 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
    /// <inheritdoc />
    public override bool CanConvert(Type typeToConvert)
    {
-      return ValueObjectMetadataLookup.Find(typeToConvert) is not null;
+      return KeyedValueObjectMetadataLookup.Find(typeToConvert) is not null;
    }
 
    /// <inheritdoc />
@@ -23,7 +23,7 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
       if (options is null)
          throw new ArgumentNullException(nameof(options));
 
-      var metadata = ValueObjectMetadataLookup.Find(typeToConvert);
+      var metadata = KeyedValueObjectMetadataLookup.Find(typeToConvert);
 
       if (metadata is null)
          throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");

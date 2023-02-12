@@ -31,7 +31,7 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
       if (SkipModelBinding(context))
          return null;
 
-      var metadata = ValueObjectMetadataLookup.Find(context.Metadata.ModelType);
+      var metadata = KeyedValueObjectMetadataLookup.Find(context.Metadata.ModelType);
 
       if (metadata is null)
          return null;

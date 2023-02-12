@@ -51,7 +51,7 @@ public sealed class ValueObjectValueConverterFactory
       if (type is null)
          throw new ArgumentNullException(nameof(type));
 
-      var metadata = ValueObjectMetadataLookup.Find(type);
+      var metadata = KeyedValueObjectMetadataLookup.Find(type);
 
       if (metadata is null)
          throw new ArgumentException($"The provided type '{type.Name}' is neither an Smart Enum nor a Value Object with a key member.");
@@ -74,7 +74,7 @@ public sealed class ValueObjectValueConverterFactory
 
    private static Expression<Func<TKey, T>> GetConverterFromKey<T, TKey>(bool useConstructor)
    {
-      var metadata = ValueObjectMetadataLookup.Find(typeof(T));
+      var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
 
       if (metadata is null)
          throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
@@ -86,7 +86,7 @@ public sealed class ValueObjectValueConverterFactory
 
    private static Expression<Func<T, TKey>> GetConverterToKey<T, TKey>()
    {
-      var metadata = ValueObjectMetadataLookup.Find(typeof(T));
+      var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
 
       if (metadata is null)
          throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");

@@ -33,7 +33,7 @@ public sealed class ValueObjectNewtonsoftJsonConverter : JsonConverter
    /// <inheritdoc />
    public override bool CanConvert(Type objectType)
    {
-      return _cache.ContainsKey(objectType) || ValueObjectMetadataLookup.Find(objectType) is not null;
+      return _cache.ContainsKey(objectType) || KeyedValueObjectMetadataLookup.Find(objectType) is not null;
    }
 
    /// <inheritdoc />
@@ -63,7 +63,7 @@ public sealed class ValueObjectNewtonsoftJsonConverter : JsonConverter
 
    private static JsonConverter CreateConverter(Type type)
    {
-      var metadata = ValueObjectMetadataLookup.Find(type);
+      var metadata = KeyedValueObjectMetadataLookup.Find(type);
 
       if (metadata is null)
          throw new InvalidOperationException($"The provided type is not serializable by the '{nameof(ValueObjectNewtonsoftJsonConverter)}'. Type: {type.FullName}");

@@ -66,7 +66,7 @@ public static class ModelBuilderExtensions
             continue;
 
          var propertyType = propertyInfo.PropertyType;
-         var metadata = ValueObjectMetadataLookup.Find(propertyType);
+         var metadata = KeyedValueObjectMetadataLookup.Find(propertyType);
 
          if (metadata is null)
             continue;
@@ -103,7 +103,7 @@ public static class ModelBuilderExtensions
 
       foreach (var navigation in entity.GetNavigations())
       {
-         if (ValueObjectMetadataLookup.Find(navigation.ClrType) is not null)
+         if (KeyedValueObjectMetadataLookup.Find(navigation.ClrType) is not null)
             (navigationsToConvert ??= new List<IMutableNavigation>()).Add(navigation);
       }
 
@@ -136,7 +136,7 @@ public static class ModelBuilderExtensions
 
          var propertyType = property.ClrType;
 
-         if (ValueObjectMetadataLookup.Find(propertyType) is null)
+         if (KeyedValueObjectMetadataLookup.Find(propertyType) is null)
             continue;
 
          SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);

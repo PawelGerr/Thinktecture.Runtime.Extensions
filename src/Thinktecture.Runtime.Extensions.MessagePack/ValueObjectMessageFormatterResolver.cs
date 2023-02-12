@@ -39,7 +39,7 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
       static Cache()
       {
          var type = typeof(T);
-         var metadata = ValueObjectMetadataLookup.Find(type);
+         var metadata = KeyedValueObjectMetadataLookup.Find(type);
 
          if (metadata is null)
             return;

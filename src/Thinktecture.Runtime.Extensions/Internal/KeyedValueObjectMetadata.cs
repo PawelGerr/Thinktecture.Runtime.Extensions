@@ -5,7 +5,7 @@ namespace Thinktecture.Internal;
 /// <summary>
 /// For internal use only.
 /// </summary>
-public sealed class ValueObjectMetadata
+public sealed class KeyedValueObjectMetadata
 {
    /// <summary>
    /// The type of the Value Object or a Smart Enum.
@@ -54,7 +54,7 @@ public sealed class ValueObjectMetadata
    public bool IsValidatableEnum { get; }
 
    /// <summary>
-   /// Initializes new instance of <see cref="ValueObjectMetadata"/>.
+   /// Initializes new instance of <see cref="KeyedValueObjectMetadata"/>.
    /// </summary>
    /// <param name="type">The type of the value object or a smart enum.</param>
    /// <param name="keyType">The type of the key property.</param>
@@ -68,7 +68,7 @@ public sealed class ValueObjectMetadata
    /// </param>
    /// <param name="convertToKey">A delegate for conversion of values of type <paramref name="type"/> to type <paramref name="keyType"/>.</param>
    /// <param name="convertToKeyExpression">An expression for conversion of values of type <paramref name="type"/> to type <paramref name="keyType"/>.</param>
-   public ValueObjectMetadata(
+   public KeyedValueObjectMetadata(
       Type type,
       Type keyType,
       bool isEnumeration,
