@@ -80,15 +80,10 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
    {
       var entity = entityTypeBuilder.Metadata;
 
-      if (typeof(IKeyedValueObject).IsAssignableFrom(entity.ClrType))
+      if (!entity.ClrType.TryGetAssignableMembers(out var members))
          return;
 
-      var ctorAttr = entity.ClrType.GetCustomAttribute<ValueObjectConstructorAttribute>();
-
-      if (ctorAttr is null || ctorAttr.Members.Length == 0)
-         return;
-
-      foreach (var memberName in ctorAttr.Members)
+      foreach (var memberName in members)
       {
          var property = entity.FindProperty(memberName);
 

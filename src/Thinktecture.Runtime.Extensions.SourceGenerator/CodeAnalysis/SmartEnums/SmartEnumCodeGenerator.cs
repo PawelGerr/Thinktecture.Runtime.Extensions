@@ -70,10 +70,10 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>> _itemsLookup
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>>(GetLookup);
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.TypeFullyQualified}>> _items
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.TypeFullyQualified}>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly());
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<{_state.TypeFullyQualified}>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
       /// <summary>
       /// Gets all valid items.

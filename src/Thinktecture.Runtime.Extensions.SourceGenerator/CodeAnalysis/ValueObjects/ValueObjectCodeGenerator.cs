@@ -96,19 +96,6 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
 
-      _sb.Append(@"
-   [global::Thinktecture.Internal.ValueObjectConstructor(");
-
-      for (var i = 0; i < _state.AssignableInstanceFieldsAndProperties.Count; i++)
-      {
-         if (i != 0)
-            _sb.Append(", ");
-
-         _sb.Append($@"nameof({_state.AssignableInstanceFieldsAndProperties[i].Name})");
-      }
-
-      _sb.Append(")]");
-
       if (_state.HasKeyMember)
       {
          _sb.Append($@"
@@ -131,9 +118,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (!_state.Settings.SkipFactoryMethods)
          {
-            _sb.Append($@", global::Thinktecture.IKeyedValueObject<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>
-");
+            _sb.Append($@", global::Thinktecture.IKeyedValueObject<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>");
          }
+      }
+      else
+      {
+         _sb.Append(@", global::Thinktecture.IComplexValueObject");
       }
 
       _sb.Append(@"
@@ -170,6 +160,10 @@ namespace ").Append(_state.Namespace).Append(@"
          GenerateImplicitConversionToKey(_state.KeyMember);
          GenerateExplicitConversionToKey(_state.KeyMember);
          GenerateExplicitConversion(_state.KeyMember, emptyStringYieldsNull);
+      }
+      else
+      {
+         GenerateGetAssignableMembers();
       }
 
       GenerateConstructor();
@@ -549,6 +543,47 @@ namespace ").Append(_state.Namespace).Append(@"
       {{
          return !(obj == other);
       }}");
+   }
+
+   private void GenerateGetAssignableMembers()
+   {
+      var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+
+      _sb.Append($@"
+
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::System.Reflection.MemberInfo>> _assignableMembers
+         = new(() =>
+               {{
+                  global::System.Linq.Expressions.Expression<global::System.Func<{_state.Name}, object>> action = o => new
+                                                                                                                     {{");
+
+      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      {
+         if (i > 0)
+            _sb.Append(",");
+
+         var memberInfo = fieldsAndProperties[i];
+         _sb.Append($@"
+                                                                                                                        o.{memberInfo.Name}");
+      }
+
+      _sb.Append(@"
+                                                                                                                     };
+
+               var members = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>();
+
+               foreach (var arg in ((global::System.Linq.Expressions.NewExpression)action.Body).Arguments)
+               {
+                  members.Add(((global::System.Linq.Expressions.MemberExpression)arg).Member);
+               }
+
+               return members.AsReadOnly();
+            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+      static global::System.Collections.Generic.IReadOnlyList<global::System.Reflection.MemberInfo> global::Thinktecture.IComplexValueObject.GetAssignableMembers()
+      {
+         return _assignableMembers.Value;
+      }");
    }
 
    private void GenerateConstructor()
