@@ -1,5 +1,3 @@
-#if !NETSTANDARD2_1
-
 using System.Collections;
 
 namespace Thinktecture.Collections;
@@ -58,4 +56,3 @@ internal sealed class ReadOnlySet<T> : IReadOnlySet<T>
       return !other.Any();
    }
 }
-#endif

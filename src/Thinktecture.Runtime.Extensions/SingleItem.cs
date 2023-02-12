@@ -54,7 +54,6 @@ public static class SingleItem
       return new SingleItemLookup<TKey, TElement>(key, elements, equalityComparer);
    }
 
-#if !NETSTANDARD2_1
    /// <summary>
    /// Creates a read-only set with 1 item.
    /// </summary>
@@ -66,5 +65,4 @@ public static class SingleItem
    {
       return new SingleItemReadOnlySet<T>(item, equalityComparer ?? EqualityComparer<T>.Default);
    }
-#endif
 }

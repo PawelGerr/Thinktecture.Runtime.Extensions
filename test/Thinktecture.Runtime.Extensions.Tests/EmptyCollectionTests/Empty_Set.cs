@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 
-#if !NETCOREAPP3_1
 namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
 {
    // ReSharper disable once InconsistentNaming
@@ -72,5 +71,3 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
       }
    }
 }
-
-#endif

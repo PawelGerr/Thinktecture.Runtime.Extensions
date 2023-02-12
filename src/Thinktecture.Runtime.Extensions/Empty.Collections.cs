@@ -33,7 +33,6 @@ public partial class Empty
       return ReadOnlyDictionary<TKey, TValue>.Instance;
    }
 
-#if !NETSTANDARD2_1
    /// <summary>
    /// Returns empty set.
    /// </summary>
@@ -42,7 +41,6 @@ public partial class Empty
    {
       return ReadOnlySet<T>.Instance;
    }
-#endif
 
    /// <summary>
    /// Returns empty lookup.

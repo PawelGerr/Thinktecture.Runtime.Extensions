@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace Thinktecture.Runtime.Tests.Collections;
 
-#if !NETCOREAPP3_1
-
 public class SingleItemReadOnlySetTests
 {
    private readonly IReadOnlySet<int> _sut = SingleItem.Set(42);
@@ -129,5 +127,3 @@ public class SingleItemReadOnlySetTests
       _sut.SetEquals(new[] { 42, 43 }).Should().BeFalse();
    }
 }
-
-#endif

@@ -20,41 +20,4 @@ public static class EnumerableExtensions
    {
       return new EnumerableWrapperWithCount<T>(items, count);
    }
-
-#if !NET6_0_OR_GREATER
-   /// <summary>
-   /// Splits the <paramref name="collection"/> in buckets of provided <paramref name="bucketSize"/>.
-   /// </summary>
-   /// <param name="collection">Collection to split in buckets.</param>
-   /// <param name="bucketSize">The size of the buckets.</param>
-   /// <typeparam name="T">Type of the item.</typeparam>
-   /// <returns>An collection of buckets.</returns>
-   /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <c>null</c>.</exception>
-   /// <exception cref="ArgumentOutOfRangeException"><paramref name="bucketSize"/> is less than 1.</exception>
-   public static IEnumerable<IEnumerable<T>> SplitInBuckets<T>(
-      this IEnumerable<T> collection,
-      int bucketSize)
-   {
-      if (collection is null)
-         throw new ArgumentNullException(nameof(collection));
-      if (bucketSize < 1)
-         throw new ArgumentOutOfRangeException(nameof(bucketSize), "Bucket size cannot be less than 1.");
-
-      var bucket = new List<T>();
-
-      foreach (var item in collection)
-      {
-         bucket.Add(item);
-
-         if (bucket.Count == bucketSize)
-         {
-            yield return bucket;
-            bucket = new List<T>();
-         }
-      }
-
-      if (bucket.Count != 0)
-         yield return bucket;
-   }
-#endif
 }
