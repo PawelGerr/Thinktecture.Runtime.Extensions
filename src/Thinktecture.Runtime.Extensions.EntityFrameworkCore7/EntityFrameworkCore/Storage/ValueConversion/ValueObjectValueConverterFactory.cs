@@ -17,6 +17,7 @@ public sealed class ValueObjectValueConverterFactory
    /// <typeparam name="TKey">Type of the key.</typeparam>
    /// <returns>An instance of <see cref="ValueConverter{T,TKey}"/>></returns>
    public static ValueConverter<T, TKey> Create<T, TKey>(bool useConstructorForRead = true)
+      where T : IKeyedValueObject<TKey>
       where TKey : notnull
    {
       return new ValueObjectValueConverter<T, TKey>(useConstructorForRead);
@@ -72,6 +73,8 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private static Expression<Func<TKey, T>> GetConverterFromKey<T, TKey>(bool useConstructor)
+      where T : IKeyedValueObject<TKey>
+      where TKey : notnull
    {
       var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
 
@@ -86,16 +89,19 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private static Expression<Func<T, TKey>> GetConverterToKey<T, TKey>()
+      where T : IKeyedValueObject<TKey>
+      where TKey : notnull
    {
       var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
 
       if (metadata is null)
          throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
 
-      return (Expression<Func<T, TKey>>)metadata.ConvertToKeyExpression;
+      return o => o.GetKey();
    }
 
    private sealed class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
+      where T : IKeyedValueObject<TKey>
       where TKey : notnull
    {
       public ValueObjectValueConverter(bool useConstructor)

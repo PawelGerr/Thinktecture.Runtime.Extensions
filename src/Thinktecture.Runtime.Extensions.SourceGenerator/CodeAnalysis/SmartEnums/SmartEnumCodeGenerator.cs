@@ -47,7 +47,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateEnum()
    {
-      var needCreateInvalidImplementation = _state.IsValidatable && !_state.HasCreateInvalidImplementation;
+      var needCreateInvalidImplementation = _state is { IsValidatable: true, HasCreateInvalidImplementation: false };
 
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
