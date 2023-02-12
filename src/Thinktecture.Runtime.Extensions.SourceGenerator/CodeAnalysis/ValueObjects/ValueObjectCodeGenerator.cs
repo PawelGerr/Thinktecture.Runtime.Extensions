@@ -31,9 +31,9 @@ namespace ").Append(_state.Namespace).Append(@"
 {");
       }
 
-      var emptyStringYieldsNull = _state.Settings.EmptyStringInFactoryMethodsYieldsNull && _state.IsReferenceType && _state.HasKeyMember && _state.KeyMember.Member.IsString();
+      var emptyStringYieldsNull = _state.Settings.EmptyStringInFactoryMethodsYieldsNull && _state is { IsReferenceType: true, HasKeyMember: true } && _state.KeyMember.Member.IsString();
 
-      if (_state.HasKeyMember)
+      if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
          GenerateTypeConverter(_state.KeyMember, emptyStringYieldsNull);
 
       GenerateValueObject(emptyStringYieldsNull);
@@ -96,7 +96,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
 
-      if (_state.HasKeyMember)
+      if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
       {
          _sb.Append($@"
    [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_ValueObjectTypeConverter))]");
@@ -159,7 +159,9 @@ namespace ").Append(_state.Namespace).Append(@"
          GenerateGetKey(_state.KeyMember);
          GenerateImplicitConversionToKey(_state.KeyMember);
          GenerateExplicitConversionToKey(_state.KeyMember);
-         GenerateExplicitConversion(_state.KeyMember, emptyStringYieldsNull);
+
+         if (!_state.Settings.SkipFactoryMethods)
+            GenerateExplicitConversion(_state.KeyMember, emptyStringYieldsNull);
       }
       else
       {
@@ -207,8 +209,8 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {{
-         var convertFromKey = new global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {nullAnnotatedTypeFullyQualified}>({typeFullyQualified}.Create);
-         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {nullAnnotatedTypeFullyQualified}>> convertFromKeyExpression = static {keyMember.ArgumentName} => {typeFullyQualified}.Create({keyMember.ArgumentName});
+         global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {nullAnnotatedTypeFullyQualified}>{(_state.Settings.SkipFactoryMethods ? "?" : null)} convertFromKey = {(_state.Settings.SkipFactoryMethods ? "null" : $"new ({typeFullyQualified}.Create)")};
+         global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {nullAnnotatedTypeFullyQualified}>>{(_state.Settings.SkipFactoryMethods ? "?" : null)} convertFromKeyExpression = {(_state.Settings.SkipFactoryMethods ? "null" : $"static {keyMember.ArgumentName} => {typeFullyQualified}.Create({keyMember.ArgumentName})")};
          global::System.Linq.Expressions.Expression<global::System.Func<{keyMember.TypeFullyQualifiedWithNullability}, {typeFullyQualified}>> convertFromKeyExpressionViaCtor = static {keyMember.ArgumentName} => new {typeFullyQualified}({keyMember.ArgumentName});
 
          var convertToKey = new global::System.Func<{typeFullyQualified}, {keyMember.TypeFullyQualifiedWithNullability}>(static item => item.{keyMember.Name});

@@ -20,12 +20,12 @@ public sealed class KeyedValueObjectMetadata
    /// <summary>
    /// A delegate for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/>.
    /// </summary>
-   public Delegate ConvertFromKey { get; }
+   public Delegate? ConvertFromKey { get; }
 
    /// <summary>
    /// An expression for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/>.
    /// </summary>
-   public LambdaExpression ConvertFromKeyExpression { get; }
+   public LambdaExpression? ConvertFromKeyExpression { get; }
 
    /// <summary>
    /// An expression for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/> using the constructor.
@@ -73,8 +73,8 @@ public sealed class KeyedValueObjectMetadata
       Type keyType,
       bool isEnumeration,
       bool isValidatableEnum,
-      Delegate convertFromKey,
-      LambdaExpression convertFromKeyExpression,
+      Delegate? convertFromKey,
+      LambdaExpression? convertFromKeyExpression,
       LambdaExpression? convertFromKeyExpressionViaConstructor,
       Delegate convertToKey,
       LambdaExpression convertToKeyExpression)
@@ -83,8 +83,8 @@ public sealed class KeyedValueObjectMetadata
       KeyType = keyType ?? throw new ArgumentNullException(nameof(keyType));
       IsEnumeration = isEnumeration;
       IsValidatableEnum = isValidatableEnum;
-      ConvertFromKey = convertFromKey ?? throw new ArgumentNullException(nameof(convertFromKey));
-      ConvertFromKeyExpression = convertFromKeyExpression ?? throw new ArgumentNullException(nameof(convertFromKeyExpression));
+      ConvertFromKey = convertFromKey;
+      ConvertFromKeyExpression = convertFromKeyExpression;
       ConvertFromKeyExpressionViaConstructor = convertFromKeyExpressionViaConstructor;
       ConvertToKey = convertToKey ?? throw new ArgumentNullException(nameof(convertToKey));
       ConvertToKeyExpression = convertToKeyExpression ?? throw new ArgumentNullException(nameof(convertToKeyExpression));

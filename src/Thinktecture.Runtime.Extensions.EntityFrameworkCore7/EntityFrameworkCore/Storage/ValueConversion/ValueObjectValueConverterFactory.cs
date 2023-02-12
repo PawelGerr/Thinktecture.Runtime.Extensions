@@ -79,9 +79,11 @@ public sealed class ValueObjectValueConverterFactory
       if (metadata is null)
          throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
 
-      return (Expression<Func<TKey, T>>)(useConstructor
-                                            ? metadata.ConvertFromKeyExpressionViaConstructor ?? metadata.ConvertFromKeyExpression
-                                            : metadata.ConvertFromKeyExpression);
+      var factoryMethod = useConstructor
+                             ? metadata.ConvertFromKeyExpressionViaConstructor ?? metadata.ConvertFromKeyExpression
+                             : metadata.ConvertFromKeyExpression;
+
+      return (Expression<Func<TKey, T>>)(factoryMethod ?? throw new InvalidOperationException($"A value converter cannot be created for the type '{typeof(T).Name}' because it has no factory methods."));
    }
 
    private static Expression<Func<T, TKey>> GetConverterToKey<T, TKey>()
