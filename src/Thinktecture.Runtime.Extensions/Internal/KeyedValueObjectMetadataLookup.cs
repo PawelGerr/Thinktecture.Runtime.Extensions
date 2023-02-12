@@ -18,8 +18,7 @@ public static class KeyedValueObjectMetadataLookup
    /// <exception cref="ArgumentNullException">If <paramref name="type"/> is <c>null</c>.</exception>
    public static KeyedValueObjectMetadata? Find(Type type)
    {
-      if (type is null)
-         throw new ArgumentNullException(nameof(type));
+      ArgumentNullException.ThrowIfNull(type);
 
       type = Nullable.GetUnderlyingType(type) ?? type;
 
@@ -45,10 +44,8 @@ public static class KeyedValueObjectMetadataLookup
    /// <exception cref="ArgumentException">The <paramref name="type"/> has been added to lookup already.</exception>
    public static void AddMetadata(Type type, KeyedValueObjectMetadata valueObjectMetadata)
    {
-      if (type is null)
-         throw new ArgumentNullException(nameof(type));
-      if (valueObjectMetadata is null)
-         throw new ArgumentNullException(nameof(valueObjectMetadata));
+      ArgumentNullException.ThrowIfNull(type);
+      ArgumentNullException.ThrowIfNull(valueObjectMetadata);
 
       if (!_metadata.TryAdd(type, valueObjectMetadata))
          throw new ArgumentException($"Multiple metadata instances for type '{type.FullName}'.");

@@ -30,10 +30,8 @@ public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConv
    /// <inheritdoc />
    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
    {
-      if (writer is null)
-         throw new ArgumentNullException(nameof(writer));
-      if (serializer is null)
-         throw new ArgumentNullException(nameof(serializer));
+      ArgumentNullException.ThrowIfNull(writer);
+      ArgumentNullException.ThrowIfNull(serializer);
 
       if (value is null)
       {
@@ -48,10 +46,8 @@ public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConv
    /// <inheritdoc />
    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
    {
-      if (reader is null)
-         throw new ArgumentNullException(nameof(reader));
-      if (serializer is null)
-         throw new ArgumentNullException(nameof(serializer));
+      ArgumentNullException.ThrowIfNull(reader);
+      ArgumentNullException.ThrowIfNull(serializer);
 
       if (reader.TokenType == JsonToken.Null)
       {

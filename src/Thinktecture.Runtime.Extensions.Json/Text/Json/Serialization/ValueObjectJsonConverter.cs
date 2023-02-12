@@ -25,8 +25,7 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
       bool mayReturnInvalidObjects,
       JsonSerializerOptions options)
    {
-      if (options is null)
-         throw new ArgumentNullException(nameof(options));
+      ArgumentNullException.ThrowIfNull(options);
 
       _mayReturnInvalidObjects = mayReturnInvalidObjects;
       _keyConverter = (JsonConverter<TKey>)options.GetConverter(typeof(TKey));

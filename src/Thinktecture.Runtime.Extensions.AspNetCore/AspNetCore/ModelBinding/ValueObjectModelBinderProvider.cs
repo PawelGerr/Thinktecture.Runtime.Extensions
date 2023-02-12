@@ -24,8 +24,7 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
    /// <inheritdoc />
    public IModelBinder? GetBinder(ModelBinderProviderContext context)
    {
-      if (context is null)
-         throw new ArgumentNullException(nameof(context));
+      ArgumentNullException.ThrowIfNull(context);
 
       // Skip model binding from body so BodyModelBinder incl. JSON serialization takes over
       if (SkipModelBinding(context))

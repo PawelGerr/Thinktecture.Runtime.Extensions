@@ -18,10 +18,8 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
    /// <inheritdoc />
    public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
    {
-      if (typeToConvert is null)
-         throw new ArgumentNullException(nameof(typeToConvert));
-      if (options is null)
-         throw new ArgumentNullException(nameof(options));
+      ArgumentNullException.ThrowIfNull(typeToConvert);
+      ArgumentNullException.ThrowIfNull(options);
 
       var metadata = KeyedValueObjectMetadataLookup.Find(typeToConvert);
 

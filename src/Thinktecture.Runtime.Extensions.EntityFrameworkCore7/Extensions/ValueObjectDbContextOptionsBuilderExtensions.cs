@@ -56,10 +56,8 @@ public static class ValueObjectDbContextOptionsBuilderExtensions
       this DbContextOptionsBuilder optionsBuilder,
       Func<ValueObjectDbContextOptionsExtension, ValueObjectDbContextOptionsExtension> callback)
    {
-      if (optionsBuilder is null)
-         throw new ArgumentNullException(nameof(optionsBuilder));
-      if (callback is null)
-         throw new ArgumentNullException(nameof(callback));
+      ArgumentNullException.ThrowIfNull(optionsBuilder);
+      ArgumentNullException.ThrowIfNull(callback);
 
       var extension = optionsBuilder.Options.FindExtension<ValueObjectDbContextOptionsExtension>() ?? new ValueObjectDbContextOptionsExtension();
 

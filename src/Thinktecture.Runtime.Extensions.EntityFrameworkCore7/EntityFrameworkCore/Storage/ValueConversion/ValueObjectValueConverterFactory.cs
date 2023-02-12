@@ -48,8 +48,7 @@ public sealed class ValueObjectValueConverterFactory
       bool validateOnWrite,
       bool useConstructorForRead = true)
    {
-      if (type is null)
-         throw new ArgumentNullException(nameof(type));
+      ArgumentNullException.ThrowIfNull(type);
 
       var metadata = KeyedValueObjectMetadataLookup.Find(type);
 

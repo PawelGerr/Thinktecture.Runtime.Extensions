@@ -29,8 +29,7 @@ public static class ModelBuilderExtensions
       bool useConstructorForRead = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      if (modelBuilder is null)
-         throw new ArgumentNullException(nameof(modelBuilder));
+      ArgumentNullException.ThrowIfNull(modelBuilder);
 
       configureEnumsAndKeyedValueObjects ??= Empty.Action;
       var converterLookup = new Dictionary<Type, ValueConverter>();

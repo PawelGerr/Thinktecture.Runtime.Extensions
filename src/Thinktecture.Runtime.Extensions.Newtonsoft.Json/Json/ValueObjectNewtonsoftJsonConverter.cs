@@ -39,8 +39,7 @@ public sealed class ValueObjectNewtonsoftJsonConverter : JsonConverter
    /// <inheritdoc />
    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
    {
-      if (writer is null)
-         throw new ArgumentNullException(nameof(writer));
+      ArgumentNullException.ThrowIfNull(writer);
 
       if (value is null)
       {
