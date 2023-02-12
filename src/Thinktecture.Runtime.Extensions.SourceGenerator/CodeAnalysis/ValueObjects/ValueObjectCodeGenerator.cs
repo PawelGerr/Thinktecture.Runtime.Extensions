@@ -132,10 +132,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (!_state.Settings.SkipFactoryMethods)
          {
-            _sb.Append($@"
-#if NET7_0
-, global::Thinktecture.IKeyedValueObject<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>
-#endif
+            _sb.Append($@", global::Thinktecture.IKeyedValueObject<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>
 ");
          }
       }

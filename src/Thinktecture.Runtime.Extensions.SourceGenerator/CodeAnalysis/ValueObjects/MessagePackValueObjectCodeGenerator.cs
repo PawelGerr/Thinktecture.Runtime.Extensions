@@ -43,17 +43,10 @@ namespace {ns}
    {{
       public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.{(state.IsReferenceType ? "ValueObjectMessagePackFormatterBase" : "StructValueObjectMessagePackFormatterBase")}<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
-#if NET7_0
          public ValueObjectMessagePackFormatter()
             : base(false)
          {{
          }}
-#else
-         public ValueObjectMessagePackFormatter()
-            : base({state.TypeFullyQualified}.Create)
-         {{
-         }}
-#endif
       }}
    }}
 {(ns is null ? null : @"}

@@ -15,7 +15,6 @@ public interface IKeyedValueObject<TKey>
    TKey GetKey() => throw new NotImplementedException("This method will be implemented by the source generator.");
 }
 
-#if NET7_0
 /// <summary>
 /// Common interface of keyed value objects.
 /// </summary>
@@ -32,4 +31,3 @@ public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>
    /// <returns>Validation result.</returns>
    static abstract ValidationResult? Validate(TKey? key, out T? item);
 }
-#endif

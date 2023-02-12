@@ -38,9 +38,7 @@ namespace TestNamespace
 	{
       public static TestEnum Get(string key) => throw new System.NotImplementedException();
       public static bool TryGet(string key, out TestEnum item) => throw new System.NotImplementedException();
-" +
-#if NET7_0
-                 @"
+
       public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
       public static global::System.Collections.Generic.IReadOnlyList<TestEnum> Items => default;
       static global::System.Collections.Generic.IReadOnlyList<OtherEnum> IEnum<string, OtherEnum>.Items => default;
@@ -50,9 +48,7 @@ namespace TestNamespace
 
       public static System.ComponentModel.DataAnnotations.ValidationResult Validate(string key, out TestEnum obj) => throw new System.NotImplementedException();
       static System.ComponentModel.DataAnnotations.ValidationResult IKeyedValueObject<OtherEnum, string>.Validate(string key, out OtherEnum obj) => throw new System.NotImplementedException();
-" +
-#endif
-                 @"   }
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("string", "TestEnum");
@@ -76,12 +72,8 @@ namespace TestNamespace
 
       public static TestEnum Get(string key) => throw new System.NotImplementedException();
       public static bool TryGet(string key, out TestEnum item) => throw new System.NotImplementedException();
-"
-#if NET7_0
-+ @"
-      public static System.ComponentModel.DataAnnotations.ValidationResult Validate(string key, out TestEnum obj) => throw new System.NotImplementedException();"
-#endif
-                 + @"
+
+      public static System.ComponentModel.DataAnnotations.ValidationResult Validate(string key, out TestEnum obj) => throw new System.NotImplementedException();
    }
 
 	public sealed partial class {|#0:TestEnum|} : IEnum<string, TestEnum>, IEnum<string>

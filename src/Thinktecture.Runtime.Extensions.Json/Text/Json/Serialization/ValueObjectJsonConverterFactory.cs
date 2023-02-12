@@ -12,12 +12,7 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
    /// <inheritdoc />
    public override bool CanConvert(Type typeToConvert)
    {
-#if !NET7_0
       return ValueObjectMetadataLookup.Find(typeToConvert) is not null;
-#else
-      return typeToConvert.GetInterfaces()
-                          .Any(static i => i.IsGenericType && !i.IsGenericTypeDefinition && i.GetGenericTypeDefinition() == typeof(IKeyedValueObject<,>));
-#endif
    }
 
    /// <inheritdoc />
@@ -34,12 +29,7 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
          throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");
 
       var converterType = typeof(ValueObjectJsonConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-
-#if !NET7_0
-      var converter = Activator.CreateInstance(converterType, metadata.ConvertFromKey, options);
-#else
       var converter = Activator.CreateInstance(converterType, metadata.IsValidatableEnum, options);
-#endif
 
       return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));
    }

@@ -19,11 +19,6 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, "Comparer");
    }
 
-   public static string? FindKeyEqualityComparer(this AttributeData attributeData)
-   {
-      return GetStringParameterValue(attributeData, "KeyComparer");
-   }
-
    public static string? FindDefaultInstancePropertyName(this AttributeData attributeData)
    {
       return GetStringParameterValue(attributeData, "DefaultInstancePropertyName");

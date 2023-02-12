@@ -27,17 +27,10 @@ namespace {ns}
    {{
       public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
       {{
-#if NET7_0
          public ValueObjectNewtonsoftJsonConverter()
             : base({(_state.IsValidatable ? "true" : "false")})
          {{
          }}
-#else
-         public ValueObjectNewtonsoftJsonConverter()
-            : base({_state.TypeFullyQualified}.Get)
-         {{
-         }}
-#endif
       }}
    }}
 {(ns is null ? null : @"}

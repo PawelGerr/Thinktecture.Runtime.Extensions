@@ -12,6 +12,7 @@
       <RepositoryUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions</RepositoryUrl>
       <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
       <RootNamespace>Thinktecture</RootNamespace>
+      <TargetFramework>net7.0</TargetFramework>
       <LangVersion>11.0</LangVersion>
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>

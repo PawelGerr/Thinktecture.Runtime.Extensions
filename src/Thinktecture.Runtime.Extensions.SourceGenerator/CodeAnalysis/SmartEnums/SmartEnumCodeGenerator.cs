@@ -7,8 +7,7 @@ public sealed class SmartEnumCodeGenerator : CodeGeneratorBase
    private readonly EnumSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
-   private bool NeedsDefaultComparer => _state.Settings.KeyEqualityComparer is null && !_state.HasKeyComparerImplementation;
-   private string KeyEqualityComparerName => _state.Settings.KeyEqualityComparer ?? EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME;
+   private bool NeedsDefaultComparer => !_state.HasKeyComparerImplementation;
 
    public override string? FileNameSuffix => null;
 
@@ -66,7 +65,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append($@"
 
-      public static global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualifiedNullAnnotated}> {KeyEqualityComparerName} => {defaultComparer};");
+      public static global::System.Collections.Generic.IEqualityComparer<{_state.KeyProperty.TypeFullyQualifiedNullAnnotated}> {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME} => {defaultComparer};");
       }
 
       _sb.Append($@"
@@ -497,7 +496,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         return {KeyEqualityComparerName}.Equals(this.{_state.KeyProperty.Name}, other.{_state.KeyProperty.Name});
+         return {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME}.Equals(this.{_state.KeyProperty.Name}, other.{_state.KeyProperty.Name});
       }}");
    }
 
@@ -509,7 +508,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}> GetLookup()
       {{
-         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>({totalNumberOfItems}, {KeyEqualityComparerName});");
+         var lookup = new global::System.Collections.Generic.Dictionary<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>({totalNumberOfItems}, {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME});");
 
       if (_state.ItemNames.Count > 0)
       {
@@ -822,7 +821,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.TypeFullyQualified}).GetHashCode() * 397 ^ {KeyEqualityComparerName}.GetHashCode({_state.KeyProperty.ArgumentName}));
+         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.TypeFullyQualified}).GetHashCode() * 397 ^ {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME}.GetHashCode({_state.KeyProperty.ArgumentName}));
       }}
 
       static partial void ValidateConstructorArguments(ref {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}");

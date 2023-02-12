@@ -60,13 +60,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          TestCode = source;
          FixedCode = fixedSource;
          ExpectedDiagnostics.AddRange(expected);
-#if NET7_0
          ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
-#elif NET6_0
-         ReferenceAssemblies = ReferenceAssemblies.Net.Net60;
-#else
-         ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
-#endif
 
          foreach (var additionalReference in additionalReferences)
          {

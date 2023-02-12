@@ -43,17 +43,10 @@ namespace {ns}
    {{
       public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
       {{
-#if NET7_0
          public ValueObjectNewtonsoftJsonConverter()
             : base(false)
          {{
          }}
-#else
-         public ValueObjectNewtonsoftJsonConverter()
-            : base({state.TypeFullyQualified}.Create)
-         {{
-         }}
-#endif
       }}
    }}
 {(ns is null ? null : @"}

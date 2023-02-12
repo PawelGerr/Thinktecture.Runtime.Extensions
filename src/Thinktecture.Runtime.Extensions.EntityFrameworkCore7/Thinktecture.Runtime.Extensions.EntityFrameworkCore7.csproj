@@ -2,17 +2,12 @@
 
    <PropertyGroup>
       <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
-      <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
       <PackageTags>common;EntityFrameworkCore</PackageTags>
       <DefineConstants>$(DefineConstants);EFCORE7</DefineConstants>
    </PropertyGroup>
 
    <ItemGroup>
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
-
-      <Compile Include="..\..\shared\IsExternalInit.cs">
-         <Link>IsExternalInit.cs</Link>
-      </Compile>
    </ItemGroup>
 
    <ItemGroup>

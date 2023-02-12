@@ -49,11 +49,8 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
                                           : typeof(StructValueObjectMessagePackFormatter<,>);
          var formatterType = formatterTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
 
-#if NET7_0
          var formatter = Activator.CreateInstance(formatterType, new object?[] { metadata.IsValidatableEnum });
-#else
-         var formatter = Activator.CreateInstance(formatterType, metadata.ConvertFromKey);
-#endif
+
          if (formatter is null)
          {
             InitError = $"The formatter of '{formatterType.Name}' could not be instantiated.";

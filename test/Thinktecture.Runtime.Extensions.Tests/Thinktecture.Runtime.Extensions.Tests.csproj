@@ -10,12 +10,4 @@
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
    </ItemGroup>
 
-   <ItemGroup Condition=" '$(TargetFramework)' != 'net7.0' ">
-      <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-   </ItemGroup>
-
-   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-      <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
-   </ItemGroup>
-
 </Project>

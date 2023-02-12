@@ -59,11 +59,7 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-#if NET7_0
             return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>(false, options);
-#else
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>({state.TypeFullyQualified}.Create, options);
-#endif
          }}
       }}
    }}

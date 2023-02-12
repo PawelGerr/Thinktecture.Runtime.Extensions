@@ -1,6 +1,4 @@
-#if NET7_0
 using System.Diagnostics.CodeAnalysis;
-#endif
 
 namespace Thinktecture;
 
@@ -11,12 +9,10 @@ namespace Thinktecture;
 public interface IEnum<TKey> : IKeyedValueObject<TKey>
    where TKey : notnull
 {
-#if NET7_0
    /// <summary>
    /// Key equality comparer.
    /// </summary>
    static abstract IEqualityComparer<TKey> KeyEqualityComparer { get; }
-#endif
 }
 
 /// <summary>
@@ -31,14 +27,10 @@ public interface IEnum<TKey> : IKeyedValueObject<TKey>
 /// <remarks>
 /// Don't implement this interface directly. It will be implemented by a source generator.
 /// </remarks>
-public interface IEnum<TKey, T>
-#if NET7_0
-   : IKeyedValueObject<T, TKey>
-#endif
+public interface IEnum<TKey, T> : IKeyedValueObject<T, TKey>
    where T : IEnum<TKey>
    where TKey : notnull
 {
-#if NET7_0
    /// <summary>
    /// Gets all valid items.
    /// </summary>
@@ -59,5 +51,4 @@ public interface IEnum<TKey, T>
    /// <param name="item">A valid instance of <typeparamref name="T"/>; otherwise <c>null</c>.</param>
    /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
    static abstract bool TryGet(TKey? key, [MaybeNullWhen(false)] out T item);
-#endif
 }

@@ -51,7 +51,7 @@ public class BindModelAsync
       var ctx = await BindAsync<IntegerEnum, int>(IntegerEnum.Validate, "42");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("The enumeration item of type \"IntegerEnum\" with identifier \"42\" is not valid.") });
+      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("There is no item of type 'IntegerEnum' with the identifier '42'.") });
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 

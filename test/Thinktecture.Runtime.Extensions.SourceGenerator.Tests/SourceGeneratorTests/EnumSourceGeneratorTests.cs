@@ -2405,23 +2405,11 @@ using System;
 
 namespace Thinktecture.Tests
 {
-   [EnumGeneration(KeyPropertyName = ""Name"""
-#if !NET7_0
-                   + @", KeyComparer = ""_testEqualityComparer"""
-#endif
-                   + @")]
+   [EnumGeneration(KeyPropertyName = ""Name"")]
 	public partial class TestEnum : IValidatableEnum<string>
-	{"
-#if NET7_0
-                                               + @"
+	{
       public static System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer = StringComparer.Ordinal;
-"
-#else
-                   + @"
-      private static readonly System.Collections.Generic.IEqualityComparer<string> _testEqualityComparer = StringComparer.Ordinal;
-"
-#endif
-                   + @"
+
 		public static readonly TestEnum Item1 = new(""Item1"", 1, -1, ""ReferenceProperty1"", ""NullableReferenceProperty1"", 11, ""ReferenceField1"");
       public static readonly TestEnum Item2 = new DerivedEnum(""Item2"", 2, 2, ""ReferenceProperty2"", ""NullableReferenceProperty2"", 22, ""ReferenceField2"");
 
@@ -2460,11 +2448,7 @@ namespace Thinktecture.Tests
 }
 ";
 
-#if NET7_0
       var comparerName = nameof(IEnum<string>.KeyEqualityComparer);
-#else
-      var comparerName = "_testEqualityComparer";
-#endif
 
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IValidatableEnum<>).Assembly);
 
@@ -2508,16 +2492,8 @@ namespace Thinktecture.Tests
 
          global::Thinktecture.Internal.ValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
-"""
-#if NET7_0
-                                             + """
-
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
-"""
-#endif
-                                             + $$"""
-
 
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
                                              = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup);

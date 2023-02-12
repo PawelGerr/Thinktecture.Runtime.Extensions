@@ -27,17 +27,10 @@ namespace {ns}
    {{
       public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.{(_state.IsReferenceType ? "ValueObjectMessagePackFormatterBase" : "StructValueObjectMessagePackFormatterBase")}<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
       {{
-#if NET7_0
          public ValueObjectMessagePackFormatter()
             : base({(_state.IsValidatable ? "true" : "false")})
          {{
          }}
-#else
-         public ValueObjectMessagePackFormatter()
-            : base({_state.TypeFullyQualified}.Get)
-         {{
-         }}
-#endif
       }}
    }}
 {(ns is null ? null : @"}

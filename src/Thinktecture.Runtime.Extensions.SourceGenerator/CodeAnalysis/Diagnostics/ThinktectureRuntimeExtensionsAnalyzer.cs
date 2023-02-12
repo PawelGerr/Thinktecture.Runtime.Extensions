@@ -29,7 +29,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-                                                                                                              DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty,
                                                                                                               DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
                                                                                                               DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
@@ -275,14 +274,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var enumAttr = enumType.FindEnumGenerationAttribute();
 
       if (enumAttr is not null)
-      {
          EnumKeyPropertyNameMustNotBeItem(context, enumAttr, locationOfFirstDeclaration);
-
-         var comparer = enumAttr.FindKeyEqualityComparer();
-         var comparerMembers = comparer is null ? Array.Empty<ISymbol>() : enumType.GetNonIgnoredMembers(comparer);
-
-         CheckKeyComparer(context, comparerMembers);
-      }
 
       var derivedTypes = ValidateDerivedTypes(context, enumType);
 
@@ -294,34 +286,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       if (type.TypeParameters.Length > 0)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
-   }
-
-   private static void CheckKeyComparer(SymbolAnalysisContext context, IEnumerable<ISymbol> comparerMembers)
-   {
-      foreach (var comparerMember in comparerMembers)
-      {
-         switch (comparerMember)
-         {
-            case IFieldSymbol field:
-
-               if (!field.IsStatic)
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, field.GetIdentifier(context.CancellationToken).GetLocation(), field.Name);
-
-               break;
-
-            case IPropertySymbol property:
-
-               if (!property.IsStatic)
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, property.GetIdentifier(context.CancellationToken).GetLocation(), property.Name);
-
-               break;
-
-            default:
-               var location = comparerMember.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken).GetLocation();
-               ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, location, comparerMember.Name);
-               break;
-         }
-      }
    }
 
    private static void Check_ItemLike_StaticProperties(SymbolAnalysisContext context, INamedTypeSymbol enumType)
