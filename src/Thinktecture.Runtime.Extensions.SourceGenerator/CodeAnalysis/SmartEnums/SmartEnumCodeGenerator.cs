@@ -582,6 +582,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       {_state.KeyProperty.TypeFullyQualified} global::Thinktecture.IKeyedValueObject<{_state.KeyProperty.TypeFullyQualified}>.GetKey()
       {{
          return this.{_state.KeyProperty.Name};

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace Thinktecture;
 
@@ -19,6 +20,7 @@ public interface IKeyedValueObject<out TKey> : IKeyedValueObject
    /// <summary>
    /// Gets the key of the item.
    /// </summary>
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    TKey GetKey() => throw new NotImplementedException("This method will be implemented by the source generator.");
 }
 
