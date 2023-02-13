@@ -6,17 +6,17 @@ namespace Thinktecture.Internal;
 /// <summary>
 /// For internal use only.
 /// </summary>
-public static class KeyedValueObjectMetadataLookup
+public static class ComplexValueObjectMetadataLookup
 {
-   private static readonly ConcurrentDictionary<Type, KeyedValueObjectMetadata> _metadata = new();
+   private static readonly ConcurrentDictionary<Type, ComplexValueObjectMetadata> _metadata = new();
 
    /// <summary>
-   /// Searches for <see cref="KeyedValueObjectMetadata"/> for provided <paramref name="type"/>.
+   /// Searches for <see cref="ComplexValueObjectMetadata"/> for provided <paramref name="type"/>.
    /// </summary>
-   /// <param name="type">Type to search for <see cref="KeyedValueObjectMetadata"/>.</param>
-   /// <returns>An instance of <see cref="KeyedValueObjectMetadata"/> if the <paramref name="type"/> is a keyed value object; otherwise <c>null</c>.</returns>
+   /// <param name="type">Type to search for <see cref="ComplexValueObjectMetadata"/>.</param>
+   /// <returns>An instance of <see cref="ComplexValueObjectMetadata"/> if the <paramref name="type"/> is a complex value object; otherwise <c>null</c>.</returns>
    /// <exception cref="ArgumentNullException">If <paramref name="type"/> is <c>null</c>.</exception>
-   public static KeyedValueObjectMetadata? Find(Type type)
+   public static ComplexValueObjectMetadata? Find(Type type)
    {
       ArgumentNullException.ThrowIfNull(type);
 
@@ -25,7 +25,7 @@ public static class KeyedValueObjectMetadataLookup
       if (_metadata.TryGetValue(type, out var metadata))
          return metadata;
 
-      if (!typeof(IKeyedValueObject).IsAssignableFrom(type))
+      if (!typeof(IComplexValueObject).IsAssignableFrom(type))
          return null;
 
       // The initializer of the assembly/module containing the smart enum/value object is not executed yet
@@ -44,7 +44,7 @@ public static class KeyedValueObjectMetadataLookup
    /// <param name="valueObjectMetadata">Metadata of the value object.</param>
    /// <exception cref="ArgumentNullException">If <paramref name="type"/> of <paramref name="valueObjectMetadata"/> is <c>null</c>.</exception>
    /// <exception cref="ArgumentException">The <paramref name="type"/> has been added to lookup already.</exception>
-   public static void AddMetadata(Type type, KeyedValueObjectMetadata valueObjectMetadata)
+   public static void AddMetadata(Type type, ComplexValueObjectMetadata valueObjectMetadata)
    {
       ArgumentNullException.ThrowIfNull(type);
       ArgumentNullException.ThrowIfNull(valueObjectMetadata);

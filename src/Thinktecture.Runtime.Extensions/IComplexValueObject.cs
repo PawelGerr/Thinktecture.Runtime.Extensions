@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace Thinktecture;
 
 /// <summary>
@@ -7,9 +5,4 @@ namespace Thinktecture;
 /// </summary>
 public interface IComplexValueObject
 {
-   /// <summary>
-   /// Gets assignable members.
-   /// </summary>
-   /// <returns>Assignable members.</returns>
-   static abstract IReadOnlyList<MemberInfo> GetAssignableMembers();
 }
