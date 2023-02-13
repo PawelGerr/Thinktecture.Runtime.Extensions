@@ -87,8 +87,8 @@ public sealed class ValueObjectSourceGeneratorState :
 
          if (settings.IsExplicitlyDeclared)
          {
-            var equalityComparer = settings.EqualityComparer;
-            var comparer = settings.Comparer;
+            var equalityComparer = settings.HasInvalidEqualityComparerType ? null : settings.EqualityComparerAccessor;
+            var comparer = settings.HasInvalidComparerType ? null : settings.ComparerAccessor;
             var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer, comparer);
 
             (equalityMembers ??= new List<EqualityInstanceMemberInfo>()).Add(equalityMember);
@@ -142,8 +142,8 @@ public sealed class ValueObjectSourceGeneratorState :
       if (!Settings.SkipToString && HasKeyMember && KeyMember.Member.IsFormattable)
          generators = generators.Add(FormattableCodeGenerator.Instance);
 
-      if (!Settings.SkipCompareTo && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.Comparer is not null))
-         generators = generators.Add(new ComparableCodeGenerator(KeyMember.Comparer));
+      if (!Settings.SkipCompareTo && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.ComparerAccessor is not null))
+         generators = generators.Add(new ComparableCodeGenerator(KeyMember.ComparerAccessor));
 
       return generators;
    }

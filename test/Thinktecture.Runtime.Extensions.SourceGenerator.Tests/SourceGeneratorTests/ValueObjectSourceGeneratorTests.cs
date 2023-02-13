@@ -3337,7 +3337,8 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      [ValueObjectEqualityMember(EqualityComparer = ""EqualityComparer<int>.Default"", Comparer = ""Comparer<int>.Default"")]
+      [ValueObjectMemberEqualityAttribute<StringComparerOrdinalIgnoreCase, string>]
+      [ValueObjectMemberCompare<StringComparerOrdinalIgnoreCase, string>]
       public readonly int ReferenceField;
    }
 }

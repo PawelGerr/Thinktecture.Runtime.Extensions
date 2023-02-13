@@ -668,7 +668,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
          {
-            var (member, equalityComparer) = _state.EqualityMembers[i];
+            var (member, equalityComparerAccessor) = _state.EqualityMembers[i];
 
             if (i == 0)
             {
@@ -681,7 +681,7 @@ namespace ").Append(_state.Namespace).Append(@"
              && ");
             }
 
-            if (equalityComparer == null)
+            if (equalityComparerAccessor == null)
             {
                if (member.IsReferenceType)
                {
@@ -694,7 +694,7 @@ namespace ").Append(_state.Namespace).Append(@"
             }
             else
             {
-               _sb.Append($@"{equalityComparer}.Equals(this.{member.Name}, other.{member.Name})");
+               _sb.Append($@"{equalityComparerAccessor}.EqualityComparer.Equals(this.{member.Name}, other.{member.Name})");
             }
          }
 
@@ -720,7 +720,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.EqualityMembers.Count > 0)
       {
-         var useShortForm = _state.EqualityMembers.Count <= 8 && _state.EqualityMembers.All(m => m.EqualityComparer == null);
+         var useShortForm = _state.EqualityMembers.Count <= 8 && _state.EqualityMembers.All(m => m.EqualityComparerAccessor == null);
 
          if (useShortForm)
          {
@@ -735,7 +735,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
          {
-            var (member, equalityComparer) = _state.EqualityMembers[i];
+            var (member, equalityComparerAccessor) = _state.EqualityMembers[i];
 
             if (useShortForm)
             {
@@ -752,8 +752,8 @@ namespace ").Append(_state.Namespace).Append(@"
                _sb.Append($@"
          hashCode.Add(this.{member.Name}");
 
-               if (equalityComparer is not null)
-                  _sb.Append($@", {equalityComparer}");
+               if (equalityComparerAccessor is not null)
+                  _sb.Append($@", {equalityComparerAccessor}.EqualityComparer");
 
                _sb.Append(@");");
             }

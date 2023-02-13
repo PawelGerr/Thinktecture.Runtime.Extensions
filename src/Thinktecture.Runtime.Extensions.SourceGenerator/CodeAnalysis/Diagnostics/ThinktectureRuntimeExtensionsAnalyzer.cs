@@ -37,7 +37,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
                                                                                                               DiagnosticsDescriptors.ValueObjectMustBeSealed,
                                                                                                               DiagnosticsDescriptors.SwitchMustCoverAllItems,
-                                                                                                              DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics);
+                                                                                                              DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics,
+                                                                                                              DiagnosticsDescriptors.ComparerTypeMustMatchMemberType);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -179,6 +180,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          if (keyMember.NullableAnnotation == NullableAnnotation.Annotated || keyMember.IsNullableStruct)
             ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.GetIdentifierLocation(), keyMember.Name);
+
+         CheckComparerTypes(context, keyMember);
       }
       else
       {
@@ -193,15 +196,36 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       foreach (var assignableMember in assignableMembers)
       {
-         var comparer = assignableMember.ValueObjectMemberSettings.Comparer;
+         CheckComparerTypes(context, assignableMember);
 
-         if (comparer is not null)
+         var comparerAccessor = assignableMember.ValueObjectMemberSettings.ComparerAccessor;
+
+         if (comparerAccessor is not null)
          {
             ReportDiagnostic(context,
                              DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
-                             assignableMember.ValueObjectMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(),
-                             comparer);
+                             assignableMember.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(),
+                             comparerAccessor);
          }
+      }
+   }
+
+   private static void CheckComparerTypes(SymbolAnalysisContext context, InstanceMemberInfo member)
+   {
+      if (member.ValueObjectMemberSettings is { HasInvalidEqualityComparerType: true, EqualityComparerAccessor: { } })
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
+                          member.ValueObjectMemberSettings.GetEqualityComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(),
+                          member.ValueObjectMemberSettings.EqualityComparerAccessor);
+      }
+
+      if (member.ValueObjectMemberSettings is { HasInvalidComparerType: true, ComparerAccessor: { } })
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
+                          member.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(),
+                          member.ValueObjectMemberSettings.ComparerAccessor);
       }
    }
 

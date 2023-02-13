@@ -17,21 +17,22 @@ public class TTRESG031_ComparerApplicableOnKeyMemberOnly
 using System;
 using System.Collections.Generic;
 using Thinktecture;
+using Thinktecture.Runtime.Tests;
 
 namespace TestNamespace
 {
    [ValueObject]
 	public sealed partial class TestValueObject
 	{
-      [{|#0:ValueObjectEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
+      [{|#0:ValueObjectMemberCompare<DefaultComparerAccessor<int>, int>|}]
       public readonly int Field;
 
       public readonly int Field2;
    }
 }";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Comparer<int>.Default");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("global::Thinktecture.Runtime.Tests.DefaultComparerAccessor<int>");
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(DefaultComparerAccessor<>).Assembly }, expected);
    }
 
    [Fact]
@@ -43,17 +44,18 @@ namespace TestNamespace
 using System;
 using System.Collections.Generic;
 using Thinktecture;
+using Thinktecture.Runtime.Tests;
 
 namespace TestNamespace
 {
    [ValueObject]
 	public sealed partial class TestValueObject
 	{
-      [{|#0:ValueObjectEqualityMember(Comparer = ""Comparer<int>.Default"")|}]
+      [{|#0:ValueObjectMemberCompare<DefaultComparerAccessor<int>, int>|}]
       public readonly int Field;
    }
 }";
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(DefaultComparerAccessor<>).Assembly });
    }
 }

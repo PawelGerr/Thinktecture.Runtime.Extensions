@@ -47,7 +47,7 @@ public sealed class ValueObjectAttribute : Attribute
    ///
    /// This setting has no effect on:
    /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectEqualityMemberAttribute.Comparer"/> is not set.
+   /// - if key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectMemberCompareAttribute{T,TMember}"/> is not set.
    /// </summary>
    public bool SkipCompareTo { get; set; }
 

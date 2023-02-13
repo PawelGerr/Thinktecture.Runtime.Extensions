@@ -46,7 +46,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
       ReadAccessibility = readAccessibility;
       IsStatic = isStatic;
-      ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member);
+      ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member, type);
 
       foreach (var @interface in type.AllInterfaces)
       {

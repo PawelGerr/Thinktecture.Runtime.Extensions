@@ -4,11 +4,11 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 {
-   private readonly string? _comparer;
+   private readonly string? _comparerAccessor;
 
-   public ComparableCodeGenerator(string? comparer)
+   public ComparableCodeGenerator(string? comparerAccessor)
    {
-      _comparer = comparer;
+      _comparerAccessor = comparerAccessor;
    }
 
    public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type)
@@ -44,7 +44,7 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 ");
       }
 
-      if (_comparer is null)
+      if (_comparerAccessor is null)
       {
          if (member.IsReferenceType)
          {
@@ -60,7 +60,7 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       else
       {
          sb.Append($@"
-         return {_comparer}.Compare(this.{member.Name}, obj.{member.Name});");
+         return {_comparerAccessor}.Comparer.Compare(this.{member.Name}, obj.{member.Name});");
       }
 
       sb.Append(@"

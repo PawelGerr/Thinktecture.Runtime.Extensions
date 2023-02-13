@@ -9,16 +9,6 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, "KeyPropertyName");
    }
 
-   public static string? FindEqualityComparer(this AttributeData attributeData)
-   {
-      return GetStringParameterValue(attributeData, "EqualityComparer");
-   }
-
-   public static string? FindComparer(this AttributeData attributeData)
-   {
-      return GetStringParameterValue(attributeData, "Comparer");
-   }
-
    public static string? FindDefaultInstancePropertyName(this AttributeData attributeData)
    {
       return GetStringParameterValue(attributeData, "DefaultInstancePropertyName");
@@ -47,6 +37,16 @@ public static class AttributeDataExtensions
    public static bool? FindSkipToString(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "SkipToString");
+   }
+
+   public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
+   {
+      var attrs = attributeData.AttributeClass?.TypeArguments;
+
+      if (attrs?.Length != 2)
+         return null;
+
+      return (attrs.Value[0], attrs.Value[1]);
    }
 
    private static string? GetStringParameterValue(AttributeData attributeData, string name)
