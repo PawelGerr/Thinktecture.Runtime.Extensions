@@ -18,10 +18,7 @@ public interface IValidatableEnum<TKey> : IEnum<TKey>, IValidatableObject
    /// Checks whether current enumeration item is valid.
    /// </summary>
    /// <exception cref="InvalidOperationException">The enumeration item is not valid.</exception>
-   void EnsureValid()
-   {
-      throw new NotImplementedException("This method will be implemented by the source generator.");
-   }
+   void EnsureValid() => throw new NotImplementedException("This method will be implemented by the source generator.");
 
    IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
    {

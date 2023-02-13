@@ -17,10 +17,6 @@ public interface IEnum<TKey> : IKeyedValueObject<TKey>
 
 /// <summary>
 /// Interface of a Smart Enum.
-///
-/// TODO:
-/// Analyzers:
-/// * don't implement this interface directly.
 /// </summary>
 /// <typeparam name="T">Type of the enumeration implementing this interface.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>

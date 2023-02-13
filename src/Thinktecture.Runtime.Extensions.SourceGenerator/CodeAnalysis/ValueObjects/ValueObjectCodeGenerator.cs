@@ -174,7 +174,9 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateEqualityOperators();
       GenerateEquals();
       GenerateGetHashCode();
-      GenerateToString();
+
+      if (!_state.Settings.SkipToString)
+         GenerateToString();
 
       if (_state.HasKeyMember)
       {

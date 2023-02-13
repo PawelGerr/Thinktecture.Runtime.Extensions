@@ -16,4 +16,9 @@ public sealed class EnumGenerationAttribute : Attribute
       get => _keyPropertyName ?? "Key";
       set => _keyPropertyName = value;
    }
+
+   /// <summary>
+   /// Indication whether the generator should implement the method <see cref="object.ToString"/> or not.
+   /// </summary>
+   public bool SkipToString { get; set; }
 }

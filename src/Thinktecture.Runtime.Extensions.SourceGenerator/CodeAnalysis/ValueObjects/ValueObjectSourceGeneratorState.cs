@@ -139,7 +139,7 @@ public sealed class ValueObjectSourceGeneratorState :
    {
       var generators = ImmutableArray<IInterfaceCodeGenerator>.Empty;
 
-      if (HasKeyMember && KeyMember.Member.IsFormattable)
+      if (!Settings.SkipToString && HasKeyMember && KeyMember.Member.IsFormattable)
          generators = generators.Add(FormattableCodeGenerator.Instance);
 
       if (!Settings.SkipCompareTo && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.Comparer is not null))

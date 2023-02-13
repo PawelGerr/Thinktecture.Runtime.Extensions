@@ -44,6 +44,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipCompareTo");
    }
 
+   public static bool? FindSkipToString(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipToString");
+   }
+
    private static string? GetStringParameterValue(AttributeData attributeData, string name)
    {
       var value = (string?)attributeData.FindNamedAttribute(name).Value;

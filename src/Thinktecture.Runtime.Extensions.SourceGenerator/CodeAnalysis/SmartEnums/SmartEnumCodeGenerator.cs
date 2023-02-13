@@ -125,13 +125,18 @@ namespace ").Append(_state.Namespace).Append(@"
       public override int GetHashCode()
       {{
          return _hashCode.Value;
-      }}
+      }}");
+
+      if (!_state.Settings.SkipToString)
+      {
+         _sb.Append($@"
 
       /// <inheritdoc />
       public override string? ToString()
       {{
          return this.{_state.KeyProperty.Name}{(!_state.IsReferenceType && _state.KeyProperty.IsReferenceType ? "?" : null)}.ToString();
       }}");
+      }
 
       GenerateSwitchForAction(false);
       GenerateSwitchForAction(true);

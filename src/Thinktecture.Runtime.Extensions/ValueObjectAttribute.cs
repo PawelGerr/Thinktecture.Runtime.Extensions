@@ -51,6 +51,11 @@ public sealed class ValueObjectAttribute : Attribute
    /// </summary>
    public bool SkipCompareTo { get; set; }
 
+   /// <summary>
+   /// Indication whether the generator should implement the method <see cref="object.ToString"/> or not.
+   /// </summary>
+   public bool SkipToString { get; set; }
+
    private string? _defaultInstancePropertyName;
 
    /// <summary>

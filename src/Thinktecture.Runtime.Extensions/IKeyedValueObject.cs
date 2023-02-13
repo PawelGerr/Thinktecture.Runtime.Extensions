@@ -29,6 +29,9 @@ public interface IKeyedValueObject<out TKey> : IKeyedValueObject
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
+/// <remarks>
+/// Don't implement this interface directly. It will be implemented by a source generator.
+/// </remarks>
 public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>
    where TKey : notnull
 {

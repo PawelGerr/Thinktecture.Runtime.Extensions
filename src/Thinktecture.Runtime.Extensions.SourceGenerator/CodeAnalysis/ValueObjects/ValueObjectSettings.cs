@@ -8,6 +8,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool EmptyStringInFactoryMethodsYieldsNull { get; }
    public bool NullInFactoryMethodsYieldsNull { get; }
    public bool SkipCompareTo { get; }
+   public bool SkipToString { get; }
    public string DefaultInstancePropertyName { get; }
 
    public ValueObjectSettings(AttributeData valueObjectAttribute)
@@ -16,6 +17,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
       EmptyStringInFactoryMethodsYieldsNull = valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false;
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
       SkipCompareTo = valueObjectAttribute.FindSkipCompareTo() ?? false;
+      SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
    }
 
@@ -35,6 +37,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && SkipCompareTo == other.SkipCompareTo
+             && SkipToString == other.SkipToString
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
 
@@ -46,6 +49,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipCompareTo.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 
          return hashCode;
