@@ -30,7 +30,7 @@ public sealed class JsonValueObjectCodeGenerator : CodeGeneratorBase
       return null;
    }
 
-   private static string? GenerateJsonConverter(
+   private static string GenerateJsonConverter(
       ValueObjectSourceGeneratorState state,
       EqualityInstanceMemberInfo keyMember)
    {
@@ -59,7 +59,7 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>(false, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>(options);
          }}
       }}
    }}

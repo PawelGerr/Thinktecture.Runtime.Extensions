@@ -22,16 +22,9 @@ public sealed class NewtonsoftJsonSmartEnumCodeGenerator : CodeGeneratorBase
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
-   [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
+   [global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
-      {{
-         public ValueObjectNewtonsoftJsonConverter()
-            : base({(_state.IsValidatable ? "true" : "false")})
-         {{
-         }}
-      }}
    }}
 {(ns is null ? null : @"}
 ")}";

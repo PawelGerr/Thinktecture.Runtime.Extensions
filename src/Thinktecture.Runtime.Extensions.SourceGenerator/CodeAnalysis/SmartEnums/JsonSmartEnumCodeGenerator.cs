@@ -41,7 +41,7 @@ namespace {ns}
             if (options is null)
                throw new global::System.ArgumentNullException(nameof(options));
 
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>({(_state.IsValidatable ? "true" : "false")}, options);
+            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>(options);
          }}
       }}
    }}

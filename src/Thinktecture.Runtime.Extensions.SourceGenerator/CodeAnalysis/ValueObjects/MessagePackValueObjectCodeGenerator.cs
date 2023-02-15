@@ -38,16 +38,9 @@ public sealed class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
-   [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
+   [global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.{(state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter")}<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.{(state.IsReferenceType ? "ValueObjectMessagePackFormatterBase" : "StructValueObjectMessagePackFormatterBase")}<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
-      {{
-         public ValueObjectMessagePackFormatter()
-            : base(false)
-         {{
-         }}
-      }}
    }}
 {(ns is null ? null : @"}
 ")}";

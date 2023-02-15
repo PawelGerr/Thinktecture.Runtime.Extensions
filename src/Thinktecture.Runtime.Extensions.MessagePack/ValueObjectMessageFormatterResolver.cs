@@ -49,7 +49,7 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
                                           : typeof(StructValueObjectMessagePackFormatter<,>);
          var formatterType = formatterTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
 
-         var formatter = Activator.CreateInstance(formatterType, new object?[] { metadata.IsValidatableEnum });
+         var formatter = Activator.CreateInstance(formatterType);
 
          if (formatter is null)
          {

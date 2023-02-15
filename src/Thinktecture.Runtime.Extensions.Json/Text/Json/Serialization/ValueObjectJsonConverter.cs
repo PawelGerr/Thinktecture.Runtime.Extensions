@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -13,21 +12,18 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
    where T : IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
-   private readonly bool _mayReturnInvalidObjects;
+   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+
    private readonly JsonConverter<TKey> _keyConverter;
 
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectJsonConverter{T,TKey}"/>.
    /// </summary>
-   /// <param name="mayReturnInvalidObjects">Indication whether invalid should be returned on deserialization. If <c>false</c> then a <see cref="JsonException"/> is thrown.</param>
    /// <param name="options">JSON serializer options.</param>
-   public ValueObjectJsonConverter(
-      bool mayReturnInvalidObjects,
-      JsonSerializerOptions options)
+   public ValueObjectJsonConverter(JsonSerializerOptions options)
    {
       ArgumentNullException.ThrowIfNull(options);
 
-      _mayReturnInvalidObjects = mayReturnInvalidObjects;
       _keyConverter = (JsonConverter<TKey>)options.GetConverter(typeof(TKey));
    }
 
@@ -41,8 +37,8 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
 
       var validationResult = T.Validate(key, out var obj);
 
-      if (validationResult != ValidationResult.Success && !_mayReturnInvalidObjects)
-         throw new JsonException(validationResult!.ErrorMessage ?? "JSON deserialization failed.");
+      if (validationResult is not null && !_mayReturnInvalidObjects)
+         throw new JsonException(validationResult.ErrorMessage ?? "JSON deserialization failed.");
 
       return obj;
    }

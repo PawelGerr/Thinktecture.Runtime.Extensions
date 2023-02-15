@@ -9,23 +9,13 @@ namespace Thinktecture.Json;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public abstract class ValueObjectNewtonsoftJsonConverterBase<T, TKey> : JsonConverter
+public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
    where T : IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
    private static readonly Type _type = typeof(T);
    private static readonly Type _keyType = typeof(TKey);
-
-   private readonly bool _mayReturnInvalidObjects;
-
-   /// <summary>
-   /// Initializes a new instance of <see cref="ValueObjectNewtonsoftJsonConverter{T,TKey}"/>.
-   /// </summary>
-   /// <param name="mayReturnInvalidObjects">Indication whether invalid should be returned on deserialization. If <c>false</c> then a <see cref="JsonSerializationException"/> is thrown.</param>
-   protected ValueObjectNewtonsoftJsonConverterBase(bool mayReturnInvalidObjects)
-   {
-      _mayReturnInvalidObjects = mayReturnInvalidObjects;
-   }
+   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
 
    /// <inheritdoc />
    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

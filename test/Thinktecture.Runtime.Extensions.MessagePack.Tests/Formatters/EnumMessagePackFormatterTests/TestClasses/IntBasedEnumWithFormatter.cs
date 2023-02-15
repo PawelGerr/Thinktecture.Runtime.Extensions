@@ -3,15 +3,7 @@ using Thinktecture.Formatters;
 
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 
-public class IntBasedEnumWithFormatterMessagePackFormatter : ValueObjectMessagePackFormatterBase<IntBasedEnumWithFormatter, int>
-{
-   public IntBasedEnumWithFormatterMessagePackFormatter()
-      : base(true)
-   {
-   }
-}
-
-[MessagePackFormatter(typeof(IntBasedEnumWithFormatterMessagePackFormatter))]
+[MessagePackFormatter(typeof(ValueObjectMessagePackFormatter<IntBasedEnumWithFormatter, int>))]
 public sealed partial class IntBasedEnumWithFormatter : IValidatableEnum<int>
 {
    public static readonly IntBasedEnumWithFormatter Value1 = new(1);

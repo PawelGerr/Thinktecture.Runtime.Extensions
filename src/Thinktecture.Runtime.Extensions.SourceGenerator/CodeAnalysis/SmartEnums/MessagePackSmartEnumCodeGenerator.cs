@@ -22,16 +22,9 @@ public sealed class MessagePackSmartEnumCodeGenerator : CodeGeneratorBase
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
-   [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
+   [global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.{(_state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter")}<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
    {{
-      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.{(_state.IsReferenceType ? "ValueObjectMessagePackFormatterBase" : "StructValueObjectMessagePackFormatterBase")}<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
-      {{
-         public ValueObjectMessagePackFormatter()
-            : base({(_state.IsValidatable ? "true" : "false")})
-         {{
-         }}
-      }}
    }}
 {(ns is null ? null : @"}
 ")}";

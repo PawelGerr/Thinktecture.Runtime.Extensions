@@ -27,7 +27,7 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
          throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");
 
       var converterType = typeof(ValueObjectJsonConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-      var converter = Activator.CreateInstance(converterType, metadata.IsValidatableEnum, options);
+      var converter = Activator.CreateInstance(converterType, options);
 
       return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));
    }

@@ -5,9 +5,7 @@ namespace Thinktecture;
 /// <summary>
 /// Interface of Smart Enum.
 /// </summary>
-/// <typeparam name="TKey">Type of the key.</typeparam>
-public interface IValidatableEnum<TKey> : IEnum<TKey>, IValidatableObject
-   where TKey : notnull
+public interface IValidatableEnum
 {
    /// <summary>
    /// Indication whether the current enumeration item is valid or not.
@@ -19,7 +17,15 @@ public interface IValidatableEnum<TKey> : IEnum<TKey>, IValidatableObject
    /// </summary>
    /// <exception cref="InvalidOperationException">The enumeration item is not valid.</exception>
    void EnsureValid() => throw new NotImplementedException("This method will be implemented by the source generator.");
+}
 
+/// <summary>
+/// Interface of Smart Enum.
+/// </summary>
+/// <typeparam name="TKey">Type of the key.</typeparam>
+public interface IValidatableEnum<TKey> : IEnum<TKey>, IValidatableEnum, IValidatableObject
+   where TKey : notnull
+{
    IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
    {
       return IsValid

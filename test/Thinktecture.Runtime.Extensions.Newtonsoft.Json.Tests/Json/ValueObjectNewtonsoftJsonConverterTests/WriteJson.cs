@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Thinktecture.Json;
 using Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -25,38 +26,38 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_enum_if_null_and_default()
    {
-      Serialize<TestSmartEnum_Class_IntBased, TestSmartEnum_Class_IntBased.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Class_StringBased, TestSmartEnum_Class_StringBased.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Struct_IntBased?, TestSmartEnum_Struct_IntBased.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Struct_StringBased?, TestSmartEnum_Struct_StringBased.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Struct_IntBased, TestSmartEnum_Struct_IntBased.ValueObjectNewtonsoftJsonConverter>(default).Should().Be("0");
-      Serialize<TestSmartEnum_Struct_StringBased, TestSmartEnum_Struct_StringBased.ValueObjectNewtonsoftJsonConverter>(default).Should().Be("null");
+      Serialize<TestSmartEnum_Class_IntBased, int>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Class_StringBased, string>(null).Should().Be("null");
+      SerializeNullableStruct<TestSmartEnum_Struct_IntBased, int>(null).Should().Be("null");
+      SerializeNullableStruct<TestSmartEnum_Struct_StringBased, string>(null).Should().Be("null");
+      SerializeStruct<TestSmartEnum_Struct_IntBased, int>(default).Should().Be("0");
+      SerializeStruct<TestSmartEnum_Struct_StringBased, string>(default).Should().Be("null");
    }
 
    [Fact]
    public void Should_deserialize_keyed_value_object_if_null_and_default()
    {
-      Serialize<IntBasedReferenceValueObject, IntBasedReferenceValueObject.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<StringBasedReferenceValueObject, StringBasedReferenceValueObject.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<IntBasedStructValueObject?, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<StringBasedStructValueObject?, StringBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>(default).Should().Be("0");
-      Serialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectNewtonsoftJsonConverter>(default).Should().Be("null");
+      Serialize<IntBasedReferenceValueObject, int>(null).Should().Be("null");
+      Serialize<StringBasedReferenceValueObject, string>(null).Should().Be("null");
+      SerializeNullableStruct<IntBasedStructValueObject, int>(null).Should().Be("null");
+      SerializeNullableStruct<StringBasedStructValueObject, string>(null).Should().Be("null");
+      SerializeStruct<IntBasedStructValueObject, int>(default).Should().Be("0");
+      SerializeStruct<StringBasedStructValueObject, string>(default).Should().Be("null");
    }
 
    [Fact]
    public void Should_deserialize_value_object_if_null_and_default()
    {
-      Serialize<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<TestValueObject_Complex_Struct?, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      Serialize<TestValueObject_Complex_Struct, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>(default).Should().Be("{\"Property1\":null,\"Property2\":null}");
+      SerializeWithConverter<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
+      SerializeWithConverter<TestValueObject_Complex_Struct?, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
+      SerializeWithConverter<TestValueObject_Complex_Struct, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>(default).Should().Be("{\"Property1\":null,\"Property2\":null}");
    }
 
    [Theory]
    [MemberData(nameof(DataForStringBasedEnumTest))]
    public void Should_serialize_string_based_enum(TestEnum enumValue, string expectedJson)
    {
-      var json = Serialize<TestEnum, TestEnum.ValueObjectNewtonsoftJsonConverter>(enumValue);
+      var json = Serialize<TestEnum, string>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -65,7 +66,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForIntBasedEnumTest))]
    public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
    {
-      var json = Serialize<IntegerEnum, IntegerEnum.ValueObjectNewtonsoftJsonConverter>(enumValue);
+      var json = Serialize<IntegerEnum, int>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -78,12 +79,39 @@ public class WriteJson : JsonTestsBase
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
    {
-      var json = Serialize<ValueObjectWithMultipleProperties, ValueObjectWithMultipleProperties.ValueObjectNewtonsoftJsonConverter>(value, namingStrategy, nullValueHandling);
+      var json = SerializeWithConverter<ValueObjectWithMultipleProperties, ValueObjectWithMultipleProperties.ValueObjectNewtonsoftJsonConverter>(value, namingStrategy, nullValueHandling);
 
       json.Should().Be(expectedJson);
    }
 
-   private static string Serialize<T, TConverter>(
+   private static string Serialize<T, TKey>(
+      T value,
+      NamingStrategy namingStrategy = null,
+      NullValueHandling nullValueHandling = NullValueHandling.Include)
+      where T : IKeyedValueObject<T, TKey>
+   {
+      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
+   }
+
+   private static string SerializeNullableStruct<T, TKey>(
+      T? value,
+      NamingStrategy namingStrategy = null,
+      NullValueHandling nullValueHandling = NullValueHandling.Include)
+      where T : struct, IKeyedValueObject<T, TKey>
+   {
+      return SerializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
+   }
+
+   private static string SerializeStruct<T, TKey>(
+      T value,
+      NamingStrategy namingStrategy = null,
+      NullValueHandling nullValueHandling = NullValueHandling.Include)
+      where T : struct, IKeyedValueObject<T, TKey>
+   {
+      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
+   }
+
+   private static string SerializeWithConverter<T, TConverter>(
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)

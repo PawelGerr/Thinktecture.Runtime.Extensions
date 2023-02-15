@@ -38,16 +38,9 @@ public sealed class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
 {(ns is null ? null : $@"
 namespace {ns}
 {{")}
-   [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
+   [global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>))]
    partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    {{
-      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
-      {{
-         public ValueObjectNewtonsoftJsonConverter()
-            : base(false)
-         {{
-         }}
-      }}
    }}
 {(ns is null ? null : @"}
 ")}";
