@@ -97,7 +97,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      private readonly global::System.Lazy<int> _hashCode;");
+      private readonly int _hashCode;");
 
       GenerateConstructors();
       GenerateGetKey();
@@ -124,7 +124,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override int GetHashCode()
       {{
-         return _hashCode.Value;
+         return _hashCode;
       }}");
 
       if (!_state.Settings.SkipToString)
@@ -824,7 +824,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-         this._hashCode = new global::System.Lazy<int>(() => typeof({_state.TypeFullyQualified}).GetHashCode() * 397 ^ {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME}.GetHashCode({_state.KeyProperty.ArgumentName}));
+         this._hashCode = global::System.HashCode.Combine(typeof({_state.TypeFullyQualified}), {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME}.GetHashCode({_state.KeyProperty.ArgumentName}));
       }}
 
       static partial void ValidateConstructorArguments(ref {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}");
