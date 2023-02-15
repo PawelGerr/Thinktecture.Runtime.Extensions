@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
-using Thinktecture.Internal;
 
 #if EFCORE5
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace Thinktecture;
@@ -9,7 +8,8 @@ namespace Thinktecture;
 /// </summary>
 /// <typeparam name="T">Type of the concrete enumeration.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public abstract class ValueObjectTypeConverter<T, TKey> : TypeConverter
+public class ValueObjectTypeConverter<T, TKey> : TypeConverter
+   where T : IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
    private static readonly Type _type = typeof(T);
@@ -17,21 +17,7 @@ public abstract class ValueObjectTypeConverter<T, TKey> : TypeConverter
    private static readonly Type _keyType = typeof(TKey);
    private static readonly Type? _nullableKeyType = !typeof(TKey).IsClass ? typeof(Nullable<>).MakeGenericType(typeof(TKey)) : null;
    private static readonly TypeConverter? _keyConverter = typeof(TKey) != typeof(T) ? TypeDescriptor.GetConverter(typeof(TKey)) : null;
-
-   /// <summary>
-   /// Converts <paramref name="key"/> to an instance of <typeparamref name="T"/>.
-   /// </summary>
-   /// <param name="key">Key to convert.</param>
-   /// <returns>An instance of <typeparamref name="T"/>.</returns>
-   [return: NotNullIfNotNull("key")]
-   protected abstract T? ConvertFrom(TKey? key);
-
-   /// <summary>
-   /// Converts <paramref name="obj"/> to an instance of <typeparamref name="TKey"/>.
-   /// </summary>
-   /// <param name="obj">Object to convert.</param>
-   /// <returns>An instance of <typeparamref name="TKey"/>.</returns>
-   protected abstract TKey GetKeyValue(T obj);
+   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
 
    /// <inheritdoc />
    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
@@ -71,9 +57,24 @@ public abstract class ValueObjectTypeConverter<T, TKey> : TypeConverter
          return ConvertFrom(key);
 
       if (_keyConverter is not null)
-         return ConvertFrom((TKey?)_keyConverter.ConvertFrom(context, culture, value));
+      {
+         var convertedValue = _keyConverter.ConvertFrom(context, culture, value);
+
+         if (convertedValue is TKey convertedKey)
+            return ConvertFrom(convertedKey);
+      }
 
       return base.ConvertFrom(context, culture, value);
+   }
+
+   private static T? ConvertFrom(TKey key)
+   {
+      var validationResult = T.Validate(key, out var item);
+
+      if (validationResult is null || _mayReturnInvalidObjects)
+         return item;
+
+      throw new FormatException(validationResult.ErrorMessage);
    }
 
    /// <inheritdoc />
@@ -92,13 +93,13 @@ public abstract class ValueObjectTypeConverter<T, TKey> : TypeConverter
          var underlyingType = Nullable.GetUnderlyingType(destinationType);
 
          if (destinationType == _keyType || underlyingType == _keyType)
-            return GetKeyValue(item);
+            return item.GetKey();
 
          if (destinationType == _type || underlyingType == _type)
             return value;
 
          if (_keyConverter is not null)
-            return _keyConverter.ConvertTo(context, culture, GetKeyValue(item), destinationType);
+            return _keyConverter.ConvertTo(context, culture, item.GetKey(), destinationType);
       }
 
       return base.ConvertTo(context, culture, value, destinationType);

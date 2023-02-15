@@ -11,9 +11,9 @@ public abstract class TypeConverterTestsBase
 
    protected TypeConverterTestsBase()
    {
-      IntBasedReferenceValueObjectTypeConverter = new IntBasedReferenceValueObject_ValueObjectTypeConverter();
-      IntBasedStructValueObjectTypeConverter = new IntBasedStructValueObject_ValueObjectTypeConverter();
-      StringBasedReferenceValueObjectTypeConverter = new StringBasedReferenceValueObject_ValueObjectTypeConverter();
-      StringBasedStructValueObjectTypeConverter = new StringBasedStructValueObject_ValueObjectTypeConverter();
+      IntBasedReferenceValueObjectTypeConverter = new ValueObjectTypeConverter<IntBasedReferenceValueObject, int>();
+      IntBasedStructValueObjectTypeConverter = new ValueObjectTypeConverter<IntBasedStructValueObject, int>();
+      StringBasedReferenceValueObjectTypeConverter = new ValueObjectTypeConverter<StringBasedReferenceValueObject, string>();
+      StringBasedStructValueObjectTypeConverter = new ValueObjectTypeConverter<StringBasedStructValueObject, string>();
    }
 }

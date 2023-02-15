@@ -54,8 +54,8 @@ public abstract class ValueObjectMessagePackFormatterBase<T, TKey> : IMessagePac
 
       var validationResult = T.Validate(key, out var obj);
 
-      if (validationResult != ValidationResult.Success)
-         throw new ValidationException(validationResult!.ErrorMessage ?? "MessagePack deserialization failed.");
+      if (validationResult is not null)
+         throw new ValidationException(validationResult.ErrorMessage);
 
       return obj;
    }

@@ -30,7 +30,6 @@ namespace ").Append(_state.Namespace).Append(@"
 {");
       }
 
-      GenerateTypeConverter();
       GenerateEnum();
 
       if (hasNamespace)
@@ -52,7 +51,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
       _sb.Append($@"
-   [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_EnumTypeConverter))]
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>))]
    partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>, global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>
    {{");
 
@@ -101,7 +100,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
       GenerateConstructors();
       GenerateGetKey();
-      GenerateGet(needCreateInvalidImplementation);
+      GenerateGet();
+
+      if (_state.IsValidatable)
+         GenerateCreateAndCheckInvalidItem(needCreateInvalidImplementation);
 
       if (needCreateInvalidImplementation && !_state.IsAbstract)
          GenerateCreateInvalidItem();
@@ -363,8 +365,22 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
+      if (_state.IsValidatable)
+      {
+         _sb.Append($@"
+         if(_itemsLookup.Value.TryGetValue({_state.KeyProperty.ArgumentName}, out item))
+            return true;
+
+         item = CreateAndCheckInvalidItem({_state.KeyProperty.ArgumentName});
+         return false;");
+      }
+      else
+      {
+         _sb.Append($@"
+         return _itemsLookup.Value.TryGetValue({_state.KeyProperty.ArgumentName}, out item);");
+      }
+
       _sb.Append($@"
-         return _itemsLookup.Value.TryGetValue({_state.KeyProperty.ArgumentName}, out item);
       }}");
    }
 
@@ -380,9 +396,31 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""{_state.KeyProperty.ArgumentName}""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] {_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName}, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.TypeFullyQualified} item)
       {{
-         return {_state.TypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out item)
-               ? global::System.ComponentModel.DataAnnotations.ValidationResult.Success
-               : new global::System.ComponentModel.DataAnnotations.ValidationResult($""There is no item of type '{_state.TypeMinimallyQualified}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");
+         if({_state.TypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out item))
+         {{
+            return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         }}
+         else
+         {{");
+
+      if (_state.IsValidatable)
+      {
+         if (_state.KeyProperty.IsReferenceType)
+         {
+            _sb.Append($@"
+            if({_state.KeyProperty.ArgumentName} is not null)
+               item = CreateAndCheckInvalidItem({_state.KeyProperty.ArgumentName});");
+         }
+         else
+         {
+            _sb.Append($@"
+            item = CreateAndCheckInvalidItem({_state.KeyProperty.ArgumentName});");
+         }
+      }
+
+      _sb.Append($@"
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($""There is no item of type '{_state.TypeMinimallyQualified}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");
+         }}
       }}");
    }
 
@@ -594,7 +632,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }}");
    }
 
-   private void GenerateGet(bool needCreateInvalidImplementation)
+   private void GenerateGet()
    {
       _sb.Append($@"
 
@@ -630,28 +668,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.IsValidatable)
       {
          _sb.Append($@"
-            item = {(needCreateInvalidImplementation && _state.IsAbstract ? "null" : $"CreateInvalidItem({_state.KeyProperty.ArgumentName})")};
-");
-
-         if (_state.IsReferenceType)
-         {
-            _sb.Append(@"
-            if (item is null)
-               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must not return 'null'."");
-");
-         }
-
-         _sb.Append(@"
-            if (item.IsValid)
-               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'."");");
-
-         if (!needCreateInvalidImplementation)
-         {
-            _sb.Append($@"
-
-            if ({_state.TypeFullyQualified}.TryGet(item.{_state.KeyProperty.Name}, out _))
-               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must not return an instance with property '{_state.KeyProperty.Name}' equals to one of a valid item."");");
-         }
+            item = CreateAndCheckInvalidItem({_state.KeyProperty.ArgumentName});");
       }
       else
       {
@@ -662,6 +679,40 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          }
 
+         return item;
+      }");
+   }
+
+   private void GenerateCreateAndCheckInvalidItem(bool needCreateInvalidImplementation)
+   {
+      _sb.Append($@"
+
+      private static {_state.TypeFullyQualified} CreateAndCheckInvalidItem({_state.KeyProperty.TypeFullyQualified} {_state.KeyProperty.ArgumentName})
+      {{
+            var item = {(needCreateInvalidImplementation && _state.IsAbstract ? "null" : $"CreateInvalidItem({_state.KeyProperty.ArgumentName})")};
+");
+
+      if (_state.IsReferenceType)
+      {
+         _sb.Append(@"
+            if (item is null)
+               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must not return 'null'."");
+");
+      }
+
+      _sb.Append(@"
+            if (item.IsValid)
+               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'."");");
+
+      if (!needCreateInvalidImplementation)
+      {
+         _sb.Append($@"
+
+            if (_itemsLookup.Value.ContainsKey(item.{_state.KeyProperty.Name}))
+               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must not return an instance with property '{_state.KeyProperty.Name}' equals to one of a valid item."");");
+      }
+
+      _sb.Append(@"
          return item;
       }");
    }
@@ -838,50 +889,6 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@");");
-   }
-
-   private void GenerateTypeConverter()
-   {
-      _sb.Append($@"
-   public class {_state.Name}_EnumTypeConverter : global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
-   {{
-      /// <inheritdoc />
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{_state.KeyProperty.ArgumentName}"")]
-      protected override {(_state.KeyProperty.IsReferenceType ? _state.TypeFullyQualifiedNullAnnotated : _state.TypeFullyQualified)} ConvertFrom({_state.KeyProperty.TypeFullyQualifiedNullAnnotated} {_state.KeyProperty.ArgumentName})
-      {{");
-
-      if (_state.IsValidatable)
-      {
-         _sb.Append($@"
-         return {_state.TypeFullyQualified}.Get({_state.KeyProperty.ArgumentName});");
-      }
-      else
-      {
-         if (_state.KeyProperty.IsReferenceType)
-         {
-            _sb.Append($@"
-         if({_state.KeyProperty.ArgumentName} is null)
-            return default;
-");
-         }
-
-         _sb.Append($@"
-         if({_state.TypeFullyQualified}.TryGet({_state.KeyProperty.ArgumentName}, out var item))
-            return item;
-
-         throw new global::System.FormatException($""There is no item of type '{_state.Name}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");");
-      }
-
-      _sb.Append($@"
-      }}
-
-      /// <inheritdoc />
-      protected override {_state.KeyProperty.TypeFullyQualified} GetKeyValue({_state.TypeFullyQualified} item)
-      {{
-         return item.{_state.KeyProperty.Name};
-      }}
-   }}
-");
    }
 
    private record struct ConstructorArgument(string TypeFullyQualifiedWithNullability, string ArgumentName);

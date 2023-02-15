@@ -88,8 +88,8 @@ public abstract class StructValueObjectMessagePackFormatterBase<T, TKey> : IMess
    {
       var validationResult = T.Validate(key, out var obj);
 
-      if (validationResult != ValidationResult.Success && !_mayReturnInvalidObjects)
-         throw new ValidationException(validationResult!.ErrorMessage ?? "MessagePack deserialization failed.");
+      if (validationResult is not null && !_mayReturnInvalidObjects)
+         throw new ValidationException(validationResult.ErrorMessage);
 
       return obj;
    }

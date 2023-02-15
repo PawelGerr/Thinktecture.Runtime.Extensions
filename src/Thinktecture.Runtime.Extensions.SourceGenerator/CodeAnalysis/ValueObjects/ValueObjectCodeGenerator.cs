@@ -33,9 +33,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var emptyStringYieldsNull = _state.Settings.EmptyStringInFactoryMethodsYieldsNull && _state is { IsReferenceType: true, HasKeyMember: true } && _state.KeyMember.Member.IsString();
 
-      if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
-         GenerateTypeConverter(_state.KeyMember, emptyStringYieldsNull);
-
       GenerateValueObject(emptyStringYieldsNull);
 
       if (hasNamespace)
@@ -50,48 +47,6 @@ namespace ").Append(_state.Namespace).Append(@"
       return _sb.ToString();
    }
 
-   private void GenerateTypeConverter(EqualityInstanceMemberInfo keyMemberInfo, bool emptyStringYieldsNull)
-   {
-      var keyMember = keyMemberInfo.Member;
-
-      _sb.Append($@"
-   public class {_state.Name}_ValueObjectTypeConverter : global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {keyMember.TypeFullyQualified}>
-   {{
-      /// <inheritdoc />");
-
-      // If emptyStringYieldsNull=true then an empty-string-argument (i.e. not null) will lead to null as return value,
-      // that's why we cannot use the NotNullIfNotNullAttribute.
-      if (keyMember.IsReferenceType && !emptyStringYieldsNull)
-      {
-         _sb.Append($@"
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""{keyMember.ArgumentName}"")]");
-      }
-
-      _sb.Append($@"
-      protected override {(keyMember.IsReferenceType ? _state.TypeFullyQualifiedNullAnnotated : _state.TypeFullyQualified)} ConvertFrom({keyMember.TypeFullyQualifiedNullAnnotated} {keyMember.ArgumentName})
-      {{");
-
-      if (keyMember.IsReferenceType)
-      {
-         _sb.Append($@"
-         if({keyMember.ArgumentName} is null)
-            return default({_state.TypeFullyQualified});
-");
-      }
-
-      _sb.Append($@"
-         return {_state.TypeFullyQualified}.Create({keyMember.ArgumentName});
-      }}
-
-      /// <inheritdoc />
-      protected override {keyMember.TypeFullyQualifiedWithNullability} GetKeyValue({_state.TypeFullyQualified} obj)
-      {{
-         return ({keyMember.TypeFullyQualifiedWithNullability}) obj;
-      }}
-   }}
-");
-   }
-
    private void GenerateValueObject(bool emptyStringYieldsNull)
    {
       var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
@@ -99,7 +54,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
       {
          _sb.Append($@"
-   [global::System.ComponentModel.TypeConverter(typeof({_state.TypeFullyQualified}_ValueObjectTypeConverter))]");
+      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualified}>))]");
       }
 
       _sb.Append($@"
