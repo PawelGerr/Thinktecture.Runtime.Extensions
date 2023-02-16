@@ -7,7 +7,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool SkipFactoryMethods { get; }
    public bool EmptyStringInFactoryMethodsYieldsNull { get; }
    public bool NullInFactoryMethodsYieldsNull { get; }
-   public bool SkipCompareTo { get; }
+   public bool SkipIComparable { get; }
    public bool SkipToString { get; }
    public string DefaultInstancePropertyName { get; }
 
@@ -16,7 +16,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
       SkipFactoryMethods = valueObjectAttribute.FindSkipFactoryMethods() ?? false;
       EmptyStringInFactoryMethodsYieldsNull = valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false;
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
-      SkipCompareTo = valueObjectAttribute.FindSkipCompareTo() ?? false;
+      SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;
       SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
    }
@@ -36,7 +36,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
       return SkipFactoryMethods == other.SkipFactoryMethods
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
-             && SkipCompareTo == other.SkipCompareTo
+             && SkipIComparable == other.SkipIComparable
              && SkipToString == other.SkipToString
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
@@ -48,7 +48,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
          var hashCode = SkipFactoryMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipCompareTo.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 

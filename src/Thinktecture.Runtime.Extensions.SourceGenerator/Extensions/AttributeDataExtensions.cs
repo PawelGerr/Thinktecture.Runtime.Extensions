@@ -29,9 +29,9 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "NullInFactoryMethodsYieldsNull");
    }
 
-   public static bool? FindSkipCompareTo(this AttributeData attributeData)
+   public static bool? FindSkipIComparable(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipCompareTo");
+      return GetBooleanParameterValue(attributeData, "SkipIComparable");
    }
 
    public static bool? FindSkipToString(this AttributeData attributeData)

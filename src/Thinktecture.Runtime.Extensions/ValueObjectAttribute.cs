@@ -49,7 +49,7 @@ public sealed class ValueObjectAttribute : Attribute
    /// - non-keyed value objects (i.e. has more than 1 field/property)
    /// - if key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectMemberCompareAttribute{T,TMember}"/> is not set.
    /// </summary>
-   public bool SkipCompareTo { get; set; }
+   public bool SkipIComparable { get; set; }
 
    /// <summary>
    /// Indication whether the generator should implement the method <see cref="object.ToString"/> or not.

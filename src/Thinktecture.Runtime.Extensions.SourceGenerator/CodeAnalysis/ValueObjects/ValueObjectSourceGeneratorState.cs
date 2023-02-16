@@ -142,7 +142,7 @@ public sealed class ValueObjectSourceGeneratorState :
       if (!Settings.SkipToString && HasKeyMember && KeyMember.Member.IsFormattable)
          generators = generators.Add(FormattableCodeGenerator.Instance);
 
-      if (!Settings.SkipCompareTo && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.ComparerAccessor is not null))
+      if (!Settings.SkipIComparable && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.ComparerAccessor is not null))
          generators = generators.Add(new ComparableCodeGenerator(KeyMember.ComparerAccessor));
 
       return generators;
