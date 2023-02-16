@@ -45,19 +45,42 @@ public class BindModelAsync
    }
 
    [Fact]
-   public async Task Should_return_error_if_value_not_exists_in_int_based_enum()
+   public async Task Should_bind_validatable_enum_even_if_key_is_unknown()
    {
       var ctx = await BindAsync<IntegerEnum, int>("42");
 
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+
+      var value = (IntegerEnum)ctx.Result.Model;
+      value!.IsValid.Should().BeFalse();
+      value!.Key.Should().Be(42);
+   }
+
+   [Fact]
+   public async Task Should_not_bind_validatable_enum_if_value_not_matching_key_type()
+   {
+      var ctx = await BindAsync<IntegerEnum, int>("item1");
+
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("There is no item of type 'IntegerEnum' with the identifier '42'.") });
+      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
    [Fact]
-   public async Task Should_return_error_if_value_not_matching_key_type_of_an_int_based_enum()
+   public async Task Should_not_bind_enum_if_key_is_unknown()
    {
-      var ctx = await BindAsync<IntegerEnum, int>("item1");
+      var ctx = await BindAsync<ValidIntegerEnum, int>("42");
+
+      ctx.ModelState.ErrorCount.Should().Be(1);
+      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("There is no item of type 'ValidIntegerEnum' with the identifier '42'.") });
+      ctx.Result.IsModelSet.Should().BeFalse();
+   }
+
+   [Fact]
+   public async Task Should_not_bind_enum_if_value_not_matching_key_type()
+   {
+      var ctx = await BindAsync<ValidIntegerEnum, int>("item1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
       ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });

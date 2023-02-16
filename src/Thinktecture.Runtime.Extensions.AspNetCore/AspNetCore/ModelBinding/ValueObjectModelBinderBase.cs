@@ -15,6 +15,8 @@ public abstract class ValueObjectModelBinderBase<T, TKey> : SimpleTypeModelBinde
    where T : IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
+   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey}"/>.
    /// </summary>
@@ -28,24 +30,22 @@ public abstract class ValueObjectModelBinderBase<T, TKey> : SimpleTypeModelBinde
    /// <inheritdoc />
    protected override void CheckModel(ModelBindingContext bindingContext, ValueProviderResult valueProviderResult, object? model)
    {
-      if (model is TKey key)
-      {
-         key = Prepare(key);
-         var validationResult = T.Validate(key, out var obj);
-
-         if (validationResult != ValidationResult.Success)
-         {
-            bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, validationResult!.ErrorMessage ?? $"The value '{obj}' is not valid.");
-         }
-         else
-         {
-            bindingContext.Result = ModelBindingResult.Success(obj);
-         }
-      }
-      else
+      if (model is not TKey key)
       {
          base.CheckModel(bindingContext, valueProviderResult, model);
+         return;
       }
+
+      key = Prepare(key);
+      var validationResult = T.Validate(key, out var obj);
+
+      if (validationResult == ValidationResult.Success || _mayReturnInvalidObjects)
+      {
+         bindingContext.Result = ModelBindingResult.Success(obj);
+         return;
+      }
+
+      bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, validationResult!.ErrorMessage ?? $"There is no item of type '{typeof(T).Name}' with the identifier '{key}'.");
    }
 
    /// <summary>

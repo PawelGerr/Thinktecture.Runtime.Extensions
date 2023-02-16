@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Thinktecture;
 
 /// <summary>
@@ -23,13 +21,7 @@ public interface IValidatableEnum
 /// Interface of Smart Enum.
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public interface IValidatableEnum<TKey> : IEnum<TKey>, IValidatableEnum, IValidatableObject
+public interface IValidatableEnum<TKey> : IEnum<TKey>, IValidatableEnum
    where TKey : notnull
 {
-   IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
-   {
-      return IsValid
-                ? Enumerable.Empty<ValidationResult>()
-                : new[] { new ValidationResult($"There is no item of type '{GetType().Name}' with the identifier '{GetKey()}'.") };
-   }
 }
