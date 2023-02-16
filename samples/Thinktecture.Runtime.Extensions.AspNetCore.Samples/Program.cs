@@ -4,13 +4,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Thinktecture.AspNetCore.ModelBinding;
+using Thinktecture.SmartEnums;
 using Thinktecture.Text.Json.Serialization;
+using Thinktecture.ValueObjects;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Thinktecture;
@@ -21,7 +25,8 @@ public class Program
    public static async Task Main()
    {
       var loggerFactory = CreateLoggerFactory();
-      var server = StartServerAsync(loggerFactory);
+      // var app = StartServerAsync(loggerFactory);
+      await StartMinimalWebApiAsync(loggerFactory);
 
       // calls
       // 	http://localhost:5000/api/category/fruits
@@ -39,7 +44,7 @@ public class Program
       // 	http://localhost:5000/api/boundary
       await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
 
-      await server;
+      await Task.Delay(5000);
    }
 
    private static async Task DoHttpRequestsAsync(ILogger logger)
@@ -49,10 +54,13 @@ public class Program
       await DoRequestAsync(logger, client, "category/fruits");
       await DoRequestAsync(logger, client, "categoryWithConverter/fruits");
       await DoRequestAsync(logger, client, "group/1");
-      await DoRequestAsync(logger, client, "group/42"); // invalid
+      await DoRequestAsync(logger, client, "group/42");      // invalid
+      await DoRequestAsync(logger, client, "group/invalid"); // invalid
       await DoRequestAsync(logger, client, "groupWithConverter/1");
       await DoRequestAsync(logger, client, "groupWithConverter/42"); // invalid
-      await DoRequestAsync(logger, client, "productType/groceries?type=groceries");
+      await DoRequestAsync(logger, client, "productType/groceries");
+      await DoRequestAsync(logger, client, "productType?productType=groceries");
+      await DoRequestAsync(logger, client, "productType", "groceries");
       await DoRequestAsync(logger, client, "productType/invalid");                                 // invalid
       await DoRequestAsync(logger, client, "productType", "invalid");                              // invalid
       await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid
@@ -124,6 +132,34 @@ public class Program
                     .Build();
 
       return webHost.RunAsync();
+   }
+
+   private static Task StartMinimalWebApiAsync(ILoggerFactory loggerFactory)
+   {
+      var builder = WebApplication.CreateBuilder();
+      builder.Services
+             .AddSingleton(loggerFactory)
+             .ConfigureHttpJsonOptions(options => options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory()));
+
+      var app = builder.Build();
+
+      var group = app.MapGroup("/api");
+      group.MapGet("/category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });
+      group.MapGet("categoryWithConverter/{category}", (ProductCategoryWithJsonConverter category) => new { Value = category, category.IsValid });
+      group.MapGet("group/{group}", (ProductGroup group) => new { Value = group, group.IsValid });
+      group.MapGet("groupWithConverter/{group}", (ProductGroupWithJsonConverter group) => new { Value = group, group.IsValid });
+      group.MapGet("productType/{productType}", (ProductType productType) => productType);
+      group.MapGet("productType", (ProductType productType) => productType);
+      group.MapPost("productType", ([FromBody] ProductType productType) => productType);
+      group.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);
+      group.MapGet("productTypeWithJsonConverter/{productType}", (ProductTypeWithJsonConverter productType) => productType);
+      group.MapGet("productName/{name}", (ProductName name) => name);
+      group.MapPost("productName", ([FromBody] ProductName name) => name);
+      group.MapGet("otherProductName/{name}", (OtherProductName? name) => name);
+      group.MapPost("otherProductName", ([FromBody] OtherProductName name) => name);
+      group.MapPost("boundary", ([FromBody] BoundaryWithJsonConverter boundary) => boundary);
+
+      return app.StartAsync();
    }
 
    private static ILoggerFactory CreateLoggerFactory()
