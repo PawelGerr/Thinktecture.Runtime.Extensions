@@ -18,7 +18,23 @@ public sealed class EnumGenerationAttribute : Attribute
    }
 
    /// <summary>
-   /// Indication whether the generator should implement the method <see cref="object.ToString"/> or not.
+   /// Indication whether the generator should skip the implementation of <see cref="IComparable{T}"/> or not.
+   ///
+   /// This setting has no effect on:
+   /// - if the key is not <see cref="IComparable{T}"/> itself.
+   /// </summary>
+   public bool SkipIComparable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IParsable{T}"/> or not.
+   ///
+   /// This setting has no effect on:
+   /// - if the key is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.
+   /// </summary>
+   public bool SkipIParsable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of the method <see cref="object.ToString"/> and the interface <see cref="IFormattable"/> or not.
    /// </summary>
    public bool SkipToString { get; set; }
 }

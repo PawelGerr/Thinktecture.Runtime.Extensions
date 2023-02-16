@@ -4,6 +4,8 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 {
+   public static readonly IInterfaceCodeGenerator Default = new ComparableCodeGenerator(null);
+
    private readonly string? _comparerAccessor;
 
    public ComparableCodeGenerator(string? comparerAccessor)
@@ -26,10 +28,10 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
          if(obj is null)
             return 1;
 
-         if(obj is not {type.TypeFullyQualified} valueObject)
+         if(obj is not {type.TypeFullyQualified} item)
             throw new global::System.ArgumentException(""Argument must be of type \""{type.TypeMinimallyQualified}\""."", nameof(obj));
 
-         return this.CompareTo(valueObject);
+         return this.CompareTo(item);
       }}
 
       /// <inheritdoc />
@@ -46,14 +48,6 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 
       if (_comparerAccessor is null)
       {
-         if (member.IsReferenceType)
-         {
-            sb.Append($@"
-         if(this.{member.Name} is null)
-            return obj.{member.Name} is null ? 0 : -1;
-");
-         }
-
          sb.Append($@"
          return this.{member.Name}.CompareTo(obj.{member.Name});");
       }

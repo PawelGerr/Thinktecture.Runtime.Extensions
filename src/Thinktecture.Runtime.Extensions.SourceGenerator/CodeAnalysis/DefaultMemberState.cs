@@ -20,6 +20,9 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsReferenceType => _type.IsReferenceType;
    public bool IsNullableStruct => _type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
    public NullableAnnotation NullableAnnotation => _type.NullableAnnotation;
+   public bool IsFormattable { get; }
+   public bool IsComparable { get; }
+   public bool IsParsable { get; }
 
    public DefaultMemberState(string name, ITypeSymbol type, string argumentName, bool isStatic)
    {
@@ -33,6 +36,22 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
       IsStatic = isStatic;
+
+      foreach (var @interface in type.AllInterfaces)
+      {
+         if (@interface.IsFormattableInterface())
+         {
+            IsFormattable = true;
+         }
+         else if (@interface.IsComparableInterface(_type))
+         {
+            IsComparable = true;
+         }
+         else if (@interface.IsParsableInterface(_type))
+         {
+            IsParsable = true;
+         }
+      }
    }
 
    public override bool Equals(object? obj)
@@ -58,7 +77,9 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
              && IsStatic == other.IsStatic
              && SpecialType == other.SpecialType
              && IsReferenceType == other.IsReferenceType
-         ;
+             && IsFormattable == other.IsFormattable
+             && IsComparable == other.IsComparable
+             && IsParsable == other.IsParsable;
    }
 
    public override int GetHashCode()
@@ -71,6 +92,9 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
          hashCode = (hashCode * 397) ^ IsStatic.GetHashCode();
          hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
 
          return hashCode;
       }

@@ -5,11 +5,15 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 public sealed class EnumSettings : IEquatable<EnumSettings>
 {
    public string? KeyPropertyName { get; }
+   public bool SkipIComparable { get; }
+   public bool SkipIParsable { get; }
    public bool SkipToString { get; }
 
    public EnumSettings(AttributeData? attribute)
    {
       KeyPropertyName = attribute?.FindKeyPropertyName().TrimAndNullify();
+      SkipIComparable = attribute?.FindSkipIComparable() ?? false;
+      SkipIParsable = attribute?.FindSkipIParsable() ?? false;
       SkipToString = attribute?.FindSkipToString() ?? false;
    }
 
@@ -26,6 +30,8 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
          return true;
 
       return KeyPropertyName == other.KeyPropertyName
+             && SkipIComparable == other.SkipIComparable
+             && SkipIParsable == other.SkipIParsable
              && SkipToString == other.SkipToString;
    }
 
@@ -34,6 +40,8 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
       unchecked
       {
          var hashCode = KeyPropertyName?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
 
          return hashCode;

@@ -8,6 +8,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool EmptyStringInFactoryMethodsYieldsNull { get; }
    public bool NullInFactoryMethodsYieldsNull { get; }
    public bool SkipIComparable { get; }
+   public bool SkipIParsable { get; }
    public bool SkipToString { get; }
    public string DefaultInstancePropertyName { get; }
 
@@ -17,6 +18,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
       EmptyStringInFactoryMethodsYieldsNull = valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false;
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
       SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;
+      SkipIParsable = valueObjectAttribute.FindSkipIParsable() ?? false;
       SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
    }
@@ -37,6 +39,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && SkipIComparable == other.SkipIComparable
+             && SkipIParsable == other.SkipIParsable
              && SkipToString == other.SkipToString
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
@@ -49,6 +52,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 

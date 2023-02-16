@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Thinktecture.CodeAnalysis.ValueObjects;
+namespace Thinktecture.CodeAnalysis;
 
 public interface IInterfaceCodeGenerator
 {

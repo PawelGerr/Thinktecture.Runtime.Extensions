@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
@@ -140,5 +141,21 @@ public sealed class EnumSourceGeneratorState :
 
          return hashCode;
       }
+   }
+
+   public ImmutableArray<IInterfaceCodeGenerator> GetInterfaceCodeGenerators()
+   {
+      var generators = ImmutableArray<IInterfaceCodeGenerator>.Empty;
+
+      if (!Settings.SkipToString && KeyProperty.IsFormattable)
+         generators = generators.Add(FormattableCodeGenerator.Instance);
+
+      if (!Settings.SkipIComparable && KeyProperty.IsComparable)
+         generators = generators.Add(ComparableCodeGenerator.Default);
+
+      if (!Settings.SkipIParsable && (KeyProperty.IsString() || KeyProperty.IsParsable))
+         generators = generators.Add(IsValidatable ? ParsableCodeGenerator.InstanceForValidatableEnum : ParsableCodeGenerator.Instance);
+
+      return generators;
    }
 }

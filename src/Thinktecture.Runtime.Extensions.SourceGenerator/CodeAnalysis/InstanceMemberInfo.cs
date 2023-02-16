@@ -25,6 +25,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public SpecialType SpecialType => _type.SpecialType;
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
+   public bool IsParsable { get; }
 
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
 
@@ -57,6 +58,10 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          else if (@interface.IsComparableInterface(_type))
          {
             IsComparable = true;
+         }
+         else if (@interface.IsParsableInterface(_type))
+         {
+            IsParsable = true;
          }
       }
    }
@@ -102,6 +107,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
              && SpecialType == other.SpecialType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
+             && IsParsable == other.IsParsable
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -118,6 +124,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;

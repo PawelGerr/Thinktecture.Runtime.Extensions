@@ -48,12 +48,23 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var needCreateInvalidImplementation = _state is { IsValidatable: true, HasCreateInvalidImplementation: false };
 
+      var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
+
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
       _sb.Append($@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>))]
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>, global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>
-   {{");
+   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>, global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>");
+
+      for (var i = 0; i < interfaceCodeGenerators.Length; i++)
+      {
+         _sb.Append(", ");
+
+         interfaceCodeGenerators[i].GenerateBaseTypes(_sb, _state);
+      }
+
+      _sb.Append(@"
+   {");
 
       GenerateModuleInitializer(_state.KeyProperty);
 
@@ -145,6 +156,14 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateSwitchForFunc(false);
       GenerateSwitchForFunc(true);
       GenerateGetLookup();
+
+      for (var i = 0; i < interfaceCodeGenerators.Length; i++)
+      {
+         interfaceCodeGenerators[i].GenerateImplementation(_sb, _state, _state.KeyProperty);
+      }
+
+      _sb.Append(@"
+   }");
    }
 
    private void GenerateSwitchForAction(bool withContext)
@@ -599,8 +618,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
          return lookup;
-      }
-   }");
+      }");
    }
 
    private void GenerateEnsureValid()

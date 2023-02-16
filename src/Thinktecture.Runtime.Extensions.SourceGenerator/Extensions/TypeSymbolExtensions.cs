@@ -282,6 +282,13 @@ public static class TypeSymbolExtensions
              && (!@interface.IsGenericType || (@interface.IsGenericType && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)));
    }
 
+   public static bool IsParsableInterface(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
+   {
+      return @interface.Name == "IParsable"
+             && @interface.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true }
+             && (!@interface.IsGenericType || (@interface.IsGenericType && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)));
+   }
+
    public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
    {
       return type.FindAttribute(static attrType => attrType.Name == "EnumGenerationAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
