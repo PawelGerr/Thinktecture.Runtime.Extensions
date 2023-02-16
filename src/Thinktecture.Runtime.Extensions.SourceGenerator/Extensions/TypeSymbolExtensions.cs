@@ -351,7 +351,7 @@ public static class TypeSymbolExtensions
    public static IEnumerable<ISymbol> GetNonIgnoredMembers(this ITypeSymbol type, string? name = null)
    {
       return (name is not null ? type.GetMembers(name) : type.GetMembers())
-         .Where(m => !m.HasAttribute(static attrType => attrType.Name == "ValueObjectIgnoreAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }));
+         .Where(m => !m.HasAttribute(static attrType => attrType.Name == "ValueObjectMemberIgnoreAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }));
    }
 
    public static IEnumerable<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
