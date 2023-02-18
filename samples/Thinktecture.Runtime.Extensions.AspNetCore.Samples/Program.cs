@@ -14,6 +14,7 @@ using Serilog.Events;
 using Thinktecture.AspNetCore.ModelBinding;
 using Thinktecture.SmartEnums;
 using Thinktecture.Text.Json.Serialization;
+using Thinktecture.Validation;
 using Thinktecture.ValueObjects;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -24,9 +25,14 @@ public class Program
    // ReSharper disable once InconsistentNaming
    public static async Task Main()
    {
+      var startMinimalWebApi = true;
+
       var loggerFactory = CreateLoggerFactory();
-      // var app = StartServerAsync(loggerFactory);
-      await StartMinimalWebApiAsync(loggerFactory);
+      var app = startMinimalWebApi
+                   ? StartMinimalWebApiAsync(loggerFactory)
+                   : StartServerAsync(loggerFactory); // MVC controllers
+
+      await app;
 
       // calls
       // 	http://localhost:5000/api/category/fruits
@@ -42,12 +48,12 @@ public class Program
       // 	http://localhost:5000/api/productName/bread
       // 	http://localhost:5000/api/productName/a
       // 	http://localhost:5000/api/boundary
-      await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
+      await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>(), startMinimalWebApi);
 
       await Task.Delay(5000);
    }
 
-   private static async Task DoHttpRequestsAsync(ILogger logger)
+   private static async Task DoHttpRequestsAsync(ILogger logger, bool forMinimalWebApi)
    {
       using var client = new HttpClient();
 
@@ -61,7 +67,11 @@ public class Program
       await DoRequestAsync(logger, client, "productType/groceries");
       await DoRequestAsync(logger, client, "productType?productType=groceries");
       await DoRequestAsync(logger, client, "productType", "groceries");
-      await DoRequestAsync(logger, client, "productType/invalid");                                 // invalid
+      await DoRequestAsync(logger, client, "productType/invalid"); // invalid
+
+      if (forMinimalWebApi)
+         await DoRequestAsync(logger, client, "productTypeWithFilter?productType=invalid"); // invalid
+
       await DoRequestAsync(logger, client, "productType", "invalid");                              // invalid
       await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid
       await DoRequestAsync(logger, client, "productTypeWithJsonConverter/groceries");
@@ -131,7 +141,7 @@ public class Program
                                        })
                     .Build();
 
-      return webHost.RunAsync();
+      return webHost.StartAsync();
    }
 
    private static Task StartMinimalWebApiAsync(ILoggerFactory loggerFactory)
@@ -144,12 +154,23 @@ public class Program
       var app = builder.Build();
 
       var group = app.MapGroup("/api");
-      group.MapGet("/category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });
+
+      group.MapGet("category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });
       group.MapGet("categoryWithConverter/{category}", (ProductCategoryWithJsonConverter category) => new { Value = category, category.IsValid });
       group.MapGet("group/{group}", (ProductGroup group) => new { Value = group, group.IsValid });
       group.MapGet("groupWithConverter/{group}", (ProductGroupWithJsonConverter group) => new { Value = group, group.IsValid });
       group.MapGet("productType/{productType}", (ProductType productType) => productType);
       group.MapGet("productType", (ProductType productType) => productType);
+      group.MapGet("productTypeWithFilter", async (BoundValueObject<ProductType> productType) => productType.Value)
+           .AddEndpointFilter((context, next) =>
+                              {
+                                 var value = context.GetArgument<IBoundParam>(0);
+
+                                 if (value.Error is not null)
+                                    return new ValueTask<object?>(Results.BadRequest(value.Error));
+
+                                 return next(context);
+                              });
       group.MapPost("productType", ([FromBody] ProductType productType) => productType);
       group.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);
       group.MapGet("productTypeWithJsonConverter/{productType}", (ProductTypeWithJsonConverter productType) => productType);
