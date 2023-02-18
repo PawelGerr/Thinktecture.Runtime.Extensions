@@ -42,6 +42,7 @@ public class UseValueObjectValueConverter : IDisposable
       ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestSmartEnum_Class_StringBased), _converterType.MakeGenericType(typeof(TestSmartEnum_Class_StringBased), typeof(string)));
       ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestSmartEnum_Struct_IntBased), _validateableConverterType.MakeGenericType(typeof(TestSmartEnum_Struct_IntBased), typeof(int)));
       ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TestSmartEnum_Struct_StringBased), _validateableConverterType.MakeGenericType(typeof(TestSmartEnum_Struct_StringBased), typeof(string)));
+      ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.NullableTestSmartEnum_Struct_StringBased), _validateableConverterType.MakeGenericType(typeof(TestSmartEnum_Struct_StringBased), typeof(string)));
    }
 
    [Fact]

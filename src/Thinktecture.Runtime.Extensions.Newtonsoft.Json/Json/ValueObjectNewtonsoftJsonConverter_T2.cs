@@ -47,7 +47,7 @@ public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
          if (_keyType.IsClass)
             return default(T);
 
-         throw new JsonException($"Cannot convert 'Null' to a struct of type '{_keyType.Name}'.");
+         throw new JsonException($"Cannot convert 'Null' to a struct of type '{_keyType.Name}', which is the underlying type of '{typeof(T).FullName}'.");
       }
 
       var token = serializer.Deserialize<JToken>(reader);

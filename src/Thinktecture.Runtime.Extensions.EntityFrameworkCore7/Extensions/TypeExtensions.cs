@@ -9,13 +9,7 @@ internal static class TypeExtensions
    {
       var metadata = ComplexValueObjectMetadataLookup.Find(type);
 
-      if (metadata is null)
-      {
-         members = Array.Empty<MemberInfo>();
-         return false;
-      }
-
-      members = metadata.AssignableMembers;
-      return true;
+      members = metadata?.AssignableMembers ?? Array.Empty<MemberInfo>();
+      return metadata is not null;
    }
 }

@@ -75,7 +75,7 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey> : IMessagePac
       return key is not null;
    }
 
-   private T Deserialize(TKey key)
+   private static T Deserialize(TKey key)
    {
       var validationResult = T.Validate(key, out var obj);
 

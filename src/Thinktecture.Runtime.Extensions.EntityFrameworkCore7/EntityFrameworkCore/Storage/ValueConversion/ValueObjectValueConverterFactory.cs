@@ -56,6 +56,14 @@ public sealed class ValueObjectValueConverterFactory
       if (metadata is null)
          throw new ArgumentException($"The provided type '{type.Name}' is neither an Smart Enum nor a Value Object with a key member.");
 
+      return Create(metadata, validateOnWrite, useConstructorForRead);
+   }
+
+   internal static ValueConverter Create(
+      KeyedValueObjectMetadata metadata,
+      bool validateOnWrite,
+      bool useConstructorForRead)
+   {
       object converter;
 
       if (metadata.IsValidatableEnum)
@@ -88,24 +96,12 @@ public sealed class ValueObjectValueConverterFactory
       return (Expression<Func<TKey, T>>)(factoryMethod ?? throw new InvalidOperationException($"A value converter cannot be created for the type '{typeof(T).Name}' because it has no factory methods."));
    }
 
-   private static Expression<Func<T, TKey>> GetConverterToKey<T, TKey>()
-      where T : IKeyedValueObject<TKey>
-      where TKey : notnull
-   {
-      var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
-
-      if (metadata is null)
-         throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
-
-      return o => o.GetKey();
-   }
-
    private sealed class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
       where T : IKeyedValueObject<TKey>
       where TKey : notnull
    {
       public ValueObjectValueConverter(bool useConstructor)
-         : base(GetConverterToKey<T, TKey>(), GetConverterFromKey<T, TKey>(useConstructor))
+         : base(static o => o.GetKey(), GetConverterFromKey<T, TKey>(useConstructor))
       {
       }
    }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
+using Thinktecture.Internal;
 
 namespace Thinktecture;
 
@@ -63,12 +64,14 @@ public static class ModelBuilderExtensions
          if (!propertyInfo.IsCandidateProperty())
             continue;
 
-         if (!typeof(IKeyedValueObject).IsAssignableFrom(propertyInfo.PropertyType))
+         var metadata = KeyedValueObjectMetadataLookup.Find(propertyInfo.PropertyType);
+
+         if (metadata is null)
             continue;
 
          var property = entity.AddProperty(propertyInfo);
 
-         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property, metadata);
       }
    }
 
@@ -94,12 +97,16 @@ public static class ModelBuilderExtensions
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure)
    {
-      List<IMutableNavigation>? navigationsToConvert = null;
+      List<(IMutableNavigation, KeyedValueObjectMetadata)>? navigationsToConvert = null;
 
       foreach (var navigation in entity.GetNavigations())
       {
-         if (typeof(IKeyedValueObject).IsAssignableFrom(navigation.ClrType))
-            (navigationsToConvert ??= new List<IMutableNavigation>()).Add(navigation);
+         var metadata = KeyedValueObjectMetadataLookup.Find(navigation.ClrType);
+
+         if (metadata is null)
+            continue;
+
+         (navigationsToConvert ??= new List<(IMutableNavigation, KeyedValueObjectMetadata)>()).Add((navigation, metadata));
       }
 
       if (navigationsToConvert is null)
@@ -109,9 +116,9 @@ public static class ModelBuilderExtensions
 
       foreach (var navigation in navigationsToConvert)
       {
-         var property = FindPropertyBuilder(builders, entity, navigation.Name);
+         var property = FindPropertyBuilder(builders, entity, navigation.Item1.Name);
 
-         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property.Metadata);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property.Metadata, navigation.Item2);
       }
    }
 
@@ -129,10 +136,12 @@ public static class ModelBuilderExtensions
          if (valueConverter is not null)
             continue;
 
-         if (!typeof(IKeyedValueObject).IsAssignableFrom(property.ClrType))
+         var metadata = KeyedValueObjectMetadataLookup.Find(property.ClrType);
+
+         if (metadata is null)
             continue;
 
-         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property, metadata);
       }
    }
 
@@ -177,9 +186,10 @@ public static class ModelBuilderExtensions
       bool useConstructorForRead,
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure,
-      IMutableProperty property)
+      IMutableProperty property,
+      KeyedValueObjectMetadata metadata)
    {
-      var valueConverter = GetValueConverter(validateOnWrite, useConstructorForRead, converterLookup, property.ClrType);
+      var valueConverter = GetValueConverter(validateOnWrite, useConstructorForRead, converterLookup, metadata);
 
       property.SetValueConverter(valueConverter);
       configure(property);
@@ -188,12 +198,13 @@ public static class ModelBuilderExtensions
    private static ValueConverter GetValueConverter(
       bool validateOnWrite,
       bool useConstructorForRead,
-      Dictionary<Type, ValueConverter> converterLookup, Type naviType)
+      Dictionary<Type, ValueConverter> converterLookup,
+      KeyedValueObjectMetadata metadata)
    {
-      if (!converterLookup.TryGetValue(naviType, out var valueConverter))
+      if (!converterLookup.TryGetValue(metadata.Type, out var valueConverter))
       {
-         valueConverter = ValueObjectValueConverterFactory.Create(naviType, validateOnWrite, useConstructorForRead);
-         converterLookup.Add(naviType, valueConverter);
+         valueConverter = ValueObjectValueConverterFactory.Create(metadata, validateOnWrite, useConstructorForRead);
+         converterLookup.Add(metadata.Type, valueConverter);
       }
 
       return valueConverter;

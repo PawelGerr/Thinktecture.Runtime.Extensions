@@ -10,7 +10,7 @@ namespace Thinktecture.Formatters;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public sealed class ValueObjectMessagePackFormatter<T, TKey> : IMessagePackFormatter<T>
-   where T : IKeyedValueObject<T, TKey>?
+   where T : class, IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));

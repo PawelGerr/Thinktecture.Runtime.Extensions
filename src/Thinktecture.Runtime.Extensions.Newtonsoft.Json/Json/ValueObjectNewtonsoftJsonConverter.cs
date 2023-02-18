@@ -14,7 +14,7 @@ public sealed class ValueObjectNewtonsoftJsonConverter : JsonConverter
    /// <inheritdoc />
    public override bool CanConvert(Type objectType)
    {
-      return _cache.ContainsKey(objectType) || typeof(IKeyedValueObject).IsAssignableFrom(objectType);
+      return _cache.ContainsKey(objectType) || KeyedValueObjectMetadataLookup.Find(objectType) is not null;
    }
 
    /// <inheritdoc />

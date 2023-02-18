@@ -161,7 +161,7 @@ public class Program
       group.MapGet("groupWithConverter/{group}", (ProductGroupWithJsonConverter group) => new { Value = group, group.IsValid });
       group.MapGet("productType/{productType}", (ProductType productType) => productType);
       group.MapGet("productType", (ProductType productType) => productType);
-      group.MapGet("productTypeWithFilter", async (BoundValueObject<ProductType> productType) => productType.Value)
+      group.MapGet("productTypeWithFilter", (BoundValueObject<ProductType> productType) => ValueTask.FromResult(productType.Value))
            .AddEndpointFilter((context, next) =>
                               {
                                  var value = context.GetArgument<IBoundParam>(0);

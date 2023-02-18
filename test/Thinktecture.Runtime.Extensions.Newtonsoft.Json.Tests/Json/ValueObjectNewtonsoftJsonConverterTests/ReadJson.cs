@@ -34,7 +34,7 @@ public class ReadJson : JsonTestsBase
       DeserializeStruct<TestSmartEnum_Struct_StringBased, string>("null").Should().Be(default(TestSmartEnum_Struct_StringBased));
 
       FluentActions.Invoking(() => DeserializeStruct<TestSmartEnum_Struct_IntBased, int>("null")).Should()
-                   .Throw<JsonException>().WithMessage("Cannot convert 'Null' to a struct of type 'Int32'.");
+                   .Throw<JsonException>().WithMessage("Cannot convert 'Null' to a struct of type 'Int32', which is the underlying type of 'Thinktecture.Runtime.Tests.TestEnums.TestSmartEnum_Struct_IntBased'.");
    }
 
    [Fact]
@@ -60,7 +60,7 @@ public class ReadJson : JsonTestsBase
       Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>("\" \"").Should().Be(null);
 
       FluentActions.Invoking(() => Deserialize<IntBasedStructValueObject, int>("null")).Should()
-                   .Throw<JsonException>().WithMessage("Cannot convert 'Null' to a struct of type 'Int32'.");
+                   .Throw<JsonException>().WithMessage("Cannot convert 'Null' to a struct of type 'Int32', which is the underlying type of 'Thinktecture.Runtime.Tests.TestValueObjects.IntBasedStructValueObject'.");
    }
 
    [Fact]
