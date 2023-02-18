@@ -9,6 +9,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool NullInFactoryMethodsYieldsNull { get; }
    public bool SkipIComparable { get; }
    public bool SkipIParsable { get; }
+   public bool SkipIFormattable { get; }
    public bool SkipToString { get; }
    public string DefaultInstancePropertyName { get; }
 
@@ -19,6 +20,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
       SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;
       SkipIParsable = valueObjectAttribute.FindSkipIParsable() ?? false;
+      SkipIFormattable = valueObjectAttribute.FindSkipIFormattable() ?? false;
       SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
    }
@@ -40,6 +42,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && SkipIComparable == other.SkipIComparable
              && SkipIParsable == other.SkipIParsable
+             && SkipIFormattable == other.SkipIFormattable
              && SkipToString == other.SkipToString
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
@@ -53,6 +56,7 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 

@@ -39,6 +39,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipIParsable");
    }
 
+   public static bool? FindSkipIFormattable(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIFormattable");
+   }
+
    public static bool? FindSkipToString(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "SkipToString");

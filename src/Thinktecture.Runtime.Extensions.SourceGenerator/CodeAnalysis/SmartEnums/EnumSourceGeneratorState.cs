@@ -147,7 +147,7 @@ public sealed class EnumSourceGeneratorState :
    {
       var generators = ImmutableArray<IInterfaceCodeGenerator>.Empty;
 
-      if (!Settings.SkipToString && KeyProperty.IsFormattable)
+      if (!Settings.SkipIFormattable && KeyProperty.IsFormattable)
          generators = generators.Add(FormattableCodeGenerator.Instance);
 
       if (!Settings.SkipIComparable && KeyProperty.IsComparable)

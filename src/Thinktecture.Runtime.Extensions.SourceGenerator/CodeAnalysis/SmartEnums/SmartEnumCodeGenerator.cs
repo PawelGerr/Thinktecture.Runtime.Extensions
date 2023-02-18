@@ -141,15 +141,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }}");
 
       if (!_state.Settings.SkipToString)
-      {
-         _sb.Append($@"
-
-      /// <inheritdoc />
-      public override string? ToString()
-      {{
-         return this.{_state.KeyProperty.Name}{(!_state.IsReferenceType && _state.KeyProperty.IsReferenceType ? "?" : null)}.ToString();
-      }}");
-      }
+         GenerateToString();
 
       GenerateSwitchForAction(false);
       GenerateSwitchForAction(true);
@@ -164,6 +156,17 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    }");
+   }
+
+   private void GenerateToString()
+   {
+      _sb.Append($@"
+
+      /// <inheritdoc />
+      public override string? ToString()
+      {{
+         return this.{_state.KeyProperty.Name}{(!_state.IsReferenceType && _state.KeyProperty.IsReferenceType ? "?" : null)}.ToString();
+      }}");
    }
 
    private void GenerateSwitchForAction(bool withContext)

@@ -45,23 +45,31 @@ public sealed class ValueObjectAttribute : Attribute
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IComparable{T}"/> or not.
    ///
-   /// This setting has no effect on:
+   /// This setting has no effect if:
    /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectMemberCompareAttribute{T,TMember}"/> is not set.
+   /// - key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectMemberCompareAttribute{T,TMember}"/> is not set.
    /// </summary>
    public bool SkipIComparable { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IParsable{T}"/> or not.
    ///
-   /// This setting has no effect on:
+   /// This setting has no effect if:
    /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.
+   /// - key-member is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.
    /// </summary>
    public bool SkipIParsable { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of the method <see cref="object.ToString"/> and the interface <see cref="IFormattable"/> or not.
+   /// Indication whether the generator should skip the implementation of <see cref="IFormattable"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - the key-member is not an <see cref="IFormattable"/> itself.
+   /// </summary>
+   public bool SkipIFormattable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of the method <see cref="object.ToString"/> or not.
    /// </summary>
    public bool SkipToString { get; set; }
 
