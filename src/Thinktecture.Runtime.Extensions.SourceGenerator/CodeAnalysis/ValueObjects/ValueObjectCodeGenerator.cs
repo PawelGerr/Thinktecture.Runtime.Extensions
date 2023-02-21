@@ -739,16 +739,15 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
-      public override string? ToString()
+      public override string ToString()
       {");
 
       if (_state.HasKeyMember)
       {
          var keyMember = _state.KeyMember.Member;
-         var nullConditionalOperator = keyMember.IsReferenceType ? "?" : null;
 
          _sb.Append($@"
-         return this.{keyMember.Name}{nullConditionalOperator}.ToString();");
+         return this.{keyMember.Name}.ToString();");
       }
       else if (_state.EqualityMembers.Count > 0)
       {

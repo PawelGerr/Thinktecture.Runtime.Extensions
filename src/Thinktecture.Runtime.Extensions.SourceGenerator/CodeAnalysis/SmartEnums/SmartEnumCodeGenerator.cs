@@ -163,9 +163,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append($@"
 
       /// <inheritdoc />
-      public override string? ToString()
+      public override string ToString()
       {{
-         return this.{_state.KeyProperty.Name}{(!_state.IsReferenceType && _state.KeyProperty.IsReferenceType ? "?" : null)}.ToString();
+         return this.{_state.KeyProperty.Name}.ToString();
       }}");
    }
 
