@@ -396,7 +396,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ", ",", trailingComma: true, useNullableTypes: allowNullKeyMemberInput);
 
       _sb.Append($@"
-         [global::System.Diagnostics.CodeAnalysis.MaybeNull] out {_state.TypeFullyQualifiedNullAnnotated} obj)
+         out {_state.TypeFullyQualifiedNullAnnotated} obj)
       {{");
 
       if (_state.HasKeyMember)
