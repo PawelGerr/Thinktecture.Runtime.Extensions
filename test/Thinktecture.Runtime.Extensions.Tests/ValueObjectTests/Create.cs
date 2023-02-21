@@ -4,7 +4,7 @@ using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
 
-public class FactroryTests
+public class Create
 {
    [Fact]
    public void With_EmptyStringInFactoryMethodsYieldsNull_null_should_yield_null()

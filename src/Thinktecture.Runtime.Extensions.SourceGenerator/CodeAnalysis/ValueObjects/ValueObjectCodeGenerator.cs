@@ -369,7 +369,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ", ",", trailingComma: true, useNullableTypes: allowNullOutput);
 
       _sb.Append($@"
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out {_state.TypeFullyQualifiedNullAnnotated} obj)
+         {(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ")}out {_state.TypeFullyQualifiedNullAnnotated} obj)
       {{
          var validationResult = Validate(");
 
