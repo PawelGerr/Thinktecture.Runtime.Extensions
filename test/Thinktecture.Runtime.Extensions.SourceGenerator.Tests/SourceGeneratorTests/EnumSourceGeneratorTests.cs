@@ -257,6 +257,33 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name=""testEnum1"">The item to compare to.</param>
@@ -274,6 +301,33 @@ namespace Thinktecture.Tests
          else if (this == testEnum2)
          {
             return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
          }
          else
          {
@@ -650,6 +704,33 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name=""testEnum1"">The item to compare to.</param>
@@ -667,6 +748,33 @@ namespace Thinktecture.Tests
          else if (this == testEnum2)
          {
             return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
          }
          else
          {
@@ -976,6 +1084,33 @@ public partial class TestEnum : IEnum<string>
       }
 
       /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name=""testEnum1"">The item to compare to.</param>
@@ -993,6 +1128,33 @@ public partial class TestEnum : IEnum<string>
          else if (this == testEnum2)
          {
             return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
          }
          else
          {
@@ -1312,6 +1474,47 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      /// <param name=""testEnum3"">The item to compare to.</param>
+      /// <param name=""testEnumAction3"">The action to execute if the current item is equal to <paramref name=""testEnum3""/>.</param>
+      /// <param name=""testEnum4"">The item to compare to.</param>
+      /// <param name=""testEnumAction4"">The action to execute if the current item is equal to <paramref name=""testEnum4""/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2,
+         TestEnum testEnum3, global::System.Action<TContext> testEnumAction3,
+         TestEnum testEnum4, global::System.Action<TContext> testEnumAction4)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else if (this == testEnum3)
+         {
+            testEnumAction3(context);
+         }
+         else if (this == testEnum4)
+         {
+            testEnumAction4(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name=""testEnum1"">The item to compare to.</param>
@@ -1343,6 +1546,47 @@ namespace Thinktecture.Tests
          else if (this == testEnum4)
          {
             return testEnumFunc4();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      /// <param name=""testEnum3"">The item to compare to.</param>
+      /// <param name=""testEnumFunc3"">The function to execute if the current item is equal to <paramref name=""testEnum3""/>.</param>
+      /// <param name=""testEnum4"">The item to compare to.</param>
+      /// <param name=""testEnumFunc4"">The function to execute if the current item is equal to <paramref name=""testEnum4""/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2,
+         TestEnum testEnum3, global::System.Func<TContext, T> testEnumFunc3,
+         TestEnum testEnum4, global::System.Func<TContext, T> testEnumFunc4)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
+         }
+         else if (this == testEnum3)
+         {
+            return testEnumFunc3(context);
+         }
+         else if (this == testEnum4)
+         {
+            return testEnumFunc4(context);
          }
          else
          {
@@ -1666,6 +1910,33 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name=""testEnum1"">The item to compare to.</param>
@@ -1683,6 +1954,33 @@ namespace Thinktecture.Tests
          else if (this == testEnum2)
          {
             return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
          }
          else
          {
@@ -1993,6 +2291,33 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name=""testEnum1"">The item to compare to.</param>
@@ -2010,6 +2335,33 @@ namespace Thinktecture.Tests
          else if (this == testEnum2)
          {
             return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
          }
          else
          {
@@ -2368,6 +2720,33 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumAction1"">The action to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumAction2"">The action to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name=""testEnum1"">The item to compare to.</param>
@@ -2385,6 +2764,33 @@ namespace Thinktecture.Tests
          else if (this == testEnum2)
          {
             return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name=""context"">Context to be passed to the callbacks.</param>
+      /// <param name=""testEnum1"">The item to compare to.</param>
+      /// <param name=""testEnumFunc1"">The function to execute if the current item is equal to <paramref name=""testEnum1""/>.</param>
+      /// <param name=""testEnum2"">The item to compare to.</param>
+      /// <param name=""testEnumFunc2"">The function to execute if the current item is equal to <paramref name=""testEnum2""/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
          }
          else
          {

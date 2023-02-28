@@ -135,12 +135,14 @@ namespace ").Append(_state.Namespace).Append(@"
          return this.{_state.KeyProperty.Name}{(!_state.IsReferenceType && _state.KeyProperty.IsReferenceType ? "?" : null)}.ToString();
       }}");
 
-      GenerateSwitchForAction();
-      GenerateSwitchForFunc();
+      GenerateSwitchForAction(false);
+      GenerateSwitchForAction(true);
+      GenerateSwitchForFunc(false);
+      GenerateSwitchForFunc(true);
       GenerateGetLookup();
    }
 
-   private void GenerateSwitchForAction()
+   private void GenerateSwitchForAction(bool withContext)
    {
       if (_state.ItemNames.Count == 0)
          return;
@@ -153,6 +155,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var itemNamePrefix = _state.Name.MakeArgumentName();
 
+      if (withContext)
+      {
+         _sb.Append(@"
+      /// <param name=""context"">Context to be passed to the callbacks.</param>");
+      }
+
       for (var i = 0; i < _state.ItemNames.Count; i++)
       {
          _sb.Append($@"
@@ -160,8 +168,17 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""{itemNamePrefix}Action{i + 1}"">The action to execute if the current item is equal to <paramref name=""{itemNamePrefix}{i + 1}""/>.</param>");
       }
 
-      _sb.Append(@"
+      if (withContext)
+      {
+         _sb.Append(@"
+      public void Switch<TContext>(
+         TContext context,");
+      }
+      else
+      {
+         _sb.Append(@"
       public void Switch(");
+      }
 
       for (var i = 0; i < _state.ItemNames.Count; i++)
       {
@@ -170,7 +187,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@"
          ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
-            .Append(", global::System.Action ").Append(itemNamePrefix).Append("Action").Append(i + 1);
+            .Append(", global::System.Action");
+
+         if (withContext)
+            _sb.Append("<TContext>");
+
+         _sb.Append(' ').Append(itemNamePrefix).Append("Action").Append(i + 1);
       }
 
       _sb.Append(@")
@@ -185,7 +207,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
          {
-            ").Append(itemNamePrefix).Append("Action").Append(i + 1).Append(@"();
+            ").Append(itemNamePrefix).Append("Action").Append(i + 1).Append("(");
+
+         if (withContext)
+            _sb.Append("context");
+
+         _sb.Append(@");
          }");
       }
 
@@ -197,7 +224,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateSwitchForFunc()
+   private void GenerateSwitchForFunc(bool withContext)
    {
       if (_state.ItemNames.Count == 0)
          return;
@@ -208,6 +235,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Executes a function depending on the current item.
       /// </summary>");
 
+      if (withContext)
+      {
+         _sb.Append(@"
+      /// <param name=""context"">Context to be passed to the callbacks.</param>");
+      }
+
       var itemNamePrefix = _state.Name.MakeArgumentName();
 
       for (var i = 0; i < _state.ItemNames.Count; i++)
@@ -217,8 +250,17 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""{itemNamePrefix}Func{i + 1}"">The function to execute if the current item is equal to <paramref name=""{itemNamePrefix}{i + 1}""/>.</param>");
       }
 
-      _sb.Append(@"
+      if (withContext)
+      {
+         _sb.Append(@"
+      public T Switch<TContext, T>(
+         TContext context,");
+      }
+      else
+      {
+         _sb.Append(@"
       public T Switch<T>(");
+      }
 
       for (var i = 0; i < _state.ItemNames.Count; i++)
       {
@@ -227,7 +269,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@"
          ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
-            .Append(", global::System.Func<T> ").Append(itemNamePrefix).Append("Func").Append(i + 1);
+            .Append(", global::System.Func<");
+
+         if (withContext)
+            _sb.Append("TContext, ");
+
+         _sb.Append("T> ").Append(itemNamePrefix).Append("Func").Append(i + 1);
       }
 
       _sb.Append(@")
@@ -242,7 +289,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
          {
-            return ").Append(itemNamePrefix).Append("Func").Append(i + 1).Append(@"();
+            return ").Append(itemNamePrefix).Append("Func").Append(i + 1).Append(@"(");
+
+         if (withContext)
+            _sb.Append("context");
+
+         _sb.Append(@");
          }");
       }
 

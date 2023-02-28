@@ -41,8 +41,16 @@ public class SmartEnumDemos
       productType.Switch(ProductType.Groceries, () => logger.Information("Switch with Action: Groceries"),
                          ProductType.Housewares, () => logger.Information("Switch with Action: Housewares"));
 
-      var returnValue = productType.Switch(ProductType.Groceries, () => "Switch with Func<T>: Groceries",
-                                           ProductType.Housewares, () => "Switch with Func<T>: Housewares");
+      productType.Switch(logger,
+                         ProductType.Groceries, static l => l.Information("Switch with Action: Groceries"),
+                         ProductType.Housewares, static l => l.Information("Switch with Action: Housewares"));
+
+      var returnValue = productType.Switch(ProductType.Groceries, static () => "Switch with Func<T>: Groceries",
+                                           ProductType.Housewares, static () => "Switch with Func<T>: Housewares");
+
+      returnValue = productType.Switch(logger,
+                                       ProductType.Groceries, static l => "Switch with Func<T>: Groceries",
+                                       ProductType.Housewares, static l => "Switch with Func<T>: Housewares");
 
       logger.Information(returnValue);
    }
