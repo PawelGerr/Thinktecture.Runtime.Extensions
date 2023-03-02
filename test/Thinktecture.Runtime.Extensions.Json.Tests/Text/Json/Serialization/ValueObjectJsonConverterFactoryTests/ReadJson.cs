@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests.TestClasses;
+using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests;
 
@@ -24,14 +25,14 @@ public class ReadJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_enum_when_null_and_default_unless_enum_and_underlying_are_both_null()
    {
-      Deserialize<TestSmartEnum_Class_IntBased, TestSmartEnum_Class_IntBased.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<TestSmartEnum_Class_StringBased, TestSmartEnum_Class_StringBased.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<TestSmartEnum_Struct_IntBased?, TestSmartEnum_Struct_IntBased.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<TestSmartEnum_Struct_StringBased?, TestSmartEnum_Struct_StringBased.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<TestSmartEnum_Struct_IntBased, TestSmartEnum_Struct_IntBased.ValueObjectJsonConverterFactory>("0").Should().Be(default(TestSmartEnum_Struct_IntBased)); // default(int) is 0
-      Deserialize<TestSmartEnum_Struct_StringBased, TestSmartEnum_Struct_StringBased.ValueObjectJsonConverterFactory>("null").Should().Be(default(TestSmartEnum_Struct_StringBased));
+      Deserialize<TestSmartEnum_Class_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_IntBased, int>>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Class_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_StringBased, string>>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Struct_IntBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int>>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Struct_StringBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string>>("null").Should().Be(null);
+      Deserialize<TestSmartEnum_Struct_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int>>("0").Should().Be(default(TestSmartEnum_Struct_IntBased)); // default(int) is 0
+      Deserialize<TestSmartEnum_Struct_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string>>("null").Should().Be(default(TestSmartEnum_Struct_StringBased));
 
-      FluentActions.Invoking(() => Deserialize<TestSmartEnum_Struct_IntBased, TestSmartEnum_Struct_IntBased.ValueObjectJsonConverterFactory>("null")).Should()
+      FluentActions.Invoking(() => Deserialize<TestSmartEnum_Struct_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int>>("null")).Should()
                    .Throw<JsonException>()
                    .WithInnerException<InvalidOperationException>().WithMessage("Cannot get the value of a token type 'Null' as a number.");
    }
@@ -39,26 +40,26 @@ public class ReadJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_keyed_value_object_when_null_and_default_unless_enum_and_underlying_are_both_null()
    {
-      Deserialize<IntBasedReferenceValueObject, IntBasedReferenceValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<StringBasedReferenceValueObject, StringBasedReferenceValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<IntBasedStructValueObject?, IntBasedStructValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<StringBasedStructValueObject?, StringBasedStructValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectJsonConverterFactory>("0").Should().Be(default); // default(int) is 0
-      Deserialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectJsonConverterFactory>("null").Should().Be(default);
+      Deserialize<IntBasedReferenceValueObject, ValueObjectJsonConverterFactory<IntBasedReferenceValueObject, int>>("null").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObject, ValueObjectJsonConverterFactory<StringBasedReferenceValueObject, string>>("null").Should().Be(null);
+      Deserialize<IntBasedStructValueObject?, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int>>("null").Should().Be(null);
+      Deserialize<StringBasedStructValueObject?, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string>>("null").Should().Be(null);
+      Deserialize<IntBasedStructValueObject, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int>>("0").Should().Be(default); // default(int) is 0
+      Deserialize<StringBasedStructValueObject, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string>>("null").Should().Be(default);
 
       // NullInFactoryMethodsYieldsNull
-      Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\"\""))
+      Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, ValueObjectJsonConverterFactory<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>>("null").Should().Be(null);
+      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, ValueObjectJsonConverterFactory<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>>("\"\""))
                    .Should().Throw<JsonException>().WithMessage("Property cannot be empty.");
-      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\" \""))
+      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, ValueObjectJsonConverterFactory<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull, string>>("\" \""))
                    .Should().Throw<JsonException>().WithMessage("Property cannot be empty.");
 
       // EmptyStringInFactoryMethodsYieldsNull
-      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("null").Should().Be(null);
-      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\"\"").Should().Be(null);
-      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.ValueObjectJsonConverterFactory>("\" \"").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, ValueObjectJsonConverterFactory<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>>("null").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, ValueObjectJsonConverterFactory<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>>("\"\"").Should().Be(null);
+      Deserialize<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, ValueObjectJsonConverterFactory<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull, string>>("\" \"").Should().Be(null);
 
-      FluentActions.Invoking(() => Deserialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectJsonConverterFactory>("null")).Should()
+      FluentActions.Invoking(() => Deserialize<IntBasedStructValueObject, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int>>("null")).Should()
                    .Throw<JsonException>()
                    .WithInnerException<InvalidOperationException>().WithMessage("Cannot get the value of a token type 'Null' as a number.");
    }
@@ -75,7 +76,7 @@ public class ReadJson : JsonTestsBase
    [MemberData(nameof(DataForStringBasedEnumTest))]
    public void Should_deserialize_string_based_enum(TestEnum expectedValue, string json)
    {
-      var value = Deserialize<TestEnum, TestEnum.ValueObjectJsonConverterFactory>(json);
+      var value = Deserialize<TestEnum, ValueObjectJsonConverterFactory<TestEnum, string>>(json);
 
       value.Should().Be(expectedValue);
    }
@@ -84,7 +85,7 @@ public class ReadJson : JsonTestsBase
    [MemberData(nameof(DataForIntBasedEnumTest))]
    public void Should_deserialize_int_based_enum(IntegerEnum expectedValue, string json)
    {
-      var value = Deserialize<IntegerEnum, IntegerEnum.ValueObjectJsonConverterFactory>(json);
+      var value = Deserialize<IntegerEnum, ValueObjectJsonConverterFactory<IntegerEnum, int>>(json);
 
       value.Should().Be(expectedValue);
    }
@@ -93,7 +94,7 @@ public class ReadJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
    public void Should_deserialize_class_containing_string_based_enum(ClassWithStringBasedEnum expectedValue, string json, bool ignoreNullValues = false)
    {
-      var value = Deserialize<ClassWithStringBasedEnum, TestEnum.ValueObjectJsonConverterFactory>(json, ignoreNullValues: ignoreNullValues);
+      var value = Deserialize<ClassWithStringBasedEnum, ValueObjectJsonConverterFactory<TestEnum, string>>(json, ignoreNullValues: ignoreNullValues);
 
       value.Should().BeEquivalentTo(expectedValue);
    }
@@ -102,7 +103,7 @@ public class ReadJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
    public void Should_deserialize_class_containing_int_based_enum(ClassWithIntBasedEnum expectedValue, string json, bool ignoreNullValues = false)
    {
-      var value = Deserialize<ClassWithIntBasedEnum, IntegerEnum.ValueObjectJsonConverterFactory>(json, ignoreNullValues: ignoreNullValues);
+      var value = Deserialize<ClassWithIntBasedEnum, ValueObjectJsonConverterFactory<IntegerEnum, int>>(json, ignoreNullValues: ignoreNullValues);
 
       value.Should().BeEquivalentTo(expectedValue);
    }
@@ -123,7 +124,7 @@ public class ReadJson : JsonTestsBase
    [Fact]
    public void Should_throw_JsonException_if_enum_parsing_throws_UnknownEnumIdentifierException()
    {
-      FluentActions.Invoking(() => Deserialize<ValidTestEnum, ValidTestEnum.ValueObjectJsonConverterFactory>("\"invalid\""))
+      FluentActions.Invoking(() => Deserialize<ValidTestEnum, ValueObjectJsonConverterFactory<ValidTestEnum, string>>("\"invalid\""))
                    .Should().Throw<JsonException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
    }
 

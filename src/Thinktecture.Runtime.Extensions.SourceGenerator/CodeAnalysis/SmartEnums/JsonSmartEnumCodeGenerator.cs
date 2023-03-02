@@ -16,36 +16,16 @@ public sealed class JsonSmartEnumCodeGenerator : CodeGeneratorBase
       if (_state.AttributeInfo.HasJsonConverterAttribute)
          return null;
 
-      var ns = _state.Namespace;
+      return $$"""
+{{GENERATED_CODE_PREFIX}}
+{{(_state.Namespace is null ? null : $@"
+namespace {_state.Namespace};
+")}}
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<{{_state.TypeFullyQualified}}, {{_state.KeyProperty.TypeFullyQualified}}>))]
+partial {{(_state.IsReferenceType ? "class" : "struct")}} {{_state.Name}}
+{
+}
 
-      return $@"{GENERATED_CODE_PREFIX}
-{(ns is null ? null : $@"
-namespace {ns}
-{{")}
-   [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
-   {{
-      public sealed class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
-      {{
-         /// <inheritdoc />
-         public override bool CanConvert(global::System.Type typeToConvert)
-         {{
-            return typeof({_state.TypeFullyQualified}).IsAssignableFrom(typeToConvert);
-         }}
-
-         /// <inheritdoc />
-         public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
-         {{
-            if (typeToConvert is null)
-               throw new global::System.ArgumentNullException(nameof(typeToConvert));
-            if (options is null)
-               throw new global::System.ArgumentNullException(nameof(options));
-
-            return new global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>(options);
-         }}
-      }}
-   }}
-{(ns is null ? null : @"}
-")}";
+""";
    }
 }

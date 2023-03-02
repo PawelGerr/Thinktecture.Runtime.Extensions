@@ -7,6 +7,29 @@ namespace Thinktecture.Text.Json.Serialization;
 /// <summary>
 /// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey}"/>.
 /// </summary>
+public sealed class ValueObjectJsonConverterFactory<T, TKey> : JsonConverterFactory
+   where T : IKeyedValueObject<T, TKey>
+   where TKey : notnull
+{
+   /// <inheritdoc />
+   public override bool CanConvert(Type typeToConvert)
+   {
+      return typeof(T).IsAssignableFrom(typeToConvert);
+   }
+
+   /// <inheritdoc />
+   public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+   {
+      ArgumentNullException.ThrowIfNull(typeToConvert);
+      ArgumentNullException.ThrowIfNull(options);
+
+      return new ValueObjectJsonConverter<T, TKey>(options);
+   }
+}
+
+/// <summary>
+/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey}"/>.
+/// </summary>
 public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
 {
    /// <inheritdoc />
