@@ -54,7 +54,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
       {
          _sb.Append($@"
-      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualified}>))]");
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualified}>))]");
       }
 
       _sb.Append($@"
