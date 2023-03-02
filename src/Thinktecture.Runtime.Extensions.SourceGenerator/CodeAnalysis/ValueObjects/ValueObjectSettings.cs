@@ -11,6 +11,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool SkipIParsable { get; }
    public bool SkipIFormattable { get; }
    public bool SkipToString { get; }
+   public bool SkipIAdditionOperators { get; }
+   public bool SkipISubtractionOperators { get; }
+   public bool SkipIMultiplyOperators { get; }
+   public bool SkipIDivisionOperators { get; }
+   public bool SkipIComparisonOperators { get; }
    public string DefaultInstancePropertyName { get; }
 
    public ValueObjectSettings(AttributeData valueObjectAttribute)
@@ -22,6 +27,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
       SkipIParsable = valueObjectAttribute.FindSkipIParsable() ?? false;
       SkipIFormattable = valueObjectAttribute.FindSkipIFormattable() ?? false;
       SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
+      SkipIAdditionOperators = valueObjectAttribute.FindSkipIAdditionOperators() ?? false;
+      SkipISubtractionOperators = valueObjectAttribute.FindSkipISubtractionOperators() ?? false;
+      SkipIMultiplyOperators = valueObjectAttribute.FindSkipIMultiplyOperators() ?? false;
+      SkipIDivisionOperators = valueObjectAttribute.FindSkipIDivisionOperators() ?? false;
+      SkipIComparisonOperators = valueObjectAttribute.FindSkipIComparisonOperators() ?? false;
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
    }
 
@@ -44,6 +54,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
              && SkipIParsable == other.SkipIParsable
              && SkipIFormattable == other.SkipIFormattable
              && SkipToString == other.SkipToString
+             && SkipIAdditionOperators == other.SkipIAdditionOperators
+             && SkipISubtractionOperators == other.SkipISubtractionOperators
+             && SkipIMultiplyOperators == other.SkipIMultiplyOperators
+             && SkipIDivisionOperators == other.SkipIDivisionOperators
+             && SkipIComparisonOperators == other.SkipIComparisonOperators
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
 
@@ -58,6 +73,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIAdditionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipISubtractionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIMultiplyOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIDivisionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIComparisonOperators.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 
          return hashCode;

@@ -286,7 +286,63 @@ public static class TypeSymbolExtensions
    {
       return @interface.Name == "IParsable"
              && @interface.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true }
-             && (!@interface.IsGenericType || (@interface.IsGenericType && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)));
+             && @interface.IsGenericType
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter);
+   }
+
+   public static bool IsIAdditionOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
+   {
+      return @interface.Name == "IAdditionOperators"
+             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
+             && @interface.IsGenericType
+             && @interface.TypeArguments.Length == 3
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
+   }
+
+   public static bool IsISubtractionOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
+   {
+      return @interface.Name == "ISubtractionOperators"
+             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
+             && @interface.IsGenericType
+             && @interface.TypeArguments.Length == 3
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
+   }
+
+   public static bool IsIMultiplyOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
+   {
+      return @interface.Name == "IMultiplyOperators"
+             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
+             && @interface.IsGenericType
+             && @interface.TypeArguments.Length == 3
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
+   }
+
+   public static bool IsIDivisionOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
+   {
+      return @interface.Name == "IDivisionOperators"
+             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
+             && @interface.IsGenericType
+             && @interface.TypeArguments.Length == 3
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
+   }
+
+   public static bool IsIComparisonOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
+   {
+      return @interface.Name == "IComparisonOperators"
+             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
+             && @interface.IsGenericType
+             && @interface.TypeArguments.Length == 3
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
+             && @interface.TypeArguments[2].SpecialType == SpecialType.System_Boolean;
    }
 
    public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)

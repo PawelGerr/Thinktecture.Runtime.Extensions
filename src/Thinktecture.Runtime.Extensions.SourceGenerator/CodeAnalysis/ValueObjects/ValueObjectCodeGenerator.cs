@@ -58,7 +58,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>");
+   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>, global::System.Numerics.IEqualityOperators<{_state.TypeFullyQualified}, {_state.TypeFullyQualified}, bool>");
 
       for (var i = 0; i < interfaceCodeGenerators.Length; i++)
       {

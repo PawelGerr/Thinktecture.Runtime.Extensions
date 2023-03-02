@@ -148,6 +148,21 @@ public sealed class ValueObjectSourceGeneratorState :
       if (!Settings.SkipIParsable && HasKeyMember && (KeyMember.Member.IsString() || KeyMember.Member.IsParsable))
          generators = generators.Add(ParsableCodeGenerator.Instance);
 
+      if (!Settings.SkipIAdditionOperators && HasKeyMember && KeyMember.Member.HasAdditionOperators)
+         generators = generators.Add(AdditionOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipISubtractionOperators && HasKeyMember && KeyMember.Member.HasSubtractionOperators)
+         generators = generators.Add(SubtractionOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipIMultiplyOperators && HasKeyMember && KeyMember.Member.HasMultiplyOperators)
+         generators = generators.Add(MultiplyOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipIDivisionOperators && HasKeyMember && KeyMember.Member.HasDivisionOperators)
+         generators = generators.Add(DivisionOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipIComparisonOperators && HasKeyMember && KeyMember.Member.HasComparisonOperators)
+         generators = generators.Add(ComparisonOperatorsCodeGenerator.Default);
+
       return generators;
    }
 }

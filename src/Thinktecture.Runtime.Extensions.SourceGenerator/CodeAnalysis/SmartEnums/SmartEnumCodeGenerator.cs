@@ -54,7 +54,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append($@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>))]
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>, global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>");
+   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::Thinktecture.IEnum<{_state.KeyProperty.TypeFullyQualified}, {_state.TypeFullyQualified}>, global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>, global::System.Numerics.IEqualityOperators<{_state.TypeFullyQualified}, {_state.TypeFullyQualified}, bool>");
 
       for (var i = 0; i < interfaceCodeGenerators.Length; i++)
       {

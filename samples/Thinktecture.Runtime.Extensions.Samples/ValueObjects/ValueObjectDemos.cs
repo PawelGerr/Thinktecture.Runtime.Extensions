@@ -50,5 +50,13 @@ public class ValueObjectDemos
 
       if (ProductName.TryCreate(null, out nullProduct))
          logger.Information("Null-Product name: {NullProduct}", nullProduct);
+
+      // Addition / subtraction / multiplication / division / comparison
+      var amount = Amount.Create(1);
+      var otherAmount = Amount.Create(2);
+      var sum = amount + otherAmount;
+      logger.Information("{Amount} + {Other} = {Sum}", amount, otherAmount, sum);
+
+      logger.Information("{Amount} > {Other} = {Result}", amount, otherAmount, amount > otherAmount);
    }
 }

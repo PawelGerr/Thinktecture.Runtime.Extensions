@@ -44,6 +44,31 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipIFormattable");
    }
 
+   public static bool? FindSkipIAdditionOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIAdditionOperators");
+   }
+
+   public static bool? FindSkipISubtractionOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipISubtractionOperators");
+   }
+
+   public static bool? FindSkipIMultiplyOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIMultiplyOperators");
+   }
+
+   public static bool? FindSkipIDivisionOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIDivisionOperators");
+   }
+
+   public static bool? FindSkipIComparisonOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIComparisonOperators");
+   }
+
    public static bool? FindSkipToString(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "SkipToString");

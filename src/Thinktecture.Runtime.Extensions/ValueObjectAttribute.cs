@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Thinktecture;
 
 /// <summary>
@@ -59,6 +61,51 @@ public sealed class ValueObjectAttribute : Attribute
    /// - key-member is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.
    /// </summary>
    public bool SkipIParsable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIAdditionOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipISubtractionOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIMultiplyOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIDivisionOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIComparisonOperators { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IFormattable"/> or not.
