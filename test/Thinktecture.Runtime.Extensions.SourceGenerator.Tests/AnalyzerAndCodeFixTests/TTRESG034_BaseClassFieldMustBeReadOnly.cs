@@ -29,6 +29,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
@@ -53,6 +59,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
@@ -75,6 +87,12 @@ namespace TestNamespace
 	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -100,6 +118,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
@@ -122,6 +146,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
@@ -142,6 +172,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
@@ -160,6 +196,12 @@ namespace TestNamespace
 	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceField, IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 
@@ -180,6 +222,12 @@ namespace TestNamespace
 	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceReadonlyField, IValidatableEnum<string>
 	{
       public static readonly TestEnum Item1 = default;
+   }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

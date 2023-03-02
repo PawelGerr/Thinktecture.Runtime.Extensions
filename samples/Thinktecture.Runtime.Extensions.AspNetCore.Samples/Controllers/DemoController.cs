@@ -41,9 +41,13 @@ public class DemoController : Controller
    }
 
    [HttpGet("productType/{productType}")]
-   public IActionResult RoundTrip(
-      [FromRoute] ProductType productType,
-      [FromQuery] ProductType? type)
+   public IActionResult RoundTrip(ProductType productType)
+   {
+      return RoundTrip<ProductType, string>(productType);
+   }
+
+   [HttpGet("productType")]
+   public IActionResult RoundTripWithQueryString(ProductType productType)
    {
       return RoundTrip<ProductType, string>(productType);
    }
@@ -53,8 +57,6 @@ public class DemoController : Controller
    {
       return RoundTrip<ProductType, string>(productType);
    }
-
-   public record ProductTypeWrapper(ProductType ProductType);
 
    [HttpPost("productTypeWrapper")]
    public IActionResult RoundTripPost([FromBody] ProductTypeWrapper productType)

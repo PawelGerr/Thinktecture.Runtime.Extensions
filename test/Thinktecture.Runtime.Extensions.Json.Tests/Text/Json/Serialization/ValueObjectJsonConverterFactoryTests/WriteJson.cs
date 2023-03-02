@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests.TestClasses;
+using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests;
 
@@ -29,23 +30,23 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_enum_if_null_and_default()
    {
-      Serialize<TestSmartEnum_Class_IntBased, TestSmartEnum_Class_IntBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Class_StringBased, TestSmartEnum_Class_StringBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Struct_IntBased?, TestSmartEnum_Struct_IntBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Struct_StringBased?, TestSmartEnum_Struct_StringBased.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Struct_IntBased, TestSmartEnum_Struct_IntBased.ValueObjectJsonConverterFactory>(default).Should().Be("0");
-      Serialize<TestSmartEnum_Struct_StringBased, TestSmartEnum_Struct_StringBased.ValueObjectJsonConverterFactory>(default).Should().Be("null");
+      Serialize<TestSmartEnum_Class_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_IntBased, int>>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Class_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_StringBased, string>>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Struct_IntBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int>>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Struct_StringBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string>>(null).Should().Be("null");
+      Serialize<TestSmartEnum_Struct_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int>>(default).Should().Be("0");
+      Serialize<TestSmartEnum_Struct_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string>>(default).Should().Be("null");
    }
 
    [Fact]
    public void Should_deserialize_keyed_value_object_if_null_and_default()
    {
-      Serialize<IntBasedReferenceValueObject, IntBasedReferenceValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<StringBasedReferenceValueObject, StringBasedReferenceValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<IntBasedStructValueObject?, IntBasedStructValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<StringBasedStructValueObject?, StringBasedStructValueObject.ValueObjectJsonConverterFactory>(null).Should().Be("null");
-      Serialize<IntBasedStructValueObject, IntBasedStructValueObject.ValueObjectJsonConverterFactory>(default).Should().Be("0");
-      Serialize<StringBasedStructValueObject, StringBasedStructValueObject.ValueObjectJsonConverterFactory>(default).Should().Be("null");
+      Serialize<IntBasedReferenceValueObject, ValueObjectJsonConverterFactory<IntBasedReferenceValueObject, int>>(null).Should().Be("null");
+      Serialize<StringBasedReferenceValueObject, ValueObjectJsonConverterFactory<StringBasedReferenceValueObject, string>>(null).Should().Be("null");
+      Serialize<IntBasedStructValueObject?, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int>>(null).Should().Be("null");
+      Serialize<StringBasedStructValueObject?, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string>>(null).Should().Be("null");
+      Serialize<IntBasedStructValueObject, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int>>(default).Should().Be("0");
+      Serialize<StringBasedStructValueObject, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string>>(default).Should().Be("null");
    }
 
    [Fact]
@@ -60,7 +61,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForStringBasedEnumTest))]
    public void Should_serialize_string_based_enum(TestEnum enumValue, string expectedJson)
    {
-      var json = Serialize<TestEnum, TestEnum.ValueObjectJsonConverterFactory>(enumValue);
+      var json = Serialize<TestEnum, ValueObjectJsonConverterFactory<TestEnum, string>>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -69,7 +70,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForIntBasedEnumTest))]
    public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
    {
-      var json = Serialize<IntegerEnum, IntegerEnum.ValueObjectJsonConverterFactory>(enumValue);
+      var json = Serialize<IntegerEnum, ValueObjectJsonConverterFactory<IntegerEnum, int>>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -78,7 +79,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
    public void Should_serialize_class_containing_string_based_enum(ClassWithStringBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
    {
-      var json = Serialize<ClassWithStringBasedEnum, TestEnum.ValueObjectJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
+      var json = Serialize<ClassWithStringBasedEnum, ValueObjectJsonConverterFactory<TestEnum, string>>(classWithEnum, null, ignoreNullValues);
 
       json.Should().Be(expectedJson);
    }
@@ -87,7 +88,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
    public void Should_serialize_class_containing_int_based_enum(ClassWithIntBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
    {
-      var json = Serialize<ClassWithIntBasedEnum, IntegerEnum.ValueObjectJsonConverterFactory>(classWithEnum, null, ignoreNullValues);
+      var json = Serialize<ClassWithIntBasedEnum, ValueObjectJsonConverterFactory<IntegerEnum, int>>(classWithEnum, null, ignoreNullValues);
 
       json.Should().Be(expectedJson);
    }

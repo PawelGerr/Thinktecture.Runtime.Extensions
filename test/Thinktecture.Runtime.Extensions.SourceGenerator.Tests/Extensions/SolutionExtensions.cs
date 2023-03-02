@@ -35,8 +35,7 @@ public static class SolutionExtensions
    public static void DisableNullableReferenceWarnings<TVerifier>(this AnalyzerTest<TVerifier> test)
       where TVerifier : IVerifier, new()
    {
-      if (test is null)
-         throw new ArgumentNullException(nameof(test));
+      ArgumentNullException.ThrowIfNull(test);
 
       test.SolutionTransforms.Add(DisableNullableWarnings);
    }

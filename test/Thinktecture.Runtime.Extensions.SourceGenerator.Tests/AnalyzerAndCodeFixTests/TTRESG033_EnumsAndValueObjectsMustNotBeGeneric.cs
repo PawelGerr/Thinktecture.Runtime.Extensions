@@ -25,6 +25,12 @@ namespace TestNamespace
 	{
       public static readonly TestEnum<T> Item1 = default;
    }
+
+   // simulate source gen
+   partial class TestEnum<T>
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
          var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Enumeration", "TestEnum<T>");
@@ -43,6 +49,12 @@ namespace TestNamespace
 	public readonly partial struct {|#0:TestEnum|}<T> : IValidatableEnum<string>
 	{
       public static readonly TestEnum<T> Item1 = default;
+   }
+
+   // simulate source gen
+   partial struct TestEnum<T>
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
    }
 }";
 

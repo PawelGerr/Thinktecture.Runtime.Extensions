@@ -87,8 +87,8 @@ public sealed class ValueObjectSourceGeneratorState :
 
          if (settings.IsExplicitlyDeclared)
          {
-            var equalityComparer = settings.EqualityComparer;
-            var comparer = settings.Comparer;
+            var equalityComparer = settings.HasInvalidEqualityComparerType ? null : settings.EqualityComparerAccessor;
+            var comparer = settings.HasInvalidComparerType ? null : settings.ComparerAccessor;
             var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer, comparer);
 
             (equalityMembers ??= new List<EqualityInstanceMemberInfo>()).Add(equalityMember);
@@ -139,11 +139,29 @@ public sealed class ValueObjectSourceGeneratorState :
    {
       var generators = ImmutableArray<IInterfaceCodeGenerator>.Empty;
 
-      if (HasKeyMember && KeyMember.Member.IsFormattable)
+      if (!Settings.SkipIFormattable && HasKeyMember && KeyMember.Member.IsFormattable)
          generators = generators.Add(FormattableCodeGenerator.Instance);
 
-      if (!Settings.SkipCompareTo && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.Comparer is not null))
-         generators = generators.Add(new ComparableCodeGenerator(KeyMember.Comparer));
+      if (!Settings.SkipIComparable && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.ComparerAccessor is not null))
+         generators = generators.Add(KeyMember.ComparerAccessor is null ? ComparableCodeGenerator.Default : new ComparableCodeGenerator(KeyMember.ComparerAccessor));
+
+      if (!Settings.SkipIParsable && HasKeyMember && (KeyMember.Member.IsString() || KeyMember.Member.IsParsable))
+         generators = generators.Add(ParsableCodeGenerator.Instance);
+
+      if (!Settings.SkipIAdditionOperators && HasKeyMember && KeyMember.Member.HasAdditionOperators)
+         generators = generators.Add(AdditionOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipISubtractionOperators && HasKeyMember && KeyMember.Member.HasSubtractionOperators)
+         generators = generators.Add(SubtractionOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipIMultiplyOperators && HasKeyMember && KeyMember.Member.HasMultiplyOperators)
+         generators = generators.Add(MultiplyOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipIDivisionOperators && HasKeyMember && KeyMember.Member.HasDivisionOperators)
+         generators = generators.Add(DivisionOperatorsCodeGenerator.Default);
+
+      if (!Settings.SkipIComparisonOperators && HasKeyMember && KeyMember.Member.HasComparisonOperators)
+         generators = generators.Add(ComparisonOperatorsCodeGenerator.Default);
 
       return generators;
    }

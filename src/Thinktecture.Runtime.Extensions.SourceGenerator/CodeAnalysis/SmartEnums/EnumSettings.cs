@@ -4,13 +4,19 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class EnumSettings : IEquatable<EnumSettings>
 {
-   public string? KeyComparer { get; }
    public string? KeyPropertyName { get; }
+   public bool SkipIComparable { get; }
+   public bool SkipIParsable { get; }
+   public bool SkipIFormattable { get; }
+   public bool SkipToString { get; }
 
    public EnumSettings(AttributeData? attribute)
    {
-      KeyComparer = attribute?.FindKeyComparer().TrimAndNullify();
       KeyPropertyName = attribute?.FindKeyPropertyName().TrimAndNullify();
+      SkipIComparable = attribute?.FindSkipIComparable() ?? false;
+      SkipIParsable = attribute?.FindSkipIParsable() ?? false;
+      SkipIFormattable = attribute?.FindSkipIFormattable() ?? false;
+      SkipToString = attribute?.FindSkipToString() ?? false;
    }
 
    public override bool Equals(object? obj)
@@ -25,16 +31,22 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
       if (ReferenceEquals(this, other))
          return true;
 
-      return KeyComparer == other.KeyComparer
-             && KeyPropertyName == other.KeyPropertyName;
+      return KeyPropertyName == other.KeyPropertyName
+             && SkipIComparable == other.SkipIComparable
+             && SkipIParsable == other.SkipIParsable
+             && SkipIFormattable == other.SkipIFormattable
+             && SkipToString == other.SkipToString;
    }
 
    public override int GetHashCode()
    {
       unchecked
       {
-         var hashCode = KeyComparer?.GetHashCode() ?? 0;
-         hashCode = (hashCode * 397) ^ (KeyPropertyName?.GetHashCode() ?? 0);
+         var hashCode = KeyPropertyName?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
 
          return hashCode;
       }

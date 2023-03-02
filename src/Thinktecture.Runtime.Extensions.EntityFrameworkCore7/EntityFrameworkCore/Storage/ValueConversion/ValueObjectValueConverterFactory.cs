@@ -17,6 +17,7 @@ public sealed class ValueObjectValueConverterFactory
    /// <typeparam name="TKey">Type of the key.</typeparam>
    /// <returns>An instance of <see cref="ValueConverter{T,TKey}"/>></returns>
    public static ValueConverter<T, TKey> Create<T, TKey>(bool useConstructorForRead = true)
+      where T : IKeyedValueObject<TKey>
       where TKey : notnull
    {
       return new ValueObjectValueConverter<T, TKey>(useConstructorForRead);
@@ -48,14 +49,21 @@ public sealed class ValueObjectValueConverterFactory
       bool validateOnWrite,
       bool useConstructorForRead = true)
    {
-      if (type is null)
-         throw new ArgumentNullException(nameof(type));
+      ArgumentNullException.ThrowIfNull(type);
 
-      var metadata = ValueObjectMetadataLookup.Find(type);
+      var metadata = KeyedValueObjectMetadataLookup.Find(type);
 
       if (metadata is null)
          throw new ArgumentException($"The provided type '{type.Name}' is neither an Smart Enum nor a Value Object with a key member.");
 
+      return Create(metadata, validateOnWrite, useConstructorForRead);
+   }
+
+   internal static ValueConverter Create(
+      KeyedValueObjectMetadata metadata,
+      bool validateOnWrite,
+      bool useConstructorForRead)
+   {
       object converter;
 
       if (metadata.IsValidatableEnum)
@@ -73,32 +81,27 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private static Expression<Func<TKey, T>> GetConverterFromKey<T, TKey>(bool useConstructor)
+      where T : IKeyedValueObject<TKey>
+      where TKey : notnull
    {
-      var metadata = ValueObjectMetadataLookup.Find(typeof(T));
+      var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
 
       if (metadata is null)
          throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
 
-      return (Expression<Func<TKey, T>>)(useConstructor
-                                            ? metadata.ConvertFromKeyExpressionViaConstructor ?? metadata.ConvertFromKeyExpression
-                                            : metadata.ConvertFromKeyExpression);
-   }
+      var factoryMethod = useConstructor
+                             ? metadata.ConvertFromKeyExpressionViaConstructor ?? metadata.ConvertFromKeyExpression
+                             : metadata.ConvertFromKeyExpression;
 
-   private static Expression<Func<T, TKey>> GetConverterToKey<T, TKey>()
-   {
-      var metadata = ValueObjectMetadataLookup.Find(typeof(T));
-
-      if (metadata is null)
-         throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
-
-      return (Expression<Func<T, TKey>>)metadata.ConvertToKeyExpression;
+      return (Expression<Func<TKey, T>>)(factoryMethod ?? throw new InvalidOperationException($"A value converter cannot be created for the type '{typeof(T).Name}' because it has no factory methods."));
    }
 
    private sealed class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
+      where T : IKeyedValueObject<TKey>
       where TKey : notnull
    {
       public ValueObjectValueConverter(bool useConstructor)
-         : base(GetConverterToKey<T, TKey>(), GetConverterFromKey<T, TKey>(useConstructor))
+         : base(static o => o.GetKey(), GetConverterFromKey<T, TKey>(useConstructor))
       {
       }
    }

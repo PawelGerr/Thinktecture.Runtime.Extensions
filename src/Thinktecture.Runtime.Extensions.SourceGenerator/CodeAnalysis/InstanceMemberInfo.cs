@@ -25,6 +25,12 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public SpecialType SpecialType => _type.SpecialType;
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
+   public bool IsParsable { get; }
+   public bool HasAdditionOperators { get; }
+   public bool HasSubtractionOperators { get; }
+   public bool HasMultiplyOperators { get; }
+   public bool HasDivisionOperators { get; }
+   public bool HasComparisonOperators { get; }
 
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
 
@@ -46,7 +52,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
       ReadAccessibility = readAccessibility;
       IsStatic = isStatic;
-      ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member);
+      ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member, type);
 
       foreach (var @interface in type.AllInterfaces)
       {
@@ -57,6 +63,30 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          else if (@interface.IsComparableInterface(_type))
          {
             IsComparable = true;
+         }
+         else if (@interface.IsParsableInterface(_type))
+         {
+            IsParsable = true;
+         }
+         else if (@interface.IsIAdditionOperators(_type))
+         {
+            HasAdditionOperators = true;
+         }
+         else if (@interface.IsISubtractionOperators(_type))
+         {
+            HasSubtractionOperators = true;
+         }
+         else if (@interface.IsIMultiplyOperators(_type))
+         {
+            HasMultiplyOperators = true;
+         }
+         else if (@interface.IsIDivisionOperators(_type))
+         {
+            HasDivisionOperators = true;
+         }
+         else if (@interface.IsIComparisonOperators(_type))
+         {
+            HasComparisonOperators = true;
          }
       }
    }
@@ -102,6 +132,12 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
              && SpecialType == other.SpecialType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
+             && IsParsable == other.IsParsable
+             && HasAdditionOperators == other.HasAdditionOperators
+             && HasSubtractionOperators == other.HasSubtractionOperators
+             && HasMultiplyOperators == other.HasMultiplyOperators
+             && HasDivisionOperators == other.HasDivisionOperators
+             && HasComparisonOperators == other.HasComparisonOperators
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -118,6 +154,12 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasAdditionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasSubtractionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasMultiplyOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasDivisionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasComparisonOperators.GetHashCode();
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;

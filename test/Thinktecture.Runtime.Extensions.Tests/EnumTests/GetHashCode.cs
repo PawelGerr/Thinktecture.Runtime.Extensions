@@ -9,9 +9,8 @@ public class GetHashCode
    public void Should_return_hashcode_of_the_type_plus_key()
    {
       var hashCode = TestEnum.Item1.GetHashCode();
-      var typeHashCode = typeof(TestEnum).GetHashCode();
       var keyHashCode = StringComparer.OrdinalIgnoreCase.GetHashCode(TestEnum.Item1.Key);
-      hashCode.Should().Be((typeHashCode * 397) ^ keyHashCode);
+      hashCode.Should().Be(HashCode.Combine(typeof(TestEnum), keyHashCode));
    }
 
    [Fact]
@@ -19,8 +18,7 @@ public class GetHashCode
    {
       var hashCode = StructIntegerEnum.Item1.GetHashCode();
 
-      var typeHashCode = typeof(StructIntegerEnum).GetHashCode();
       var keyHashCode = StructIntegerEnum.Item1.Key.GetHashCode();
-      hashCode.Should().Be((typeHashCode * 397) ^ keyHashCode);
+      hashCode.Should().Be(HashCode.Combine(typeof(StructIntegerEnum), keyHashCode));
    }
 }

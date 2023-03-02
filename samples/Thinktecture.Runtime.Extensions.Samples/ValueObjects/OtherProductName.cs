@@ -6,7 +6,7 @@ namespace Thinktecture.ValueObjects;
 [ValueObject(EmptyStringInFactoryMethodsYieldsNull = true)]
 public sealed partial class OtherProductName
 {
-   [ValueObjectEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]
+   [ValueObjectMemberEqualityAttribute<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    private string Value { get; }
 
    static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref string value)

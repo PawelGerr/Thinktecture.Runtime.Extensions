@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
@@ -58,13 +60,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          TestCode = source;
          FixedCode = fixedSource;
          ExpectedDiagnostics.AddRange(expected);
-#if NET7_0
          ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
-#elif NET6_0
-         ReferenceAssemblies = ReferenceAssemblies.Net.Net60;
-#else
-         ReferenceAssemblies = ReferenceAssemblies.Net.Net50;
-#endif
 
          foreach (var additionalReference in additionalReferences)
          {
@@ -72,6 +68,14 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          }
 
          this.DisableNullableReferenceWarnings();
+      }
+
+      protected override ParseOptions CreateParseOptions()
+      {
+         var options = (CSharpParseOptions)base.CreateParseOptions();
+         options = options.WithLanguageVersion(LanguageVersion.Preview);
+
+         return options;
       }
    }
 }

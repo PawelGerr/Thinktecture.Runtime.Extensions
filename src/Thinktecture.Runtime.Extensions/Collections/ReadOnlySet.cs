@@ -1,5 +1,3 @@
-#if !NETSTANDARD2_1
-
 using System.Collections;
 
 namespace Thinktecture.Collections;
@@ -27,8 +25,7 @@ internal sealed class ReadOnlySet<T> : IReadOnlySet<T>
 
    public bool IsProperSubsetOf(IEnumerable<T> other)
    {
-      if (other is null)
-         throw new ArgumentNullException(nameof(other));
+      ArgumentNullException.ThrowIfNull(other);
 
       return other.Any();
    }
@@ -58,4 +55,3 @@ internal sealed class ReadOnlySet<T> : IReadOnlySet<T>
       return !other.Any();
    }
 }
-#endif

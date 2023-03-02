@@ -16,24 +16,16 @@ public sealed class NewtonsoftJsonSmartEnumCodeGenerator : CodeGeneratorBase
       if (_state.AttributeInfo.HasNewtonsoftJsonConverterAttribute)
          return null;
 
-      var ns = _state.Namespace;
+      return $$"""
+{{GENERATED_CODE_PREFIX}}
+{{(_state.Namespace is null ? null : $@"
+namespace {_state.Namespace};
+")}}
+[global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{{_state.TypeFullyQualified}}, {{_state.KeyProperty.TypeFullyQualified}}>))]
+partial {{(_state.IsReferenceType ? "class" : "struct")}} {{_state.Name}}
+{
+}
 
-      return $@"{GENERATED_CODE_PREFIX}
-{(ns is null ? null : $@"
-namespace {ns}
-{{")}
-   [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name}
-   {{
-      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{_state.TypeFullyQualified}, {_state.KeyProperty.TypeFullyQualified}>
-      {{
-         public ValueObjectNewtonsoftJsonConverter()
-            : base({_state.TypeFullyQualified}.Get, static obj => obj.{_state.KeyProperty.Name})
-         {{
-         }}
-      }}
-   }}
-{(ns is null ? null : @"}
-")}";
+""";
    }
 }

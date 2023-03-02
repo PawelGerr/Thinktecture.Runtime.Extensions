@@ -93,7 +93,6 @@ internal sealed class ValueObjectDbContextOptionsExtension : IDbContextOptionsEx
       {
          return HashCode.Combine(_extension.ValueObjectValueConverterSettings);
       }
-
 #endif
 
       public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)

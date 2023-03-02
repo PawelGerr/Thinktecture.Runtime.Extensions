@@ -24,14 +24,13 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
    /// <inheritdoc />
    public IModelBinder? GetBinder(ModelBinderProviderContext context)
    {
-      if (context is null)
-         throw new ArgumentNullException(nameof(context));
+      ArgumentNullException.ThrowIfNull(context);
 
       // Skip model binding from body so BodyModelBinder incl. JSON serialization takes over
       if (SkipModelBinding(context))
          return null;
 
-      var metadata = ValueObjectMetadataLookup.Find(context.Metadata.ModelType);
+      var metadata = KeyedValueObjectMetadataLookup.Find(context.Metadata.ModelType);
 
       if (metadata is null)
          return null;
@@ -40,7 +39,7 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
       var modelBinderType = _trimStringBasedEnums && metadata.IsEnumeration && metadata.KeyType == typeof(string)
                                ? typeof(TrimmingSmartEnumModelBinder<>).MakeGenericType(metadata.Type)
                                : typeof(ValueObjectModelBinder<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-      var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory, metadata.Validate)
+      var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory)
                         ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
 
       return (IModelBinder)modelBinder;

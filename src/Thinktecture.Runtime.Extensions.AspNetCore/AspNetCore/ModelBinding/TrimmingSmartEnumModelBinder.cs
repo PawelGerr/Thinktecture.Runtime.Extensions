@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
-using Thinktecture.Internal;
 
 namespace Thinktecture.AspNetCore.ModelBinding;
 
@@ -9,16 +8,15 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 public sealed class TrimmingSmartEnumModelBinder<T> : ValueObjectModelBinderBase<T, string>
+   where T : IKeyedValueObject<T, string>
 {
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey}"/>.
    /// </summary>
    /// <param name="loggerFactory">Logger factory.</param>
-   /// <param name="validate">Callback that performs the actual binding.</param>
    public TrimmingSmartEnumModelBinder(
-      ILoggerFactory loggerFactory,
-      Validate<T, string> validate)
-      : base(loggerFactory, validate)
+      ILoggerFactory loggerFactory)
+      : base(loggerFactory)
    {
    }
 

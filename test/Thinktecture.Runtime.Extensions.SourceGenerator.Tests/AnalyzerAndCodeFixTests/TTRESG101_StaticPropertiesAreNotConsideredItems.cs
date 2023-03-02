@@ -23,6 +23,12 @@ namespace TestNamespace
 
       public static TestEnum {|#0:Item2|} => default;
    }
+
+   // simulate source gen
+   partial class TestEnum
+   {
+      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+   }
 }";
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item2");

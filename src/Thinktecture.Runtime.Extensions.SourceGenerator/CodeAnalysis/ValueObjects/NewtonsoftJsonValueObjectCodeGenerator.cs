@@ -32,64 +32,56 @@ public sealed class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
 
    private static string GenerateJsonConverter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
    {
-      var ns = state.Namespace;
+      return $$"""
+{{GENERATED_CODE_PREFIX}}
+{{(state.Namespace is null ? null : $@"
+namespace {state.Namespace};
+")}}
+[global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<{{state.TypeFullyQualified}}, {{keyMember.Member.TypeFullyQualified}}>))]
+partial {{(state.IsReferenceType ? "class" : "struct")}} {{state.Name}}
+{
+}
 
-      return $@"{GENERATED_CODE_PREFIX}
-{(ns is null ? null : $@"
-namespace {ns}
-{{")}
-   [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
-   {{
-      public sealed class ValueObjectNewtonsoftJsonConverter : global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
-      {{
-         public ValueObjectNewtonsoftJsonConverter()
-            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
-         {{
-         }}
-      }}
-   }}
-{(ns is null ? null : @"}
-")}";
+""";
    }
 
    private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
       sb.Append($@"{GENERATED_CODE_PREFIX}
 {(state.Namespace is null ? null : $@"
-namespace {state.Namespace}
-{{")}
-   [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
+namespace {state.Namespace};
+")}
+[global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
+partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
+{{
+   public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {{
-      public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
-      {{
-         private static readonly global::System.Type _type = typeof({state.TypeFullyQualified});
+      private static readonly global::System.Type _type = typeof({state.TypeFullyQualified});
 
-         /// <inheritdoc />
-         public override bool CanConvert(global::System.Type objectType)
+      /// <inheritdoc />
+      public override bool CanConvert(global::System.Type objectType)
+      {{
+         return _type.IsAssignableFrom(objectType);
+      }}
+
+      /// <inheritdoc />
+      public override object? ReadJson(global::Newtonsoft.Json.JsonReader reader, global::System.Type objectType, object? existingValue, global::Newtonsoft.Json.JsonSerializer serializer)
+      {{
+         if (reader is null)
+            throw new global::System.ArgumentNullException(nameof(reader));
+         if (serializer is null)
+            throw new global::System.ArgumentNullException(nameof(serializer));
+
+         if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
          {{
-            return _type.IsAssignableFrom(objectType);
+            if (objectType.IsClass || global::System.Nullable.GetUnderlyingType(objectType) == _type)
+               return null;
+
+            return default({state.TypeFullyQualified});
          }}
 
-         /// <inheritdoc />
-         public override object? ReadJson(global::Newtonsoft.Json.JsonReader reader, global::System.Type objectType, object? existingValue, global::Newtonsoft.Json.JsonSerializer serializer)
-         {{
-            if (reader is null)
-               throw new global::System.ArgumentNullException(nameof(reader));
-            if (serializer is null)
-               throw new global::System.ArgumentNullException(nameof(serializer));
-
-            if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
-            {{
-               if (objectType.IsClass || global::System.Nullable.GetUnderlyingType(objectType) == _type)
-                  return null;
-
-               return default({state.TypeFullyQualified});
-            }}
-
-            if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
-               throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::Newtonsoft.Json.JsonToken.StartObject)}}\""."");
+         if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
+            throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::Newtonsoft.Json.JsonToken.StartObject)}}\""."");
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -97,25 +89,25 @@ namespace {state.Namespace}
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            {memberInfo.TypeFullyQualifiedNullAnnotated} {memberInfo.ArgumentName} = default;");
+         {memberInfo.TypeFullyQualifiedNullAnnotated} {memberInfo.ArgumentName} = default;");
       }
 
       sb.Append(@$"
 
-            var comparer = global::System.StringComparer.OrdinalIgnoreCase;
+         var comparer = global::System.StringComparer.OrdinalIgnoreCase;
 
-            while (reader.Read())
-            {{
-               if (reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
-                  break;
+         while (reader.Read())
+         {{
+            if (reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
+               break;
 
-               if (reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
-                  throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::Newtonsoft.Json.JsonToken.PropertyName)}}\""."");
+            if (reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
+               throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::Newtonsoft.Json.JsonToken.PropertyName)}}\""."");
 
-               var propName = reader.Value!.ToString();
+            var propName = reader.Value!.ToString();
 
-               if(!reader.Read())
-                  throw new global::Newtonsoft.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{{propName}}\"" during deserialization of \""{state.TypeMinimallyQualified}\""."");
+            if(!reader.Read())
+               throw new global::Newtonsoft.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{{propName}}\"" during deserialization of \""{state.TypeMinimallyQualified}\""."");
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -125,88 +117,88 @@ namespace {state.Namespace}
          if (i == 0)
          {
             sb.Append(@"
-               if ");
+            if ");
          }
          else
          {
             sb.Append(@"
-               else if ");
+            else if ");
          }
 
          sb.Append(@$"(comparer.Equals(propName, ""{memberInfo.ArgumentName}""))
-               {{
-                  {memberInfo.ArgumentName} = serializer.Deserialize<{memberInfo.TypeFullyQualifiedWithNullability}>(reader);
-               }}");
+            {{
+               {memberInfo.ArgumentName} = serializer.Deserialize<{memberInfo.TypeFullyQualifiedWithNullability}>(reader);
+            }}");
       }
 
       if (state.AssignableInstanceFieldsAndProperties.Count > 0)
       {
          sb.Append(@$"
-               else
-               {{
-                  throw new global::Newtonsoft.Json.JsonException($""Unknown member \""{{propName}}\"" encountered when trying to deserialize \""{state.TypeMinimallyQualified}\""."");
-               }}");
+            else
+            {{
+               throw new global::Newtonsoft.Json.JsonException($""Unknown member \""{{propName}}\"" encountered when trying to deserialize \""{state.TypeMinimallyQualified}\""."");
+            }}");
       }
 
       sb.Append(@$"
-            }}
-
-            var validationResult = {state.TypeFullyQualified}.TryCreate(");
-
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
-      {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
-
-         sb.Append(@$"
-                                       {memberInfo.ArgumentName}!,");
-      }
-
-      sb.Append(@$"
-                                       out var obj);
-
-            if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
-               throw new global::Newtonsoft.Json.JsonException($""Unable to deserialize \""{state.TypeMinimallyQualified}\"". Error: {{validationResult!.ErrorMessage}}."");
-
-            return obj;
          }}
 
-         /// <inheritdoc />
-         public override void WriteJson(global::Newtonsoft.Json.JsonWriter writer, object? value, global::Newtonsoft.Json.JsonSerializer serializer)
-         {{
-            if (value is null)
-            {{
-               writer.WriteNull();
-               return;
-            }}
-
-            var obj = ({state.TypeFullyQualified})value;
-            var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
-
-            writer.WriteStartObject();");
+         var validationResult = {state.TypeFullyQualified}.Validate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            var {memberInfo.ArgumentName}PropertyValue = obj.{memberInfo.Name};
+                                    {memberInfo.ArgumentName}!,");
+      }
+
+      sb.Append(@$"
+                                    out var obj);
+
+         if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::Newtonsoft.Json.JsonException($""Unable to deserialize \""{state.TypeMinimallyQualified}\"". Error: {{validationResult!.ErrorMessage}}."");
+
+         return obj;
+      }}
+
+      /// <inheritdoc />
+      public override void WriteJson(global::Newtonsoft.Json.JsonWriter writer, object? value, global::Newtonsoft.Json.JsonSerializer serializer)
+      {{
+         if (value is null)
+         {{
+            writer.WriteNull();
+            return;
+         }}
+
+         var obj = ({state.TypeFullyQualified})value;
+         var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
+
+         writer.WriteStartObject();");
+
+      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+
+         sb.Append(@$"
+         var {memberInfo.ArgumentName}PropertyValue = obj.{memberInfo.Name};
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
          {
             sb.Append(@$"
-            if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || {memberInfo.ArgumentName}PropertyValue is not null)
-            {{
-               ");
+         if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || {memberInfo.ArgumentName}PropertyValue is not null)
+         {{
+            ");
          }
          else
          {
             sb.Append(@"
-            ");
+         ");
          }
 
          sb.Append(@$"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""{memberInfo.Name}"") : ""{memberInfo.Name}"");
-            ");
+         ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
             sb.Append(@"   ");
@@ -215,16 +207,15 @@ namespace {state.Namespace}
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
             sb.Append(@"
-            }");
+         }");
       }
 
       sb.Append($@"
-            writer.WriteEndObject();
-         }}
+         writer.WriteEndObject();
       }}
    }}
-{(state.Namespace is null ? null : @"}
-")}");
+}}
+");
 
       return sb.ToString();
    }

@@ -8,6 +8,6 @@ public class GetConverter
    [Fact]
    public void Should_return_enum_typeconverter_via_typedescriptor()
    {
-      TypeDescriptor.GetConverter(typeof(TestEnum)).Should().BeOfType(typeof(TestEnum_EnumTypeConverter));
+      TypeDescriptor.GetConverter(typeof(TestEnum)).Should().BeOfType(typeof(ValueObjectTypeConverter<TestEnum, string>));
    }
 }

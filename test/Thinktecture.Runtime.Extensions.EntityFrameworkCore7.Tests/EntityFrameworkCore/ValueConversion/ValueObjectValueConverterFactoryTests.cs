@@ -31,6 +31,7 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("value 2"),
                       TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased.Value1,
                       TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
+                      NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
                       Boundary = Boundary.Create(10, 20)
                    };
       _ctx.Add(entity);
@@ -51,6 +52,7 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("other value"),
                       TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased.Value1,
                       TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
+                      NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
                       Boundary = Boundary.Create(10, 20)
                    };
       _ctx.Add(entity);

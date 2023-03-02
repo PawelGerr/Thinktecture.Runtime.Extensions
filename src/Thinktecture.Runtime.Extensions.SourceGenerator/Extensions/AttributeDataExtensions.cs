@@ -9,21 +9,6 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, "KeyPropertyName");
    }
 
-   public static string? FindEqualityComparer(this AttributeData attributeData)
-   {
-      return GetStringParameterValue(attributeData, "EqualityComparer");
-   }
-
-   public static string? FindComparer(this AttributeData attributeData)
-   {
-      return GetStringParameterValue(attributeData, "Comparer");
-   }
-
-   public static string? FindKeyComparer(this AttributeData attributeData)
-   {
-      return GetStringParameterValue(attributeData, "KeyComparer");
-   }
-
    public static string? FindDefaultInstancePropertyName(this AttributeData attributeData)
    {
       return GetStringParameterValue(attributeData, "DefaultInstancePropertyName");
@@ -44,9 +29,59 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "NullInFactoryMethodsYieldsNull");
    }
 
-   public static bool? FindSkipCompareTo(this AttributeData attributeData)
+   public static bool? FindSkipIComparable(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipCompareTo");
+      return GetBooleanParameterValue(attributeData, "SkipIComparable");
+   }
+
+   public static bool? FindSkipIParsable(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIParsable");
+   }
+
+   public static bool? FindSkipIFormattable(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIFormattable");
+   }
+
+   public static bool? FindSkipIAdditionOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIAdditionOperators");
+   }
+
+   public static bool? FindSkipISubtractionOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipISubtractionOperators");
+   }
+
+   public static bool? FindSkipIMultiplyOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIMultiplyOperators");
+   }
+
+   public static bool? FindSkipIDivisionOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIDivisionOperators");
+   }
+
+   public static bool? FindSkipIComparisonOperators(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipIComparisonOperators");
+   }
+
+   public static bool? FindSkipToString(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipToString");
+   }
+
+   public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
+   {
+      var attrs = attributeData.AttributeClass?.TypeArguments;
+
+      if (attrs?.Length != 2)
+         return null;
+
+      return (attrs.Value[0], attrs.Value[1]);
    }
 
    private static string? GetStringParameterValue(AttributeData attributeData, string name)

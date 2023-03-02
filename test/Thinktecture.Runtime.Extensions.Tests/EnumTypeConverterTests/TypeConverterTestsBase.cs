@@ -11,9 +11,9 @@ public abstract class TypeConverterTestsBase
 
    protected TypeConverterTestsBase()
    {
-      StringBasedTypeConverter = new TestEnum_EnumTypeConverter();
-      IntBasedTypeConverter = new IntegerEnum_EnumTypeConverter();
-      IntBasedStructEnumTypeConverter = new StructIntegerEnum_EnumTypeConverter();
-      ValidEnumTypeConverter = new ValidTestEnum_EnumTypeConverter();
+      StringBasedTypeConverter = new ValueObjectTypeConverter<TestEnum, string>();
+      IntBasedTypeConverter = new ValueObjectTypeConverter<IntegerEnum, int>();
+      IntBasedStructEnumTypeConverter = new ValueObjectTypeConverter<StructIntegerEnum, int>();
+      ValidEnumTypeConverter = new ValueObjectTypeConverter<ValidTestEnum, string>();
    }
 }

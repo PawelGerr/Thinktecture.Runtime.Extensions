@@ -2,20 +2,11 @@
 
     <PropertyGroup>
         <Description>Provides an easy way to implement Smart Enums and Value Objects.</Description>
-        <TargetFrameworks>netstandard2.1;net5.0;net6.0;net7.0</TargetFrameworks>
         <PackageTags>smart-enum;value-object;</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'" Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" PrivateAssets="contentfiles;build" />
-
-        <Compile Include="..\..\shared\IsExternalInit.cs">
-            <Link>IsExternalInit.cs</Link>
-        </Compile>
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-      <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    </ItemGroup>
-    
 </Project>

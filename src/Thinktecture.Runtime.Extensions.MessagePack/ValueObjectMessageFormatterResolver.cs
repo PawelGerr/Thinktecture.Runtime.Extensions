@@ -39,16 +39,17 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
       static Cache()
       {
          var type = typeof(T);
-         var metadata = ValueObjectMetadataLookup.Find(type);
+         var metadata = KeyedValueObjectMetadataLookup.Find(type);
 
          if (metadata is null)
             return;
 
-         var formatterGenericTypeDefinition = Nullable.GetUnderlyingType(type) == metadata.Type
-                                                 ? typeof(NullableStructValueObjectMessagePackFormatter<,>)
-                                                 : typeof(ValueObjectMessagePackFormatter<,>);
-         var formatterType = formatterGenericTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
-         var formatter = Activator.CreateInstance(formatterType, metadata.ConvertFromKey, metadata.ConvertToKey);
+         var formatterTypeDefinition = metadata.Type.IsClass
+                                          ? typeof(ValueObjectMessagePackFormatter<,>)
+                                          : typeof(StructValueObjectMessagePackFormatter<,>);
+         var formatterType = formatterTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
+
+         var formatter = Activator.CreateInstance(formatterType);
 
          if (formatter is null)
          {

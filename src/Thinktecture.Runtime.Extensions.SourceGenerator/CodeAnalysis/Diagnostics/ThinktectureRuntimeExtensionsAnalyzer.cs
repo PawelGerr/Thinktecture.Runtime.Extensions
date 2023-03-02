@@ -29,7 +29,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-                                                                                                              DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty,
                                                                                                               DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
                                                                                                               DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
@@ -37,7 +36,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
                                                                                                               DiagnosticsDescriptors.ValueObjectMustBeSealed,
-                                                                                                              DiagnosticsDescriptors.SwitchMustCoverAllItems);
+                                                                                                              DiagnosticsDescriptors.SwitchMustCoverAllItems,
+                                                                                                              DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics,
+                                                                                                              DiagnosticsDescriptors.ComparerTypeMustMatchMemberType);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -179,6 +180,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          if (keyMember.NullableAnnotation == NullableAnnotation.Annotated || keyMember.IsNullableStruct)
             ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.GetIdentifierLocation(), keyMember.Name);
+
+         CheckComparerTypes(context, keyMember);
       }
       else
       {
@@ -193,15 +196,36 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       foreach (var assignableMember in assignableMembers)
       {
-         var comparer = assignableMember.ValueObjectMemberSettings.Comparer;
+         CheckComparerTypes(context, assignableMember);
 
-         if (comparer is not null)
+         var comparerAccessor = assignableMember.ValueObjectMemberSettings.ComparerAccessor;
+
+         if (comparerAccessor is not null)
          {
             ReportDiagnostic(context,
                              DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
-                             assignableMember.ValueObjectMemberSettings.GetAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(),
-                             comparer);
+                             assignableMember.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(),
+                             comparerAccessor);
          }
+      }
+   }
+
+   private static void CheckComparerTypes(SymbolAnalysisContext context, InstanceMemberInfo member)
+   {
+      if (member.ValueObjectMemberSettings is { HasInvalidEqualityComparerType: true, EqualityComparerAccessor: { } })
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
+                          member.ValueObjectMemberSettings.GetEqualityComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(),
+                          member.ValueObjectMemberSettings.EqualityComparerAccessor);
+      }
+
+      if (member.ValueObjectMemberSettings is { HasInvalidComparerType: true, ComparerAccessor: { } })
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
+                          member.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(),
+                          member.ValueObjectMemberSettings.ComparerAccessor);
       }
    }
 
@@ -233,7 +257,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, enumType, declarations);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
-      var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, context.CancellationToken, locationOfFirstDeclaration, context.ReportDiagnostic);
+      var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, (context.ReportDiagnostic, locationOfFirstDeclaration));
 
       if (validEnumInterface is null)
          return;
@@ -274,14 +298,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var enumAttr = enumType.FindEnumGenerationAttribute();
 
       if (enumAttr is not null)
-      {
          EnumKeyPropertyNameMustNotBeItem(context, enumAttr, locationOfFirstDeclaration);
-
-         var comparer = enumAttr.FindKeyComparer();
-         var comparerMembers = comparer is null ? Array.Empty<ISymbol>() : enumType.GetNonIgnoredMembers(comparer);
-
-         CheckKeyComparer(context, comparerMembers);
-      }
 
       var derivedTypes = ValidateDerivedTypes(context, enumType);
 
@@ -293,34 +310,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       if (type.TypeParameters.Length > 0)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
-   }
-
-   private static void CheckKeyComparer(SymbolAnalysisContext context, IEnumerable<ISymbol> comparerMembers)
-   {
-      foreach (var comparerMember in comparerMembers)
-      {
-         switch (comparerMember)
-         {
-            case IFieldSymbol field:
-
-               if (!field.IsStatic)
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, field.GetIdentifier(context.CancellationToken).GetLocation(), field.Name);
-
-               break;
-
-            case IPropertySymbol property:
-
-               if (!property.IsStatic)
-                  ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, property.GetIdentifier(context.CancellationToken).GetLocation(), property.Name);
-
-               break;
-
-            default:
-               var location = comparerMember.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken).GetLocation();
-               ReportDiagnostic(context, DiagnosticsDescriptors.KeyComparerMustBeStaticFieldOrProperty, location, comparerMember.Name);
-               break;
-         }
-      }
    }
 
    private static void Check_ItemLike_StaticProperties(SymbolAnalysisContext context, INamedTypeSymbol enumType)

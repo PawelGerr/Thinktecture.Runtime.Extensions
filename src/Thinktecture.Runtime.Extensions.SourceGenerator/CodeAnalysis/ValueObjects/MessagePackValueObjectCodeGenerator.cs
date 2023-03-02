@@ -32,54 +32,46 @@ public sealed class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
 
    private static string GenerateFormatter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
    {
-      var ns = state.Namespace;
+      return $$"""
+{{GENERATED_CODE_PREFIX}}
+{{(state.Namespace is null ? null : $@"
+namespace {state.Namespace};
+")}}
+[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.{{(state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter")}}<{{state.TypeFullyQualified}}, {{keyMember.Member.TypeFullyQualified}}>))]
+partial {{(state.IsReferenceType ? "class" : "struct")}} {{state.Name}}
+{
+}
 
-      return $@"{GENERATED_CODE_PREFIX}
-{(ns is null ? null : $@"
-namespace {ns}
-{{")}
-   [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
-   {{
-      public sealed class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ValueObjectMessagePackFormatterBase<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualifiedWithNullability}>
-      {{
-         public ValueObjectMessagePackFormatter()
-            : base({state.TypeFullyQualified}.Create, static obj => obj.{keyMember.Member.Name})
-         {{
-         }}
-      }}
-   }}
-{(ns is null ? null : @"}
-")}";
+""";
    }
 
    private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
       sb.Append($@"{GENERATED_CODE_PREFIX}
 {(state.Namespace is null ? null : $@"
-namespace {state.Namespace}
-{{")}
-   [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-   partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
+namespace {state.Namespace};
+")}
+[global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
+partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
+{{
+   public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualifiedNullAnnotated}>
    {{
-      public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<{state.TypeFullyQualifiedNullAnnotated}>
+      /// <inheritdoc />
+      public {state.TypeFullyQualifiedNullAnnotated} Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
       {{
-         /// <inheritdoc />
-         public {state.TypeFullyQualifiedNullAnnotated} Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+         if (reader.TryReadNil())
+            return default;
+
+         var count = reader.ReadArrayHeader();
+
+         if (count != {state.AssignableInstanceFieldsAndProperties.Count})
+            throw new global::MessagePack.MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
+
+         global::MessagePack.IFormatterResolver resolver = options.Resolver;
+         options.Security.DepthStep(ref reader);
+
+         try
          {{
-            if (reader.TryReadNil())
-               return default;
-
-            var count = reader.ReadArrayHeader();
-
-            if (count != {state.AssignableInstanceFieldsAndProperties.Count})
-               throw new global::MessagePack.MessagePackSerializationException($""Invalid member count. Expected {state.AssignableInstanceFieldsAndProperties.Count} but found {{count}} field/property values."");
-
-            global::MessagePack.IFormatterResolver resolver = options.Resolver;
-            options.Security.DepthStep(ref reader);
-
-            try
-            {{
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -87,69 +79,68 @@ namespace {state.Namespace}
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-               var {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)}!;");
+            var {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)}!;");
       }
 
       sb.Append(@$"
 
-               var validationResult = {state.TypeFullyQualified}.TryCreate(");
+            var validationResult = {state.TypeFullyQualified}.Validate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-                                          {memberInfo.ArgumentName},");
+                                       {memberInfo.ArgumentName},");
       }
 
       sb.Append(@$"
-                                          out var obj);
+                                       out var obj);
 
-               if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                  throw new global::MessagePack.MessagePackSerializationException($""Unable to deserialize \""{state.TypeMinimallyQualified}\"". Error: {{validationResult!.ErrorMessage}}."");
+            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+               throw new global::MessagePack.MessagePackSerializationException($""Unable to deserialize \""{state.TypeMinimallyQualified}\"". Error: {{validationResult!.ErrorMessage}}."");
 
-               return obj;
-            }}
-            finally
-            {{
-              reader.Depth--;
-            }}
+            return obj;
          }}
+         finally
+         {{
+           reader.Depth--;
+         }}
+      }}
 
-         /// <inheritdoc />
-         public void Serialize(ref global::MessagePack.MessagePackWriter writer, {state.TypeFullyQualifiedNullAnnotated} value, global::MessagePack.MessagePackSerializerOptions options)
-         {{");
+      /// <inheritdoc />
+      public void Serialize(ref global::MessagePack.MessagePackWriter writer, {state.TypeFullyQualifiedNullAnnotated} value, global::MessagePack.MessagePackSerializerOptions options)
+      {{");
 
       if (state.IsReferenceType)
       {
          sb.Append(@$"
-            if(value is null)
-            {{
-               writer.WriteNil();
-               return;
-            }}
+         if(value is null)
+         {{
+            writer.WriteNil();
+            return;
+         }}
 ");
       }
 
       sb.Append(@$"
-            writer.WriteArrayHeader({state.AssignableInstanceFieldsAndProperties.Count});
+         writer.WriteArrayHeader({state.AssignableInstanceFieldsAndProperties.Count});
 
-            var resolver = options.Resolver;");
+         var resolver = options.Resolver;");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
          sb.Append(@$"
-            {GenerateWriteValue(memberInfo)};");
+         {GenerateWriteValue(memberInfo)};");
       }
 
       sb.Append($@"
-         }}
       }}
    }}
-{(state.Namespace is null ? null : @"}
-")}");
+}}
+");
 
       return sb.ToString();
    }

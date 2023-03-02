@@ -1,3 +1,7 @@
+using MessagePack;
+using MessagePack.Formatters;
+using System.ComponentModel.DataAnnotations;
+
 namespace Thinktecture.Formatters;
 
 /// <summary>
@@ -5,16 +9,45 @@ namespace Thinktecture.Formatters;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public sealed class ValueObjectMessagePackFormatter<T, TKey> : ValueObjectMessagePackFormatterBase<T, TKey>
+public sealed class ValueObjectMessagePackFormatter<T, TKey> : IMessagePackFormatter<T>
+   where T : class, IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
-   /// <summary>
-   /// Initializes a new instance of <see cref="ValueObjectMessagePackFormatter{T,TKey}"/>.
-   /// </summary>
-   /// <param name="convertFromKey">Converts an instance of type <typeparamref name="TKey"/> to an instance of <typeparamref name="T"/>.</param>
-   /// <param name="convertToKey">Converts an instance of type <typeparamref name="T"/> to an instance of <typeparamref name="TKey"/>.</param>
-   public ValueObjectMessagePackFormatter(Func<TKey, T> convertFromKey, Func<T, TKey> convertToKey)
-      : base(convertFromKey, convertToKey)
+   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+
+   /// <inheritdoc />
+   public void Serialize(ref MessagePackWriter writer, T? value, MessagePackSerializerOptions options)
    {
+      if (value is null)
+      {
+         writer.WriteNil();
+      }
+      else
+      {
+         var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
+         formatter.Serialize(ref writer, value.GetKey(), options);
+      }
+   }
+
+   /// <inheritdoc />
+#pragma warning disable CS8766
+   public T? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+#pragma warning restore CS8766
+   {
+      if (reader.TryReadNil())
+         return default;
+
+      var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
+      var key = formatter.Deserialize(ref reader, options);
+
+      if (key is null)
+         return default;
+
+      var validationResult = T.Validate(key, out var obj);
+
+      if (validationResult is not null && !_mayReturnInvalidObjects)
+         throw new ValidationException(validationResult.ErrorMessage ?? "MessagePack deserialization failed.");
+
+      return obj;
    }
 }

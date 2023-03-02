@@ -4,11 +4,13 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 {
-   private readonly string? _comparer;
+   public static readonly IInterfaceCodeGenerator Default = new ComparableCodeGenerator(null);
 
-   public ComparableCodeGenerator(string? comparer)
+   private readonly string? _comparerAccessor;
+
+   public ComparableCodeGenerator(string? comparerAccessor)
    {
-      _comparer = comparer;
+      _comparerAccessor = comparerAccessor;
    }
 
    public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type)
@@ -26,10 +28,10 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
          if(obj is null)
             return 1;
 
-         if(obj is not {type.TypeFullyQualified} valueObject)
+         if(obj is not {type.TypeFullyQualified} item)
             throw new global::System.ArgumentException(""Argument must be of type \""{type.TypeMinimallyQualified}\""."", nameof(obj));
 
-         return this.CompareTo(valueObject);
+         return this.CompareTo(item);
       }}
 
       /// <inheritdoc />
@@ -44,23 +46,15 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 ");
       }
 
-      if (_comparer is null)
+      if (_comparerAccessor is null)
       {
-         if (member.IsReferenceType)
-         {
-            sb.Append($@"
-         if(this.{member.Name} is null)
-            return obj.{member.Name} is null ? 0 : -1;
-");
-         }
-
          sb.Append($@"
          return this.{member.Name}.CompareTo(obj.{member.Name});");
       }
       else
       {
          sb.Append($@"
-         return {_comparer}.Compare(this.{member.Name}, obj.{member.Name});");
+         return {_comparerAccessor}.Comparer.Compare(this.{member.Name}, obj.{member.Name});");
       }
 
       sb.Append(@"

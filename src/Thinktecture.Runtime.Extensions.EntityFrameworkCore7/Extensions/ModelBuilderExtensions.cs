@@ -29,8 +29,7 @@ public static class ModelBuilderExtensions
       bool useConstructorForRead = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      if (modelBuilder is null)
-         throw new ArgumentNullException(nameof(modelBuilder));
+      ArgumentNullException.ThrowIfNull(modelBuilder);
 
       configureEnumsAndKeyedValueObjects ??= Empty.Action;
       var converterLookup = new Dictionary<Type, ValueConverter>();
@@ -65,29 +64,23 @@ public static class ModelBuilderExtensions
          if (!propertyInfo.IsCandidateProperty())
             continue;
 
-         var propertyType = propertyInfo.PropertyType;
-         var metadata = ValueObjectMetadataLookup.Find(propertyType);
+         var metadata = KeyedValueObjectMetadataLookup.Find(propertyInfo.PropertyType);
 
          if (metadata is null)
             continue;
 
          var property = entity.AddProperty(propertyInfo);
 
-         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property, metadata);
       }
    }
 
    private static void AddNonKeyedValueObjectMembers(IMutableEntityType entity)
    {
-      if (entity.ClrType.GetCustomAttribute<KeyedValueObjectAttribute>() is not null)
+      if (!entity.ClrType.TryGetAssignableMembers(out var members))
          return;
 
-      var ctorAttr = entity.ClrType.GetCustomAttribute<ValueObjectConstructorAttribute>();
-
-      if (ctorAttr is null || ctorAttr.Members.Length == 0)
-         return;
-
-      foreach (var memberName in ctorAttr.Members)
+      foreach (var memberName in members)
       {
          var property = entity.FindProperty(memberName);
 
@@ -104,12 +97,16 @@ public static class ModelBuilderExtensions
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure)
    {
-      List<IMutableNavigation>? navigationsToConvert = null;
+      List<(IMutableNavigation, KeyedValueObjectMetadata)>? navigationsToConvert = null;
 
       foreach (var navigation in entity.GetNavigations())
       {
-         if (ValueObjectMetadataLookup.Find(navigation.ClrType) is not null)
-            (navigationsToConvert ??= new List<IMutableNavigation>()).Add(navigation);
+         var metadata = KeyedValueObjectMetadataLookup.Find(navigation.ClrType);
+
+         if (metadata is null)
+            continue;
+
+         (navigationsToConvert ??= new List<(IMutableNavigation, KeyedValueObjectMetadata)>()).Add((navigation, metadata));
       }
 
       if (navigationsToConvert is null)
@@ -119,9 +116,9 @@ public static class ModelBuilderExtensions
 
       foreach (var navigation in navigationsToConvert)
       {
-         var property = FindPropertyBuilder(builders, entity, navigation.Name);
+         var property = FindPropertyBuilder(builders, entity, navigation.Item1.Name);
 
-         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property.Metadata);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property.Metadata, navigation.Item2);
       }
    }
 
@@ -139,12 +136,12 @@ public static class ModelBuilderExtensions
          if (valueConverter is not null)
             continue;
 
-         var propertyType = property.ClrType;
+         var metadata = KeyedValueObjectMetadataLookup.Find(property.ClrType);
 
-         if (ValueObjectMetadataLookup.Find(propertyType) is null)
+         if (metadata is null)
             continue;
 
-         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property);
+         SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property, metadata);
       }
    }
 
@@ -189,9 +186,10 @@ public static class ModelBuilderExtensions
       bool useConstructorForRead,
       Dictionary<Type, ValueConverter> converterLookup,
       Action<IMutableProperty> configure,
-      IMutableProperty property)
+      IMutableProperty property,
+      KeyedValueObjectMetadata metadata)
    {
-      var valueConverter = GetValueConverter(validateOnWrite, useConstructorForRead, converterLookup, property.ClrType);
+      var valueConverter = GetValueConverter(validateOnWrite, useConstructorForRead, converterLookup, metadata);
 
       property.SetValueConverter(valueConverter);
       configure(property);
@@ -200,12 +198,13 @@ public static class ModelBuilderExtensions
    private static ValueConverter GetValueConverter(
       bool validateOnWrite,
       bool useConstructorForRead,
-      Dictionary<Type, ValueConverter> converterLookup, Type naviType)
+      Dictionary<Type, ValueConverter> converterLookup,
+      KeyedValueObjectMetadata metadata)
    {
-      if (!converterLookup.TryGetValue(naviType, out var valueConverter))
+      if (!converterLookup.TryGetValue(metadata.Type, out var valueConverter))
       {
-         valueConverter = ValueObjectValueConverterFactory.Create(naviType, validateOnWrite, useConstructorForRead);
-         converterLookup.Add(naviType, valueConverter);
+         valueConverter = ValueObjectValueConverterFactory.Create(metadata, validateOnWrite, useConstructorForRead);
+         converterLookup.Add(metadata.Type, valueConverter);
       }
 
       return valueConverter;

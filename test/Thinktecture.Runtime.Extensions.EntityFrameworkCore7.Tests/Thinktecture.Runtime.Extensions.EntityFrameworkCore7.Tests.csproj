@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
    <PropertyGroup>
-      <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
       <DefineConstants>$(DefineConstants);EFCORE7</DefineConstants>
    </PropertyGroup>
 
@@ -12,7 +11,7 @@
    </ItemGroup>
 
    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.3" />
    </ItemGroup>
 
 </Project>

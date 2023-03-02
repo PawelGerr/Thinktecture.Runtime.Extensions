@@ -25,6 +25,12 @@ namespace TestNamespace
 	   {
          public static readonly TestEnum Item1 = default;
       }
+
+      // simulate source gen
+      partial class TestEnum
+      {
+         public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
+      }
    }
 }";
 

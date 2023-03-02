@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Thinktecture;
 
 /// <summary>
@@ -7,14 +9,14 @@ namespace Thinktecture;
 public sealed class ValueObjectAttribute : Attribute
 {
    /// <summary>
-   /// Indication whether the methods "Create" and "TryCreate" should be generated or not.
+   /// Indication whether the methods "Create", "Validate" and "TryCreate" should be generated or not.
    /// </summary>
    public bool SkipFactoryMethods { get; set; }
 
    private bool _nullInFactoryMethodsYieldsNull;
 
    /// <summary>
-   /// By default, providing <c>null</c> to methods "Create" and "TryCreate" of an keyed value object is not allowed.
+   /// By default, providing <c>null</c> to methods "Create", "Validate" and "TryCreate" of an keyed value object is not allowed.
    /// If this property is set to <c>true</c>, then providing a <c>null</c> will return <c>null</c>.
    ///
    /// This setting has no effect on:
@@ -43,13 +45,85 @@ public sealed class ValueObjectAttribute : Attribute
    public bool EmptyStringInFactoryMethodsYieldsNull { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should implement <see cref="IComparable{T}"/> interface or not.
+   /// Indication whether the generator should skip the implementation of <see cref="IComparable{T}"/> or not.
    ///
-   /// This setting has no effect on:
+   /// This setting has no effect if:
    /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectEqualityMemberAttribute.Comparer"/> is not set.
+   /// - key-member is not <see cref="IComparable{T}"/> itself and <see cref="ValueObjectMemberCompareAttribute{T,TMember}"/> is not set.
    /// </summary>
-   public bool SkipCompareTo { get; set; }
+   public bool SkipIComparable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IParsable{T}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.
+   /// </summary>
+   public bool SkipIParsable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIAdditionOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipISubtractionOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIMultiplyOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIDivisionOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - non-keyed value objects (i.e. has more than 1 field/property)
+   /// - key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIComparisonOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IFormattable"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - the key-member is not an <see cref="IFormattable"/> itself.
+   /// </summary>
+   public bool SkipIFormattable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of the method <see cref="object.ToString"/> or not.
+   /// </summary>
+   public bool SkipToString { get; set; }
 
    private string? _defaultInstancePropertyName;
 

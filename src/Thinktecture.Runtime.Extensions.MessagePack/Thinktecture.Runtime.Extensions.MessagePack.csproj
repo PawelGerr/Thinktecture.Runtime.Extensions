@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <Description>Adds MessagePack formatter for components from Thinktecture.Runtime.Extensions.</Description>
-        <TargetFrameworks>netstandard2.1;net5.0;net6.0;net7.0</TargetFrameworks>
         <PackageTags>common;MessagePack</PackageTags>
     </PropertyGroup>
 
@@ -12,14 +11,6 @@
 
     <ItemGroup>
         <PackageReference Include="MessagePack" Version="2.4.59" />
-    </ItemGroup>
-
-   <ItemGroup Condition=" '$(TargetFramework)' != 'net7.0' ">
-      <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-   </ItemGroup>
-
-   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-      <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
    </ItemGroup>
 
 </Project>
