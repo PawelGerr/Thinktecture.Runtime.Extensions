@@ -8,7 +8,9 @@ public class FormattableTests
    [Fact]
    public void Should_use_format_string()
    {
-      DecimalBasedClassValueObject.Create(1m).ToString("P").Should().Be("100.00%");
+      CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+
+      DecimalBasedClassValueObject.Create(1m).ToString("P").Should().Be("100.00 %");
    }
 
    [Fact]

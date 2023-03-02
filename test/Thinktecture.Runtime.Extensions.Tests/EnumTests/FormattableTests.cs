@@ -8,7 +8,9 @@ public class FormattableTests
    [Fact]
    public void Should_use_format_string()
    {
-      TestSmartEnum_Class_DecimalBased.Value1.ToString("P").Should().Be("100.00%");
+      CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+
+      TestSmartEnum_Class_DecimalBased.Value1.ToString("P").Should().Be("100.00 %");
    }
 
    [Fact]
