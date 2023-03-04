@@ -4,9 +4,7 @@ namespace Thinktecture;
 
 public class ProductsDbContext : DbContext
 {
-#nullable disable
-   public DbSet<Product> Products { get; set; }
-#nullable enable
+   public DbSet<Product> Products => Set<Product>();
 
    public ProductsDbContext(DbContextOptions<ProductsDbContext> options)
       : base(options)

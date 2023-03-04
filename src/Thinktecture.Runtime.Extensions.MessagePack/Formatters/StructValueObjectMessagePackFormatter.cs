@@ -37,9 +37,7 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey> : IMessagePac
    }
 
    /// <inheritdoc />
-#pragma warning disable CS8766
    public T Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
-#pragma warning restore CS8766
    {
       if (!TryReadKey(ref reader, options, out var key))
          return default;
@@ -48,9 +46,7 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey> : IMessagePac
    }
 
    /// <inheritdoc />
-#pragma warning disable CS8766
    T? IMessagePackFormatter<T?>.Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
-#pragma warning restore CS8766
    {
       if (!TryReadKey(ref reader, options, out var key))
          return default;

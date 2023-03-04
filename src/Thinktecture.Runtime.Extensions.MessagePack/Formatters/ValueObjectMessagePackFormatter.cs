@@ -9,7 +9,7 @@ namespace Thinktecture.Formatters;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public sealed class ValueObjectMessagePackFormatter<T, TKey> : IMessagePackFormatter<T>
+public sealed class ValueObjectMessagePackFormatter<T, TKey> : IMessagePackFormatter<T?>
    where T : class, IKeyedValueObject<T, TKey>
    where TKey : notnull
 {
@@ -30,9 +30,7 @@ public sealed class ValueObjectMessagePackFormatter<T, TKey> : IMessagePackForma
    }
 
    /// <inheritdoc />
-#pragma warning disable CS8766
    public T? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
-#pragma warning restore CS8766
    {
       if (reader.TryReadNil())
          return default;

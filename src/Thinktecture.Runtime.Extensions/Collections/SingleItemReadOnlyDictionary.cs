@@ -23,9 +23,7 @@ internal sealed class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDict
       _equalityComparer = equalityComparer ?? EqualityComparer<TKey>.Default;
    }
 
-#pragma warning disable CS8767
    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
-#pragma warning restore CS8767
    {
       if (_equalityComparer.Equals(_key, key))
       {
