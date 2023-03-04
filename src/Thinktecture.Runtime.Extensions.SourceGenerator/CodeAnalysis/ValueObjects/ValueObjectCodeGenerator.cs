@@ -427,7 +427,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if({_state.KeyMember.Member.ArgumentName} is null)
          {{
             obj = default;
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult(""The argument '{_state.KeyMember.Member.ArgumentName}' must not be null."");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult(""The argument '{_state.KeyMember.Member.ArgumentName}' must not be null."", global::Thinktecture.SingleItem.Collection(nameof({_state.TypeFullyQualified}.{_state.KeyMember.Member.Name})));
          }}
 ");
          }

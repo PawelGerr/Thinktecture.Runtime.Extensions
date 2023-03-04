@@ -441,7 +441,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($""There is no item of type '{_state.TypeMinimallyQualified}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($""There is no item of type '{_state.TypeMinimallyQualified}' with the identifier '{{{_state.KeyProperty.ArgumentName}}}'."", global::Thinktecture.SingleItem.Collection(nameof({_state.TypeFullyQualified}.{_state.KeyProperty.Name})));
          }}
       }}");
    }

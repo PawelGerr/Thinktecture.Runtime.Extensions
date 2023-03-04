@@ -1243,7 +1243,7 @@ namespace Thinktecture.Tests
          if(referenceField is null)
          {
             obj = default;
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
          }
 
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
@@ -1746,7 +1746,7 @@ namespace Thinktecture.Tests
          if(referenceField is null)
          {
             obj = default;
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
          }
 
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
@@ -1971,7 +1971,7 @@ namespace Thinktecture.Tests
          if(referenceField is null)
          {
             obj = default;
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
          }
 
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
@@ -2194,7 +2194,7 @@ namespace Thinktecture.Tests
          if(referenceField is null)
          {
             obj = default;
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
          }
 
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
@@ -4277,7 +4277,7 @@ namespace Thinktecture.Tests
          if(referenceField is null)
          {
             obj = default;
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
          }
 
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Serilog;
 
 namespace Thinktecture.SmartEnums;
@@ -24,6 +25,17 @@ public class SmartEnumDemos
 
       if (ProductType.TryGet("Housewares", out var housewares))
          logger.Information("Product type {Type} with TryGet found", housewares);
+
+      var validationResult = ProductType.Validate("Groceries", out var groceries);
+
+      if (validationResult == ValidationResult.Success)
+      {
+         logger.Information("Product type {Type} found with Validate", groceries);
+      }
+      else
+      {
+         logger.Warning("Failed to fetch the product type with Validate. Validation result: {ValidationResult}", validationResult!.ErrorMessage);
+      }
 
       string keyOfTheProductType = productType;
       logger.Information("Implicit conversion of ProductType -> string: {Key}", keyOfTheProductType);

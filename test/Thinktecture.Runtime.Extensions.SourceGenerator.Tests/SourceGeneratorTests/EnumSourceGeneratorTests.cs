@@ -131,7 +131,7 @@ namespace Thinktecture.Tests
          }
          else
          {
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
          }
       }
 
@@ -606,7 +606,7 @@ namespace Thinktecture.Tests
          }
          else
          {
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
          }
       }
 
@@ -1014,7 +1014,7 @@ public partial class TestEnum : IEnum<string>
          }
          else
          {
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::TestEnum.Key)));
          }
       }
 
@@ -1418,7 +1418,7 @@ namespace Thinktecture.Tests
          }
          else
          {
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
          }
       }
 
@@ -1911,7 +1911,7 @@ namespace Thinktecture.Tests
          {
             if(key is not null)
                item = CreateAndCheckInvalidItem(key);
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
          }
       }
 
@@ -2346,7 +2346,7 @@ namespace Thinktecture.Tests
          {
             if(key is not null)
                item = CreateAndCheckInvalidItem(key);
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
          }
       }
 
@@ -2805,7 +2805,7 @@ namespace Thinktecture.Tests
          {
             if(name is not null)
                item = CreateAndCheckInvalidItem(name);
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{name}'.");
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{name}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Name)));
          }
       }
 
