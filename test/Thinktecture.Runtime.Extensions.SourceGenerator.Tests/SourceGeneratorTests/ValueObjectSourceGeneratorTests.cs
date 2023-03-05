@@ -3938,7 +3938,7 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      [ValueObjectMemberEqualityAttribute<StringComparerOrdinalIgnoreCase, string>]
+      [ValueObjectMemberEqualityComparerAttribute<StringComparerOrdinalIgnoreCase, string>]
       [ValueObjectMemberComparer<StringComparerOrdinalIgnoreCase, string>]
       public readonly string ReferenceField;
    }

@@ -6,7 +6,7 @@ namespace Thinktecture.ValueObjects;
 [ValueObject(DefaultInstancePropertyName = "None")]
 public readonly partial struct ProductNameStruct
 {
-   [ValueObjectMemberEqualityAttribute<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+   [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    [ValueObjectMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    private string Value { get; }
 
