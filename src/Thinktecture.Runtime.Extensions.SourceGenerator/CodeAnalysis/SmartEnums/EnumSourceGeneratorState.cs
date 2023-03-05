@@ -111,6 +111,7 @@ public sealed class EnumSourceGeneratorState :
       return TypeFullyQualified == other.TypeFullyQualified
              && IsValidatable == other.IsValidatable
              && HasCreateInvalidImplementation == other.HasCreateInvalidImplementation
+             && HasKeyComparerImplementation == other.HasKeyComparerImplementation
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
              && AttributeInfo.Equals(other.AttributeInfo)
@@ -129,6 +130,7 @@ public sealed class EnumSourceGeneratorState :
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
          hashCode = (hashCode * 397) ^ HasCreateInvalidImplementation.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasKeyComparerImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
