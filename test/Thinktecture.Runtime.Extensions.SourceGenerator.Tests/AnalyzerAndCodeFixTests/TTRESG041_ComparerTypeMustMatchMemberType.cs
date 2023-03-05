@@ -25,7 +25,7 @@ namespace TestNamespace
    [ValueObject]
 	public sealed partial class TestValueObject
 	{
-      [{|#0:ValueObjectMemberCompare<ComparerAccessors.Default<string>, string>|}]
+      [{|#0:ValueObjectMemberComparer<ComparerAccessors.Default<string>, string>|}]
       public readonly int Field;
    }
 }";
@@ -49,7 +49,7 @@ namespace TestNamespace
    [ValueObject]
 	public sealed partial class TestValueObject
 	{
-      [{|#0:ValueObjectMemberCompare<ComparerAccessors.Default<int>, int>|}]
+      [{|#0:ValueObjectMemberComparer<ComparerAccessors.Default<int>, int>|}]
       public readonly int Field;
    }
 }";

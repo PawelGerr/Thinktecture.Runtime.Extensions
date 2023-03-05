@@ -42,7 +42,7 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
    {
       var equalityMemberAttr = member.FindAttribute(static type => type.Name == "ValueObjectEqualityMemberAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
       var equalityComparerAttr = member.FindAttribute(static type => type.Name == "ValueObjectMemberEqualityAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
-      var comparerAttr = member.FindAttribute(static type => type.Name == "ValueObjectMemberCompareAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
+      var comparerAttr = member.FindAttribute(static type => type.Name == "ValueObjectMemberComparerAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
 
       if (equalityMemberAttr is null && equalityComparerAttr is null && comparerAttr is null)
          return None;

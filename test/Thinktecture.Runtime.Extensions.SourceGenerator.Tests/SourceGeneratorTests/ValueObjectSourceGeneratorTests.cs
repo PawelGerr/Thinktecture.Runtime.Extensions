@@ -3939,8 +3939,8 @@ namespace Thinktecture.Tests
 	public partial class TestValueObject
 	{
       [ValueObjectMemberEqualityAttribute<StringComparerOrdinalIgnoreCase, string>]
-      [ValueObjectMemberCompare<StringComparerOrdinalIgnoreCase, string>]
-      public readonly int ReferenceField;
+      [ValueObjectMemberComparer<StringComparerOrdinalIgnoreCase, string>]
+      public readonly string ReferenceField;
    }
 }
 ";
@@ -3949,21 +3949,21 @@ namespace Thinktecture.Tests
 
 namespace Thinktecture.Tests
 {
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
-   partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>, global::System.IFormattable, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>, global::System.IParsable<global::Thinktecture.Tests.TestValueObject>, global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>, global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>, global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>, global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>, global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>, global::Thinktecture.IKeyedValueObject<int>, global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+   partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestValueObject>, global::System.IParsable<global::Thinktecture.Tests.TestValueObject>, global::Thinktecture.IKeyedValueObject<string>, global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {
-         global::System.Func<int, global::Thinktecture.Tests.TestValueObject> convertFromKey = new (global::Thinktecture.Tests.TestValueObject.Create);
-         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpression = static referenceField => global::Thinktecture.Tests.TestValueObject.Create(referenceField);
-         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpressionViaCtor = static referenceField => new global::Thinktecture.Tests.TestValueObject(referenceField);
+         global::System.Func<string, global::Thinktecture.Tests.TestValueObject> convertFromKey = new (global::Thinktecture.Tests.TestValueObject.Create);
+         global::System.Linq.Expressions.Expression<global::System.Func<string, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpression = static referenceField => global::Thinktecture.Tests.TestValueObject.Create(referenceField);
+         global::System.Linq.Expressions.Expression<global::System.Func<string, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpressionViaCtor = static referenceField => new global::Thinktecture.Tests.TestValueObject(referenceField);
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, int>(static item => item.ReferenceField);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, int>> convertToKeyExpression = static obj => obj.ReferenceField;
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, string>(static item => item.ReferenceField);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
 
          var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
       }
@@ -3971,9 +3971,15 @@ namespace Thinktecture.Tests
       private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
-         int referenceField,
+         string? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         if(referenceField is null)
+         {
+            obj = default;
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+         }
+
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref referenceField);
 
@@ -3990,7 +3996,7 @@ namespace Thinktecture.Tests
          return validationResult;
       }
 
-      public static global::Thinktecture.Tests.TestValueObject Create(int referenceField)
+      public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
       {
          var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
 
@@ -4001,7 +4007,7 @@ namespace Thinktecture.Tests
       }
 
       public static bool TryCreate(
-         int referenceField,
+         string referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
          var validationResult = Validate(referenceField, out obj);
@@ -4009,7 +4015,7 @@ namespace Thinktecture.Tests
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
 
-      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int referenceField);
+      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
 
       partial void FactoryPostInit();
 
@@ -4017,54 +4023,44 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      string global::Thinktecture.IKeyedValueObject<string>.GetKey()
       {
          return this.ReferenceField;
       }
 
       /// <summary>
-      /// Implicit conversion to the type <see cref="int"/>.
+      /// Implicit conversion to the type <see cref="string"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>The <see cref="ReferenceField"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
-      public static implicit operator int?(global::Thinktecture.Tests.TestValueObject? obj)
+      public static implicit operator string?(global::Thinktecture.Tests.TestValueObject? obj)
       {
          return obj?.ReferenceField;
       }
 
       /// <summary>
-      /// Explicit conversion to the type <see cref="int"/>.
-      /// </summary>
-      /// <param name="obj">Object to covert.</param>
-      /// <returns>The <see cref="ReferenceField"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
-      public static explicit operator int(global::Thinktecture.Tests.TestValueObject obj)
-      {
-         if(obj is null)
-            throw new global::System.NullReferenceException();
-
-         return obj.ReferenceField;
-      }
-
-      /// <summary>
-      /// Explicit conversion from the type <see cref="int"/>.
+      /// Explicit conversion from the type <see cref="string"/>.
       /// </summary>
       /// <param name="referenceField">Value to covert.</param>
       /// <returns>An instance of <see cref="TestValueObject"/>.</returns>
-      public static explicit operator global::Thinktecture.Tests.TestValueObject(int referenceField)
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("referenceField")]
+      public static explicit operator global::Thinktecture.Tests.TestValueObject?(string? referenceField)
       {
+         if(referenceField is null)
+            return null;
+
          return global::Thinktecture.Tests.TestValueObject.Create(referenceField);
       }
 
-      private TestValueObject(int referenceField)
+      private TestValueObject(string referenceField)
       {
          ValidateConstructorArguments(ref referenceField);
 
          this.ReferenceField = referenceField;
       }
 
-      static partial void ValidateConstructorArguments(ref int referenceField);
+      static partial void ValidateConstructorArguments(ref string referenceField);
 
       /// <summary>
       /// Compares to instances of <see cref="TestValueObject"/>.
@@ -4109,25 +4105,21 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return this.ReferenceField.Equals(other.ReferenceField);
+         return StringComparerOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, StringComparerOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
       public override string ToString()
       {
          return this.ReferenceField.ToString();
-      }
-
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {
-         return this.ReferenceField.ToString(format, formatProvider);
       }
 
       /// <inheritdoc />
@@ -4148,14 +4140,13 @@ namespace Thinktecture.Tests
          if(obj is null)
             return 1;
 
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
+         return StringComparerOrdinalIgnoreCase.Comparer.Compare(this.ReferenceField, obj.ReferenceField);
       }
 
       /// <inheritdoc />
       public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
       {
-         var key = int.Parse(s, provider);
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
 
          if(validationResult is null)
             return result!;
@@ -4172,51 +4163,9 @@ namespace Thinktecture.Tests
             return false;
          }
 
-         if(!int.TryParse(s, provider, out var key))
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
          return validationResult is null;
       }
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(left.ReferenceField + right.ReferenceField);
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(checked(left.ReferenceField + right.ReferenceField));
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(left.ReferenceField - right.ReferenceField);
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(checked(left.ReferenceField - right.ReferenceField));
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(left.ReferenceField * right.ReferenceField);
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(checked(left.ReferenceField * right.ReferenceField));
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(left.ReferenceField / right.ReferenceField);
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => Create(checked(left.ReferenceField / right.ReferenceField));
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => left.ReferenceField < right.ReferenceField;
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => left.ReferenceField <= right.ReferenceField;
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => left.ReferenceField > right.ReferenceField;
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right) => left.ReferenceField >= right.ReferenceField;
    }
 }
 

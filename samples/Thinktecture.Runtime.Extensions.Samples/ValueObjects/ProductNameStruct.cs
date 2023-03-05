@@ -7,7 +7,7 @@ namespace Thinktecture.ValueObjects;
 public readonly partial struct ProductNameStruct
 {
    [ValueObjectMemberEqualityAttribute<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-   [ValueObjectMemberCompare<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+   [ValueObjectMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    private string Value { get; }
 
    static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref string value)
