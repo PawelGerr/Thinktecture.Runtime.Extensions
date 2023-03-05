@@ -124,7 +124,7 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateImplicitConversion();
       GenerateExplicitConversion();
       GenerateEqualityOperators();
-      GenerateTypedEquals();
+      GenerateEquals();
 
       _sb.Append($@"
 
@@ -459,16 +459,26 @@ namespace ").Append(_state.Namespace).Append(@"
       public static bool operator ==({_state.TypeFullyQualifiedNullAnnotated} item1, {_state.TypeFullyQualifiedNullAnnotated} item2)
       {{");
 
-      if (_state.IsReferenceType)
+      if (_state.IsValidatable)
       {
-         _sb.Append(@"
+         if (_state.IsReferenceType)
+         {
+            _sb.Append(@"
          if (item1 is null)
             return item2 is null;
 ");
+         }
+
+         _sb.Append(@"
+         return item1.Equals(item2);");
+      }
+      else
+      {
+         _sb.Append(@"
+         return global::System.Object.ReferenceEquals(item1, item2);");
       }
 
       _sb.Append($@"
-         return item1.Equals(item2);
       }}
 
       /// <summary>
@@ -527,7 +537,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }}");
    }
 
-   private void GenerateTypedEquals()
+   private void GenerateEquals()
    {
       _sb.Append($@"
 
@@ -535,9 +545,11 @@ namespace ").Append(_state.Namespace).Append(@"
       public bool Equals({_state.TypeFullyQualifiedNullAnnotated} other)
       {{");
 
-      if (_state.IsReferenceType)
+      if (_state.IsValidatable)
       {
-         _sb.Append(@"
+         if (_state.IsReferenceType)
+         {
+            _sb.Append(@"
          if (other is null)
             return false;
 
@@ -547,19 +559,24 @@ namespace ").Append(_state.Namespace).Append(@"
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 ");
-      }
+         }
 
-      if (_state.IsValidatable)
-      {
          _sb.Append(@"
          if (this.IsValid != other.IsValid)
             return false;
 ");
+
+         _sb.Append($@"
+         return {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME}.Equals(this.{_state.KeyProperty.Name}, other.{_state.KeyProperty.Name});");
+      }
+      else
+      {
+         _sb.Append(@"
+         return global::System.Object.ReferenceEquals(this, other);");
       }
 
-      _sb.Append($@"
-         return {EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME}.Equals(this.{_state.KeyProperty.Name}, other.{_state.KeyProperty.Name});
-      }}");
+      _sb.Append(@"
+      }");
    }
 
    private void GenerateGetLookup()

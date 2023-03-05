@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Serilog;
 
 namespace Thinktecture.SmartEnums;
@@ -65,6 +67,39 @@ public class SmartEnumDemos
                                        ProductType.Housewares, static l => "Switch with Func<T>: Housewares");
 
       logger.Information(returnValue);
+
+      var formatted = ProductGroup.Apple.ToString("000", CultureInfo.InvariantCulture); // 001
+      logger.Information("Formatted: {Formatted}", formatted);
+
+      var comparison = ProductGroup.Apple.CompareTo(ProductGroup.Orange); // -1
+      logger.Information("Comparison: {Comparison}", comparison);
+
+      logger.Information("==== Demo for abstract static members ====");
+
+      PrintAllItems<ProductType, string>(logger);
+
+      Get<ProductType, string>(logger, "Groceries");
+   }
+
+   private static void PrintAllItems<T, TKey>(ILogger logger)
+      where T : IEnum<TKey, T>, IEnum<TKey>
+      where TKey : notnull
+   {
+      logger.Information("Print all items of '{Name}':", typeof(T).Name);
+
+      foreach (var item in T.Items)
+      {
+         logger.Information("Item: {Item}", item);
+      }
+   }
+
+   private static void Get<T, TKey>(ILogger logger, TKey key)
+      where T : IEnum<TKey, T>, IEnum<TKey>
+      where TKey : notnull
+   {
+      var item = T.Get(key);
+
+      logger.Information("Key '{Key}' => '{Item}'", key, item);
    }
 
    private static void DemoForValidatableEnum(ILogger logger)

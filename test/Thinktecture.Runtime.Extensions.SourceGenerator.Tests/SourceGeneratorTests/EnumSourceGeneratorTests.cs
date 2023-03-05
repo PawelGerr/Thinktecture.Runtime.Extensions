@@ -165,10 +165,7 @@ namespace Thinktecture.Tests
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
       public static bool operator ==(global::Thinktecture.Tests.TestEnum? item1, global::Thinktecture.Tests.TestEnum? item2)
       {
-         if (item1 is null)
-            return item2 is null;
-
-         return item1.Equals(item2);
+         return global::System.Object.ReferenceEquals(item1, item2);
       }
 
       /// <summary>
@@ -185,16 +182,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(global::Thinktecture.Tests.TestEnum? other)
       {
-         if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
-         if (global::System.Object.ReferenceEquals(this, other))
-            return true;
-
-         return KeyEqualityComparer.Equals(this.Key, other.Key);
+         return global::System.Object.ReferenceEquals(this, other);
       }
 
       /// <inheritdoc />
@@ -640,10 +628,7 @@ namespace Thinktecture.Tests
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
       public static bool operator ==(global::Thinktecture.Tests.TestEnum? item1, global::Thinktecture.Tests.TestEnum? item2)
       {
-         if (item1 is null)
-            return item2 is null;
-
-         return item1.Equals(item2);
+         return global::System.Object.ReferenceEquals(item1, item2);
       }
 
       /// <summary>
@@ -660,16 +645,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(global::Thinktecture.Tests.TestEnum? other)
       {
-         if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
-         if (global::System.Object.ReferenceEquals(this, other))
-            return true;
-
-         return KeyEqualityComparer.Equals(this.Key, other.Key);
+         return global::System.Object.ReferenceEquals(this, other);
       }
 
       /// <inheritdoc />
@@ -1048,10 +1024,7 @@ public partial class TestEnum : IEnum<string>
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
       public static bool operator ==(global::TestEnum? item1, global::TestEnum? item2)
       {
-         if (item1 is null)
-            return item2 is null;
-
-         return item1.Equals(item2);
+         return global::System.Object.ReferenceEquals(item1, item2);
       }
 
       /// <summary>
@@ -1068,16 +1041,7 @@ public partial class TestEnum : IEnum<string>
       /// <inheritdoc />
       public bool Equals(global::TestEnum? other)
       {
-         if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
-         if (global::System.Object.ReferenceEquals(this, other))
-            return true;
-
-         return KeyEqualityComparer.Equals(this.Key, other.Key);
+         return global::System.Object.ReferenceEquals(this, other);
       }
 
       /// <inheritdoc />
@@ -1452,10 +1416,7 @@ namespace Thinktecture.Tests
       /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
       public static bool operator ==(global::Thinktecture.Tests.TestEnum? item1, global::Thinktecture.Tests.TestEnum? item2)
       {
-         if (item1 is null)
-            return item2 is null;
-
-         return item1.Equals(item2);
+         return global::System.Object.ReferenceEquals(item1, item2);
       }
 
       /// <summary>
@@ -1472,16 +1433,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(global::Thinktecture.Tests.TestEnum? other)
       {
-         if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
-         if (global::System.Object.ReferenceEquals(this, other))
-            return true;
-
-         return KeyEqualityComparer.Equals(this.Key, other.Key);
+         return global::System.Object.ReferenceEquals(this, other);
       }
 
       /// <inheritdoc />
