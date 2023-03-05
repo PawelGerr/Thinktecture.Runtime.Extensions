@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Thinktecture;
 
 /// <summary>
@@ -32,6 +34,14 @@ public sealed class EnumGenerationAttribute : Attribute
    /// - the key is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.
    /// </summary>
    public bool SkipIParsable { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> or not.
+   ///
+   /// This setting has no effect if:
+   /// - the key is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself.
+   /// </summary>
+   public bool SkipIComparisonOperators { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IFormattable"/> or not.

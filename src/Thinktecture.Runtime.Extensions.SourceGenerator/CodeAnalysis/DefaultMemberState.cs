@@ -23,6 +23,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
+   public bool HasComparisonOperators { get; }
 
    public DefaultMemberState(string name, ITypeSymbol type, string argumentName, bool isStatic)
    {
@@ -50,6 +51,10 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
          else if (@interface.IsParsableInterface(_type))
          {
             IsParsable = true;
+         }
+         else if (@interface.IsIComparisonOperators(_type))
+         {
+            HasComparisonOperators = true;
          }
       }
    }
@@ -79,7 +84,8 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
              && IsReferenceType == other.IsReferenceType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
-             && IsParsable == other.IsParsable;
+             && IsParsable == other.IsParsable
+             && HasComparisonOperators == other.HasComparisonOperators;
    }
 
    public override int GetHashCode()
@@ -95,6 +101,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasComparisonOperators.GetHashCode();
 
          return hashCode;
       }

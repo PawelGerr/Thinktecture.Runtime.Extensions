@@ -156,6 +156,9 @@ public sealed class EnumSourceGeneratorState :
       if (!Settings.SkipIParsable && (KeyProperty.IsString() || KeyProperty.IsParsable))
          generators = generators.Add(IsValidatable ? ParsableCodeGenerator.InstanceForValidatableEnum : ParsableCodeGenerator.Instance);
 
+      if (!Settings.SkipIComparisonOperators && KeyProperty.HasComparisonOperators)
+         generators = generators.Add(ComparisonOperatorsCodeGenerator.Default);
+
       return generators;
    }
 }

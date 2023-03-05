@@ -74,6 +74,9 @@ public class SmartEnumDemos
       var comparison = ProductGroup.Apple.CompareTo(ProductGroup.Orange); // -1
       logger.Information("Comparison: {Comparison}", comparison);
 
+      var isBigger = ProductGroup.Apple > ProductGroup.Orange;
+      logger.Information("{Apple} > {Orange} = {IsBigger}", ProductGroup.Apple, ProductGroup.Orange, isBigger);
+
       logger.Information("==== Demo for abstract static members ====");
 
       PrintAllItems<ProductType, string>(logger);
