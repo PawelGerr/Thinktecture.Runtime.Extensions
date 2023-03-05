@@ -40,11 +40,10 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
 
    public static ValueObjectMemberSettings Create(ISymbol member, ITypeSymbol type)
    {
-      var equalityMemberAttr = member.FindAttribute(static type => type.Name == "ValueObjectEqualityMemberAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
       var equalityComparerAttr = member.FindAttribute(static type => type.Name == "ValueObjectMemberEqualityComparerAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
       var comparerAttr = member.FindAttribute(static type => type.Name == "ValueObjectMemberComparerAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
 
-      if (equalityMemberAttr is null && equalityComparerAttr is null && comparerAttr is null)
+      if (equalityComparerAttr is null && comparerAttr is null)
          return None;
 
       var equalityComparerGenericTypes = equalityComparerAttr?.GetComparerTypes();

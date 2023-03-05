@@ -4173,7 +4173,7 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
-   public void Should_generate_IComperable_if_member_is_not_IComperable_but_has_custom_comparer()
+   public void Should_generate_IComparable_if_member_is_not_IComparable_but_has_custom_comparer()
    {
       var source = @"
 using System;
@@ -4184,7 +4184,7 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      [ValueObjectEqualityMember(Comparer = ""Comparer<Foo>.Default"")]
+      [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<Foo>, Foo>]
       public readonly Foo ReferenceField;
    }
 
@@ -4354,13 +4354,15 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+         return global::Thinktecture.ComparerAccessors.Default<global::Thinktecture.Tests.Foo>.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.Default<global::Thinktecture.Tests.Foo>.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
@@ -4386,10 +4388,10 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      [ValueObjectEqualityMember(EqualityComparer = nameof(StringComparer.OrdinalIgnoreCase))]
+      [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
       public readonly string ReferenceField;
 
-      [ValueObjectEqualityMember]
+      [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
       public readonly int StructField;
 
       public string ReferenceProperty { get; }
@@ -4551,15 +4553,17 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField))
-             && this.StructField.Equals(other.StructField);
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField)
+             && global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer.Equals(this.StructField, other.StructField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField,
-            this.StructField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.StructField, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
