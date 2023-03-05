@@ -19,20 +19,19 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
 using System;
 using System.Collections.Generic;
 using Thinktecture;
-using Thinktecture.Runtime.Tests;
 
 namespace TestNamespace
 {
    [ValueObject]
 	public sealed partial class TestValueObject
 	{
-      [{|#0:ValueObjectMemberCompare<DefaultComparerAccessor<string>, string>|}]
+      [{|#0:ValueObjectMemberCompare<ComparerAccessors.Default<string>, string>|}]
       public readonly int Field;
    }
 }";
 
-      var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("global::Thinktecture.Runtime.Tests.DefaultComparerAccessor<string>");
-      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(DefaultComparerAccessor<>).Assembly }, expected);
+      var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("global::Thinktecture.ComparerAccessors.Default<string>");
+      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
    }
 
    [Fact]
@@ -44,18 +43,17 @@ namespace TestNamespace
 using System;
 using System.Collections.Generic;
 using Thinktecture;
-using Thinktecture.Runtime.Tests;
 
 namespace TestNamespace
 {
    [ValueObject]
 	public sealed partial class TestValueObject
 	{
-      [{|#0:ValueObjectMemberCompare<DefaultComparerAccessor<int>, int>|}]
+      [{|#0:ValueObjectMemberCompare<ComparerAccessors.Default<int>, int>|}]
       public readonly int Field;
    }
 }";
 
-      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(DefaultComparerAccessor<>).Assembly });
+      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
    }
 }

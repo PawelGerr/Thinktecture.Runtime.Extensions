@@ -13,6 +13,7 @@ public sealed partial class Boundary
       if (lower <= upper)
          return;
 
-      validationResult = new ValidationResult($"Lower boundary '{lower}' must be less than upper boundary '{upper}'");
+      validationResult = new ValidationResult($"Lower boundary '{lower}' must be less than upper boundary '{upper}'",
+                                              new[] { nameof(Lower), nameof(Upper) });
    }
 }

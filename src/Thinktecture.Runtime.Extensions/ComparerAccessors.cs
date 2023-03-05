@@ -28,4 +28,17 @@ public static class ComparerAccessors
       /// <inheritdoc />
       public static IComparer<string> Comparer => StringComparer.OrdinalIgnoreCase;
    }
+
+   /// <summary>
+   /// Provides the default comparers.
+   /// </summary>
+   /// <typeparam name="T"></typeparam>
+   public class Default<T> : IEqualityComparerAccessor<T>, IComparerAccessor<T>
+   {
+      /// <inheritdoc />
+      public static IEqualityComparer<T> EqualityComparer => EqualityComparer<T>.Default;
+
+      /// <inheritdoc />
+      public static IComparer<T> Comparer => Comparer<T>.Default;
+   }
 }

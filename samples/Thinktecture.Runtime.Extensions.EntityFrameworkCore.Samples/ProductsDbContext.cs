@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Thinktecture.SmartEnums;
 
 namespace Thinktecture;
 
@@ -26,9 +27,11 @@ public class ProductsDbContext : DbContext
                                    });
 
       // Alternative way to apply ValueConverters to Smart Enums and Value Objects
-      // modelBuilder.AddEnumAndValueObjectConverters(true, property =>
-      //                                                    {
-      //
-      //                                                    });
+      // modelBuilder.AddEnumAndValueObjectConverters(validateOnWrite: true,
+      //                                              configureEnumsAndKeyedValueObjects: property =>
+      //                                                                                  {
+      //                                                                                     if (property.ClrType == typeof(ProductType))
+      //                                                                                        property.SetMaxLength(20);
+      //                                                                                  });
    }
 }

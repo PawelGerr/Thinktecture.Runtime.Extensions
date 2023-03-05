@@ -68,6 +68,9 @@ public class SmartEnumDemos
 
       logger.Information(returnValue);
 
+      var parsed = ProductType.TryParse("Groceries", null, out var parsedProductType);
+      logger.Information("Parsed: {Parsed}", parsedProductType);
+
       var formatted = ProductGroup.Apple.ToString("000", CultureInfo.InvariantCulture); // 001
       logger.Information("Formatted: {Formatted}", formatted);
 
