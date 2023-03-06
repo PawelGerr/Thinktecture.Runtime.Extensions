@@ -36,12 +36,12 @@ public sealed class EnumGenerationAttribute : Attribute
    public bool SkipIParsable { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> or not.
+   /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
    /// This setting has no effect if:
    /// - the key is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself.
    /// </summary>
-   public bool SkipIComparisonOperators { get; set; }
+   public OperatorsGeneration ComparisonOperators { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IFormattable"/> or not.

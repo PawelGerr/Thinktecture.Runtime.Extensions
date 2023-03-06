@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Thinktecture.CodeAnalysis.ValueObjects;
+namespace Thinktecture.CodeAnalysis;
 
 public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
 {
@@ -14,16 +14,17 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
       _isForValidatableEnum = isForValidatableEnum;
    }
 
-   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type)
+   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
-      sb.Append($"global::System.IParsable<{type.TypeFullyQualified}>");
+      sb.Append(@$"
+      global::System.IParsable<{type.TypeFullyQualified}>");
    }
 
-   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState member)
+   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
-      GenerateParse(sb, type, member);
+      GenerateParse(sb, type, keyMember);
 
-      GenerateTryParse(sb, type, member);
+      GenerateTryParse(sb, type, keyMember);
    }
 
    private void GenerateParse(StringBuilder sb, ITypeInformation type, IMemberState member)

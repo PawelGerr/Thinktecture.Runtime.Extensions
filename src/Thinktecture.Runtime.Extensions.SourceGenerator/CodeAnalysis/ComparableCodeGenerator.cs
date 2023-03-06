@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Thinktecture.CodeAnalysis.ValueObjects;
+namespace Thinktecture.CodeAnalysis;
 
 public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 {
@@ -13,12 +13,14 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       _comparerAccessor = comparerAccessor;
    }
 
-   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type)
+   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
-      sb.Append($"global::System.IComparable, global::System.IComparable<{type.TypeFullyQualified}>");
+      sb.Append(@$"
+      global::System.IComparable,
+      global::System.IComparable<{type.TypeFullyQualified}>");
    }
 
-   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState member)
+   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
       sb.Append($@"
 
@@ -49,12 +51,12 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       if (_comparerAccessor is null)
       {
          sb.Append($@"
-         return this.{member.Name}.CompareTo(obj.{member.Name});");
+         return this.{keyMember.Name}.CompareTo(obj.{keyMember.Name});");
       }
       else
       {
          sb.Append($@"
-         return {_comparerAccessor}.Comparer.Compare(this.{member.Name}, obj.{member.Name});");
+         return {_comparerAccessor}.Comparer.Compare(this.{keyMember.Name}, obj.{keyMember.Name});");
       }
 
       sb.Append(@"

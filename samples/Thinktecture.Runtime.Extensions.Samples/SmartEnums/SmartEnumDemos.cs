@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Serilog;
@@ -79,6 +78,10 @@ public class SmartEnumDemos
 
       var isBigger = ProductGroup.Apple > ProductGroup.Orange;
       logger.Information("{Apple} > {Orange} = {IsBigger}", ProductGroup.Apple, ProductGroup.Orange, isBigger);
+
+      // Comparison with key-member type due to [EnumGeneration(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+      isBigger = ProductGroup.Apple > 42;
+      logger.Information("{Apple} > {42} = {IsBigger}", ProductGroup.Apple, 42, isBigger);
 
       logger.Information("==== Demo for abstract static members ====");
 

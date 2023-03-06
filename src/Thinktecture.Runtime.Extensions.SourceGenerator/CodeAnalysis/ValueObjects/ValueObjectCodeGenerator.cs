@@ -58,27 +58,31 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append($@"
-   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>, global::System.Numerics.IEqualityOperators<{_state.TypeFullyQualified}, {_state.TypeFullyQualified}, bool>");
-
-      for (var i = 0; i < interfaceCodeGenerators.Length; i++)
-      {
-         _sb.Append(", ");
-
-         interfaceCodeGenerators[i].GenerateBaseTypes(_sb, _state);
-      }
+   partial {(_state.IsReferenceType ? "class" : "struct")} {_state.Name} : global::System.IEquatable<{_state.TypeFullyQualifiedNullAnnotated}>,
+      global::System.Numerics.IEqualityOperators<{_state.TypeFullyQualified}, {_state.TypeFullyQualified}, bool>");
 
       if (_state.HasKeyMember)
       {
-         _sb.Append($@", global::Thinktecture.IKeyedValueObject<{_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>");
+         _sb.Append($@",
+      global::Thinktecture.IKeyedValueObject<{_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>");
 
          if (!_state.Settings.SkipFactoryMethods)
          {
-            _sb.Append($@", global::Thinktecture.IKeyedValueObject<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>");
+            _sb.Append($@",
+      global::Thinktecture.IKeyedValueObject<{_state.TypeFullyQualified}, {_state.KeyMember.Member.TypeFullyQualifiedWithNullability}>");
+         }
+
+         for (var i = 0; i < interfaceCodeGenerators.Length; i++)
+         {
+            _sb.Append(",");
+
+            interfaceCodeGenerators[i].GenerateBaseTypes(_sb, _state, _state.KeyMember.Member);
          }
       }
       else
       {
-         _sb.Append(@", global::Thinktecture.IComplexValueObject");
+         _sb.Append(@",
+      global::Thinktecture.IComplexValueObject");
       }
 
       _sb.Append(@"

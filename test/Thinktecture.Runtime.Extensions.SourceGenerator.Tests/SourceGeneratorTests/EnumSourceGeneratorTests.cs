@@ -16,12 +16,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
 """;
 
+   /* language=c# */
    private const string _OUTPUT_OF_SIMPLE_ENUM = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestEnum>, global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -383,6 +389,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_not_generate_if_class_is_not_partial()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -402,6 +409,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_not_generate_if_generic()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -421,6 +429,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_class_which_implements_IEnum()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -440,6 +449,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_smart_enum_with_base_class_and_non_default_constructors()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -464,12 +474,19 @@ namespace Thinktecture.Tests
 }
 ";
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestEnum>, global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -847,6 +864,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_class_which_implements_IEnum_if_IEnum_is_fully_qualified()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -866,6 +884,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_enum_which_has_no_namespace()
    {
+      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -877,10 +896,17 @@ public partial class TestEnum : IEnum<string>
 }
 ";
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::TestEnum, string>))]
-   partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum>, global::System.IEquatable<global::TestEnum?>, global::System.Numerics.IEqualityOperators<global::TestEnum, global::TestEnum, bool>, global::System.IComparable, global::System.IComparable<global::TestEnum>, global::System.IParsable<global::TestEnum>
+   partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum>,
+      global::System.IEquatable<global::TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::TestEnum, global::TestEnum, bool>,
+      global::System.IComparable,
+      global::System.IComparable<global::TestEnum>,
+      global::System.IParsable<global::TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -1242,6 +1268,7 @@ public partial class TestEnum : IEnum<string>
    [Fact]
    public void Should_generate_enum_with_inner_derived_type_which_is_generic()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -1265,12 +1292,19 @@ namespace Thinktecture.Tests
 }
 ";
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestEnum>, global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -1693,6 +1727,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_class_which_implements_IValidatableEnum()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -1707,12 +1742,18 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IValidatableEnum<>).Assembly);
 
+      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestEnum>, global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -2130,6 +2171,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_struct_which_implements_IValidatableEnum()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -2144,13 +2186,19 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IValidatableEnum<>).Assembly);
 
+      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-   partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestEnum>, global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+   partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -2547,6 +2595,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_advanced_class_which_implements_IValidatableEnum()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -2597,12 +2646,18 @@ namespace Thinktecture.Tests
 
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IValidatableEnum<>).Assembly);
 
+      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestEnum>, global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -3024,6 +3079,7 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_int_based_IEnum()
    {
+      /* language=c# */
       var source = @"
 using System;
 
@@ -3037,12 +3093,21 @@ namespace Thinktecture.Tests
 }
 ";
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
-   partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>, global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>, global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>, global::System.IFormattable, global::System.IComparable, global::System.IComparable<global::Thinktecture.Tests.TestEnum>, global::System.IParsable<global::Thinktecture.Tests.TestEnum>, global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>
+   partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IFormattable,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>,
+      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -3396,16 +3461,514 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right) => left.Key < right.Key;
+      public static bool operator <(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key < right.Key;
+      }
 
       /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right) => left.Key <= right.Key;
+      public static bool operator <=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key <= right.Key;
+      }
 
       /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right) => left.Key > right.Key;
+      public static bool operator >(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key > right.Key;
+      }
 
       /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right) => left.Key >= right.Key;
+      public static bool operator >=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key >= right.Key;
+      }
+   }
+}
+
+""");
+   }
+
+   [Fact]
+   public void Should_generate_int_based_IEnum_with_ComparisonOperators_DefaultWithKeyTypeOverloads()
+   {
+      /* language=c# */
+      var source = @"
+using System;
+
+namespace Thinktecture.Tests
+{
+   [EnumGeneration(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+	public partial class TestEnum : IEnum<int>
+	{
+      public static readonly TestEnum Item1 = new(1);
+      public static readonly TestEnum Item2 = new(2);
+   }
+}
+";
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      /* language=c# */
+      AssertOutput(output, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests
+{
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
+   partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>,
+      global::System.IFormattable,
+      global::System.IComparable,
+      global::System.IComparable<global::Thinktecture.Tests.TestEnum>,
+      global::System.IParsable<global::Thinktecture.Tests.TestEnum>,
+      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>
+   {
+      [global::System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {
+         var convertFromKey = new global::System.Func<int, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
+         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, int>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, int>> convertToKeyExpression = static item => item.Key;
+
+         var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(int), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+      }
+
+      public static global::System.Collections.Generic.IEqualityComparer<int> KeyEqualityComparer => global::System.Collections.Generic.EqualityComparer<int>.Default;
+
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+      /// <summary>
+      /// Gets all valid items.
+      /// </summary>
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+
+      /// <summary>
+      /// The identifier of the item.
+      /// </summary>
+      public int Key { get; }
+
+      private readonly int _hashCode;
+
+      private TestEnum(int key)
+      {
+         ValidateConstructorArguments(ref key);
+
+         this.Key = key;
+         this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), KeyEqualityComparer.GetHashCode(key));
+      }
+
+      static partial void ValidateConstructorArguments(ref int key);
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.Key;
+      }
+
+      /// <summary>
+      /// Gets an enumeration item for provided <paramref name="key"/>.
+      /// </summary>
+      /// <param name="key">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+      public static global::Thinktecture.Tests.TestEnum Get(int key)
+      {
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
+         {
+            throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+         }
+
+         return item;
+      }
+
+      /// <summary>
+      /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+      /// </summary>
+      /// <param name="key">The identifier to return an enumeration item for.</param>
+      /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+      /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+      {
+         return _itemsLookup.Value.TryGetValue(key, out item);
+      }
+
+      /// <summary>
+      /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name="key">The identifier to return an enumeration item for.</param>
+      /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      {
+         if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+         {
+            return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         }
+         else
+         {
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+         }
+      }
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref="int"/>.
+      /// </summary>
+      /// <param name="item">Item to covert.</param>
+      /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
+      public static implicit operator int(global::Thinktecture.Tests.TestEnum? item)
+      {
+         return item is null ? default : item.Key;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref="int"/>.
+      /// </summary>
+      /// <param name="key">Value to covert.</param>
+      /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum{TKey}"/>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+      public static explicit operator global::Thinktecture.Tests.TestEnum?(int key)
+      {
+         return global::Thinktecture.Tests.TestEnum.Get(key);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref="TestEnum"/>.
+      /// </summary>
+      /// <param name="item1">Instance to compare.</param>
+      /// <param name="item2">Another instance to compare.</param>
+      /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestEnum? item1, global::Thinktecture.Tests.TestEnum? item2)
+      {
+         return global::System.Object.ReferenceEquals(item1, item2);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref="TestEnum"/>.
+      /// </summary>
+      /// <param name="item1">Instance to compare.</param>
+      /// <param name="item2">Another instance to compare.</param>
+      /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestEnum? item1, global::Thinktecture.Tests.TestEnum? item2)
+      {
+         return !(item1 == item2);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestEnum? other)
+      {
+         return global::System.Object.ReferenceEquals(this, other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         return _hashCode;
+      }
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return this.Key.ToString();
+      }
+
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name="testEnum1">The item to compare to.</param>
+      /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+      /// <param name="testEnum2">The item to compare to.</param>
+      /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+      public void Switch(
+         TestEnum testEnum1, global::System.Action testEnumAction1,
+         TestEnum testEnum2, global::System.Action testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1();
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+         }
+      }
+
+      /// <summary>
+      /// Executes an action depending on the current item.
+      /// </summary>
+      /// <param name="context">Context to be passed to the callbacks.</param>
+      /// <param name="testEnum1">The item to compare to.</param>
+      /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+      /// <param name="testEnum2">The item to compare to.</param>
+      /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+      public void Switch<TContext>(
+         TContext context,
+         TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+         TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+      {
+         if (this == testEnum1)
+         {
+            testEnumAction1(context);
+         }
+         else if (this == testEnum2)
+         {
+            testEnumAction2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name="testEnum1">The item to compare to.</param>
+      /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+      /// <param name="testEnum2">The item to compare to.</param>
+      /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+      public T Switch<T>(
+         TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1();
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2();
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+         }
+      }
+
+      /// <summary>
+      /// Executes a function depending on the current item.
+      /// </summary>
+      /// <param name="context">Context to be passed to the callbacks.</param>
+      /// <param name="testEnum1">The item to compare to.</param>
+      /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+      /// <param name="testEnum2">The item to compare to.</param>
+      /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+      public T Switch<TContext, T>(
+         TContext context,
+         TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+         TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+      {
+         if (this == testEnum1)
+         {
+            return testEnumFunc1(context);
+         }
+         else if (this == testEnum2)
+         {
+            return testEnumFunc2(context);
+         }
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+         }
+      }
+
+      private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> GetLookup()
+      {
+         var lookup = new global::System.Collections.Generic.Dictionary<int, global::Thinktecture.Tests.TestEnum>(2, KeyEqualityComparer);
+
+         void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
+         {
+            if (item is null)
+               throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+            if (lookup.ContainsKey(item.Key))
+               throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
+
+            lookup.Add(item.Key, item);
+         }
+
+         AddItem(Item1, nameof(Item1));
+         AddItem(Item2, nameof(Item2));
+
+         return lookup;
+      }
+
+      /// <inheritdoc />
+      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
+      {
+         return this.Key.ToString(format, formatProvider);
+      }
+
+      /// <inheritdoc />
+      public int CompareTo(object? obj)
+      {
+         if(obj is null)
+            return 1;
+
+         if(obj is not global::Thinktecture.Tests.TestEnum item)
+            throw new global::System.ArgumentException("Argument must be of type \"TestEnum\".", nameof(obj));
+
+         return this.CompareTo(item);
+      }
+
+      /// <inheritdoc />
+      public int CompareTo(global::Thinktecture.Tests.TestEnum? obj)
+      {
+         if(obj is null)
+            return 1;
+
+         return this.Key.CompareTo(obj.Key);
+      }
+
+      /// <inheritdoc />
+      public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
+      {
+         var key = int.Parse(s, provider);
+         var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, out var result);
+
+         if(validationResult is null)
+            return result!;
+
+         throw new global::System.FormatException(validationResult.ErrorMessage);
+      }
+
+      /// <inheritdoc />
+      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+      {
+         if(s is null)
+         {
+            result = default;
+            return false;
+         }
+
+         if(!int.TryParse(s, provider, out var key))
+         {
+            result = default;
+            return false;
+         }
+
+         var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, out result!);
+         return validationResult is null;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+      public static bool operator <(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key < right.Key;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+      public static bool operator <=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key <= right.Key;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+      public static bool operator >(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key > right.Key;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+      public static bool operator >=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left.Key >= right.Key;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+      public static bool operator <(global::Thinktecture.Tests.TestEnum left, int right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         return left.Key < right;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+      public static bool operator <(int left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left < right.Key;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+      public static bool operator <=(global::Thinktecture.Tests.TestEnum left, int right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         return left.Key <= right;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+      public static bool operator <=(int left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left <= right.Key;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+      public static bool operator >(global::Thinktecture.Tests.TestEnum left, int right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         return left.Key > right;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+      public static bool operator >(int left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left > right.Key;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+      public static bool operator >=(global::Thinktecture.Tests.TestEnum left, int right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+         return left.Key >= right;
+      }
+
+      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+      public static bool operator >=(int left, global::Thinktecture.Tests.TestEnum right)
+      {
+         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+         return left >= right.Key;
+      }
    }
 }
 

@@ -7,7 +7,7 @@ namespace Thinktecture.ValueObjects;
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class Amount
+public readonly partial struct AmountStruct
 {
    private readonly int _value;
 

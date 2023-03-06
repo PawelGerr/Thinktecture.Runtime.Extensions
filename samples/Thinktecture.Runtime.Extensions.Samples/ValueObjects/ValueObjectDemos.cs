@@ -71,10 +71,14 @@ public class ValueObjectDemos
       logger.Information("Comparison: {Comparison}", comparison);
 
       // Addition / subtraction / multiplication / division / comparison
-      var sum = amount + otherAmount;
-      logger.Information("{Amount} + {Other} = {Sum}", amount, otherAmount, sum);
-
+      logger.Information("{Amount} + {Other} = {Sum}", amount, otherAmount, amount + otherAmount);
       logger.Information("{Amount} > {Other} = {Result}", amount, otherAmount, amount > otherAmount);
+
+      // Addition with key-member type due to [ValueObject(AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+      logger.Information("{Amount} + {Other} = {Sum}", amount, 42, amount + 42);
+
+      // Comparison with key-member type due to [ValueObject(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+      logger.Information("{Amount} > {Other} = {Result}", amount, 42, amount > 42);
    }
 
    private static void DemoForComplexValueObjects(ILogger logger)

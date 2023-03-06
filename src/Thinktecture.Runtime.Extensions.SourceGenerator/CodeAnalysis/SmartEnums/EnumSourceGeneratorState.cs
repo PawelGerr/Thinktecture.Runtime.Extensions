@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
@@ -158,8 +157,8 @@ public sealed class EnumSourceGeneratorState :
       if (!Settings.SkipIParsable && (KeyProperty.IsString() || KeyProperty.IsParsable))
          generators = generators.Add(IsValidatable ? ParsableCodeGenerator.InstanceForValidatableEnum : ParsableCodeGenerator.Instance);
 
-      if (!Settings.SkipIComparisonOperators && KeyProperty.HasComparisonOperators)
-         generators = generators.Add(ComparisonOperatorsCodeGenerator.Default);
+      if (KeyProperty.HasComparisonOperators && ComparisonOperatorsCodeGenerator.TryGet(Settings.ComparisonOperators, null, out var comparisonOperatorsCodeGenerator))
+         generators = generators.Add(comparisonOperatorsCodeGenerator);
 
       return generators;
    }

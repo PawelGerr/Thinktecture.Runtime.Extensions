@@ -4,6 +4,6 @@ namespace Thinktecture.CodeAnalysis;
 
 public interface IInterfaceCodeGenerator
 {
-   void GenerateBaseTypes(StringBuilder sb, ITypeInformation type);
-   void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState member);
+   void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberState keyMember);
+   void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState keyMember);
 }

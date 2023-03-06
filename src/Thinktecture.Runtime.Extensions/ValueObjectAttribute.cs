@@ -64,53 +64,53 @@ public sealed class ValueObjectAttribute : Attribute
    public bool SkipIParsable { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> or not.
+   /// Indication whether and how the generator should generate the implementation of <see cref="IAdditionOperators{TSelf,TOther,TResult}"/>.
    ///
    /// This setting has no effect if:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - non-keyed value objects (i.e. has more than 1 field/property)
    /// - key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself.
    /// </summary>
-   public bool SkipIAdditionOperators { get; set; }
+   public OperatorsGeneration AdditionOperators { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> or not.
+   /// Indication whether and how the generator should generate the implementation of <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/>.
    ///
    /// This setting has no effect if:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - non-keyed value objects (i.e. has more than 1 field/property)
    /// - key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself.
    /// </summary>
-   public bool SkipISubtractionOperators { get; set; }
+   public OperatorsGeneration SubtractionOperators { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> or not.
+   /// Indication whether and how the generator should generate the implementation of <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/>.
    ///
    /// This setting has no effect if:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - non-keyed value objects (i.e. has more than 1 field/property)
    /// - key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself.
    /// </summary>
-   public bool SkipIMultiplyOperators { get; set; }
+   public OperatorsGeneration MultiplyOperators { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> or not.
+   /// Indication whether and how the generator should generate the implementation of <see cref="IDivisionOperators{TSelf,TOther,TResult}"/>.
    ///
    /// This setting has no effect if:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - non-keyed value objects (i.e. has more than 1 field/property)
    /// - key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself.
    /// </summary>
-   public bool SkipIDivisionOperators { get; set; }
+   public OperatorsGeneration DivisionOperators { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> or not.
+   /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
    /// This setting has no effect if:
    /// - non-keyed value objects (i.e. has more than 1 field/property)
    /// - key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself.
    /// </summary>
-   public bool SkipIComparisonOperators { get; set; }
+   public OperatorsGeneration ComparisonOperators { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IFormattable"/> or not.

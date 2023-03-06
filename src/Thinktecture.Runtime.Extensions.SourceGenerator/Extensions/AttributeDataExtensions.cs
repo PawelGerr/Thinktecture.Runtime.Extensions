@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis;
+using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture;
 
@@ -44,29 +45,29 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipIFormattable");
    }
 
-   public static bool? FindSkipIAdditionOperators(this AttributeData attributeData)
+   public static OperatorsGeneration FindAdditionOperators(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipIAdditionOperators");
+      return GetOperatorsGeneration(attributeData, "AdditionOperators");
    }
 
-   public static bool? FindSkipISubtractionOperators(this AttributeData attributeData)
+   public static OperatorsGeneration FindSubtractionOperators(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipISubtractionOperators");
+      return GetOperatorsGeneration(attributeData, "SubtractionOperators");
    }
 
-   public static bool? FindSkipIMultiplyOperators(this AttributeData attributeData)
+   public static OperatorsGeneration FindMultiplyOperators(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipIMultiplyOperators");
+      return GetOperatorsGeneration(attributeData, "MultiplyOperators");
    }
 
-   public static bool? FindSkipIDivisionOperators(this AttributeData attributeData)
+   public static OperatorsGeneration FindDivisionOperators(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipIDivisionOperators");
+      return GetOperatorsGeneration(attributeData, "DivisionOperators");
    }
 
-   public static bool? FindSkipIComparisonOperators(this AttributeData attributeData)
+   public static OperatorsGeneration FindComparisonOperators(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipIComparisonOperators");
+      return GetOperatorsGeneration(attributeData, "ComparisonOperators");
    }
 
    public static bool? FindSkipToString(this AttributeData attributeData)
@@ -89,6 +90,12 @@ public static class AttributeDataExtensions
       var value = (string?)attributeData.FindNamedAttribute(name).Value;
 
       return String.IsNullOrWhiteSpace(value) ? null : value?.Trim();
+   }
+
+   private static OperatorsGeneration GetOperatorsGeneration(AttributeData attributeData, string name)
+   {
+      return (OperatorsGeneration?)(int?)attributeData.FindNamedAttribute(name).Value
+             ?? OperatorsGeneration.Default;
    }
 
    private static bool? GetBooleanParameterValue(AttributeData attributeData, string name)

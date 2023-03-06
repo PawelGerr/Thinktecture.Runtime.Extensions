@@ -11,11 +11,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool SkipIParsable { get; }
    public bool SkipIFormattable { get; }
    public bool SkipToString { get; }
-   public bool SkipIAdditionOperators { get; }
-   public bool SkipISubtractionOperators { get; }
-   public bool SkipIMultiplyOperators { get; }
-   public bool SkipIDivisionOperators { get; }
-   public bool SkipIComparisonOperators { get; }
+   public OperatorsGeneration AdditionOperators { get; }
+   public OperatorsGeneration SubtractionOperators { get; }
+   public OperatorsGeneration MultiplyOperators { get; }
+   public OperatorsGeneration DivisionOperators { get; }
+   public OperatorsGeneration ComparisonOperators { get; }
    public string DefaultInstancePropertyName { get; }
 
    public ValueObjectSettings(AttributeData valueObjectAttribute)
@@ -27,11 +27,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
       SkipIParsable = SkipFactoryMethods || (valueObjectAttribute.FindSkipIParsable() ?? false);
       SkipIFormattable = valueObjectAttribute.FindSkipIFormattable() ?? false;
       SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
-      SkipIAdditionOperators = SkipFactoryMethods || (valueObjectAttribute.FindSkipIAdditionOperators() ?? false);
-      SkipISubtractionOperators = SkipFactoryMethods || (valueObjectAttribute.FindSkipISubtractionOperators() ?? false);
-      SkipIMultiplyOperators = SkipFactoryMethods || (valueObjectAttribute.FindSkipIMultiplyOperators() ?? false);
-      SkipIDivisionOperators = SkipFactoryMethods || (valueObjectAttribute.FindSkipIDivisionOperators() ?? false);
-      SkipIComparisonOperators = valueObjectAttribute.FindSkipIComparisonOperators() ?? false;
+      AdditionOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindAdditionOperators();
+      SubtractionOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindSubtractionOperators();
+      MultiplyOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindMultiplyOperators();
+      DivisionOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindDivisionOperators();
+      ComparisonOperators = valueObjectAttribute.FindComparisonOperators();
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
    }
 
@@ -54,11 +54,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
              && SkipIParsable == other.SkipIParsable
              && SkipIFormattable == other.SkipIFormattable
              && SkipToString == other.SkipToString
-             && SkipIAdditionOperators == other.SkipIAdditionOperators
-             && SkipISubtractionOperators == other.SkipISubtractionOperators
-             && SkipIMultiplyOperators == other.SkipIMultiplyOperators
-             && SkipIDivisionOperators == other.SkipIDivisionOperators
-             && SkipIComparisonOperators == other.SkipIComparisonOperators
+             && AdditionOperators == other.AdditionOperators
+             && SubtractionOperators == other.SubtractionOperators
+             && MultiplyOperators == other.MultiplyOperators
+             && DivisionOperators == other.DivisionOperators
+             && ComparisonOperators == other.ComparisonOperators
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
 
@@ -73,11 +73,11 @@ public sealed class ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipIAdditionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipISubtractionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipIMultiplyOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipIDivisionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipIComparisonOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ AdditionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ SubtractionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ MultiplyOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ DivisionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ ComparisonOperators.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 
          return hashCode;

@@ -148,20 +148,20 @@ public sealed class ValueObjectSourceGeneratorState :
       if (!Settings.SkipIParsable && HasKeyMember && (KeyMember.Member.IsString() || KeyMember.Member.IsParsable))
          generators = generators.Add(ParsableCodeGenerator.Instance);
 
-      if (!Settings.SkipIAdditionOperators && HasKeyMember && KeyMember.Member.HasAdditionOperators)
-         generators = generators.Add(AdditionOperatorsCodeGenerator.Default);
+      if (HasKeyMember && KeyMember.Member.HasAdditionOperators && AdditionOperatorsCodeGenerator.TryGet(Settings.AdditionOperators, out var additionOperatorsCodeGenerator))
+         generators = generators.Add(additionOperatorsCodeGenerator);
 
-      if (!Settings.SkipISubtractionOperators && HasKeyMember && KeyMember.Member.HasSubtractionOperators)
-         generators = generators.Add(SubtractionOperatorsCodeGenerator.Default);
+      if (HasKeyMember && KeyMember.Member.HasSubtractionOperators && SubtractionOperatorsCodeGenerator.TryGet(Settings.SubtractionOperators, out var subtractionOperatorsCodeGenerator))
+         generators = generators.Add(subtractionOperatorsCodeGenerator);
 
-      if (!Settings.SkipIMultiplyOperators && HasKeyMember && KeyMember.Member.HasMultiplyOperators)
-         generators = generators.Add(MultiplyOperatorsCodeGenerator.Default);
+      if (HasKeyMember && KeyMember.Member.HasMultiplyOperators && MultiplyOperatorsCodeGenerator.TryGet(Settings.MultiplyOperators, out var multiplyOperatorsCodeGenerator))
+         generators = generators.Add(multiplyOperatorsCodeGenerator);
 
-      if (!Settings.SkipIDivisionOperators && HasKeyMember && KeyMember.Member.HasDivisionOperators)
-         generators = generators.Add(DivisionOperatorsCodeGenerator.Default);
+      if (HasKeyMember && KeyMember.Member.HasDivisionOperators && DivisionOperatorsCodeGenerator.TryGet(Settings.DivisionOperators, out var divisionOperatorsCodeGenerator))
+         generators = generators.Add(divisionOperatorsCodeGenerator);
 
-      if (!Settings.SkipIComparisonOperators && HasKeyMember && KeyMember.Member.HasComparisonOperators)
-         generators = generators.Add(ComparisonOperatorsCodeGenerator.Default);
+      if (HasKeyMember && KeyMember.Member.HasComparisonOperators && ComparisonOperatorsCodeGenerator.TryGet(Settings.ComparisonOperators, KeyMember.ComparerAccessor, out var comparisonOperatorsCodeGenerator))
+         generators = generators.Add(comparisonOperatorsCodeGenerator);
 
       return generators;
    }
