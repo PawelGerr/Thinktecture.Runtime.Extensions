@@ -33,7 +33,7 @@ public static class NamedTypeSymbolExtensions
       return ctors.Select(ctor =>
                           {
                              var parameters = ctor.Parameters
-                                                  .Select(p => new DefaultMemberState(p.Name, p.Type, p.Name, false))
+                                                  .Select(p => new DefaultMemberState(TypedMemberState.GetOrCreate(p.Type), p.Name, p.Name, false))
                                                   .ToList();
 
                              return new ConstructorState(parameters);

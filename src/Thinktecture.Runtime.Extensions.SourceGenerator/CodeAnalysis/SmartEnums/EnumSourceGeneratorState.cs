@@ -16,7 +16,7 @@ public sealed class EnumSourceGeneratorState :
    public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeMinimallyQualified { get; }
 
-   public DefaultMemberState KeyProperty { get; }
+   public IMemberState KeyProperty { get; }
 
    public bool IsValidatable { get; }
 

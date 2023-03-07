@@ -11,4 +11,11 @@ public interface IMemberState : IEquatable<IMemberState>
    string TypeFullyQualifiedNullAnnotated { get; }
    string TypeFullyQualifiedWithNullability { get; }
    bool IsReferenceType { get; }
+   bool IsFormattable { get; }
+   bool IsComparable { get; }
+   bool IsParsable { get; }
+   bool IsNullableStruct { get; }
+   NullableAnnotation NullableAnnotation { get; }
+   bool HasComparisonOperators { get; }
+   string TypeMinimallyQualified { get; }
 }
