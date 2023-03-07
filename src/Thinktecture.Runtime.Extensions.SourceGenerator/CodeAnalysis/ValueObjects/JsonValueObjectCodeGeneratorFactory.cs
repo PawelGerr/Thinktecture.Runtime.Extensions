@@ -4,6 +4,8 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class JsonValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<ValueObjectSourceGeneratorState>
 {
+   public static readonly JsonValueObjectCodeGeneratorFactory Instance = new();
+
    public CodeGeneratorBase Create(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
       return new JsonValueObjectCodeGenerator(state, stringBuilder);

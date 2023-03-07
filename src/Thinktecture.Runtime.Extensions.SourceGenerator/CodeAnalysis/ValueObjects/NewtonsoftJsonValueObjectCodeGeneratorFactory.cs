@@ -4,6 +4,8 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<ValueObjectSourceGeneratorState>
 {
+   public static readonly NewtonsoftJsonValueObjectCodeGeneratorFactory Instance = new();
+
    public CodeGeneratorBase Create(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
       return new NewtonsoftJsonValueObjectCodeGenerator(state, stringBuilder);

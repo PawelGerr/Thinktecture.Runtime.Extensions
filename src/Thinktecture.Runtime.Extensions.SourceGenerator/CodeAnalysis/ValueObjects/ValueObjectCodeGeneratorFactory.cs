@@ -4,6 +4,8 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<ValueObjectSourceGeneratorState>
 {
+   public static readonly ValueObjectCodeGeneratorFactory Instance = new();
+
    public CodeGeneratorBase Create(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
       return new ValueObjectCodeGenerator(state, stringBuilder);

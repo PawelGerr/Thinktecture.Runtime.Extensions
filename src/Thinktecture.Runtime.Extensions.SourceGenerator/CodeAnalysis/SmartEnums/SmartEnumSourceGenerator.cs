@@ -10,7 +10,7 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<EnumSourceGeneratorState>, IIncrementalGenerator
 {
    public SmartEnumSourceGenerator()
-      : base(12_000)
+      : base(24_000)
    {
    }
 
@@ -82,24 +82,14 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
 
       foreach (var module in reference.GetModules())
       {
-         switch (module.Name)
+         factories = module.Name switch
          {
-            case THINKTECTURE_RUNTIME_EXTENSIONS:
-               factories = factories.Add(new SmartEnumCodeGeneratorFactory());
-               break;
-
-            case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
-               factories = factories.Add(new JsonSmartEnumCodeGeneratorFactory());
-               break;
-
-            case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
-               factories = factories.Add(new NewtonsoftJsonSmartEnumCodeGeneratorFactory());
-               break;
-
-            case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
-               factories = factories.Add(new MessagePackSmartEnumCodeGeneratorFactory());
-               break;
-         }
+            THINKTECTURE_RUNTIME_EXTENSIONS => factories.Add(new SmartEnumCodeGeneratorFactory()),
+            THINKTECTURE_RUNTIME_EXTENSIONS_JSON => factories.Add(new JsonSmartEnumCodeGeneratorFactory()),
+            THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON => factories.Add(new NewtonsoftJsonSmartEnumCodeGeneratorFactory()),
+            THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK => factories.Add(new MessagePackSmartEnumCodeGeneratorFactory()),
+            _ => factories
+         };
       }
 
       return factories;
@@ -165,6 +155,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
             return null;
 
          return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, genericEnumTypes, enumInterface, cancellationToken), null);
+      }
+      catch (OperationCanceledException)
+      {
+         throw;
       }
       catch (Exception ex)
       {

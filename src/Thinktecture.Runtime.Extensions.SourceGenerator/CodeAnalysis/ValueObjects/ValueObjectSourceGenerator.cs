@@ -10,7 +10,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase<ValueObjectSourceGeneratorState>, IIncrementalGenerator
 {
    public ValueObjectSourceGenerator()
-      : base(10_000)
+      : base(12_000)
    {
    }
 
@@ -48,24 +48,14 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
       foreach (var module in reference.GetModules())
       {
-         switch (module.Name)
+         factories = module.Name switch
          {
-            case THINKTECTURE_RUNTIME_EXTENSIONS:
-               factories = factories.Add(new ValueObjectCodeGeneratorFactory());
-               break;
-
-            case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
-               factories = factories.Add(new JsonValueObjectCodeGeneratorFactory());
-               break;
-
-            case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
-               factories = factories.Add(new NewtonsoftJsonValueObjectCodeGeneratorFactory());
-               break;
-
-            case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
-               factories = factories.Add(new MessagePackValueObjectCodeGeneratorFactory());
-               break;
-         }
+            THINKTECTURE_RUNTIME_EXTENSIONS => factories.Add(ValueObjectCodeGeneratorFactory.Instance),
+            THINKTECTURE_RUNTIME_EXTENSIONS_JSON => factories.Add(JsonValueObjectCodeGeneratorFactory.Instance),
+            THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON => factories.Add(NewtonsoftJsonValueObjectCodeGeneratorFactory.Instance),
+            THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK => factories.Add(MessagePackValueObjectCodeGeneratorFactory.Instance),
+            _ => factories
+         };
       }
 
       return factories;
@@ -110,6 +100,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
 
          return new SourceGenState<ValueObjectSourceGeneratorState>(new ValueObjectSourceGeneratorState(type, valueObjectAttribute, cancellationToken), null);
+      }
+      catch (OperationCanceledException)
+      {
+         throw;
       }
       catch (Exception ex)
       {
