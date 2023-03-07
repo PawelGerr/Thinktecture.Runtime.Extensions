@@ -55,7 +55,12 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
             stringBuilder.Clear();
 
             var generator = generatorFactory.Create(state, stringBuilder);
-            var generatedCode = generator.Generate();
+            generator.Generate();
+
+            if (stringBuilder.Length <= 0)
+               continue;
+
+            var generatedCode = stringBuilder.ToString();
 
             context.EmitFile(state.Namespace, state.Name, generatedCode, generator.FileNameSuffix);
          }

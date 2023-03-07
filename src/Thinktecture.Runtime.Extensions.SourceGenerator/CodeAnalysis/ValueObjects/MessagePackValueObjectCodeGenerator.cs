@@ -16,36 +16,35 @@ public sealed class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
       _stringBuilder = stringBuilder;
    }
 
-   public override string? Generate()
+   public override void Generate()
    {
       if (_state.AttributeInfo.HasMessagePackFormatterAttribute)
-         return null;
+         return;
 
       if (_state.HasKeyMember)
-         return GenerateFormatter(_state, _state.KeyMember);
-
-      if (!_state.Settings.SkipFactoryMethods)
-         return GenerateValueObjectFormatter(_state, _stringBuilder);
-
-      return null;
+      {
+         GenerateFormatter(_state, _state.KeyMember);
+      }
+      else if (!_state.Settings.SkipFactoryMethods)
+      {
+         GenerateValueObjectFormatter(_state, _stringBuilder);
+      }
    }
 
-   private static string GenerateFormatter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
+   private void GenerateFormatter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
    {
-      return $$"""
-{{GENERATED_CODE_PREFIX}}
-{{(state.Namespace is null ? null : $@"
+      _stringBuilder.Append($@"{GENERATED_CODE_PREFIX}
+{(state.Namespace is null ? null : $@"
 namespace {state.Namespace};
-")}}
-[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.{{(state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter")}}<{{state.TypeFullyQualified}}, {{keyMember.Member.TypeFullyQualified}}>))]
-partial {{(state.IsReferenceType ? "class" : "struct")}} {{state.Name}}
-{
-}
-
-""";
+")}
+[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.{(state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter")}<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>))]
+partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
+{{
+}}
+");
    }
 
-   private static string GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb)
+   private static void GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
       sb.Append($@"{GENERATED_CODE_PREFIX}
 {(state.Namespace is null ? null : $@"
@@ -141,8 +140,6 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    }}
 }}
 ");
-
-      return sb.ToString();
    }
 
    private static string GenerateWriteValue(InstanceMemberInfo memberInfo)

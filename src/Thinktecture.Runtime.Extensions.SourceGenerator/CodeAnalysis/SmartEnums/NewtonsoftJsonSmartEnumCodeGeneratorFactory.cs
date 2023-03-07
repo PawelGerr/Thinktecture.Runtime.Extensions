@@ -6,7 +6,7 @@ public sealed class NewtonsoftJsonSmartEnumCodeGeneratorFactory : ICodeGenerator
 {
    public CodeGeneratorBase Create(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
-      return new NewtonsoftJsonSmartEnumCodeGenerator(state);
+      return new NewtonsoftJsonSmartEnumCodeGenerator(state, stringBuilder);
    }
 
    public override bool Equals(object? obj)

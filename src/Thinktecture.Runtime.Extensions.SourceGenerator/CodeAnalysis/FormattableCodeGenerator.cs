@@ -14,12 +14,12 @@ public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
 
    public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
-      sb.Append($@"
+      sb.Append(@"
 
       /// <inheritdoc />
       public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {{
-         return this.{keyMember.Name}.ToString(format, formatProvider);
-      }}");
+      {
+         return this.").Append(keyMember.Name).Append(@".ToString(format, formatProvider);
+      }");
    }
 }

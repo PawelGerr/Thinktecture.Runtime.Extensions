@@ -6,7 +6,7 @@ public sealed class JsonSmartEnumCodeGeneratorFactory : ICodeGeneratorFactory<En
 {
    public CodeGeneratorBase Create(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
-      return new JsonSmartEnumCodeGenerator(state);
+      return new JsonSmartEnumCodeGenerator(state, stringBuilder);
    }
 
    public override bool Equals(object? obj)

@@ -6,7 +6,7 @@ public sealed class MessagePackSmartEnumCodeGeneratorFactory : ICodeGeneratorFac
 {
    public CodeGeneratorBase Create(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
-      return new MessagePackSmartEnumCodeGenerator(state);
+      return new MessagePackSmartEnumCodeGenerator(state, stringBuilder);
    }
 
    public override bool Equals(object? obj)

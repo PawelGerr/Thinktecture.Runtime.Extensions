@@ -16,8 +16,8 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
 
    public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
-      sb.Append(@$"
-      global::System.IParsable<{type.TypeFullyQualified}>");
+      sb.Append(@"
+      global::System.IParsable<").Append(type.TypeFullyQualified).Append(">");
    }
 
    public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
@@ -29,22 +29,22 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
 
    private void GenerateParse(StringBuilder sb, ITypeInformation type, IMemberState member)
    {
-      sb.Append($@"
+      sb.Append(@"
 
       /// <inheritdoc />
-      public static {type.TypeFullyQualified} Parse(string s, global::System.IFormatProvider? provider)
-      {{");
+      public static ").Append(type.TypeFullyQualified).Append(@" Parse(string s, global::System.IFormatProvider? provider)
+      {");
 
       if (member.IsString())
       {
-         sb.Append($@"
-         var validationResult = {type.TypeFullyQualified}.Validate(s, out var result);");
+         sb.Append(@"
+         var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(s, out var result);");
       }
       else
       {
-         sb.Append($@"
-         var key = {member.TypeFullyQualified}.Parse(s, provider);
-         var validationResult = {type.TypeFullyQualified}.Validate(key, out var result);");
+         sb.Append(@"
+         var key = ").Append(member.TypeFullyQualified).Append(@".Parse(s, provider);
+         var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(key, out var result);");
       }
 
       if (_isForValidatableEnum)
@@ -55,46 +55,46 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
       }
       else
       {
-         sb.Append($@"
+         sb.Append(@"
 
          if(validationResult is null)
             return result!;
 
          throw new global::System.FormatException(validationResult.ErrorMessage);
-      }}");
+      }");
       }
    }
 
    private void GenerateTryParse(StringBuilder sb, ITypeInformation type, IMemberState member)
    {
-      sb.Append($@"
+      sb.Append(@"
 
       /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out {type.TypeFullyQualified} result)
-      {{
+      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").Append(type.TypeFullyQualified).Append(@" result)
+      {
          if(s is null)
-         {{
+         {
             result = default;
             return false;
-         }}");
+         }");
 
       if (member.IsString())
       {
-         sb.Append($@"
+         sb.Append(@"
 
-         var validationResult = {type.TypeFullyQualified}.Validate(s, out result!);");
+         var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(s, out result!);");
       }
       else
       {
-         sb.Append($@"
+         sb.Append(@"
 
-         if(!{member.TypeFullyQualified}.TryParse(s, provider, out var key))
-         {{
+         if(!").Append(member.TypeFullyQualified).Append(@".TryParse(s, provider, out var key))
+         {
             result = default;
             return false;
-         }}
+         }
 
-         var validationResult = {type.TypeFullyQualified}.Validate(key, out result!);");
+         var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(key, out result!);");
       }
 
       if (_isForValidatableEnum)

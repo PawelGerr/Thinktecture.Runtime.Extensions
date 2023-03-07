@@ -6,5 +6,5 @@ public abstract class CodeGeneratorBase
 #nullable enable";
 
    public abstract string? FileNameSuffix { get; }
-   public abstract string? Generate();
+   public abstract void Generate();
 }

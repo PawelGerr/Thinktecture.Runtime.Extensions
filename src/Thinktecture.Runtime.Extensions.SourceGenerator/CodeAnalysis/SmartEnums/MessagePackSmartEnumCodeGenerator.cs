@@ -1,31 +1,40 @@
+using System.Text;
+
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class MessagePackSmartEnumCodeGenerator : CodeGeneratorBase
 {
    private readonly EnumSourceGeneratorState _state;
+   private readonly StringBuilder _sb;
 
    public override string FileNameSuffix => ".MessagePack";
 
-   public MessagePackSmartEnumCodeGenerator(EnumSourceGeneratorState state)
+   public MessagePackSmartEnumCodeGenerator(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
       _state = state;
+      _sb = stringBuilder;
    }
 
-   public override string? Generate()
+   public override void Generate()
    {
       if (_state.AttributeInfo.HasMessagePackFormatterAttribute)
-         return null;
+         return;
 
-      return $$"""
-{{GENERATED_CODE_PREFIX}}
-{{(_state.Namespace is null ? null : $@"
-namespace {_state.Namespace};
-")}}
-[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.{{(_state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter")}}<{{_state.TypeFullyQualified}}, {{_state.KeyProperty.TypeFullyQualified}}>))]
-partial {{(_state.IsReferenceType ? "class" : "struct")}} {{_state.Name}}
+      _sb.Append(GENERATED_CODE_PREFIX).Append(@"
+");
+
+      if (_state.Namespace is not null)
+      {
+         _sb.Append(@"
+namespace ").Append(_state.Namespace).Append(@";
+");
+      }
+
+      _sb.Append(@"
+[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.").Append(_state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter").Append("<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
+partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(@"
 {
 }
-
-""";
+");
    }
 }

@@ -18,7 +18,7 @@ public sealed class ValueObjectCodeGenerator : CodeGeneratorBase
       _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
    }
 
-   public override string Generate()
+   public override void Generate()
    {
       _sb.AppendLine(GENERATED_CODE_PREFIX);
 
@@ -43,8 +43,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 ");
-
-      return _sb.ToString();
    }
 
    private void GenerateValueObject(bool emptyStringYieldsNull)

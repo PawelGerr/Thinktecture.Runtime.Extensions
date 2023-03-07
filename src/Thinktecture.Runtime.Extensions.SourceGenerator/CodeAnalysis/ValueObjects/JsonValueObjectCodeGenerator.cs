@@ -16,38 +16,37 @@ public sealed class JsonValueObjectCodeGenerator : CodeGeneratorBase
       _stringBuilder = stringBuilder;
    }
 
-   public override string? Generate()
+   public override void Generate()
    {
       if (_state.AttributeInfo.HasJsonConverterAttribute)
-         return null;
+         return;
 
       if (_state.HasKeyMember)
-         return GenerateJsonConverter(_state, _state.KeyMember);
-
-      if (!_state.Settings.SkipFactoryMethods)
-         return GenerateValueObjectJsonConverter(_state, _stringBuilder);
-
-      return null;
+      {
+         GenerateJsonConverter(_state, _state.KeyMember);
+      }
+      else if (!_state.Settings.SkipFactoryMethods)
+      {
+         GenerateValueObjectJsonConverter(_state, _stringBuilder);
+      }
    }
 
-   private static string GenerateJsonConverter(
+   private void GenerateJsonConverter(
       ValueObjectSourceGeneratorState state,
       EqualityInstanceMemberInfo keyMember)
    {
-      return $$"""
-{{GENERATED_CODE_PREFIX}}
-{{(state.Namespace is null ? null : $@"
+      _stringBuilder.Append($@"{GENERATED_CODE_PREFIX}
+{(state.Namespace is null ? null : $@"
 namespace {state.Namespace};
-")}}
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<{{state.TypeFullyQualified}}, {{keyMember.Member.TypeFullyQualified}}>))]
-partial {{(state.IsReferenceType ? "class" : "struct")}} {{state.Name}}
-{
-}
-
-""";
+")}
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>))]
+partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
+{{
+}}
+");
    }
 
-   private static string GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
+   private static void GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
       sb.Append($@"{GENERATED_CODE_PREFIX}
 {(state.Namespace is null ? null : $@"
@@ -259,8 +258,6 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
    }}
 }}
 ");
-
-      return sb.ToString();
    }
 
    private static bool GenerateWriteValue(StringBuilder? sb, InstanceMemberInfo memberInfo)

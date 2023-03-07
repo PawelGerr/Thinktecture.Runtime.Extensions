@@ -46,8 +46,8 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
-      sb.Append(@$"
-      global::System.Numerics.IComparisonOperators<{type.TypeFullyQualified}, {type.TypeFullyQualified}, bool>");
+      sb.Append(@"
+      global::System.Numerics.IComparisonOperators<").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(", bool>");
    }
 
    public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
@@ -57,63 +57,59 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
 
       if (_comparerAccessor is null)
       {
-         sb.Append($$"""
+         sb.Append(@"
 
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+      public static bool operator <(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return left.{{keyMember.Name}} < right.{{keyMember.Name}};
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(keyMember.Name).Append(" < right.").Append(keyMember.Name).Append(@";
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+      public static bool operator <=(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return left.{{keyMember.Name}} <= right.{{keyMember.Name}};
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(keyMember.Name).Append(" <= right.").Append(keyMember.Name).Append(@";
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+      public static bool operator >(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return left.{{keyMember.Name}} > right.{{keyMember.Name}};
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(keyMember.Name).Append(" > right.").Append(keyMember.Name).Append(@";
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+      public static bool operator >=(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return left.{{keyMember.Name}} >= right.{{keyMember.Name}};
-      }
-""");
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(keyMember.Name).Append(" >= right.").Append(keyMember.Name).Append(@";
+      }");
       }
       else
       {
-         sb.Append($$"""
+         sb.Append(@"
 
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+      public static bool operator <(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right.{{keyMember.Name}}) < 0;
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(", right.").Append(keyMember.Name).Append(@") < 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+      public static bool operator <=(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right.{{keyMember.Name}}) <= 0;
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(", right.").Append(keyMember.Name).Append(@") <= 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+      public static bool operator >(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right.{{keyMember.Name}}) > 0;
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(", right.").Append(keyMember.Name).Append(@") > 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+      public static bool operator >=(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{leftNullCheck}}{{rightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right.{{keyMember.Name}}) >= 0;
-      }
-""");
+         ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(", right.").Append(keyMember.Name).Append(@") >= 0;
+      }");
       }
 
       if (_withKeyTypeOverloads)
@@ -129,111 +125,107 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
 
       if (_comparerAccessor is null)
       {
-         sb.Append($$"""
+         sb.Append(@"
 
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+      public static bool operator <(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return left.{{keyMember.Name}} < right;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(keyMember.Name).Append(@" < right;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+      public static bool operator <(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return left < right.{{keyMember.Name}};
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left < right.").Append(keyMember.Name).Append(@";
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+      public static bool operator <=(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return left.{{keyMember.Name}} <= right;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(keyMember.Name).Append(@" <= right;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+      public static bool operator <=(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return left <= right.{{keyMember.Name}};
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left <= right.").Append(keyMember.Name).Append(@";
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+      public static bool operator >(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return left.{{keyMember.Name}} > right;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(keyMember.Name).Append(@" > right;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+      public static bool operator >(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return left > right.{{keyMember.Name}};
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left > right.").Append(keyMember.Name).Append(@";
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+      public static bool operator >=(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return left.{{keyMember.Name}} >= right;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(keyMember.Name).Append(@" >= right;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+      public static bool operator >=(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return left >= right.{{keyMember.Name}};
-      }
-""");
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left >= right.").Append(keyMember.Name).Append(@";
+      }");
       }
       else
       {
-         sb.Append($$"""
+         sb.Append(@"
 
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+      public static bool operator <(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right) < 0;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(@", right) < 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+      public static bool operator <(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left, right.{{keyMember.Name}}) < 0;
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left, right.").Append(keyMember.Name).Append(@") < 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+      public static bool operator <=(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right) <= 0;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(@", right) <= 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+      public static bool operator <=(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left, right.{{keyMember.Name}}) <= 0;
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left, right.").Append(keyMember.Name).Append(@") <= 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+      public static bool operator >(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right) > 0;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(@", right) > 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+      public static bool operator >(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left, right.{{keyMember.Name}}) > 0;
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left, right.").Append(keyMember.Name).Append(@") > 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+      public static bool operator >=(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left.{{keyMember.Name}}, right) >= 0;
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left.").Append(keyMember.Name).Append(@", right) >= 0;
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+      public static bool operator >=(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeRightNullCheck}}return {{_comparerAccessor}}.Comparer.Compare(left, right.{{keyMember.Name}}) >= 0;
-      }
-""");
+         ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(_comparerAccessor).Append(".Comparer.Compare(left, right.").Append(keyMember.Name).Append(@") >= 0;
+      }");
       }
    }
 }
