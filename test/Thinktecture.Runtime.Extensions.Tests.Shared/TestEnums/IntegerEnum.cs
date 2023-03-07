@@ -1,5 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
+[EnumGeneration(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
 public sealed partial class IntegerEnum : IValidatableEnum<int>
 {
    public static readonly IntegerEnum Item1 = new(1);
