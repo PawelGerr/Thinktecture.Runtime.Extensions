@@ -41,13 +41,13 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
    {
-      sb.Append(@$"
-      global::System.Numerics.IDivisionOperators<{type.TypeFullyQualified}, {type.TypeFullyQualified}, {type.TypeFullyQualified}>");
+      sb.Append(@"
+      global::System.Numerics.IDivisionOperators<").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(">");
 
       if (_withKeyTypeOverloads)
       {
-         sb.Append(@$",
-      global::System.Numerics.IDivisionOperators<{type.TypeFullyQualified}, {keyMember.TypeFullyQualified}, {type.TypeFullyQualified}>");
+         sb.Append(@",
+      global::System.Numerics.IDivisionOperators<").Append(type.TypeFullyQualified).Append(", ").Append(keyMember.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(">");
       }
    }
 
@@ -56,54 +56,50 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
       var typeLeftNullCheck = type.IsReferenceType ? _LEFT_NULL_CHECK : null;
       var typeLightNullCheck = type.IsReferenceType ? _RIGHT_NULL_CHECK : null;
 
-      sb.Append($$"""
+      sb.Append(@"
 
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static {{type.TypeFullyQualified}} operator /({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
+      public static ").Append(type.TypeFullyQualified).Append(" operator /(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{typeLightNullCheck}}return Create(left.{{keyMember.Name}} / right.{{keyMember.Name}});
+         ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left.").Append(keyMember.Name).Append(" / right.").Append(keyMember.Name).Append(@");
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static {{type.TypeFullyQualified}} operator checked /({{type.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
+      public static ").Append(type.TypeFullyQualified).Append(" operator checked /(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{typeLightNullCheck}}return Create(checked(left.{{keyMember.Name}} / right.{{keyMember.Name}}));
-      }
-""");
+         ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left.").Append(keyMember.Name).Append(" / right.").Append(keyMember.Name).Append(@"));
+      }");
 
       if (_withKeyTypeOverloads)
       {
          var memberLeftNullCheck = keyMember.IsReferenceType ? _LEFT_NULL_CHECK : null;
          var memberRightNullCheck = keyMember.IsReferenceType ? _RIGHT_NULL_CHECK : null;
 
-         sb.Append($$"""
+         sb.Append(@"
 
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static {{type.TypeFullyQualified}} operator /({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
+      public static ").Append(type.TypeFullyQualified).Append(" operator /(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return Create(left.{{keyMember.Name}} / right);
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(left.").Append(keyMember.Name).Append(@" / right);
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static {{type.TypeFullyQualified}} operator /({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
+      public static ").Append(type.TypeFullyQualified).Append(" operator /(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeLightNullCheck}}return Create(left / right.{{keyMember.Name}});
+         ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left / right.").Append(keyMember.Name).Append(@");
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static {{type.TypeFullyQualified}} operator checked /({{type.TypeFullyQualified}} left, {{keyMember.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
+      public static ").Append(type.TypeFullyQualified).Append(" operator checked /(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
       {
-         {{typeLeftNullCheck}}{{memberRightNullCheck}}return Create(checked(left.{{keyMember.Name}} / right));
+         ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(checked(left.").Append(keyMember.Name).Append(@" / right));
       }
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static {{type.TypeFullyQualified}} operator checked /({{keyMember.TypeFullyQualified}} left, {{type.TypeFullyQualified}} right)
+      /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
+      public static ").Append(type.TypeFullyQualified).Append(" operator checked /(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
       {
-         {{memberLeftNullCheck}}{{typeLightNullCheck}}return Create(checked(left / right.{{keyMember.Name}}));
-      }
-""");
+         ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left / right.").Append(keyMember.Name).Append(@"));
+      }");
       }
    }
 }

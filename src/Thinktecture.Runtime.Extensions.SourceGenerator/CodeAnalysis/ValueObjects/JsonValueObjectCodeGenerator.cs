@@ -35,28 +35,42 @@ public sealed class JsonValueObjectCodeGenerator : CodeGeneratorBase
       ValueObjectSourceGeneratorState state,
       EqualityInstanceMemberInfo keyMember)
    {
-      _stringBuilder.Append($@"{GENERATED_CODE_PREFIX}
-{(state.Namespace is null ? null : $@"
-namespace {state.Namespace};
-")}
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<{state.TypeFullyQualified}, {keyMember.Member.TypeFullyQualified}>))]
-partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
-{{
-}}
+      _stringBuilder.Append(GENERATED_CODE_PREFIX).Append(@"
+");
+
+      if (state.Namespace is not null)
+      {
+         _stringBuilder.Append(@"
+namespace ").Append(state.Namespace).Append(@";
+");
+      }
+
+      _stringBuilder.Append(@"
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").Append(state.TypeFullyQualified).Append(", ").Append(keyMember.Member.TypeFullyQualified).Append(@">))]
+partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append(state.Name).Append(@"
+{
+}
 ");
    }
 
    private static void GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
    {
-      sb.Append($@"{GENERATED_CODE_PREFIX}
-{(state.Namespace is null ? null : $@"
-namespace {state.Namespace};
-")}
+      sb.Append(GENERATED_CODE_PREFIX).Append(@"
+");
+
+      if (state.Namespace is not null)
+      {
+         sb.Append(@"
+namespace ").Append(state.Namespace).Append(@";
+");
+      }
+
+      sb.Append(@"
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
-{{
-   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<{state.TypeFullyQualified}>
-   {{");
+partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append(state.Name).Append(@"
+{
+   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<").Append(state.TypeFullyQualified).Append(@">
+   {");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
@@ -65,12 +79,12 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
 
          if (needsConverter)
          {
-            sb.Append(@$"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualifiedWithNullability}> _{memberInfo.ArgumentName}Converter;");
+            sb.Append(@"
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("> _").Append(memberInfo.ArgumentName).Append("Converter;");
          }
 
-         sb.Append(@$"
-      private readonly string _{memberInfo.ArgumentName}PropertyName;");
+         sb.Append(@"
+      private readonly string _").Append(memberInfo.ArgumentName).Append("PropertyName;");
       }
 
       sb.Append(@"
@@ -90,51 +104,51 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
 
          if (needsConverter)
          {
-            sb.Append(@$"
-         this._{memberInfo.ArgumentName}Converter = (global::System.Text.Json.Serialization.JsonConverter<{memberInfo.TypeFullyQualifiedWithNullability}>)options.GetConverter(typeof({memberInfo.TypeFullyQualifiedWithNullability}));");
+            sb.Append(@"
+         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)options.GetConverter(typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("));");
          }
 
-         sb.Append(@$"
-         this._{memberInfo.ArgumentName}PropertyName = namingPolicy?.ConvertName(""{memberInfo.Name}"") ?? ""{memberInfo.Name}"";");
+         sb.Append(@"
+         this._").Append(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
-      sb.Append(@$"
-      }}
+      sb.Append(@"
+      }
 
       /// <inheritdoc />
-      public override {state.TypeFullyQualifiedNullAnnotated} Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
-      {{
+      public override ").Append(state.TypeFullyQualifiedNullAnnotated).Append(@" Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      {
          if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
             return default;
 
          if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
-            throw new global::System.Text.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::System.Text.Json.JsonTokenType.StartObject)}}\""."");
+            throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.StartObject)}\""."");
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@$"
-         {memberInfo.TypeFullyQualifiedNullAnnotated} {memberInfo.ArgumentName} = default;");
+         sb.Append(@"
+         ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName).Append(" = default;");
       }
 
-      sb.Append(@$"
+      sb.Append(@"
 
          var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
          while (reader.Read())
-         {{
+         {
             if (reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
                break;
 
             if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
-               throw new global::System.Text.Json.JsonException($""Unexpected token \""{{reader.TokenType}}\"" when trying to deserialize \""{state.TypeMinimallyQualified}\"". Expected token: \""{{(global::System.Text.Json.JsonTokenType.PropertyName)}}\""."");
+               throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.PropertyName)}\""."");
 
             var propName = reader.GetString();
 
             if(!reader.Read())
-               throw new global::System.Text.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{{propName}}\"" during deserialization of \""{state.TypeMinimallyQualified}\""."");
+               throw new global::System.Text.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(state.TypeMinimallyQualified).Append(@"\""."");
 ");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
@@ -152,46 +166,50 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
             else if ");
          }
 
-         sb.Append(@$"(comparer.Equals(propName, this._{memberInfo.ArgumentName}PropertyName))
-            {{
-               {memberInfo.ArgumentName} = {GenerateReadValue(memberInfo)};
-            }}");
+         sb.Append(@"(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName).Append(@"PropertyName))
+            {
+               ").Append(memberInfo.ArgumentName).Append(" = ");
+
+         GenerateReadValue(sb, memberInfo);
+
+         sb.Append(@";
+            }");
       }
 
       if (state.AssignableInstanceFieldsAndProperties.Count > 0)
       {
-         sb.Append(@$"
+         sb.Append(@"
             else
-            {{
-               throw new global::System.Text.Json.JsonException($""Unknown member \""{{propName}}\"" encountered when trying to deserialize \""{state.TypeMinimallyQualified}\""."");
-            }}");
+            {
+               throw new global::System.Text.Json.JsonException($""Unknown member \""{propName}\"" encountered when trying to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\""."");
+            }");
       }
 
-      sb.Append(@$"
-         }}
+      sb.Append(@"
+         }
 
-         var validationResult = {state.TypeFullyQualified}.Validate(");
+         var validationResult = ").Append(state.TypeFullyQualified).Append(".Validate(");
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@$"
-                                    {memberInfo.ArgumentName}!,");
+         sb.Append(@"
+                                    ").Append(memberInfo.ArgumentName).Append("!,");
       }
 
-      sb.Append(@$"
+      sb.Append(@"
                                     out var obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-            throw new global::System.Text.Json.JsonException($""Unable to deserialize \""{state.Name}\"". Error: {{validationResult!.ErrorMessage}}."");
+            throw new global::System.Text.Json.JsonException($""Unable to deserialize \""").Append(state.Name).Append(@"\"". Error: {validationResult!.ErrorMessage}."");
 
          return obj;
-      }}
+      }
 
       /// <inheritdoc />
-      public override void Write(global::System.Text.Json.Utf8JsonWriter writer, {state.TypeFullyQualified} value, global::System.Text.Json.JsonSerializerOptions options)
-      {{
+      public override void Write(global::System.Text.Json.Utf8JsonWriter writer, ").Append(state.TypeFullyQualified).Append(@" value, global::System.Text.Json.JsonSerializerOptions options)
+      {
          writer.WriteStartObject();
 
          var ignoreNullValues = options.DefaultIgnoreCondition is global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull or global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
@@ -202,29 +220,29 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@$"
-         var {memberInfo.ArgumentName}PropertyValue = value.{memberInfo.Name};
+         sb.Append(@"
+         var ").Append(memberInfo.ArgumentName).Append(@"PropertyValue = value.").Append(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
          {
-            sb.Append(@$"
-         if(!ignoreNullValues || {memberInfo.ArgumentName}PropertyValue is not null)
-         {{
+            sb.Append(@"
+         if(!ignoreNullValues || ").Append(memberInfo.ArgumentName).Append(@"PropertyValue is not null)
+         {
             ");
          }
          else
          {
-            sb.Append(@$"
-         if(!ignoreDefaultValues || !{memberInfo.ArgumentName}PropertyValue.Equals(default({memberInfo.TypeFullyQualifiedWithNullability})))
-         {{
+            sb.Append(@"
+         if(!ignoreDefaultValues || !").Append(memberInfo.ArgumentName).Append("PropertyValue.Equals(default(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@")))
+         {
             ");
          }
 
-         sb.Append(@$"writer.WritePropertyName(this._{memberInfo.ArgumentName}PropertyName);
+         sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append(@"PropertyName);
          ");
 
-         sb.Append(@"   ");
+         sb.Append("   ");
 
          GenerateWriteValue(sb, memberInfo);
 
@@ -232,31 +250,31 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
          }");
       }
 
-      sb.Append($@"
+      sb.Append(@"
          writer.WriteEndObject();
-      }}
-   }}
+      }
+   }
 
    public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
-   {{
+   {
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type typeToConvert)
-      {{
-         return typeof({state.TypeFullyQualified}).IsAssignableFrom(typeToConvert);
-      }}
+      {
+         return typeof(").Append(state.TypeFullyQualified).Append(@").IsAssignableFrom(typeToConvert);
+      }
 
       /// <inheritdoc />
       public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
-      {{
+      {
          if (typeToConvert is null)
             throw new global::System.ArgumentNullException(nameof(typeToConvert));
          if (options is null)
             throw new global::System.ArgumentNullException(nameof(options));
 
          return new ValueObjectJsonConverter(options);
-      }}
-   }}
-}}
+      }
+   }
+}
 ");
    }
 
@@ -295,18 +313,18 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
          }
          else
          {
-            sb?.Append(@$"this._{memberInfo.ArgumentName}Converter.Write(writer, {memberInfo.ArgumentName}PropertyValue, options);");
+            sb?.Append("this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").Append(memberInfo.ArgumentName).Append("PropertyValue, options);");
 
             return true;
          }
       }
 
-      sb?.Append("writer.").Append(command).Append($"({memberInfo.ArgumentName}PropertyValue);");
+      sb?.Append("writer.").Append(command).Append("(").Append(memberInfo.ArgumentName).Append("PropertyValue);");
 
       return false;
    }
 
-   private static string GenerateReadValue(InstanceMemberInfo memberInfo)
+   private static void GenerateReadValue(StringBuilder sb, InstanceMemberInfo memberInfo)
    {
       var command = memberInfo.SpecialType switch
       {
@@ -345,10 +363,11 @@ partial {(state.IsReferenceType ? "class" : "struct")} {state.Name}
          }
          else
          {
-            return @$"this._{memberInfo.ArgumentName}Converter.Read(ref reader, typeof({memberInfo.TypeFullyQualifiedWithNullability}), options)";
+            sb.Append("this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("), options)");
+            return;
          }
       }
 
-      return @$"reader.{command}()";
+      sb.Append("reader.").Append(command).Append("()");
    }
 }
