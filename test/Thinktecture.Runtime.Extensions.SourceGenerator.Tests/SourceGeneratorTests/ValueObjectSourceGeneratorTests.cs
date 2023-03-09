@@ -5355,7 +5355,9 @@ namespace Thinktecture.Tests
       public readonly int StructField;
 
       public string ReferenceProperty { get; }
+      public string? NullableReferenceProperty { get; }
       public int StructProperty { get; }
+      public int? NullableStructProperty { get; }
 
       public int ExpressionBodyProperty => 42;
 
@@ -5395,7 +5397,9 @@ namespace Thinktecture.Tests
                                                                                                                o.ReferenceField,
                                                                                                                o.StructField,
                                                                                                                o.ReferenceProperty,
-                                                                                                               o.StructProperty
+                                                                                                               o.NullableReferenceProperty,
+                                                                                                               o.StructProperty,
+                                                                                                               o.NullableStructProperty
                                                                                                             };
 
          var members = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>();
@@ -5417,15 +5421,17 @@ namespace Thinktecture.Tests
          string referenceField,
          int structField,
          string referenceProperty,
+         string? nullableReferenceProperty,
          int structProperty,
+         int? nullableStructProperty,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-         ValidateFactoryArguments(ref validationResult, ref referenceField, ref structField, ref referenceProperty, ref structProperty);
+         ValidateFactoryArguments(ref validationResult, ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
          if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
          {
-            obj = new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, structProperty);
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
             obj.FactoryPostInit();
          }
          else
@@ -5436,9 +5442,9 @@ namespace Thinktecture.Tests
          return validationResult;
       }
 
-      public static global::Thinktecture.Tests.TestValueObject Create(string referenceField, int structField, string referenceProperty, int structProperty)
+      public static global::Thinktecture.Tests.TestValueObject Create(string referenceField, int structField, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
       {
-         var validationResult = Validate(referenceField, structField, referenceProperty, structProperty, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -5450,29 +5456,33 @@ namespace Thinktecture.Tests
          string referenceField,
          int structField,
          string referenceProperty,
+         string? nullableReferenceProperty,
          int structProperty,
+         int? nullableStructProperty,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(referenceField, structField, referenceProperty, structProperty, out obj);
+         var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
 
-      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField, ref int structField, ref string referenceProperty, ref int structProperty);
+      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField, ref int structField, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
       partial void FactoryPostInit();
 
-      private TestValueObject(string referenceField, int structField, string referenceProperty, int structProperty)
+      private TestValueObject(string referenceField, int structField, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
       {
-         ValidateConstructorArguments(ref referenceField, ref structField, ref referenceProperty, ref structProperty);
+         ValidateConstructorArguments(ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
          this.ReferenceField = referenceField;
          this.StructField = structField;
          this.ReferenceProperty = referenceProperty;
+         this.NullableReferenceProperty = nullableReferenceProperty;
          this.StructProperty = structProperty;
+         this.NullableStructProperty = nullableStructProperty;
       }
 
-      static partial void ValidateConstructorArguments(ref string referenceField, ref int structField, ref string referenceProperty, ref int structProperty);
+      static partial void ValidateConstructorArguments(ref string referenceField, ref int structField, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
       /// <summary>
       /// Compares to instances of <see cref="TestValueObject"/>.

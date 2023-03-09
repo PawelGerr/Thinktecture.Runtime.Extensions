@@ -81,7 +81,15 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       var cachedState = _typedMemberStates.GetOrAdd(type,
                                                     static t =>
                                                     {
-                                                       switch (t.SpecialType)
+                                                       var specialType = t.SpecialType;
+
+                                                       if (t.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
+                                                       {
+                                                          if (t is INamedTypeSymbol namedTypeSymbol)
+                                                             specialType = namedTypeSymbol.TypeArguments[0].SpecialType;
+                                                       }
+
+                                                       switch (specialType)
                                                        {
                                                           case SpecialType.System_Boolean:
                                                           case SpecialType.System_Char:
@@ -165,15 +173,36 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    {
       public static readonly SpecialTypeAndNullableAnnotationComparer Instance = new();
 
-      public bool Equals(ITypeSymbol x, ITypeSymbol y)
+      public bool Equals(ITypeSymbol type, ITypeSymbol other)
       {
-         return x.SpecialType == y.SpecialType
-                && x.NullableAnnotation == y.NullableAnnotation;
+         if (type.SpecialType != other.SpecialType
+             || type.NullableAnnotation != other.NullableAnnotation)
+            return false;
+
+         if (type.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T)
+            return other.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T;
+
+         if (other.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T)
+            return false;
+
+         if (type is not INamedTypeSymbol named || other is not INamedTypeSymbol namedOther)
+            return false;
+
+         return named.TypeArguments[0].SpecialType == namedOther.TypeArguments[0].SpecialType;
       }
 
       public int GetHashCode(ITypeSymbol obj)
       {
-         return ((int)obj.SpecialType * 397) ^ (int)obj.NullableAnnotation;
+         var hashCode = (int)obj.SpecialType;
+         hashCode = (hashCode * 397) ^ (int)obj.NullableAnnotation;
+
+         if (obj.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T)
+            return hashCode;
+
+         if (obj is not INamedTypeSymbol named)
+            return (hashCode * 397) ^ 1;
+
+         return (hashCode * 397) ^ (int)named.TypeArguments[0].SpecialType;
       }
    }
 }
