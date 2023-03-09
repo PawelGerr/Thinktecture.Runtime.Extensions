@@ -15,7 +15,9 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    public string TypeFullyQualifiedNullable { get; }
    public string TypeFullyQualifiedNullAnnotated => _type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
    public string TypeFullyQualifiedWithNullability => _type is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.Annotated } ? TypeFullyQualifiedNullAnnotated : TypeFullyQualified;
-   public string TypeMinimallyQualified { get; }
+
+   private string? _typeMinimallyQualified;
+   public string TypeMinimallyQualified => _typeMinimallyQualified ??= _type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
    public NullableAnnotation NullableAnnotation => _type.NullableAnnotation;
    public SpecialType SpecialType => _type.SpecialType;
@@ -37,7 +39,6 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
       foreach (var @interface in type.AllInterfaces)
       {

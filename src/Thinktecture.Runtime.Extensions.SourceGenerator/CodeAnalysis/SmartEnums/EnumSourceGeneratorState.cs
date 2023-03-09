@@ -14,7 +14,9 @@ public sealed class EnumSourceGeneratorState :
    public string? Namespace { get; }
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
-   public string TypeMinimallyQualified { get; }
+
+   private string? _typeMinimallyQualified;
+   public string TypeMinimallyQualified => _typeMinimallyQualified ??= _enumType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
    public IMemberState KeyProperty { get; }
 
@@ -26,7 +28,7 @@ public sealed class EnumSourceGeneratorState :
    public bool HasKeyComparerImplementation { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
-   public string Name { get; }
+   public string Name => _enumType.Name;
    public EnumSettings Settings { get; }
 
    public IReadOnlyList<string> ItemNames { get; }
@@ -49,8 +51,6 @@ public sealed class EnumSourceGeneratorState :
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{TypeFullyQualified}?" : TypeFullyQualified;
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-      Name = type.Name;
 
       IsReferenceType = type.IsReferenceType;
       IsAbstract = type.IsAbstract;
