@@ -8,18 +8,14 @@ public sealed class ValueObjectSourceGeneratorState :
    ISourceGeneratorState,
    IEquatable<ValueObjectSourceGeneratorState>
 {
-   private readonly INamedTypeSymbol _type;
-
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullable { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
-
-   private string? _typeMinimallyQualified;
-   public string TypeMinimallyQualified => _typeMinimallyQualified ??= _type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+   public string TypeMinimallyQualified { get; }
 
    public string? Namespace { get; }
-   public string Name => _type.Name;
-   public bool IsReferenceType => _type.IsReferenceType;
+   public string Name { get; }
+   public bool IsReferenceType { get; }
 
    public string? FactoryValidationReturnType { get; }
 
@@ -41,20 +37,20 @@ public sealed class ValueObjectSourceGeneratorState :
       AttributeData valueObjectAttribute,
       CancellationToken cancellationToken)
    {
-      _type = type ?? throw new ArgumentNullException(nameof(type));
-
+      Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
       TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
-
-      AssignableInstanceFieldsAndProperties = _type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
+      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      IsReferenceType = type.IsReferenceType;
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
       EqualityMembers = GetEqualityMembers();
 
-      var factoryValidationReturnType = _type.GetMembers()
-                                             .OfType<IMethodSymbol>()
-                                             .FirstOrDefault(m => m.IsStatic && m.ReturnType.SpecialType != SpecialType.System_Void && m.Name == "ValidateFactoryArguments")?
-                                             .ReturnType;
+      var factoryValidationReturnType = type.GetMembers()
+                                            .OfType<IMethodSymbol>()
+                                            .FirstOrDefault(m => m.IsStatic && m.ReturnType.SpecialType != SpecialType.System_Void && m.Name == "ValidateFactoryArguments")?
+                                            .ReturnType;
 
       if (factoryValidationReturnType is not null)
       {
@@ -66,11 +62,6 @@ public sealed class ValueObjectSourceGeneratorState :
 
       AttributeInfo = new AttributeInfo(type);
       Settings = new ValueObjectSettings(valueObjectAttribute);
-   }
-
-   public Location GetFirstLocation(CancellationToken cancellationToken)
-   {
-      return _type.DeclaringSyntaxReferences.First().GetSyntax(cancellationToken).GetLocation();
    }
 
    private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()

@@ -9,14 +9,10 @@ public sealed class EnumSourceGeneratorState :
 {
    internal const string KEY_EQUALITY_COMPARER_NAME = "KeyEqualityComparer";
 
-   private readonly INamedTypeSymbol _enumType;
-
    public string? Namespace { get; }
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
-
-   private string? _typeMinimallyQualified;
-   public string TypeMinimallyQualified => _typeMinimallyQualified ??= _enumType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+   public string TypeMinimallyQualified { get; }
 
    public IMemberState KeyProperty { get; }
 
@@ -28,7 +24,7 @@ public sealed class EnumSourceGeneratorState :
    public bool HasKeyComparerImplementation { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
-   public string Name => _enumType.Name;
+   public string Name { get; }
    public EnumSettings Settings { get; }
 
    public IReadOnlyList<string> ItemNames { get; }
@@ -45,12 +41,11 @@ public sealed class EnumSourceGeneratorState :
       if (enumInterface is null)
          throw new ArgumentNullException(nameof(enumInterface));
 
-      _enumType = type ?? throw new ArgumentNullException(nameof(type));
-
+      Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{TypeFullyQualified}?" : TypeFullyQualified;
-
+      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
       IsAbstract = type.IsAbstract;
       IsValidatable = enumInterface.IsValidatableEnumInterface();
@@ -86,11 +81,6 @@ public sealed class EnumSourceGeneratorState :
       }
 
       return false;
-   }
-
-   public Location GetFirstLocation(CancellationToken cancellationToken)
-   {
-      return _enumType.DeclaringSyntaxReferences.First().GetSyntax(cancellationToken).GetLocation();
    }
 
    public override bool Equals(object? obj)

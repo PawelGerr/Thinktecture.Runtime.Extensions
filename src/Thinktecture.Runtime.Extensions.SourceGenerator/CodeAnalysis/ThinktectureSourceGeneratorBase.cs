@@ -69,7 +69,7 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       catch (Exception ex)
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                    state.GetLocationOrNullSafe(context),
+                                                    Location.None,
                                                     state.Name, ex.Message));
       }
       finally
