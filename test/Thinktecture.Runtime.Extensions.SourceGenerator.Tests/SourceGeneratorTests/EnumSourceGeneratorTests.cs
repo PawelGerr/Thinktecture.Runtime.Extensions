@@ -1,3 +1,4 @@
+using System.Linq;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Xunit.Abstractions;
 
@@ -1291,10 +1292,15 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      outputs.Should().HaveCount(2);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var genericsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Generics.g.cs")).Value;
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -1319,8 +1325,6 @@ namespace Thinktecture.Tests
          var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<int>), metadata);
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<decimal>), metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -1718,6 +1722,23 @@ namespace Thinktecture.Tests
          var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
          return validationResult is null;
       }
+   }
+}
+
+""");
+
+      AssertOutput(genericsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestEnum
+{
+   [global::System.Runtime.CompilerServices.ModuleInitializer]
+   internal static void GenericsModuleInit()
+   {
+      var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<int>));
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<decimal>));
    }
 }
 

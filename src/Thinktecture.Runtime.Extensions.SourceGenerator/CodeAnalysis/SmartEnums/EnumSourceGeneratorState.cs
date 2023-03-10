@@ -39,7 +39,6 @@ public sealed class EnumSourceGeneratorState :
 
    public EnumSourceGeneratorState(
       INamedTypeSymbol type,
-      ImmutableArray<INamedTypeSymbol> genericEnumTypes,
       INamedTypeSymbol enumInterface,
       CancellationToken cancellationToken)
    {
@@ -68,7 +67,6 @@ public sealed class EnumSourceGeneratorState :
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
       FullyQualifiedDerivedTypes = type.FindDerivedInnerEnums()
                                        .Select(t => t.Type)
-                                       .Concat(genericEnumTypes)
                                        .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
                                        .Select(t => t.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
                                        .ToList();

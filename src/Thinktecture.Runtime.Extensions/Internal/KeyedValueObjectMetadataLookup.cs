@@ -9,6 +9,7 @@ namespace Thinktecture.Internal;
 public static class KeyedValueObjectMetadataLookup
 {
    private static readonly ConcurrentDictionary<Type, KeyedValueObjectMetadata> _metadata = new();
+   private static readonly ConcurrentDictionary<Type, Type> _typeByDerivedType = new();
 
    /// <summary>
    /// Searches for <see cref="KeyedValueObjectMetadata"/> for provided <paramref name="type"/>.
@@ -22,7 +23,7 @@ public static class KeyedValueObjectMetadataLookup
 
       type = Nullable.GetUnderlyingType(type) ?? type;
 
-      if (_metadata.TryGetValue(type, out var metadata))
+      if (TryGetMetadata(type, out var metadata))
          return metadata;
 
       if (!typeof(IKeyedValueObject).IsAssignableFrom(type))
@@ -31,10 +32,26 @@ public static class KeyedValueObjectMetadataLookup
       // The initializer of the assembly/module containing the smart enum/value object is not executed yet
       RuntimeHelpers.RunModuleConstructor(type.Assembly.ManifestModule.ModuleHandle);
 
-      if (_metadata.TryGetValue(type, out metadata))
+      if (TryGetMetadata(type, out metadata))
          return metadata;
 
       throw new Exception($"Could not retries metadata for type '{type.FullName}'.");
+   }
+
+   private static bool TryGetMetadata(Type type, out KeyedValueObjectMetadata? metadata)
+   {
+      if (_metadata.TryGetValue(type, out metadata))
+         return true;
+
+      if (!_typeByDerivedType.TryGetValue(type, out var baseType))
+         return false;
+
+      if (!_metadata.TryGetValue(baseType, out metadata))
+         return false;
+
+      _metadata.TryAdd(type, metadata);
+
+      return true;
    }
 
    /// <summary>
@@ -51,5 +68,20 @@ public static class KeyedValueObjectMetadataLookup
 
       if (!_metadata.TryAdd(type, valueObjectMetadata))
          throw new ArgumentException($"Multiple metadata instances for type '{type.FullName}'.");
+   }
+
+   /// <summary>
+   /// Adds a relation between a type and its derived type.
+   /// </summary>
+   /// <param name="type">Base type.</param>
+   /// <param name="derivedType">Derived type.</param>
+   /// <exception cref="ArgumentNullException">If <paramref name="type"/> of <paramref name="derivedType"/> is <c>null</c>.</exception>
+   public static void AddDerivedType(Type type, Type derivedType)
+   {
+      ArgumentNullException.ThrowIfNull(type);
+      ArgumentNullException.ThrowIfNull(derivedType);
+
+      if (!_typeByDerivedType.TryAdd(derivedType, type))
+         throw new ArgumentException($"Multiple tries to register derived type '{derivedType.FullName}'.");
    }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -16,21 +17,12 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
-      IncrementalValuesProvider<INamedTypeSymbol> candidates = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetEnumType)
-                                                                      .Where(type => type is not null)!;
-
-      var genericTypes = context.SyntaxProvider.CreateSyntaxProvider(IsInstanceCreation, GetDerivedGenericEnums)
-                                .Where(static tuple => tuple is not null)
-                                .Select(static (tuple, _) => tuple!.Value)
-                                .Collect()
-                                .Select(static (tuple, _) => tuple.Distinct());
-
-      var enumTypes = candidates.Combine(genericTypes)
-                                .Select(GetEnumStateOrNull)
-                                .Where(static state => state.HasValue && IsKeyNotNotNullable(state.Value))
-                                .Select(static (state, _) => state!.Value)
-                                .Collect()
-                                .SelectMany(static (states, _) => states.Distinct());
+      var enumTypes = context.SyntaxProvider
+                             .CreateSyntaxProvider(IsCandidate, GetEnumType)
+                             .Where(static state => state.HasValue && IsKeyNotNotNullable(state.Value))
+                             .Select(static (state, _) => state!.Value)
+                             .Collect()
+                             .SelectMany(static (states, _) => states.Distinct());
 
       var generators = context.GetMetadataReferencesProvider()
                               .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
@@ -38,6 +30,76 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
       context.RegisterSourceOutput(enumTypes.Combine(generators), GenerateCode);
+
+      var genericTypes = context.SyntaxProvider.CreateSyntaxProvider(IsInstanceCreation, GetDerivedGenericEnums)
+                                .Where(static tuple => tuple is not null)
+                                .Select(static (tuple, _) => tuple)!
+                                .Collect<GenericEnumInfo>()
+                                .Select(static (tuple, _) => tuple.Distinct().ToImmutableArray())
+                                .WithComparer(new SetComparer<GenericEnumInfo>());
+
+      context.RegisterImplementationSourceOutput(genericTypes, GenerateModuleInitializerCode);
+   }
+
+   private void GenerateModuleInitializerCode(
+      SourceProductionContext context,
+      ImmutableArray<GenericEnumInfo> genericEnumInfos)
+   {
+      var stringBuilder = LeaseStringBuilder();
+
+      try
+      {
+         foreach (var group in genericEnumInfos.GroupBy(i => i.EnumTypeFullyQualified))
+         {
+            stringBuilder.Clear();
+
+            var candidate = group.First();
+            GenerateModuleInitializer(stringBuilder, candidate, group);
+
+            if (stringBuilder.Length <= 0)
+               return;
+
+            var generatedCode = stringBuilder.ToString();
+
+            context.EmitFile(candidate.Namespace, candidate.EnumTypeName, generatedCode, ".Generics");
+         }
+      }
+      finally
+      {
+         Return(stringBuilder);
+      }
+   }
+
+   private static void GenerateModuleInitializer(StringBuilder sb, GenericEnumInfo candidate, IEnumerable<GenericEnumInfo> genericEnums)
+   {
+      sb.Append(CodeGeneratorBase.GENERATED_CODE_PREFIX).Append(@"
+");
+
+      if (candidate.Namespace is not null)
+      {
+         sb.Append(@"
+namespace ").Append(candidate.Namespace).Append(@";
+");
+      }
+
+      sb.Append(@"
+partial class ").Append(candidate.EnumTypeName).Append(@"
+{
+   [global::System.Runtime.CompilerServices.ModuleInitializer]
+   internal static void GenericsModuleInit()
+   {
+      var enumType = typeof(").Append(candidate.EnumTypeFullyQualified).Append(@");");
+
+      foreach (var genericEnum in genericEnums)
+      {
+         sb.Append(@"
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(").Append(genericEnum.GenericEnumTypeFullyQualified).Append(@"));");
+      }
+
+      sb.Append(@"
+   }
+}
+");
    }
 
    private static bool IsKeyNotNotNullable(SourceGenState<EnumSourceGeneratorState> state)
@@ -120,31 +182,15 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
              && typeDeclaration.IsEnumCandidate();
    }
 
-   private static INamedTypeSymbol? GetEnumType(GeneratorSyntaxContext context, CancellationToken cancellationToken)
-   {
-      var tds = (TypeDeclarationSyntax)context.Node;
-      var type = context.SemanticModel.GetDeclaredSymbol(tds, cancellationToken);
-
-      if (type?.ContainingType is not null)
-         return null;
-
-      return type;
-   }
-
-   private static SourceGenState<EnumSourceGeneratorState>? GetEnumStateOrNull(
-      (INamedTypeSymbol, IEnumerable<GenericEnumInfo>) tuple,
-      CancellationToken cancellationToken)
+   private static SourceGenState<EnumSourceGeneratorState>? GetEnumType(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
       try
       {
-         var (type, genericEnums) = tuple;
-         var genericEnumTypes = ImmutableArray<INamedTypeSymbol>.Empty;
+         var tds = (TypeDeclarationSyntax)context.Node;
+         var type = context.SemanticModel.GetDeclaredSymbol(tds, cancellationToken);
 
-         foreach (var genericEnum in genericEnums)
-         {
-            if (SymbolEqualityComparer.Default.Equals(genericEnum.EnumType, type))
-               genericEnumTypes = genericEnumTypes.Add(genericEnum.GenericEnumType);
-         }
+         if (type?.ContainingType is not null)
+            return null;
 
          if (!type.IsEnum(out var enumInterfaces))
             return null;
@@ -154,7 +200,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
          if (enumInterface is null)
             return null;
 
-         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, genericEnumTypes, enumInterface, cancellationToken), null);
+         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, enumInterface, cancellationToken), null);
       }
       catch (OperationCanceledException)
       {
@@ -163,41 +209,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
       catch (Exception ex)
       {
          return new SourceGenState<EnumSourceGeneratorState>(null, ex);
-      }
-   }
-
-   private struct GenericEnumInfo : IEquatable<GenericEnumInfo>
-   {
-      public INamedTypeSymbol EnumType { get; }
-      public INamedTypeSymbol GenericEnumType { get; }
-
-      public GenericEnumInfo(INamedTypeSymbol enumType, INamedTypeSymbol genericEnumType)
-      {
-         EnumType = enumType;
-         GenericEnumType = genericEnumType;
-      }
-
-      public bool Equals(GenericEnumInfo other)
-      {
-         var comparer = SymbolEqualityComparer.Default;
-
-         return comparer.Equals(EnumType, other.EnumType)
-                && comparer.Equals(GenericEnumType, other.GenericEnumType);
-      }
-
-      public override bool Equals(object? obj)
-      {
-         return obj is GenericEnumInfo other && Equals(other);
-      }
-
-      public override int GetHashCode()
-      {
-         var comparer = SymbolEqualityComparer.Default;
-
-         unchecked
-         {
-            return (comparer.GetHashCode(EnumType) * 397) ^ comparer.GetHashCode(GenericEnumType);
-         }
       }
    }
 }

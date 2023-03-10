@@ -31,6 +31,18 @@ public abstract class SourceGeneratorTestsBase
       params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
+      var outputsByFilePath = GetGeneratedOutputs<T>(source, furtherAssemblies);
+
+      var output = outputsByFilePath.SingleOrDefault(t => generatedFileNameFragment is null || t.Key.Contains(generatedFileNameFragment)).Value;
+
+      _output.WriteLine(output ?? "No output provided.");
+
+      return output;
+   }
+
+   public static Dictionary<string, string> GetGeneratedOutputs<T>(string source, params Assembly[] furtherAssemblies)
+      where T : IIncrementalGenerator, new()
+   {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
       var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName?.Contains("Thinktecture") != true))
                        {
@@ -56,14 +68,9 @@ public abstract class SourceGeneratorTestsBase
       var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
       errors.Should().BeEmpty();
 
-      var output = outputCompilation.SyntaxTrees
-                                    .Skip(1)
-                                    .SingleOrDefault(t => generatedFileNameFragment is null || t.FilePath.Contains(generatedFileNameFragment))?
-                                    .ToString();
-
-      _output.WriteLine(output ?? "No output provided.");
-
-      return output;
+      return outputCompilation.SyntaxTrees
+                              .Skip(1)
+                              .ToDictionary(t => t.FilePath, t => t.ToString());
    }
 
    protected static void AssertOutput(string output, string expectedOutput)

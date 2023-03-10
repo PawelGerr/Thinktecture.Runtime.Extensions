@@ -14,13 +14,13 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
    internal const string THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK = "Thinktecture.Runtime.Extensions.MessagePack.dll";
 
    private readonly int _stringBuilderInitialSize;
-   private readonly int _maxPooledStringBuilderInitialSize;
+   private readonly int _maxPooledStringBuilderSize;
    private readonly ConcurrentQueue<StringBuilder> _stringBuilderPool;
 
    protected ThinktectureSourceGeneratorBase(int stringBuilderInitialSize)
    {
       _stringBuilderInitialSize = stringBuilderInitialSize;
-      _maxPooledStringBuilderInitialSize = stringBuilderInitialSize * 2;
+      _maxPooledStringBuilderSize = stringBuilderInitialSize * 2;
 
       _stringBuilderPool = new ConcurrentQueue<StringBuilder>();
       _stringBuilderPool.Enqueue(new StringBuilder(stringBuilderInitialSize));
@@ -41,13 +41,10 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       if (state is null || generatorFactories.IsDefaultOrEmpty)
          return;
 
-      StringBuilder? stringBuilder = null;
+      var stringBuilder = LeaseStringBuilder();
 
       try
       {
-         if (!_stringBuilderPool.TryDequeue(out stringBuilder))
-            stringBuilder = new StringBuilder(_stringBuilderInitialSize);
-
          foreach (var generatorFactory in generatorFactories.Distinct())
          {
             context.CancellationToken.ThrowIfCancellationRequested();
@@ -77,13 +74,23 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       }
       finally
       {
-         if (stringBuilder is not null
-             && stringBuilder.Capacity < _maxPooledStringBuilderInitialSize
-             && _stringBuilderPool.Count < 3)
-         {
-            stringBuilder.Clear();
-            _stringBuilderPool.Enqueue(stringBuilder);
-         }
+         Return(stringBuilder);
       }
+   }
+
+   protected StringBuilder LeaseStringBuilder()
+   {
+      return _stringBuilderPool.TryDequeue(out var stringBuilder)
+                ? stringBuilder
+                : new StringBuilder(_stringBuilderInitialSize);
+   }
+
+   protected void Return(StringBuilder stringBuilder)
+   {
+      if (stringBuilder.Capacity >= _maxPooledStringBuilderSize || _stringBuilderPool.Count >= 3)
+         return;
+
+      stringBuilder.Clear();
+      _stringBuilderPool.Enqueue(stringBuilder);
    }
 }
