@@ -170,12 +170,18 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    }
 
    // We need to check NullableAnnotation as well, because string is a reference type.
-   private class SpecialTypeAndNullableAnnotationComparer : IEqualityComparer<ITypeSymbol>
+   private sealed class SpecialTypeAndNullableAnnotationComparer : IEqualityComparer<ITypeSymbol>
    {
       public static readonly SpecialTypeAndNullableAnnotationComparer Instance = new();
 
-      public bool Equals(ITypeSymbol type, ITypeSymbol other)
+      public bool Equals(ITypeSymbol? type, ITypeSymbol? other)
       {
+         if (type is null)
+            return other is null;
+
+         if (other is null)
+            return false;
+
          if (type.SpecialType != other.SpecialType
              || type.NullableAnnotation != other.NullableAnnotation)
             return false;

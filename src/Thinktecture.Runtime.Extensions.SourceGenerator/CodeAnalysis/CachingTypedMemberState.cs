@@ -49,17 +49,17 @@ public class CachingTypedMemberState : IEquatable<CachingTypedMemberState>, ITyp
       HasDivisionOperators = typedMemberState.HasDivisionOperators;
    }
 
-   public override bool Equals(object obj)
+   public override bool Equals(object? obj)
    {
       return ReferenceEquals(this, obj);
    }
 
-   public bool Equals(ITypedMemberState other)
+   public bool Equals(ITypedMemberState? other)
    {
       return ReferenceEquals(this, other);
    }
 
-   public bool Equals(CachingTypedMemberState other)
+   public bool Equals(CachingTypedMemberState? other)
    {
       return ReferenceEquals(this, other);
    }

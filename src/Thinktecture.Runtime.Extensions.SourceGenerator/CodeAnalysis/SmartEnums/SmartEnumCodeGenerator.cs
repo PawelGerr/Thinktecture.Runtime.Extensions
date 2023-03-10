@@ -956,8 +956,14 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       public static readonly ConstructorArgumentsComparer Instance = new();
 
-      public bool Equals(IReadOnlyList<ConstructorArgument> x, IReadOnlyList<ConstructorArgument> y)
+      public bool Equals(IReadOnlyList<ConstructorArgument>? x, IReadOnlyList<ConstructorArgument>? y)
       {
+         if (x is null)
+            return y is null;
+
+         if (y is null)
+            return false;
+
          if (x.Count != y.Count)
             return false;
 

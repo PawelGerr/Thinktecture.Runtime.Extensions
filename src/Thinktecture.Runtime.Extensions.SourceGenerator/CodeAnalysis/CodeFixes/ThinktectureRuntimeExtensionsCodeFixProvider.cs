@@ -219,7 +219,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
    private static ThrowStatementSyntax BuildThrowNotImplementedException()
    {
-      var notImplementedExceptionType = SyntaxFactory.ParseTypeName(typeof(NotImplementedException).FullName);
+      var notImplementedExceptionType = SyntaxFactory.ParseTypeName($"global::System.{nameof(NotImplementedException)}");
       var newNotImplementedException = SyntaxFactory.ObjectCreationExpression(notImplementedExceptionType, SyntaxFactory.ArgumentList(), null);
       var throwStatement = SyntaxFactory.ThrowStatement(newNotImplementedException);
       return throwStatement;

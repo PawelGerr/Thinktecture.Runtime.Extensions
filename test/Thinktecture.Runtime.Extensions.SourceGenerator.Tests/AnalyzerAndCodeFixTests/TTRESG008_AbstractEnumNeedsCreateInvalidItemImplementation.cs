@@ -41,7 +41,7 @@ namespace TestNamespace
 
         private static TestEnum CreateInvalidItem(string key)
         {
-            throw new System.NotImplementedException();
+            throw new global::System.NotImplementedException();
         }
     }
 
