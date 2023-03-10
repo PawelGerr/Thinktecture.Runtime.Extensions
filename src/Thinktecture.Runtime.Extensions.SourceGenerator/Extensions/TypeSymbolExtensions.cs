@@ -115,7 +115,7 @@ public static class TypeSymbolExtensions
       INamedTypeSymbol? validInterface = null;
       ITypeSymbol? validKeyType = null;
 
-      var emittDontImplementEnumInterfaceWithTwoGenerics = false;
+      var emitDontImplementEnumInterfaceWithTwoGenerics = false;
       INamedTypeSymbol? enumInterfaceWithTwoGenerics = null;
 
       foreach (var enumInterface in enumInterfaces)
@@ -125,7 +125,7 @@ public static class TypeSymbolExtensions
 
          if (enumInterface.TypeArguments.Length != 1)
          {
-            if (diagnostics is not null && enumInterface.IsGenericType && enumInterface.TypeArguments.Length == 2)
+            if (diagnostics is not null && enumInterface is { TypeArguments: { IsDefaultOrEmpty: false, Length: 2 } })
             {
                if (enumInterfaceWithTwoGenerics is null)
                {
@@ -135,7 +135,7 @@ public static class TypeSymbolExtensions
                else if (!SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], enumInterface.TypeArguments[0])
                         || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumInterface.TypeArguments[1]))
                {
-                  emittDontImplementEnumInterfaceWithTwoGenerics = true;
+                  emitDontImplementEnumInterfaceWithTwoGenerics = true;
                }
             }
 
@@ -153,8 +153,7 @@ public static class TypeSymbolExtensions
          {
             if (!SymbolEqualityComparer.Default.Equals(validKeyType, keyType))
             {
-               if (diagnostics.HasValue)
-                  diagnostics.Value.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces, diagnostics.Value.Location, enumType.Name));
+               diagnostics?.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces, diagnostics.Value.Location, enumType.Name));
 
                return null;
             }
@@ -168,7 +167,7 @@ public static class TypeSymbolExtensions
 
       // check the validity of IEnum<TKey, T>
       if (diagnostics is not null && validInterface is not null && validKeyType is not null && enumInterfaceWithTwoGenerics is not null
-          && (emittDontImplementEnumInterfaceWithTwoGenerics
+          && (emitDontImplementEnumInterfaceWithTwoGenerics
               || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], validKeyType)
               || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumType)))
       {
@@ -181,76 +180,82 @@ public static class TypeSymbolExtensions
       return validInterface;
    }
 
-   public static bool IsNonValidatableEnumInterface(this ITypeSymbol type)
+   public static bool IsNonValidatableEnumInterface(this INamedTypeSymbol type)
    {
-      return type.Name == "IEnum"
-             && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true };
+      return type is { Name: "IEnum", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsValidatableEnumInterface(this ITypeSymbol type)
+   public static bool IsValidatableEnumInterface(this INamedTypeSymbol type)
    {
-      return type.Name == "IValidatableEnum"
-             && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true };
+      return type is { Name: "IValidatableEnum", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsMessagePackFormatterAttribute(this ITypeSymbol type)
    {
-      return type.Name == "MessagePackFormatterAttribute"
-             && type.ContainingNamespace is { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true };
+      return type is { Name: "MessagePackFormatterAttribute", ContainingNamespace: { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsStructLayoutAttribute(this ITypeSymbol type)
    {
-      return type.Name == "StructLayoutAttribute"
-             && type.ContainingNamespace is
-             {
-                Name: "InteropServices",
-                ContainingNamespace:
-                {
-                   Name: "Runtime",
-                   ContainingNamespace:
-                   {
-                      Name: "System",
-                      ContainingNamespace.IsGlobalNamespace: true
-                   }
-                }
-             };
+      return type is
+      {
+         Name: "StructLayoutAttribute",
+         ContainingNamespace:
+         {
+            Name: "InteropServices",
+            ContainingNamespace:
+            {
+               Name: "Runtime",
+               ContainingNamespace:
+               {
+                  Name: "System",
+                  ContainingNamespace.IsGlobalNamespace: true
+               }
+            }
+         }
+      };
    }
 
    public static bool IsNewtonsoftJsonConverterAttribute(this ITypeSymbol type)
    {
-      return type.Name == "JsonConverterAttribute"
-             && type.ContainingNamespace is
-             {
-                Name: "Json",
-                ContainingNamespace:
-                {
-                   Name: "Newtonsoft",
-                   ContainingNamespace.IsGlobalNamespace: true
-                }
-             };
+      return type is
+      {
+         Name: "JsonConverterAttribute",
+         ContainingNamespace:
+         {
+            Name: "Json",
+            ContainingNamespace:
+            {
+               Name: "Newtonsoft",
+               ContainingNamespace.IsGlobalNamespace: true
+            }
+         }
+      };
    }
 
    public static bool IsJsonConverterAttribute(this ITypeSymbol type)
    {
-      return type.Name == "JsonConverterAttribute"
-             && type.ContainingNamespace is
-             {
-                Name: "Serialization",
-                ContainingNamespace:
-                {
-                   Name: "Json",
-                   ContainingNamespace:
-                   {
-                      Name: "Text",
-                      ContainingNamespace:
-                      {
-                         Name: "System",
-                         ContainingNamespace.IsGlobalNamespace: true
-                      }
-                   }
-                }
-             };
+      return type is
+      {
+         Name: "JsonConverterAttribute",
+         ContainingNamespace:
+         {
+            Name: "Serialization",
+            ContainingNamespace:
+            {
+               Name: "Json",
+               ContainingNamespace:
+               {
+                  Name: "Text",
+                  ContainingNamespace:
+                  {
+                     Name: "System",
+                     ContainingNamespace.IsGlobalNamespace: true
+                  }
+               }
+            }
+         }
+      };
    }
 
    public static IEnumerable<IFieldSymbol> EnumerateEnumItems(this ITypeSymbol enumType)
@@ -271,31 +276,35 @@ public static class TypeSymbolExtensions
 
    public static bool IsFormattableInterface(this INamedTypeSymbol @interface)
    {
-      return @interface.Name == "IFormattable"
-             && @interface.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true };
+      return @interface is { Name: "IFormattable", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsComparableInterface(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return @interface.Name == "IComparable"
-             && @interface.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true }
+      return @interface is { Name: "IComparable", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
              && (!@interface.IsGenericType || (@interface.IsGenericType && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)));
    }
 
    public static bool IsParsableInterface(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return @interface.Name == "IParsable"
-             && @interface.ContainingNamespace is { Name: "System", ContainingNamespace.IsGlobalNamespace: true }
-             && @interface.IsGenericType
+      return @interface is
+             {
+                Name: "IParsable",
+                ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true },
+                IsGenericType: true
+             }
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter);
    }
 
    public static bool IsIAdditionOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return @interface.Name == "IAdditionOperators"
-             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
-             && @interface.IsGenericType
-             && @interface.TypeArguments.Length == 3
+      return @interface is
+             {
+                Name: "IAdditionOperators",
+                ContainingNamespace: { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } },
+                IsGenericType: true,
+                TypeArguments: { IsDefaultOrEmpty: false, Length: 3 }
+             }
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
@@ -303,10 +312,13 @@ public static class TypeSymbolExtensions
 
    public static bool IsISubtractionOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return @interface.Name == "ISubtractionOperators"
-             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
-             && @interface.IsGenericType
-             && @interface.TypeArguments.Length == 3
+      return @interface is
+             {
+                Name: "ISubtractionOperators",
+                ContainingNamespace: { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } },
+                IsGenericType: true,
+                TypeArguments: { IsDefaultOrEmpty: false, Length: 3 }
+             }
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
@@ -314,10 +326,13 @@ public static class TypeSymbolExtensions
 
    public static bool IsIMultiplyOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return @interface.Name == "IMultiplyOperators"
-             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
-             && @interface.IsGenericType
-             && @interface.TypeArguments.Length == 3
+      return @interface is
+             {
+                Name: "IMultiplyOperators",
+                ContainingNamespace: { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } },
+                IsGenericType: true,
+                TypeArguments: { IsDefaultOrEmpty: false, Length: 3 }
+             }
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
@@ -325,10 +340,13 @@ public static class TypeSymbolExtensions
 
    public static bool IsIDivisionOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return @interface.Name == "IDivisionOperators"
-             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
-             && @interface.IsGenericType
-             && @interface.TypeArguments.Length == 3
+      return @interface is
+             {
+                Name: "IDivisionOperators",
+                ContainingNamespace: { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } },
+                IsGenericType: true,
+                TypeArguments: { IsDefaultOrEmpty: false, Length: 3 }
+             }
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[2], genericTypeParameter);
@@ -336,10 +354,13 @@ public static class TypeSymbolExtensions
 
    public static bool IsIComparisonOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
    {
-      return @interface.Name == "IComparisonOperators"
-             && @interface.ContainingNamespace is { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } }
-             && @interface.IsGenericType
-             && @interface.TypeArguments.Length == 3
+      return @interface is
+             {
+                Name: "IComparisonOperators",
+                ContainingNamespace: { Name: "Numerics", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } },
+                IsGenericType: true,
+                TypeArguments: { IsDefaultOrEmpty: false, Length: 3 }
+             }
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
              && @interface.TypeArguments[2].SpecialType == SpecialType.System_Boolean;
@@ -561,10 +582,7 @@ public static class TypeSymbolExtensions
    {
       foreach (var member in enumType.GetNonIgnoredMembers())
       {
-         if (member is not IMethodSymbol method)
-            continue;
-
-         if (method.Name != "CreateInvalidItem")
+         if (member is not IMethodSymbol { Name: "CreateInvalidItem" } method)
             continue;
 
          if (method.Parameters.Length == 1)
@@ -572,8 +590,7 @@ public static class TypeSymbolExtensions
             var parameterType = method.Parameters[0].Type;
             var returnType = method.ReturnType;
 
-            if (member.IsStatic &&
-                member.DeclaredAccessibility == Accessibility.Private &&
+            if (member is { IsStatic: true, DeclaredAccessibility: Accessibility.Private } &&
                 SymbolEqualityComparer.Default.Equals(parameterType, keyType) &&
                 SymbolEqualityComparer.Default.Equals(returnType, enumType))
             {
