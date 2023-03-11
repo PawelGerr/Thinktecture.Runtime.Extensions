@@ -16,12 +16,24 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
-      var enumTypes = context.SyntaxProvider
-                             .CreateSyntaxProvider(IsCandidate, GetEnumType)
-                             .Where(static state => state.HasValue && IsKeyNotNotNullable(state.Value))
-                             .Select(static (state, _) => state!.Value)
-                             .Collect()
-                             .SelectMany(static (states, _) => states.Distinct());
+      var enumTypeOrException = context.SyntaxProvider
+                                       .CreateSyntaxProvider(IsCandidate, GetEnumType)
+                                       .SelectMany(static (state, _) => state.HasValue
+                                                                           ? ImmutableArray.Create(state.Value)
+                                                                           : ImmutableArray<SourceGenState<EnumSourceGeneratorState>>.Empty);
+
+      var enumTypes = enumTypeOrException
+                      .SelectMany(static (state, _) => state.State is not null && IsKeyNotNotNullable(state.State)
+                                                          ? ImmutableArray.Create(state.State)
+                                                          : ImmutableArray<EnumSourceGeneratorState>.Empty)
+                      .Collect()
+                      .Select(static (states, _) => states.Distinct().ToImmutableArray())
+                      .WithComparer(new SetComparer<EnumSourceGeneratorState>())
+                      .SelectMany((states, _) => states);
+
+      var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Exception is not null
+                                                                              ? ImmutableArray.Create(state.Exception)
+                                                                              : ImmutableArray<Exception>.Empty);
 
       var generators = context.GetMetadataReferencesProvider()
                               .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
@@ -29,15 +41,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
       context.RegisterSourceOutput(enumTypes.Combine(generators), GenerateCode);
+      context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private static bool IsKeyNotNotNullable(SourceGenState<EnumSourceGeneratorState> state)
+   private static bool IsKeyNotNotNullable(EnumSourceGeneratorState state)
    {
-      if (state.State is null)
-         return true;
-
-      return !state.State.KeyProperty.IsNullableStruct
-             && state.State.KeyProperty.NullableAnnotation != NullableAnnotation.Annotated;
+      return !state.KeyProperty.IsNullableStruct
+             && state.KeyProperty.NullableAnnotation != NullableAnnotation.Annotated;
    }
 
    private static ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)
@@ -104,7 +114,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
 
          return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, enumInterface, cancellationToken), null);
       }
-      catch (OperationCanceledException)
+      catch (OperationCanceledException)when (cancellationToken.IsCancellationRequested)
       {
          throw;
       }

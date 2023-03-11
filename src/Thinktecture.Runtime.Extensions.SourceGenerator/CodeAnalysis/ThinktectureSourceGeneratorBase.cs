@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
@@ -26,19 +27,27 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       _stringBuilderPool.Enqueue(new StringBuilder(stringBuilderInitialSize));
    }
 
-   protected void GenerateCode(
+   protected void ReportException(
       SourceProductionContext context,
-      (SourceGenState<TState>, ImmutableArray<ICodeGeneratorFactory<TState>>) tuple)
+      Exception exception)
    {
-      var ((state, exception), generatorFactories) = tuple;
-
-      if (exception is not null)
+      try
       {
          context.ReportException(exception);
-         return;
       }
+      catch (Exception ex)
+      {
+         Debug.Write(ex);
+      }
+   }
 
-      if (state is null || generatorFactories.IsDefaultOrEmpty)
+   protected void GenerateCode(
+      SourceProductionContext context,
+      (TState, ImmutableArray<ICodeGeneratorFactory<TState>>) tuple)
+   {
+      var (state, generatorFactories) = tuple;
+
+      if (generatorFactories.IsDefaultOrEmpty)
          return;
 
       var stringBuilder = LeaseStringBuilder();
