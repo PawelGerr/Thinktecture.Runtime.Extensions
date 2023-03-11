@@ -6,6 +6,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ValueObjectSourceGeneratorState :
    ISourceGeneratorState,
+   ITypeInformation,
    IEquatable<ValueObjectSourceGeneratorState>
 {
    public string TypeFullyQualified { get; }

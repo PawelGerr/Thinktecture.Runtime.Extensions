@@ -6,10 +6,8 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public abstract class ThinktectureSourceGeneratorBase<TState>
-   where TState : ISourceGeneratorState, IEquatable<TState>
+public abstract class ThinktectureSourceGeneratorBase
 {
-   internal const string THINKTECTURE_RUNTIME_EXTENSIONS = "Thinktecture.Runtime.Extensions.dll";
    internal const string THINKTECTURE_RUNTIME_EXTENSIONS_JSON = "Thinktecture.Runtime.Extensions.Json.dll";
    internal const string THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.dll";
    internal const string THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK = "Thinktecture.Runtime.Extensions.MessagePack.dll";
@@ -41,10 +39,11 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       }
    }
 
-   protected void GenerateCode(
+   protected void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,
       ICodeGeneratorFactory<TState> generatorFactory)
+      where TState : ISourceGeneratorState, IEquatable<TState>
    {
       var stringBuilder = LeaseStringBuilder();
 
@@ -58,9 +57,10 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       }
    }
 
-   protected void GenerateCode(
+   protected void GenerateCode<TState>(
       SourceProductionContext context,
       (TState, ImmutableArray<ICodeGeneratorFactory<TState>>) tuple)
+      where TState : ISourceGeneratorState, IEquatable<TState>
    {
       var stringBuilder = LeaseStringBuilder();
 
@@ -82,11 +82,12 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       }
    }
 
-   private static void GenerateCode(
+   private static void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,
       ICodeGeneratorFactory<TState> generatorFactory,
       StringBuilder stringBuilder)
+      where TState : ISourceGeneratorState, IEquatable<TState>
    {
       try
       {

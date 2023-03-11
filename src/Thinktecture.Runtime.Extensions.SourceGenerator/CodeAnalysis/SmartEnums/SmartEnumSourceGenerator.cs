@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 [Generator]
-public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<EnumSourceGeneratorState>, IIncrementalGenerator
+public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public SmartEnumSourceGenerator()
       : base(24_000)
@@ -20,7 +20,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                                        .CreateSyntaxProvider(IsCandidate, GetEnumType)
                                        .SelectMany(static (state, _) => state.HasValue
                                                                            ? ImmutableArray.Create(state.Value)
-                                                                           : ImmutableArray<SourceGenState<EnumSourceGeneratorState>>.Empty);
+                                                                           : ImmutableArray<SourceGenState>.Empty);
 
       var enumTypes = enumTypeOrException
                       .SelectMany(static (state, _) => state.State is not null && IsKeyNotNotNullable(state.State)
@@ -32,6 +32,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                                                        : states.Distinct().ToImmutableArray())
                       .WithComparer(new SetComparer<EnumSourceGeneratorState>())
                       .SelectMany((states, _) => states);
+
+      var derivedTypes = enumTypeOrException
+                         .SelectMany(static (state, _) => state.DerivedTypes?.DerivedTypesFullyQualified.Count > 0
+                                                             ? ImmutableArray.Create(state.DerivedTypes)
+                                                             : ImmutableArray<SmartEnumDerivedTypes>.Empty)
+                         .Collect()
+                         .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                          ? ImmutableArray<SmartEnumDerivedTypes>.Empty
+                                                          : states.Distinct(EnumTypeOnlyComparer.Instance).ToImmutableArray())
+                         .WithComparer(new SetComparer<SmartEnumDerivedTypes>())
+                         .SelectMany((states, _) => states);
 
       var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Exception is not null
                                                                               ? ImmutableArray.Create(state.Exception)
@@ -46,6 +57,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                                         .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
       context.RegisterSourceOutput(enumTypes, (ctx, state) => GenerateCode(ctx, state, SmartEnumCodeGeneratorFactory.Instance));
+      context.RegisterImplementationSourceOutput(derivedTypes, (ctx, types) => GenerateCode(ctx, types, DerivedTypesCodeGeneratorFactory.Instance));
       context.RegisterImplementationSourceOutput(enumTypes.Combine(additionalGenerators), GenerateCode);
       context.RegisterSourceOutput(exceptions, ReportException);
    }
@@ -106,7 +118,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
              && typeDeclaration.IsEnumCandidate();
    }
 
-   private static SourceGenState<EnumSourceGeneratorState>? GetEnumType(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private static SourceGenState? GetEnumType(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
       try
       {
@@ -124,15 +136,33 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
          if (enumInterface is null)
             return null;
 
-         return new SourceGenState<EnumSourceGeneratorState>(new EnumSourceGeneratorState(type, enumInterface, cancellationToken), null);
+         var enumState = new EnumSourceGeneratorState(type, enumInterface, cancellationToken);
+         var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
+
+         return new SourceGenState(enumState, derivedTypes, null);
       }
-      catch (OperationCanceledException)when (cancellationToken.IsCancellationRequested)
+      catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
          throw;
       }
       catch (Exception ex)
       {
-         return new SourceGenState<EnumSourceGeneratorState>(null, ex);
+         return new SourceGenState(null, null, ex);
       }
    }
+
+   private static IReadOnlyList<string> FindDerivedTypes(INamedTypeSymbol type)
+   {
+      var derivedTypes = type.FindDerivedInnerEnums();
+
+      if (derivedTypes.Count == 0)
+         return Array.Empty<string>();
+
+      return derivedTypes
+             .Select(t => t.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
+             .Distinct()
+             .ToList();
+   }
+
+   private record struct SourceGenState(EnumSourceGeneratorState? State, SmartEnumDerivedTypes? DerivedTypes, Exception? Exception);
 }

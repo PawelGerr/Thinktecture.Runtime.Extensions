@@ -369,15 +369,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var enumType = typeof(").Append(enumType).Append(@");
          var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(").Append(keyMember.TypeFullyQualified).Append("), true, ").Append(_state.IsValidatable ? "true" : "false").Append(@", convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);");
-
-      foreach (var derivedType in _state.FullyQualifiedDerivedTypes)
-      {
-         _sb.Append(@"
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(").Append(derivedType).Append("), metadata);");
-      }
-
-      _sb.Append(@"
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }");
    }
 

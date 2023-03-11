@@ -1,5 +1,7 @@
 namespace Thinktecture.CodeAnalysis;
 
-public interface ISourceGeneratorState : ITypeInformation
+public interface ISourceGeneratorState
 {
+   string? Namespace { get; }
+   string Name { get; }
 }

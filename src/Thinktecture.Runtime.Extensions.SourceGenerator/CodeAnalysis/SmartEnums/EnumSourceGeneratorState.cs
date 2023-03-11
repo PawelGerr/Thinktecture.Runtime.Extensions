@@ -5,6 +5,7 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class EnumSourceGeneratorState :
    ISourceGeneratorState,
+   ITypeInformation,
    IEquatable<EnumSourceGeneratorState>
 {
    internal const string KEY_EQUALITY_COMPARER_NAME = "KeyEqualityComparer";
@@ -33,7 +34,6 @@ public sealed class EnumSourceGeneratorState :
 
    public IReadOnlyList<string> ItemNames { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
-   public IReadOnlyList<string> FullyQualifiedDerivedTypes { get; }
 
    public AttributeInfo AttributeInfo { get; }
 
@@ -64,11 +64,6 @@ public sealed class EnumSourceGeneratorState :
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
-      FullyQualifiedDerivedTypes = type.FindDerivedInnerEnums()
-                                       .Select(t => t.Type)
-                                       .Distinct<INamedTypeSymbol>(SymbolEqualityComparer.Default)
-                                       .Select(t => t.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
-                                       .ToList();
 
       AttributeInfo = new AttributeInfo(type);
    }
@@ -110,8 +105,7 @@ public sealed class EnumSourceGeneratorState :
              && Equals(BaseType, other.BaseType)
              && Settings.Equals(other.Settings)
              && ItemNames.EqualsTo(other.ItemNames)
-             && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
-             && FullyQualifiedDerivedTypes.EqualsTo(other.FullyQualifiedDerivedTypes);
+             && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties);
    }
 
    public override int GetHashCode()
@@ -130,7 +124,6 @@ public sealed class EnumSourceGeneratorState :
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
-         hashCode = (hashCode * 397) ^ FullyQualifiedDerivedTypes.ComputeHashCode();
 
          return hashCode;
       }

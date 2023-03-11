@@ -1,3 +1,4 @@
+using System.Linq;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Xunit.Abstractions;
 
@@ -1320,10 +1321,15 @@ public partial class TestEnum : IEnum<string>
          }
 
          """;
-      var outputs = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      outputs.Should().HaveCount(2);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var derivedTypesOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.DerivedTypes.g.cs")).Value;
 
       /* language=c# */
-      AssertOutput(outputs, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -1348,10 +1354,6 @@ namespace Thinktecture.Tests
          var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.GenericEnum<>), metadata);
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.UnusedGenericEnum<>), metadata);
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum), metadata);
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.UnusedDerivedEnum), metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -1836,6 +1838,26 @@ namespace Thinktecture.Tests
          var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
          return validationResult is null;
       }
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(derivedTypesOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestEnum
+{
+   [global::System.Runtime.CompilerServices.ModuleInitializer]
+   internal static void DerivedTypesModuleInit()
+   {
+      var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.GenericEnum<>));
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.UnusedGenericEnum<>));
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum));
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.UnusedDerivedEnum));
    }
 }
 
