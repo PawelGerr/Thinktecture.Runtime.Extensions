@@ -1,4 +1,3 @@
-using System.Linq;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Xunit.Abstractions;
 
@@ -1270,37 +1269,61 @@ public partial class TestEnum : IEnum<string>
    public void Should_generate_enum_with_inner_derived_type_which_is_generic()
    {
       /* language=c# */
-      var source = @"
-using System;
+      var source = """
+         using System;
 
-namespace Thinktecture.Tests
-{
-	public partial class TestEnum : IEnum<string>
-	{
-      public static readonly TestEnum Item1 = new(""Item1"");
-      public static readonly TestEnum Item2 = new DerivedEnum<int>(""Item2"");
-      public static readonly TestEnum Item3 = new DerivedEnum<decimal>(""Item3"");
-      public static readonly TestEnum Item4 = new DerivedEnum<decimal>(""Item4"");
-
-      private class DerivedEnum<T> : TestEnum
-      {
-         public DerivedEnum(string key)
-            : base(key)
+         namespace Thinktecture.Tests
          {
+         	public partial class TestEnum : IEnum<string>
+         	{
+               public static readonly TestEnum Item_1 = new("Item 1");
+               public static readonly TestEnum Item_2 = new("Item 2");
+               public static readonly TestEnum Item_int_1 = new GenericEnum<int>("GenericEnum<int> 1");
+               public static readonly TestEnum Item_decimal_1 = new GenericEnum<decimal>("GenericEnum<decimal> 1");
+               public static readonly TestEnum Item_decimal_2 = new GenericEnum<decimal>("GenericEnum<decimal> 2");
+               public static readonly TestEnum Item_derived_1 = new DerivedEnum("DerivedEnum 1");
+               public static readonly TestEnum Item_derived_2 = new DerivedEnum("DerivedEnum 2");
+
+               private class GenericEnum<T> : TestEnum
+               {
+                  public DerivedEnum(string key)
+                     : base(key)
+                  {
+                  }
+               }
+
+               private class UnusedGenericEnum<T> : TestEnum
+               {
+                  public UnusedGenericEnum(string key)
+                     : base(key)
+                  {
+                  }
+               }
+
+               private class DerivedEnum : TestEnum
+               {
+                  public DerivedEnum(string key)
+                     : base(key)
+                  {
+                  }
+               }
+
+               private class UnusedDerivedEnum : TestEnum
+               {
+                  public UnusedDerivedEnum(string key)
+                     : base(key)
+                  {
+                  }
+               }
+
+            }
          }
-      }
-   }
-}
-";
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
 
-      outputs.Should().HaveCount(2);
-
-      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
-      var genericsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Generics.g.cs")).Value;
+         """;
+      var outputs = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
 
       /* language=c# */
-      AssertOutput(mainOutput, _GENERATED_HEADER + """
+      AssertOutput(outputs, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -1325,6 +1348,10 @@ namespace Thinktecture.Tests
          var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.GenericEnum<>), metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.UnusedGenericEnum<>), metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum), metadata);
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(typeof(global::Thinktecture.Tests.TestEnum.UnusedDerivedEnum), metadata);
       }
 
       public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
@@ -1503,11 +1530,20 @@ namespace Thinktecture.Tests
       /// <param name="testEnumAction3">The action to execute if the current item is equal to <paramref name="testEnum3"/>.</param>
       /// <param name="testEnum4">The item to compare to.</param>
       /// <param name="testEnumAction4">The action to execute if the current item is equal to <paramref name="testEnum4"/>.</param>
+      /// <param name="testEnum5">The item to compare to.</param>
+      /// <param name="testEnumAction5">The action to execute if the current item is equal to <paramref name="testEnum5"/>.</param>
+      /// <param name="testEnum6">The item to compare to.</param>
+      /// <param name="testEnumAction6">The action to execute if the current item is equal to <paramref name="testEnum6"/>.</param>
+      /// <param name="testEnum7">The item to compare to.</param>
+      /// <param name="testEnumAction7">The action to execute if the current item is equal to <paramref name="testEnum7"/>.</param>
       public void Switch(
          TestEnum testEnum1, global::System.Action testEnumAction1,
          TestEnum testEnum2, global::System.Action testEnumAction2,
          TestEnum testEnum3, global::System.Action testEnumAction3,
-         TestEnum testEnum4, global::System.Action testEnumAction4)
+         TestEnum testEnum4, global::System.Action testEnumAction4,
+         TestEnum testEnum5, global::System.Action testEnumAction5,
+         TestEnum testEnum6, global::System.Action testEnumAction6,
+         TestEnum testEnum7, global::System.Action testEnumAction7)
       {
          if (this == testEnum1)
          {
@@ -1524,6 +1560,18 @@ namespace Thinktecture.Tests
          else if (this == testEnum4)
          {
             testEnumAction4();
+         }
+         else if (this == testEnum5)
+         {
+            testEnumAction5();
+         }
+         else if (this == testEnum6)
+         {
+            testEnumAction6();
+         }
+         else if (this == testEnum7)
+         {
+            testEnumAction7();
          }
          else
          {
@@ -1543,12 +1591,21 @@ namespace Thinktecture.Tests
       /// <param name="testEnumAction3">The action to execute if the current item is equal to <paramref name="testEnum3"/>.</param>
       /// <param name="testEnum4">The item to compare to.</param>
       /// <param name="testEnumAction4">The action to execute if the current item is equal to <paramref name="testEnum4"/>.</param>
+      /// <param name="testEnum5">The item to compare to.</param>
+      /// <param name="testEnumAction5">The action to execute if the current item is equal to <paramref name="testEnum5"/>.</param>
+      /// <param name="testEnum6">The item to compare to.</param>
+      /// <param name="testEnumAction6">The action to execute if the current item is equal to <paramref name="testEnum6"/>.</param>
+      /// <param name="testEnum7">The item to compare to.</param>
+      /// <param name="testEnumAction7">The action to execute if the current item is equal to <paramref name="testEnum7"/>.</param>
       public void Switch<TContext>(
          TContext context,
          TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
          TestEnum testEnum2, global::System.Action<TContext> testEnumAction2,
          TestEnum testEnum3, global::System.Action<TContext> testEnumAction3,
-         TestEnum testEnum4, global::System.Action<TContext> testEnumAction4)
+         TestEnum testEnum4, global::System.Action<TContext> testEnumAction4,
+         TestEnum testEnum5, global::System.Action<TContext> testEnumAction5,
+         TestEnum testEnum6, global::System.Action<TContext> testEnumAction6,
+         TestEnum testEnum7, global::System.Action<TContext> testEnumAction7)
       {
          if (this == testEnum1)
          {
@@ -1565,6 +1622,18 @@ namespace Thinktecture.Tests
          else if (this == testEnum4)
          {
             testEnumAction4(context);
+         }
+         else if (this == testEnum5)
+         {
+            testEnumAction5(context);
+         }
+         else if (this == testEnum6)
+         {
+            testEnumAction6(context);
+         }
+         else if (this == testEnum7)
+         {
+            testEnumAction7(context);
          }
          else
          {
@@ -1583,11 +1652,20 @@ namespace Thinktecture.Tests
       /// <param name="testEnumFunc3">The function to execute if the current item is equal to <paramref name="testEnum3"/>.</param>
       /// <param name="testEnum4">The item to compare to.</param>
       /// <param name="testEnumFunc4">The function to execute if the current item is equal to <paramref name="testEnum4"/>.</param>
+      /// <param name="testEnum5">The item to compare to.</param>
+      /// <param name="testEnumFunc5">The function to execute if the current item is equal to <paramref name="testEnum5"/>.</param>
+      /// <param name="testEnum6">The item to compare to.</param>
+      /// <param name="testEnumFunc6">The function to execute if the current item is equal to <paramref name="testEnum6"/>.</param>
+      /// <param name="testEnum7">The item to compare to.</param>
+      /// <param name="testEnumFunc7">The function to execute if the current item is equal to <paramref name="testEnum7"/>.</param>
       public T Switch<T>(
          TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
          TestEnum testEnum2, global::System.Func<T> testEnumFunc2,
          TestEnum testEnum3, global::System.Func<T> testEnumFunc3,
-         TestEnum testEnum4, global::System.Func<T> testEnumFunc4)
+         TestEnum testEnum4, global::System.Func<T> testEnumFunc4,
+         TestEnum testEnum5, global::System.Func<T> testEnumFunc5,
+         TestEnum testEnum6, global::System.Func<T> testEnumFunc6,
+         TestEnum testEnum7, global::System.Func<T> testEnumFunc7)
       {
          if (this == testEnum1)
          {
@@ -1604,6 +1682,18 @@ namespace Thinktecture.Tests
          else if (this == testEnum4)
          {
             return testEnumFunc4();
+         }
+         else if (this == testEnum5)
+         {
+            return testEnumFunc5();
+         }
+         else if (this == testEnum6)
+         {
+            return testEnumFunc6();
+         }
+         else if (this == testEnum7)
+         {
+            return testEnumFunc7();
          }
          else
          {
@@ -1623,12 +1713,21 @@ namespace Thinktecture.Tests
       /// <param name="testEnumFunc3">The function to execute if the current item is equal to <paramref name="testEnum3"/>.</param>
       /// <param name="testEnum4">The item to compare to.</param>
       /// <param name="testEnumFunc4">The function to execute if the current item is equal to <paramref name="testEnum4"/>.</param>
+      /// <param name="testEnum5">The item to compare to.</param>
+      /// <param name="testEnumFunc5">The function to execute if the current item is equal to <paramref name="testEnum5"/>.</param>
+      /// <param name="testEnum6">The item to compare to.</param>
+      /// <param name="testEnumFunc6">The function to execute if the current item is equal to <paramref name="testEnum6"/>.</param>
+      /// <param name="testEnum7">The item to compare to.</param>
+      /// <param name="testEnumFunc7">The function to execute if the current item is equal to <paramref name="testEnum7"/>.</param>
       public T Switch<TContext, T>(
          TContext context,
          TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
          TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2,
          TestEnum testEnum3, global::System.Func<TContext, T> testEnumFunc3,
-         TestEnum testEnum4, global::System.Func<TContext, T> testEnumFunc4)
+         TestEnum testEnum4, global::System.Func<TContext, T> testEnumFunc4,
+         TestEnum testEnum5, global::System.Func<TContext, T> testEnumFunc5,
+         TestEnum testEnum6, global::System.Func<TContext, T> testEnumFunc6,
+         TestEnum testEnum7, global::System.Func<TContext, T> testEnumFunc7)
       {
          if (this == testEnum1)
          {
@@ -1646,6 +1745,18 @@ namespace Thinktecture.Tests
          {
             return testEnumFunc4(context);
          }
+         else if (this == testEnum5)
+         {
+            return testEnumFunc5(context);
+         }
+         else if (this == testEnum6)
+         {
+            return testEnumFunc6(context);
+         }
+         else if (this == testEnum7)
+         {
+            return testEnumFunc7(context);
+         }
          else
          {
             throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
@@ -1654,7 +1765,7 @@ namespace Thinktecture.Tests
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
       {
-         var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(4, KeyEqualityComparer);
+         var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(7, KeyEqualityComparer);
 
          void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
          {
@@ -1670,10 +1781,13 @@ namespace Thinktecture.Tests
             lookup.Add(item.Key, item);
          }
 
-         AddItem(Item1, nameof(Item1));
-         AddItem(Item2, nameof(Item2));
-         AddItem(Item3, nameof(Item3));
-         AddItem(Item4, nameof(Item4));
+         AddItem(Item_1, nameof(Item_1));
+         AddItem(Item_2, nameof(Item_2));
+         AddItem(Item_int_1, nameof(Item_int_1));
+         AddItem(Item_decimal_1, nameof(Item_decimal_1));
+         AddItem(Item_decimal_2, nameof(Item_decimal_2));
+         AddItem(Item_derived_1, nameof(Item_derived_1));
+         AddItem(Item_derived_2, nameof(Item_derived_2));
 
          return lookup;
       }
@@ -1722,23 +1836,6 @@ namespace Thinktecture.Tests
          var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
          return validationResult is null;
       }
-   }
-}
-
-""");
-
-      AssertOutput(genericsOutput, _GENERATED_HEADER + """
-
-namespace Thinktecture.Tests;
-
-partial class TestEnum
-{
-   [global::System.Runtime.CompilerServices.ModuleInitializer]
-   internal static void GenericsModuleInit()
-   {
-      var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<int>));
-      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.DerivedEnum<decimal>));
    }
 }
 

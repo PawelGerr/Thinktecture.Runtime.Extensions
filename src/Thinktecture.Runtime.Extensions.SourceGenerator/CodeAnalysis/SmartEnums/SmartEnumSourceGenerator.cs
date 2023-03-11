@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,76 +29,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                               .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
       context.RegisterSourceOutput(enumTypes.Combine(generators), GenerateCode);
-
-      var genericTypes = context.SyntaxProvider.CreateSyntaxProvider(IsInstanceCreation, GetDerivedGenericEnums)
-                                .Where(static tuple => tuple is not null)
-                                .Select(static (tuple, _) => tuple)!
-                                .Collect<GenericEnumInfo>()
-                                .Select(static (tuple, _) => tuple.Distinct().ToImmutableArray())
-                                .WithComparer(new SetComparer<GenericEnumInfo>());
-
-      context.RegisterImplementationSourceOutput(genericTypes, GenerateModuleInitializerCode);
-   }
-
-   private void GenerateModuleInitializerCode(
-      SourceProductionContext context,
-      ImmutableArray<GenericEnumInfo> genericEnumInfos)
-   {
-      var stringBuilder = LeaseStringBuilder();
-
-      try
-      {
-         foreach (var group in genericEnumInfos.GroupBy(i => i.EnumTypeFullyQualified))
-         {
-            stringBuilder.Clear();
-
-            var candidate = group.First();
-            GenerateModuleInitializer(stringBuilder, candidate, group);
-
-            if (stringBuilder.Length <= 0)
-               return;
-
-            var generatedCode = stringBuilder.ToString();
-
-            context.EmitFile(candidate.Namespace, candidate.EnumTypeName, generatedCode, ".Generics");
-         }
-      }
-      finally
-      {
-         Return(stringBuilder);
-      }
-   }
-
-   private static void GenerateModuleInitializer(StringBuilder sb, GenericEnumInfo candidate, IEnumerable<GenericEnumInfo> genericEnums)
-   {
-      sb.Append(CodeGeneratorBase.GENERATED_CODE_PREFIX).Append(@"
-");
-
-      if (candidate.Namespace is not null)
-      {
-         sb.Append(@"
-namespace ").Append(candidate.Namespace).Append(@";
-");
-      }
-
-      sb.Append(@"
-partial class ").Append(candidate.EnumTypeName).Append(@"
-{
-   [global::System.Runtime.CompilerServices.ModuleInitializer]
-   internal static void GenericsModuleInit()
-   {
-      var enumType = typeof(").Append(candidate.EnumTypeFullyQualified).Append(@");");
-
-      foreach (var genericEnum in genericEnums)
-      {
-         sb.Append(@"
-      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(").Append(genericEnum.GenericEnumTypeFullyQualified).Append(@"));");
-      }
-
-      sb.Append(@"
-   }
-}
-");
    }
 
    private static bool IsKeyNotNotNullable(SourceGenState<EnumSourceGeneratorState> state)
@@ -109,33 +38,6 @@ partial class ").Append(candidate.EnumTypeName).Append(@"
 
       return !state.State.KeyProperty.IsNullableStruct
              && state.State.KeyProperty.NullableAnnotation != NullableAnnotation.Annotated;
-   }
-
-   private static bool IsInstanceCreation(SyntaxNode node, CancellationToken _)
-   {
-      return node is BaseObjectCreationExpressionSyntax;
-   }
-
-   private static GenericEnumInfo? GetDerivedGenericEnums(
-      GeneratorSyntaxContext context,
-      CancellationToken cancellationToken)
-   {
-      var typeInfo = context.SemanticModel.GetTypeInfo(context.Node, cancellationToken);
-
-      // search for generic inner enums
-      if (typeInfo.Type is INamedTypeSymbol { IsGenericType: true, IsUnboundGenericType: false, ContainingSymbol: INamedTypeSymbol enumType } type)
-      {
-         // the enum is always the most outer class
-         while (enumType.ContainingSymbol is INamedTypeSymbol namedTypeSymbol)
-         {
-            enumType = namedTypeSymbol;
-         }
-
-         if (enumType.IsEnum())
-            return new(enumType, type);
-      }
-
-      return null;
    }
 
    private static ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)

@@ -325,7 +325,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static IReadOnlyList<(INamedTypeSymbol Type, int Level)> ValidateDerivedTypes(SymbolAnalysisContext context, INamedTypeSymbol enumType)
    {
-      var derivedTypes = enumType.FindDerivedInnerEnums(true);
+      var derivedTypes = enumType.FindDerivedInnerEnums();
       var typeToLeaveOpen = ImmutableArray.Create<INamedTypeSymbol>();
 
       foreach (var derivedType in derivedTypes)

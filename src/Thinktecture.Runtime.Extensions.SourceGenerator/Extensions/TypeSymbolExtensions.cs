@@ -377,12 +377,11 @@ public static class TypeSymbolExtensions
    }
 
    public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerEnums(
-      this ITypeSymbol enumType,
-      bool inclGenericTypeDefinitions = false)
+      this ITypeSymbol enumType)
    {
       List<(INamedTypeSymbol, int Level)>? derivedTypes = null;
 
-      FindDerivedInnerEnums(enumType, 0, enumType, inclGenericTypeDefinitions, ref derivedTypes);
+      FindDerivedInnerEnums(enumType, 0, enumType, ref derivedTypes);
 
       return derivedTypes ?? (IReadOnlyList<(INamedTypeSymbol Type, int Level)>)Array.Empty<(INamedTypeSymbol Type, int Level)>();
    }
@@ -391,21 +390,31 @@ public static class TypeSymbolExtensions
       ITypeSymbol typeToCheck,
       int currentLevel,
       ITypeSymbol enumType,
-      bool inclGenericTypeDefinitions,
       ref List<(INamedTypeSymbol, int Level)>? derivedTypes)
    {
       currentLevel++;
 
-      foreach (var innerType in typeToCheck.GetTypeMembers())
+      var types = typeToCheck.GetTypeMembers();
+
+      for (var i = 0; i < types.Length; i++)
       {
-         // enums can be structs or classes only
-         if (innerType.TypeKind is not (TypeKind.Class or TypeKind.Struct))
+         var innerType = types[i];
+
+         // derived enums can be classes only
+         if (innerType.TypeKind is not TypeKind.Class)
             continue;
 
-         if ((inclGenericTypeDefinitions || !innerType.IsGenericType || innerType.IsUnboundGenericType) && IsDerivedFrom(innerType, enumType))
-            (derivedTypes ??= new List<(INamedTypeSymbol, int Level)>()).Add((innerType, currentLevel));
+         if (IsDerivedFrom(innerType, enumType))
+         {
+            var derivedType = innerType;
 
-         FindDerivedInnerEnums(innerType, currentLevel, enumType, inclGenericTypeDefinitions, ref derivedTypes);
+            if (derivedType is { IsGenericType: true, IsUnboundGenericType: false })
+               derivedType = derivedType.ConstructUnboundGenericType();
+
+            (derivedTypes ??= new List<(INamedTypeSymbol, int Level)>()).Add((derivedType, currentLevel));
+         }
+
+         FindDerivedInnerEnums(innerType, currentLevel, enumType, ref derivedTypes);
       }
    }
 
