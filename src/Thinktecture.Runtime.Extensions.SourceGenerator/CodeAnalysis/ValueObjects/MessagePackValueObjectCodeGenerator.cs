@@ -16,7 +16,7 @@ public sealed class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
       _stringBuilder = stringBuilder;
    }
 
-   public override void Generate()
+   public override void Generate(CancellationToken cancellationToken)
    {
       if (_state.AttributeInfo.HasMessagePackFormatterAttribute)
          return;
@@ -27,7 +27,7 @@ public sealed class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
       }
       else if (!_state.Settings.SkipFactoryMethods)
       {
-         GenerateValueObjectFormatter(_state, _stringBuilder);
+         GenerateValueObjectFormatter(_state, _stringBuilder, cancellationToken);
       }
    }
 
@@ -51,7 +51,7 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
 ");
    }
 
-   private static void GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb)
+   private static void GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb, CancellationToken cancellationToken)
    {
       sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
@@ -103,6 +103,8 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
 
             var validationResult = ").Append(state.TypeFullyQualified).Append(".Validate(");
 
+      cancellationToken.ThrowIfCancellationRequested();
+
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
@@ -144,6 +146,8 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
          writer.WriteArrayHeader(").Append(state.AssignableInstanceFieldsAndProperties.Count).Append(@");
 
          var resolver = options.Resolver;");
+
+      cancellationToken.ThrowIfCancellationRequested();
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
@@ -187,7 +191,7 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
       if (command is not null)
       {
          sb.Append("writer.").Append(command).Append("(value.").Append(memberInfo.Name).Append(")");
-         return ;
+         return;
       }
 
       sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">(resolver).Serialize(ref writer, value.").Append(memberInfo.Name).Append(", options)");

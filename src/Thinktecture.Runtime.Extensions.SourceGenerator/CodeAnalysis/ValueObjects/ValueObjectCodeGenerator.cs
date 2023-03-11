@@ -18,7 +18,7 @@ public sealed class ValueObjectCodeGenerator : CodeGeneratorBase
       _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
    }
 
-   public override void Generate()
+   public override void Generate(CancellationToken cancellationToken)
    {
       _sb.AppendLine(GENERATED_CODE_PREFIX);
 
@@ -33,7 +33,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var emptyStringYieldsNull = _state.Settings.EmptyStringInFactoryMethodsYieldsNull && _state is { IsReferenceType: true, HasKeyMember: true } && _state.KeyMember.Member.IsString();
 
-      GenerateValueObject(emptyStringYieldsNull);
+      GenerateValueObject(emptyStringYieldsNull, cancellationToken);
 
       if (hasNamespace)
       {
@@ -45,7 +45,7 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
    }
 
-   private void GenerateValueObject(bool emptyStringYieldsNull)
+   private void GenerateValueObject(bool emptyStringYieldsNull, CancellationToken cancellationToken)
    {
       var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
 
@@ -105,6 +105,8 @@ namespace ").Append(_state.Namespace).Append(@"
       public static readonly ").Append(_state.TypeFullyQualified).Append(" ").Append(_state.Settings.DefaultInstancePropertyName).Append(" = default;");
       }
 
+      cancellationToken.ThrowIfCancellationRequested();
+
       if (!_state.Settings.SkipFactoryMethods)
       {
          var allowNullKeyMemberInput = _state.HasKeyMember && _state.KeyMember.Member.IsReferenceType;
@@ -127,6 +129,8 @@ namespace ").Append(_state.Namespace).Append(@"
             GenerateExplicitConversion(_state.KeyMember, emptyStringYieldsNull);
       }
 
+      cancellationToken.ThrowIfCancellationRequested();
+
       GenerateConstructor();
       GenerateEqualityOperators();
       GenerateEquals();
@@ -139,6 +143,8 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          for (var i = 0; i < interfaceCodeGenerators.Length; i++)
          {
+            cancellationToken.ThrowIfCancellationRequested();
+
             interfaceCodeGenerators[i].GenerateImplementation(_sb, _state, _state.KeyMember.Member);
          }
       }

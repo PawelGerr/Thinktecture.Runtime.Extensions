@@ -8,7 +8,7 @@ public static class StringBuilderExtensions
 {
    public static void GenerateStructLayoutAttributeIfRequired(this StringBuilder sb, EnumSourceGeneratorState state)
    {
-      if (!state.IsReferenceType && !state.AttributeInfo.HasStructLayoutAttribute)
+      if (state is { IsReferenceType: false, AttributeInfo.HasStructLayoutAttribute: false })
       {
          sb.Append(@"
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");

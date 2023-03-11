@@ -15,12 +15,12 @@ public sealed class NewtonsoftJsonSmartEnumCodeGenerator : CodeGeneratorBase
       _sb = stringBuilder;
    }
 
-   public override void Generate()
+   public override void Generate(CancellationToken cancellationToken)
    {
       if (_state.AttributeInfo.HasNewtonsoftJsonConverterAttribute)
          return;
 
-      _sb.Append(GENERATED_CODE_PREFIX).Append($@"
+      _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
       if (_state.Namespace is not null)

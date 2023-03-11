@@ -17,7 +17,7 @@ public sealed class SmartEnumCodeGenerator : CodeGeneratorBase
       _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
    }
 
-   public override void Generate()
+   public override void Generate(CancellationToken cancellationToken)
    {
       _sb.AppendLine(GENERATED_CODE_PREFIX);
 
@@ -30,7 +30,7 @@ namespace ").Append(_state.Namespace).Append(@"
 {");
       }
 
-      GenerateEnum();
+      GenerateEnum(cancellationToken);
 
       if (hasNamespace)
       {
@@ -42,7 +42,7 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
    }
 
-   private void GenerateEnum()
+   private void GenerateEnum(CancellationToken cancellationToken)
    {
       var needCreateInvalidImplementation = _state is { IsValidatable: true, HasCreateInvalidImplementation: false };
 
@@ -118,6 +118,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private readonly int _hashCode;");
 
+      cancellationToken.ThrowIfCancellationRequested();
+
       GenerateConstructors();
       GenerateGetKey();
       GenerateGet();
@@ -128,12 +130,16 @@ namespace ").Append(_state.Namespace).Append(@"
       if (needCreateInvalidImplementation && !_state.IsAbstract)
          GenerateCreateInvalidItem();
 
+      cancellationToken.ThrowIfCancellationRequested();
+
       GenerateTryGet();
       GenerateValidate();
       GenerateImplicitConversion();
       GenerateExplicitConversion();
       GenerateEqualityOperators();
       GenerateEquals();
+
+      cancellationToken.ThrowIfCancellationRequested();
 
       _sb.Append(@"
 
@@ -160,6 +166,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       for (var i = 0; i < interfaceCodeGenerators.Length; i++)
       {
+         cancellationToken.ThrowIfCancellationRequested();
+
          interfaceCodeGenerators[i].GenerateImplementation(_sb, _state, _state.KeyProperty);
       }
 
@@ -189,7 +197,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Executes an action depending on the current item.
       /// </summary>");
 
-      var itemNamePrefix = _state.Name.MakeArgumentName();
+      var itemNamePrefix = _state.ArgumentName;
 
       if (withContext)
       {
@@ -277,7 +285,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""context"">Context to be passed to the callbacks.</param>");
       }
 
-      var itemNamePrefix = _state.Name.MakeArgumentName();
+      var itemNamePrefix = _state.ArgumentName;
 
       for (var i = 0; i < _state.ItemNames.Count; i++)
       {

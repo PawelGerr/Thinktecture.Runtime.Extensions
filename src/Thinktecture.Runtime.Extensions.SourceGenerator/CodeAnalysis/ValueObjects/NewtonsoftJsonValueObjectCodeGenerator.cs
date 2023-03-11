@@ -16,7 +16,7 @@ public sealed class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
       _stringBuilder = stringBuilder;
    }
 
-   public override void Generate()
+   public override void Generate(CancellationToken cancellationToken)
    {
       if (_state.AttributeInfo.HasNewtonsoftJsonConverterAttribute)
          return;
@@ -27,7 +27,7 @@ public sealed class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
       }
       else if (!_state.Settings.SkipFactoryMethods)
       {
-         GenerateValueObjectJsonConverter(_state, _stringBuilder);
+         GenerateValueObjectJsonConverter(_state, _stringBuilder, cancellationToken);
       }
    }
 
@@ -51,7 +51,7 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
 ");
    }
 
-   private static void GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb)
+   private static void GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb, CancellationToken cancellationToken)
    {
       sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
@@ -123,6 +123,8 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
                throw new global::Newtonsoft.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(state.TypeMinimallyQualified).Append(@"\""."");
 ");
 
+      cancellationToken.ThrowIfCancellationRequested();
+
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
@@ -158,6 +160,8 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
 
          var validationResult = ").Append(state.TypeFullyQualified).Append(".Validate(");
 
+      cancellationToken.ThrowIfCancellationRequested();
+
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
@@ -188,6 +192,8 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
          var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
 
          writer.WriteStartObject();");
+
+      cancellationToken.ThrowIfCancellationRequested();
 
       for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
       {

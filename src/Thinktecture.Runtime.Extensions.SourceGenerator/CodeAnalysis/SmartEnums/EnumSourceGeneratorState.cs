@@ -25,6 +25,10 @@ public sealed class EnumSourceGeneratorState :
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
    public string Name { get; }
+
+   private string? _argumentName;
+   public string ArgumentName => _argumentName ??= Name.MakeArgumentName();
+
    public EnumSettings Settings { get; }
 
    public IReadOnlyList<string> ItemNames { get; }

@@ -15,7 +15,7 @@ public sealed class MessagePackSmartEnumCodeGenerator : CodeGeneratorBase
       _sb = stringBuilder;
    }
 
-   public override void Generate()
+   public override void Generate(CancellationToken cancellationToken)
    {
       if (_state.AttributeInfo.HasMessagePackFormatterAttribute)
          return;

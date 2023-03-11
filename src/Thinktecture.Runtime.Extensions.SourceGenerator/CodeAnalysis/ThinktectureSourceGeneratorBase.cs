@@ -91,7 +91,7 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
       try
       {
          var generator = generatorFactory.Create(state, stringBuilder);
-         generator.Generate();
+         generator.Generate(context.CancellationToken);
 
          if (stringBuilder.Length <= 0)
             return;
