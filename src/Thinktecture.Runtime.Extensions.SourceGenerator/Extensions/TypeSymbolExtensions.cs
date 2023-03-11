@@ -16,7 +16,7 @@ public static class TypeSymbolExtensions
 
    public static bool IsSelfOrBaseTypesAnEnum(this ITypeSymbol? type)
    {
-      while (type is not null)
+      while (!type.IsNullOrObject())
       {
          if (type.IsEnum())
             return true;
@@ -118,22 +118,25 @@ public static class TypeSymbolExtensions
       var emitDontImplementEnumInterfaceWithTwoGenerics = false;
       INamedTypeSymbol? enumInterfaceWithTwoGenerics = null;
 
-      foreach (var enumInterface in enumInterfaces)
+      for (var i = 0; i < enumInterfaces.Count; i++)
       {
-         if (!enumInterface.IsGenericType)
+         var enumInterface = enumInterfaces[i];
+         var enumInterfaceTypeArgs = enumInterface.TypeArguments;
+
+         if (!enumInterface.IsGenericType || enumInterfaceTypeArgs.IsDefaultOrEmpty)
             continue;
 
-         if (enumInterface.TypeArguments.Length != 1)
+         if (enumInterfaceTypeArgs.Length != 1)
          {
-            if (diagnostics is not null && enumInterface is { TypeArguments: { IsDefaultOrEmpty: false, Length: 2 } })
+            if (diagnostics is not null && enumInterfaceTypeArgs.Length == 2)
             {
                if (enumInterfaceWithTwoGenerics is null)
                {
                   enumInterfaceWithTwoGenerics = enumInterface;
                }
                // forbid 2 different implementations of IEnum<TKey, T>
-               else if (!SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], enumInterface.TypeArguments[0])
-                        || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumInterface.TypeArguments[1]))
+               else if (!SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], enumInterfaceTypeArgs[0])
+                        || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumInterfaceTypeArgs[1]))
                {
                   emitDontImplementEnumInterfaceWithTwoGenerics = true;
                }
@@ -142,7 +145,7 @@ public static class TypeSymbolExtensions
             continue;
          }
 
-         var keyType = enumInterface.TypeArguments[0];
+         var keyType = enumInterfaceTypeArgs[0];
 
          if (validInterface == null)
          {
@@ -396,6 +399,9 @@ public static class TypeSymbolExtensions
 
       var types = typeToCheck.GetTypeMembers();
 
+      if (types.IsDefaultOrEmpty)
+         return;
+
       for (var i = 0; i < types.Length; i++)
       {
          var innerType = types[i];
@@ -535,9 +541,9 @@ public static class TypeSymbolExtensions
                                case IPropertySymbol property:
                                {
                                   // other assembly
-                                  if (property.DeclaringSyntaxReferences.Length == 0)
+                                  if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
                                   {
-                                     if (!property.IsReadOnly && !property.IsWriteOnly)
+                                     if (property is { IsReadOnly: false, IsWriteOnly: false })
                                         ReportProperty(property, DiagnosticSeverity.Warning);
                                   }
                                   // same assembly
@@ -594,7 +600,7 @@ public static class TypeSymbolExtensions
          if (member is not IMethodSymbol { Name: "CreateInvalidItem" } method)
             continue;
 
-         if (method.Parameters.Length == 1)
+         if (method.Parameters is { IsDefaultOrEmpty: false, Length: 1 })
          {
             var parameterType = method.Parameters[0].Type;
             var returnType = method.ReturnType;

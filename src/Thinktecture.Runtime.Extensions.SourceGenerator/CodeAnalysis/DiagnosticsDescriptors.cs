@@ -33,6 +33,7 @@ internal static class DiagnosticsDescriptors
    public static readonly DiagnosticDescriptor DontImplementEnumInterfaceWithTwoGenerics = new("TTRESG040", "Don't implement \"IEnum<TKey, T>\", implement \"IEnum<TKey>\" only", "The interface \"IEnum<{0}, {1}>\" will be implemented by Source Generator, implement \"IEnum<{0}>\" only", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
    public static readonly DiagnosticDescriptor ComparerTypeMustMatchMemberType = new("TTRESG041", "The type of the comparer doesn't match the type of the member", "A comparer '{0}' doesn't match the type of the member", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
+   public static readonly DiagnosticDescriptor ErrorDuringCodeAnalysis = new("TTRESG098", "Error during code analysis", "Error during code analysis of '{0}': '{1}'", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Warning, true);
    public static readonly DiagnosticDescriptor ErrorDuringGeneration = new("TTRESG099", "Error during code generation", "Error during code generation for '{0}': '{1}'", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Error, true);
 
    public static readonly DiagnosticDescriptor EnumerationHasNoItems = new("TTRESG100", "The enumeration has no items", "The enumeration '{0}' has no items", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Warning, true);

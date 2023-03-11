@@ -77,12 +77,13 @@ public static class AttributeDataExtensions
 
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
    {
-      var attrs = attributeData.AttributeClass?.TypeArguments;
-
-      if (attrs?.Length != 2)
+      if (attributeData.AttributeClass is not { TypeArguments: var typeArguments })
          return null;
 
-      return (attrs.Value[0], attrs.Value[1]);
+      if (typeArguments.IsDefaultOrEmpty || typeArguments.Length != 2)
+         return null;
+
+      return (typeArguments[0], typeArguments[1]);
    }
 
    private static string? GetStringParameterValue(AttributeData attributeData, string name)

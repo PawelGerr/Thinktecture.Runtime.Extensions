@@ -8,6 +8,9 @@ public static class SymbolExtensions
    {
       var attributes = type.GetAttributes();
 
+      if (attributes.IsDefaultOrEmpty)
+         return null;
+
       for (var i = 0; i < attributes.Length; i++)
       {
          var attribute = attributes[i];

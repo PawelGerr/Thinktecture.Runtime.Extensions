@@ -27,6 +27,6 @@ public sealed class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
       // We cannot include the hash of the items, because the hashcode changes
       // if the order is different, but in (mathematical) sets we don't want to be order-specific.
 
-      return obj.Length.GetHashCode();
+      return obj.IsDefaultOrEmpty ? 0 : obj.Length.GetHashCode();
    }
 }
