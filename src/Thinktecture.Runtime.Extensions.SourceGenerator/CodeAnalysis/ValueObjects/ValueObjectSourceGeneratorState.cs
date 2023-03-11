@@ -4,10 +4,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class ValueObjectSourceGeneratorState :
-   ISourceGeneratorState,
-   ITypeInformation,
-   IEquatable<ValueObjectSourceGeneratorState>
+public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatable<ValueObjectSourceGeneratorState>
 {
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullable { get; }
@@ -139,7 +136,7 @@ public sealed class ValueObjectSourceGeneratorState :
          generators = generators.Add(KeyMember.ComparerAccessor is null ? ComparableCodeGenerator.Default : new ComparableCodeGenerator(KeyMember.ComparerAccessor));
 
       if (!Settings.SkipIParsable && HasKeyMember && (KeyMember.Member.IsString() || KeyMember.Member.IsParsable))
-         generators = generators.Add(ParsableCodeGenerator.Instance);
+         generators = generators.Add(ParsableCodeGenerator.Default);
 
       if (HasKeyMember && KeyMember.Member.HasAdditionOperators && AdditionOperatorsCodeGenerator.TryGet(Settings.AdditionOperators, out var additionOperatorsCodeGenerator))
          generators = generators.Add(additionOperatorsCodeGenerator);

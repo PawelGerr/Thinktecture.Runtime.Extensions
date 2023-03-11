@@ -47,24 +47,13 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var needCreateInvalidItemImplementation = _state is { IsValidatable: true, HasCreateInvalidItemImplementation: false };
 
-      var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
-
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
       _sb.Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
    partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@">,
       global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">,
-      global::System.Numerics.IEqualityOperators<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(", bool>");
-
-      for (var i = 0; i < interfaceCodeGenerators.Length; i++)
-      {
-         _sb.Append(",");
-
-         interfaceCodeGenerators[i].GenerateBaseTypes(_sb, _state, _state.KeyProperty);
-      }
-
-      _sb.Append(@"
+      global::System.Numerics.IEqualityOperators<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@", bool>
    {");
 
       GenerateModuleInitializer(_state.KeyProperty);
@@ -156,7 +145,7 @@ namespace ").Append(_state.Namespace).Append(@"
          return _hashCode;
       }");
 
-      if (!_state.Settings.SkipToString)
+      if (!_state.SkipToString)
          GenerateToString();
 
       GenerateSwitchForAction(false);
@@ -164,13 +153,6 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateSwitchForFunc(false);
       GenerateSwitchForFunc(true);
       GenerateGetLookup();
-
-      for (var i = 0; i < interfaceCodeGenerators.Length; i++)
-      {
-         cancellationToken.ThrowIfCancellationRequested();
-
-         interfaceCodeGenerators[i].GenerateImplementation(_sb, _state, _state.KeyProperty);
-      }
 
       _sb.Append(@"
    }");

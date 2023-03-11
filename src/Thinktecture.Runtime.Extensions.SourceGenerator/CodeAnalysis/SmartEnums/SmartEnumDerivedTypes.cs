@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class SmartEnumDerivedTypes : ISourceGeneratorState, IEquatable<SmartEnumDerivedTypes>
+public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualified, IEquatable<SmartEnumDerivedTypes>
 {
    public string? Namespace { get; }
    public string Name { get; }

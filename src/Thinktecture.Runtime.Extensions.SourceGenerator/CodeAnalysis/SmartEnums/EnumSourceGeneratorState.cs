@@ -1,36 +1,29 @@
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class EnumSourceGeneratorState :
-   ISourceGeneratorState,
-   ITypeInformation,
-   IEquatable<EnumSourceGeneratorState>
+public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<EnumSourceGeneratorState>
 {
    internal const string KEY_EQUALITY_COMPARER_NAME = "KeyEqualityComparer";
 
    public string? Namespace { get; }
+   public string Name { get; }
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeMinimallyQualified { get; }
 
    public IMemberState KeyProperty { get; }
-
    public bool IsValidatable { get; }
-
    public BaseTypeState? BaseType { get; }
+   public bool SkipToString { get; }
 
    public bool HasCreateInvalidItemImplementation { get; }
    public bool HasKeyComparerImplementation { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
-   public string Name { get; }
 
    private string? _argumentName;
    public string ArgumentName => _argumentName ??= Name.MakeArgumentName();
-
-   public EnumSettings Settings { get; }
 
    public IReadOnlyList<string> ItemNames { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
@@ -39,11 +32,16 @@ public sealed class EnumSourceGeneratorState :
 
    public EnumSourceGeneratorState(
       INamedTypeSymbol type,
-      INamedTypeSymbol enumInterface,
+      IMemberState keyProperty,
+      bool skipToString,
+      bool isValidatable,
+      bool hasCreateInvalidItemImplementation,
       CancellationToken cancellationToken)
    {
-      if (enumInterface is null)
-         throw new ArgumentNullException(nameof(enumInterface));
+      KeyProperty = keyProperty;
+      SkipToString = skipToString;
+      IsValidatable = isValidatable;
+      HasCreateInvalidItemImplementation = hasCreateInvalidItemImplementation;
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
@@ -52,16 +50,9 @@ public sealed class EnumSourceGeneratorState :
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
       IsAbstract = type.IsAbstract;
-      IsValidatable = enumInterface.IsValidatableEnumInterface();
-      Settings = new EnumSettings(type.FindEnumGenerationAttribute());
 
       BaseType = type.GetBaseType();
-
-      var keyType = enumInterface.TypeArguments[0];
-      KeyProperty = Settings.CreateKeyProperty(keyType);
-      HasCreateInvalidItemImplementation = IsValidatable && type.HasCreateInvalidItemImplementation(keyType, cancellationToken);
       HasKeyComparerImplementation = HasHasKeyComparerImplementation(type);
-
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
 
@@ -103,7 +94,6 @@ public sealed class EnumSourceGeneratorState :
              && AttributeInfo.Equals(other.AttributeInfo)
              && KeyProperty.Equals(other.KeyProperty)
              && Equals(BaseType, other.BaseType)
-             && Settings.Equals(other.Settings)
              && ItemNames.EqualsTo(other.ItemNames)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties);
    }
@@ -121,30 +111,10 @@ public sealed class EnumSourceGeneratorState :
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
-         hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
 
          return hashCode;
       }
-   }
-
-   public ImmutableArray<IInterfaceCodeGenerator> GetInterfaceCodeGenerators()
-   {
-      var generators = ImmutableArray<IInterfaceCodeGenerator>.Empty;
-
-      if (!Settings.SkipIFormattable && KeyProperty.IsFormattable)
-         generators = generators.Add(FormattableCodeGenerator.Instance);
-
-      if (!Settings.SkipIComparable && KeyProperty.IsComparable)
-         generators = generators.Add(ComparableCodeGenerator.Default);
-
-      if (!Settings.SkipIParsable && (KeyProperty.IsString() || KeyProperty.IsParsable))
-         generators = generators.Add(IsValidatable ? ParsableCodeGenerator.InstanceForValidatableEnum : ParsableCodeGenerator.Instance);
-
-      if (KeyProperty.HasComparisonOperators && ComparisonOperatorsCodeGenerator.TryGet(Settings.ComparisonOperators, null, out var comparisonOperatorsCodeGenerator))
-         generators = generators.Add(comparisonOperatorsCodeGenerator);
-
-      return generators;
    }
 }

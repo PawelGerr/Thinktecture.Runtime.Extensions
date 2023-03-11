@@ -1,14 +1,30 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class EnumTypeOnlyComparer : IEqualityComparer<SmartEnumDerivedTypes>
+public class EnumTypeOnlyComparer
+   : IEqualityComparer<FormattableGeneratorState>,
+     IEqualityComparer<ComparableGeneratorState>,
+     IEqualityComparer<ParsableGeneratorState>,
+     IEqualityComparer<ComparisonOperatorsGeneratorState>
 {
-   public static readonly IEqualityComparer<SmartEnumDerivedTypes> Instance = new EnumTypeOnlyComparer();
+   public static readonly EnumTypeOnlyComparer Instance = new();
 
-   private EnumTypeOnlyComparer()
-   {
-   }
+   public bool Equals(FormattableGeneratorState x, FormattableGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
+   public bool Equals(ComparableGeneratorState x, ComparableGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
+   public bool Equals(ParsableGeneratorState x, ParsableGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
+   public bool Equals(ComparisonOperatorsGeneratorState x, ComparisonOperatorsGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
 
-   public bool Equals(SmartEnumDerivedTypes? x, SmartEnumDerivedTypes? y)
+   public int GetHashCode(FormattableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
+   public int GetHashCode(ComparableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
+   public int GetHashCode(ParsableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
+   public int GetHashCode(ComparisonOperatorsGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
+}
+
+public class EnumTypeOnlyComparer<T> : IEqualityComparer<T>
+   where T : ITypeFullyQualified
+{
+   public static readonly IEqualityComparer<T> Instance = new EnumTypeOnlyComparer<T>();
+
+   public bool Equals(T? x, T? y)
    {
       if (x is null)
          return y is null;
@@ -19,7 +35,7 @@ public class EnumTypeOnlyComparer : IEqualityComparer<SmartEnumDerivedTypes>
       return x.TypeFullyQualified == y.TypeFullyQualified;
    }
 
-   public int GetHashCode(SmartEnumDerivedTypes obj)
+   public int GetHashCode(T obj)
    {
       return obj.TypeFullyQualified.GetHashCode();
    }

@@ -1,11 +1,7 @@
 namespace Thinktecture.CodeAnalysis;
 
-public interface ITypeInformation
+public interface ITypeInformation : INamespaceAndName, ITypeFullyQualified
 {
-   string? Namespace { get; }
-   string Name { get; }
-
-   string TypeFullyQualified { get; }
    string TypeMinimallyQualified { get; }
    string TypeFullyQualifiedNullAnnotated { get; }
    bool IsReferenceType { get; }

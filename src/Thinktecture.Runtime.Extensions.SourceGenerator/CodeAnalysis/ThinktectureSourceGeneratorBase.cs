@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture.CodeAnalysis;
 
@@ -39,11 +40,16 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
+   protected void GenerateCode(SourceProductionContext context, FormattableGeneratorState state) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Formattable);
+   protected void GenerateCode(SourceProductionContext context, ComparableGeneratorState state) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Comparable(state.ComparerAccessor));
+   protected void GenerateCode(SourceProductionContext context, ParsableGeneratorState state) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Parsable(state.IsValidatableEnum));
+   protected void GenerateCode(SourceProductionContext context, ComparisonOperatorsGeneratorState state, IInterfaceCodeGenerator codeGenerator) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.ComparisonOperators(codeGenerator));
+
    protected void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,
       ICodeGeneratorFactory<TState> generatorFactory)
-      where TState : ISourceGeneratorState, IEquatable<TState>
+      where TState : INamespaceAndName, IEquatable<TState>
    {
       var stringBuilder = LeaseStringBuilder();
 
@@ -60,7 +66,7 @@ public abstract class ThinktectureSourceGeneratorBase
    protected void GenerateCode<TState>(
       SourceProductionContext context,
       (TState, ImmutableArray<ICodeGeneratorFactory<TState>>) tuple)
-      where TState : ISourceGeneratorState, IEquatable<TState>
+      where TState : INamespaceAndName, IEquatable<TState>
    {
       var stringBuilder = LeaseStringBuilder();
 
@@ -87,7 +93,39 @@ public abstract class ThinktectureSourceGeneratorBase
       TState state,
       ICodeGeneratorFactory<TState> generatorFactory,
       StringBuilder stringBuilder)
-      where TState : ISourceGeneratorState, IEquatable<TState>
+      where TState : INamespaceAndName, IEquatable<TState>
+   {
+      GenerateCode(context, state.Namespace, state.Name, state, generatorFactory, stringBuilder);
+   }
+
+   private void GenerateCode<TState>(
+      SourceProductionContext context,
+      string? ns,
+      string name,
+      TState state,
+      ICodeGeneratorFactory<TState> generatorFactory)
+      where TState : IEquatable<TState>
+   {
+      var stringBuilder = LeaseStringBuilder();
+
+      try
+      {
+         GenerateCode(context, ns, name, state, generatorFactory, stringBuilder);
+      }
+      finally
+      {
+         Return(stringBuilder);
+      }
+   }
+
+   private static void GenerateCode<TState>(
+      SourceProductionContext context,
+      string? ns,
+      string name,
+      TState state,
+      ICodeGeneratorFactory<TState> generatorFactory,
+      StringBuilder stringBuilder)
+      where TState : IEquatable<TState>
    {
       try
       {
@@ -99,7 +137,7 @@ public abstract class ThinktectureSourceGeneratorBase
 
          var generatedCode = stringBuilder.ToString();
 
-         context.EmitFile(state.Namespace, state.Name, generatedCode, generator.FileNameSuffix);
+         context.EmitFile(ns, name, generatedCode, generator.FileNameSuffix);
       }
       catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
       {
@@ -109,7 +147,7 @@ public abstract class ThinktectureSourceGeneratorBase
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
                                                     Location.None,
-                                                    state.Name, ex.Message));
+                                                    name, ex.Message));
       }
    }
 

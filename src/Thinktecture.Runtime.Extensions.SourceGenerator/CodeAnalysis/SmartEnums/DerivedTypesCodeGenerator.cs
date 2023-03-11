@@ -28,17 +28,17 @@ namespace ").Append(_state.Namespace).Append(@";
       }
 
       _sb.Append(@"
-partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(@" ").Append(_state.Name).Append(@"
+partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(@"
 {
    [global::System.Runtime.CompilerServices.ModuleInitializer]
    internal static void DerivedTypesModuleInit()
    {
-      var enumType = typeof(").Append(_state.TypeFullyQualified).Append(@");");
+      var enumType = typeof(").Append(_state.TypeFullyQualified).Append(");");
 
       foreach (var derivedType in _state.DerivedTypesFullyQualified)
       {
          _sb.Append(@"
-      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(").Append(derivedType).Append(@"));");
+      global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(").Append(derivedType).Append("));");
       }
 
       _sb.Append(@"

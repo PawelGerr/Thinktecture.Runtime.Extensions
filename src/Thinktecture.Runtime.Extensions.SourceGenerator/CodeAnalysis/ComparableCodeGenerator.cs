@@ -8,58 +8,59 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 
    private readonly string? _comparerAccessor;
 
+   public string FileNameSuffix => ".Comparable";
+
    public ComparableCodeGenerator(string? comparerAccessor)
    {
       _comparerAccessor = comparerAccessor;
    }
 
-   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
+   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
    {
       sb.Append(@"
-      global::System.IComparable,
-      global::System.IComparable<").Append(type.TypeFullyQualified).Append(">");
+   global::System.IComparable,
+   global::System.IComparable<").Append(type.TypeFullyQualified).Append(">");
    }
 
-   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberState keyMember)
+   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
    {
       sb.Append(@"
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
 
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
+      if(obj is not ").Append(type.TypeFullyQualified).Append(@" item)
+         throw new global::System.ArgumentException(""Argument must be of type \""").Append(type.TypeMinimallyQualified).Append(@"\""."", nameof(obj));
 
-         if(obj is not ").Append(type.TypeFullyQualified).Append(@" item)
-            throw new global::System.ArgumentException(""Argument must be of type \""").Append(type.TypeMinimallyQualified).Append(@"\""."", nameof(obj));
+      return this.CompareTo(item);
+   }
 
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(").Append(type.TypeFullyQualifiedNullAnnotated).Append(@" obj)
-      {");
+   /// <inheritdoc />
+   public int CompareTo(").Append(type.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+   {");
 
       if (type.IsReferenceType)
       {
          sb.Append(@"
-         if(obj is null)
-            return 1;
+      if(obj is null)
+         return 1;
 ");
       }
 
       if (_comparerAccessor is null)
       {
          sb.Append(@"
-         return this.").Append(keyMember.Name).Append(".CompareTo(obj.").Append(keyMember.Name).Append(");");
+      return this.").Append(keyMember.Name).Append(".CompareTo(obj.").Append(keyMember.Name).Append(");");
       }
       else
       {
          sb.Append(@"
-         return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").Append(keyMember.Name).Append(", obj.").Append(keyMember.Name).Append(");");
+      return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").Append(keyMember.Name).Append(", obj.").Append(keyMember.Name).Append(");");
       }
 
       sb.Append(@"
-      }");
+   }");
    }
 }
