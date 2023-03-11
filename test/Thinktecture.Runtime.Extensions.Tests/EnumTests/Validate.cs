@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTests;
@@ -16,7 +15,7 @@ public class Validate
 
       testEnum.Should().BeNull();
 
-      var validTestEnumValidationResult = ValidTestEnum.Validate(null, out var validTestEnum);
+      var validTestEnumValidationResult = ValidTestEnum.Validate(null!, out var validTestEnum);
       validTestEnumValidationResult.Should().NotBeNull();
       validTestEnumValidationResult.ErrorMessage.Should().Be("There is no item of type 'ValidTestEnum' with the identifier ''.");
       validTestEnumValidationResult.MemberNames.Should().BeEquivalentTo(nameof(TestEnum.Key));
@@ -62,7 +61,7 @@ public class Validate
    [Fact]
    public void Should_throw_if_CreateInvalidItem_isValid_is_true()
    {
-      Action action = () => TestEnumWithInvalidCreateInvalidItem.Validate(TestEnumWithInvalidCreateInvalidItem.INVALID_KEY_FOR_TESTING_ISVALID_TRUE, out _);
+      Action action = () => TestEnumWithInvalidCreateInvalidItem.Validate(TestEnumWithInvalidCreateInvalidItem.INVALID_KEY_FOR_TESTING_IS_VALID_TRUE, out _);
       action.Should().Throw<Exception>().WithMessage("The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'.");
    }
 

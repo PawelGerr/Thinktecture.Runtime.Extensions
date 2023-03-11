@@ -8,7 +8,7 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.Te
 public class ClassWithStringBasedEnum : IEquatable<ClassWithStringBasedEnum>
 {
    [Key(0)]
-   public TestEnum Enum { get; set; }
+   public TestEnum Enum { get; init; }
 
    public ClassWithStringBasedEnum()
    {

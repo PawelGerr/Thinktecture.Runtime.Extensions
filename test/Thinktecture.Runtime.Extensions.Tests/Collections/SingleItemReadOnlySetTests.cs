@@ -7,7 +7,6 @@ namespace Thinktecture.Runtime.Tests.Collections;
 public class SingleItemReadOnlySetTests
 {
    private readonly IReadOnlySet<int> _sut = SingleItem.Set(42);
-   private readonly IReadOnlySet<int> Set = new HashSet<int> { 42 };
 
    [Fact]
    public void Should_have_count_of_1()

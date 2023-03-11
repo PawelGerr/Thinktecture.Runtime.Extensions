@@ -19,7 +19,7 @@ public sealed partial class ProductGroupWithJsonConverter : IValidatableEnum<int
       return 42;
    }
 
-   private static ProductGroupWithJsonConverter CreateInvalid(int key)
+   private static ProductGroupWithJsonConverter CreateInvalidItem(int key)
    {
       // the values can be anything besides the key,
       // the key must not be null

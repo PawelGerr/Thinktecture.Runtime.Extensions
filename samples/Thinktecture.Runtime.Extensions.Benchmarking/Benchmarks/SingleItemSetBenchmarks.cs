@@ -12,7 +12,7 @@ public class SingleItemSetBenchmarks
    [Benchmark]
    public void ForeachSingleItemSet()
    {
-      foreach (var item in _singleItemSet)
+      foreach (var _ in _singleItemSet)
       {
       }
    }
@@ -20,7 +20,7 @@ public class SingleItemSetBenchmarks
    [Benchmark]
    public void ForeachHashSet()
    {
-      foreach (var item in _hashset)
+      foreach (var _ in _hashset)
       {
       }
    }

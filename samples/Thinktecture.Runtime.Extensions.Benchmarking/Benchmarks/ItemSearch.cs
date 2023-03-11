@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
 using BenchmarkDotNet.Attributes;
 
 namespace Thinktecture.Benchmarks;
@@ -25,10 +24,13 @@ public class ItemSearch
    private readonly ReadOnlyDictionary<string, SmartEnum> _readOnlyDictionary;
    private readonly ImmutableDictionary<string, SmartEnum> _immutableDictionary;
    private readonly ImmutableSortedDictionary<string, SmartEnum> _immutableSortedDictionary;
+   private readonly SmartEnum[] _array;
+
+   // ReSharper disable NotAccessedField.Local
    private readonly List<SmartEnum> _list;
    private readonly ReadOnlyCollection<SmartEnum> _readOnlyCollection;
-   private readonly SmartEnum[] _array;
    private readonly string[] _keysArray;
+   // ReSharper restore NotAccessedField.Local
 
    [Params("aaaaAaaaaa", "iiiiIiiiii", "tttttTtttt")]
    public string SearchTerm { get; set; } = String.Empty;

@@ -20,7 +20,7 @@ public sealed class EnumSourceGeneratorState :
 
    public BaseTypeState? BaseType { get; }
 
-   public bool HasCreateInvalidImplementation { get; }
+   public bool HasCreateInvalidItemImplementation { get; }
    public bool HasKeyComparerImplementation { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
@@ -59,7 +59,7 @@ public sealed class EnumSourceGeneratorState :
 
       var keyType = enumInterface.TypeArguments[0];
       KeyProperty = Settings.CreateKeyProperty(keyType);
-      HasCreateInvalidImplementation = type.HasCreateInvalidImplementation(keyType, cancellationToken);
+      HasCreateInvalidItemImplementation = IsValidatable && type.HasCreateInvalidItemImplementation(keyType, cancellationToken);
       HasKeyComparerImplementation = HasHasKeyComparerImplementation(type);
 
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
@@ -101,7 +101,7 @@ public sealed class EnumSourceGeneratorState :
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsValidatable == other.IsValidatable
-             && HasCreateInvalidImplementation == other.HasCreateInvalidImplementation
+             && HasCreateInvalidItemImplementation == other.HasCreateInvalidItemImplementation
              && HasKeyComparerImplementation == other.HasKeyComparerImplementation
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
@@ -120,7 +120,7 @@ public sealed class EnumSourceGeneratorState :
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasCreateInvalidImplementation.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasCreateInvalidItemImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ HasKeyComparerImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();

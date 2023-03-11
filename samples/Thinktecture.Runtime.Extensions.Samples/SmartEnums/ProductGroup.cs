@@ -18,9 +18,11 @@ public sealed partial class ProductGroup : IValidatableEnum<int>
       return 42;
    }
 
+   // ReSharper disable UnusedParameterInPartialMethod
    static partial void ValidateConstructorArguments(ref int key, bool isValid, ref string displayName, ref ProductCategory category)
    {
    }
+   // ReSharper restore UnusedParameterInPartialMethod
 
    private static ProductGroup CreateInvalidItem(int key)
    {

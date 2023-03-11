@@ -153,32 +153,32 @@ public class Program
 
       var app = builder.Build();
 
-      var group = app.MapGroup("/api");
+      var routeGroup = app.MapGroup("/api");
 
-      group.MapGet("category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });
-      group.MapGet("categoryWithConverter/{category}", (ProductCategoryWithJsonConverter category) => new { Value = category, category.IsValid });
-      group.MapGet("group/{group}", (ProductGroup group) => new { Value = group, group.IsValid });
-      group.MapGet("groupWithConverter/{group}", (ProductGroupWithJsonConverter group) => new { Value = group, group.IsValid });
-      group.MapGet("productType/{productType}", (ProductType productType) => productType);
-      group.MapGet("productType", (ProductType productType) => productType);
-      group.MapGet("productTypeWithFilter", (BoundValueObject<ProductType> productType) => ValueTask.FromResult(productType.Value))
-           .AddEndpointFilter((context, next) =>
-                              {
-                                 var value = context.GetArgument<IBoundParam>(0);
+      routeGroup.MapGet("category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });
+      routeGroup.MapGet("categoryWithConverter/{category}", (ProductCategoryWithJsonConverter category) => new { Value = category, category.IsValid });
+      routeGroup.MapGet("group/{group}", (ProductGroup group) => new { Value = group, group.IsValid });
+      routeGroup.MapGet("groupWithConverter/{group}", (ProductGroupWithJsonConverter group) => new { Value = group, group.IsValid });
+      routeGroup.MapGet("productType/{productType}", (ProductType productType) => productType);
+      routeGroup.MapGet("productType", (ProductType productType) => productType);
+      routeGroup.MapGet("productTypeWithFilter", (BoundValueObject<ProductType> productType) => ValueTask.FromResult(productType.Value))
+                .AddEndpointFilter((context, next) =>
+                                   {
+                                      var value = context.GetArgument<IBoundParam>(0);
 
-                                 if (value.Error is not null)
-                                    return new ValueTask<object?>(Results.BadRequest(value.Error));
+                                      if (value.Error is not null)
+                                         return new ValueTask<object?>(Results.BadRequest(value.Error));
 
-                                 return next(context);
-                              });
-      group.MapPost("productType", ([FromBody] ProductType productType) => productType);
-      group.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);
-      group.MapGet("productTypeWithJsonConverter/{productType}", (ProductTypeWithJsonConverter productType) => productType);
-      group.MapGet("productName/{name}", (ProductName name) => name);
-      group.MapPost("productName", ([FromBody] ProductName name) => name);
-      group.MapGet("otherProductName/{name}", (OtherProductName? name) => name);
-      group.MapPost("otherProductName", ([FromBody] OtherProductName name) => name);
-      group.MapPost("boundary", ([FromBody] BoundaryWithJsonConverter boundary) => boundary);
+                                      return next(context);
+                                   });
+      routeGroup.MapPost("productType", ([FromBody] ProductType productType) => productType);
+      routeGroup.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);
+      routeGroup.MapGet("productTypeWithJsonConverter/{productType}", (ProductTypeWithJsonConverter productType) => productType);
+      routeGroup.MapGet("productName/{name}", (ProductName name) => name);
+      routeGroup.MapPost("productName", ([FromBody] ProductName name) => name);
+      routeGroup.MapGet("otherProductName/{name}", (OtherProductName? name) => name);
+      routeGroup.MapPost("otherProductName", ([FromBody] OtherProductName name) => name);
+      routeGroup.MapPost("boundary", ([FromBody] BoundaryWithJsonConverter boundary) => boundary);
 
       return app.StartAsync();
    }

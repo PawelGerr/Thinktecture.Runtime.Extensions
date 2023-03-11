@@ -4,6 +4,7 @@ public class BaseClassWithSetBodyProperty
 {
    public int Property
    {
+      // ReSharper disable once ValueParameterNotUsed
       set { }
    }
 }

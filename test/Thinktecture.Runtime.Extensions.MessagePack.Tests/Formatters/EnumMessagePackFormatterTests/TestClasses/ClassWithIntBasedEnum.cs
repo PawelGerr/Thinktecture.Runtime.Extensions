@@ -8,7 +8,7 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.Te
 public class ClassWithIntBasedEnum : IEquatable<ClassWithIntBasedEnum>
 {
    [Key(0)]
-   public IntegerEnum Enum { get; set; }
+   public IntegerEnum Enum { get; init; }
 
    public ClassWithIntBasedEnum()
    {

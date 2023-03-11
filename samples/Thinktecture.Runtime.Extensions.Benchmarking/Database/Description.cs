@@ -19,9 +19,6 @@ public sealed partial class Description
       value = value.Trim();
 
       if (value.Length < 2)
-      {
          validationResult = new ValidationResult("Description cannot be less than 2 characters.");
-         return;
-      }
    }
 }

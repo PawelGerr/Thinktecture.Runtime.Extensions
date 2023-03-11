@@ -1,5 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
+// ReSharper disable once InconsistentNaming
 public sealed partial class TestSmartEnum_Class_StringBased : IEnum<string>
 {
    public static readonly TestSmartEnum_Class_StringBased Value1 = new("Value1");

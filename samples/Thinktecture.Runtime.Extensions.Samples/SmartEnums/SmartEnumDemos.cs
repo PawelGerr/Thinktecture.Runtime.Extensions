@@ -60,15 +60,16 @@ public class SmartEnumDemos
 
       var returnValue = productType.Switch(ProductType.Groceries, static () => "Switch with Func<T>: Groceries",
                                            ProductType.Housewares, static () => "Switch with Func<T>: Housewares");
+      logger.Information(returnValue);
 
       returnValue = productType.Switch(logger,
-                                       ProductType.Groceries, static l => "Switch with Func<T>: Groceries",
-                                       ProductType.Housewares, static l => "Switch with Func<T>: Housewares");
+                                       ProductType.Groceries, static _ => "Switch with Func<T>: Groceries",
+                                       ProductType.Housewares, static _ => "Switch with Func<T>: Housewares");
 
       logger.Information(returnValue);
 
       var parsed = ProductType.TryParse("Groceries", null, out var parsedProductType);
-      logger.Information("Parsed: {Parsed}", parsedProductType);
+      logger.Information("Success: {Success} Parsed: {Parsed}", parsed, parsedProductType);
 
       var formatted = ProductGroup.Apple.ToString("000", CultureInfo.InvariantCulture); // 001
       logger.Information("Formatted: {Formatted}", formatted);

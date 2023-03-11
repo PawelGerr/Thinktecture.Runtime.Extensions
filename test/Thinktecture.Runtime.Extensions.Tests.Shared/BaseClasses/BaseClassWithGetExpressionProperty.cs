@@ -5,6 +5,7 @@ public class BaseClassWithGetExpressionProperty
    public int Property
    {
       get => 42;
+      // ReSharper disable once ValueParameterNotUsed
       set { }
    }
 }

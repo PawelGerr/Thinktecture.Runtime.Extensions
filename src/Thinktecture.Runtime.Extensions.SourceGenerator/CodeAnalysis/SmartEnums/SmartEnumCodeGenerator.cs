@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
@@ -44,7 +45,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateEnum(CancellationToken cancellationToken)
    {
-      var needCreateInvalidImplementation = _state is { IsValidatable: true, HasCreateInvalidImplementation: false };
+      var needCreateInvalidItemImplementation = _state is { IsValidatable: true, HasCreateInvalidItemImplementation: false };
 
       var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
 
@@ -125,9 +126,9 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateGet();
 
       if (_state.IsValidatable)
-         GenerateCreateAndCheckInvalidItem(needCreateInvalidImplementation);
+         GenerateCreateAndCheckInvalidItem(needCreateInvalidItemImplementation);
 
-      if (needCreateInvalidImplementation && !_state.IsAbstract)
+      if (needCreateInvalidItemImplementation && !_state.IsAbstract)
          GenerateCreateInvalidItem();
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -738,7 +739,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateCreateAndCheckInvalidItem(bool needCreateInvalidImplementation)
+   private void GenerateCreateAndCheckInvalidItem(bool needsCreateInvalidItemImplementation)
    {
       _sb.Append(@"
 
@@ -746,7 +747,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
             var item = ");
 
-      if (needCreateInvalidImplementation && _state.IsAbstract)
+      if (needsCreateInvalidItemImplementation && _state.IsAbstract)
       {
          _sb.Append("null");
       }
@@ -770,7 +771,7 @@ namespace ").Append(_state.Namespace).Append(@"
             if (item.IsValid)
                throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'."");");
 
-      if (!needCreateInvalidImplementation)
+      if (!needsCreateInvalidItemImplementation)
       {
          _sb.Append(@"
 
@@ -824,7 +825,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                                                 var argName = a.ArgumentName;
                                                                 var counter = 0;
 
-                                                                while (_state.KeyProperty.ArgumentName == argName || ownCtorArgs.Any(ownArg => ownArg.ArgumentName == argName))
+                                                                while (_state.KeyProperty.ArgumentName == argName || ContainsArgument(ownCtorArgs, argName))
                                                                 {
                                                                    counter++;
                                                                    argName = $"{a.ArgumentName}{counter}"; // rename the argument name if it collides with another argument
@@ -840,6 +841,18 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          GenerateConstructor(ownCtorArgs.Concat(baseArgs).ToList(), baseArgs);
       }
+   }
+
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   private static bool ContainsArgument(List<ConstructorArgument> ownCtorArgs, string argName)
+   {
+      for (var i = 0; i < ownCtorArgs.Count; i++)
+      {
+         if (ownCtorArgs[i].ArgumentName == argName)
+            return true;
+      }
+
+      return false;
    }
 
    private void GenerateConstructor(

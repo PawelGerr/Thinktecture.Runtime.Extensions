@@ -1,18 +1,16 @@
-
-
 // ReSharper disable once CheckNamespace
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Thinktecture;
+namespace Thinktecture.Runtime.Tests.EnumerableExtensionsTests;
 
 public class ToReadOnlyCollection
 {
    [Fact]
    public void Should_throw_if_items_is_null()
    {
-      0.Invoking(_ => ((IEnumerable<int>)null).ToReadOnlyCollection(42))
+      0.Invoking(_ => ((IEnumerable<int>)null)!.ToReadOnlyCollection(42))
        .Should().Throw<ArgumentNullException>();
    }
 

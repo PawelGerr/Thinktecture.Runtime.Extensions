@@ -5,8 +5,11 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
    // ReSharper disable once InconsistentNaming
    public class Empty_Set
    {
+      // ReSharper disable once MemberCanBeMadeStatic.Local
+      // ReSharper disable once InconsistentNaming
       private IReadOnlySet<object> SUT => Empty.Set<object>();
 
+      // ReSharper disable once CollectionNeverUpdated.Local
       private readonly HashSet<object> _realEmptySet = new();
       private readonly HashSet<object> _realNonEmptySet = new() { 1 };
 

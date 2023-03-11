@@ -375,9 +375,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, ITypeSymbol keyType, Location location)
    {
-      var hasCreateInvalidImplementation = enumType.HasCreateInvalidImplementation(keyType, context.CancellationToken, context.ReportDiagnostic);
+      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(keyType, context.CancellationToken, context.ReportDiagnostic);
 
-      if (!hasCreateInvalidImplementation && enumType.IsAbstract)
+      if (!hasCreateInvalidItemImplementation && enumType.IsAbstract)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
                           location,
@@ -481,29 +481,14 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
    }
 
-   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0)
-   {
-      ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0));
-   }
-
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, string arg1)
    {
       ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0), arg1);
    }
 
-   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0)
-   {
-      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0));
-   }
-
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
-   }
-
-   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location)
-   {
-      context.ReportDiagnostic(Diagnostic.Create(descriptor, location));
    }
 
    private static string BuildTypeName(ITypeSymbol type)

@@ -15,6 +15,7 @@ public class ReadJson
       action.Should().Throw<JsonException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
    }
 
+   // ReSharper disable once UnusedMethodReturnValue.Local
    private static T Deserialize<T>(
       string json,
       JsonNamingPolicy namingPolicy = null,

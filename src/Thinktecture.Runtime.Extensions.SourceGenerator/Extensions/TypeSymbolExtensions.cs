@@ -589,7 +589,7 @@ public static class TypeSymbolExtensions
       return accessor.Body is null && accessor.ExpressionBody is null;
    }
 
-   public static bool HasCreateInvalidImplementation(
+   public static bool HasCreateInvalidItemImplementation(
       this ITypeSymbol enumType,
       ITypeSymbol keyType,
       CancellationToken cancellationToken,

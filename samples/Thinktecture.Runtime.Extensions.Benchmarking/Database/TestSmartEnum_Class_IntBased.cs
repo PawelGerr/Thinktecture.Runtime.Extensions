@@ -1,5 +1,6 @@
 namespace Thinktecture.Database;
 
+// ReSharper disable InconsistentNaming
 public sealed partial class TestSmartEnum_Class_IntBased : IEnum<int>
 {
    public static readonly TestSmartEnum_Class_IntBased Value1 = new(0);

@@ -1,5 +1,6 @@
 namespace Thinktecture.Database;
 
+// ReSharper disable InconsistentNaming
 public class Entity_Enum_StringConverter
 {
    public int Id { get; set; }

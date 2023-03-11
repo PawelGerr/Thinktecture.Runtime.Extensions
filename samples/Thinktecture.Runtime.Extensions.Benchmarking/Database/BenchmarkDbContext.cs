@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Thinktecture.Database;
 
+// ReSharper disable InconsistentNaming
 public class BenchmarkDbContext : DbContext
 {
    public DbSet<Entity_Enum_StringConverter> Entity_Enum_StringConverter { get; set; } = null!;

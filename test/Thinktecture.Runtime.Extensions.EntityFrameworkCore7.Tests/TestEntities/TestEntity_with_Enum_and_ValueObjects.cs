@@ -5,6 +5,7 @@ using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.TestEntities;
 
+// ReSharper disable InconsistentNaming
 public class TestEntity_with_Enum_and_ValueObjects
 {
    public Guid Id { get; set; }

@@ -8,6 +8,7 @@ using Thinktecture.Database;
 
 namespace Thinktecture.Benchmarks;
 
+// ReSharper disable InconsistentNaming
 [MemoryDiagnoser]
 public class LoadingSmartEnums
 {

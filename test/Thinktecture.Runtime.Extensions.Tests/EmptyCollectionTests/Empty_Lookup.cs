@@ -5,6 +5,8 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
 // ReSharper disable once InconsistentNaming
 public class Empty_Lookup
 {
+   // ReSharper disable once MemberCanBeMadeStatic.Local
+   // ReSharper disable once InconsistentNaming
    private ILookup<object, object> SUT => Empty.Lookup<object, object>();
 
    [Fact]

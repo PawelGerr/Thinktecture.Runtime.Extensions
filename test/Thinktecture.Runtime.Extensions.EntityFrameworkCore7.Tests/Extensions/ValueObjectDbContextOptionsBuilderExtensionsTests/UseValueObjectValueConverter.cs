@@ -9,6 +9,7 @@ using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.Extensions.ValueObjectDbContextOptionsBuilderExtensionsTests;
 
+// ReSharper disable InconsistentNaming
 public class UseValueObjectValueConverter : IDisposable
 {
    private static readonly Type _validateableConverterType = typeof(ValueObjectValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)

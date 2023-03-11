@@ -5,6 +5,7 @@ public class BaseClassWithGetBodyStaticProperty
    public static int Property
    {
       get { return 42; }
+      // ReSharper disable once ValueParameterNotUsed
       set { }
    }
 }

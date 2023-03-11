@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Thinktecture.Runtime.Tests.TestEntities;
 
+// ReSharper disable InconsistentNaming
 public class TestDbContext : DbContext
 {
    private readonly bool _registerConverters;

@@ -4,11 +4,11 @@ public class BaseClassWithSetExpressionStaticProperty
 {
    public static class Helper
    {
-      public static int Property { get; set; }
+      public static int HelperProperty { get; set; }
    }
 
    public static int Property
    {
-      set => Helper.Property = value;
+      set => Helper.HelperProperty = value;
    }
 }

@@ -1,5 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
+// ReSharper disable once InconsistentNaming
 public readonly partial struct TestSmartEnum_Struct_IntBased : IValidatableEnum<int>
 {
    public static readonly TestSmartEnum_Struct_IntBased Value1 = new(1);

@@ -19,9 +19,6 @@ public sealed partial class Name
       value = value.Trim();
 
       if (value.Length < 2)
-      {
          validationResult = new ValidationResult("Name cannot be less than 2 characters.");
-         return;
-      }
    }
 }

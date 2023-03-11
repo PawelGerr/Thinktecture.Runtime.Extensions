@@ -1,5 +1,6 @@
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 
+// ReSharper disable InconsistentNaming
 [ValueObject]
 public readonly partial struct TestValueObject_Complex_Struct_WithFormatter
 {

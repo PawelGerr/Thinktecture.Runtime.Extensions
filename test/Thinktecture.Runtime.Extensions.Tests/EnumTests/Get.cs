@@ -29,7 +29,8 @@ public class Get
       var item = (EmptyEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
                                              .Invoke(null, new object[] { "unknown" });
 
-      item.IsValid.Should().BeFalse();
+      item.Should().NotBeNull();
+      item!.IsValid.Should().BeFalse();
       item.Key.Should().Be("unknown");
    }
 
@@ -51,7 +52,7 @@ public class Get
    [Fact]
    public void Should_throw_if_CreateInvalidItem_isValid_is_true()
    {
-      Action action = () => TestEnumWithInvalidCreateInvalidItem.Get(TestEnumWithInvalidCreateInvalidItem.INVALID_KEY_FOR_TESTING_ISVALID_TRUE);
+      Action action = () => TestEnumWithInvalidCreateInvalidItem.Get(TestEnumWithInvalidCreateInvalidItem.INVALID_KEY_FOR_TESTING_IS_VALID_TRUE);
       action.Should().Throw<Exception>().WithMessage("The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'.");
    }
 

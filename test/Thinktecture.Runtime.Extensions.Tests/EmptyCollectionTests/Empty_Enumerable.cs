@@ -6,6 +6,8 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests;
 // ReSharper disable once InconsistentNaming
 public class Empty_Enumerable
 {
+   // ReSharper disable once MemberCanBeMadeStatic.Local
+   // ReSharper disable once InconsistentNaming
    private IEnumerable SUT => Empty.Collection();
 
    [Fact]

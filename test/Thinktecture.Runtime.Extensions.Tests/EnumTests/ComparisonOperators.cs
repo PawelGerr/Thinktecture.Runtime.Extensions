@@ -2,6 +2,7 @@ using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTests;
 
+// ReSharper disable InconsistentNaming
 public class ComparisonOperators
 {
    [Fact]
@@ -10,10 +11,12 @@ public class ComparisonOperators
       var item_1 = IntegerEnum.Item1;
       var item_2 = IntegerEnum.Item2;
 
+      // ReSharper disable EqualExpressionComparison
       (item_1 < item_1).Should().BeFalse();
       (item_1 <= item_1).Should().BeTrue();
       (item_1 > item_1).Should().BeFalse();
       (item_1 >= item_1).Should().BeTrue();
+      // ReSharper restore EqualExpressionComparison
 
       (item_1 < item_2).Should().BeTrue();
       (item_1 <= item_2).Should().BeTrue();

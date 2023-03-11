@@ -23,6 +23,7 @@ public partial class EnumWithDerivedType : IValidatableEnum<int>
       }
    }
 
+   // ReSharper disable once UnusedTypeParameter
    private sealed class GenericEnum<T> : EnumWithDerivedType
    {
       public GenericEnum(int key)

@@ -15,6 +15,7 @@ public sealed partial class TestEnum : IValidatableEnum<string>
    public static readonly IntegerEnum Item6 = IntegerEnum.Item1;
    public static readonly IntegerEnum Item7 = IntegerEnum.Get(42);
 
+   // ReSharper disable once UnusedParameterInPartialMethod
    static partial void ValidateConstructorArguments(ref string key, bool isValid)
    {
       if (String.IsNullOrWhiteSpace(key))

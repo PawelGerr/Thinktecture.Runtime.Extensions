@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;

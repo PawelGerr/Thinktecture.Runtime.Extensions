@@ -58,7 +58,10 @@ public abstract class SourceGeneratorTestsBase
                                  .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
                                  .Cast<MetadataReference>();
 
-      var compilation = CSharpCompilation.Create("SourceGeneratorTests", new[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+      var compilation = CSharpCompilation.Create("SourceGeneratorTests",
+                                                 new[] { syntaxTree },
+                                                 references,
+                                                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
 
       // compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).Should().BeEmpty();
 

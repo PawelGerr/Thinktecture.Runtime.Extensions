@@ -2,6 +2,7 @@ using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
 
+// ReSharper disable InconsistentNaming
 public class ComparisonOperators
 {
    [Fact]
@@ -10,10 +11,12 @@ public class ComparisonOperators
       var obj_1 = DecimalBasedClassValueObject.Create(1);
       var obj_2 = DecimalBasedClassValueObject.Create(2);
 
+      // ReSharper disable EqualExpressionComparison
       (obj_1 < obj_1).Should().BeFalse();
       (obj_1 <= obj_1).Should().BeTrue();
       (obj_1 > obj_1).Should().BeFalse();
       (obj_1 >= obj_1).Should().BeTrue();
+      // ReSharper restore EqualExpressionComparison
 
       (obj_1 < obj_2).Should().BeTrue();
       (obj_1 <= obj_2).Should().BeTrue();

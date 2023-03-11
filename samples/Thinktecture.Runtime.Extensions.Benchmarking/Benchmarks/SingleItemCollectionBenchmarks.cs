@@ -13,7 +13,7 @@ public class SingleItemCollectionBenchmarks
    [Benchmark]
    public void ForeachSingleItemCollection()
    {
-      foreach (var item in _singleItemCollection)
+      foreach (var _ in _singleItemCollection)
       {
       }
    }
@@ -21,7 +21,7 @@ public class SingleItemCollectionBenchmarks
    [Benchmark]
    public void ForeachList()
    {
-      foreach (var item in _list)
+      foreach (var _ in _list)
       {
       }
    }
@@ -29,7 +29,7 @@ public class SingleItemCollectionBenchmarks
    [Benchmark]
    public void ForeachArray()
    {
-      foreach (var item in _array)
+      foreach (var _ in _array)
       {
       }
    }

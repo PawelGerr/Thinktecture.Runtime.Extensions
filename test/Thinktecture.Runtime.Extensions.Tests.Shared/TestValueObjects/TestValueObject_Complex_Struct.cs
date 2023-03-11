@@ -1,5 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
+// ReSharper disable once InconsistentNaming
 [ValueObject]
 public readonly partial struct TestValueObject_Complex_Struct
 {
