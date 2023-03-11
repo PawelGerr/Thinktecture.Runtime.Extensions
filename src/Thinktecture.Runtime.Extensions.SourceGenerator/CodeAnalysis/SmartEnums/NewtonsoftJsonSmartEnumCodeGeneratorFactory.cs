@@ -4,23 +4,19 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class NewtonsoftJsonSmartEnumCodeGeneratorFactory : ICodeGeneratorFactory<EnumSourceGeneratorState>
 {
+   public static readonly ICodeGeneratorFactory<EnumSourceGeneratorState> Instance = new NewtonsoftJsonSmartEnumCodeGeneratorFactory();
+
+   private NewtonsoftJsonSmartEnumCodeGeneratorFactory()
+   {
+   }
+
    public CodeGeneratorBase Create(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
       return new NewtonsoftJsonSmartEnumCodeGenerator(state, stringBuilder);
    }
 
-   public override bool Equals(object? obj)
+   public bool Equals(ICodeGeneratorFactory<EnumSourceGeneratorState> other)
    {
-      return obj is NewtonsoftJsonSmartEnumCodeGeneratorFactory;
-   }
-
-   public bool Equals(ICodeGeneratorFactory<EnumSourceGeneratorState>? obj)
-   {
-      return obj is NewtonsoftJsonSmartEnumCodeGeneratorFactory;
-   }
-
-   public override int GetHashCode()
-   {
-      return GetType().GetHashCode();
+      return ReferenceEquals(this, other);
    }
 }

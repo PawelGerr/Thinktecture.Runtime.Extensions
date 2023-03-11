@@ -4,23 +4,19 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class MessagePackSmartEnumCodeGeneratorFactory : ICodeGeneratorFactory<EnumSourceGeneratorState>
 {
+   public static readonly ICodeGeneratorFactory<EnumSourceGeneratorState> Instance = new MessagePackSmartEnumCodeGeneratorFactory();
+
+   private MessagePackSmartEnumCodeGeneratorFactory()
+   {
+   }
+
    public CodeGeneratorBase Create(EnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
       return new MessagePackSmartEnumCodeGenerator(state, stringBuilder);
    }
 
-   public override bool Equals(object? obj)
+   public bool Equals(ICodeGeneratorFactory<EnumSourceGeneratorState> other)
    {
-      return obj is MessagePackSmartEnumCodeGeneratorFactory;
-   }
-
-   public bool Equals(ICodeGeneratorFactory<EnumSourceGeneratorState>? obj)
-   {
-      return obj is MessagePackSmartEnumCodeGeneratorFactory;
-   }
-
-   public override int GetHashCode()
-   {
-      return GetType().GetHashCode();
+      return ReferenceEquals(this, other);
    }
 }

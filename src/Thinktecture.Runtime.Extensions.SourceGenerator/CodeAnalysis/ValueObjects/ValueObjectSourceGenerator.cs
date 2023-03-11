@@ -25,19 +25,26 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                                    ? ImmutableArray.Create(state.State)
                                                                                    : ImmutableArray<ValueObjectSourceGeneratorState>.Empty)
                                                .Collect()
-                                               .Select(static (states, _) => states.Distinct().ToImmutableArray())
+                                               .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                                ? ImmutableArray<ValueObjectSourceGeneratorState>.Empty
+                                                                                : states.Distinct().ToImmutableArray())
                                                .WithComparer(new SetComparer<ValueObjectSourceGeneratorState>())
                                                .SelectMany((states, _) => states);
 
       var exceptions = valueObjectOrException.SelectMany(static (state, _) => state.Exception is not null
                                                                                  ? ImmutableArray.Create(state.Exception)
                                                                                  : ImmutableArray<Exception>.Empty);
-      var generators = context.GetMetadataReferencesProvider()
-                              .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
-                              .Collect()
-                              .WithComparer(new SetComparer<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>());
 
-      context.RegisterSourceOutput(valueObjects.Combine(generators), GenerateCode);
+      var additionalGenerators = context.MetadataReferencesProvider
+                                        .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
+                                        .Collect()
+                                        .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                         ? ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>.Empty
+                                                                         : states.Distinct().ToImmutableArray())
+                                        .WithComparer(new SetComparer<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>());
+
+      context.RegisterSourceOutput(valueObjects, (ctx, state) => GenerateCode(ctx, state, ValueObjectCodeGeneratorFactory.Instance));
+      context.RegisterImplementationSourceOutput(valueObjects.Combine(additionalGenerators), GenerateCode);
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
@@ -54,16 +61,22 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
    {
       var factories = ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>.Empty;
 
-      foreach (var module in reference.GetModules())
+      try
       {
-         factories = module.Name switch
+         foreach (var module in reference.GetModules())
          {
-            THINKTECTURE_RUNTIME_EXTENSIONS => factories.Add(ValueObjectCodeGeneratorFactory.Instance),
-            THINKTECTURE_RUNTIME_EXTENSIONS_JSON => factories.Add(JsonValueObjectCodeGeneratorFactory.Instance),
-            THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON => factories.Add(NewtonsoftJsonValueObjectCodeGeneratorFactory.Instance),
-            THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK => factories.Add(MessagePackValueObjectCodeGeneratorFactory.Instance),
-            _ => factories
-         };
+            factories = module.Name switch
+            {
+               THINKTECTURE_RUNTIME_EXTENSIONS_JSON => factories.Add(JsonValueObjectCodeGeneratorFactory.Instance),
+               THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON => factories.Add(NewtonsoftJsonValueObjectCodeGeneratorFactory.Instance),
+               THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK => factories.Add(MessagePackValueObjectCodeGeneratorFactory.Instance),
+               _ => factories
+            };
+         }
+      }
+      catch (Exception ex)
+      {
+         Debug.Write(ex);
       }
 
       return factories;

@@ -43,35 +43,64 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
 
    protected void GenerateCode(
       SourceProductionContext context,
-      (TState, ImmutableArray<ICodeGeneratorFactory<TState>>) tuple)
+      TState state,
+      ICodeGeneratorFactory<TState> generatorFactory)
    {
-      var (state, generatorFactories) = tuple;
-
-      if (generatorFactories.IsDefaultOrEmpty)
-         return;
-
       var stringBuilder = LeaseStringBuilder();
 
       try
       {
-         foreach (var generatorFactory in generatorFactories.Distinct())
+         GenerateCode(context, state, generatorFactory, stringBuilder);
+      }
+      finally
+      {
+         Return(stringBuilder);
+      }
+   }
+
+   protected void GenerateCode(
+      SourceProductionContext context,
+      (TState, ImmutableArray<ICodeGeneratorFactory<TState>>) tuple)
+   {
+      var stringBuilder = LeaseStringBuilder();
+
+      try
+      {
+         var (state, generatorFactories) = tuple;
+
+         for (var i = 0; i < generatorFactories.Length; i++)
          {
             context.CancellationToken.ThrowIfCancellationRequested();
-
             stringBuilder.Clear();
 
-            var generator = generatorFactory.Create(state, stringBuilder);
-            generator.Generate();
-
-            if (stringBuilder.Length <= 0)
-               continue;
-
-            var generatedCode = stringBuilder.ToString();
-
-            context.EmitFile(state.Namespace, state.Name, generatedCode, generator.FileNameSuffix);
+            GenerateCode(context, state, generatorFactories[i], stringBuilder);
          }
       }
-      catch (OperationCanceledException)
+      finally
+      {
+         Return(stringBuilder);
+      }
+   }
+
+   private static void GenerateCode(
+      SourceProductionContext context,
+      TState state,
+      ICodeGeneratorFactory<TState> generatorFactory,
+      StringBuilder stringBuilder)
+   {
+      try
+      {
+         var generator = generatorFactory.Create(state, stringBuilder);
+         generator.Generate();
+
+         if (stringBuilder.Length <= 0)
+            return;
+
+         var generatedCode = stringBuilder.ToString();
+
+         context.EmitFile(state.Namespace, state.Name, generatedCode, generator.FileNameSuffix);
+      }
+      catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
       {
          throw;
       }
@@ -80,10 +109,6 @@ public abstract class ThinktectureSourceGeneratorBase<TState>
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
                                                     Location.None,
                                                     state.Name, ex.Message));
-      }
-      finally
-      {
-         Return(stringBuilder);
       }
    }
 

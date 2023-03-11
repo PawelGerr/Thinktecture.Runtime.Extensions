@@ -27,7 +27,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                                                           ? ImmutableArray.Create(state.State)
                                                           : ImmutableArray<EnumSourceGeneratorState>.Empty)
                       .Collect()
-                      .Select(static (states, _) => states.Distinct().ToImmutableArray())
+                      .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                       ? ImmutableArray<EnumSourceGeneratorState>.Empty
+                                                       : states.Distinct().ToImmutableArray())
                       .WithComparer(new SetComparer<EnumSourceGeneratorState>())
                       .SelectMany((states, _) => states);
 
@@ -35,12 +37,16 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
                                                                               ? ImmutableArray.Create(state.Exception)
                                                                               : ImmutableArray<Exception>.Empty);
 
-      var generators = context.GetMetadataReferencesProvider()
-                              .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
-                              .Collect()
-                              .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
+      var additionalGenerators = context.MetadataReferencesProvider
+                                        .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
+                                        .Collect()
+                                        .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                         ? ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty
+                                                                         : states.Distinct().ToImmutableArray())
+                                        .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
 
-      context.RegisterSourceOutput(enumTypes.Combine(generators), GenerateCode);
+      context.RegisterSourceOutput(enumTypes, (ctx, state) => GenerateCode(ctx, state, SmartEnumCodeGeneratorFactory.Instance));
+      context.RegisterImplementationSourceOutput(enumTypes.Combine(additionalGenerators), GenerateCode);
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
@@ -54,16 +60,22 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase<E
    {
       var factories = ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty;
 
-      foreach (var module in reference.GetModules())
+      try
       {
-         factories = module.Name switch
+         foreach (var module in reference.GetModules())
          {
-            THINKTECTURE_RUNTIME_EXTENSIONS => factories.Add(new SmartEnumCodeGeneratorFactory()),
-            THINKTECTURE_RUNTIME_EXTENSIONS_JSON => factories.Add(new JsonSmartEnumCodeGeneratorFactory()),
-            THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON => factories.Add(new NewtonsoftJsonSmartEnumCodeGeneratorFactory()),
-            THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK => factories.Add(new MessagePackSmartEnumCodeGeneratorFactory()),
-            _ => factories
-         };
+            factories = module.Name switch
+            {
+               THINKTECTURE_RUNTIME_EXTENSIONS_JSON => factories.Add(JsonSmartEnumCodeGeneratorFactory.Instance),
+               THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON => factories.Add(NewtonsoftJsonSmartEnumCodeGeneratorFactory.Instance),
+               THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK => factories.Add(MessagePackSmartEnumCodeGeneratorFactory.Instance),
+               _ => factories
+            };
+         }
+      }
+      catch (Exception ex)
+      {
+         Debug.Write(ex);
       }
 
       return factories;

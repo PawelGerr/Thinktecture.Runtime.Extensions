@@ -5,6 +5,10 @@ namespace Thinktecture;
 
 public static class MetadataReferenceExtensions
 {
+   /// <summary>
+   /// Can throw if file (DLL) could not be loaded.
+   /// </summary>
+   /// <exception cref="FileNotFoundException">MissingMetadataReference throws if DLL could not be loaded.</exception>
    public static IEnumerable<ModuleInfo> GetModules(this MetadataReference metadataReference)
    {
       // Project reference (ISymbol)
