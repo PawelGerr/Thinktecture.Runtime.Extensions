@@ -1,3 +1,4 @@
+using System.Linq;
 using Thinktecture.CodeAnalysis.ValueObjects;
 using Xunit.Abstractions;
 
@@ -15,7 +16,425 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 ";
 
    /* language=c# */
-   private const string _SIMPLE_VALUE_TYPE_OUTPUT = _GENERATED_HEADER + """
+   private const string _FORMATTABLE_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IFormattable
+{
+   /// <inheritdoc />
+   public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
+   {
+      return this.StructField.ToString(format, formatProvider);
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _COMPARABLE_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestValueObject item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return this.StructField.CompareTo(obj.StructField);
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _COMPARABLE_STRUCT_STRING = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestValueObject item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
+   {
+      return this.ReferenceField.CompareTo(obj.ReferenceField);
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _COMPARABLE_CLASS_STRING = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestValueObject item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return this.ReferenceField.CompareTo(obj.ReferenceField);
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _COMPARABLE_CLASS_STRING_WITH_COMPARER = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestValueObject item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.Comparer.Compare(this.ReferenceField, obj.ReferenceField);
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _PARSABLE_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var key = int.Parse(s, provider);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+
+      if(validationResult is null)
+         return result!;
+
+      throw new global::System.FormatException(validationResult.ErrorMessage);
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      if(!int.TryParse(s, provider, out var key))
+      {
+         result = default;
+         return false;
+      }
+
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      return validationResult is null;
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _PARSABLE_STRUCT_STRING = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
+
+      if(validationResult is null)
+         return result!;
+
+      throw new global::System.FormatException(validationResult.ErrorMessage);
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
+      return validationResult is null;
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _PARSABLE_CLASS_STRING = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
+
+      if(validationResult is null)
+         return result!;
+
+      throw new global::System.FormatException(validationResult.ErrorMessage);
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
+      return validationResult is null;
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _COMPARISON_OPERATORS_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField < right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField <= right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField > right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField >= right.StructField;
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _ADDITION_OPERATORS_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField + right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField + right.StructField));
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _SUBTRACTION_OPERATORS_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField - right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField - right.StructField));
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _MULTIPLY_OPERATORS_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField * right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField * right.StructField));
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _DIVISION_OPERATORS_INT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField / right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField / right.StructField));
+   }
+}
+
+""";
+
+   /* language=c# */
+   private const string _COMPLEX_VALUE_TYPE_WITHOUT_MEMBERS_OUTPUT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -209,7 +628,7 @@ namespace Thinktecture.Tests
 }
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      AssertOutput(output, _SIMPLE_VALUE_TYPE_OUTPUT);
+      AssertOutput(output, _COMPLEX_VALUE_TYPE_WITHOUT_MEMBERS_OUTPUT);
    }
 
    [Fact]
@@ -724,7 +1143,7 @@ namespace Thinktecture.Tests
 }
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      AssertOutput(output, _SIMPLE_VALUE_TYPE_OUTPUT);
+      AssertOutput(output, _COMPLEX_VALUE_TYPE_WITHOUT_MEMBERS_OUTPUT);
    }
 
    [Fact]
@@ -743,7 +1162,7 @@ namespace Thinktecture.Tests
 }
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      AssertOutput(output, _SIMPLE_VALUE_TYPE_OUTPUT);
+      AssertOutput(output, _COMPLEX_VALUE_TYPE_WITHOUT_MEMBERS_OUTPUT);
    }
 
    [Fact]
@@ -763,20 +1182,26 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(4);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+
+      AssertOutput(formattableOutput, _FORMATTABLE_INT);
+      AssertOutput(comparableOutput, _COMPARABLE_INT);
+      AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
-      global::Thinktecture.IKeyedValueObject<int>,
-      global::System.IFormattable,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+      global::Thinktecture.IKeyedValueObject<int>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -895,65 +1320,6 @@ namespace Thinktecture.Tests
       public override string ToString()
       {
          return this.StructField.ToString();
-      }
-
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {
-         return this.StructField.ToString(format, formatProvider);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return this.StructField.CompareTo(obj.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField < right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField <= right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField > right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField >= right.StructField;
       }
    }
 }
@@ -1272,10 +1638,18 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_STRUCT_STRING);
+      AssertOutput(parsableOutput, _PARSABLE_STRUCT_STRING);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -1283,10 +1657,7 @@ namespace Thinktecture.Tests
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -1441,48 +1812,6 @@ namespace Thinktecture.Tests
       {
          return this.ReferenceField.ToString();
       }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
-      {
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
-         return validationResult is null;
-      }
    }
 }
 
@@ -1506,10 +1835,21 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(9);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
+      var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
+      var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
+      var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -1517,16 +1857,7 @@ namespace Thinktecture.Tests
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-      global::System.IFormattable,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -1685,133 +2016,225 @@ namespace Thinktecture.Tests
       {
          return this.StructField.ToString();
       }
+   }
+}
 
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
+""");
+
+      /* language=c# */
+      AssertOutput(formattableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IFormattable
+{
+   /// <inheritdoc />
+   public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
+   {
+      return this.StructField.ToString(format, formatProvider);
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(comparableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestValueObject item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
+   {
+      return this.StructField.CompareTo(obj.StructField);
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(parsableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var key = int.Parse(s, provider);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+
+      if(validationResult is null)
+         return result!;
+
+      throw new global::System.FormatException(validationResult.ErrorMessage);
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
+   {
+      if(s is null)
       {
-         return this.StructField.ToString(format, formatProvider);
+         result = default;
+         return false;
       }
 
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
+      if(!int.TryParse(s, provider, out var key))
       {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
+         result = default;
+         return false;
       }
 
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
-      {
-         return this.StructField.CompareTo(obj.StructField);
-      }
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      return validationResult is null;
+   }
+}
 
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var key = int.Parse(s, provider);
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+""");
 
-         if(validationResult is null)
-            return result!;
+      /* language=c# */
+      AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
+namespace Thinktecture.Tests;
 
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
+partial struct TestValueObject :
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField < right.StructField;
+   }
 
-         if(!int.TryParse(s, provider, out var key))
-         {
-            result = default;
-            return false;
-         }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField <= right.StructField;
+   }
 
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
-         return validationResult is null;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField > right.StructField;
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(left.StructField + right.StructField);
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField >= right.StructField;
+   }
+}
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(checked(left.StructField + right.StructField));
-      }
+""");
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(left.StructField - right.StructField);
-      }
+      /* language=c# */
+      AssertOutput(additionOperatorsOutput, _GENERATED_HEADER + """
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(checked(left.StructField - right.StructField));
-      }
+namespace Thinktecture.Tests;
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(left.StructField * right.StructField);
-      }
+partial struct TestValueObject :
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField + right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(checked(left.StructField * right.StructField));
-      }
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField + right.StructField));
+   }
+}
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(left.StructField / right.StructField);
-      }
+""");
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return Create(checked(left.StructField / right.StructField));
-      }
+      /* language=c# */
+      AssertOutput(subtractionOperatorsOutput, _GENERATED_HEADER + """
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return left.StructField < right.StructField;
-      }
+namespace Thinktecture.Tests;
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return left.StructField <= right.StructField;
-      }
+partial struct TestValueObject :
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField - right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return left.StructField > right.StructField;
-      }
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField - right.StructField));
+   }
+}
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         return left.StructField >= right.StructField;
-      }
+""");
+
+      /* language=c# */
+      AssertOutput(multiplyOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField * right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField * right.StructField));
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(divisionOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField / right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField / right.StructField));
    }
 }
 
@@ -1835,10 +2258,18 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_STRUCT_STRING);
+      AssertOutput(parsableOutput, _PARSABLE_STRUCT_STRING);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -1846,10 +2277,7 @@ namespace Thinktecture.Tests
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -2003,48 +2431,6 @@ namespace Thinktecture.Tests
       public override string ToString()
       {
          return this.ReferenceField.ToString();
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
-      {
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
-         return validationResult is null;
       }
    }
 }
@@ -2069,10 +2455,18 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_STRUCT_STRING);
+      AssertOutput(parsableOutput, _PARSABLE_STRUCT_STRING);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -2080,10 +2474,7 @@ namespace Thinktecture.Tests
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -2238,48 +2629,6 @@ namespace Thinktecture.Tests
       {
          return this.ReferenceField.ToString();
       }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
-      {
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
-         return validationResult is null;
-      }
    }
 }
 
@@ -2303,10 +2652,18 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
+      AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -2314,10 +2671,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -2486,51 +2840,6 @@ namespace Thinktecture.Tests
       {
          return this.ReferenceField.ToString();
       }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
-         return validationResult is null;
-      }
    }
 }
 
@@ -2554,10 +2863,30 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(9);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
+      var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
+      var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
+      var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
+
+      AssertOutput(formattableOutput, _FORMATTABLE_INT);
+      AssertOutput(comparableOutput, _COMPARABLE_INT);
+      AssertOutput(parsableOutput, _PARSABLE_INT);
+      AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
+      AssertOutput(additionOperatorsOutput, _ADDITION_OPERATORS_INT);
+      AssertOutput(subtractionOperatorsOutput, _SUBTRACTION_OPERATORS_INT);
+      AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
+      AssertOutput(divisionOperatorsOutput, _DIVISION_OPERATORS_INT);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -2565,16 +2894,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-      global::System.IFormattable,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -2746,160 +3066,6 @@ namespace Thinktecture.Tests
       public override string ToString()
       {
          return this.StructField.ToString();
-      }
-
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {
-         return this.StructField.ToString(format, formatProvider);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return this.StructField.CompareTo(obj.StructField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var key = int.Parse(s, provider);
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         if(!int.TryParse(s, provider, out var key))
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
-         return validationResult is null;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField + right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField + right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField - right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField - right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField * right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField * right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField / right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField / right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField < right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField <= right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField > right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField >= right.StructField;
       }
    }
 }
@@ -2928,10 +3094,25 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(9);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
+      var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
+      var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
+      var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
+
+      AssertOutput(formattableOutput, _FORMATTABLE_INT);
+      AssertOutput(comparableOutput, _COMPARABLE_INT);
+      AssertOutput(parsableOutput, _PARSABLE_INT);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -2939,20 +3120,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-      global::System.IFormattable,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -3125,328 +3293,329 @@ namespace Thinktecture.Tests
       {
          return this.StructField.ToString();
       }
+   }
+}
 
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {
-         return this.StructField.ToString(format, formatProvider);
-      }
+""");
 
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
+      /* language=c# */
+      AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+namespace Thinktecture.Tests;
 
-         return this.CompareTo(item);
-      }
+partial class TestValueObject :
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField < right.StructField;
+   }
 
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField <= right.StructField;
+   }
 
-         return this.StructField.CompareTo(obj.StructField);
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField > right.StructField;
+   }
 
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var key = int.Parse(s, provider);
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField >= right.StructField;
+   }
 
-         if(validationResult is null)
-            return result!;
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return left.StructField < right;
+   }
 
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left < right.StructField;
+   }
 
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return left.StructField <= right;
+   }
 
-         if(!int.TryParse(s, provider, out var key))
-         {
-            result = default;
-            return false;
-         }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left <= right.StructField;
+   }
 
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
-         return validationResult is null;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return left.StructField > right;
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField + right.StructField);
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left > right.StructField;
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField + right.StructField));
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return left.StructField >= right;
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(left.StructField + right);
-      }
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left >= right.StructField;
+   }
+}
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left + right.StructField);
-      }
+""");
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(checked(left.StructField + right));
-      }
+      /* language=c# */
+      AssertOutput(additionOperatorsOutput, _GENERATED_HEADER + """
 
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left + right.StructField));
-      }
+namespace Thinktecture.Tests;
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField - right.StructField);
-      }
+partial class TestValueObject :
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField + right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField - right.StructField));
-      }
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField + right.StructField));
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(left.StructField - right);
-      }
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(left.StructField + right);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left - right.StructField);
-      }
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator +(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left + right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(checked(left.StructField - right));
-      }
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(checked(left.StructField + right));
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left - right.StructField));
-      }
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked +(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left + right.StructField));
+   }
+}
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField * right.StructField);
-      }
+""");
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField * right.StructField));
-      }
+      /* language=c# */
+      AssertOutput(subtractionOperatorsOutput, _GENERATED_HEADER + """
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(left.StructField * right);
-      }
+namespace Thinktecture.Tests;
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left * right.StructField);
-      }
+partial class TestValueObject :
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField - right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(checked(left.StructField * right));
-      }
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField - right.StructField));
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left * right.StructField));
-      }
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(left.StructField - right);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField / right.StructField);
-      }
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator -(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left - right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField / right.StructField));
-      }
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(checked(left.StructField - right));
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(left.StructField / right);
-      }
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked -(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left - right.StructField));
+   }
+}
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left / right.StructField);
-      }
+""");
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return Create(checked(left.StructField / right));
-      }
+      /* language=c# */
+      AssertOutput(multiplyOperatorsOutput, _GENERATED_HEADER + """
 
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left / right.StructField));
-      }
+namespace Thinktecture.Tests;
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField < right.StructField;
-      }
+partial class TestValueObject :
+   global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
+   global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField * right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField <= right.StructField;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField * right.StructField));
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField > right.StructField;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(left.StructField * right);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField >= right.StructField;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator *(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left * right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return left.StructField < right;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(checked(left.StructField * right));
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left < right.StructField;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked *(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left * right.StructField));
+   }
+}
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return left.StructField <= right;
-      }
+""");
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left <= right.StructField;
-      }
+      /* language=c# */
+      AssertOutput(divisionOperatorsOutput, _GENERATED_HEADER + """
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return left.StructField > right;
-      }
+namespace Thinktecture.Tests;
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left > right.StructField;
-      }
+partial class TestValueObject :
+   global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
+   global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left.StructField / right.StructField);
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, int right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         return left.StructField >= right;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left.StructField / right.StructField));
+   }
 
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(int left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left >= right.StructField;
-      }
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(left.StructField / right);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator /(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(left / right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, int right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      return Create(checked(left.StructField / right));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked /(int left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return Create(checked(left / right.StructField));
    }
 }
 
@@ -3470,10 +3639,18 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
+      AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -3481,10 +3658,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -3654,51 +3828,6 @@ namespace Thinktecture.Tests
       {
          return this.ReferenceField.ToString();
       }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
-         return validationResult is null;
-      }
    }
 }
 
@@ -3722,10 +3851,18 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
+      AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -3733,10 +3870,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -3904,51 +4038,6 @@ namespace Thinktecture.Tests
       {
          return this.ReferenceField.ToString();
       }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return this.ReferenceField.CompareTo(obj.ReferenceField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
-         return validationResult is null;
-      }
    }
 }
 
@@ -3972,10 +4061,30 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(9);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
+      var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
+      var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
+      var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
+
+      AssertOutput(formattableOutput, _FORMATTABLE_INT);
+      AssertOutput(comparableOutput, _COMPARABLE_INT);
+      AssertOutput(parsableOutput, _PARSABLE_INT);
+      AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
+      AssertOutput(additionOperatorsOutput, _ADDITION_OPERATORS_INT);
+      AssertOutput(subtractionOperatorsOutput, _SUBTRACTION_OPERATORS_INT);
+      AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
+      AssertOutput(divisionOperatorsOutput, _DIVISION_OPERATORS_INT);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -3983,16 +4092,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-      global::System.IFormattable,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -4164,160 +4264,6 @@ namespace Thinktecture.Tests
       public override string ToString()
       {
          return this.StructField.ToString();
-      }
-
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {
-         return this.StructField.ToString(format, formatProvider);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return this.StructField.CompareTo(obj.StructField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var key = int.Parse(s, provider);
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         if(!int.TryParse(s, provider, out var key))
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
-         return validationResult is null;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField + right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField + right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField - right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField - right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField * right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField * right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField / right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField / right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField < right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField <= right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField > right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField >= right.StructField;
       }
    }
 }
@@ -4342,10 +4288,30 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(9);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
+      var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
+      var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
+      var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
+
+      AssertOutput(formattableOutput, _FORMATTABLE_INT);
+      AssertOutput(comparableOutput, _COMPARABLE_INT);
+      AssertOutput(parsableOutput, _PARSABLE_INT);
+      AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
+      AssertOutput(additionOperatorsOutput, _ADDITION_OPERATORS_INT);
+      AssertOutput(subtractionOperatorsOutput, _SUBTRACTION_OPERATORS_INT);
+      AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
+      AssertOutput(divisionOperatorsOutput, _DIVISION_OPERATORS_INT);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -4353,16 +4319,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-      global::System.IFormattable,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -4534,160 +4491,6 @@ namespace Thinktecture.Tests
       public override string ToString()
       {
          return this.StructField.ToString();
-      }
-
-      /// <inheritdoc />
-      public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
-      {
-         return this.StructField.ToString(format, formatProvider);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return this.StructField.CompareTo(obj.StructField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var key = int.Parse(s, provider);
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         if(!int.TryParse(s, provider, out var key))
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
-         return validationResult is null;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField + right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField + right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField - right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField - right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField * right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField * right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(left.StructField / right.StructField);
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-      public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return Create(checked(left.StructField / right.StructField));
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-      public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField < right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-      public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField <= right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-      public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField > right.StructField;
-      }
-
-      /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-      public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-      {
-         global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-         return left.StructField >= right.StructField;
       }
    }
 }
@@ -4871,7 +4674,7 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
-   public void Should_generate_class_with_int_key_member_having_EqualityMemberAttribute()
+   public void Should_generate_class_with_string_key_member_having_EqualityMemberAttribute()
    {
       /* language=c# */
       var source = @"
@@ -4883,16 +4686,24 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      [ValueObjectMemberEqualityComparerAttribute<StringComparerOrdinalIgnoreCase, string>]
-      [ValueObjectMemberComparer<StringComparerOrdinalIgnoreCase, string>]
+      [ValueObjectMemberEqualityComparerAttribute<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+      [ValueObjectMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
       public readonly string ReferenceField;
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING_WITH_COMPARER);
+      AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
@@ -4900,10 +4711,7 @@ namespace Thinktecture.Tests
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-      global::System.IComparable,
-      global::System.IComparable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -5058,14 +4866,14 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return StringComparerOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
          var hashCode = new global::System.HashCode();
-         hashCode.Add(this.ReferenceField, StringComparerOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
          return hashCode.ToHashCode();
       }
 
@@ -5073,51 +4881,6 @@ namespace Thinktecture.Tests
       public override string ToString()
       {
          return this.ReferenceField.ToString();
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(object? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         if(obj is not global::Thinktecture.Tests.TestValueObject item)
-            throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
-
-         return this.CompareTo(item);
-      }
-
-      /// <inheritdoc />
-      public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         if(obj is null)
-            return 1;
-
-         return StringComparerOrdinalIgnoreCase.Comparer.Compare(this.ReferenceField, obj.ReferenceField);
-      }
-
-      /// <inheritdoc />
-      public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
-      {
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
-
-         if(validationResult is null)
-            return result!;
-
-         throw new global::System.FormatException(validationResult.ErrorMessage);
-      }
-
-      /// <inheritdoc />
-      public static bool TryParse(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
-      {
-         if(s is null)
-         {
-            result = default;
-            return false;
-         }
-
-         var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
-         return validationResult is null;
       }
    }
 }

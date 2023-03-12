@@ -31,9 +31,9 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
    public bool HasComparisonOperators => _typedMemberState.HasComparisonOperators;
    public bool HasAdditionOperators => _typedMemberState.HasAdditionOperators;
-   public bool HasSubtractionOperators => _typedMemberState.HasAdditionOperators;
-   public bool HasMultiplyOperators => _typedMemberState.HasAdditionOperators;
-   public bool HasDivisionOperators => _typedMemberState.HasAdditionOperators;
+   public bool HasSubtractionOperators => _typedMemberState.HasSubtractionOperators;
+   public bool HasMultiplyOperators => _typedMemberState.HasMultiplyOperators;
+   public bool HasDivisionOperators => _typedMemberState.HasDivisionOperators;
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,

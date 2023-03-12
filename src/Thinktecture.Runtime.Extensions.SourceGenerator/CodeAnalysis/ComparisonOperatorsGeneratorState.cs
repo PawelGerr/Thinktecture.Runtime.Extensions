@@ -1,30 +1,34 @@
-namespace Thinktecture.CodeAnalysis.SmartEnums;
+namespace Thinktecture.CodeAnalysis;
 
 public readonly struct ComparisonOperatorsGeneratorState : IEquatable<ComparisonOperatorsGeneratorState>
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
-   public OperatorsGeneration ComparisonOperators { get; }
-   public bool HasKeyMemberComparisonOperators { get; }
+   public OperatorsGeneration OperatorsGeneration { get; }
+   public bool HasKeyMemberOperators { get; }
+   public string? ComparerAccessor { get; }
 
    public ComparisonOperatorsGeneratorState(
       ITypeInformation type,
       IMemberInformation keyMember,
-      OperatorsGeneration comparisonOperators,
-      bool hasKeyMemberComparisonOperators)
+      OperatorsGeneration operatorsGeneration,
+      bool hasKeyMemberOperators,
+      string? comparerAccessor)
    {
       Type = type;
       KeyMember = keyMember;
-      ComparisonOperators = comparisonOperators;
-      HasKeyMemberComparisonOperators = hasKeyMemberComparisonOperators;
+      OperatorsGeneration = operatorsGeneration;
+      HasKeyMemberOperators = hasKeyMemberOperators;
+      ComparerAccessor = comparerAccessor;
    }
 
    public bool Equals(ComparisonOperatorsGeneratorState other)
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
-             && ComparisonOperators == other.ComparisonOperators
-             && HasKeyMemberComparisonOperators == other.HasKeyMemberComparisonOperators;
+             && OperatorsGeneration == other.OperatorsGeneration
+             && HasKeyMemberOperators == other.HasKeyMemberOperators
+             && ComparerAccessor == other.ComparerAccessor;
    }
 
    public override bool Equals(object? obj)
@@ -38,8 +42,9 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ MemberInformationComparer.Instance.GetHashCode(KeyMember);
-         hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
-         hashCode = (hashCode * 397) ^ HasKeyMemberComparisonOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
+         hashCode = (hashCode * 397) ^ HasKeyMemberOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ ComparerAccessor?.GetHashCode() ?? 0;
 
          return hashCode;
       }

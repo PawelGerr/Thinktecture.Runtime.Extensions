@@ -40,82 +40,47 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
    {
       var comparables = validStates
-                        .Select((state, _) => new ComparisonOperatorsGeneratorState(state.State,
-                                                                                    state.KeyMember,
-                                                                                    state.Settings.ComparisonOperators,
-                                                                                    state.KeyMember.HasComparisonOperators))
-                        .Where(state => state.HasKeyMemberComparisonOperators && state.ComparisonOperators != OperatorsGeneration.None)
-                        .Collect()
-                        .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                         ? ImmutableArray<ComparisonOperatorsGeneratorState>.Empty
-                                                         : states.Distinct(EnumTypeOnlyComparer.Instance).ToImmutableArray())
-                        .WithComparer(new SetComparer<ComparisonOperatorsGeneratorState>())
-                        .SelectMany((states, _) => states)
-                        .SelectMany((state, _) =>
-                                    {
-                                       if (ComparisonOperatorsCodeGenerator.TryGet(state.ComparisonOperators, null, out var codeGenerator))
-                                          return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+         .Select((state, _) => new ComparisonOperatorsGeneratorState(state.State,
+                                                                     state.KeyMember,
+                                                                     state.Settings.ComparisonOperators,
+                                                                     state.KeyMember.HasComparisonOperators,
+                                                                     null));
 
-                                       return ImmutableArray<(ComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
-                                    });
-
-      context.RegisterSourceOutput(comparables, (ctx, tuple) => GenerateCode(ctx, tuple.State, tuple.CodeGenerator));
+      InitializeComparisonOperatorsCodeGenerator(context, comparables);
    }
 
    private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
    {
       var parsables = validStates
-                      .Select((state, _) => new ParsableGeneratorState(state.State,
-                                                                       state.KeyMember,
-                                                                       state.Settings.SkipIParsable,
-                                                                       state.KeyMember.IsParsable,
-                                                                       state.State.IsValidatable))
-                      .Where(state => !state.SkipIParsable && (state.KeyMember.IsString() || state.IsKeyMemberParsable))
-                      .Collect()
-                      .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                       ? ImmutableArray<ParsableGeneratorState>.Empty
-                                                       : states.Distinct(EnumTypeOnlyComparer.Instance).ToImmutableArray())
-                      .WithComparer(new SetComparer<ParsableGeneratorState>())
-                      .SelectMany((states, _) => states);
-
-      context.RegisterSourceOutput(parsables, GenerateCode);
+         .Select((state, _) => new ParsableGeneratorState(state.State,
+                                                          state.KeyMember,
+                                                          state.Settings.SkipIParsable,
+                                                          state.KeyMember.IsParsable,
+                                                          state.State.IsValidatable));
+      InitializeParsableCodeGenerator(context, parsables);
    }
 
    private void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
    {
       var comparables = validStates
-                        .Select((state, _) => new ComparableGeneratorState(state.State,
-                                                                           state.KeyMember,
-                                                                           state.Settings.SkipIComparable,
-                                                                           state.KeyMember.IsComparable,
-                                                                           null))
-                        .Where(state => state is { SkipIComparable: false, IsKeyMemberComparable: true })
-                        .Collect()
-                        .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                         ? ImmutableArray<ComparableGeneratorState>.Empty
-                                                         : states.Distinct(EnumTypeOnlyComparer.Instance).ToImmutableArray())
-                        .WithComparer(new SetComparer<ComparableGeneratorState>())
-                        .SelectMany((states, _) => states);
+         .Select((state, _) => new ComparableGeneratorState(state.State,
+                                                            state.KeyMember,
+                                                            state.Settings.SkipIComparable,
+                                                            state.KeyMember.IsComparable,
+                                                            null));
 
-      context.RegisterSourceOutput(comparables, GenerateCode);
+      InitializeComparableCodeGenerator(context, comparables);
    }
 
    private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
    {
       var formattables = validStates
-                         .Select((state, _) => new FormattableGeneratorState(state.State,
-                                                                             state.KeyMember,
-                                                                             state.Settings.SkipIFormattable,
-                                                                             state.KeyMember.IsFormattable))
-                         .Where(state => state is { SkipIFormattable: false, IsKeyMemberFormattable: true })
-                         .Collect()
-                         .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                          ? ImmutableArray<FormattableGeneratorState>.Empty
-                                                          : states.Distinct(EnumTypeOnlyComparer.Instance).ToImmutableArray())
-                         .WithComparer(new SetComparer<FormattableGeneratorState>())
-                         .SelectMany((states, _) => states);
+         .Select((state, _) => new FormattableGeneratorState(state.State,
+                                                             state.KeyMember,
+                                                             state.Settings.SkipIFormattable,
+                                                             state.KeyMember.IsFormattable));
 
-      context.RegisterSourceOutput(formattables, GenerateCode);
+      InitializeFormattableCodeGenerator(context, formattables);
    }
 
    private void InitializeEnumTypeGeneration(
@@ -127,7 +92,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                       .Collect()
                       .Select(static (states, _) => states.IsDefaultOrEmpty
                                                        ? ImmutableArray<EnumSourceGeneratorState>.Empty
-                                                       : states.Distinct(EnumTypeOnlyComparer<EnumSourceGeneratorState>.Instance).ToImmutableArray())
+                                                       : states.Distinct(TypeOnlyComparer<EnumSourceGeneratorState>.Instance).ToImmutableArray())
                       .WithComparer(new SetComparer<EnumSourceGeneratorState>())
                       .SelectMany((states, _) => states);
 
@@ -151,7 +116,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                          .Collect()
                          .Select(static (states, _) => states.IsDefaultOrEmpty
                                                           ? ImmutableArray<SmartEnumDerivedTypes>.Empty
-                                                          : states.Distinct(EnumTypeOnlyComparer<SmartEnumDerivedTypes>.Instance).ToImmutableArray())
+                                                          : states.Distinct(TypeOnlyComparer<SmartEnumDerivedTypes>.Instance).ToImmutableArray())
                          .WithComparer(new SetComparer<SmartEnumDerivedTypes>())
                          .SelectMany((states, _) => states);
 

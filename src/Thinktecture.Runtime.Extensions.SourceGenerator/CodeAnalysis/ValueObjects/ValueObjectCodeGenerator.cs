@@ -47,8 +47,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValueObject(bool emptyStringYieldsNull, CancellationToken cancellationToken)
    {
-      var interfaceCodeGenerators = _state.GetInterfaceCodeGenerators();
-
       if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
       {
          _sb.Append(@"
@@ -68,13 +66,6 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append(@",
       global::Thinktecture.IKeyedValueObject<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(">");
-         }
-
-         for (var i = 0; i < interfaceCodeGenerators.Length; i++)
-         {
-            _sb.Append(",");
-
-            interfaceCodeGenerators[i].GenerateBaseTypes(_sb, _state, _state.KeyMember.Member);
          }
       }
       else
@@ -138,16 +129,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipToString)
          GenerateToString();
-
-      if (_state.HasKeyMember)
-      {
-         for (var i = 0; i < interfaceCodeGenerators.Length; i++)
-         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            interfaceCodeGenerators[i].GenerateImplementation(_sb, _state, _state.KeyMember.Member);
-         }
-      }
 
       _sb.Append(@"
    }");

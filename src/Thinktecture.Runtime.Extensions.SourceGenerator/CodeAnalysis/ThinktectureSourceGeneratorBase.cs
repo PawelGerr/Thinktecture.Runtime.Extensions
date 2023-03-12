@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture.CodeAnalysis;
 
@@ -54,10 +53,101 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
-   protected void GenerateCode(SourceProductionContext context, FormattableGeneratorState state) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Formattable);
-   protected void GenerateCode(SourceProductionContext context, ComparableGeneratorState state) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Comparable(state.ComparerAccessor));
-   protected void GenerateCode(SourceProductionContext context, ParsableGeneratorState state) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Parsable(state.IsValidatableEnum));
-   protected void GenerateCode(SourceProductionContext context, ComparisonOperatorsGeneratorState state, IInterfaceCodeGenerator codeGenerator) => GenerateCode(context, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.ComparisonOperators(codeGenerator));
+   protected void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<FormattableGeneratorState> formattables)
+   {
+      formattables = formattables
+                     .Where(state => state is { SkipIFormattable: false, IsKeyMemberFormattable: true })
+                     .Collect()
+                     .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                      ? ImmutableArray<FormattableGeneratorState>.Empty
+                                                      : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                     .WithComparer(new SetComparer<FormattableGeneratorState>())
+                     .SelectMany((states, _) => states);
+
+      context.RegisterSourceOutput(formattables, (ctx, state) => GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Formattable));
+   }
+
+   protected void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ComparableGeneratorState> comparables)
+   {
+      comparables = comparables
+                    .Where(state => !state.SkipIComparable && (state.IsKeyMemberComparable || state.ComparerAccessor is not null))
+                    .Collect()
+                    .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                     ? ImmutableArray<ComparableGeneratorState>.Empty
+                                                     : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                    .WithComparer(new SetComparer<ComparableGeneratorState>())
+                    .SelectMany((states, _) => states);
+
+      context.RegisterSourceOutput(comparables, (ctx, state) => GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Comparable(state.ComparerAccessor)));
+   }
+
+   protected void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ParsableGeneratorState> parsables)
+   {
+      parsables = parsables
+                  .Where(state => !state.SkipIParsable && (state.KeyMember.IsString() || state.IsKeyMemberParsable))
+                  .Collect()
+                  .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                   ? ImmutableArray<ParsableGeneratorState>.Empty
+                                                   : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                  .WithComparer(new SetComparer<ParsableGeneratorState>())
+                  .SelectMany((states, _) => states);
+
+      context.RegisterSourceOutput(parsables, (ctx, state) => GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Parsable(state.IsValidatableEnum)));
+   }
+
+   protected void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ComparisonOperatorsGeneratorState> comparables)
+   {
+      var operators = comparables
+                      .Where(state => state.HasKeyMemberOperators && state.OperatorsGeneration != OperatorsGeneration.None)
+                      .Collect()
+                      .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                       ? ImmutableArray<ComparisonOperatorsGeneratorState>.Empty
+                                                       : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                      .WithComparer(new SetComparer<ComparisonOperatorsGeneratorState>())
+                      .SelectMany((states, _) => states)
+                      .SelectMany((state, _) =>
+                                  {
+                                     if (ComparisonOperatorsCodeGenerator.TryGet(state.OperatorsGeneration, state.ComparerAccessor, out var codeGenerator))
+                                        return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+
+                                     return ImmutableArray<(ComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
+                                  });
+
+      context.RegisterSourceOutput(operators, (ctx, tuple) =>
+                                              {
+                                                 var state = tuple.State;
+                                                 var generator = tuple.CodeGenerator;
+
+                                                 GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Create(generator));
+                                              });
+   }
+
+   protected void InitializeOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<OperatorsGeneratorState> operators)
+   {
+      var operatorsWithGenerator = operators
+                                   .Where(state => state.HasKeyMemberOperators && state.OperatorsGeneration != OperatorsGeneration.None)
+                                   .Collect()
+                                   .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                    ? ImmutableArray<OperatorsGeneratorState>.Empty
+                                                                    : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                                   .WithComparer(new SetComparer<OperatorsGeneratorState>())
+                                   .SelectMany((states, _) => states)
+                                   .SelectMany((state, _) =>
+                                               {
+                                                  if (state.GeneratorProvider.TryGet(state.OperatorsGeneration, out var codeGenerator))
+                                                     return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+
+                                                  return ImmutableArray<(OperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
+                                               });
+
+      context.RegisterSourceOutput(operatorsWithGenerator, (ctx, tuple) =>
+                                                           {
+                                                              var state = tuple.State;
+                                                              var generator = tuple.CodeGenerator;
+
+                                                              GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Create(generator));
+                                                           });
+   }
 
    protected void GenerateCode<TState>(
       SourceProductionContext context,

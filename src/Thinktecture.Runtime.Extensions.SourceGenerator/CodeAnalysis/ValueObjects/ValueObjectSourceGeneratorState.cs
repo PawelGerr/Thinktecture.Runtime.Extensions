@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
@@ -33,9 +32,10 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
    public ValueObjectSourceGeneratorState(
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
-      AttributeData valueObjectAttribute,
+      ValueObjectSettings settings,
       CancellationToken cancellationToken)
    {
+      Settings = settings;
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -60,7 +60,6 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
       }
 
       AttributeInfo = new AttributeInfo(type);
-      Settings = new ValueObjectSettings(valueObjectAttribute);
    }
 
    private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()
@@ -124,36 +123,5 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
 
          return hashCode;
       }
-   }
-
-   public ImmutableArray<IInterfaceCodeGenerator> GetInterfaceCodeGenerators()
-   {
-      var generators = ImmutableArray<IInterfaceCodeGenerator>.Empty;
-
-      if (!Settings.SkipIFormattable && HasKeyMember && KeyMember.Member.IsFormattable)
-         generators = generators.Add(FormattableCodeGenerator.Instance);
-
-      if (!Settings.SkipIComparable && HasKeyMember && (KeyMember.Member.IsComparable || KeyMember.ComparerAccessor is not null))
-         generators = generators.Add(KeyMember.ComparerAccessor is null ? ComparableCodeGenerator.Default : new ComparableCodeGenerator(KeyMember.ComparerAccessor));
-
-      if (!Settings.SkipIParsable && HasKeyMember && (KeyMember.Member.IsString() || KeyMember.Member.IsParsable))
-         generators = generators.Add(ParsableCodeGenerator.Default);
-
-      if (HasKeyMember && KeyMember.Member.HasAdditionOperators && AdditionOperatorsCodeGenerator.TryGet(Settings.AdditionOperators, out var additionOperatorsCodeGenerator))
-         generators = generators.Add(additionOperatorsCodeGenerator);
-
-      if (HasKeyMember && KeyMember.Member.HasSubtractionOperators && SubtractionOperatorsCodeGenerator.TryGet(Settings.SubtractionOperators, out var subtractionOperatorsCodeGenerator))
-         generators = generators.Add(subtractionOperatorsCodeGenerator);
-
-      if (HasKeyMember && KeyMember.Member.HasMultiplyOperators && MultiplyOperatorsCodeGenerator.TryGet(Settings.MultiplyOperators, out var multiplyOperatorsCodeGenerator))
-         generators = generators.Add(multiplyOperatorsCodeGenerator);
-
-      if (HasKeyMember && KeyMember.Member.HasDivisionOperators && DivisionOperatorsCodeGenerator.TryGet(Settings.DivisionOperators, out var divisionOperatorsCodeGenerator))
-         generators = generators.Add(divisionOperatorsCodeGenerator);
-
-      if (HasKeyMember && KeyMember.Member.HasComparisonOperators && ComparisonOperatorsCodeGenerator.TryGet(Settings.ComparisonOperators, KeyMember.ComparerAccessor, out var comparisonOperatorsCodeGenerator))
-         generators = generators.Add(comparisonOperatorsCodeGenerator);
-
-      return generators;
    }
 }

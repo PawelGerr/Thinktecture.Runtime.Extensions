@@ -1,4 +1,4 @@
-namespace Thinktecture.CodeAnalysis.SmartEnums;
+namespace Thinktecture.CodeAnalysis;
 
 public sealed class MemberInformationComparer : IEqualityComparer<IMemberInformation>
 {

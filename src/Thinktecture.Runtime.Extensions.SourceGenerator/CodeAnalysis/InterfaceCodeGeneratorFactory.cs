@@ -13,7 +13,7 @@ public class InterfaceCodeGeneratorFactory : ICodeGeneratorFactory<(ITypeInforma
 
    public static InterfaceCodeGeneratorFactory Comparable(string? comparerAccessor)
    {
-      return String.IsNullOrWhiteSpace(comparerAccessor) ? new InterfaceCodeGeneratorFactory(new ComparableCodeGenerator(comparerAccessor)) : _comparable;
+      return String.IsNullOrWhiteSpace(comparerAccessor) ? _comparable : new InterfaceCodeGeneratorFactory(new ComparableCodeGenerator(comparerAccessor));
    }
 
    public static InterfaceCodeGeneratorFactory Parsable(bool forValidatableEnum)
@@ -21,7 +21,7 @@ public class InterfaceCodeGeneratorFactory : ICodeGeneratorFactory<(ITypeInforma
       return forValidatableEnum ? _parsableForValidatableEnum : _parsable;
    }
 
-   public static InterfaceCodeGeneratorFactory ComparisonOperators(IInterfaceCodeGenerator codeGenerator)
+   public static InterfaceCodeGeneratorFactory Create(IInterfaceCodeGenerator codeGenerator)
    {
       return new InterfaceCodeGeneratorFactory(codeGenerator);
    }
