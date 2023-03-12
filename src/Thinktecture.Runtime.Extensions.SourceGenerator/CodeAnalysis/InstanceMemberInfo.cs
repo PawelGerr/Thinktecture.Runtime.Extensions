@@ -52,13 +52,14 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public static InstanceMemberInfo? CreateOrNull(
       TypedMemberStateFactory factory,
       IFieldSymbol field,
+      bool populateValueObjectMemberSettings,
       bool allowedCaptureSymbols)
    {
       if (field.Type.Kind == SymbolKind.ErrorType)
          return null;
 
       var symbol = allowedCaptureSymbols ? field : null;
-      var settings = ValueObjectMemberSettings.Create(field, field.Type, allowedCaptureSymbols);
+      var settings = populateValueObjectMemberSettings ? ValueObjectMemberSettings.Create(field, field.Type, allowedCaptureSymbols) : ValueObjectMemberSettings.None;
 
       return new(factory.Create(field.Type), settings, field.Name, (symbol, null), field.IsStatic);
    }
@@ -66,13 +67,14 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public static InstanceMemberInfo? CreateOrNull(
       TypedMemberStateFactory factory,
       IPropertySymbol property,
+      bool populateValueObjectMemberSettings,
       bool allowedCaptureSymbols)
    {
       if (property.Type.Kind == SymbolKind.ErrorType)
          return null;
 
       var symbol = allowedCaptureSymbols ? property : null;
-      var settings = ValueObjectMemberSettings.Create(property, property.Type, allowedCaptureSymbols);
+      var settings = populateValueObjectMemberSettings ? ValueObjectMemberSettings.Create(property, property.Type, allowedCaptureSymbols) : ValueObjectMemberSettings.None;
 
       return new(factory.Create(property.Type), settings, property.Name, (null, symbol), property.IsStatic);
    }

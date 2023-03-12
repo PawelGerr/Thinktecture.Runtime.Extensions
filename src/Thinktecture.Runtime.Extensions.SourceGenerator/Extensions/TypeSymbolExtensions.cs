@@ -460,6 +460,7 @@ public static class TypeSymbolExtensions
       this ITypeSymbol type,
       TypedMemberStateFactory factory,
       bool instanceMembersOnly,
+      bool populateValueObjectMemberSettings,
       CancellationToken cancellationToken,
       Action<Diagnostic>? reportDiagnostic = null)
    {
@@ -470,8 +471,8 @@ public static class TypeSymbolExtensions
                          {
                             return tuple switch
                             {
-                               ({ } field, _) => InstanceMemberInfo.CreateOrNull(factory, field, allowedCaptureSymbols),
-                               (_, { } property) => InstanceMemberInfo.CreateOrNull(factory, property, allowedCaptureSymbols),
+                               ({ } field, _) => InstanceMemberInfo.CreateOrNull(factory, field, populateValueObjectMemberSettings, allowedCaptureSymbols),
+                               (_, { } property) => InstanceMemberInfo.CreateOrNull(factory, property, populateValueObjectMemberSettings, allowedCaptureSymbols),
                                _ => throw new Exception("Either field or property must be set.")
                             };
                          })

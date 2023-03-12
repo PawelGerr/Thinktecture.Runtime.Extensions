@@ -181,7 +181,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
-      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, context.CancellationToken, context.ReportDiagnostic)
+      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context.ReportDiagnostic)
                                   .Where(m => !m.IsStatic)
                                   .ToList();
 
@@ -320,7 +320,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, keyType, locationOfFirstDeclaration);
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, context.CancellationToken, context.ReportDiagnostic).Enumerate();
+      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, false, context.CancellationToken, context.ReportDiagnostic).Enumerate();
       var baseClass = enumType.BaseType;
 
       while (!baseClass.IsNullOrObject())

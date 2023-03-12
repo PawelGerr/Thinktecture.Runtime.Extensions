@@ -4,7 +4,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
 {
-   private static readonly ValueObjectMemberSettings _none = new(false);
+   public static readonly ValueObjectMemberSettings None = new(false);
    private static readonly ValueObjectMemberSettings _noneForString = new(false, null, Constants.ComparerAccessor.ORDINAL_IGNORE_CASE, false, null, Constants.ComparerAccessor.ORDINAL_IGNORE_CASE, false);
 
    private readonly SyntaxReference? _equalityComparerAttr;
@@ -47,7 +47,7 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
       var comparerAttr = member.FindAttribute(static type => type.Name == "ValueObjectMemberComparerAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
 
       if (equalityComparerAttr is null && comparerAttr is null)
-         return type.SpecialType == SpecialType.System_String ? _noneForString : _none;
+         return type.SpecialType == SpecialType.System_String ? _noneForString : None;
 
       var equalityComparerGenericTypes = equalityComparerAttr?.GetComparerTypes();
       var equalityComparerAccessorType = equalityComparerGenericTypes?.ComparerType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ?? (type.SpecialType == SpecialType.System_String ? Constants.ComparerAccessor.ORDINAL_IGNORE_CASE : null);

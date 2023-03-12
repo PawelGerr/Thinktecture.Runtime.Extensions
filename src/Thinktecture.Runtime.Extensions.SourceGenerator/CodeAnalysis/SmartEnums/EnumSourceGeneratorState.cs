@@ -54,7 +54,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       BaseType = type.GetBaseType(factory);
       HasKeyComparerImplementation = HasHasKeyComparerImplementation(type);
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, cancellationToken).ToList();
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, false, cancellationToken).ToList();
    }
 
    private static bool HasHasKeyComparerImplementation(INamedTypeSymbol enumType)
