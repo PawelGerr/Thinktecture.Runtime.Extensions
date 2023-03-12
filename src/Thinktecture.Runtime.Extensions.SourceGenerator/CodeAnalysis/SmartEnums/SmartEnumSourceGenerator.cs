@@ -16,15 +16,15 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
-      var enumTypeOrException = context.SyntaxProvider
-                                       .CreateSyntaxProvider(IsCandidate, GetSourceGenContext)
-                                       .SelectMany(static (state, _) => state.HasValue
-                                                                           ? ImmutableArray.Create(state.Value)
-                                                                           : ImmutableArray<SourceGenContext>.Empty);
+      var enumTypeOrError = context.SyntaxProvider
+                                   .CreateSyntaxProvider(IsCandidate, GetSourceGenContext)
+                                   .SelectMany(static (state, _) => state.HasValue
+                                                                       ? ImmutableArray.Create(state.Value)
+                                                                       : ImmutableArray<SourceGenContext>.Empty);
 
-      var validStates = enumTypeOrException.SelectMany(static (state, _) => state.ValidState is not null && IsKeyNotNotNullable(state.ValidState.Value.KeyMember)
-                                                                               ? ImmutableArray.Create(state.ValidState.Value)
-                                                                               : ImmutableArray<ValidSourceGenState>.Empty);
+      var validStates = enumTypeOrError.SelectMany(static (state, _) => state.ValidState is not null
+                                                                           ? ImmutableArray.Create(state.ValidState.Value)
+                                                                           : ImmutableArray<ValidSourceGenState>.Empty);
 
       InitializeEnumTypeGeneration(context, validStates);
       InitializeDerivedTypesGeneration(context, validStates);
@@ -32,7 +32,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       InitializeComparableCodeGenerator(context, validStates);
       InitializeParsableCodeGenerator(context, validStates);
       InitializeComparisonOperatorsCodeGenerator(context, validStates);
-      InitializeErrorReporting(context, enumTypeOrException);
+
+      InitializeErrorReporting(context, enumTypeOrError);
+      InitializeExceptionReporting(context, enumTypeOrError);
    }
 
    private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
@@ -158,16 +160,18 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private void InitializeErrorReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
    {
-      var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Exception is not null
-                                                                              ? ImmutableArray.Create(state.Exception)
-                                                                              : ImmutableArray<Exception>.Empty);
-      context.RegisterSourceOutput(exceptions, ReportException);
+      var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Error is not null
+                                                                              ? ImmutableArray.Create(state.Error.Value)
+                                                                              : ImmutableArray<SourceGenError>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportError);
    }
 
-   private static bool IsKeyNotNotNullable(IMemberState keyProperty)
+   private void InitializeExceptionReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
    {
-      return !keyProperty.IsNullableStruct
-             && keyProperty.NullableAnnotation != NullableAnnotation.Annotated;
+      var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Exception is not null
+                                                                              ? ImmutableArray.Create(state.Exception.Value)
+                                                                              : ImmutableArray<SourceGenException>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportException);
    }
 
    private static ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)
@@ -222,9 +226,11 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private static SourceGenContext? GetSourceGenContext(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
+      var tds = (TypeDeclarationSyntax)context.Node;
+
       try
       {
-         var type = context.SemanticModel.GetDeclaredSymbol((TypeDeclarationSyntax)context.Node, cancellationToken);
+         var type = context.SemanticModel.GetDeclaredSymbol(tds, cancellationToken);
 
          if (type is null || type.TypeKind == TypeKind.Error || type.ContainingType is not null)
             return null;
@@ -242,12 +248,20 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          if (keyType.TypeKind == TypeKind.Error)
             return null;
 
+         if (keyType.NullableAnnotation == NullableAnnotation.Annotated)
+            return null;
+
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
+
+         if (factory is null)
+            return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
+
          var settings = new EnumSettings(type.FindEnumGenerationAttribute());
-         var keyProperty = settings.CreateKeyProperty(keyType);
+         var keyProperty = settings.CreateKeyProperty(factory, keyType);
          var isValidatable = enumInterface.IsValidatableEnumInterface();
          var hasCreateInvalidItemImplementation = isValidatable && type.HasCreateInvalidItemImplementation(keyType, cancellationToken);
 
-         var enumState = new EnumSourceGeneratorState(type, keyProperty, settings.SkipToString, isValidatable, hasCreateInvalidItemImplementation, cancellationToken);
+         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, isValidatable, hasCreateInvalidItemImplementation, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
          return new SourceGenContext(new ValidSourceGenState(enumState, derivedTypes, settings, keyProperty));
@@ -258,7 +272,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       }
       catch (Exception ex)
       {
-         return new SourceGenContext(ex);
+         return new SourceGenContext(new SourceGenException(ex, tds));
       }
    }
 
@@ -281,15 +295,20 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       EnumSettings Settings,
       IMemberState KeyMember);
 
-   private record struct SourceGenContext(ValidSourceGenState? ValidState, Exception? Exception)
+   private record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
    {
-      public SourceGenContext(Exception exception)
-         : this(null, exception)
+      public SourceGenContext(ValidSourceGenState validState)
+         : this(validState, null, null)
       {
       }
 
-      public SourceGenContext(ValidSourceGenState validState)
-         : this(validState, null)
+      public SourceGenContext(SourceGenException exception)
+         : this(null, exception, null)
+      {
+      }
+
+      public SourceGenContext(SourceGenError errorMessage)
+         : this(null, null, errorMessage)
       {
       }
    }

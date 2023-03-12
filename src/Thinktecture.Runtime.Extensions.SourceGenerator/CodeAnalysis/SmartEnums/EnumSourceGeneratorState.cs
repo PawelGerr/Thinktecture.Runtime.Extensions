@@ -31,6 +31,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public AttributeInfo AttributeInfo { get; }
 
    public EnumSourceGeneratorState(
+      TypedMemberStateFactory factory,
       INamedTypeSymbol type,
       IMemberState keyProperty,
       bool skipToString,
@@ -51,10 +52,10 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       IsReferenceType = type.IsReferenceType;
       IsAbstract = type.IsAbstract;
 
-      BaseType = type.GetBaseType();
+      BaseType = type.GetBaseType(factory);
       HasKeyComparerImplementation = HasHasKeyComparerImplementation(type);
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, cancellationToken).ToList();
 
       AttributeInfo = new AttributeInfo(type);
    }

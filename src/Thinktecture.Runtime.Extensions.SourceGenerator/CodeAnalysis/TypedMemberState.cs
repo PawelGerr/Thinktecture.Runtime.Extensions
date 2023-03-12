@@ -1,14 +1,9 @@
-using System.Collections.Concurrent;
 using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
 public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 {
-#pragma warning disable RS1024 // we don't need SymbolComparer because we compare SpecialType and NullableAnnotation only.
-   private static readonly ConcurrentDictionary<ITypeSymbol, ITypedMemberState?> _typedMemberStates = new(SpecialTypeAndNullableAnnotationComparer.Instance);
-#pragma warning restore RS1024
-
    private readonly ITypeSymbol _type;
 
    public string TypeFullyQualified { get; }
@@ -33,7 +28,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    public bool HasMultiplyOperators { get; }
    public bool HasDivisionOperators { get; }
 
-   private TypedMemberState(ITypeSymbol type)
+   public TypedMemberState(ITypeSymbol type)
    {
       _type = type;
 
@@ -75,46 +70,6 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
             HasComparisonOperators = true;
          }
       }
-   }
-
-   public static ITypedMemberState GetOrCreate(ITypeSymbol type)
-   {
-      var cachedState = _typedMemberStates.GetOrAdd(type,
-                                                    static t =>
-                                                    {
-                                                       var specialType = t.SpecialType;
-
-                                                       if (t.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
-                                                       {
-                                                          if (t is INamedTypeSymbol namedTypeSymbol)
-                                                             specialType = namedTypeSymbol.TypeArguments[0].SpecialType;
-                                                       }
-
-                                                       switch (specialType)
-                                                       {
-                                                          case SpecialType.System_Boolean:
-                                                          case SpecialType.System_Char:
-                                                          case SpecialType.System_SByte:
-                                                          case SpecialType.System_Byte:
-                                                          case SpecialType.System_Int16:
-                                                          case SpecialType.System_UInt16:
-                                                          case SpecialType.System_Int32:
-                                                          case SpecialType.System_UInt32:
-                                                          case SpecialType.System_Int64:
-                                                          case SpecialType.System_UInt64:
-                                                          case SpecialType.System_Decimal:
-                                                          case SpecialType.System_Single:
-                                                          case SpecialType.System_Double:
-                                                          case SpecialType.System_String:
-                                                          case SpecialType.System_DateTime:
-                                                             return new CachingTypedMemberState(new TypedMemberState(t));
-
-                                                          default:
-                                                             return null;
-                                                       }
-                                                    });
-
-      return cachedState ?? new TypedMemberState(type);
    }
 
    public override bool Equals(object? obj)
@@ -166,50 +121,6 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          hashCode = (hashCode * 397) ^ HasDivisionOperators.GetHashCode();
 
          return hashCode;
-      }
-   }
-
-   // We need to check NullableAnnotation as well, because string is a reference type.
-   private sealed class SpecialTypeAndNullableAnnotationComparer : IEqualityComparer<ITypeSymbol>
-   {
-      public static readonly SpecialTypeAndNullableAnnotationComparer Instance = new();
-
-      public bool Equals(ITypeSymbol? type, ITypeSymbol? other)
-      {
-         if (type is null)
-            return other is null;
-
-         if (other is null)
-            return false;
-
-         if (type.SpecialType != other.SpecialType
-             || type.NullableAnnotation != other.NullableAnnotation)
-            return false;
-
-         if (type.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T)
-            return other.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T;
-
-         if (other.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T)
-            return false;
-
-         if (type is not INamedTypeSymbol named || other is not INamedTypeSymbol namedOther)
-            return false;
-
-         return named.TypeArguments[0].SpecialType == namedOther.TypeArguments[0].SpecialType;
-      }
-
-      public int GetHashCode(ITypeSymbol obj)
-      {
-         var hashCode = (int)obj.SpecialType;
-         hashCode = (hashCode * 397) ^ (int)obj.NullableAnnotation;
-
-         if (obj.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T)
-            return hashCode;
-
-         if (obj is not INamedTypeSymbol named)
-            return (hashCode * 397) ^ 1;
-
-         return (hashCode * 397) ^ (int)named.TypeArguments[0].SpecialType;
       }
    }
 }

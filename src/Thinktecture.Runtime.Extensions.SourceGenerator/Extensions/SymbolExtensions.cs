@@ -15,7 +15,7 @@ public static class SymbolExtensions
       {
          var attribute = attributes[i];
 
-         if (attribute.AttributeClass is not null && predicate(attribute.AttributeClass))
+         if (attribute.AttributeClass is { } attributeClass && attributeClass.TypeKind != TypeKind.Error && predicate(attributeClass))
             return attribute;
       }
 

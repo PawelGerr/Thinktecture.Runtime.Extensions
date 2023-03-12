@@ -166,11 +166,22 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation);
+
+      if (factory is null)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                    locationOfFirstDeclaration,
+                                                    type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                                                    "Could not fetch type information for analysis of the value object."));
+         return;
+      }
+
       TypeMustBePartial(context, type);
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
-      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, context.ReportDiagnostic)
+      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, context.CancellationToken, context.ReportDiagnostic)
                                   .Where(m => !m.IsStatic)
                                   .ToList();
 
@@ -260,6 +271,17 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          }
       }
 
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation);
+
+      if (factory is null)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                    locationOfFirstDeclaration,
+                                                    enumType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                                                    "Could not fetch type information for analysis of the smart enum."));
+         return;
+      }
+
       ConstructorsMustBePrivate(context, enumType);
       TypeMustBePartial(context, enumType);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
@@ -295,7 +317,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, keyType, locationOfFirstDeclaration);
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, context.ReportDiagnostic).Enumerate();
+      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, context.CancellationToken, context.ReportDiagnostic).Enumerate();
       var baseClass = enumType.BaseType;
 
       while (!baseClass.IsNullOrObject())

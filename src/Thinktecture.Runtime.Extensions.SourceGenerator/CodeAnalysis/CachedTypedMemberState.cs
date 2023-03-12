@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class CachingTypedMemberState : IEquatable<CachingTypedMemberState>, ITypedMemberState
+public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITypedMemberState
 {
    private readonly int _hashCode;
 
@@ -25,7 +25,7 @@ public class CachingTypedMemberState : IEquatable<CachingTypedMemberState>, ITyp
    public bool HasMultiplyOperators { get; }
    public bool HasDivisionOperators { get; }
 
-   public CachingTypedMemberState(ITypedMemberState typedMemberState)
+   public CachedTypedMemberState(ITypedMemberState typedMemberState)
    {
       _hashCode = typedMemberState.GetHashCode();
 
@@ -59,7 +59,7 @@ public class CachingTypedMemberState : IEquatable<CachingTypedMemberState>, ITyp
       return ReferenceEquals(this, other);
    }
 
-   public bool Equals(CachingTypedMemberState? other)
+   public bool Equals(CachedTypedMemberState? other)
    {
       return ReferenceEquals(this, other);
    }

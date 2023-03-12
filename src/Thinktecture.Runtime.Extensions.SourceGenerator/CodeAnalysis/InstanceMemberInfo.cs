@@ -53,14 +53,20 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member, type);
    }
 
-   public static InstanceMemberInfo CreateFrom(IFieldSymbol field, CancellationToken cancellationToken)
+   public static InstanceMemberInfo? CreateOrNull(TypedMemberStateFactory factory, IFieldSymbol field, CancellationToken cancellationToken)
    {
-      return new(TypedMemberState.GetOrCreate(field.Type), field, field.Type, field.Name, field.GetIdentifier(cancellationToken), field.DeclaredAccessibility, field.IsStatic);
+      if (field.Type.Kind == SymbolKind.ErrorType)
+         return null;
+
+      return new(factory.Create(field.Type), field, field.Type, field.Name, field.GetIdentifier(cancellationToken), field.DeclaredAccessibility, field.IsStatic);
    }
 
-   public static InstanceMemberInfo CreateFrom(IPropertySymbol property, CancellationToken cancellationToken)
+   public static InstanceMemberInfo? CreateOrNull(TypedMemberStateFactory factory, IPropertySymbol property, CancellationToken cancellationToken)
    {
-      return new(TypedMemberState.GetOrCreate(property.Type), property, property.Type, property.Name, property.GetIdentifier(cancellationToken), property.DeclaredAccessibility, property.IsStatic);
+      if (property.Type.Kind == SymbolKind.ErrorType)
+         return null;
+
+      return new(factory.Create(property.Type), property, property.Type, property.Name, property.GetIdentifier(cancellationToken), property.DeclaredAccessibility, property.IsStatic);
    }
 
    public Location GetIdentifierLocation()

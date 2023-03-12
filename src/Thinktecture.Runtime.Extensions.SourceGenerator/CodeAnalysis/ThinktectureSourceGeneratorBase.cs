@@ -26,13 +26,27 @@ public abstract class ThinktectureSourceGeneratorBase
       _stringBuilderPool.Enqueue(new StringBuilder(stringBuilderInitialSize));
    }
 
-   protected void ReportException(
+   protected void ReportError(
       SourceProductionContext context,
-      Exception exception)
+      SourceGenError error)
    {
       try
       {
-         context.ReportException(exception);
+         context.ReportError(error.Node, error.Message);
+      }
+      catch (Exception ex)
+      {
+         Debug.Write(ex);
+      }
+   }
+
+   protected void ReportException(
+      SourceProductionContext context,
+      SourceGenException exception)
+   {
+      try
+      {
+         context.ReportError(exception.Node, exception.Exception.ToString());
       }
       catch (Exception ex)
       {

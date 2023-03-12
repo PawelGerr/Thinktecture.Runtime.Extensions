@@ -31,6 +31,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
    public ValueObjectSettings Settings { get; }
 
    public ValueObjectSourceGeneratorState(
+      TypedMemberStateFactory factory,
       INamedTypeSymbol type,
       AttributeData valueObjectAttribute,
       CancellationToken cancellationToken)
@@ -42,7 +43,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
       TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(true, cancellationToken).ToList();
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, cancellationToken).ToList();
       EqualityMembers = GetEqualityMembers();
 
       var factoryValidationReturnType = type.GetMembers()

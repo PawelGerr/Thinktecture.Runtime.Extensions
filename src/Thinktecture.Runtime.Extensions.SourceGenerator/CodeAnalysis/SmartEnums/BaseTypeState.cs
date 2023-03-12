@@ -7,10 +7,10 @@ public sealed class BaseTypeState : IEquatable<BaseTypeState>
    public IReadOnlyList<ConstructorState> Constructors { get; }
    public bool IsSameAssembly { get; }
 
-   public BaseTypeState(INamedTypeSymbol type, bool isSameAssembly)
+   public BaseTypeState(TypedMemberStateFactory factory, INamedTypeSymbol type, bool isSameAssembly)
    {
       IsSameAssembly = isSameAssembly;
-      Constructors = type.GetConstructors();
+      Constructors = type.GetConstructors(factory);
    }
 
    public override bool Equals(object? obj)

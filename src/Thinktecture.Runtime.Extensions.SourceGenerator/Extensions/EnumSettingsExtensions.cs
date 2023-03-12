@@ -6,10 +6,10 @@ namespace Thinktecture;
 
 public static class EnumSettingsExtensions
 {
-   public static IMemberState CreateKeyProperty(this EnumSettings settings, ITypeSymbol keyType)
+   public static IMemberState CreateKeyProperty(this EnumSettings settings, TypedMemberStateFactory factory, ITypeSymbol keyType)
    {
       var keyPropertyName = settings.GetKeyPropertyName();
-      return new DefaultMemberState(TypedMemberState.GetOrCreate(keyType), keyPropertyName, keyPropertyName.MakeArgumentName(), false);
+      return new DefaultMemberState(factory.Create(keyType), keyPropertyName, keyPropertyName.MakeArgumentName(), false);
    }
 
    private static string GetKeyPropertyName(this EnumSettings settings)

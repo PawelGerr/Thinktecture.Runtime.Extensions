@@ -18,7 +18,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
 
       foreach (var attribute in type.GetAttributes())
       {
-         if (attribute.AttributeClass is null)
+         if (attribute.AttributeClass is not { } attributeClass || attributeClass.TypeKind == TypeKind.Error)
             continue;
 
          if (attribute.AttributeClass.IsStructLayoutAttribute())

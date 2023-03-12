@@ -6,23 +6,28 @@ namespace Thinktecture;
 
 public static class NamedTypeSymbolExtensions
 {
-   public static BaseTypeState? GetBaseType(this INamedTypeSymbol type)
+   public static BaseTypeState? GetBaseType(
+      this INamedTypeSymbol type,
+      TypedMemberStateFactory factory)
    {
       if (type.BaseType.IsNullOrObject())
          return null;
 
       var isSameAssembly = SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, type.BaseType.ContainingAssembly);
-      return new BaseTypeState(type.BaseType, isSameAssembly);
-   }
-
-   public static IReadOnlyList<ConstructorState> GetConstructors(
-      this INamedTypeSymbol type)
-   {
-      return GetConstructors(type, GetBaseType(type));
+      return new BaseTypeState(factory, type.BaseType, isSameAssembly);
    }
 
    public static IReadOnlyList<ConstructorState> GetConstructors(
       this INamedTypeSymbol type,
+      TypedMemberStateFactory factory
+   )
+   {
+      return type.GetConstructors(factory, type.GetBaseType(factory));
+   }
+
+   public static IReadOnlyList<ConstructorState> GetConstructors(
+      this INamedTypeSymbol type,
+      TypedMemberStateFactory factory,
       BaseTypeState? baseType)
    {
       var ctors = type.Constructors
@@ -33,7 +38,7 @@ public static class NamedTypeSymbolExtensions
       return ctors.Select(ctor =>
                           {
                              var parameters = ctor.Parameters
-                                                  .Select(p => new DefaultMemberState(TypedMemberState.GetOrCreate(p.Type), p.Name, p.Name, false))
+                                                  .Select(p => new DefaultMemberState(factory.Create(p.Type), p.Name, p.Name, false))
                                                   .ToList();
 
                              return new ConstructorState(parameters);

@@ -59,36 +59,39 @@ public static class TypeSymbolExtensions
       bool collectFoundInterfaces,
       [MaybeNullWhen(false)] out IReadOnlyList<INamedTypeSymbol> foundEnumInterfaces)
    {
-      // The type is an enum, if
-      // a) it directly implements IEnum/IValidatableEnum OR
-      // b) it has EnumGenerationAttribute and one of its base classes is an enum
-
-      if (enumType.IsNullOrObject())
+      while (true)
       {
-         foundEnumInterfaces = null;
-         return false;
+         // The type is an enum, if
+         // a) it directly implements IEnum/IValidatableEnum OR
+         // b) it has EnumGenerationAttribute and one of its base classes is an enum
+
+         if (enumType.IsNullOrObject())
+         {
+            foundEnumInterfaces = null;
+            return false;
+         }
+
+         List<INamedTypeSymbol>? implementedInterfaces = null;
+
+         if (SearchForEnumInterfaces(enumType.Interfaces, collectFoundInterfaces, ref implementedInterfaces))
+         {
+            if (!enumType.BaseType.IsNullOrObject())
+               SearchForEnumInterfaces(enumType.BaseType.AllInterfaces, collectFoundInterfaces, ref implementedInterfaces);
+
+            foundEnumInterfaces = implementedInterfaces ?? (IReadOnlyList<INamedTypeSymbol>)Array.Empty<INamedTypeSymbol>();
+            return true;
+         }
+
+         var enumGenerationAttr = enumType.FindEnumGenerationAttribute();
+
+         if (enumGenerationAttr is null)
+         {
+            foundEnumInterfaces = null;
+            return false;
+         }
+
+         enumType = enumType.BaseType;
       }
-
-      List<INamedTypeSymbol>? implementedInterfaces = null;
-
-      if (SearchForEnumInterfaces(enumType.Interfaces, collectFoundInterfaces, ref implementedInterfaces))
-      {
-         if (!enumType.BaseType.IsNullOrObject())
-            SearchForEnumInterfaces(enumType.BaseType.AllInterfaces, collectFoundInterfaces, ref implementedInterfaces);
-
-         foundEnumInterfaces = implementedInterfaces ?? (IReadOnlyList<INamedTypeSymbol>)Array.Empty<INamedTypeSymbol>();
-         return true;
-      }
-
-      var enumGenerationAttr = enumType.FindEnumGenerationAttribute();
-
-      if (enumGenerationAttr is null)
-      {
-         foundEnumInterfaces = null;
-         return false;
-      }
-
-      return enumType.BaseType.IsEnum(collectFoundInterfaces, out foundEnumInterfaces);
    }
 
    private static bool SearchForEnumInterfaces(ImmutableArray<INamedTypeSymbol> interfaces, bool collectFoundInterfaces, ref List<INamedTypeSymbol>? foundEnumInterfaces)
@@ -371,12 +374,12 @@ public static class TypeSymbolExtensions
 
    public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
    {
-      return type.FindAttribute(static attrType => attrType.Name == "EnumGenerationAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
+      return type.FindAttribute(static attrType => attrType is { Name: "EnumGenerationAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } });
    }
 
    public static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)
    {
-      return type.FindAttribute(static attrType => attrType.Name == "ValueObjectAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
+      return type.FindAttribute(static attrType => attrType is { Name: "ValueObjectAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } });
    }
 
    public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerEnums(
@@ -455,6 +458,7 @@ public static class TypeSymbolExtensions
 
    public static IEnumerable<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
+      TypedMemberStateFactory factory,
       bool instanceMembersOnly,
       CancellationToken cancellationToken,
       Action<Diagnostic>? reportDiagnostic = null)
@@ -464,11 +468,12 @@ public static class TypeSymbolExtensions
                          {
                             return tuple switch
                             {
-                               ({ } field, _) => InstanceMemberInfo.CreateFrom(field, cancellationToken),
-                               (_, { } property) => InstanceMemberInfo.CreateFrom(property, cancellationToken),
+                               ({ } field, _) => InstanceMemberInfo.CreateOrNull(factory, field, cancellationToken),
+                               (_, { } property) => InstanceMemberInfo.CreateOrNull(factory, property, cancellationToken),
                                _ => throw new Exception("Either field or property must be set.")
                             };
-                         });
+                         })
+                 .Where(i => i is not null)!;
    }
 
    public static IEnumerable<(IFieldSymbol? Field, IPropertySymbol? Property)> IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(
