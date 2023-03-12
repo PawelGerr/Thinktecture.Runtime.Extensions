@@ -9,8 +9,6 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public string Name { get; }
    public string ArgumentName { get; }
 
-   public bool IsStatic { get; }
-
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public string TypeFullyQualifiedNullAnnotated => _typedMemberState.TypeFullyQualifiedNullAnnotated;
@@ -19,17 +17,14 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;
    public bool IsParsable => _typedMemberState.IsParsable;
-   public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
-   public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
    public bool HasComparisonOperators => _typedMemberState.HasComparisonOperators;
    public string TypeMinimallyQualified => _typedMemberState.TypeMinimallyQualified;
 
-   public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName, bool isStatic)
+   public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName)
    {
       _typedMemberState = typedMemberState;
       Name = name;
       ArgumentName = argumentName;
-      IsStatic = isStatic;
    }
 
    public override bool Equals(object? obj)
@@ -51,8 +46,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
 
       return _typedMemberState.Equals(other._typedMemberState)
              && Name == other.Name
-             && ArgumentName == other.ArgumentName
-             && IsStatic == other.IsStatic;
+             && ArgumentName == other.ArgumentName;
    }
 
    public override int GetHashCode()
@@ -62,7 +56,6 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
          var hashCode = _typedMemberState.GetHashCode();
          hashCode = (hashCode * 397) ^ Name.GetHashCode();
          hashCode = (hashCode * 397) ^ ArgumentName.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsStatic.GetHashCode();
 
          return hashCode;
       }

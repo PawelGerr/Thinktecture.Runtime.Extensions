@@ -5,9 +5,14 @@ namespace Thinktecture;
 
 public static class PropertySymbolExtensions
 {
-   public static SyntaxToken GetIdentifier(this IPropertySymbol property, CancellationToken cancellationToken)
+   public static SyntaxToken? GetIdentifier(this IPropertySymbol property, CancellationToken cancellationToken)
    {
-      var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
-      return syntax.Identifier;
+      if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+         return null;
+
+      if (property.DeclaringSyntaxReferences[0].GetSyntax(cancellationToken) is PropertyDeclarationSyntax propertyDeclaration)
+         return propertyDeclaration.Identifier;
+
+      return null;
    }
 }

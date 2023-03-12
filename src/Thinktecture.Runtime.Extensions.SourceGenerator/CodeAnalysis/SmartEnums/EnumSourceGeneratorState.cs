@@ -4,8 +4,6 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<EnumSourceGeneratorState>
 {
-   internal const string KEY_EQUALITY_COMPARER_NAME = "KeyEqualityComparer";
-
    public string? Namespace { get; }
    public string Name { get; }
    public string TypeFullyQualified { get; }
@@ -67,7 +65,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          if (member is not IPropertySymbol property)
             continue;
 
-         if (member.IsStatic && property.Name == KEY_EQUALITY_COMPARER_NAME)
+         if (member.IsStatic && property.Name == Constants.KEY_EQUALITY_COMPARER_NAME)
             return true;
       }
 

@@ -10,7 +10,7 @@ public static class NamedTypeSymbolExtensions
       this INamedTypeSymbol type,
       TypedMemberStateFactory factory)
    {
-      if (type.BaseType.IsNullOrObject())
+      if (type.BaseType.IsNullOrObject() || type.BaseType.Kind == SymbolKind.ErrorType)
          return null;
 
       var isSameAssembly = SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, type.BaseType.ContainingAssembly);
@@ -19,30 +19,40 @@ public static class NamedTypeSymbolExtensions
 
    public static IReadOnlyList<ConstructorState> GetConstructors(
       this INamedTypeSymbol type,
-      TypedMemberStateFactory factory
-   )
+      TypedMemberStateFactory factory)
    {
       return type.GetConstructors(factory, type.GetBaseType(factory));
    }
 
-   public static IReadOnlyList<ConstructorState> GetConstructors(
+   private static IReadOnlyList<ConstructorState> GetConstructors(
       this INamedTypeSymbol type,
       TypedMemberStateFactory factory,
       BaseTypeState? baseType)
    {
-      var ctors = type.Constructors
-                      .Where(c => c.MethodKind == MethodKind.Constructor
-                                  && (c.DeclaredAccessibility is Accessibility.Protected or Accessibility.Public || (c.DeclaredAccessibility == Accessibility.Internal && baseType?.IsSameAssembly != true))
-                                  && (!c.IsImplicitlyDeclared || baseType?.IsSameAssembly != true)); // default-ctor will be replaced by ctor implemented by this generator
+      if (type.Constructors.IsDefaultOrEmpty)
+         return Array.Empty<ConstructorState>();
 
-      return ctors.Select(ctor =>
-                          {
-                             var parameters = ctor.Parameters
-                                                  .Select(p => new DefaultMemberState(factory.Create(p.Type), p.Name, p.Name, false))
-                                                  .ToList();
+      List<ConstructorState>? ctorStates = null;
 
-                             return new ConstructorState(parameters);
-                          })
-                  .ToList();
+      for (var i = 0; i < type.Constructors.Length; i++)
+      {
+         var ctor = type.Constructors[i];
+
+         if (ctor.MethodKind == MethodKind.Constructor
+             && (ctor.DeclaredAccessibility is Accessibility.Protected or Accessibility.Public || (ctor.DeclaredAccessibility == Accessibility.Internal && baseType?.IsSameAssembly != true))
+             && (!ctor.IsImplicitlyDeclared || baseType?.IsSameAssembly != true)) // default-ctor will be replaced by ctor implemented by this generator
+         {
+            var parameters = ctor.Parameters.IsDefaultOrEmpty
+                                ? (IReadOnlyList<IMemberState>)Array.Empty<IMemberState>()
+                                : ctor.Parameters
+                                      .Select(p => new DefaultMemberState(factory.Create(p.Type), p.Name, p.Name))
+                                      .ToList();
+
+            var ctorState = new ConstructorState(parameters);
+            (ctorStates ??= new List<ConstructorState>()).Add(ctorState);
+         }
+      }
+
+      return ctorStates ?? (IReadOnlyList<ConstructorState>)Array.Empty<ConstructorState>();
    }
 }

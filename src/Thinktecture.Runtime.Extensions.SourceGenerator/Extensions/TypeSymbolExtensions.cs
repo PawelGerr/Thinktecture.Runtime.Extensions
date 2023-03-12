@@ -269,7 +269,7 @@ public static class TypeSymbolExtensions
       return enumType.GetNonIgnoredMembers()
                      .Select(m =>
                              {
-                                if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField(out _))
+                                if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField())
                                    return null;
 
                                 if (SymbolEqualityComparer.Default.Equals(field.Type, enumType))
@@ -463,13 +463,15 @@ public static class TypeSymbolExtensions
       CancellationToken cancellationToken,
       Action<Diagnostic>? reportDiagnostic = null)
    {
+      var allowedCaptureSymbols = reportDiagnostic is not null;
+
       return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(instanceMembersOnly, cancellationToken, null, reportDiagnostic)
                  .Select(tuple =>
                          {
                             return tuple switch
                             {
-                               ({ } field, _) => InstanceMemberInfo.CreateOrNull(factory, field, cancellationToken),
-                               (_, { } property) => InstanceMemberInfo.CreateOrNull(factory, property, cancellationToken),
+                               ({ } field, _) => InstanceMemberInfo.CreateOrNull(factory, field, allowedCaptureSymbols),
+                               (_, { } property) => InstanceMemberInfo.CreateOrNull(factory, property, allowedCaptureSymbols),
                                _ => throw new Exception("Either field or property must be set.")
                             };
                          })
@@ -494,7 +496,7 @@ public static class TypeSymbolExtensions
          if (locationOfDerivedType is null)
          {
             descriptor = DiagnosticsDescriptors.FieldMustBeReadOnly;
-            location = field.GetIdentifier(cancellationToken).GetLocation();
+            location = field.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
          }
          else
          {
@@ -516,7 +518,7 @@ public static class TypeSymbolExtensions
          if (locationOfDerivedType is null)
          {
             descriptor = DiagnosticsDescriptors.PropertyMustBeReadOnly;
-            location = property.GetIdentifier(cancellationToken).GetLocation();
+            location = property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
          }
          else
          {
@@ -602,7 +604,7 @@ public static class TypeSymbolExtensions
    {
       foreach (var member in enumType.GetNonIgnoredMembers())
       {
-         if (member is not IMethodSymbol { Name: "CreateInvalidItem" } method)
+         if (member is not IMethodSymbol { Name: Constants.Methods.CREATE_INVALID_ITEM } method)
             continue;
 
          if (method.Parameters is { IsDefaultOrEmpty: false, Length: 1 })

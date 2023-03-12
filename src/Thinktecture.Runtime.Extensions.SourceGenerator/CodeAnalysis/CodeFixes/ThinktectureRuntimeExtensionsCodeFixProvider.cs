@@ -15,7 +15,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _MAKE_MEMBER_PUBLIC = "Make the member public";
    private const string _MAKE_FIELD_READONLY = "Make the field read-only";
    private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
-   private const string _IMPLEMENT_CREATE_INVALID = "Implement 'CreateInvalidItem'";
+   private const string _IMPLEMENT_CREATE_INVALID = $"Implement '{Constants.Methods.CREATE_INVALID_ITEM}'";
    private const string _MAKE_TYPE_PRIVATE = "Make type private";
    private const string _MAKE_TYPE_PUBLIC = "Make type public";
    private const string _SEAL_CLASS = "Seal class";
@@ -205,7 +205,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       var parameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("key"))
                                    .WithType(SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)));
 
-      var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(enumType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)), "CreateInvalidItem")
+      var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(enumType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)), Constants.Methods.CREATE_INVALID_ITEM)
                                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword))
                                 .AddParameterListParameters(parameter)
                                 .WithBody(SyntaxFactory.Block(BuildThrowNotImplementedException()));

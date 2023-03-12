@@ -6,14 +6,13 @@ namespace Thinktecture.CodeAnalysis;
 public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMemberInfo>
 {
    private readonly ITypedMemberState _typedMemberState;
-   private readonly SyntaxToken _identifier;
+   private readonly (IFieldSymbol? Field, IPropertySymbol? Property) _symbol;
 
    private string? _argumentName;
    public string ArgumentName => _argumentName ??= Name.MakeArgumentName();
 
    public string Name { get; }
    public bool IsStatic { get; }
-   public Accessibility ReadAccessibility { get; }
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
@@ -37,41 +36,56 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,
-      ISymbol member,
-      ITypeSymbol type,
+      ValueObjectMemberSettings settings,
       string name,
-      SyntaxToken identifier,
-      Accessibility readAccessibility,
+      (IFieldSymbol?, IPropertySymbol?) symbol,
       bool isStatic)
    {
       _typedMemberState = typedMemberState;
-      _identifier = identifier;
+      _symbol = symbol;
 
       Name = name;
-      ReadAccessibility = readAccessibility;
       IsStatic = isStatic;
-      ValueObjectMemberSettings = ValueObjectMemberSettings.Create(member, type);
+      ValueObjectMemberSettings = settings;
    }
 
-   public static InstanceMemberInfo? CreateOrNull(TypedMemberStateFactory factory, IFieldSymbol field, CancellationToken cancellationToken)
+   public static InstanceMemberInfo? CreateOrNull(
+      TypedMemberStateFactory factory,
+      IFieldSymbol field,
+      bool allowedCaptureSymbols)
    {
       if (field.Type.Kind == SymbolKind.ErrorType)
          return null;
 
-      return new(factory.Create(field.Type), field, field.Type, field.Name, field.GetIdentifier(cancellationToken), field.DeclaredAccessibility, field.IsStatic);
+      var symbol = allowedCaptureSymbols ? field : null;
+      var settings = ValueObjectMemberSettings.Create(field, field.Type, allowedCaptureSymbols);
+
+      return new(factory.Create(field.Type), settings, field.Name, (symbol, null), field.IsStatic);
    }
 
-   public static InstanceMemberInfo? CreateOrNull(TypedMemberStateFactory factory, IPropertySymbol property, CancellationToken cancellationToken)
+   public static InstanceMemberInfo? CreateOrNull(
+      TypedMemberStateFactory factory,
+      IPropertySymbol property,
+      bool allowedCaptureSymbols)
    {
       if (property.Type.Kind == SymbolKind.ErrorType)
          return null;
 
-      return new(factory.Create(property.Type), property, property.Type, property.Name, property.GetIdentifier(cancellationToken), property.DeclaredAccessibility, property.IsStatic);
+      var symbol = allowedCaptureSymbols ? property : null;
+      var settings = ValueObjectMemberSettings.Create(property, property.Type, allowedCaptureSymbols);
+
+      return new(factory.Create(property.Type), settings, property.Name, (null, symbol), property.IsStatic);
    }
 
-   public Location GetIdentifierLocation()
+   public Location GetIdentifierLocation(CancellationToken cancellationToken)
    {
-      return _identifier.GetLocation();
+      if (_symbol.Field is not null)
+         return _symbol.Field.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+
+      if (_symbol.Property is not null)
+         return _symbol.Property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+
+      return Location.None;
    }
 
    public override bool Equals(object? obj)
@@ -93,7 +107,6 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
       return _typedMemberState.Equals(other._typedMemberState)
              && Name == other.Name
-             && ReadAccessibility == other.ReadAccessibility
              && IsStatic == other.IsStatic
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
@@ -104,7 +117,6 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       {
          var hashCode = _typedMemberState.GetHashCode();
          hashCode = (hashCode * 397) ^ Name.GetHashCode();
-         hashCode = (hashCode * 397) ^ (int)ReadAccessibility;
          hashCode = (hashCode * 397) ^ IsStatic.GetHashCode();
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 

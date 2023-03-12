@@ -62,7 +62,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 
-      public static global::System.Collections.Generic.IEqualityComparer<").Append(_state.KeyProperty.TypeFullyQualifiedNullAnnotated).Append("> ").Append(EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME).Append(" => ");
+      public static global::System.Collections.Generic.IEqualityComparer<").Append(_state.KeyProperty.TypeFullyQualifiedNullAnnotated).Append("> ").Append(Constants.KEY_EQUALITY_COMPARER_NAME).Append(" => ");
 
          if (_state.KeyProperty.IsString())
          {
@@ -559,7 +559,7 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
 
          _sb.Append(@"
-         return ").Append(EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME).Append(".Equals(this.").Append(_state.KeyProperty.Name).Append(", other.").Append(_state.KeyProperty.Name).Append(");");
+         return ").Append(Constants.KEY_EQUALITY_COMPARER_NAME).Append(".Equals(this.").Append(_state.KeyProperty.Name).Append(", other.").Append(_state.KeyProperty.Name).Append(");");
       }
       else
       {
@@ -579,7 +579,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private static global::System.Collections.Generic.IReadOnlyDictionary<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@"> GetLookup()
       {
-         var lookup = new global::System.Collections.Generic.Dictionary<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(">(").Append(totalNumberOfItems).Append(", ").Append(EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME).Append(");");
+         var lookup = new global::System.Collections.Generic.Dictionary<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(">(").Append(totalNumberOfItems).Append(", ").Append(Constants.KEY_EQUALITY_COMPARER_NAME).Append(");");
 
       if (_state.ItemNames.Count > 0)
       {
@@ -727,7 +727,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
       else
       {
-         _sb.Append("CreateInvalidItem(").Append(_state.KeyProperty.ArgumentName).Append(")");
+         _sb.Append(Constants.Methods.CREATE_INVALID_ITEM).Append("(").Append(_state.KeyProperty.ArgumentName).Append(")");
       }
 
       _sb.Append(@";
@@ -737,20 +737,20 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
             if (item is null)
-               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must not return 'null'."");
+               throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must not return 'null'."");
 ");
       }
 
       _sb.Append(@"
             if (item.IsValid)
-               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'."");");
+               throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must return an instance with property 'IsValid' equals to 'false'."");");
 
       if (!needsCreateInvalidItemImplementation)
       {
          _sb.Append(@"
 
             if (_itemsLookup.Value.ContainsKey(item.").Append(_state.KeyProperty.Name).Append(@"))
-               throw new global::System.Exception(""The implementation of method 'CreateInvalidItem' must not return an instance with property '").Append(_state.KeyProperty.Name).Append(@"' equals to one of a valid item."");");
+               throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append("' must not return an instance with property '").Append(_state.KeyProperty.Name).Append(@"' equals to one of a valid item."");");
       }
 
       _sb.Append(@"
@@ -762,7 +762,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
-      private static ").Append(_state.TypeFullyQualified).Append(" CreateInvalidItem(").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName).Append(@")
+      private static ").Append(_state.TypeFullyQualified).Append(" ").Append(Constants.Methods.CREATE_INVALID_ITEM).Append("(").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName).Append(@")
       {
          return new ").Append(_state.TypeFullyQualified).Append("(").Append(_state.KeyProperty.ArgumentName).Append(", false");
 
@@ -929,7 +929,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-         this._hashCode = global::System.HashCode.Combine(typeof(").Append(_state.TypeFullyQualified).Append("), ").Append(EnumSourceGeneratorState.KEY_EQUALITY_COMPARER_NAME).Append(".GetHashCode(").Append(_state.KeyProperty.ArgumentName).Append(@"));
+         this._hashCode = global::System.HashCode.Combine(typeof(").Append(_state.TypeFullyQualified).Append("), ").Append(Constants.KEY_EQUALITY_COMPARER_NAME).Append(".GetHashCode(").Append(_state.KeyProperty.ArgumentName).Append(@"));
       }
 
       static partial void ValidateConstructorArguments(ref ").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName);

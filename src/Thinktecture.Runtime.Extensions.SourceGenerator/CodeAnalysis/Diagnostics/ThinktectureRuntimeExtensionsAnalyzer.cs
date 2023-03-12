@@ -198,8 +198,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var keyMember = assignableMembers[0];
 
-         if (keyMember.NullableAnnotation == NullableAnnotation.Annotated || keyMember.IsNullableStruct)
-            ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.GetIdentifierLocation(), keyMember.Name);
+         if (keyMember.NullableAnnotation == NullableAnnotation.Annotated)
+            ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.GetIdentifierLocation(context.CancellationToken), keyMember.Name);
 
          CheckComparerTypes(context, keyMember);
       }
@@ -227,7 +227,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          {
             ReportDiagnostic(context,
                              DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
-                             assignableMember.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(),
+                             assignableMember.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(context.CancellationToken),
                              comparerAccessor);
          }
       }
@@ -239,7 +239,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
-                          member.ValueObjectMemberSettings.GetEqualityComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(),
+                          member.ValueObjectMemberSettings.GetEqualityComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(context.CancellationToken),
                           member.ValueObjectMemberSettings.EqualityComparerAccessor);
       }
 
@@ -247,7 +247,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
-                          member.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(),
+                          member.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(context.CancellationToken),
                           member.ValueObjectMemberSettings.ComparerAccessor);
       }
    }
@@ -352,7 +352,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       foreach (var member in enumType.GetNonIgnoredMembers())
       {
          if (member.IsStatic && member is IPropertySymbol property && SymbolEqualityComparer.Default.Equals(property.Type, enumType))
-            ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier(context.CancellationToken).GetLocation(), property.Name);
+            ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier(context.CancellationToken)?.GetLocation() ?? Location.None, property.Name);
       }
    }
 
@@ -434,7 +434,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             continue;
 
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumItemMustBePublic,
-                          item.GetIdentifier(context.CancellationToken).GetLocation(),
+                          item.GetIdentifier(context.CancellationToken)?.GetLocation() ?? Location.None,
                           item.Name, BuildTypeName(type));
       }
    }

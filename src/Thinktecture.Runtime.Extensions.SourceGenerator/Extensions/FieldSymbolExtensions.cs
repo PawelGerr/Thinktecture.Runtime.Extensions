@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -6,21 +5,19 @@ namespace Thinktecture;
 
 public static class FieldSymbolExtensions
 {
-   public static SyntaxToken GetIdentifier(this IFieldSymbol field, CancellationToken cancellationToken)
+   public static SyntaxToken? GetIdentifier(this IFieldSymbol field, CancellationToken cancellationToken)
    {
-      var syntax = (VariableDeclaratorSyntax)field.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
-      return syntax.Identifier;
+      if (field.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+         return null;
+
+      if (field.DeclaringSyntaxReferences[0].GetSyntax(cancellationToken) is VariableDeclaratorSyntax variableDeclaration)
+         return variableDeclaration.Identifier;
+
+      return null;
    }
 
-   public static bool IsPropertyBackingField(this IFieldSymbol field, [MaybeNullWhen(false)] out IPropertySymbol property)
+   public static bool IsPropertyBackingField(this IFieldSymbol field)
    {
-      if (field.AssociatedSymbol is IPropertySymbol prop)
-      {
-         property = prop;
-         return true;
-      }
-
-      property = null;
-      return false;
+      return field.AssociatedSymbol is IPropertySymbol;
    }
 }

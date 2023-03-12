@@ -208,12 +208,12 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          if (enumInterface is null || enumInterface.TypeKind == TypeKind.Error)
             return null;
 
-         var keyType = enumInterface.TypeArguments[0];
+         var keyMemberType = enumInterface.TypeArguments[0];
 
-         if (keyType.TypeKind == TypeKind.Error)
+         if (keyMemberType.TypeKind == TypeKind.Error)
             return null;
 
-         if (keyType.NullableAnnotation == NullableAnnotation.Annotated)
+         if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated)
             return null;
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
@@ -222,9 +222,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
 
          var settings = new EnumSettings(type.FindEnumGenerationAttribute());
-         var keyProperty = settings.CreateKeyProperty(factory, keyType);
+         var keyTypedMemberState = factory.Create(keyMemberType);
+         var keyProperty = settings.CreateKeyProperty(keyTypedMemberState);
          var isValidatable = enumInterface.IsValidatableEnumInterface();
-         var hasCreateInvalidItemImplementation = isValidatable && type.HasCreateInvalidItemImplementation(keyType, cancellationToken);
+         var hasCreateInvalidItemImplementation = isValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
 
          var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, isValidatable, hasCreateInvalidItemImplementation, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));

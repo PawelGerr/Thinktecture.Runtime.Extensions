@@ -94,7 +94,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
       for (var i = 0; i < members.Count; i++)
       {
          var memberInfo = members[i];
-         var comparerAccessor = memberInfo.SpecialType == SpecialType.System_String ? Constants.ORDINAL_IGNORE_CASE_ACCESSOR : null;
+         var comparerAccessor = memberInfo.SpecialType == SpecialType.System_String ? Constants.ComparerAccessor.ORDINAL_IGNORE_CASE : null;
          var equalityMemberInfo = new EqualityInstanceMemberInfo(memberInfo, comparerAccessor, comparerAccessor);
 
          equalityMembersArray[i] = equalityMemberInfo;

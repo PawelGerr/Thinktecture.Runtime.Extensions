@@ -4,21 +4,17 @@ namespace Thinktecture.CodeAnalysis;
 
 public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 {
-   private readonly ITypeSymbol _type;
-
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullable { get; }
-   public string TypeFullyQualifiedNullAnnotated => _type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
-   public string TypeFullyQualifiedWithNullability => _type is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.Annotated } ? TypeFullyQualifiedNullAnnotated : TypeFullyQualified;
+   public string TypeFullyQualifiedNullAnnotated => IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
+   public string TypeFullyQualifiedWithNullability => IsReferenceType && NullableAnnotation == NullableAnnotation.Annotated ? TypeFullyQualifiedNullAnnotated : TypeFullyQualified;
+   public string TypeMinimallyQualified { get; }
 
-   private string? _typeMinimallyQualified;
-   public string TypeMinimallyQualified => _typeMinimallyQualified ??= _type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-
-   public NullableAnnotation NullableAnnotation => _type.NullableAnnotation;
-   public SpecialType SpecialType => _type.SpecialType;
-   public bool IsReferenceType => _type.IsReferenceType;
-   public bool IsNullableStruct => _type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
-   public bool IsReferenceTypeOrNullableStruct => _type.IsReferenceType || IsNullableStruct;
+   public NullableAnnotation NullableAnnotation { get; }
+   public SpecialType SpecialType { get; }
+   public bool IsReferenceType { get; }
+   public bool IsNullableStruct { get; }
+   public bool IsReferenceTypeOrNullableStruct => IsReferenceType || IsNullableStruct;
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
@@ -30,10 +26,13 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 
    public TypedMemberState(ITypeSymbol type)
    {
-      _type = type;
-
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
+      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      IsReferenceType = type.IsReferenceType;
+      NullableAnnotation = type.NullableAnnotation;
+      SpecialType = type.SpecialType;
+      IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
       foreach (var @interface in type.AllInterfaces)
       {
@@ -41,31 +40,31 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          {
             IsFormattable = true;
          }
-         else if (@interface.IsComparableInterface(_type))
+         else if (@interface.IsComparableInterface(type))
          {
             IsComparable = true;
          }
-         else if (@interface.IsParsableInterface(_type))
+         else if (@interface.IsParsableInterface(type))
          {
             IsParsable = true;
          }
-         else if (@interface.IsIAdditionOperators(_type))
+         else if (@interface.IsIAdditionOperators(type))
          {
             HasAdditionOperators = true;
          }
-         else if (@interface.IsISubtractionOperators(_type))
+         else if (@interface.IsISubtractionOperators(type))
          {
             HasSubtractionOperators = true;
          }
-         else if (@interface.IsIMultiplyOperators(_type))
+         else if (@interface.IsIMultiplyOperators(type))
          {
             HasMultiplyOperators = true;
          }
-         else if (@interface.IsIDivisionOperators(_type))
+         else if (@interface.IsIDivisionOperators(type))
          {
             HasDivisionOperators = true;
          }
-         else if (@interface.IsIComparisonOperators(_type))
+         else if (@interface.IsIComparisonOperators(type))
          {
             HasComparisonOperators = true;
          }
@@ -91,7 +90,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 
       return TypeFullyQualifiedWithNullability == other.TypeFullyQualifiedWithNullability
              && SpecialType == other.SpecialType
-             && _type.OriginalDefinition.SpecialType == other._type.OriginalDefinition.SpecialType
+             && IsNullableStruct == other.IsNullableStruct
              && IsReferenceType == other.IsReferenceType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
@@ -109,7 +108,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       {
          var hashCode = TypeFullyQualifiedWithNullability.GetHashCode();
          hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
-         hashCode = (hashCode * 397) ^ _type.OriginalDefinition.SpecialType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsNullableStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
