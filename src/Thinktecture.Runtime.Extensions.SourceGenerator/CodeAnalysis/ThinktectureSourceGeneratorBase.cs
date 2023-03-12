@@ -192,6 +192,28 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
+   protected void GenerateCode<TState>(
+      SourceProductionContext context,
+      (TState, ICodeGeneratorFactory<TState>) tuple)
+      where TState : INamespaceAndName, IEquatable<TState>
+   {
+      var stringBuilder = LeaseStringBuilder();
+
+      try
+      {
+         var (state, generatorFactory) = tuple;
+
+         context.CancellationToken.ThrowIfCancellationRequested();
+         stringBuilder.Clear();
+
+         GenerateCode(context, state, generatorFactory, stringBuilder);
+      }
+      finally
+      {
+         Return(stringBuilder);
+      }
+   }
+
    private static void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,

@@ -17,6 +17,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
 
    public bool HasCreateInvalidItemImplementation { get; }
    public bool HasKeyComparerImplementation { get; }
+   public bool HasStructLayoutAttribute { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
 
@@ -26,8 +27,6 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public IReadOnlyList<string> ItemNames { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
 
-   public AttributeInfo AttributeInfo { get; }
-
    public EnumSourceGeneratorState(
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
@@ -35,12 +34,14 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       bool skipToString,
       bool isValidatable,
       bool hasCreateInvalidItemImplementation,
+      bool hasStructLayoutAttribute,
       CancellationToken cancellationToken)
    {
       KeyProperty = keyProperty;
       SkipToString = skipToString;
       IsValidatable = isValidatable;
       HasCreateInvalidItemImplementation = hasCreateInvalidItemImplementation;
+      HasStructLayoutAttribute = hasStructLayoutAttribute;
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
@@ -54,8 +55,6 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       HasKeyComparerImplementation = HasHasKeyComparerImplementation(type);
       ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, cancellationToken).ToList();
-
-      AttributeInfo = new AttributeInfo(type);
    }
 
    private static bool HasHasKeyComparerImplementation(INamedTypeSymbol enumType)
@@ -90,7 +89,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && HasKeyComparerImplementation == other.HasKeyComparerImplementation
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
-             && AttributeInfo.Equals(other.AttributeInfo)
+             && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && KeyProperty.Equals(other.KeyProperty)
              && Equals(BaseType, other.BaseType)
              && ItemNames.EqualsTo(other.ItemNames)
@@ -107,7 +106,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ HasKeyComparerImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
-         hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();

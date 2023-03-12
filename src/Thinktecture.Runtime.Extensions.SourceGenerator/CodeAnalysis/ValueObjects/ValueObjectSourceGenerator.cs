@@ -36,6 +36,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                      });
 
       InitializeValueObjectsGeneration(context, validStates);
+      InitializeSerializerGenerators(context, validStates);
       InitializeFormattableCodeGenerator(context, keyedValueObjects);
       InitializeComparableCodeGenerator(context, keyedValueObjects);
       InitializeParsableCodeGenerator(context, keyedValueObjects);
@@ -60,16 +61,49 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                          .WithComparer(new SetComparer<ValueObjectSourceGeneratorState>())
                          .SelectMany((states, _) => states);
 
-      var additionalGenerators = context.MetadataReferencesProvider
-                                        .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
-                                        .Collect()
-                                        .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                                         ? ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>.Empty
-                                                                         : states.Distinct().ToImmutableArray())
-                                        .WithComparer(new SetComparer<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>());
-
       context.RegisterSourceOutput(valueObjects, (ctx, state) => GenerateCode(ctx, state, ValueObjectCodeGeneratorFactory.Instance));
-      context.RegisterImplementationSourceOutput(valueObjects.Combine(additionalGenerators), GenerateCode);
+   }
+
+   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   {
+      var serializerGeneratorFactories = context.MetadataReferencesProvider
+                                                .SelectMany(static (reference, _) => GetSerializerCodeGeneratorFactories(reference))
+                                                .Collect()
+                                                .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                                 ? ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>.Empty
+                                                                                 : states.Distinct().ToImmutableArray())
+                                                .WithComparer(new SetComparer<IValueObjectSerializerCodeGeneratorFactory>());
+
+      validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods);
+
+      var keyedSerializerGeneratorStates = validStates.SelectMany((state, _) =>
+                                                                  {
+                                                                     if (!state.State.HasKeyMember)
+                                                                        return ImmutableArray<KeyedSerializerGeneratorState>.Empty;
+
+                                                                     var serializerState = new KeyedSerializerGeneratorState(state.State, state.State.KeyMember.Member, state.AttributeInfo);
+
+                                                                     return ImmutableArray.Create(serializerState);
+                                                                  })
+                                                      .Combine(serializerGeneratorFactories)
+                                                      .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
+                                                      .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo));
+
+      var complexSerializerGeneratorStates = validStates.SelectMany((state, _) =>
+                                                                    {
+                                                                       if (state.State.HasKeyMember)
+                                                                          return ImmutableArray<ComplexSerializerGeneratorState>.Empty;
+
+                                                                       var serializerState = new ComplexSerializerGeneratorState(state.State, state.State.AssignableInstanceFieldsAndProperties, state.AttributeInfo);
+
+                                                                       return ImmutableArray.Create(serializerState);
+                                                                    })
+                                                        .Combine(serializerGeneratorFactories)
+                                                        .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
+                                                        .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo));
+
+      context.RegisterImplementationSourceOutput(keyedSerializerGeneratorStates, (ctx, tuple) => GenerateCode(ctx, tuple));
+      context.RegisterImplementationSourceOutput(complexSerializerGeneratorStates, (ctx, tuple) => GenerateCode(ctx, tuple));
    }
 
    private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
@@ -188,9 +222,9 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       return state.HasKeyMember && state.KeyMember.Member.NullableAnnotation == NullableAnnotation.Annotated;
    }
 
-   private static ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)
+   private static ImmutableArray<IValueObjectSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
    {
-      var factories = ImmutableArray<ICodeGeneratorFactory<ValueObjectSourceGeneratorState>>.Empty;
+      var factories = ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>.Empty;
 
       try
       {
@@ -258,13 +292,14 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
 
          var settings = new AllValueObjectSettings(valueObjectAttribute);
-
          var state = new ValueObjectSourceGeneratorState(factory, type, new ValueObjectSettings(settings), cancellationToken);
 
          if (IsKeyMemberNullable(state))
             return null;
 
-         return new SourceGenContext(new ValidSourceGenState(state, settings));
+         var attributeInfo = new AttributeInfo(type);
+
+         return new SourceGenContext(new ValidSourceGenState(state, settings, attributeInfo));
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -278,7 +313,8 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
    private record struct ValidSourceGenState(
       ValueObjectSourceGeneratorState State,
-      AllValueObjectSettings Settings);
+      AllValueObjectSettings Settings,
+      AttributeInfo AttributeInfo);
 
    private record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
    {

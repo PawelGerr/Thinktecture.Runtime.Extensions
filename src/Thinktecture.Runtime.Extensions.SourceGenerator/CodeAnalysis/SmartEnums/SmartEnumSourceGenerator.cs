@@ -27,6 +27,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                            : ImmutableArray<ValidSourceGenState>.Empty);
 
       InitializeEnumTypeGeneration(context, validStates);
+      InitializeSerializerGenerators(context, validStates);
       InitializeDerivedTypesGeneration(context, validStates);
       InitializeFormattableCodeGenerator(context, validStates);
       InitializeComparableCodeGenerator(context, validStates);
@@ -96,16 +97,25 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                       .WithComparer(new SetComparer<EnumSourceGeneratorState>())
                       .SelectMany((states, _) => states);
 
-      var additionalGenerators = context.MetadataReferencesProvider
-                                        .SelectMany(static (reference, _) => GetCodeGeneratorFactories(reference))
-                                        .Collect()
-                                        .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                                         ? ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty
-                                                                         : states.Distinct().ToImmutableArray())
-                                        .WithComparer(new SetComparer<ICodeGeneratorFactory<EnumSourceGeneratorState>>());
-
       context.RegisterSourceOutput(enumTypes, (ctx, state) => GenerateCode(ctx, state, SmartEnumCodeGeneratorFactory.Instance));
-      context.RegisterImplementationSourceOutput(enumTypes.Combine(additionalGenerators), GenerateCode);
+   }
+
+   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   {
+      var serializerGeneratorFactories = context.MetadataReferencesProvider
+                                                .SelectMany(static (reference, _) => GetSerializerCodeGeneratorFactories(reference))
+                                                .Collect()
+                                                .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                                 ? ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty
+                                                                                 : states.Distinct().ToImmutableArray())
+                                                .WithComparer(new SetComparer<IKeyedSerializerCodeGeneratorFactory>());
+
+      var serializerGeneratorStates = validStates.Select((state, _) => new KeyedSerializerGeneratorState(state.State, state.KeyMember, state.AttributeInfo))
+                                                 .Combine(serializerGeneratorFactories)
+                                                 .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
+                                                 .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo));
+
+      context.RegisterImplementationSourceOutput(serializerGeneratorStates, (ctx, tuple) => GenerateCode(ctx, tuple));
    }
 
    private void InitializeDerivedTypesGeneration(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
@@ -139,9 +149,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private static ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>> GetCodeGeneratorFactories(MetadataReference reference)
+   private static ImmutableArray<IKeyedSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
    {
-      var factories = ImmutableArray<ICodeGeneratorFactory<EnumSourceGeneratorState>>.Empty;
+      var factories = ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty;
 
       try
       {
@@ -227,10 +237,12 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          var isValidatable = enumInterface.IsValidatableEnumInterface();
          var hasCreateInvalidItemImplementation = isValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
 
-         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, isValidatable, hasCreateInvalidItemImplementation, cancellationToken);
+         var attributeInfo = new AttributeInfo(type);
+
+         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, isValidatable, hasCreateInvalidItemImplementation, attributeInfo.HasStructLayoutAttribute, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
-         return new SourceGenContext(new ValidSourceGenState(enumState, derivedTypes, settings, keyProperty));
+         return new SourceGenContext(new ValidSourceGenState(enumState, derivedTypes, settings, keyProperty, attributeInfo));
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -255,11 +267,11 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
              .ToList();
    }
 
-   private record struct ValidSourceGenState(
-      EnumSourceGeneratorState State,
-      SmartEnumDerivedTypes DerivedTypes,
-      EnumSettings Settings,
-      IMemberState KeyMember);
+   private record struct ValidSourceGenState(EnumSourceGeneratorState State,
+                                             SmartEnumDerivedTypes DerivedTypes,
+                                             EnumSettings Settings,
+                                             IMemberState KeyMember,
+                                             AttributeInfo AttributeInfo);
 
    private record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
    {

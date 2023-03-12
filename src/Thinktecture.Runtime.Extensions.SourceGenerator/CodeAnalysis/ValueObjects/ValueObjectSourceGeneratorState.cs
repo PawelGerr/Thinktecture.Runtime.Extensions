@@ -26,7 +26,6 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
 
    public EqualityInstanceMemberInfo? KeyMember => HasKeyMember ? EqualityMembers[0] : null;
 
-   public AttributeInfo AttributeInfo { get; }
    public ValueObjectSettings Settings { get; }
 
    public ValueObjectSourceGeneratorState(
@@ -58,8 +57,6 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
          if (factoryValidationReturnType.NullableAnnotation == NullableAnnotation.Annotated)
             FactoryValidationReturnType += "?";
       }
-
-      AttributeInfo = new AttributeInfo(type);
    }
 
    private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()
@@ -118,7 +115,6 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
              && FactoryValidationReturnType == other.FactoryValidationReturnType
-             && AttributeInfo.Equals(other.AttributeInfo)
              && Settings.Equals(other.Settings)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
              && EqualityMembers.EqualsTo(other.EqualityMembers);
@@ -131,7 +127,6 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ FactoryValidationReturnType?.GetHashCode() ?? 0;
-         hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();

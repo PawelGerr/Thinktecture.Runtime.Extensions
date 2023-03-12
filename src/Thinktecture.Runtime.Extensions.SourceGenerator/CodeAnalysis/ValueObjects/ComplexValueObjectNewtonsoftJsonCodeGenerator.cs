@@ -3,73 +3,43 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class NewtonsoftJsonValueObjectCodeGenerator : CodeGeneratorBase
+public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator : CodeGeneratorBase
 {
-   private readonly ValueObjectSourceGeneratorState _state;
-   private readonly StringBuilder _stringBuilder;
+   private readonly ITypeInformation _type;
+   private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
+   private readonly StringBuilder _sb;
 
    public override string FileNameSuffix => ".NewtonsoftJson";
 
-   public NewtonsoftJsonValueObjectCodeGenerator(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
+   public ComplexValueObjectNewtonsoftJsonCodeGenerator(
+      ITypeInformation type,
+      IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
+      StringBuilder stringBuilder)
    {
-      _state = state;
-      _stringBuilder = stringBuilder;
+      _type = type;
+      _assignableInstanceFieldsAndProperties = assignableInstanceFieldsAndProperties;
+      _sb = stringBuilder;
    }
 
    public override void Generate(CancellationToken cancellationToken)
    {
-      if (_state.AttributeInfo.HasNewtonsoftJsonConverterAttribute)
-         return;
-
-      if (_state.HasKeyMember)
-      {
-         GenerateJsonConverter(_state, _state.KeyMember);
-      }
-      else if (!_state.Settings.SkipFactoryMethods)
-      {
-         GenerateValueObjectJsonConverter(_state, _stringBuilder, cancellationToken);
-      }
-   }
-
-   private void GenerateJsonConverter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
-   {
-      _stringBuilder.Append(GENERATED_CODE_PREFIX).Append(@"
+      _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
-      if (state.Namespace is not null)
+      if (_type.Namespace is not null)
       {
-         _stringBuilder.Append(@"
-namespace ").Append(state.Namespace).Append(@";
+         _sb.Append(@"
+namespace ").Append(_type.Namespace).Append(@";
 ");
       }
 
-      _stringBuilder.Append(@"
-[global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<").Append(state.TypeFullyQualified).Append(", ").Append(keyMember.Member.TypeFullyQualified).Append(@">))]
-partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append(state.Name).Append(@"
-{
-}
-");
-   }
-
-   private static void GenerateValueObjectJsonConverter(ValueObjectSourceGeneratorState state, StringBuilder sb, CancellationToken cancellationToken)
-   {
-      sb.Append(GENERATED_CODE_PREFIX).Append(@"
-");
-
-      if (state.Namespace is not null)
-      {
-         sb.Append(@"
-namespace ").Append(state.Namespace).Append(@";
-");
-      }
-
-      sb.Append(@"
+      _sb.Append(@"
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append(state.Name).Append(@"
+partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
 {
    public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {
-      private static readonly global::System.Type _type = typeof(").Append(state.TypeFullyQualified).Append(@");
+      private static readonly global::System.Type _type = typeof(").Append(_type.TypeFullyQualified).Append(@");
 
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type objectType)
@@ -90,22 +60,22 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
             if (objectType.IsClass || global::System.Nullable.GetUnderlyingType(objectType) == _type)
                return null;
 
-            return default(").Append(state.TypeFullyQualified).Append(@");
+            return default(").Append(_type.TypeFullyQualified).Append(@");
          }
 
          if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
-            throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."");
+            throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."");
 ");
 
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@"
+         _sb.Append(@"
          ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName).Append(" = default;");
       }
 
-      sb.Append(@"
+      _sb.Append(@"
 
          var comparer = global::System.StringComparer.OrdinalIgnoreCase;
 
@@ -115,66 +85,66 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
                break;
 
             if (reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
-               throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."");
+               throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."");
 
             var propName = reader.Value!.ToString();
 
             if(!reader.Read())
-               throw new global::Newtonsoft.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(state.TypeMinimallyQualified).Append(@"\""."");
+               throw new global::Newtonsoft.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(_type.TypeMinimallyQualified).Append(@"\""."");
 ");
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          if (i == 0)
          {
-            sb.Append(@"
+            _sb.Append(@"
             if ");
          }
          else
          {
-            sb.Append(@"
+            _sb.Append(@"
             else if ");
          }
 
-         sb.Append(@"(comparer.Equals(propName, """).Append(memberInfo.ArgumentName).Append(@"""))
+         _sb.Append(@"(comparer.Equals(propName, """).Append(memberInfo.ArgumentName).Append(@"""))
             {
                ").Append(memberInfo.ArgumentName).Append(" = serializer.Deserialize<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@">(reader);
             }");
       }
 
-      if (state.AssignableInstanceFieldsAndProperties.Count > 0)
+      if (_assignableInstanceFieldsAndProperties.Count > 0)
       {
-         sb.Append(@"
+         _sb.Append(@"
             else
             {
-               throw new global::Newtonsoft.Json.JsonException($""Unknown member \""{propName}\"" encountered when trying to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\""."");
+               throw new global::Newtonsoft.Json.JsonException($""Unknown member \""{propName}\"" encountered when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."");
             }");
       }
 
-      sb.Append(@"
+      _sb.Append(@"
          }
 
-         var validationResult = ").Append(state.TypeFullyQualified).Append(".Validate(");
+         var validationResult = ").Append(_type.TypeFullyQualified).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@"
+         _sb.Append(@"
                                     ").Append(memberInfo.ArgumentName).Append("!,");
       }
 
-      sb.Append(@"
+      _sb.Append(@"
                                     out var obj);
 
          if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
-            throw new global::Newtonsoft.Json.JsonException($""Unable to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\"". Error: {validationResult!.ErrorMessage}."");
+            throw new global::Newtonsoft.Json.JsonException($""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Error: {validationResult!.ErrorMessage}."");
 
          return obj;
       }
@@ -188,48 +158,48 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
             return;
          }
 
-         var obj = (").Append(state.TypeFullyQualified).Append(@")value;
+         var obj = (").Append(_type.TypeFullyQualified).Append(@")value;
          var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
 
          writer.WriteStartObject();");
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@"
+         _sb.Append(@"
          var ").Append(memberInfo.ArgumentName).Append(@"PropertyValue = obj.").Append(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
          {
-            sb.Append(@"
+            _sb.Append(@"
          if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || ").Append(memberInfo.ArgumentName).Append(@"PropertyValue is not null)
          {
             ");
          }
          else
          {
-            sb.Append(@"
+            _sb.Append(@"
          ");
          }
 
-         sb.Append(@"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""").Append(memberInfo.Name).Append(@""") : """).Append(memberInfo.Name).Append(@""");
+         _sb.Append(@"writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(""").Append(memberInfo.Name).Append(@""") : """).Append(memberInfo.Name).Append(@""");
          ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
-            sb.Append("   ");
+            _sb.Append("   ");
 
-         GenerateWriteValue(sb, memberInfo);
+         GenerateWriteValue(_sb, memberInfo);
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
-            sb.Append(@"
+            _sb.Append(@"
          }");
       }
 
-      sb.Append(@"
+      _sb.Append(@"
          writer.WriteEndObject();
       }
    }

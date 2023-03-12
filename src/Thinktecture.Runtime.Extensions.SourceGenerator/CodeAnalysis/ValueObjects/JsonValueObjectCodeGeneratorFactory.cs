@@ -2,21 +2,31 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class JsonValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<ValueObjectSourceGeneratorState>
+public sealed class JsonValueObjectCodeGeneratorFactory : IValueObjectSerializerCodeGeneratorFactory
 {
-   public static readonly ICodeGeneratorFactory<ValueObjectSourceGeneratorState> Instance = new JsonValueObjectCodeGeneratorFactory();
+   public static readonly IValueObjectSerializerCodeGeneratorFactory Instance = new JsonValueObjectCodeGeneratorFactory();
 
    private JsonValueObjectCodeGeneratorFactory()
    {
    }
 
-   public CodeGeneratorBase Create(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
+   public bool MustGenerateCode(AttributeInfo attributeInfo)
    {
-      return new JsonValueObjectCodeGenerator(state, stringBuilder);
+      return !attributeInfo.HasJsonConverterAttribute;
    }
 
-   public bool Equals(ICodeGeneratorFactory<ValueObjectSourceGeneratorState>? obj)
+   public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)
    {
-      return obj is JsonValueObjectCodeGeneratorFactory;
+      return new KeyedJsonCodeGenerator(state.Type, state.KeyMember, stringBuilder);
    }
+
+   public CodeGeneratorBase Create(ComplexSerializerGeneratorState state, StringBuilder stringBuilder)
+   {
+      return new ComplexValueObjectJsonCodeGenerator(state.Type, state.AssignableInstanceFieldsAndProperties, stringBuilder);
+   }
+
+   public bool Equals(IValueObjectSerializerCodeGeneratorFactory? other) => ReferenceEquals(this, other);
+   public bool Equals(ICodeGeneratorFactory<KeyedSerializerGeneratorState> other) => ReferenceEquals(this, other);
+   public bool Equals(ICodeGeneratorFactory<ComplexSerializerGeneratorState> other) => ReferenceEquals(this, other);
+   public bool Equals(IKeyedSerializerCodeGeneratorFactory other) => ReferenceEquals(this, other);
 }

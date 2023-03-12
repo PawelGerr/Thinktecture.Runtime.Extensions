@@ -3,82 +3,52 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class MessagePackValueObjectCodeGenerator : CodeGeneratorBase
+public sealed class ComplexValueObjectMessagePackCodeGenerator : CodeGeneratorBase
 {
-   private readonly ValueObjectSourceGeneratorState _state;
-   private readonly StringBuilder _stringBuilder;
+   private readonly ITypeInformation _type;
+   private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
+   private readonly StringBuilder _sb;
 
    public override string FileNameSuffix => ".MessagePack";
 
-   public MessagePackValueObjectCodeGenerator(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
+   public ComplexValueObjectMessagePackCodeGenerator(
+      ITypeInformation type,
+      IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
+      StringBuilder stringBuilder)
    {
-      _state = state;
-      _stringBuilder = stringBuilder;
+      _type = type;
+      _assignableInstanceFieldsAndProperties = assignableInstanceFieldsAndProperties;
+      _sb = stringBuilder;
    }
 
    public override void Generate(CancellationToken cancellationToken)
    {
-      if (_state.AttributeInfo.HasMessagePackFormatterAttribute)
-         return;
-
-      if (_state.HasKeyMember)
-      {
-         GenerateFormatter(_state, _state.KeyMember);
-      }
-      else if (!_state.Settings.SkipFactoryMethods)
-      {
-         GenerateValueObjectFormatter(_state, _stringBuilder, cancellationToken);
-      }
-   }
-
-   private void GenerateFormatter(ValueObjectSourceGeneratorState state, EqualityInstanceMemberInfo keyMember)
-   {
-      _stringBuilder.Append(GENERATED_CODE_PREFIX).Append(@"
+      _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
-      if (state.Namespace is not null)
+      if (_type.Namespace is not null)
       {
-         _stringBuilder.Append(@"
-namespace ").Append(state.Namespace).Append(@";
+         _sb.Append(@"
+namespace ").Append(_type.Namespace).Append(@";
 ");
       }
 
-      _stringBuilder.Append(@"
-[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.").Append(state.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter").Append("<").Append(state.TypeFullyQualified).Append(", ").Append(keyMember.Member.TypeFullyQualified).Append(@">))]
-partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append(state.Name).Append(@"
-{
-}
-");
-   }
-
-   private static void GenerateValueObjectFormatter(ValueObjectSourceGeneratorState state, StringBuilder sb, CancellationToken cancellationToken)
-   {
-      sb.Append(GENERATED_CODE_PREFIX).Append(@"
-");
-
-      if (state.Namespace is not null)
-      {
-         sb.Append(@"
-namespace ").Append(state.Namespace).Append(@";
-");
-      }
-
-      sb.Append(@"
+      _sb.Append(@"
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append(state.Name).Append(@"
+partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
 {
-   public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").Append(state.TypeFullyQualifiedNullAnnotated).Append(@">
+   public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").Append(_type.TypeFullyQualifiedNullAnnotated).Append(@">
    {
       /// <inheritdoc />
-      public ").Append(state.TypeFullyQualifiedNullAnnotated).Append(@" Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+      public ").Append(_type.TypeFullyQualifiedNullAnnotated).Append(@" Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
       {
          if (reader.TryReadNil())
             return default;
 
          var count = reader.ReadArrayHeader();
 
-         if (count != ").Append(state.AssignableInstanceFieldsAndProperties.Count).Append(@")
-            throw new global::MessagePack.MessagePackSerializationException($""Invalid member count. Expected ").Append(state.AssignableInstanceFieldsAndProperties.Count).Append(@" but found {count} field/property values."");
+         if (count != ").Append(_assignableInstanceFieldsAndProperties.Count).Append(@")
+            throw new global::MessagePack.MessagePackSerializationException($""Invalid member count. Expected ").Append(_assignableInstanceFieldsAndProperties.Count).Append(@" but found {count} field/property values."");
 
          global::MessagePack.IFormatterResolver resolver = options.Resolver;
          options.Security.DepthStep(ref reader);
@@ -87,37 +57,37 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
          {
 ");
 
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@"
+         _sb.Append(@"
             var ").Append(memberInfo.ArgumentName).Append(" = ");
 
-         GenerateReadValue(sb, memberInfo);
+         GenerateReadValue(_sb, memberInfo);
 
-         sb.Append("!;");
+         _sb.Append("!;");
       }
 
-      sb.Append(@"
+      _sb.Append(@"
 
-            var validationResult = ").Append(state.TypeFullyQualified).Append(".Validate(");
+            var validationResult = ").Append(_type.TypeFullyQualified).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@"
+         _sb.Append(@"
                                        ").Append(memberInfo.ArgumentName).Append(",");
       }
 
-      sb.Append(@"
+      _sb.Append(@"
                                        out var obj);
 
             if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-               throw new global::MessagePack.MessagePackSerializationException($""Unable to deserialize \""").Append(state.TypeMinimallyQualified).Append(@"\"". Error: {validationResult!.ErrorMessage}."");
+               throw new global::MessagePack.MessagePackSerializationException($""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Error: {validationResult!.ErrorMessage}."");
 
             return obj;
          }
@@ -128,12 +98,12 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
 
       /// <inheritdoc />
-      public void Serialize(ref global::MessagePack.MessagePackWriter writer, ").Append(state.TypeFullyQualifiedNullAnnotated).Append(@" value, global::MessagePack.MessagePackSerializerOptions options)
+      public void Serialize(ref global::MessagePack.MessagePackWriter writer, ").Append(_type.TypeFullyQualifiedNullAnnotated).Append(@" value, global::MessagePack.MessagePackSerializerOptions options)
       {");
 
-      if (state.IsReferenceType)
+      if (_type.IsReferenceType)
       {
-         sb.Append(@"
+         _sb.Append(@"
          if(value is null)
          {
             writer.WriteNil();
@@ -142,25 +112,25 @@ partial ").Append(state.IsReferenceType ? "class" : "struct").Append(" ").Append
 ");
       }
 
-      sb.Append(@"
-         writer.WriteArrayHeader(").Append(state.AssignableInstanceFieldsAndProperties.Count).Append(@");
+      _sb.Append(@"
+         writer.WriteArrayHeader(").Append(_assignableInstanceFieldsAndProperties.Count).Append(@");
 
          var resolver = options.Resolver;");
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < state.AssignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
-         var memberInfo = state.AssignableInstanceFieldsAndProperties[i];
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         sb.Append(@"
+         _sb.Append(@"
          ");
-         GenerateWriteValue(sb, memberInfo);
+         GenerateWriteValue(_sb, memberInfo);
 
-         sb.Append(";");
+         _sb.Append(";");
       }
 
-      sb.Append(@"
+      _sb.Append(@"
       }
    }
 }

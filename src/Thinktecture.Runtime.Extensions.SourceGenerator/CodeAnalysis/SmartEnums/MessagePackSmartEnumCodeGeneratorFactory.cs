@@ -2,20 +2,30 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class MessagePackSmartEnumCodeGeneratorFactory : ICodeGeneratorFactory<EnumSourceGeneratorState>
+public sealed class MessagePackSmartEnumCodeGeneratorFactory : IKeyedSerializerCodeGeneratorFactory
 {
-   public static readonly ICodeGeneratorFactory<EnumSourceGeneratorState> Instance = new MessagePackSmartEnumCodeGeneratorFactory();
+   public static readonly IKeyedSerializerCodeGeneratorFactory Instance = new MessagePackSmartEnumCodeGeneratorFactory();
 
    private MessagePackSmartEnumCodeGeneratorFactory()
    {
    }
 
-   public CodeGeneratorBase Create(EnumSourceGeneratorState state, StringBuilder stringBuilder)
+   public bool MustGenerateCode(AttributeInfo attributeInfo)
    {
-      return new MessagePackSmartEnumCodeGenerator(state, stringBuilder);
+      return !attributeInfo.HasMessagePackFormatterAttribute;
    }
 
-   public bool Equals(ICodeGeneratorFactory<EnumSourceGeneratorState> other)
+   public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)
+   {
+      return new KeyedMessagePackCodeGenerator(state.Type, state.KeyMember, stringBuilder);
+   }
+
+   public bool Equals(IKeyedSerializerCodeGeneratorFactory other)
+   {
+      return ReferenceEquals(this, other);
+   }
+
+   public bool Equals(ICodeGeneratorFactory<KeyedSerializerGeneratorState> other)
    {
       return ReferenceEquals(this, other);
    }
