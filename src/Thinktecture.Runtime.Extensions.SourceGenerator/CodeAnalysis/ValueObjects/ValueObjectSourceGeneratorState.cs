@@ -7,7 +7,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
 {
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullable { get; }
-   public string TypeFullyQualifiedNullAnnotated { get; }
+   public string TypeFullyQualifiedNullAnnotated => IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
    public string TypeMinimallyQualified { get; }
 
    public string? Namespace { get; }
@@ -39,16 +39,17 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
-      TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, true, cancellationToken).ToList();
       EqualityMembers = GetEqualityMembers();
 
-      var factoryValidationReturnType = type.GetMembers()
-                                            .OfType<IMethodSymbol>()
-                                            .FirstOrDefault(m => m.IsStatic && m.ReturnType.SpecialType != SpecialType.System_Void && m.Name == "ValidateFactoryArguments")?
-                                            .ReturnType;
+      var members = type.GetMembers();
+      var factoryValidationReturnType = members.IsDefaultOrEmpty
+                                           ? null
+                                           : members.OfType<IMethodSymbol>()
+                                                    .FirstOrDefault(m => m.IsStatic && m.ReturnType.SpecialType != SpecialType.System_Void && m.Name == Constants.Methods.VALIDATE_FACTORY_ARGUMENTS)?
+                                                    .ReturnType;
 
       if (factoryValidationReturnType is not null)
       {

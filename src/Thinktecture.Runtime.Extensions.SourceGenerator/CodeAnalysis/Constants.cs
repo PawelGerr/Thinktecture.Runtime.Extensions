@@ -12,5 +12,6 @@ public static class Constants
    public static class Methods
    {
       public const string CREATE_INVALID_ITEM = "CreateInvalidItem";
+      public const string VALIDATE_FACTORY_ARGUMENTS = "ValidateFactoryArguments";
    }
 }

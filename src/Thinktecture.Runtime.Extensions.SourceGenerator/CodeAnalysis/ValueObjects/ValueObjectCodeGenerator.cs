@@ -451,7 +451,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT).Append(" = ");
 
-      _sb.Append(@"ValidateFactoryArguments(ref validationResult");
+      _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref validationResult");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
@@ -491,7 +491,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("private ");
 
-      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult");
+      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true);
 
