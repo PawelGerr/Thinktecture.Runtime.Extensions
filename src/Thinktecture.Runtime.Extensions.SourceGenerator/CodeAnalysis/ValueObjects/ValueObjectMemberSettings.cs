@@ -5,6 +5,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
 {
    public static readonly ValueObjectMemberSettings None = new(false);
+   public static readonly ValueObjectMemberSettings NoneForString = new(false, null, Constants.ORDINAL_IGNORE_CASE_ACCESSOR, false, null, Constants.ORDINAL_IGNORE_CASE_ACCESSOR, false);
 
    private readonly AttributeData? _equalityComparerAttr;
    private readonly AttributeData? _comparerAttr;
@@ -21,21 +22,23 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
    }
 
    private ValueObjectMemberSettings(
+      bool isExplicitlyDeclared,
       AttributeData? equalityComparerAttr,
-      ITypeSymbol? equalityComparerAccessorType,
+      string? equalityComparerAccessorType,
       bool hasInvalidEqualityComparerType,
       AttributeData? comparerAttr,
-      ITypeSymbol? comparerAccessorType,
+      string? comparerAccessorType,
       bool hasInvalidComparerType)
       : this(true)
    {
       _equalityComparerAttr = equalityComparerAttr;
       _comparerAttr = comparerAttr;
 
+      IsExplicitlyDeclared = isExplicitlyDeclared;
       HasInvalidComparerType = hasInvalidComparerType;
       HasInvalidEqualityComparerType = hasInvalidEqualityComparerType;
-      ComparerAccessor = comparerAccessorType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      EqualityComparerAccessor = equalityComparerAccessorType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      ComparerAccessor = comparerAccessorType;
+      EqualityComparerAccessor = equalityComparerAccessorType;
    }
 
    public static ValueObjectMemberSettings Create(ISymbol member, ITypeSymbol type)
@@ -44,19 +47,22 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
       var comparerAttr = member.FindAttribute(static type => type.Name == "ValueObjectMemberComparerAttribute" && type.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
 
       if (equalityComparerAttr is null && comparerAttr is null)
-         return None;
+         return type.SpecialType == SpecialType.System_String ? NoneForString : None;
 
       var equalityComparerGenericTypes = equalityComparerAttr?.GetComparerTypes();
+      var equalityComparerAccessorType = equalityComparerGenericTypes?.ComparerType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ?? (type.SpecialType == SpecialType.System_String ? Constants.ORDINAL_IGNORE_CASE_ACCESSOR : null);
       var hasInvalidEqualityComparerType = equalityComparerGenericTypes is not null && !SymbolEqualityComparer.Default.Equals(equalityComparerGenericTypes.Value.ItemType, type);
 
       var comparerGenericTypes = comparerAttr?.GetComparerTypes();
+      var comparerAccessorType = comparerGenericTypes?.ComparerType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ?? (type.SpecialType == SpecialType.System_String ? Constants.ORDINAL_IGNORE_CASE_ACCESSOR : null);
       var hasInvalidComparerType = comparerGenericTypes is not null && !SymbolEqualityComparer.Default.Equals(comparerGenericTypes.Value.ItemType, type);
 
-      return new ValueObjectMemberSettings(equalityComparerAttr,
-                                           equalityComparerGenericTypes?.ComparerType,
+      return new ValueObjectMemberSettings(true,
+                                           equalityComparerAttr,
+                                           equalityComparerAccessorType,
                                            hasInvalidEqualityComparerType,
                                            comparerAttr,
-                                           comparerGenericTypes?.ComparerType,
+                                           comparerAccessorType,
                                            hasInvalidComparerType);
    }
 

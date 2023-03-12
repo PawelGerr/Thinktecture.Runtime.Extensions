@@ -216,6 +216,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       foreach (var assignableMember in assignableMembers)
       {
+         if (!assignableMember.ValueObjectMemberSettings.IsExplicitlyDeclared)
+            continue;
+
          CheckComparerTypes(context, assignableMember);
 
          var comparerAccessor = assignableMember.ValueObjectMemberSettings.ComparerAccessor;

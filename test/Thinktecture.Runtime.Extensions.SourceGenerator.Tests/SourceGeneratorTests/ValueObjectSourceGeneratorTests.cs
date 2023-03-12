@@ -89,7 +89,7 @@ partial struct TestValueObject :
    /// <inheritdoc />
    public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
    {
-      return this.ReferenceField.CompareTo(obj.ReferenceField);
+      return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.Comparer.Compare(this.ReferenceField, obj.ReferenceField);
    }
 }
 
@@ -122,14 +122,14 @@ partial class TestValueObject :
       if(obj is null)
          return 1;
 
-      return this.ReferenceField.CompareTo(obj.ReferenceField);
+      return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.Comparer.Compare(this.ReferenceField, obj.ReferenceField);
    }
 }
 
 """;
 
    /* language=c# */
-   private const string _COMPARABLE_CLASS_STRING_WITH_COMPARER = _GENERATED_HEADER + """
+   private const string _COMPARABLE_CLASS_STRING_WITH_ORDINAL_COMPARER = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
 
@@ -155,7 +155,7 @@ partial class TestValueObject :
       if(obj is null)
          return 1;
 
-      return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.Comparer.Compare(this.ReferenceField, obj.ReferenceField);
+      return global::Thinktecture.ComparerAccessors.StringOrdinal.Comparer.Compare(this.ReferenceField, obj.ReferenceField);
    }
 }
 
@@ -1798,13 +1798,15 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(global::Thinktecture.Tests.TestValueObject other)
       {
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
@@ -2418,13 +2420,15 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(global::Thinktecture.Tests.TestValueObject other)
       {
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
@@ -2615,13 +2619,15 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public bool Equals(global::Thinktecture.Tests.TestValueObject other)
       {
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
@@ -2826,13 +2832,15 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
@@ -3814,13 +3822,15 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
@@ -4024,13 +4034,15 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField));
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(this.ReferenceField);
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
@@ -4513,182 +4525,8 @@ namespace Thinktecture.Tests
 	{
       public readonly string ReferenceField;
 
-      [ValueObjectIgnore]
+      [ValueObjectMemberIgnore]
       public readonly string OtherField;
-   }
-}
-";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-
-      /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
-
-namespace Thinktecture.Tests
-{
-   partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
-      global::Thinktecture.IComplexValueObject
-   {
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
-      {
-         global::System.Linq.Expressions.Expression<global::System.Func<TestValueObject, object>> action = o => new
-                                                                                                            {
-                                                                                                               o.ReferenceField,
-                                                                                                               o.OtherField
-                                                                                                            };
-
-         var members = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>();
-
-         foreach (var arg in ((global::System.Linq.Expressions.NewExpression)action.Body).Arguments)
-         {
-            members.Add(((global::System.Linq.Expressions.MemberExpression)arg).Member);
-         }
-
-         var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ComplexValueObjectMetadata(type, members.AsReadOnly());
-
-         global::Thinktecture.Internal.ComplexValueObjectMetadataLookup.AddMetadata(type, metadata);
-      }
-
-      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
-
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
-         string referenceField,
-         string otherField,
-         out global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-         ValidateFactoryArguments(ref validationResult, ref referenceField, ref otherField);
-
-         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-         {
-            obj = new global::Thinktecture.Tests.TestValueObject(referenceField, otherField);
-            obj.FactoryPostInit();
-         }
-         else
-         {
-            obj = default;
-         }
-
-         return validationResult;
-      }
-
-      public static global::Thinktecture.Tests.TestValueObject Create(string referenceField, string otherField)
-      {
-         var validationResult = Validate(referenceField, otherField, out global::Thinktecture.Tests.TestValueObject? obj);
-
-         if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
-
-         return obj!;
-      }
-
-      public static bool TryCreate(
-         string referenceField,
-         string otherField,
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
-      {
-         var validationResult = Validate(referenceField, otherField, out obj);
-
-         return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-      }
-
-      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField, ref string otherField);
-
-      partial void FactoryPostInit();
-
-      private TestValueObject(string referenceField, string otherField)
-      {
-         ValidateConstructorArguments(ref referenceField, ref otherField);
-
-         this.ReferenceField = referenceField;
-         this.OtherField = otherField;
-      }
-
-      static partial void ValidateConstructorArguments(ref string referenceField, ref string otherField);
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
-      /// <inheritdoc />
-      public override bool Equals(object? other)
-      {
-         return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
-      }
-
-      /// <inheritdoc />
-      public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
-         if (global::System.Object.ReferenceEquals(this, other))
-            return true;
-
-         return (this.ReferenceField is null ? other.ReferenceField is null : this.ReferenceField.Equals(other.ReferenceField))
-             && (this.OtherField is null ? other.OtherField is null : this.OtherField.Equals(other.OtherField));
-      }
-
-      /// <inheritdoc />
-      public override int GetHashCode()
-      {
-         return global::System.HashCode.Combine(this.ReferenceField,
-            this.OtherField);
-      }
-
-      /// <inheritdoc />
-      public override string ToString()
-      {
-         return $"{{ ReferenceField = {this.ReferenceField}, OtherField = {this.OtherField} }}";
-      }
-   }
-}
-
-""");
-   }
-
-   [Fact]
-   public void Should_generate_class_with_string_key_member_having_EqualityMemberAttribute()
-   {
-      /* language=c# */
-      var source = @"
-using System;
-using Thinktecture;
-
-namespace Thinktecture.Tests
-{
-   [ValueObject]
-	public partial class TestValueObject
-	{
-      [ValueObjectMemberEqualityComparerAttribute<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-      [ValueObjectMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-      public readonly string ReferenceField;
    }
 }
 ";
@@ -4699,7 +4537,7 @@ namespace Thinktecture.Tests
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
 
-      AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING_WITH_COMPARER);
+      AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
       AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
 
       /* language=c# */
@@ -4874,6 +4712,221 @@ namespace Thinktecture.Tests
       {
          var hashCode = new global::System.HashCode();
          hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         return hashCode.ToHashCode();
+      }
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return this.ReferenceField.ToString();
+      }
+   }
+}
+
+""");
+   }
+
+   [Fact]
+   public void Should_generate_class_with_string_key_member_having_EqualityMemberAttribute()
+   {
+      /* language=c# */
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public partial class TestValueObject
+	{
+      [ValueObjectMemberEqualityComparerAttribute<ComparerAccessors.StringOrdinal, string>]
+      [ValueObjectMemberComparer<ComparerAccessors.StringOrdinal, string>]
+      public readonly string ReferenceField;
+   }
+}
+";
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(3);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING_WITH_ORDINAL_COMPARER);
+      AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
+
+      /* language=c# */
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests
+{
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+   partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
+      global::Thinktecture.IKeyedValueObject<string>,
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
+   {
+      [global::System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {
+         global::System.Func<string, global::Thinktecture.Tests.TestValueObject> convertFromKey = new (global::Thinktecture.Tests.TestValueObject.Create);
+         global::System.Linq.Expressions.Expression<global::System.Func<string, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpression = static referenceField => global::Thinktecture.Tests.TestValueObject.Create(referenceField);
+         global::System.Linq.Expressions.Expression<global::System.Func<string, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpressionViaCtor = static referenceField => new global::Thinktecture.Tests.TestValueObject(referenceField);
+
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, string>(static item => item.ReferenceField);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, string>> convertToKeyExpression = static obj => obj.ReferenceField;
+
+         var type = typeof(global::Thinktecture.Tests.TestValueObject);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(string), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
+
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
+      }
+
+      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         if(referenceField is null)
+         {
+            obj = default;
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+         }
+
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref referenceField);
+
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
+
+         return validationResult;
+      }
+
+      public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
+      {
+         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
+
+         if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+
+         return obj!;
+      }
+
+      public static bool TryCreate(
+         string referenceField,
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         var validationResult = Validate(referenceField, out obj);
+
+         return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+      }
+
+      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+
+      partial void FactoryPostInit();
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref="string"/>.
+      /// </summary>
+      /// <param name="obj">Object to covert.</param>
+      /// <returns>The <see cref="ReferenceField"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
+      public static implicit operator string?(global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         return obj?.ReferenceField;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref="string"/>.
+      /// </summary>
+      /// <param name="referenceField">Value to covert.</param>
+      /// <returns>An instance of <see cref="TestValueObject"/>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("referenceField")]
+      public static explicit operator global::Thinktecture.Tests.TestValueObject?(string? referenceField)
+      {
+         if(referenceField is null)
+            return null;
+
+         return global::Thinktecture.Tests.TestValueObject.Create(referenceField);
+      }
+
+      private TestValueObject(string referenceField)
+      {
+         ValidateConstructorArguments(ref referenceField);
+
+         this.ReferenceField = referenceField;
+      }
+
+      static partial void ValidateConstructorArguments(ref string referenceField);
+
+      /// <summary>
+      /// Compares to instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         return !(obj == other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (other is null)
+            return false;
+
+         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
+            return false;
+
+         if (global::System.Object.ReferenceEquals(this, other))
+            return true;
+
+         return global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.Equals(this.ReferenceField, other.ReferenceField);
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(this.ReferenceField, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
          return hashCode.ToHashCode();
       }
 
@@ -5500,30 +5553,30 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return (this.ReferenceField1 is null ? other.ReferenceField1 is null : this.ReferenceField1.Equals(other.ReferenceField1))
-             && (this.ReferenceField2 is null ? other.ReferenceField2 is null : this.ReferenceField2.Equals(other.ReferenceField2))
-             && (this.ReferenceField3 is null ? other.ReferenceField3 is null : this.ReferenceField3.Equals(other.ReferenceField3))
-             && (this.ReferenceField4 is null ? other.ReferenceField4 is null : this.ReferenceField4.Equals(other.ReferenceField4))
-             && (this.ReferenceField5 is null ? other.ReferenceField5 is null : this.ReferenceField5.Equals(other.ReferenceField5))
-             && (this.ReferenceField6 is null ? other.ReferenceField6 is null : this.ReferenceField6.Equals(other.ReferenceField6))
-             && (this.ReferenceField7 is null ? other.ReferenceField7 is null : this.ReferenceField7.Equals(other.ReferenceField7))
-             && (this.ReferenceField8 is null ? other.ReferenceField8 is null : this.ReferenceField8.Equals(other.ReferenceField8))
-             && (this.ReferenceField9 is null ? other.ReferenceField9 is null : this.ReferenceField9.Equals(other.ReferenceField9));
+         return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField1, other.ReferenceField1)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField2, other.ReferenceField2)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField3, other.ReferenceField3)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField4, other.ReferenceField4)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField5, other.ReferenceField5)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField6, other.ReferenceField6)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField7, other.ReferenceField7)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField8, other.ReferenceField8)
+             && global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this.ReferenceField9, other.ReferenceField9);
       }
 
       /// <inheritdoc />
       public override int GetHashCode()
       {
          var hashCode = new global::System.HashCode();
-         hashCode.Add(this.ReferenceField1);
-         hashCode.Add(this.ReferenceField2);
-         hashCode.Add(this.ReferenceField3);
-         hashCode.Add(this.ReferenceField4);
-         hashCode.Add(this.ReferenceField5);
-         hashCode.Add(this.ReferenceField6);
-         hashCode.Add(this.ReferenceField7);
-         hashCode.Add(this.ReferenceField8);
-         hashCode.Add(this.ReferenceField9);
+         hashCode.Add(this.ReferenceField1, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField2, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField3, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField4, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField5, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField6, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField7, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField8, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+         hashCode.Add(this.ReferenceField9, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
          return hashCode.ToHashCode();
       }
 

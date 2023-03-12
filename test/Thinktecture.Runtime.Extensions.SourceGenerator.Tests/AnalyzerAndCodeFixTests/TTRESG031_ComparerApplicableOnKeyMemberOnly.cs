@@ -56,4 +56,38 @@ namespace TestNamespace
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
    }
+
+   [Fact]
+   public async Task Should_not_trigger_on_string_member_without_comparer()
+   {
+      // language=c#
+      const string code = """
+         #nullable enable
+
+         using System;
+         using System.Collections.Generic;
+         using Thinktecture;
+
+         namespace TestNamespace;
+
+         [ValueObject]
+         public sealed partial class TestValueObject
+         {
+            public readonly string Field;
+         }
+
+
+         // Simulate source generator
+         public sealed partial class TestValueObject
+         {
+            private TestValueObject(string field)
+         	{
+               Field = field;
+            }
+         }
+
+         """;
+
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+   }
 }

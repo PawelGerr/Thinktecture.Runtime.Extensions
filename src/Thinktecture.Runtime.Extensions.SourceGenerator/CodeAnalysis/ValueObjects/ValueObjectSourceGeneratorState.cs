@@ -71,21 +71,36 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
 
       List<EqualityInstanceMemberInfo>? equalityMembers = null;
 
-      foreach (var member in members)
+      for (var i = 0; i < members.Count; i++)
       {
+         var member = members[i];
          var settings = member.ValueObjectMemberSettings;
 
-         if (settings.IsExplicitlyDeclared)
-         {
-            var equalityComparer = settings.HasInvalidEqualityComparerType ? null : settings.EqualityComparerAccessor;
-            var comparer = settings.HasInvalidComparerType ? null : settings.ComparerAccessor;
-            var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer, comparer);
+         if (!settings.IsExplicitlyDeclared)
+            continue;
 
-            (equalityMembers ??= new List<EqualityInstanceMemberInfo>()).Add(equalityMember);
-         }
+         var equalityComparer = settings.HasInvalidEqualityComparerType ? null : settings.EqualityComparerAccessor;
+         var comparer = settings.HasInvalidComparerType ? null : settings.ComparerAccessor;
+         var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer, comparer);
+
+         (equalityMembers ??= new List<EqualityInstanceMemberInfo>(members.Count)).Add(equalityMember);
       }
 
-      return equalityMembers ?? members.Select(m => new EqualityInstanceMemberInfo(m, null, null)).ToList();
+      if (equalityMembers != null)
+         return equalityMembers;
+
+      var equalityMembersArray = new EqualityInstanceMemberInfo[members.Count];
+
+      for (var i = 0; i < members.Count; i++)
+      {
+         var memberInfo = members[i];
+         var comparerAccessor = memberInfo.SpecialType == SpecialType.System_String ? Constants.ORDINAL_IGNORE_CASE_ACCESSOR : null;
+         var equalityMemberInfo = new EqualityInstanceMemberInfo(memberInfo, comparerAccessor, comparerAccessor);
+
+         equalityMembersArray[i] = equalityMemberInfo;
+      }
+
+      return equalityMembersArray;
    }
 
    public override bool Equals(object? obj)
