@@ -85,7 +85,13 @@ public static class AttributeDataExtensions
       if (typeArguments.IsDefaultOrEmpty || typeArguments.Length != 2)
          return null;
 
-      return (typeArguments[0], typeArguments[1]);
+      var comparerAccessorTypes = typeArguments[0];
+      var keyType = typeArguments[1];
+
+      if (comparerAccessorTypes.TypeKind == TypeKind.Error || keyType.TypeKind == TypeKind.Error)
+         return null;
+
+      return (comparerAccessorTypes, keyType);
    }
 
    private static string? GetStringParameterValue(AttributeData attributeData, string name)
