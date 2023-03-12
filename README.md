@@ -342,23 +342,68 @@ var isBigger = amount > otherAmount;
 var sum = amount + otherAmount;
 ```
 
-## Complex Value Object
+## Complex Value Objects
 
-Definition of a complex value object with 2 properties and a custom validation of the arguments.
+A complex value object is considered a `class` or a `readonly struct` with a `ValueObjectAttribute` and with more than 1 "assignable" properties/fields. The main use case is to *manage* multiple values as a whole.
+
+A simple example would be a `Boundary` with 2 properties, one is the lower boundary and the other is the upper boundary. Yet again, we skip the validation at the moment.
 
 ```C#
 [ValueObject]
-public partial class Boundary
+public sealed partial class Boundary
 {
    public decimal Lower { get; }
    public decimal Upper { get; }
-
-   static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref decimal lower, ref decimal upper)
-   {
-      if (lower <= upper)
-         return;
-
-      validationResult = new ValidationResult($"Lower boundary '{lower}' must be less than upper boundary '{upper}'");
-   }
 }
 ```
+
+The rest is implemented by a Roslyn source generator, providing the following API:
+
+```C#
+// Factory method for creation of new instances.
+// Throws ValidationException if the validation fails
+Boundary boundary = Boundary.Create(lower: 1, upper: 2);
+
+-----------
+
+// the same as above but returns a bool instead of throwing an exception (dictionary-style)
+bool created = Boundary.TryCreate(lower: 1, upper: 2, out Boundary boundary);
+
+-----------
+
+// similar to TryCreate but returns a ValidationResult instead of a boolean.
+ValidationResult? validationResult = Boundary.Validate(lower: 1, upper: 2, out Boundary boundary);
+
+if (validationResult == ValidationResult.Success)
+{
+    logger.Information("Boundary {Boundary} created", boundary);
+}
+else
+{
+    logger.Warning("Failed to create boundary. Validation result: {ValidationResult}", validationResult.ErrorMessage);
+}
+
+-----------
+
+// Equality comparison with 'Equals'
+// which compares the members using default or custom comparers.
+// Strings are compared with 'StringComparer.OrdinalIgnoreCase' by default.
+bool equal = boundary.Equals(boundary);
+
+-----------
+
+// Equality comparison with '==' and '!='
+bool equal = boundary == boundary;
+bool notEqual = boundary != boundary;
+
+-----------
+
+// Hash code of the members according default or custom comparers
+int hashCode = boundary.GetHashCode();
+
+-----------
+
+// 'ToString' implementation
+string value = boundary.ToString(); // "{ Lower = 1, Upper = 2 }"
+```
+
