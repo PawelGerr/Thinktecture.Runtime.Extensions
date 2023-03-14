@@ -34,23 +34,24 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
                                                         return ImmutableArray.Create(keyedValueObject);
                                                      });
+      var options = GetGeneratorOptions(context);
 
-      InitializeValueObjectsGeneration(context, validStates);
-      InitializeSerializerGenerators(context, validStates);
-      InitializeFormattableCodeGenerator(context, keyedValueObjects);
-      InitializeComparableCodeGenerator(context, keyedValueObjects);
-      InitializeParsableCodeGenerator(context, keyedValueObjects);
-      InitializeComparisonOperatorsCodeGenerator(context, keyedValueObjects);
-      InitializeAdditionOperatorsCodeGenerator(context, keyedValueObjects);
-      InitializeSubtractionOperatorsCodeGenerator(context, keyedValueObjects);
-      InitializeMultiplyOperatorsCodeGenerator(context, keyedValueObjects);
-      InitializeDivisionOperatorsCodeGenerator(context, keyedValueObjects);
+      InitializeValueObjectsGeneration(context, validStates, options);
+      InitializeSerializerGenerators(context, validStates, options);
+      InitializeFormattableCodeGenerator(context, keyedValueObjects, options);
+      InitializeComparableCodeGenerator(context, keyedValueObjects, options);
+      InitializeParsableCodeGenerator(context, keyedValueObjects, options);
+      InitializeComparisonOperatorsCodeGenerator(context, keyedValueObjects, options);
+      InitializeAdditionOperatorsCodeGenerator(context, keyedValueObjects, options);
+      InitializeSubtractionOperatorsCodeGenerator(context, keyedValueObjects, options);
+      InitializeMultiplyOperatorsCodeGenerator(context, keyedValueObjects, options);
+      InitializeDivisionOperatorsCodeGenerator(context, keyedValueObjects, options);
 
       InitializeErrorReporting(context, valueObjectOrException);
       InitializeExceptionReporting(context, valueObjectOrException);
    }
 
-   private void InitializeValueObjectsGeneration(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeValueObjectsGeneration(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var valueObjects = validStates
                          .Select((state, _) => state.State)
@@ -61,10 +62,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                          .WithComparer(new SetComparer<ValueObjectSourceGeneratorState>())
                          .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(valueObjects, (ctx, state) => GenerateCode(ctx, state, ValueObjectCodeGeneratorFactory.Instance));
+      context.RegisterSourceOutput(valueObjects.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left, state.Right, ValueObjectCodeGeneratorFactory.Instance));
    }
 
-   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var serializerGeneratorFactories = context.MetadataReferencesProvider
                                                 .SelectMany(static (reference, _) => GetSerializerCodeGeneratorFactories(reference))
@@ -102,11 +103,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                         .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                         .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo));
 
-      context.RegisterImplementationSourceOutput(keyedSerializerGeneratorStates, (ctx, tuple) => GenerateCode(ctx, tuple));
-      context.RegisterImplementationSourceOutput(complexSerializerGeneratorStates, (ctx, tuple) => GenerateCode(ctx, tuple));
+      context.RegisterImplementationSourceOutput(keyedSerializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
+      context.RegisterImplementationSourceOutput(complexSerializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
    }
 
-   private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var formattables = validStates
          .Select((state, _) => new FormattableGeneratorState(state.Type,
@@ -114,10 +115,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                              state.Settings.SkipIFormattable,
                                                              state.KeyMember.Member.IsFormattable));
 
-      InitializeFormattableCodeGenerator(context, formattables);
+      InitializeFormattableCodeGenerator(context, formattables, options);
    }
 
-   private void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
          .Select((state, _) => new ComparableGeneratorState(state.Type,
@@ -126,10 +127,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                             state.KeyMember.Member.IsComparable,
                                                             state.KeyMember.ComparerAccessor));
 
-      InitializeComparableCodeGenerator(context, comparables);
+      InitializeComparableCodeGenerator(context, comparables, options);
    }
 
-   private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var parsables = validStates
          .Select((state, _) => new ParsableGeneratorState(state.Type,
@@ -138,10 +139,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                           state.KeyMember.Member.IsParsable,
                                                           false));
 
-      InitializeParsableCodeGenerator(context, parsables);
+      InitializeParsableCodeGenerator(context, parsables, options);
    }
 
-   private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
          .Select((state, _) => new ComparisonOperatorsGeneratorState(state.Type,
@@ -150,10 +151,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                      state.KeyMember.Member.HasComparisonOperators,
                                                                      state.KeyMember.ComparerAccessor));
 
-      InitializeComparisonOperatorsCodeGenerator(context, comparables);
+      InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
    }
 
-   private void InitializeAdditionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeAdditionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
@@ -162,10 +163,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                            state.KeyMember.Member.HasAdditionOperators,
                                                            AdditionOperatorsCodeGeneratorProvider.Instance));
 
-      InitializeOperatorsCodeGenerator(context, operators);
+      InitializeOperatorsCodeGenerator(context, operators, options);
    }
 
-   private void InitializeSubtractionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeSubtractionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
@@ -174,10 +175,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                            state.KeyMember.Member.HasSubtractionOperators,
                                                            SubtractionOperatorsCodeGeneratorProvider.Instance));
 
-      InitializeOperatorsCodeGenerator(context, operators);
+      InitializeOperatorsCodeGenerator(context, operators, options);
    }
 
-   private void InitializeMultiplyOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeMultiplyOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
@@ -186,10 +187,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                            state.KeyMember.Member.HasMultiplyOperators,
                                                            MultiplyOperatorsCodeGeneratorProvider.Instance));
 
-      InitializeOperatorsCodeGenerator(context, operators);
+      InitializeOperatorsCodeGenerator(context, operators, options);
    }
 
-   private void InitializeDivisionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates)
+   private void InitializeDivisionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
@@ -198,7 +199,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                            state.KeyMember.Member.HasDivisionOperators,
                                                            DivisionOperatorsCodeGeneratorProvider.Instance));
 
-      InitializeOperatorsCodeGenerator(context, operators);
+      InitializeOperatorsCodeGenerator(context, operators, options);
    }
 
    private void InitializeErrorReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> valueObjectOrException)

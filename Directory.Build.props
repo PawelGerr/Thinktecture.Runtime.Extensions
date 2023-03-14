@@ -22,4 +22,8 @@
       <VSTestResultsDirectory>$(MSBuildThisFileDirectory)test-results/$(TargetFramework)</VSTestResultsDirectory>
    </PropertyGroup>
 
+   <ItemGroup>
+      <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_Counter" />
+   </ItemGroup>
+
 </Project>

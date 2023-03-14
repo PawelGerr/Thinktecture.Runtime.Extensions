@@ -26,19 +26,21 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                            ? ImmutableArray.Create(state.ValidState.Value)
                                                                            : ImmutableArray<ValidSourceGenState>.Empty);
 
-      InitializeEnumTypeGeneration(context, validStates);
-      InitializeSerializerGenerators(context, validStates);
-      InitializeDerivedTypesGeneration(context, validStates);
-      InitializeFormattableCodeGenerator(context, validStates);
-      InitializeComparableCodeGenerator(context, validStates);
-      InitializeParsableCodeGenerator(context, validStates);
-      InitializeComparisonOperatorsCodeGenerator(context, validStates);
+      var options = GetGeneratorOptions(context);
+
+      InitializeEnumTypeGeneration(context, validStates, options);
+      InitializeSerializerGenerators(context, validStates, options);
+      InitializeDerivedTypesGeneration(context, validStates, options);
+      InitializeFormattableCodeGenerator(context, validStates, options);
+      InitializeComparableCodeGenerator(context, validStates, options);
+      InitializeParsableCodeGenerator(context, validStates, options);
+      InitializeComparisonOperatorsCodeGenerator(context, validStates, options);
 
       InitializeErrorReporting(context, enumTypeOrError);
       InitializeExceptionReporting(context, enumTypeOrError);
    }
 
-   private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
          .Select((state, _) => new ComparisonOperatorsGeneratorState(state.State,
@@ -47,10 +49,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                      state.KeyMember.HasComparisonOperators,
                                                                      null));
 
-      InitializeComparisonOperatorsCodeGenerator(context, comparables);
+      InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
    }
 
-   private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var parsables = validStates
          .Select((state, _) => new ParsableGeneratorState(state.State,
@@ -58,10 +60,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                           state.Settings.SkipIParsable,
                                                           state.KeyMember.IsParsable,
                                                           state.State.IsValidatable));
-      InitializeParsableCodeGenerator(context, parsables);
+      InitializeParsableCodeGenerator(context, parsables, options);
    }
 
-   private void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
          .Select((state, _) => new ComparableGeneratorState(state.State,
@@ -70,10 +72,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                             state.KeyMember.IsComparable,
                                                             null));
 
-      InitializeComparableCodeGenerator(context, comparables);
+      InitializeComparableCodeGenerator(context, comparables, options);
    }
 
-   private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var formattables = validStates
          .Select((state, _) => new FormattableGeneratorState(state.State,
@@ -81,12 +83,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                              state.Settings.SkipIFormattable,
                                                              state.KeyMember.IsFormattable));
 
-      InitializeFormattableCodeGenerator(context, formattables);
+      InitializeFormattableCodeGenerator(context, formattables, options);
    }
 
    private void InitializeEnumTypeGeneration(
       IncrementalGeneratorInitializationContext context,
-      IncrementalValuesProvider<ValidSourceGenState> validStates)
+      IncrementalValuesProvider<ValidSourceGenState> validStates,
+      IncrementalValueProvider<GeneratorOptions> options)
    {
       var enumTypes = validStates
                       .Select((state, _) => state.State)
@@ -97,10 +100,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                       .WithComparer(new SetComparer<EnumSourceGeneratorState>())
                       .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(enumTypes, (ctx, state) => GenerateCode(ctx, state, SmartEnumCodeGeneratorFactory.Instance));
+      context.RegisterSourceOutput(enumTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, SmartEnumCodeGeneratorFactory.Instance));
    }
 
-   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var serializerGeneratorFactories = context.MetadataReferencesProvider
                                                 .SelectMany(static (reference, _) => GetSerializerCodeGeneratorFactories(reference))
@@ -115,10 +118,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                  .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                  .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo));
 
-      context.RegisterImplementationSourceOutput(serializerGeneratorStates, (ctx, tuple) => GenerateCode(ctx, tuple));
+      context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
    }
 
-   private void InitializeDerivedTypesGeneration(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates)
+   private void InitializeDerivedTypesGeneration(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var derivedTypes = validStates
                          .Select(static (state, _) => state.DerivedTypes)
@@ -130,7 +133,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                          .WithComparer(new SetComparer<SmartEnumDerivedTypes>())
                          .SelectMany((states, _) => states);
 
-      context.RegisterImplementationSourceOutput(derivedTypes, (ctx, types) => GenerateCode(ctx, types, DerivedTypesCodeGeneratorFactory.Instance));
+      context.RegisterImplementationSourceOutput(derivedTypes.Combine(options), (ctx, types) => GenerateCode(ctx, types.Left, types.Right, DerivedTypesCodeGeneratorFactory.Instance));
    }
 
    private void InitializeErrorReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)

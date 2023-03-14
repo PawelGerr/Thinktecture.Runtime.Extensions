@@ -8,6 +8,8 @@ namespace Thinktecture.CodeAnalysis;
 
 public abstract class ThinktectureSourceGeneratorBase
 {
+   private static long _counter;
+
    internal const string THINKTECTURE_RUNTIME_EXTENSIONS_JSON = "Thinktecture.Runtime.Extensions.Json.dll";
    internal const string THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.dll";
    internal const string THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK = "Thinktecture.Runtime.Extensions.MessagePack.dll";
@@ -23,6 +25,22 @@ public abstract class ThinktectureSourceGeneratorBase
 
       _stringBuilderPool = new ConcurrentQueue<StringBuilder>();
       _stringBuilderPool.Enqueue(new StringBuilder(stringBuilderInitialSize));
+   }
+
+   protected static IncrementalValueProvider<GeneratorOptions> GetGeneratorOptions(IncrementalGeneratorInitializationContext context)
+   {
+      return context.AnalyzerConfigOptionsProvider.Select((options, _) =>
+                                                          {
+                                                             var counterEnabled = options.GlobalOptions.TryGetValue(Constants.Configuration.COUNTER, out var counterEnabledValue)
+                                                                                  && IsFeatureEnable(counterEnabledValue);
+
+                                                             return new GeneratorOptions(counterEnabled);
+                                                          });
+   }
+
+   private static bool IsFeatureEnable(string counterEnabledValue)
+   {
+      return (StringComparer.OrdinalIgnoreCase.Equals("enable", counterEnabledValue) || StringComparer.OrdinalIgnoreCase.Equals("enabled", counterEnabledValue) || StringComparer.OrdinalIgnoreCase.Equals("true", counterEnabledValue));
    }
 
    protected void ReportError(
@@ -53,7 +71,10 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
-   protected void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<FormattableGeneratorState> formattables)
+   protected void InitializeFormattableCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<FormattableGeneratorState> formattables,
+      IncrementalValueProvider<GeneratorOptions> options)
    {
       formattables = formattables
                      .Where(state => state is { SkipIFormattable: false, IsKeyMemberFormattable: true })
@@ -64,10 +85,13 @@ public abstract class ThinktectureSourceGeneratorBase
                      .WithComparer(new SetComparer<FormattableGeneratorState>())
                      .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(formattables, (ctx, state) => GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Formattable));
+      context.RegisterSourceOutput(formattables.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left.Type.Namespace, state.Left.Type.Name, (state.Left.Type, state.Left.KeyMember), state.Right, InterfaceCodeGeneratorFactory.Formattable));
    }
 
-   protected void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ComparableGeneratorState> comparables)
+   protected void InitializeComparableCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<ComparableGeneratorState> comparables,
+      IncrementalValueProvider<GeneratorOptions> options)
    {
       comparables = comparables
                     .Where(state => !state.SkipIComparable && (state.IsKeyMemberComparable || state.ComparerAccessor is not null))
@@ -78,10 +102,13 @@ public abstract class ThinktectureSourceGeneratorBase
                     .WithComparer(new SetComparer<ComparableGeneratorState>())
                     .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(comparables, (ctx, state) => GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Comparable(state.ComparerAccessor)));
+      context.RegisterSourceOutput(comparables.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left.Type.Namespace, state.Left.Type.Name, (state.Left.Type, state.Left.KeyMember), state.Right, InterfaceCodeGeneratorFactory.Comparable(state.Left.ComparerAccessor)));
    }
 
-   protected void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ParsableGeneratorState> parsables)
+   protected void InitializeParsableCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<ParsableGeneratorState> parsables,
+      IncrementalValueProvider<GeneratorOptions> options)
    {
       parsables = parsables
                   .Where(state => !state.SkipIParsable && (state.KeyMember.IsString() || state.IsKeyMemberParsable))
@@ -92,10 +119,13 @@ public abstract class ThinktectureSourceGeneratorBase
                   .WithComparer(new SetComparer<ParsableGeneratorState>())
                   .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(parsables, (ctx, state) => GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Parsable(state.IsValidatableEnum)));
+      context.RegisterSourceOutput(parsables.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left.Type.Namespace, state.Left.Type.Name, (state.Left.Type, state.Left.KeyMember), state.Right, InterfaceCodeGeneratorFactory.Parsable(state.Left.IsValidatableEnum)));
    }
 
-   protected void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ComparisonOperatorsGeneratorState> comparables)
+   protected void InitializeComparisonOperatorsCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<ComparisonOperatorsGeneratorState> comparables,
+      IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = comparables
                       .Where(state => state.HasKeyMemberOperators && state.OperatorsGeneration != OperatorsGeneration.None)
@@ -113,16 +143,19 @@ public abstract class ThinktectureSourceGeneratorBase
                                      return ImmutableArray<(ComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
                                   });
 
-      context.RegisterSourceOutput(operators, (ctx, tuple) =>
-                                              {
-                                                 var state = tuple.State;
-                                                 var generator = tuple.CodeGenerator;
+      context.RegisterSourceOutput(operators.Combine(options), (ctx, tuple) =>
+                                                               {
+                                                                  var state = tuple.Left.State;
+                                                                  var generator = tuple.Left.CodeGenerator;
 
-                                                 GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Create(generator));
-                                              });
+                                                                  GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), tuple.Right, InterfaceCodeGeneratorFactory.Create(generator));
+                                                               });
    }
 
-   protected void InitializeOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<OperatorsGeneratorState> operators)
+   protected void InitializeOperatorsCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<OperatorsGeneratorState> operators,
+      IncrementalValueProvider<GeneratorOptions> options)
    {
       var operatorsWithGenerator = operators
                                    .Where(state => state.HasKeyMemberOperators && state.OperatorsGeneration != OperatorsGeneration.None)
@@ -140,18 +173,20 @@ public abstract class ThinktectureSourceGeneratorBase
                                                   return ImmutableArray<(OperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
                                                });
 
-      context.RegisterSourceOutput(operatorsWithGenerator, (ctx, tuple) =>
-                                                           {
-                                                              var state = tuple.State;
-                                                              var generator = tuple.CodeGenerator;
+      context.RegisterSourceOutput(operatorsWithGenerator.Combine(options),
+                                   (ctx, tuple) =>
+                                   {
+                                      var state = tuple.Left.State;
+                                      var generator = tuple.Left.CodeGenerator;
 
-                                                              GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), InterfaceCodeGeneratorFactory.Create(generator));
-                                                           });
+                                      GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), tuple.Right, InterfaceCodeGeneratorFactory.Create(generator));
+                                   });
    }
 
    protected void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,
+      GeneratorOptions options,
       ICodeGeneratorFactory<TState> generatorFactory)
       where TState : INamespaceAndName, IEquatable<TState>
    {
@@ -159,7 +194,7 @@ public abstract class ThinktectureSourceGeneratorBase
 
       try
       {
-         GenerateCode(context, state, generatorFactory, stringBuilder);
+         GenerateCode(context, state, options, generatorFactory, stringBuilder);
       }
       finally
       {
@@ -169,21 +204,21 @@ public abstract class ThinktectureSourceGeneratorBase
 
    protected void GenerateCode<TState>(
       SourceProductionContext context,
-      (TState, ImmutableArray<ICodeGeneratorFactory<TState>>) tuple)
+      TState state,
+      GeneratorOptions options,
+      ImmutableArray<ICodeGeneratorFactory<TState>> generatorFactories)
       where TState : INamespaceAndName, IEquatable<TState>
    {
       var stringBuilder = LeaseStringBuilder();
 
       try
       {
-         var (state, generatorFactories) = tuple;
-
          for (var i = 0; i < generatorFactories.Length; i++)
          {
             context.CancellationToken.ThrowIfCancellationRequested();
             stringBuilder.Clear();
 
-            GenerateCode(context, state, generatorFactories[i], stringBuilder);
+            GenerateCode(context, state, options, generatorFactories[i], stringBuilder);
          }
       }
       finally
@@ -192,36 +227,15 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
-   protected void GenerateCode<TState>(
-      SourceProductionContext context,
-      (TState, ICodeGeneratorFactory<TState>) tuple)
-      where TState : INamespaceAndName, IEquatable<TState>
-   {
-      var stringBuilder = LeaseStringBuilder();
-
-      try
-      {
-         var (state, generatorFactory) = tuple;
-
-         context.CancellationToken.ThrowIfCancellationRequested();
-         stringBuilder.Clear();
-
-         GenerateCode(context, state, generatorFactory, stringBuilder);
-      }
-      finally
-      {
-         Return(stringBuilder);
-      }
-   }
-
    private static void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,
+      GeneratorOptions options,
       ICodeGeneratorFactory<TState> generatorFactory,
       StringBuilder stringBuilder)
       where TState : INamespaceAndName, IEquatable<TState>
    {
-      GenerateCode(context, state.Namespace, state.Name, state, generatorFactory, stringBuilder);
+      GenerateCode(context, state.Namespace, state.Name, state, options, generatorFactory, stringBuilder);
    }
 
    private void GenerateCode<TState>(
@@ -229,6 +243,7 @@ public abstract class ThinktectureSourceGeneratorBase
       string? ns,
       string name,
       TState state,
+      GeneratorOptions options,
       ICodeGeneratorFactory<TState> generatorFactory)
       where TState : IEquatable<TState>
    {
@@ -236,7 +251,7 @@ public abstract class ThinktectureSourceGeneratorBase
 
       try
       {
-         GenerateCode(context, ns, name, state, generatorFactory, stringBuilder);
+         GenerateCode(context, ns, name, state, options, generatorFactory, stringBuilder);
       }
       finally
       {
@@ -249,16 +264,26 @@ public abstract class ThinktectureSourceGeneratorBase
       string? ns,
       string name,
       TState state,
+      GeneratorOptions options,
       ICodeGeneratorFactory<TState> generatorFactory,
       StringBuilder stringBuilder)
       where TState : IEquatable<TState>
    {
       try
       {
+         var sbLengthBeforeActualContent = 0;
+
+         if (options.CounterEnabled)
+         {
+            var counter = Interlocked.Increment(ref _counter);
+            stringBuilder.Append("// COUNTER: ").AppendLine(counter.ToString().PadLeft(8, ' ')).AppendLine();
+            sbLengthBeforeActualContent = stringBuilder.Length;
+         }
+
          var generator = generatorFactory.Create(state, stringBuilder);
          generator.Generate(context.CancellationToken);
 
-         if (stringBuilder.Length <= 0)
+         if (stringBuilder.Length <= sbLengthBeforeActualContent)
             return;
 
          var generatedCode = stringBuilder.ToString();

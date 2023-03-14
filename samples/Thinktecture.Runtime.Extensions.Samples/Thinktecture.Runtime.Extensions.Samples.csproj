@@ -1,6 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
+        <ThinktectureRuntimeExtensions_SourceGenerator_Counter>enabled</ThinktectureRuntimeExtensions_SourceGenerator_Counter>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />

@@ -14,4 +14,9 @@ public static class Constants
       public const string CREATE_INVALID_ITEM = "CreateInvalidItem";
       public const string VALIDATE_FACTORY_ARGUMENTS = "ValidateFactoryArguments";
    }
+
+   public static class Configuration
+   {
+      public const string COUNTER = "build_property.ThinktectureRuntimeExtensions_SourceGenerator_Counter";
+   }
 }
