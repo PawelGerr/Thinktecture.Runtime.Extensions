@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <Description>Provides an easy way to implement Smart Enums and Value Objects.</Description>
-        <PackageTags>smart-enum;value-object;</PackageTags>
-    </PropertyGroup>
+   <PropertyGroup>
+      <Description>Provides an easy way to implement Smart Enums and Value Objects.</Description>
+      <PackageTags>smart-enum;value-object;</PackageTags>
+   </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'" Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" PrivateAssets="contentfiles;build" />
-    </ItemGroup>
+   <ItemGroup>
+      <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'" Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" PrivateAssets="contentfiles;build" />
+      <None Update="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="build" />
+   </ItemGroup>
 
 </Project>
