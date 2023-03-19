@@ -1,5 +1,4 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture;
@@ -15,10 +14,10 @@ public static class SourceProductionContextExtensions
       context.AddSource(hintName, generatedCode!);
    }
 
-   public static void ReportError(this SourceProductionContext context, TypeDeclarationSyntax node, string message)
+   public static void ReportError(this SourceProductionContext context, Location location, string name, string message)
    {
       context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                 node.GetLocation(),
-                                                 node.Identifier.Text, message));
+                                                 location,
+                                                 name, message));
    }
 }

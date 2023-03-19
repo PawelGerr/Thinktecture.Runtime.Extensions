@@ -1,8 +1,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
+using Thinktecture.Logging;
 
 namespace Thinktecture.CodeAnalysis;
 
@@ -17,6 +18,9 @@ public abstract class ThinktectureSourceGeneratorBase
    private readonly int _stringBuilderInitialSize;
    private readonly int _maxPooledStringBuilderSize;
    private readonly ConcurrentQueue<StringBuilder> _stringBuilderPool;
+   private readonly LoggerFactory _loggerFactory;
+
+   protected ILogger Logger { get; private set; }
 
    protected ThinktectureSourceGeneratorBase(int stringBuilderInitialSize)
    {
@@ -25,22 +29,77 @@ public abstract class ThinktectureSourceGeneratorBase
 
       _stringBuilderPool = new ConcurrentQueue<StringBuilder>();
       _stringBuilderPool.Enqueue(new StringBuilder(stringBuilderInitialSize));
+      _loggerFactory = new LoggerFactory(this);
+      Logger = NullLogger.Instance;
    }
 
-   protected static IncrementalValueProvider<GeneratorOptions> GetGeneratorOptions(IncrementalGeneratorInitializationContext context)
+   protected IncrementalValueProvider<GeneratorOptions> GetGeneratorOptions(IncrementalGeneratorInitializationContext context)
    {
       return context.AnalyzerConfigOptionsProvider.Select((options, _) =>
                                                           {
                                                              var counterEnabled = options.GlobalOptions.TryGetValue(Constants.Configuration.COUNTER, out var counterEnabledValue)
                                                                                   && IsFeatureEnable(counterEnabledValue);
 
-                                                             return new GeneratorOptions(counterEnabled);
+                                                             var loggingOptions = GetLoggingOptions(options);
+
+                                                             return new GeneratorOptions(counterEnabled, loggingOptions);
                                                           });
+   }
+
+   protected void SetupLogger(IncrementalGeneratorInitializationContext context)
+   {
+      var logging = GetGeneratorOptions(context)
+                    .Select((options, _) => options.Logging)
+                    .Select((options, _) =>
+                            {
+                               var logger = Logger;
+
+                               Logger = options is null
+                                           ? NullLogger.Instance
+                                           : _loggerFactory.CreateLogger(options.Value.Level, options.Value.FilePath, options.Value.InitialBufferSize, GetType().Name);
+
+                               logger.Dispose();
+
+                               return options;
+                            })
+                    .SelectMany((_, _) => ImmutableArray<int>.Empty); // don't emit anything
+
+      context.RegisterSourceOutput(logging, static (_, _) =>
+                                            {
+                                            });
+   }
+
+   private static LoggingOptions? GetLoggingOptions(AnalyzerConfigOptionsProvider options)
+   {
+      if (!options.GlobalOptions.TryGetValue(Constants.Configuration.LOG_FILE_PATH, out var logFilePath))
+         return null;
+
+      if (String.IsNullOrWhiteSpace(logFilePath))
+         return null;
+
+      logFilePath = logFilePath.Trim();
+
+      if (!options.GlobalOptions.TryGetValue(Constants.Configuration.LOG_LEVEL, out var logLevelValue)
+          || !Enum.TryParse(logLevelValue, true, out LogLevel logLevel))
+      {
+         logLevel = LogLevel.Information;
+      }
+
+      if (!options.GlobalOptions.TryGetValue(Constants.Configuration.LOG_INITIAL_BUFFER_SIZE, out var initialBufferSizeValue)
+          || !Int32.TryParse(initialBufferSizeValue, out var initialBufferSize)
+          || initialBufferSize < 10)
+      {
+         initialBufferSize = 1000;
+      }
+
+      return new LoggingOptions(logFilePath, logLevel, initialBufferSize);
    }
 
    private static bool IsFeatureEnable(string counterEnabledValue)
    {
-      return (StringComparer.OrdinalIgnoreCase.Equals("enable", counterEnabledValue) || StringComparer.OrdinalIgnoreCase.Equals("enabled", counterEnabledValue) || StringComparer.OrdinalIgnoreCase.Equals("true", counterEnabledValue));
+      return StringComparer.OrdinalIgnoreCase.Equals("enable", counterEnabledValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("enabled", counterEnabledValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("true", counterEnabledValue);
    }
 
    protected void ReportError(
@@ -49,11 +108,12 @@ public abstract class ThinktectureSourceGeneratorBase
    {
       try
       {
-         context.ReportError(error.Node, error.Message);
+         var node = error.Node;
+         context.ReportError(node.GetLocation(), node.Identifier.Text, error.Message);
       }
       catch (Exception ex)
       {
-         Debug.Write(ex);
+         Logger.LogError("Error during reporting an error to Roslyn", ex);
       }
    }
 
@@ -63,11 +123,12 @@ public abstract class ThinktectureSourceGeneratorBase
    {
       try
       {
-         context.ReportError(exception.Node, exception.Exception.ToString());
+         var node = exception.Node;
+         context.ReportError(node.GetLocation(), node.Identifier.Text, exception.Exception.ToString());
       }
       catch (Exception ex)
       {
-         Debug.Write(ex);
+         Logger.LogError("Error during reporting an error to Roslyn", ex);
       }
    }
 
@@ -227,7 +288,7 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
-   private static void GenerateCode<TState>(
+   private void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,
       GeneratorOptions options,
@@ -259,7 +320,7 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
-   private static void GenerateCode<TState>(
+   private void GenerateCode<TState>(
       SourceProductionContext context,
       string? ns,
       string name,
@@ -296,9 +357,16 @@ public abstract class ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
-         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringGeneration,
-                                                    Location.None,
-                                                    name, ex.Message));
+         try
+         {
+            Logger.LogError("Error during code generation", ex);
+
+            context.ReportError(Location.None, name, ex.ToString());
+         }
+         catch (Exception innerEx)
+         {
+            Logger.LogError("Error during reporting an error to Roslyn", innerEx);
+         }
       }
    }
 

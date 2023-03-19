@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>EXE</OutputType>
-    </PropertyGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />
-        <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj" />
-        <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
-        <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    </ItemGroup>
+   <PropertyGroup>
+      <OutputType>EXE</OutputType>
+      <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>C:\temp\ef_logs.txt</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>
+   </PropertyGroup>
+   <ItemGroup>
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />
+      <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+   </ItemGroup>
+   <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
+      <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+   </ItemGroup>
 </Project>

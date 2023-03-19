@@ -13,4 +13,11 @@
       <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
    </PropertyGroup>
 
+   <ItemGroup>
+      <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_Counter" />
+      <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath" />
+      <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogLevel" />
+      <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize" />
+   </ItemGroup>
+
 </Project>

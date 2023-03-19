@@ -3,10 +3,14 @@ namespace Thinktecture.CodeAnalysis;
 public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
 {
    public bool CounterEnabled { get; }
+   public LoggingOptions? Logging { get; }
 
-   public GeneratorOptions(bool counterEnabled)
+   public GeneratorOptions(
+      bool counterEnabled,
+      LoggingOptions? logging)
    {
       CounterEnabled = counterEnabled;
+      Logging = logging;
    }
 
    public bool Equals(GeneratorOptions? other)
@@ -17,7 +21,8 @@ public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
       if (ReferenceEquals(this, other))
          return true;
 
-      return CounterEnabled == other.CounterEnabled;
+      return CounterEnabled == other.CounterEnabled
+             && Logging.Equals(other.Logging);
    }
 
    public override bool Equals(object? obj)
@@ -27,6 +32,9 @@ public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
 
    public override int GetHashCode()
    {
-      return CounterEnabled.GetHashCode();
+      unchecked
+      {
+         return (CounterEnabled.GetHashCode() * 397) ^ Logging.GetHashCode();
+      }
    }
 }

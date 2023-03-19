@@ -1,13 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <ThinktectureRuntimeExtensions_SourceGenerator_Counter>enabled</ThinktectureRuntimeExtensions_SourceGenerator_Counter>
-    </PropertyGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
-        <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    </ItemGroup>
+   <PropertyGroup>
+      <OutputType>Exe</OutputType>
+      <ThinktectureRuntimeExtensions_SourceGenerator_Counter>enabled</ThinktectureRuntimeExtensions_SourceGenerator_Counter>
+      <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>C:\temp\samples_logs.txt</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>
+      <ThinktectureRuntimeExtensions_SourceGenerator_LogLevel>information</ThinktectureRuntimeExtensions_SourceGenerator_LogLevel>
+      <ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize>1000</ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize>
+   </PropertyGroup>
+   <ItemGroup>
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+   </ItemGroup>
+   <ItemGroup>
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+   </ItemGroup>
 </Project>

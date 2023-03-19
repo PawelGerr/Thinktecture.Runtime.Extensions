@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -16,6 +15,8 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
+      SetupLogger(context);
+
       var enumTypeOrError = context.SyntaxProvider
                                    .CreateSyntaxProvider(IsCandidate, GetSourceGenContext)
                                    .SelectMany(static (state, _) => state.HasValue
@@ -106,7 +107,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var serializerGeneratorFactories = context.MetadataReferencesProvider
-                                                .SelectMany(static (reference, _) => GetSerializerCodeGeneratorFactories(reference))
+                                                .SelectMany((reference, _) => GetSerializerCodeGeneratorFactories(reference))
                                                 .Collect()
                                                 .Select(static (states, _) => states.IsDefaultOrEmpty
                                                                                  ? ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty
@@ -152,7 +153,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private static ImmutableArray<IKeyedSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
+   private ImmutableArray<IKeyedSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
    {
       var factories = ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty;
 
@@ -171,13 +172,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       }
       catch (Exception ex)
       {
-         Debug.Write(ex);
+         Logger.LogError("Error during checking referenced modules", ex);
       }
 
       return factories;
    }
 
-   private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   private bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
       try
       {
@@ -190,19 +191,30 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       }
       catch (Exception ex)
       {
-         Debug.Write(ex);
+         Logger.LogError("Error during checking whether a syntax node is a smart enum candidate", ex);
          return false;
       }
    }
 
-   private static bool IsEnumCandidate(TypeDeclarationSyntax typeDeclaration)
+   private bool IsEnumCandidate(TypeDeclarationSyntax typeDeclaration)
    {
-      return typeDeclaration.IsPartial()
-             && !typeDeclaration.IsGeneric()
-             && typeDeclaration.IsEnumCandidate();
+      var isCandidate = typeDeclaration.IsPartial()
+                        && !typeDeclaration.IsGeneric()
+                        && typeDeclaration.IsEnumCandidate();
+
+      if (isCandidate)
+      {
+         Logger.LogDebug("The type declaration is a smart enum candidate", typeDeclaration);
+      }
+      else
+      {
+         Logger.LogTrace("The type declaration is not a smart enum candidate", typeDeclaration);
+      }
+
+      return isCandidate;
    }
 
-   private static SourceGenContext? GetSourceGenContext(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetSourceGenContext(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.Node;
 
@@ -253,6 +265,8 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       }
       catch (Exception ex)
       {
+         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a smart enum", ex);
+
          return new SourceGenContext(new SourceGenException(ex, tds));
       }
    }

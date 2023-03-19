@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Thinktecture.Logging;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
@@ -16,6 +17,8 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
+      SetupLogger(context);
+
       var valueObjectOrException = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetValueObjectStateOrNull)
                                           .SelectMany(static (state, _) => state.HasValue
                                                                               ? ImmutableArray.Create(state.Value)
@@ -68,7 +71,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
    private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var serializerGeneratorFactories = context.MetadataReferencesProvider
-                                                .SelectMany(static (reference, _) => GetSerializerCodeGeneratorFactories(reference))
+                                                .SelectMany((reference, _) => GetSerializerCodeGeneratorFactories(reference))
                                                 .Collect()
                                                 .Select(static (states, _) => states.IsDefaultOrEmpty
                                                                                  ? ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>.Empty
@@ -223,7 +226,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       return state.HasKeyMember && state.KeyMember.Member.NullableAnnotation == NullableAnnotation.Annotated;
    }
 
-   private static ImmutableArray<IValueObjectSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
+   private ImmutableArray<IValueObjectSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
    {
       var factories = ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>.Empty;
 
@@ -242,13 +245,13 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
-         Debug.Write(ex);
+         Logger.LogError("Error during checking referenced modules", ex);
       }
 
       return factories;
    }
 
-   private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   private bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
       try
       {
@@ -261,19 +264,30 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
-         Debug.Write(ex);
+         Logger.LogError("Error during checking whether a syntax node is a value object candidate", ex);
          return false;
       }
    }
 
-   private static bool IsValueObjectCandidate(TypeDeclarationSyntax typeDeclaration)
+   private bool IsValueObjectCandidate(TypeDeclarationSyntax typeDeclaration)
    {
-      return typeDeclaration.IsPartial()
-             && !typeDeclaration.IsGeneric()
-             && typeDeclaration.IsValueObjectCandidate();
+      var isCandidate = typeDeclaration.IsPartial()
+                        && !typeDeclaration.IsGeneric()
+                        && typeDeclaration.IsValueObjectCandidate();
+
+      if (isCandidate)
+      {
+         Logger.LogDebug("The type declaration is a value object candidate", typeDeclaration);
+      }
+      else
+      {
+         Logger.LogTrace("The type declaration is not a value object candidate", typeDeclaration);
+      }
+
+      return isCandidate;
    }
 
-   private static SourceGenContext? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.Node;
 
@@ -308,6 +322,8 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
+         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a value object", ex);
+
          return new SourceGenContext(new SourceGenException(ex, tds));
       }
    }

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <OutputType>EXE</OutputType>
+      <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>C:\temp\messagepack_logs.txt</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>
    </PropertyGroup>
    <ItemGroup>
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack\Thinktecture.Runtime.Extensions.MessagePack.csproj" />
