@@ -41,5 +41,5 @@ public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>
    /// <param name="key">The value to validate.</param>
    /// <param name="item">Item with key property equals to the provided <paramref name="key"/>.</param>
    /// <returns>Validation result.</returns>
-   static abstract ValidationResult? Validate(TKey? key, out T? item);
+   static virtual ValidationResult? Validate(TKey? key, out T? item) => throw new NotImplementedException("This method will be implemented by the source generator.");
 }

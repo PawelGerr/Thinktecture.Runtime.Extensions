@@ -12,7 +12,7 @@ public interface IEnum<TKey> : IKeyedValueObject<TKey>
    /// <summary>
    /// Key equality comparer.
    /// </summary>
-   static abstract IEqualityComparer<TKey> KeyEqualityComparer { get; }
+   static virtual IEqualityComparer<TKey> KeyEqualityComparer => throw new NotImplementedException("This property will be implemented by the source generator.");
 }
 
 /// <summary>
@@ -30,7 +30,7 @@ public interface IEnum<TKey, T> : IKeyedValueObject<T, TKey>
    /// <summary>
    /// Gets all valid items.
    /// </summary>
-   static abstract IReadOnlyList<T> Items { get; }
+   static virtual IReadOnlyList<T> Items => throw new NotImplementedException("This property will be implemented by the source generator.");
 
    /// <summary>
    /// Gets an enumeration item for provided <paramref name="key"/>.
@@ -38,7 +38,7 @@ public interface IEnum<TKey, T> : IKeyedValueObject<T, TKey>
    /// <param name="key">The identifier to return an enumeration item for.</param>
    /// <returns>An instance of <typeparamref name="T"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
    [return: NotNullIfNotNull(nameof(key))]
-   static abstract T? Get(TKey? key);
+   static virtual T? Get(TKey? key) => throw new NotImplementedException("This method will be implemented by the source generator.");
 
    /// <summary>
    /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -46,5 +46,5 @@ public interface IEnum<TKey, T> : IKeyedValueObject<T, TKey>
    /// <param name="key">The identifier to return an enumeration item for.</param>
    /// <param name="item">A valid instance of <typeparamref name="T"/>; otherwise <c>null</c>.</param>
    /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-   static abstract bool TryGet(TKey? key, [MaybeNullWhen(false)] out T item);
+   static virtual bool TryGet(TKey? key, [MaybeNullWhen(false)] out T item) => throw new NotImplementedException("This method will be implemented by the source generator.");
 }
