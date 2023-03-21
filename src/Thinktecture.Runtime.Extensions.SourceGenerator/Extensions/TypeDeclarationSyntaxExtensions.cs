@@ -28,28 +28,6 @@ internal static class TypeDeclarationSyntaxExtensions
       return tds.TypeParameterList is { Parameters.Count: > 0 };
    }
 
-   public static bool IsValueObjectCandidate(this TypeDeclarationSyntax tds)
-   {
-      for (var i = 0; i < tds.AttributeLists.Count; i++)
-      {
-         var attributes = tds.AttributeLists[i].Attributes;
-
-         for (var j = 0; j < attributes.Count; j++)
-         {
-            if (CouldBeValueObjectAttribute(attributes[j].Name))
-               return true;
-         }
-      }
-
-      return false;
-   }
-
-   private static bool CouldBeValueObjectAttribute(NameSyntax type)
-   {
-      var typeName = ExtractTypeName(type);
-      return typeName is "ValueObjectAttribute" or "ValueObject";
-   }
-
    private static string? ExtractTypeName(NameSyntax? name)
    {
       return name switch

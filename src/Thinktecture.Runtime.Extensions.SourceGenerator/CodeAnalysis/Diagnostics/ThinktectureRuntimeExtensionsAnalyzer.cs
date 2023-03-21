@@ -135,7 +135,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
             return;
 
-         if (!type.HasValueObjectAttribute(out _))
+         if (!type.HasValueObjectAttribute())
             return;
 
          ValidateValueObject(context, type);

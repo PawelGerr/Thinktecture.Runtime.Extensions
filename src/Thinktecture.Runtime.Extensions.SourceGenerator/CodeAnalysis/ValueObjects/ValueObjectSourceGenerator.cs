@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
@@ -19,7 +18,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
       SetupLogger(context, options);
 
-      var valueObjectOrException = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetValueObjectStateOrNull)
+      var valueObjectOrException = context.SyntaxProvider
+                                          .ForAttributeWithMetadataName(Constants.Attributes.VALUE_OBJECT,
+                                                                        IsCandidate,
+                                                                        GetValueObjectStateOrNull)
                                           .SelectMany(static (state, _) => state.HasValue
                                                                               ? ImmutableArray.Create(state.Value)
                                                                               : ImmutableArray<SourceGenContext>.Empty);
@@ -294,8 +296,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
    private bool IsValueObjectCandidate(TypeDeclarationSyntax typeDeclaration)
    {
       var isCandidate = typeDeclaration.IsPartial()
-                        && !typeDeclaration.IsGeneric()
-                        && typeDeclaration.IsValueObjectCandidate();
+                        && !typeDeclaration.IsGeneric();
 
       if (isCandidate)
       {
@@ -309,19 +310,13 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       return isCandidate;
    }
 
-   private SourceGenContext? GetValueObjectStateOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetValueObjectStateOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
    {
-      var tds = (TypeDeclarationSyntax)context.Node;
+      var tds = (TypeDeclarationSyntax)context.TargetNode;
 
       try
       {
-         var type = context.SemanticModel.GetDeclaredSymbol(tds);
-
-         if (type is null)
-         {
-            Logger.LogDebug("Type in semantic model not found", tds);
-            return null;
-         }
+         var type = (INamedTypeSymbol)context.TargetSymbol;
 
          if (type.TypeKind == TypeKind.Error)
          {
@@ -335,9 +330,9 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
-         if (!type.HasValueObjectAttribute(out var valueObjectAttribute))
+         if (context.Attributes.Length > 1)
          {
-            Logger.LogDebug("Type has no ValueObjectAttribute", tds);
+            Logger.LogDebug("Type has more than 1 ValueObjectAttribute", tds);
             return null;
          }
 
@@ -346,7 +341,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
 
-         var settings = new AllValueObjectSettings(valueObjectAttribute);
+         var settings = new AllValueObjectSettings(context.Attributes[0]);
          var state = new ValueObjectSourceGeneratorState(factory, type, new ValueObjectSettings(settings), cancellationToken);
 
          if (state.HasKeyMember)

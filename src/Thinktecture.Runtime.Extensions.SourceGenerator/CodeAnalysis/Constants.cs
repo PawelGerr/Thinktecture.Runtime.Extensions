@@ -22,4 +22,9 @@ public static class Constants
       public const string LOG_LEVEL = "build_property.ThinktectureRuntimeExtensions_SourceGenerator_LogLevel";
       public const string LOG_INITIAL_BUFFER_SIZE = "build_property.ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize";
    }
+
+   public static class Attributes
+   {
+      public const string VALUE_OBJECT = "Thinktecture.ValueObjectAttribute";
+   }
 }

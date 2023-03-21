@@ -27,11 +27,9 @@ public static class TypeSymbolExtensions
       return false;
    }
 
-   public static bool HasValueObjectAttribute(
-      this ITypeSymbol type,
-      [MaybeNullWhen(false)] out AttributeData valueObjectAttribute)
+   public static bool HasValueObjectAttribute(this ITypeSymbol type)
    {
-      valueObjectAttribute = type.FindValueObjectAttribute();
+      var valueObjectAttribute = type.FindValueObjectAttribute();
 
       return valueObjectAttribute is not null;
    }
@@ -371,7 +369,7 @@ public static class TypeSymbolExtensions
       return type.FindAttribute(static attrType => attrType is { Name: "EnumGenerationAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } });
    }
 
-   public static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)
+   private static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)
    {
       return type.FindAttribute(static attrType => attrType is { Name: "ValueObjectAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } });
    }
