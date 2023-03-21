@@ -6,6 +6,8 @@ public sealed class JsonSmartEnumCodeGeneratorFactory : IKeyedSerializerCodeGene
 {
    public static readonly IKeyedSerializerCodeGeneratorFactory Instance = new JsonSmartEnumCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "SystemTextJson-SmartEnum-CodeGenerator";
+
    private JsonSmartEnumCodeGeneratorFactory()
    {
    }

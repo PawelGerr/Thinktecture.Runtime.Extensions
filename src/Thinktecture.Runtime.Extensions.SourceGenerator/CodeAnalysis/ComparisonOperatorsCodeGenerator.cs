@@ -38,6 +38,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    private readonly bool _withKeyTypeOverloads;
    private readonly string? _comparerAccessor;
 
+   public string CodeGeneratorName => "ComparisonOperators-CodeGenerator";
    public string FileNameSuffix => ".ComparisonOperators";
 
    private ComparisonOperatorsCodeGenerator(bool withKeyTypeOverloads, string? comparerAccessor)

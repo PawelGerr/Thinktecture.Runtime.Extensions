@@ -6,6 +6,8 @@ public sealed class NewtonsoftJsonSmartEnumCodeGeneratorFactory : IKeyedSerializ
 {
    public static readonly IKeyedSerializerCodeGeneratorFactory Instance = new NewtonsoftJsonSmartEnumCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "NewtonsoftJson-SmartEnum-CodeGenerator";
+
    private NewtonsoftJsonSmartEnumCodeGeneratorFactory()
    {
    }

@@ -6,6 +6,8 @@ public sealed class DerivedTypesCodeGeneratorFactory : ICodeGeneratorFactory<Sma
 {
    public static readonly ICodeGeneratorFactory<SmartEnumDerivedTypes> Instance = new DerivedTypesCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "DerivedTypes-CodeGenerator";
+
    private DerivedTypesCodeGeneratorFactory()
    {
    }

@@ -6,6 +6,8 @@ public sealed class MessagePackValueObjectCodeGeneratorFactory : IValueObjectSer
 {
    public static readonly IValueObjectSerializerCodeGeneratorFactory Instance = new MessagePackValueObjectCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "MessagePack-ValueObject-CodeGenerator";
+
    private MessagePackValueObjectCodeGeneratorFactory()
    {
    }

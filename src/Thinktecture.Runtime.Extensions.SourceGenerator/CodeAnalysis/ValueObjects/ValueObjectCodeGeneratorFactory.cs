@@ -6,6 +6,8 @@ public sealed class ValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<Valu
 {
    public static readonly ICodeGeneratorFactory<ValueObjectSourceGeneratorState> Instance = new ValueObjectCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "ValueObject-CodeGenerator";
+
    private ValueObjectCodeGeneratorFactory()
    {
    }

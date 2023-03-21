@@ -10,6 +10,7 @@ public sealed class ValueObjectCodeGenerator : CodeGeneratorBase
    private readonly ValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => "ValueObject-CodeGenerator";
    public override string? FileNameSuffix => null;
 
    public ValueObjectCodeGenerator(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)

@@ -8,6 +8,7 @@ public sealed class KeyedNewtonsoftJsonCodeGenerator : CodeGeneratorBase
    private readonly ITypeFullyQualified _keyMember;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => "Keyed-NewtonsoftJson-CodeGenerator";
    public override string FileNameSuffix => ".NewtonsoftJson";
 
    public KeyedNewtonsoftJsonCodeGenerator(ITypeInformation type, ITypeFullyQualified keyMember, StringBuilder stringBuilder)

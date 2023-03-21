@@ -6,6 +6,8 @@ public sealed class JsonValueObjectCodeGeneratorFactory : IValueObjectSerializer
 {
    public static readonly IValueObjectSerializerCodeGeneratorFactory Instance = new JsonValueObjectCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "SystemTextJson-ValueObject-CodeGenerator";
+
    private JsonValueObjectCodeGeneratorFactory()
    {
    }

@@ -46,9 +46,11 @@ public abstract class ThinktectureSourceGeneratorBase
                                                           });
    }
 
-   protected void SetupLogger(IncrementalGeneratorInitializationContext context)
+   protected void SetupLogger(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValueProvider<GeneratorOptions> optionsProvider)
    {
-      var logging = GetGeneratorOptions(context)
+      var logging = optionsProvider
                     .Select((options, _) => options.Logging)
                     .Select((options, _) =>
                             {
@@ -106,14 +108,17 @@ public abstract class ThinktectureSourceGeneratorBase
       SourceProductionContext context,
       SourceGenError error)
    {
+      var node = error.Node;
+
       try
       {
-         var node = error.Node;
+         Logger.LogError(error.Message, node);
+
          context.ReportError(node.GetLocation(), node.Identifier.Text, error.Message);
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during reporting an error to Roslyn", ex);
+         Logger.LogError("Error during reporting an error to Roslyn", node, ex);
       }
    }
 
@@ -121,14 +126,15 @@ public abstract class ThinktectureSourceGeneratorBase
       SourceProductionContext context,
       SourceGenException exception)
    {
+      var node = exception.Node;
+
       try
       {
-         var node = exception.Node;
          context.ReportError(node.GetLocation(), node.Identifier.Text, exception.Exception.ToString());
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during reporting an error to Roslyn", ex);
+         Logger.LogError("Error during reporting an error to Roslyn", node, ex);
       }
    }
 
@@ -263,31 +269,6 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
-   protected void GenerateCode<TState>(
-      SourceProductionContext context,
-      TState state,
-      GeneratorOptions options,
-      ImmutableArray<ICodeGeneratorFactory<TState>> generatorFactories)
-      where TState : INamespaceAndName, IEquatable<TState>
-   {
-      var stringBuilder = LeaseStringBuilder();
-
-      try
-      {
-         for (var i = 0; i < generatorFactories.Length; i++)
-         {
-            context.CancellationToken.ThrowIfCancellationRequested();
-            stringBuilder.Clear();
-
-            GenerateCode(context, state, options, generatorFactories[i], stringBuilder);
-         }
-      }
-      finally
-      {
-         Return(stringBuilder);
-      }
-   }
-
    private void GenerateCode<TState>(
       SourceProductionContext context,
       TState state,
@@ -345,11 +326,19 @@ public abstract class ThinktectureSourceGeneratorBase
          generator.Generate(context.CancellationToken);
 
          if (stringBuilder.Length <= sbLengthBeforeActualContent)
+         {
+            if (Logger.IsEnabled(LogLevel.Warning))
+               Logger.Log(LogLevel.Warning, $"Code generator '{generator.CodeGeneratorName}' didn't emit any code for '{ns}.{name}'.");
+
             return;
+         }
 
          var generatedCode = stringBuilder.ToString();
 
          context.EmitFile(ns, name, generatedCode, generator.FileNameSuffix);
+
+         if (Logger.IsEnabled(LogLevel.Information))
+            Logger.Log(LogLevel.Information, $"Code generator '{generator.CodeGeneratorName}' emitted code for '{ns}.{name}'.");
       }
       catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
       {
@@ -359,13 +348,13 @@ public abstract class ThinktectureSourceGeneratorBase
       {
          try
          {
-            Logger.LogError("Error during code generation", ex);
+            Logger.LogError("Error during code generation", exception: ex);
 
             context.ReportError(Location.None, name, ex.ToString());
          }
          catch (Exception innerEx)
          {
-            Logger.LogError("Error during reporting an error to Roslyn", innerEx);
+            Logger.LogError("Error during reporting an error to Roslyn", exception: innerEx);
          }
       }
    }

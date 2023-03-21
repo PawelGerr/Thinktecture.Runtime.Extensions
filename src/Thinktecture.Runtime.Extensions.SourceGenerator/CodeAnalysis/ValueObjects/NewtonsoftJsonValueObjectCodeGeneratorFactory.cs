@@ -6,6 +6,8 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : IValueObject
 {
    public static readonly IValueObjectSerializerCodeGeneratorFactory Instance = new NewtonsoftJsonValueObjectCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "NewtonsoftJson-ValueObject-CodeGenerator";
+
    private NewtonsoftJsonValueObjectCodeGeneratorFactory()
    {
    }
@@ -29,4 +31,5 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : IValueObject
    public bool Equals(ICodeGeneratorFactory<KeyedSerializerGeneratorState> other) => ReferenceEquals(this, other);
    public bool Equals(ICodeGeneratorFactory<ComplexSerializerGeneratorState> other) => ReferenceEquals(this, other);
    public bool Equals(IKeyedSerializerCodeGeneratorFactory other) => ReferenceEquals(this, other);
+
 }

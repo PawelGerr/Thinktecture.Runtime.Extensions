@@ -6,6 +6,7 @@ public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
 {
    public static readonly IInterfaceCodeGenerator Instance = new FormattableCodeGenerator();
 
+   public string CodeGeneratorName => "Formattable-CodeGenerator";
    public string FileNameSuffix => ".Formattable";
 
    public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)

@@ -6,6 +6,8 @@ public sealed class MessagePackSmartEnumCodeGeneratorFactory : IKeyedSerializerC
 {
    public static readonly IKeyedSerializerCodeGeneratorFactory Instance = new MessagePackSmartEnumCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "MessagePack-SmartEnum-CodeGenerator";
+
    private MessagePackSmartEnumCodeGeneratorFactory()
    {
    }

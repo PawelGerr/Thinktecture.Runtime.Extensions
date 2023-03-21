@@ -9,6 +9,7 @@ public class InterfaceCodeGenerator : CodeGeneratorBase
    private readonly IMemberInformation _keyMember;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => _codeGenerator.CodeGeneratorName;
    public override string FileNameSuffix => _codeGenerator.FileNameSuffix;
 
    public InterfaceCodeGenerator(

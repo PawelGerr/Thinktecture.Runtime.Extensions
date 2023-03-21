@@ -9,6 +9,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
 
    private readonly bool _isForValidatableEnum;
 
+   public string CodeGeneratorName => "Parsable-CodeGenerator";
    public string FileNameSuffix => ".Parsable";
 
    private ParsableCodeGenerator(bool isForValidatableEnum)

@@ -4,6 +4,7 @@ namespace Thinktecture.CodeAnalysis;
 
 public interface IInterfaceCodeGenerator
 {
+   string CodeGeneratorName { get; }
    string FileNameSuffix { get; }
 
    void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember);

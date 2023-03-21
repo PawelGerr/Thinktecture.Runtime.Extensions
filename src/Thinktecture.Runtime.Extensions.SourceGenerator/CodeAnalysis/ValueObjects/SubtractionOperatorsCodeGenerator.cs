@@ -34,6 +34,7 @@ public sealed class SubtractionOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    private readonly bool _withKeyTypeOverloads;
 
+   public string CodeGeneratorName => "SubtractionOperators-CodeGenerator";
    public string FileNameSuffix => ".SubtractionOperators";
 
    private SubtractionOperatorsCodeGenerator(bool withKeyTypeOverloads)

@@ -9,6 +9,7 @@ public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator : CodeGenerato
    private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => "Complex-ValueObject-NewtonsoftJson-CodeGenerator";
    public override string FileNameSuffix => ".NewtonsoftJson";
 
    public ComplexValueObjectNewtonsoftJsonCodeGenerator(

@@ -13,6 +13,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
    public string Name { get; }
    public bool IsStatic { get; }
+   public bool IsErroneous { get; }
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
@@ -39,13 +40,15 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       ValueObjectMemberSettings settings,
       string name,
       (IFieldSymbol?, IPropertySymbol?) symbol,
-      bool isStatic)
+      bool isStatic,
+      bool isErroneous)
    {
       _typedMemberState = typedMemberState;
       _symbol = symbol;
 
       Name = name;
       IsStatic = isStatic;
+      IsErroneous = isErroneous;
       ValueObjectMemberSettings = settings;
    }
 
@@ -61,7 +64,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       var symbol = allowedCaptureSymbols ? field : null;
       var settings = populateValueObjectMemberSettings ? ValueObjectMemberSettings.Create(field, field.Type, allowedCaptureSymbols) : ValueObjectMemberSettings.None;
 
-      return new(factory.Create(field.Type), settings, field.Name, (symbol, null), field.IsStatic);
+      return new(factory.Create(field.Type), settings, field.Name, (symbol, null), field.IsStatic, field.Type.TypeKind == TypeKind.Error);
    }
 
    public static InstanceMemberInfo? CreateOrNull(
@@ -76,7 +79,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       var symbol = allowedCaptureSymbols ? property : null;
       var settings = populateValueObjectMemberSettings ? ValueObjectMemberSettings.Create(property, property.Type, allowedCaptureSymbols) : ValueObjectMemberSettings.None;
 
-      return new(factory.Create(property.Type), settings, property.Name, (null, symbol), property.IsStatic);
+      return new(factory.Create(property.Type), settings, property.Name, (null, symbol), property.IsStatic, property.Type.TypeKind == TypeKind.Error);
    }
 
    public Location GetIdentifierLocation(CancellationToken cancellationToken)
@@ -110,6 +113,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       return _typedMemberState.Equals(other._typedMemberState)
              && Name == other.Name
              && IsStatic == other.IsStatic
+             && IsErroneous == other.IsErroneous
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -120,6 +124,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          var hashCode = _typedMemberState.GetHashCode();
          hashCode = (hashCode * 397) ^ Name.GetHashCode();
          hashCode = (hashCode * 397) ^ IsStatic.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsErroneous.GetHashCode();
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;

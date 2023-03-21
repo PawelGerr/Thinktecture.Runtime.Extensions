@@ -8,6 +8,7 @@ public sealed class KeyedJsonCodeGenerator : CodeGeneratorBase
    private readonly ITypeFullyQualified _keyMember;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => "Keyed-SystemTextJson-CodeGenerator";
    public override string FileNameSuffix => ".Json";
 
    public KeyedJsonCodeGenerator(ITypeInformation type, ITypeFullyQualified keyMember, StringBuilder stringBuilder)

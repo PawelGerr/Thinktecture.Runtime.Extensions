@@ -28,6 +28,8 @@ public class InterfaceCodeGeneratorFactory : ICodeGeneratorFactory<(ITypeInforma
 
    private readonly IInterfaceCodeGenerator _interfaceCodeGenerator;
 
+   public string CodeGeneratorName => _interfaceCodeGenerator.CodeGeneratorName;
+
    private InterfaceCodeGeneratorFactory(IInterfaceCodeGenerator interfaceCodeGenerator)
    {
       _interfaceCodeGenerator = interfaceCodeGenerator;

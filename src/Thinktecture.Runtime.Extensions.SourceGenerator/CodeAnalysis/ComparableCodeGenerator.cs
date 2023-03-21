@@ -8,6 +8,7 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 
    private readonly string? _comparerAccessor;
 
+   public string CodeGeneratorName => "Comparable-CodeGenerator";
    public string FileNameSuffix => ".Comparable";
 
    public ComparableCodeGenerator(string? comparerAccessor)

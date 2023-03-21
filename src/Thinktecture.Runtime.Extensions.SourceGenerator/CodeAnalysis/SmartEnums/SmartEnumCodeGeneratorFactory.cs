@@ -6,6 +6,8 @@ public sealed class SmartEnumCodeGeneratorFactory : ICodeGeneratorFactory<EnumSo
 {
    public static readonly ICodeGeneratorFactory<EnumSourceGeneratorState> Instance = new SmartEnumCodeGeneratorFactory();
 
+   public string CodeGeneratorName => "SmartEnum-CodeGenerator";
+
    private SmartEnumCodeGeneratorFactory()
    {
    }

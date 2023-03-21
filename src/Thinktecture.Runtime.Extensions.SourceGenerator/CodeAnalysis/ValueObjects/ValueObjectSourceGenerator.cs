@@ -1,9 +1,7 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Thinktecture.Logging;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
@@ -17,7 +15,9 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
-      SetupLogger(context);
+      var options = GetGeneratorOptions(context);
+
+      SetupLogger(context, options);
 
       var valueObjectOrException = context.SyntaxProvider.CreateSyntaxProvider(IsCandidate, GetValueObjectStateOrNull)
                                           .SelectMany(static (state, _) => state.HasValue
@@ -37,7 +37,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
                                                         return ImmutableArray.Create(keyedValueObject);
                                                      });
-      var options = GetGeneratorOptions(context);
 
       InitializeValueObjectsGeneration(context, validStates, options);
       InitializeSerializerGenerators(context, validStates, options);
@@ -91,7 +90,17 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                   })
                                                       .Combine(serializerGeneratorFactories)
                                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
-                                                      .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo));
+                                                      .Where(tuple =>
+                                                             {
+                                                                if (tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo))
+                                                                {
+                                                                   Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                   return true;
+                                                                }
+
+                                                                Logger.LogInformation("Code generator must not generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                return false;
+                                                             });
 
       var complexSerializerGeneratorStates = validStates.SelectMany((state, _) =>
                                                                     {
@@ -104,7 +113,17 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                     })
                                                         .Combine(serializerGeneratorFactories)
                                                         .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
-                                                        .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo));
+                                                        .Where(tuple =>
+                                                               {
+                                                                  if (tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo))
+                                                                  {
+                                                                     Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                     return true;
+                                                                  }
+
+                                                                  Logger.LogInformation("Code generator must not generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                  return false;
+                                                               });
 
       context.RegisterImplementationSourceOutput(keyedSerializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
       context.RegisterImplementationSourceOutput(complexSerializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
@@ -221,11 +240,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private static bool IsKeyMemberNullable(ValueObjectSourceGeneratorState state)
-   {
-      return state.HasKeyMember && state.KeyMember.Member.NullableAnnotation == NullableAnnotation.Annotated;
-   }
-
    private ImmutableArray<IValueObjectSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
    {
       var factories = ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>.Empty;
@@ -234,18 +248,26 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       {
          foreach (var module in reference.GetModules())
          {
-            factories = module.Name switch
+            switch (module.Name)
             {
-               THINKTECTURE_RUNTIME_EXTENSIONS_JSON => factories.Add(JsonValueObjectCodeGeneratorFactory.Instance),
-               THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON => factories.Add(NewtonsoftJsonValueObjectCodeGeneratorFactory.Instance),
-               THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK => factories.Add(MessagePackValueObjectCodeGeneratorFactory.Instance),
-               _ => factories
-            };
+               case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
+                  Logger.LogInformation("Code generator for System.Text.Json will participate in code generation");
+                  factories = factories.Add(JsonValueObjectCodeGeneratorFactory.Instance);
+                  break;
+               case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
+                  Logger.LogInformation("Code generator for Newtonsoft.Json will participate in code generation");
+                  factories = factories.Add(NewtonsoftJsonValueObjectCodeGeneratorFactory.Instance);
+                  break;
+               case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
+                  Logger.LogInformation("Code generator for MessagePack will participate in code generation");
+                  factories = factories.Add(MessagePackValueObjectCodeGeneratorFactory.Instance);
+                  break;
+            }
          }
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during checking referenced modules", ex);
+         Logger.LogError("Error during checking referenced modules", exception: ex);
       }
 
       return factories;
@@ -264,7 +286,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during checking whether a syntax node is a value object candidate", ex);
+         Logger.LogError("Error during checking whether a syntax node is a value object candidate", exception: ex);
          return false;
       }
    }
@@ -295,11 +317,29 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       {
          var type = context.SemanticModel.GetDeclaredSymbol(tds);
 
-         if (!type.HasValueObjectAttribute(out var valueObjectAttribute))
+         if (type is null)
+         {
+            Logger.LogDebug("Type in semantic model not found", tds);
             return null;
+         }
+
+         if (type.TypeKind == TypeKind.Error)
+         {
+            Logger.LogDebug("Type from semantic model is erroneous", tds);
+            return null;
+         }
 
          if (type.ContainingType is not null)
+         {
+            Logger.LogDebug("Nested types are not supported", tds);
             return null;
+         }
+
+         if (!type.HasValueObjectAttribute(out var valueObjectAttribute))
+         {
+            Logger.LogDebug("Type has no ValueObjectAttribute", tds);
+            return null;
+         }
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
@@ -309,8 +349,26 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          var settings = new AllValueObjectSettings(valueObjectAttribute);
          var state = new ValueObjectSourceGeneratorState(factory, type, new ValueObjectSettings(settings), cancellationToken);
 
-         if (IsKeyMemberNullable(state))
-            return null;
+         if (state.HasKeyMember)
+         {
+            if (state.KeyMember.Member.IsErroneous)
+            {
+               Logger.LogDebug("Type of the key member is erroneous", tds);
+               return null;
+            }
+
+            if (state.KeyMember.Member.NullableAnnotation == NullableAnnotation.Annotated)
+            {
+               Logger.LogDebug("Type of the key member must not be nullable", tds);
+               return null;
+            }
+
+            Logger.LogDebug("The type declaration is a valid simple/keyed value object", namespaceAndName: state);
+         }
+         else
+         {
+            Logger.LogDebug("The type declaration is a valid complex value object", namespaceAndName: state);
+         }
 
          var attributeInfo = new AttributeInfo(type);
 
@@ -322,7 +380,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a value object", ex);
+         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a value object", tds, ex);
 
          return new SourceGenContext(new SourceGenException(ex, tds));
       }

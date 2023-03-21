@@ -34,6 +34,7 @@ public sealed class MultiplyOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    private readonly bool _withKeyTypeOverloads;
 
+   public string CodeGeneratorName => "MultiplyOperators-CodeGenerator";
    public string FileNameSuffix => ".MultiplyOperators";
 
    private MultiplyOperatorsCodeGenerator(bool withKeyTypeOverloads)

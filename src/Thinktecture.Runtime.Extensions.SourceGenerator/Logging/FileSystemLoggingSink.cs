@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -192,9 +191,6 @@ public class FileSystemLoggingSink : ILoggingSink, IDisposable
 
    private static async Task<bool> WriteInternalAsync(StreamWriter writer, LogItem item)
    {
-      if (item.LogLevel == LogLevel.None)
-         return false;
-
       await writer.WriteAsync("[");
       await WriteDateTimeAsync(writer, item.Datetime);
       await writer.WriteAsync(" | ");

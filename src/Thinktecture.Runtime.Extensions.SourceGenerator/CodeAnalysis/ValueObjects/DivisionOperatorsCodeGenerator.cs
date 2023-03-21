@@ -34,6 +34,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    private readonly bool _withKeyTypeOverloads;
 
+   public string CodeGeneratorName => "DivisionOperators-CodeGenerator";
    public string FileNameSuffix => ".DivisionOperators";
 
    private DivisionOperatorsCodeGenerator(bool withKeyTypeOverloads)

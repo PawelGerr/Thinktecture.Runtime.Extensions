@@ -7,6 +7,7 @@ public class DerivedTypesCodeGenerator : CodeGeneratorBase
    private readonly SmartEnumDerivedTypes _state;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => "DerivedTypes-CodeGenerator";
    public override string FileNameSuffix => ".DerivedTypes";
 
    public DerivedTypesCodeGenerator(SmartEnumDerivedTypes state, StringBuilder stringBuilder)

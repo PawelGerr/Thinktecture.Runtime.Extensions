@@ -9,6 +9,7 @@ public sealed class ComplexValueObjectJsonCodeGenerator : CodeGeneratorBase
    private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => "Complex-ValueObject-SystemTextJson-CodeGenerator";
    public override string FileNameSuffix => ".Json";
 
    public ComplexValueObjectJsonCodeGenerator(

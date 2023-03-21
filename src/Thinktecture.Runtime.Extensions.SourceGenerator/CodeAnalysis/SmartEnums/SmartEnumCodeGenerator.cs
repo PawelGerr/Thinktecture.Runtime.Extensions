@@ -10,6 +10,7 @@ public sealed class SmartEnumCodeGenerator : CodeGeneratorBase
 
    private bool NeedsDefaultComparer => !_state.HasKeyComparerImplementation;
 
+   public override string CodeGeneratorName => "SmartEnum-CodeGenerator";
    public override string? FileNameSuffix => null;
 
    public SmartEnumCodeGenerator(EnumSourceGeneratorState state, StringBuilder stringBuilder)

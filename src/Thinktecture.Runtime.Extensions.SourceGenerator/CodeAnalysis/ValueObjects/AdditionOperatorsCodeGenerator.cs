@@ -34,6 +34,7 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    private readonly bool _withKeyTypeOverloads;
 
+   public string CodeGeneratorName => "AdditionOperators-CodeGenerator";
    public string FileNameSuffix => ".AdditionOperators";
 
    private AdditionOperatorsCodeGenerator(bool withKeyTypeOverloads)

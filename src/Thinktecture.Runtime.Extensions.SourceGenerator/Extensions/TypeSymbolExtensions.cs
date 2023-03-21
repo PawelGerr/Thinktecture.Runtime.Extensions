@@ -28,15 +28,9 @@ public static class TypeSymbolExtensions
    }
 
    public static bool HasValueObjectAttribute(
-      [NotNullWhen(true)] this ITypeSymbol? type,
+      this ITypeSymbol type,
       [MaybeNullWhen(false)] out AttributeData valueObjectAttribute)
    {
-      if (type is null)
-      {
-         valueObjectAttribute = null;
-         return false;
-      }
-
       valueObjectAttribute = type.FindValueObjectAttribute();
 
       return valueObjectAttribute is not null;

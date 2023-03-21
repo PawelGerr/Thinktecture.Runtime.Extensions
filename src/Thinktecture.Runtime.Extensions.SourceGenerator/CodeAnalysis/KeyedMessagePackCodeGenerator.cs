@@ -8,6 +8,7 @@ public sealed class KeyedMessagePackCodeGenerator : CodeGeneratorBase
    private readonly ITypeFullyQualified _keyMember;
    private readonly StringBuilder _sb;
 
+   public override string CodeGeneratorName => "Keyed-MessagePack-CodeGenerator";
    public override string FileNameSuffix => ".MessagePack";
 
    public KeyedMessagePackCodeGenerator(ITypeInformation type, ITypeFullyQualified keyMember, StringBuilder stringBuilder)
