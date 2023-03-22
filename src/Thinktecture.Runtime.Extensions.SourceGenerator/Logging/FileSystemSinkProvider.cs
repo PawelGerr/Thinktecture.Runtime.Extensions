@@ -135,7 +135,7 @@ public class FileSystemSinkProvider
          return null;
 
       var now = DateTime.Now;
-      var fileName = $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}_{now.Year}{now.Month:00}{now.Day:00}_{now.Hour:00}{now.Minute:00}{now.Second:00}_{Guid.NewGuid()}{logFileInfos.FileExtension}";
+      var fileName = $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}_{now.Year}{now.Month:00}{now.Day:00}_{now.Hour:00}{now.Minute:00}{now.Second:00}_{Guid.NewGuid():N}{logFileInfos.FileExtension}";
       var logFilePath = Path.Combine(logFileInfos.FolderPath, fileName);
 
       return new FileSystemLoggingSink(logFilePath, initialBufferSize);

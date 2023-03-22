@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
+using Thinktecture.Logging;
 
 namespace Thinktecture.CodeAnalysis.Diagnostics;
 
@@ -166,7 +167,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation);
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, NullLogger.Instance);
 
       if (factory is null)
       {
@@ -274,7 +275,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          }
       }
 
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation);
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, NullLogger.Instance);
 
       if (factory is null)
       {

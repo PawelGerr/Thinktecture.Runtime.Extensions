@@ -21,7 +21,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var valueObjectOrException = context.SyntaxProvider
                                           .ForAttributeWithMetadataName(Constants.Attributes.VALUE_OBJECT,
                                                                         IsCandidate,
-                                                                        GetValueObjectStateOrNull)
+                                                                        GetSourceGenContextOrNull)
                                           .SelectMany(static (state, _) => state.HasValue
                                                                               ? ImmutableArray.Create(state.Value)
                                                                               : ImmutableArray<SourceGenContext>.Empty);
@@ -252,15 +252,15 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          {
             switch (module.Name)
             {
-               case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
                   Logger.LogInformation("Code generator for System.Text.Json will participate in code generation");
                   factories = factories.Add(JsonValueObjectCodeGeneratorFactory.Instance);
                   break;
-               case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
                   Logger.LogInformation("Code generator for Newtonsoft.Json will participate in code generation");
                   factories = factories.Add(NewtonsoftJsonValueObjectCodeGeneratorFactory.Instance);
                   break;
-               case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
                   Logger.LogInformation("Code generator for MessagePack will participate in code generation");
                   factories = factories.Add(MessagePackValueObjectCodeGeneratorFactory.Instance);
                   break;
@@ -310,7 +310,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       return isCandidate;
    }
 
-   private SourceGenContext? GetValueObjectStateOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.TargetNode;
 
@@ -336,7 +336,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
 
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));

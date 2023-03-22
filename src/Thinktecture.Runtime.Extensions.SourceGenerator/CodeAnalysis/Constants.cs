@@ -4,6 +4,13 @@ public static class Constants
 {
    public const string KEY_EQUALITY_COMPARER_NAME = "KeyEqualityComparer";
 
+   public static class Modules
+   {
+      public const string THINKTECTURE_RUNTIME_EXTENSIONS_JSON = "Thinktecture.Runtime.Extensions.Json.dll";
+      public const string THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.dll";
+      public const string THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK = "Thinktecture.Runtime.Extensions.MessagePack.dll";
+   }
+
    public static class ComparerAccessor
    {
       public const string ORDINAL_IGNORE_CASE = "global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase";

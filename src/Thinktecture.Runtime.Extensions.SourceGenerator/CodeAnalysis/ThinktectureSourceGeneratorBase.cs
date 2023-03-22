@@ -11,10 +11,6 @@ public abstract class ThinktectureSourceGeneratorBase
 {
    private static long _counter;
 
-   internal const string THINKTECTURE_RUNTIME_EXTENSIONS_JSON = "Thinktecture.Runtime.Extensions.Json.dll";
-   internal const string THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.dll";
-   internal const string THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK = "Thinktecture.Runtime.Extensions.MessagePack.dll";
-
    private readonly int _stringBuilderInitialSize;
    private readonly int _maxPooledStringBuilderSize;
    private readonly ConcurrentQueue<StringBuilder> _stringBuilderPool;
@@ -359,14 +355,14 @@ public abstract class ThinktectureSourceGeneratorBase
       }
    }
 
-   protected StringBuilder LeaseStringBuilder()
+   private StringBuilder LeaseStringBuilder()
    {
       return _stringBuilderPool.TryDequeue(out var stringBuilder)
                 ? stringBuilder
                 : new StringBuilder(_stringBuilderInitialSize);
    }
 
-   protected void Return(StringBuilder stringBuilder)
+   private void Return(StringBuilder stringBuilder)
    {
       if (stringBuilder.Capacity >= _maxPooledStringBuilderSize || _stringBuilderPool.Count >= 3)
          return;

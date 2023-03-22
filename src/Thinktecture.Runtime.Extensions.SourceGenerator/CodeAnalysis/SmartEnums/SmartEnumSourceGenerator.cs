@@ -20,7 +20,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       SetupLogger(context, options);
 
       var enumTypeOrError = context.SyntaxProvider
-                                   .CreateSyntaxProvider(IsCandidate, GetSourceGenContext)
+                                   .CreateSyntaxProvider(IsCandidate, GetSourceGenContextOrNull)
                                    .SelectMany(static (state, _) => state.HasValue
                                                                        ? ImmutableArray.Create(state.Value)
                                                                        : ImmutableArray<SourceGenContext>.Empty);
@@ -173,15 +173,15 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          {
             switch (module.Name)
             {
-               case THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
                   Logger.LogInformation("Code generator for System.Text.Json will participate in code generation");
                   factories = factories.Add(JsonSmartEnumCodeGeneratorFactory.Instance);
                   break;
-               case THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
                   Logger.LogInformation("Code generator for Newtonsoft.Json will participate in code generation");
                   factories = factories.Add(NewtonsoftJsonSmartEnumCodeGeneratorFactory.Instance);
                   break;
-               case THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
                   Logger.LogInformation("Code generator for MessagePack will participate in code generation");
                   factories = factories.Add(MessagePackSmartEnumCodeGeneratorFactory.Instance);
                   break;
@@ -232,7 +232,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       return isCandidate;
    }
 
-   private SourceGenContext? GetSourceGenContext(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetSourceGenContextOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.Node;
 
@@ -292,7 +292,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             return null;
          }
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
 
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
