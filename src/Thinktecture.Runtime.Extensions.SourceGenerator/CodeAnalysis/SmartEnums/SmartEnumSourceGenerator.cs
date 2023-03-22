@@ -337,13 +337,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
              .ToList();
    }
 
-   private record struct ValidSourceGenState(EnumSourceGeneratorState State,
-                                             SmartEnumDerivedTypes DerivedTypes,
-                                             EnumSettings Settings,
-                                             IMemberState KeyMember,
-                                             AttributeInfo AttributeInfo);
+   private readonly record struct ValidSourceGenState(EnumSourceGeneratorState State,
+                                                      SmartEnumDerivedTypes DerivedTypes,
+                                                      EnumSettings Settings,
+                                                      IMemberState KeyMember,
+                                                      AttributeInfo AttributeInfo);
 
-   private record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
+   private readonly record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
    {
       public SourceGenContext(ValidSourceGenState validState)
          : this(validState, null, null)

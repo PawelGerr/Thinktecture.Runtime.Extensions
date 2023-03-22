@@ -274,19 +274,5 @@ public class FileSystemLoggingSink : ILoggingSink, IDisposable
       }
    }
 
-   private readonly struct LogItem
-   {
-      public string Source { get; }
-      public LogLevel LogLevel { get; }
-      public DateTime Datetime { get; }
-      public string Message { get; }
-
-      public LogItem(string source, LogLevel logLevel, DateTime datetime, string message)
-      {
-         Source = source;
-         LogLevel = logLevel;
-         Datetime = datetime;
-         Message = message;
-      }
-   }
+   private readonly record struct LogItem(string Source, LogLevel LogLevel, DateTime Datetime, string Message);
 }

@@ -85,5 +85,5 @@ public class TypedMemberStateFactory
       return new TypedMemberStateFactory(compilation);
    }
 
-   private record struct TypedMemberStates(ITypedMemberState NotNullable, ITypedMemberState Nullable);
+   private readonly record struct TypedMemberStates(ITypedMemberState NotNullable, ITypedMemberState Nullable);
 }

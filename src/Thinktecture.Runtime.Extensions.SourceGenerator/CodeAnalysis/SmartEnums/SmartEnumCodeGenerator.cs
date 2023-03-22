@@ -946,7 +946,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(");");
    }
 
-   private record struct ConstructorArgument(string TypeFullyQualifiedWithNullability, string ArgumentName);
+   private readonly record struct ConstructorArgument(string TypeFullyQualifiedWithNullability, string ArgumentName);
 
    private sealed class ConstructorArgumentsComparer : IEqualityComparer<IReadOnlyList<ConstructorArgument>>
    {

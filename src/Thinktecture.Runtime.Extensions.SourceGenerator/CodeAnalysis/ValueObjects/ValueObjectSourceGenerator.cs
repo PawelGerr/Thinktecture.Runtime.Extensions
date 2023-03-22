@@ -381,12 +381,12 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
    }
 
-   private record struct ValidSourceGenState(
+   private readonly record struct ValidSourceGenState(
       ValueObjectSourceGeneratorState State,
       AllValueObjectSettings Settings,
       AttributeInfo AttributeInfo);
 
-   private record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
+   private readonly record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
    {
       public SourceGenContext(ValidSourceGenState validState)
          : this(validState, null, null)
@@ -404,5 +404,5 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
    }
 
-   private record struct KeyedValueObjectState(ITypeInformation Type, EqualityInstanceMemberInfo KeyMember, AllValueObjectSettings Settings);
+   private readonly record struct KeyedValueObjectState(ITypeInformation Type, EqualityInstanceMemberInfo KeyMember, AllValueObjectSettings Settings);
 }
