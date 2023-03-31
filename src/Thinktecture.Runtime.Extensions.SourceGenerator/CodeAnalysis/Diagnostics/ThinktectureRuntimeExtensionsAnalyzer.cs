@@ -40,7 +40,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.SwitchMustCoverAllItems,
                                                                                                               DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics,
                                                                                                               DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
-                                                                                                              DiagnosticsDescriptors.ErrorDuringCodeAnalysis);
+                                                                                                              DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                                                                              DiagnosticsDescriptors.InitAccessorMustBePrivate);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)

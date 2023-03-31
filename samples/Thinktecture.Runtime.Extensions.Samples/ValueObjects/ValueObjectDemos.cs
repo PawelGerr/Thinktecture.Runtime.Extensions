@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Serilog;
@@ -9,6 +10,7 @@ public class ValueObjectDemos
    public static void Demo(ILogger logger)
    {
       DemoForSimpleValueObjects(logger);
+      DemoForEndDate(logger);
       DemoForComplexValueObjects(logger);
    }
 
@@ -81,9 +83,36 @@ public class ValueObjectDemos
       logger.Information("{Amount} > {Other} = {Result}", amount, 42, amount > 42);
    }
 
+   private static void DemoForEndDate(ILogger logger)
+   {
+      logger.Information("""
+
+
+==== Demo for End Date ====
+
+""");
+
+      var defaultEndDate = default(EndDate);
+      var infiniteEndDate = EndDate.Infinite;
+
+      logger.Information("EndDate.Infinite and default(EndDate) are equal: {AreEqual}", infiniteEndDate == defaultEndDate);
+
+      DateOnly dateOfDefaultDate = defaultEndDate;
+      DateOnly dateOfInfiniteDate = infiniteEndDate;
+
+      logger.Information("DateOnly of EndDate.Infinite and default(EndDate) are equal: {AreEqual}", dateOfInfiniteDate == dateOfDefaultDate);
+
+      logger.Information("EndDate.Infinite and DateOnly.MaxValue are equal: {AreEqual}", dateOfInfiniteDate == DateOnly.MaxValue);
+   }
+
    private static void DemoForComplexValueObjects(ILogger logger)
    {
-      logger.Information("==== Demo for Complex Value Objects ====");
+      logger.Information("""
+
+
+==== Demo for Complex Value Objects ====
+
+""");
 
       Boundary boundaryWithCreate = Boundary.Create(lower: 1, upper: 2);
       logger.Information("Boundary with Create: {Boundary}", boundaryWithCreate);

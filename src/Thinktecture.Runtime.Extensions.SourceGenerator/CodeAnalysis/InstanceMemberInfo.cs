@@ -20,7 +20,6 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public string TypeFullyQualifiedNullAnnotated => _typedMemberState.TypeFullyQualifiedNullAnnotated;
    public string TypeFullyQualifiedWithNullability => _typedMemberState.TypeFullyQualifiedWithNullability;
-   public string TypeMinimallyQualified => _typedMemberState.TypeMinimallyQualified;
    public string TypeFullyQualifiedNullable => _typedMemberState.TypeFullyQualifiedNullable;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsReferenceTypeOrNullableStruct => _typedMemberState.IsReferenceTypeOrNullableStruct;

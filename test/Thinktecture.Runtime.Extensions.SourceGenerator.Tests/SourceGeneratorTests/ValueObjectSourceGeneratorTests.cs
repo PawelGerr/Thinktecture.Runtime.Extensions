@@ -2236,6 +2236,429 @@ partial struct TestValueObject :
    }
 
    [Fact]
+   public void Should_generate_struct_with_int_key_member_with_init_only()
+   {
+      /* language=c# */
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject]
+	public readonly partial struct TestValueObject
+	{
+      public readonly int StructField { get; private init; }
+   }
+}
+";
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(9);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
+      var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
+      var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
+      var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
+
+      /* language=c# */
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests
+{
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
+   partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
+      global::Thinktecture.IKeyedValueObject<int>,
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
+   {
+      [global::System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {
+         global::System.Func<int, global::Thinktecture.Tests.TestValueObject> convertFromKey = new (global::Thinktecture.Tests.TestValueObject.Create);
+         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpression = static structField => global::Thinktecture.Tests.TestValueObject.Create(structField);
+         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpressionViaCtor = static structField => new global::Thinktecture.Tests.TestValueObject(structField);
+
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, int>(static item => item.StructField);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, int>> convertToKeyExpression = static obj => obj.StructField;
+
+         var type = typeof(global::Thinktecture.Tests.TestValueObject);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
+
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
+      }
+
+      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
+
+      public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         int structField,
+         out global::Thinktecture.Tests.TestValueObject obj)
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref structField);
+
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(structField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
+
+         return validationResult;
+      }
+
+      public static global::Thinktecture.Tests.TestValueObject Create(int structField)
+      {
+         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject obj);
+
+         if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+
+         return obj!;
+      }
+
+      public static bool TryCreate(
+         int structField,
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
+      {
+         var validationResult = Validate(structField, out obj);
+
+         return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+      }
+
+      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+
+      partial void FactoryPostInit();
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref="int"/>.
+      /// </summary>
+      /// <param name="obj">Object to covert.</param>
+      /// <returns>The <see cref="StructField"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
+      public static implicit operator int?(global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         return obj?.StructField;
+      }
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref="int"/>.
+      /// </summary>
+      /// <param name="obj">Object to covert.</param>
+      /// <returns>The <see cref="StructField"/> of provided <paramref name="obj"/>.</returns>
+      public static implicit operator int(global::Thinktecture.Tests.TestValueObject obj)
+      {
+         return obj.StructField;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref="int"/>.
+      /// </summary>
+      /// <param name="structField">Value to covert.</param>
+      /// <returns>An instance of <see cref="TestValueObject"/>.</returns>
+      public static explicit operator global::Thinktecture.Tests.TestValueObject(int structField)
+      {
+         return global::Thinktecture.Tests.TestValueObject.Create(structField);
+      }
+
+      private TestValueObject(int structField)
+      {
+         ValidateConstructorArguments(ref structField);
+
+         this.StructField = structField;
+      }
+
+      static partial void ValidateConstructorArguments(ref int structField);
+
+      /// <summary>
+      /// Compares to instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
+      {
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares to instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
+      {
+         return !(obj == other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestValueObject other)
+      {
+         return this.StructField.Equals(other.StructField);
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         return global::System.HashCode.Combine(this.StructField);
+      }
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return this.StructField.ToString();
+      }
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(formattableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IFormattable
+{
+   /// <inheritdoc />
+   public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
+   {
+      return this.StructField.ToString(format, formatProvider);
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(comparableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestValueObject item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestValueObject obj)
+   {
+      return this.StructField.CompareTo(obj.StructField);
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(parsableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var key = int.Parse(s, provider);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+
+      if(validationResult is null)
+         return result!;
+
+      throw new global::System.FormatException(validationResult.ErrorMessage);
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      if(!int.TryParse(s, provider, out var key))
+      {
+         result = default;
+         return false;
+      }
+
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      return validationResult is null;
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField < right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField <= right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField > right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return left.StructField >= right.StructField;
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(additionOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField + right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField + right.StructField));
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(subtractionOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField - right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField - right.StructField));
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(multiplyOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField * right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField * right.StructField));
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(divisionOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(left.StructField / right.StructField);
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      return Create(checked(left.StructField / right.StructField));
+   }
+}
+
+""");
+   }
+
+   [Fact]
    public void Should_generate_struct_with_string_key_member_and_NullInFactoryMethodsYieldsNull_should_be_ignored()
    {
       /* language=c# */
@@ -5045,7 +5468,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to the type <see cref="Foo"/>.
+      /// Implicit conversion to the type <see cref="global::Thinktecture.Tests.Foo"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>The <see cref="ReferenceField"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
@@ -5056,7 +5479,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Explicit conversion from the type <see cref="Foo"/>.
+      /// Explicit conversion from the type <see cref="global::Thinktecture.Tests.Foo"/>.
       /// </summary>
       /// <param name="referenceField">Value to covert.</param>
       /// <returns>An instance of <see cref="TestValueObject"/>.</returns>

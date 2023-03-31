@@ -9,5 +9,4 @@ public interface IMemberState : IEquatable<IMemberState>, IMemberInformation
    bool IsComparable { get; }
    bool IsParsable { get; }
    bool HasComparisonOperators { get; }
-   string TypeMinimallyQualified { get; }
 }

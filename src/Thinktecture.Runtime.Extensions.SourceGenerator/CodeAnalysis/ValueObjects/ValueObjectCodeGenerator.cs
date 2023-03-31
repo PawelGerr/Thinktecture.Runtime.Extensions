@@ -242,7 +242,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""").Append(keyMember.TypeMinimallyQualified).Append(@"""/>.
+      /// Implicit conversion to the type <see cref=""").Append(keyMember.TypeFullyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -260,7 +260,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""").Append(keyMember.TypeMinimallyQualified).Append(@"""/>.
+      /// Implicit conversion to the type <see cref=""").Append(keyMember.TypeFullyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
@@ -280,7 +280,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion to the type <see cref=""").Append(keyMember.TypeMinimallyQualified).Append(@"""/>.
+      /// Explicit conversion to the type <see cref=""").Append(keyMember.TypeFullyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -303,7 +303,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion from the type <see cref=""").Append(keyMember.TypeMinimallyQualified).Append(@"""/>.
+      /// Explicit conversion from the type <see cref=""").Append(keyMember.TypeFullyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(keyMember.ArgumentName).Append(@""">Value to covert.</param>
       /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.</returns>");

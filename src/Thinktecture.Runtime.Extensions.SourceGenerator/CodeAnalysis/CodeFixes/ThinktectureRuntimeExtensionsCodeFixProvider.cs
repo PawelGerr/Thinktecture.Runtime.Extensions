@@ -15,6 +15,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _MAKE_MEMBER_PUBLIC = "Make the member public";
    private const string _MAKE_FIELD_READONLY = "Make the field read-only";
    private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
+   private const string _MAKE_INIT_PRIVATE = "Make init private";
    private const string _IMPLEMENT_CREATE_INVALID = $"Implement '{Constants.Methods.CREATE_INVALID_ITEM}'";
    private const string _MAKE_TYPE_PRIVATE = "Make type private";
    private const string _MAKE_TYPE_PUBLIC = "Make type public";
@@ -30,7 +31,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
                                                                                                 DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
                                                                                                 DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
                                                                                                 DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
-                                                                                                DiagnosticsDescriptors.ValueObjectMustBeSealed.Id);
+                                                                                                DiagnosticsDescriptors.ValueObjectMustBeSealed.Id,
+                                                                                                DiagnosticsDescriptors.InitAccessorMustBePrivate.Id);
 
    /// <inheritdoc />
    public override FixAllProvider GetFixAllProvider()
@@ -70,6 +72,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          else if (diagnostic.Id == DiagnosticsDescriptors.PropertyMustBeReadOnly.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_REMOVE_PROPERTY_SETTER, _ => RemovePropertySetterAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration), _REMOVE_PROPERTY_SETTER), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.InitAccessorMustBePrivate.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_MAKE_INIT_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration?.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.InitAccessorDeclaration)), SyntaxKind.PrivateKeyword), _MAKE_INIT_PRIVATE), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id)
          {
@@ -111,41 +117,72 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private static Task<Document> ChangeAccessibilityAsync(
       Document document,
       SyntaxNode root,
+      AccessorDeclarationSyntax? declaration,
+      SyntaxKind accessibility)
+   {
+      return ChangeAccessibilityAsync(document, root, declaration, declaration?.Modifiers ?? default, static (node, newModifiers) => node.WithModifiers(newModifiers), accessibility);
+   }
+
+   private static Task<Document> ChangeAccessibilityAsync(
+      Document document,
+      SyntaxNode root,
       MemberDeclarationSyntax? declaration,
       SyntaxKind accessibility)
+   {
+      return ChangeAccessibilityAsync(document, root, declaration, declaration?.Modifiers ?? default, static (node, newModifiers) => node.WithModifiers(newModifiers), accessibility);
+   }
+
+   private static Task<Document> ChangeAccessibilityAsync<T>(
+      Document document,
+      SyntaxNode root,
+      T? declaration,
+      SyntaxTokenList modifiers,
+      Func<T, SyntaxTokenList, T> useNewModifiers,
+      SyntaxKind accessibility)
+      where T : CSharpSyntaxNode
    {
       if (declaration is null)
          return Task.FromResult(document);
 
-      var firstModifier = declaration.Modifiers.FirstOrDefault();
-      var newModifiers = declaration.Modifiers;
-      var isFirstModiferRemoved = false;
+      var newAccessibilitySyntax = SyntaxFactory.Token(accessibility);
+      var newModifiers = modifiers;
+      T newDeclaration = declaration;
 
-      foreach (var currentModifier in newModifiers)
+      if (modifiers.Count > 0)
       {
-         if (currentModifier.Kind() is SyntaxKind.PrivateKeyword or SyntaxKind.ProtectedKeyword or SyntaxKind.InternalKeyword or SyntaxKind.PublicKeyword && !currentModifier.IsKind(accessibility))
-         {
-            newModifiers = newModifiers.Remove(currentModifier);
+         var firstModifier = modifiers.FirstOrDefault();
+         var isFirstModiferRemoved = false;
 
-            if (currentModifier == firstModifier)
-               isFirstModiferRemoved = true;
+         foreach (var currentModifier in newModifiers)
+         {
+            if (currentModifier.Kind() is SyntaxKind.PrivateKeyword or SyntaxKind.ProtectedKeyword or SyntaxKind.InternalKeyword or SyntaxKind.PublicKeyword && !currentModifier.IsKind(accessibility))
+            {
+               newModifiers = newModifiers.Remove(currentModifier);
+
+               if (currentModifier == firstModifier)
+                  isFirstModiferRemoved = true;
+            }
          }
+
+         if (!isFirstModiferRemoved && firstModifier.HasLeadingTrivia)
+            newModifiers = newModifiers.RemoveAt(0).Insert(0, firstModifier.WithLeadingTrivia(SyntaxTriviaList.Empty));
+
+         if (firstModifier.HasLeadingTrivia)
+            newAccessibilitySyntax = newAccessibilitySyntax.WithLeadingTrivia(firstModifier.LeadingTrivia);
+
+         if (firstModifier.HasTrailingTrivia)
+            newAccessibilitySyntax = newAccessibilitySyntax.WithTrailingTrivia(firstModifier.TrailingTrivia);
+      }
+      else if (declaration.HasLeadingTrivia)
+      {
+         newAccessibilitySyntax = newAccessibilitySyntax.WithLeadingTrivia(declaration.GetLeadingTrivia())
+                                                        .WithTrailingTrivia(SyntaxFactory.Whitespace(" "));
+         newDeclaration = declaration.WithLeadingTrivia(SyntaxTriviaList.Empty);
       }
 
-      if (!isFirstModiferRemoved && firstModifier.HasLeadingTrivia)
-         newModifiers = newModifiers.RemoveAt(0).Insert(0, firstModifier.WithLeadingTrivia(SyntaxTriviaList.Empty));
+      newModifiers = newModifiers.Insert(0, newAccessibilitySyntax);
 
-      var publicSyntax = SyntaxFactory.Token(accessibility);
-
-      if (firstModifier.HasLeadingTrivia)
-         publicSyntax = publicSyntax.WithLeadingTrivia(declaration.Modifiers.FirstOrDefault().LeadingTrivia);
-
-      if (firstModifier.HasTrailingTrivia)
-         publicSyntax = publicSyntax.WithTrailingTrivia(declaration.Modifiers.FirstOrDefault().TrailingTrivia);
-
-      newModifiers = newModifiers.Insert(0, publicSyntax);
-
-      var newDeclaration = declaration.WithModifiers(newModifiers);
+      newDeclaration = useNewModifiers(newDeclaration, newModifiers);
       var newRoot = root.ReplaceNode(declaration, newDeclaration);
       var newDoc = document.WithSyntaxRoot(newRoot);
 

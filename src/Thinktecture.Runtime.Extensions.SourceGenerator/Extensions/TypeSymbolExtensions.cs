@@ -500,7 +500,7 @@ public static class TypeSymbolExtensions
          reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, field.Name, type.Name));
       }
 
-      void ReportProperty(IPropertySymbol property, DiagnosticSeverity? severity = null)
+      void ReportPropertyMustBeReadOnly(IPropertySymbol property, DiagnosticSeverity? severity = null)
       {
          if (reportDiagnostic is null)
             return;
@@ -520,6 +520,17 @@ public static class TypeSymbolExtensions
          }
 
          reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, effectiveSeverity: severity ?? descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
+      }
+
+      void ReportPropertyInitAccessorMustBePrivate(IPropertySymbol property)
+      {
+         if (reportDiagnostic is null)
+            return;
+
+         var descriptor = DiagnosticsDescriptors.InitAccessorMustBePrivate;
+         var location = property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+
+         reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
       }
 
       return type.GetNonIgnoredMembers()
@@ -544,7 +555,7 @@ public static class TypeSymbolExtensions
                                   if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
                                   {
                                      if (property is { IsReadOnly: false, IsWriteOnly: false })
-                                        ReportProperty(property, DiagnosticSeverity.Warning);
+                                        ReportPropertyMustBeReadOnly(property, DiagnosticSeverity.Warning);
                                   }
                                   // same assembly
                                   else
@@ -554,19 +565,54 @@ public static class TypeSymbolExtensions
                                      if (syntax.ExpressionBody is not null) // public int Foo => 42;
                                         return null;
 
-                                     var getter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
+                                     if (syntax.AccessorList is null)
+                                        return null;
 
-                                     if (!IsDefaultImplementation(getter)) // public int Foo { get { return 42; } } OR public int Foo { get => 42; }
+                                     AccessorDeclarationSyntax? getter = null;
+                                     AccessorDeclarationSyntax? setter = null;
+                                     AccessorDeclarationSyntax? init = null;
+
+                                     foreach (var accessor in syntax.AccessorList.Accessors)
+                                     {
+                                        switch ((SyntaxKind)accessor.RawKind)
+                                        {
+                                           case SyntaxKind.GetAccessorDeclaration:
+                                              getter = accessor;
+                                              break;
+                                           case SyntaxKind.SetAccessorDeclaration:
+                                              setter = accessor;
+                                              break;
+                                           case SyntaxKind.InitAccessorDeclaration:
+                                              init = accessor;
+                                              break;
+                                        }
+                                     }
+
+                                     // public int Foo { get { return 42; } }
+                                     // public int Foo { get => 42; }
+                                     // public int Foo { get => _foo; }
+                                     // If we have 'init' then continue checks
+                                     if (!IsDefaultImplementation(getter) && init is null)
                                         return null;
 
                                      if (property.SetMethod is not null)
                                      {
-                                        var setter = syntax.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+                                        // there can be init, setter or none of them
+                                        if (init is not null)
+                                        {
+                                           if (property.DeclaredAccessibility != Accessibility.Private
+                                               && property.SetMethod.DeclaredAccessibility != Accessibility.Private)
+                                           {
+                                              ReportPropertyInitAccessorMustBePrivate(property);
+                                           }
+                                        }
+                                        else if (setter is not null)
+                                        {
+                                           if (!IsDefaultImplementation(setter))
+                                              return null;
 
-                                        if (!IsDefaultImplementation(setter))
-                                           return null;
-
-                                        ReportProperty(property);
+                                           ReportPropertyMustBeReadOnly(property);
+                                        }
                                      }
                                   }
 

@@ -47,4 +47,18 @@ public class Create
       FluentActions.Invoking(() => StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Create(" "))
                    .Should().Throw<ValidationException>().WithMessage("Property cannot be empty.");
    }
+
+   [Fact]
+   public void Properties_with_init_should_be_recognized_as_value_object_properties()
+   {
+      var obj = ValueObjectWithInitProperties.Create(initExpression: 1, initBody: 2, publicPropertyDefaultInit: 3, privatePropertyDefaultInit: 4);
+
+      obj.Should().BeEquivalentTo(new
+                                  {
+                                     InitExpression = 1,
+                                     InitBody = 2,
+                                     PublicPropertyDefaultInit = 3,
+                                     PrivatePropertyDefaultInit = 4
+                                  });
+   }
 }

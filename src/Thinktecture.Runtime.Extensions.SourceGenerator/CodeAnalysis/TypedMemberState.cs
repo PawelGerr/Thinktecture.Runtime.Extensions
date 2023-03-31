@@ -8,7 +8,6 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    public string TypeFullyQualifiedNullable { get; }
    public string TypeFullyQualifiedNullAnnotated => IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
    public string TypeFullyQualifiedWithNullability => IsReferenceType && NullableAnnotation == NullableAnnotation.Annotated ? TypeFullyQualifiedNullAnnotated : TypeFullyQualified;
-   public string TypeMinimallyQualified { get; }
 
    public NullableAnnotation NullableAnnotation { get; }
    public SpecialType SpecialType { get; }
@@ -28,7 +27,6 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    {
       TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
       NullableAnnotation = type.NullableAnnotation;
       SpecialType = type.SpecialType;

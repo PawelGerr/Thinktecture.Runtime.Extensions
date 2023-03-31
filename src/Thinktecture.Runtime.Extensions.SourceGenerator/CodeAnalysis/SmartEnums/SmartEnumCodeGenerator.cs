@@ -491,7 +491,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""").Append(_state.KeyProperty.TypeMinimallyQualified).Append(@"""/>.
+      /// Implicit conversion to the type <see cref=""").Append(_state.KeyProperty.TypeFullyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The <see cref=""").Append(_state.TypeMinimallyQualified).Append(".").Append(_state.KeyProperty.Name).Append(@"""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
@@ -519,7 +519,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion from the type <see cref=""").Append(_state.KeyProperty.TypeMinimallyQualified).Append(@"""/>.
+      /// Explicit conversion from the type <see cref=""").Append(_state.KeyProperty.TypeFullyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(_state.KeyProperty.ArgumentName).Append(@""">Value to covert.</param>
       /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/> if the <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum{TKey}""/>.</returns>
