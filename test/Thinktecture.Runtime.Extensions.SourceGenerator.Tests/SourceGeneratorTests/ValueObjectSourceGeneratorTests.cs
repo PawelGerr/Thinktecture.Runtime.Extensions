@@ -1419,10 +1419,6 @@ namespace Thinktecture.Tests
 
       partial void FactoryPostInit();
 
-      private TestValueObject()
-      {
-      }
-
       /// <summary>
       /// Compares to instances of <see cref="TestValueObject"/>.
       /// </summary>
@@ -1565,10 +1561,6 @@ namespace Thinktecture.Tests
       static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
 
       partial void FactoryPostInit();
-
-      private TestValueObject()
-      {
-      }
 
       /// <summary>
       /// Compares to instances of <see cref="TestValueObject"/>.

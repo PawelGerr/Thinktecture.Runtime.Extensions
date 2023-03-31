@@ -562,6 +562,11 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
+      var isStructDefaultCtor = !_state.IsReferenceType && fieldsAndProperties.Count == 0;
+
+      if(isStructDefaultCtor)
+         return;
+
       _sb.Append(@"
 
       private ").Append(_state.Name).Append(@"(");
