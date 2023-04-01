@@ -70,6 +70,11 @@ public static class AttributeDataExtensions
       return GetOperatorsGeneration(attributeData, "ComparisonOperators");
    }
 
+   public static OperatorsGeneration FindEqualityComparisonOperators(this AttributeData attributeData)
+   {
+      return GetOperatorsGeneration(attributeData, "EqualityComparisonOperators");
+   }
+
    public static bool? FindSkipToString(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "SkipToString");

@@ -16,6 +16,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
    public OperatorsGeneration MultiplyOperators { get; }
    public OperatorsGeneration DivisionOperators { get; }
    public OperatorsGeneration ComparisonOperators { get; }
+   public OperatorsGeneration EqualityComparisonOperators { get; }
    public string DefaultInstancePropertyName { get; }
 
    public AllValueObjectSettings(AttributeData valueObjectAttribute)
@@ -31,8 +32,13 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
       SubtractionOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindSubtractionOperators();
       MultiplyOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindMultiplyOperators();
       DivisionOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindDivisionOperators();
+      EqualityComparisonOperators = valueObjectAttribute.FindEqualityComparisonOperators();
       ComparisonOperators = valueObjectAttribute.FindComparisonOperators();
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
+
+      // Comparison operators depend on the equality comparison operators
+      if (ComparisonOperators > EqualityComparisonOperators)
+         EqualityComparisonOperators = ComparisonOperators;
    }
 
    public override bool Equals(object? obj)
@@ -42,7 +48,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
 
    public bool Equals(AllValueObjectSettings? other)
    {
-      if (ReferenceEquals(null, other))
+      if (other is null)
          return false;
       if (ReferenceEquals(this, other))
          return true;
@@ -59,6 +65,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
              && MultiplyOperators == other.MultiplyOperators
              && DivisionOperators == other.DivisionOperators
              && ComparisonOperators == other.ComparisonOperators
+             && EqualityComparisonOperators == other.EqualityComparisonOperators
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
    }
 
@@ -78,6 +85,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
          hashCode = (hashCode * 397) ^ MultiplyOperators.GetHashCode();
          hashCode = (hashCode * 397) ^ DivisionOperators.GetHashCode();
          hashCode = (hashCode * 397) ^ ComparisonOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ EqualityComparisonOperators.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 
          return hashCode;

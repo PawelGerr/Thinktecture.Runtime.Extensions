@@ -29,7 +29,7 @@ public sealed class EqualityInstanceMemberInfo : IEquatable<EqualityInstanceMemb
 
    public bool Equals(EqualityInstanceMemberInfo? other)
    {
-      if (ReferenceEquals(null, other))
+      if (other is null)
          return false;
       if (ReferenceEquals(this, other))
          return true;

@@ -215,6 +215,36 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                });
    }
 
+   protected void InitializeEqualityComparisonOperatorsCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<EqualityComparisonOperatorsGeneratorState> comparables,
+      IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var operators = comparables
+                      .Where(state => state.OperatorsGeneration != OperatorsGeneration.None)
+                      .Collect()
+                      .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                       ? ImmutableArray<EqualityComparisonOperatorsGeneratorState>.Empty
+                                                       : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                      .WithComparer(new SetComparer<EqualityComparisonOperatorsGeneratorState>())
+                      .SelectMany((states, _) => states)
+                      .SelectMany((state, _) =>
+                                  {
+                                     if (EqualityComparisonOperatorsCodeGenerator.TryGet(state.OperatorsGeneration, state.EqualityComparer, out var codeGenerator))
+                                        return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+
+                                     return ImmutableArray<(EqualityComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
+                                  });
+
+      context.RegisterSourceOutput(operators.Combine(options), (ctx, tuple) =>
+                                                               {
+                                                                  var state = tuple.Left.State;
+                                                                  var generator = tuple.Left.CodeGenerator;
+
+                                                                  GenerateCode(ctx, state.Type.Namespace, state.Type.Name, (state.Type, state.KeyMember), tuple.Right, InterfaceCodeGeneratorFactory.Create(generator));
+                                                               });
+   }
+
    protected void InitializeOperatorsCodeGenerator(
       IncrementalGeneratorInitializationContext context,
       IncrementalValuesProvider<OperatorsGeneratorState> operators,

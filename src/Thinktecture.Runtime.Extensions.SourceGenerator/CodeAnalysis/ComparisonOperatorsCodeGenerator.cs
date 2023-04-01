@@ -65,6 +65,12 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
 
       sb.Append(@"
    global::System.Numerics.IComparisonOperators<").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(", bool>");
+
+      if (!_withKeyTypeOverloads)
+         return;
+
+      sb.Append(@",
+   global::System.Numerics.IComparisonOperators<").Append(type.TypeFullyQualified).Append(", ").Append(keyMember.TypeFullyQualified).Append(", bool>");
    }
 
    public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)

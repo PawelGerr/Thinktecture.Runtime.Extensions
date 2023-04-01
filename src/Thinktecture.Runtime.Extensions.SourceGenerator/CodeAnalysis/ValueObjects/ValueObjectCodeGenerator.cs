@@ -55,8 +55,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">,
-      global::System.Numerics.IEqualityOperators<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(", bool>");
+   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(">");
 
       if (_state.HasKeyMember)
       {
@@ -72,6 +71,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@",
+      global::System.Numerics.IEqualityOperators<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@", bool>,
       global::Thinktecture.IComplexValueObject");
       }
 
@@ -124,7 +124,11 @@ namespace ").Append(_state.Namespace).Append(@"
       cancellationToken.ThrowIfCancellationRequested();
 
       GenerateConstructor();
-      GenerateEqualityOperators();
+
+      // Keyed value object get their equality operators from EqualityComparisonOperatorsCodeGenerator
+      if (!_state.HasKeyMember)
+         GenerateEqualityOperators();
+
       GenerateEquals();
       GenerateGetHashCode();
 
@@ -564,7 +568,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var isStructDefaultCtor = !_state.IsReferenceType && fieldsAndProperties.Count == 0;
 
-      if(isStructDefaultCtor)
+      if (isStructDefaultCtor)
          return;
 
       _sb.Append(@"
@@ -626,9 +630,6 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))

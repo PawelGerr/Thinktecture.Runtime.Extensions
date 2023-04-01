@@ -38,10 +38,10 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
 
    public bool Equals(DefaultMemberState? other)
    {
+      if (other is null)
+         return false;
       if (ReferenceEquals(this, other))
          return true;
-      if (ReferenceEquals(null, other))
-         return false;
 
       return _typedMemberState.Equals(other._typedMemberState)
              && Name == other.Name

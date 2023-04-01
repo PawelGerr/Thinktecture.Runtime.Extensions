@@ -104,7 +104,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
    public bool Equals(InstanceMemberInfo? other)
    {
-      if (ReferenceEquals(null, other))
+      if (other is null)
          return false;
       if (ReferenceEquals(this, other))
          return true;

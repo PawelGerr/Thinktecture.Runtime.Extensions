@@ -53,8 +53,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
    partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@">,
-      global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">,
-      global::System.Numerics.IEqualityOperators<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@", bool>
+      global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">
    {");
 
       GenerateModuleInitializer(_state.KeyProperty);
@@ -127,7 +126,6 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateValidate();
       GenerateImplicitConversion();
       GenerateExplicitConversion();
-      GenerateEqualityOperators();
       GenerateEquals();
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -439,53 +437,6 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateEqualityOperators()
-   {
-      _sb.Append(@"
-
-      /// <summary>
-      /// Compares to instances of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.
-      /// </summary>
-      /// <param name=""item1"">Instance to compare.</param>
-      /// <param name=""item2"">Another instance to compare.</param>
-      /// <returns><c>true</c> if items are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").Append(_state.TypeFullyQualifiedNullAnnotated).Append(" item1, ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" item2)
-      {");
-
-      if (_state.IsValidatable)
-      {
-         if (_state.IsReferenceType)
-         {
-            _sb.Append(@"
-         if (item1 is null)
-            return item2 is null;
-");
-         }
-
-         _sb.Append(@"
-         return item1.Equals(item2);");
-      }
-      else
-      {
-         _sb.Append(@"
-         return global::System.Object.ReferenceEquals(item1, item2);");
-      }
-
-      _sb.Append(@"
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.
-      /// </summary>
-      /// <param name=""item1"">Instance to compare.</param>
-      /// <param name=""item2"">Another instance to compare.</param>
-      /// <returns><c>false</c> if items are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").Append(_state.TypeFullyQualifiedNullAnnotated).Append(" item1, ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" item2)
-      {
-         return !(item1 == item2);
-      }");
-   }
-
    private void GenerateImplicitConversion()
    {
       _sb.Append(@"
@@ -564,6 +515,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
       else
       {
+         // ReferenceEquals is ok because non-validatable smart enums are classes only
          _sb.Append(@"
          return global::System.Object.ReferenceEquals(this, other);");
       }
@@ -720,7 +672,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private static ").Append(_state.TypeFullyQualified).Append(" CreateAndCheckInvalidItem(").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName).Append(@")
       {
-            var item = ");
+         var item = ");
 
       if (needsCreateInvalidItemImplementation && _state.IsAbstract)
       {
@@ -737,24 +689,25 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.IsReferenceType)
       {
          _sb.Append(@"
-            if (item is null)
-               throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must not return 'null'."");
+         if (item is null)
+            throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must not return 'null'."");
 ");
       }
 
       _sb.Append(@"
-            if (item.IsValid)
-               throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must return an instance with property 'IsValid' equals to 'false'."");");
+         if (item.IsValid)
+            throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must return an instance with property 'IsValid' equals to 'false'."");");
 
       if (!needsCreateInvalidItemImplementation)
       {
          _sb.Append(@"
 
-            if (_itemsLookup.Value.ContainsKey(item.").Append(_state.KeyProperty.Name).Append(@"))
-               throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append("' must not return an instance with property '").Append(_state.KeyProperty.Name).Append(@"' equals to one of a valid item."");");
+         if (_itemsLookup.Value.ContainsKey(item.").Append(_state.KeyProperty.Name).Append(@"))
+            throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append("' must not return an instance with property '").Append(_state.KeyProperty.Name).Append(@"' equals to one of a valid item."");");
       }
 
       _sb.Append(@"
+
          return item;
       }");
    }

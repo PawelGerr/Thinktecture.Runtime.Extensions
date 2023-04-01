@@ -102,7 +102,7 @@ public class ValueObjectDemos
 
       logger.Information("DateOnly of EndDate.Infinite and default(EndDate) are equal: {AreEqual}", dateOfInfiniteDate == dateOfDefaultDate);
 
-      logger.Information("EndDate.Infinite and DateOnly.MaxValue are equal: {AreEqual}", dateOfInfiniteDate == DateOnly.MaxValue);
+      logger.Information("EndDate.Infinite and DateOnly.MaxValue are equal: {AreEqual}", infiniteEndDate == DateOnly.MaxValue);
    }
 
    private static void DemoForComplexValueObjects(ILogger logger)

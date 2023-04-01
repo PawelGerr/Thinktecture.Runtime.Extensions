@@ -450,6 +450,164 @@ partial class TestValueObject :
 """;
 
    /* language=c# */
+   private const string _EQUALITY_COMPARISON_OPERATORS_CLASS = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         return !(obj == other);
+      }
+}
+
+""";
+
+   /* language=c# */
+   private const string _EQUALITY_COMPARISON_OPERATORS_STRUCT = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial struct TestValueObject :
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
+      {
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
+      {
+         return !(obj == other);
+      }
+}
+
+""";
+
+   /* language=c# */
+   private const string _EQUALITY_COMPARISON_OPERATORS_INT_WITH_KEY_OVERLOADS = _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, int, bool>
+{
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         return !(obj == other);
+      }
+
+      private static bool Equals(global::Thinktecture.Tests.TestValueObject? obj, int value)
+      {
+         if (obj is null)
+            return false;
+
+         return obj.StructField.Equals(value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="TestValueObject"/> with <see cref="int"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, int value)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="TestValueObject"/> with <see cref="int"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(int value, global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="TestValueObject"/> with <see cref="int"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, int value)
+      {
+         return !(obj == value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="int"/> with <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(int value, global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         return !(obj == value);
+      }
+}
+
+""";
+
+   /* language=c# */
    private const string _ADDITION_OPERATORS_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -670,9 +828,6 @@ namespace Thinktecture.Tests
          if (other is null)
             return false;
 
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
@@ -890,9 +1045,6 @@ namespace Thinktecture.Tests
          if (other is null)
             return false;
 
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
@@ -1051,9 +1203,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -1225,9 +1374,6 @@ public partial class TestValueObject
          if (other is null)
             return false;
 
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
@@ -1307,16 +1453,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(formattableOutput, _FORMATTABLE_INT);
       AssertOutput(comparableOutput, _COMPARABLE_INT);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -1324,7 +1472,6 @@ namespace Thinktecture.Tests
 namespace Thinktecture.Tests
 {
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -1388,31 +1535,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref int structField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -1423,9 +1545,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -1755,16 +1874,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_STRUCT_STRING);
       AssertOutput(parsableOutput, _PARSABLE_STRUCT_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRUCT_STRING);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -1773,7 +1894,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -1885,28 +2005,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref string referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -1956,17 +2054,20 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(9);
+      outputs.Should().HaveCount(10);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
       var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
       var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
       var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
       var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
+
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -1975,7 +2076,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
@@ -2090,28 +2190,6 @@ namespace Thinktecture.Tests
       }
 
       static partial void ValidateConstructorArguments(ref int structField);
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return !(obj == other);
-      }
 
       /// <inheritdoc />
       public override bool Equals(object? other)
@@ -2379,17 +2457,20 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(9);
+      outputs.Should().HaveCount(10);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
       var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
       var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
       var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
       var divisionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs")).Value;
+
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -2398,7 +2479,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
@@ -2513,28 +2593,6 @@ namespace Thinktecture.Tests
       }
 
       static partial void ValidateConstructorArguments(ref int structField);
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return !(obj == other);
-      }
 
       /// <inheritdoc />
       public override bool Equals(object? other)
@@ -2802,16 +2860,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_STRUCT_STRING);
       AssertOutput(parsableOutput, _PARSABLE_STRUCT_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRUCT_STRING);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -2820,7 +2880,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -2931,28 +2990,6 @@ namespace Thinktecture.Tests
       }
 
       static partial void ValidateConstructorArguments(ref string referenceField);
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return !(obj == other);
-      }
 
       /// <inheritdoc />
       public override bool Equals(object? other)
@@ -3003,16 +3040,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_STRUCT_STRING);
       AssertOutput(parsableOutput, _PARSABLE_STRUCT_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRUCT_STRING);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -3021,7 +3060,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -3133,28 +3171,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref string referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject obj, global::Thinktecture.Tests.TestValueObject other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -3204,16 +3220,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
       AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -3222,7 +3240,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -3336,31 +3353,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref string referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -3371,9 +3363,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -3419,13 +3408,14 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(9);
+      outputs.Should().HaveCount(10);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
       var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
       var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
       var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
@@ -3435,6 +3425,7 @@ namespace Thinktecture.Tests
       AssertOutput(comparableOutput, _COMPARABLE_INT);
       AssertOutput(parsableOutput, _PARSABLE_INT);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
       AssertOutput(additionOperatorsOutput, _ADDITION_OPERATORS_INT);
       AssertOutput(subtractionOperatorsOutput, _SUBTRACTION_OPERATORS_INT);
       AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
@@ -3447,7 +3438,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
@@ -3565,31 +3555,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref int structField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -3600,9 +3565,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -3638,7 +3600,7 @@ using Thinktecture;
 
 namespace Thinktecture.Tests
 {
-   [ValueObject(ComparisonOperators = OperatorsGeneration.ForcedWithKeyTypeOverloads)]
+   [ValueObject]
 	public partial class TestValueObject
 	{
       public readonly DateOnly StructField;
@@ -3646,13 +3608,14 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(5);
+      outputs.Should().HaveCount(6);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -3661,7 +3624,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
    {
@@ -3779,31 +3741,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref global::System.DateOnly structField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -3814,9 +3751,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -3978,6 +3912,455 @@ partial class TestValueObject :
 }
 
 """);
+
+      /* language=c# */
+      AssertOutput(equalityComparisonOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         return !(obj == other);
+      }
+}
+
+""");
+   }
+
+   [Fact]
+   public void Should_generate_class_with_DateOnly_key_member_with_DefaultWithKeyTypeOverloads()
+   {
+      /* language=c# */
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [ValueObject(EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+	public partial class TestValueObject
+	{
+      public readonly DateOnly StructField;
+   }
+}
+";
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(6);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
+
+      /* language=c# */
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests
+{
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>))]
+   partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+      global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
+      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
+   {
+      [global::System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {
+         global::System.Func<global::System.DateOnly, global::Thinktecture.Tests.TestValueObject> convertFromKey = new (global::Thinktecture.Tests.TestValueObject.Create);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::System.DateOnly, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpression = static structField => global::Thinktecture.Tests.TestValueObject.Create(structField);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::System.DateOnly, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpressionViaCtor = static structField => new global::Thinktecture.Tests.TestValueObject(structField);
+
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>(static item => item.StructField);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>> convertToKeyExpression = static obj => obj.StructField;
+
+         var type = typeof(global::Thinktecture.Tests.TestValueObject);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(global::System.DateOnly), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
+
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
+      }
+
+      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         global::System.DateOnly structField,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         ValidateFactoryArguments(ref validationResult, ref structField);
+
+         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         {
+            obj = new global::Thinktecture.Tests.TestValueObject(structField);
+            obj.FactoryPostInit();
+         }
+         else
+         {
+            obj = default;
+         }
+
+         return validationResult;
+      }
+
+      public static global::Thinktecture.Tests.TestValueObject Create(global::System.DateOnly structField)
+      {
+         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject? obj);
+
+         if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+
+         return obj!;
+      }
+
+      public static bool TryCreate(
+         global::System.DateOnly structField,
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         var validationResult = Validate(structField, out obj);
+
+         return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+      }
+
+      static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref global::System.DateOnly structField);
+
+      partial void FactoryPostInit();
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      global::System.DateOnly global::Thinktecture.IKeyedValueObject<global::System.DateOnly>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref="global::System.DateOnly"/>.
+      /// </summary>
+      /// <param name="obj">Object to covert.</param>
+      /// <returns>The <see cref="StructField"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
+      public static implicit operator global::System.DateOnly?(global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         return obj?.StructField;
+      }
+
+      /// <summary>
+      /// Explicit conversion to the type <see cref="global::System.DateOnly"/>.
+      /// </summary>
+      /// <param name="obj">Object to covert.</param>
+      /// <returns>The <see cref="StructField"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
+      public static explicit operator global::System.DateOnly(global::Thinktecture.Tests.TestValueObject obj)
+      {
+         if(obj is null)
+            throw new global::System.NullReferenceException();
+
+         return obj.StructField;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref="global::System.DateOnly"/>.
+      /// </summary>
+      /// <param name="structField">Value to covert.</param>
+      /// <returns>An instance of <see cref="TestValueObject"/>.</returns>
+      public static explicit operator global::Thinktecture.Tests.TestValueObject(global::System.DateOnly structField)
+      {
+         return global::Thinktecture.Tests.TestValueObject.Create(structField);
+      }
+
+      private TestValueObject(global::System.DateOnly structField)
+      {
+         ValidateConstructorArguments(ref structField);
+
+         this.StructField = structField;
+      }
+
+      static partial void ValidateConstructorArguments(ref global::System.DateOnly structField);
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (other is null)
+            return false;
+
+         if (global::System.Object.ReferenceEquals(this, other))
+            return true;
+
+         return this.StructField.Equals(other.StructField);
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         return global::System.HashCode.Combine(this.StructField);
+      }
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return this.StructField.ToString();
+      }
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(formattableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IFormattable
+{
+   /// <inheritdoc />
+   public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
+   {
+      return this.StructField.ToString(format, formatProvider);
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(comparableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestValueObject item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestValueObject? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return this.StructField.CompareTo(obj.StructField);
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(parsableOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
+{
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var key = global::System.DateOnly.Parse(s, provider);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+
+      if(validationResult is null)
+         return result!;
+
+      throw new global::System.FormatException(validationResult.ErrorMessage);
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      if(!global::System.DateOnly.TryParse(s, provider, out var key))
+      {
+         result = default;
+         return false;
+      }
+
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      return validationResult is null;
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+{
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField < right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField <= right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField > right.StructField;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.StructField >= right.StructField;
+   }
+}
+
+""");
+
+      /* language=c# */
+      AssertOutput(equalityComparisonOperatorsOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests;
+
+partial class TestValueObject :
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, bool>
+{
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares two instances of <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+      {
+         return !(obj == other);
+      }
+
+      private static bool Equals(global::Thinktecture.Tests.TestValueObject? obj, global::System.DateOnly value)
+      {
+         if (obj is null)
+            return false;
+
+         return obj.StructField.Equals(value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="TestValueObject"/> with <see cref="global::System.DateOnly"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::System.DateOnly value)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="TestValueObject"/> with <see cref="global::System.DateOnly"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::System.DateOnly value, global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="TestValueObject"/> with <see cref="global::System.DateOnly"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::System.DateOnly value)
+      {
+         return !(obj == value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="global::System.DateOnly"/> with <see cref="TestValueObject"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::System.DateOnly value, global::Thinktecture.Tests.TestValueObject? obj)
+      {
+         return !(obj == value);
+      }
+}
+
+""");
    }
 
    [Fact]
@@ -4002,13 +4385,14 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(9);
+      outputs.Should().HaveCount(10);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
       var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
       var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
       var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
@@ -4017,6 +4401,7 @@ namespace Thinktecture.Tests
       AssertOutput(formattableOutput, _FORMATTABLE_INT);
       AssertOutput(comparableOutput, _COMPARABLE_INT);
       AssertOutput(parsableOutput, _PARSABLE_INT);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_INT_WITH_KEY_OVERLOADS);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -4025,7 +4410,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
@@ -4143,31 +4527,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref int structField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -4178,9 +4537,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -4211,7 +4567,8 @@ namespace Thinktecture.Tests
 namespace Thinktecture.Tests;
 
 partial class TestValueObject :
-   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, int, bool>
 {
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
    public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
@@ -4547,16 +4904,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
       AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -4565,7 +4924,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -4680,31 +5038,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref string referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -4715,9 +5048,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -4763,16 +5093,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
       AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -4781,7 +5113,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -4894,31 +5225,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref string referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -4929,9 +5235,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -4977,13 +5280,14 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(9);
+      outputs.Should().HaveCount(10);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
       var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
       var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
       var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
@@ -4993,6 +5297,7 @@ namespace Thinktecture.Tests
       AssertOutput(comparableOutput, _COMPARABLE_INT);
       AssertOutput(parsableOutput, _PARSABLE_INT);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
       AssertOutput(additionOperatorsOutput, _ADDITION_OPERATORS_INT);
       AssertOutput(subtractionOperatorsOutput, _SUBTRACTION_OPERATORS_INT);
       AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
@@ -5005,7 +5310,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
@@ -5123,31 +5427,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref int structField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -5158,9 +5437,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -5204,13 +5480,14 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(9);
+      outputs.Should().HaveCount(10);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var formattableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Formattable.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
       var additionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs")).Value;
       var subtractionOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs")).Value;
       var multiplyOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs")).Value;
@@ -5220,6 +5497,7 @@ namespace Thinktecture.Tests
       AssertOutput(comparableOutput, _COMPARABLE_INT);
       AssertOutput(parsableOutput, _PARSABLE_INT);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
       AssertOutput(additionOperatorsOutput, _ADDITION_OPERATORS_INT);
       AssertOutput(subtractionOperatorsOutput, _SUBTRACTION_OPERATORS_INT);
       AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
@@ -5232,7 +5510,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<int>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>
    {
@@ -5350,31 +5627,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref int structField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -5385,9 +5637,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -5434,16 +5683,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING);
       AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -5452,7 +5703,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -5566,31 +5816,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref string referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -5601,9 +5826,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -5651,16 +5873,18 @@ namespace Thinktecture.Tests
 }
 ";
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
-      outputs.Should().HaveCount(4);
+      outputs.Should().HaveCount(5);
 
       var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
       var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Comparable.g.cs")).Value;
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.Parsable.g.cs")).Value;
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
       AssertOutput(comparableOutput, _COMPARABLE_CLASS_STRING_WITH_ORDINAL_COMPARER);
       AssertOutput(parsableOutput, _PARSABLE_CLASS_STRING);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRING_WITH_ORDINAL_COMPARER);
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
       /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
@@ -5669,7 +5893,6 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<string>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>
    {
@@ -5783,31 +6006,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref string referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -5818,9 +6016,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -5870,16 +6065,21 @@ namespace Thinktecture.Tests
    }
 }
 ";
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
+      outputs.Should().HaveCount(2);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.g.cs")).Value;
+      var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
+
+      AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
       /* language=c# */
-      AssertOutput(output, _GENERATED_HEADER + """
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>))]
    partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.Foo>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>
    {
@@ -5993,31 +6193,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(ref global::Thinktecture.Tests.Foo referenceField);
 
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares to instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
-
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
@@ -6028,9 +6203,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))
@@ -6244,9 +6416,6 @@ namespace Thinktecture.Tests
          if (other is null)
             return false;
 
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
@@ -6452,9 +6621,6 @@ namespace Thinktecture.Tests
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
          if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
             return false;
 
          if (global::System.Object.ReferenceEquals(this, other))

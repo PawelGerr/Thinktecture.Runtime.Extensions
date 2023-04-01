@@ -36,6 +36,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       InitializeComparableCodeGenerator(context, validStates, options);
       InitializeParsableCodeGenerator(context, validStates, options);
       InitializeComparisonOperatorsCodeGenerator(context, validStates, options);
+      InitializeEqualityComparisonOperatorsCodeGenerator(context, validStates, options);
 
       InitializeErrorReporting(context, enumTypeOrError);
       InitializeExceptionReporting(context, enumTypeOrError);
@@ -51,6 +52,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                      null));
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
+   }
+
+   private void InitializeEqualityComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var comparables = validStates
+         .Select((state, _) => new EqualityComparisonOperatorsGeneratorState(state.State,
+                                                                             state.KeyMember,
+                                                                             state.Settings.EqualityComparisonOperators,
+                                                                             new ComparerInfo(Constants.KEY_EQUALITY_COMPARER_NAME, false)));
+
+      InitializeEqualityComparisonOperatorsCodeGenerator(context, comparables, options);
    }
 
    private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)

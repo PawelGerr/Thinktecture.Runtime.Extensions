@@ -56,11 +56,11 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
       sb.Append(@"
    global::System.Numerics.IDivisionOperators<").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(">");
 
-      if (_withKeyTypeOverloads)
-      {
-         sb.Append(@",
+      if (!_withKeyTypeOverloads)
+         return;
+
+      sb.Append(@",
    global::System.Numerics.IDivisionOperators<").Append(type.TypeFullyQualified).Append(", ").Append(keyMember.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(">");
-      }
    }
 
    public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)

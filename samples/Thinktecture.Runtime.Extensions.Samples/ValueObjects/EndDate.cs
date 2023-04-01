@@ -2,12 +2,14 @@ using System;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject(DefaultInstancePropertyName = "Infinite")]
+[ValueObject(DefaultInstancePropertyName = "Infinite",
+             EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)] // for comparison with DateTime without implicit cast
 public readonly partial struct EndDate
 {
    [ValueObjectMemberIgnore]
    private readonly DateOnly? _date;
 
+   // can be public as well
    private DateOnly Date
    {
       get => _date ?? DateOnly.MaxValue;

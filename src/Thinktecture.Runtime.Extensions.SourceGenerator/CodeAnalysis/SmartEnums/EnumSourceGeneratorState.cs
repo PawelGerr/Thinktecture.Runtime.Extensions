@@ -9,6 +9,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeMinimallyQualified { get; }
+   public bool IsEqualWithReferenceEquality => !IsValidatable;
 
    public IMemberState KeyProperty { get; }
    public bool IsValidatable { get; }
@@ -78,7 +79,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
 
    public bool Equals(EnumSourceGeneratorState? other)
    {
-      if (ReferenceEquals(null, other))
+      if (other is null)
          return false;
       if (ReferenceEquals(this, other))
          return true;

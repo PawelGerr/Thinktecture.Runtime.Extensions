@@ -38,10 +38,30 @@ public sealed class EnumGenerationAttribute : Attribute
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
+   /// Please note that the comparison operators depend on <see cref="EqualityComparisonOperators"/>. For example, if <see cref="ComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/>
+   /// then the <see cref="EqualityComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/> as well.
+   ///
    /// This setting has no effect:
-   /// - if the key is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_GreaterThan</code>, <code>op_GreaterThanOrEqual</code>, <code>op_LessThan</code>, <code>op_LessThanOrEqual</code>).
+   /// - if key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_GreaterThan</code>, <code>op_GreaterThanOrEqual</code>, <code>op_LessThan</code>, <code>op_LessThanOrEqual</code>).
    /// </summary>
    public OperatorsGeneration ComparisonOperators { get; set; }
+
+   private OperatorsGeneration _equalityComparisonOperators;
+
+   /// <summary>
+   /// Indication whether and how the generator should generate the implementation of <see cref="IEqualityOperators{TSelf,TOther,TResult}"/>.
+   ///
+   /// Please note that the comparison operators depend on <see cref="EqualityComparisonOperators"/>. For example, if <see cref="ComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/>
+   /// then the <see cref="EqualityComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/> as well.
+   ///
+   /// This setting has no effect:
+   /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Equality</code>, <code>op_Inequality</code>).
+   /// </summary>
+   public OperatorsGeneration EqualityComparisonOperators
+   {
+      get => ComparisonOperators > _equalityComparisonOperators ? ComparisonOperators : _equalityComparisonOperators;
+      set => _equalityComparisonOperators = value;
+   }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IFormattable"/> or not.

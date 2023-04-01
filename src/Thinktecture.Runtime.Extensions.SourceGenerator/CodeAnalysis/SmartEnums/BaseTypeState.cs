@@ -20,7 +20,7 @@ public sealed class BaseTypeState : IEquatable<BaseTypeState>
 
    public bool Equals(BaseTypeState? other)
    {
-      if (ReferenceEquals(null, other))
+      if (other is null)
          return false;
       if (ReferenceEquals(this, other))
          return true;

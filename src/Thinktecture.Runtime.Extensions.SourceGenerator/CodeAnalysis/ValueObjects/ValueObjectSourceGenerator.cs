@@ -46,6 +46,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       InitializeComparableCodeGenerator(context, keyedValueObjects, options);
       InitializeParsableCodeGenerator(context, keyedValueObjects, options);
       InitializeComparisonOperatorsCodeGenerator(context, keyedValueObjects, options);
+      InitializeEqualityComparisonOperatorsCodeGenerator(context, keyedValueObjects, options);
       InitializeAdditionOperatorsCodeGenerator(context, keyedValueObjects, options);
       InitializeSubtractionOperatorsCodeGenerator(context, keyedValueObjects, options);
       InitializeMultiplyOperatorsCodeGenerator(context, keyedValueObjects, options);
@@ -176,6 +177,17 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                      state.KeyMember.ComparerAccessor));
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
+   }
+
+   private void InitializeEqualityComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var comparables = validStates
+         .Select((state, _) => new EqualityComparisonOperatorsGeneratorState(state.Type,
+                                                                             state.KeyMember.Member,
+                                                                             state.Settings.EqualityComparisonOperators,
+                                                                             state.KeyMember.EqualityComparerAccessor is null ? null : new ComparerInfo(state.KeyMember.EqualityComparerAccessor, true)));
+
+      InitializeEqualityComparisonOperatorsCodeGenerator(context, comparables, options);
    }
 
    private void InitializeAdditionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)

@@ -9,6 +9,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
    public string TypeFullyQualifiedNullable { get; }
    public string TypeFullyQualifiedNullAnnotated => IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
    public string TypeMinimallyQualified { get; }
+   public bool IsEqualWithReferenceEquality => false;
 
    public string? Namespace { get; }
    public string Name { get; }
@@ -108,7 +109,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
 
    public bool Equals(ValueObjectSourceGeneratorState? other)
    {
-      if (ReferenceEquals(null, other))
+      if (other is null)
          return false;
       if (ReferenceEquals(this, other))
          return true;
