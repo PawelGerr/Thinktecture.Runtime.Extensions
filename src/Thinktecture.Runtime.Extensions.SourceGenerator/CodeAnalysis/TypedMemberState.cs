@@ -17,11 +17,11 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
-   public bool HasComparisonOperators { get; }
-   public bool HasAdditionOperators { get; }
-   public bool HasSubtractionOperators { get; }
-   public bool HasMultiplyOperators { get; }
-   public bool HasDivisionOperators { get; }
+   public ImplementedComparisonOperators ComparisonOperators { get; }
+   public ImplementedOperators AdditionOperators { get; }
+   public ImplementedOperators SubtractionOperators { get; }
+   public ImplementedOperators MultiplyOperators { get; }
+   public ImplementedOperators DivisionOperators { get; }
 
    public TypedMemberState(ITypeSymbol type)
    {
@@ -32,6 +32,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       SpecialType = type.SpecialType;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
+      // Check for implemented interfaces
       foreach (var @interface in type.AllInterfaces)
       {
          if (@interface.IsFormattableInterface())
@@ -48,23 +49,94 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          }
          else if (@interface.IsIAdditionOperators(type))
          {
-            HasAdditionOperators = true;
+            AdditionOperators = ImplementedOperators.All;
          }
          else if (@interface.IsISubtractionOperators(type))
          {
-            HasSubtractionOperators = true;
+            SubtractionOperators = ImplementedOperators.All;
          }
          else if (@interface.IsIMultiplyOperators(type))
          {
-            HasMultiplyOperators = true;
+            MultiplyOperators = ImplementedOperators.All;
          }
          else if (@interface.IsIDivisionOperators(type))
          {
-            HasDivisionOperators = true;
+            DivisionOperators = ImplementedOperators.All;
          }
          else if (@interface.IsIComparisonOperators(type))
          {
-            HasComparisonOperators = true;
+            ComparisonOperators = ImplementedComparisonOperators.All;
+         }
+      }
+
+      // If the operator-interfaces are not implemented then check for user-defined operators
+      var members = type.GetMembers();
+
+      for (var i = 0; i < members.Length; i++)
+      {
+         if (members[i] is not IMethodSymbol { MethodKind: MethodKind.UserDefinedOperator } customOperator)
+            continue;
+
+         switch (customOperator.Name)
+         {
+            case "op_GreaterThan":
+               if (customOperator.IsComparisonOperator(type))
+                  ComparisonOperators |= ImplementedComparisonOperators.GreaterThan;
+               break;
+
+            case "op_GreaterThanOrEqual":
+               if (customOperator.IsComparisonOperator(type))
+                  ComparisonOperators |= ImplementedComparisonOperators.GreaterThanOrEqual;
+               break;
+
+            case "op_LessThan":
+               if (customOperator.IsComparisonOperator(type))
+                  ComparisonOperators |= ImplementedComparisonOperators.LessThan;
+               break;
+
+            case "op_LessThanOrEqual":
+               if (customOperator.IsComparisonOperator(type))
+                  ComparisonOperators |= ImplementedComparisonOperators.LessThanOrEqual;
+               break;
+
+            case "op_Addition":
+               if (customOperator.IsArithmeticOperator(type))
+                  AdditionOperators |= ImplementedOperators.Default;
+               break;
+
+            case "op_CheckedAddition":
+               if (customOperator.IsArithmeticOperator(type))
+                  AdditionOperators |= ImplementedOperators.Checked;
+               break;
+
+            case "op_Subtraction":
+               if (customOperator.IsArithmeticOperator(type))
+                  SubtractionOperators |= ImplementedOperators.Default;
+               break;
+            case "op_CheckedSubtraction":
+               if (customOperator.IsArithmeticOperator(type))
+                  SubtractionOperators |= ImplementedOperators.Checked;
+               break;
+
+            case "op_Division":
+               if (customOperator.IsArithmeticOperator(type))
+                  DivisionOperators |= ImplementedOperators.Default;
+               break;
+
+            case "op_CheckedDivision":
+               if (customOperator.IsArithmeticOperator(type))
+                  DivisionOperators |= ImplementedOperators.Checked;
+               break;
+
+            case "op_Multiply":
+               if (customOperator.IsArithmeticOperator(type))
+                  MultiplyOperators |= ImplementedOperators.Default;
+               break;
+
+            case "op_CheckedMultiply":
+               if (customOperator.IsArithmeticOperator(type))
+                  MultiplyOperators |= ImplementedOperators.Checked;
+               break;
          }
       }
    }
@@ -93,11 +165,11 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
              && IsParsable == other.IsParsable
-             && HasComparisonOperators == other.HasComparisonOperators
-             && HasAdditionOperators == other.HasAdditionOperators
-             && HasSubtractionOperators == other.HasSubtractionOperators
-             && HasMultiplyOperators == other.HasMultiplyOperators
-             && HasDivisionOperators == other.HasDivisionOperators;
+             && ComparisonOperators == other.ComparisonOperators
+             && AdditionOperators == other.AdditionOperators
+             && SubtractionOperators == other.SubtractionOperators
+             && MultiplyOperators == other.MultiplyOperators
+             && DivisionOperators == other.DivisionOperators;
    }
 
    public override int GetHashCode()
@@ -111,11 +183,11 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasComparisonOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasAdditionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasSubtractionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasMultiplyOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasDivisionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ ComparisonOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ AdditionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ SubtractionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ MultiplyOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ DivisionOperators.GetHashCode();
 
          return hashCode;
       }

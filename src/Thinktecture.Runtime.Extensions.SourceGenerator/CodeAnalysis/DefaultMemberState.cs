@@ -17,7 +17,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;
    public bool IsParsable => _typedMemberState.IsParsable;
-   public bool HasComparisonOperators => _typedMemberState.HasComparisonOperators;
+   public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
 
    public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName)
    {

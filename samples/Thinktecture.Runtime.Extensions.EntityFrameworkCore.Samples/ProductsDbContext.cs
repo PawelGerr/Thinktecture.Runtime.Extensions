@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Thinktecture;
 
@@ -17,6 +17,8 @@ public class ProductsDbContext : DbContext
 
       modelBuilder.Entity<Product>(builder =>
                                    {
+                                      builder.HasKey(p => p.Id);
+
                                       builder.OwnsOne(p => p.Boundary,
                                                       boundaryBuilder =>
                                                       {

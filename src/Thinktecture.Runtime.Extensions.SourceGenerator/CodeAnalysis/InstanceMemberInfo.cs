@@ -28,11 +28,11 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public bool IsParsable => _typedMemberState.IsParsable;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
-   public bool HasComparisonOperators => _typedMemberState.HasComparisonOperators;
-   public bool HasAdditionOperators => _typedMemberState.HasAdditionOperators;
-   public bool HasSubtractionOperators => _typedMemberState.HasSubtractionOperators;
-   public bool HasMultiplyOperators => _typedMemberState.HasMultiplyOperators;
-   public bool HasDivisionOperators => _typedMemberState.HasDivisionOperators;
+   public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
+   public ImplementedOperators AdditionOperators => _typedMemberState.AdditionOperators;
+   public ImplementedOperators SubtractionOperators => _typedMemberState.SubtractionOperators;
+   public ImplementedOperators MultiplyOperators => _typedMemberState.MultiplyOperators;
+   public ImplementedOperators DivisionOperators => _typedMemberState.DivisionOperators;
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,

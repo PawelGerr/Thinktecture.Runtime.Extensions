@@ -16,9 +16,9 @@ public interface ITypedMemberState : IEquatable<ITypedMemberState>
    bool IsFormattable { get; }
    bool IsComparable { get; }
    bool IsParsable { get; }
-   bool HasComparisonOperators { get; }
-   bool HasAdditionOperators { get; }
-   bool HasSubtractionOperators { get; }
-   bool HasMultiplyOperators { get; }
-   bool HasDivisionOperators { get; }
+   ImplementedComparisonOperators ComparisonOperators { get; }
+   ImplementedOperators AdditionOperators { get; }
+   ImplementedOperators SubtractionOperators { get; }
+   ImplementedOperators MultiplyOperators { get; }
+   ImplementedOperators DivisionOperators { get; }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -92,21 +93,14 @@ public class Program
 
       await DoRequestAsync(logger, client, "boundary", BoundaryWithJsonConverter.Create(1, 2));
       await DoRequestAsync(logger, client, "boundary", jsonBody: "{ \"lower\": 2, \"upper\": 1 }");
+
+      await DoRequestAsync(logger, client, $"enddate/{DateOnly.FromDateTime(DateTime.Now):O}");
+      await DoRequestAsync(logger, client, "enddate", DateOnly.FromDateTime(DateTime.Now));
    }
 
    private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url, object? body = null, string? jsonBody = null)
    {
       var hasBody = body is not null || jsonBody is not null;
-
-      if (hasBody)
-      {
-         logger.LogInformation("POST request with url '{Url}' and body '{Body}'", url, body ?? jsonBody);
-      }
-      else
-      {
-         logger.LogInformation("GET request with url '{Url}'", url);
-      }
-
       var request = new HttpRequestMessage(hasBody ? HttpMethod.Post : HttpMethod.Get, "http://localhost:5000/api/" + url);
 
       if (body is not null)
@@ -114,6 +108,15 @@ public class Program
 
       if (jsonBody is not null)
          request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+      if (hasBody)
+      {
+         logger.LogInformation("POST request with url '{Url}' and body '{Body}'", url, await request.Content!.ReadAsStringAsync());
+      }
+      else
+      {
+         logger.LogInformation("GET request with url '{Url}'", url);
+      }
 
       using var response = await client.SendAsync(request);
 
@@ -137,7 +140,11 @@ public class Program
                                        {
                                           collection.AddSingleton(loggerFactory);
                                           collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
-                                                    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory()));
+                                                    .AddJsonOptions(options =>
+                                                                    {
+                                                                       options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
+                                                                       options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
+                                                                    });
                                        })
                     .Build();
 
@@ -149,7 +156,11 @@ public class Program
       var builder = WebApplication.CreateBuilder();
       builder.Services
              .AddSingleton(loggerFactory)
-             .ConfigureHttpJsonOptions(options => options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory()));
+             .ConfigureHttpJsonOptions(options =>
+                                       {
+                                          options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
+                                          options.SerializerOptions.Converters.Add(new DateOnlyConverter());
+                                       });
 
       var app = builder.Build();
 
@@ -179,6 +190,9 @@ public class Program
       routeGroup.MapGet("otherProductName/{name}", (OtherProductName? name) => name);
       routeGroup.MapPost("otherProductName", ([FromBody] OtherProductName name) => name);
       routeGroup.MapPost("boundary", ([FromBody] BoundaryWithJsonConverter boundary) => boundary);
+
+      routeGroup.MapGet("enddate/{date}", (EndDate date) => date);
+      routeGroup.MapPost("enddate", ([FromBody] EndDate date) => date);
 
       return app.StartAsync();
    }

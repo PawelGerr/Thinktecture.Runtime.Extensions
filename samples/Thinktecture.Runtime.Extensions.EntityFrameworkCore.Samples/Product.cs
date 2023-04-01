@@ -6,26 +6,33 @@ namespace Thinktecture;
 
 public class Product
 {
-   public Guid Id { get; private set; }
+   public Guid Id { get; }
    public ProductName Name { get; private set; }
    public ProductCategory Category { get; private set; }
    public ProductType ProductType { get; private set; }
-   public Boundary Boundary { get; private set; }
+   public EndDate EndDate { get; set; }
 
-   // For EF (see also https://github.com/dotnet/efcore/issues/12078)
-#pragma warning disable 8618
-   private Product(Guid id, ProductName name, ProductCategory category, ProductType productType)
+   private Boundary? _boundary;
+   public Boundary Boundary => _boundary ?? throw new InvalidOperationException("Boundary is not loaded.");
+
+   private Product(Guid id, ProductName name, ProductCategory category, ProductType productType, EndDate endDate)
    {
       Id = id;
       Name = name;
       Category = category;
       ProductType = productType;
+      EndDate = endDate;
    }
-#pragma warning restore 8618
 
-   public Product(Guid id, ProductName name, ProductCategory category, ProductType productType, Boundary boundary)
-      : this(id, name, category, productType)
+   public Product(
+      Guid id,
+      ProductName name,
+      ProductCategory category,
+      ProductType productType,
+      Boundary boundary,
+      EndDate endDate = default)
+      : this(id, name, category, productType, endDate)
    {
-      Boundary = boundary;
+      _boundary = boundary;
    }
 }

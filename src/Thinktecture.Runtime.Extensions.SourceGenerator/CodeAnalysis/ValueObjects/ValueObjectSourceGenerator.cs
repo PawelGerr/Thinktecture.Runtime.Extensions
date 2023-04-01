@@ -172,7 +172,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          .Select((state, _) => new ComparisonOperatorsGeneratorState(state.Type,
                                                                      state.KeyMember.Member,
                                                                      state.Settings.ComparisonOperators,
-                                                                     state.KeyMember.Member.HasComparisonOperators,
+                                                                     state.KeyMember.Member.ComparisonOperators,
                                                                      state.KeyMember.ComparerAccessor));
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
@@ -184,7 +184,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
                                                            state.Settings.AdditionOperators,
-                                                           state.KeyMember.Member.HasAdditionOperators,
+                                                           state.KeyMember.Member.AdditionOperators,
                                                            AdditionOperatorsCodeGeneratorProvider.Instance));
 
       InitializeOperatorsCodeGenerator(context, operators, options);
@@ -196,7 +196,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
                                                            state.Settings.SubtractionOperators,
-                                                           state.KeyMember.Member.HasSubtractionOperators,
+                                                           state.KeyMember.Member.SubtractionOperators,
                                                            SubtractionOperatorsCodeGeneratorProvider.Instance));
 
       InitializeOperatorsCodeGenerator(context, operators, options);
@@ -208,7 +208,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
                                                            state.Settings.MultiplyOperators,
-                                                           state.KeyMember.Member.HasMultiplyOperators,
+                                                           state.KeyMember.Member.MultiplyOperators,
                                                            MultiplyOperatorsCodeGeneratorProvider.Instance));
 
       InitializeOperatorsCodeGenerator(context, operators, options);
@@ -220,7 +220,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
                                                            state.Settings.DivisionOperators,
-                                                           state.KeyMember.Member.HasDivisionOperators,
+                                                           state.KeyMember.Member.DivisionOperators,
                                                            DivisionOperatorsCodeGeneratorProvider.Instance));
 
       InitializeOperatorsCodeGenerator(context, operators, options);

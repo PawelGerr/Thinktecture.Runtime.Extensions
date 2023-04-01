@@ -18,11 +18,11 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
-   public bool HasComparisonOperators { get; }
-   public bool HasAdditionOperators { get; }
-   public bool HasSubtractionOperators { get; }
-   public bool HasMultiplyOperators { get; }
-   public bool HasDivisionOperators { get; }
+   public ImplementedComparisonOperators ComparisonOperators { get; }
+   public ImplementedOperators AdditionOperators { get; }
+   public ImplementedOperators SubtractionOperators { get; }
+   public ImplementedOperators MultiplyOperators { get; }
+   public ImplementedOperators DivisionOperators { get; }
 
    public CachedTypedMemberState(ITypedMemberState typedMemberState)
    {
@@ -40,11 +40,11 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
       IsFormattable = typedMemberState.IsFormattable;
       IsComparable = typedMemberState.IsComparable;
       IsParsable = typedMemberState.IsParsable;
-      HasComparisonOperators = typedMemberState.HasComparisonOperators;
-      HasAdditionOperators = typedMemberState.HasAdditionOperators;
-      HasSubtractionOperators = typedMemberState.HasSubtractionOperators;
-      HasMultiplyOperators = typedMemberState.HasMultiplyOperators;
-      HasDivisionOperators = typedMemberState.HasDivisionOperators;
+      ComparisonOperators = typedMemberState.ComparisonOperators;
+      AdditionOperators = typedMemberState.AdditionOperators;
+      SubtractionOperators = typedMemberState.SubtractionOperators;
+      MultiplyOperators = typedMemberState.MultiplyOperators;
+      DivisionOperators = typedMemberState.DivisionOperators;
    }
 
    public override bool Equals(object? obj)

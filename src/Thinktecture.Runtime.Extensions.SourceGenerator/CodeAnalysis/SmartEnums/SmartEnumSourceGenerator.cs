@@ -47,7 +47,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          .Select((state, _) => new ComparisonOperatorsGeneratorState(state.State,
                                                                      state.KeyMember,
                                                                      state.Settings.ComparisonOperators,
-                                                                     state.KeyMember.HasComparisonOperators,
+                                                                     state.KeyMember.ComparisonOperators,
                                                                      null));
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);

@@ -23,6 +23,6 @@ public sealed partial class ProductGroupWithJsonConverter : IValidatableEnum<int
    {
       // the values can be anything besides the key,
       // the key must not be null
-      return new(key, "Unknown product group", ProductCategory.Get("Unknown"));
+      return new(key, false, "Unknown product group", ProductCategory.Get("Unknown"));
    }
 }

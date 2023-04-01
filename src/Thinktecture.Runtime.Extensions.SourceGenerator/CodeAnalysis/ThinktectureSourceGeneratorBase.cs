@@ -191,7 +191,7 @@ public abstract class ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = comparables
-                      .Where(state => state.HasKeyMemberOperators && state.OperatorsGeneration != OperatorsGeneration.None)
+                      .Where(state => state.OperatorsGeneration != OperatorsGeneration.None && (state.KeyMemberOperators != ImplementedComparisonOperators.None || state.ComparerAccessor is not null))
                       .Collect()
                       .Select(static (states, _) => states.IsDefaultOrEmpty
                                                        ? ImmutableArray<ComparisonOperatorsGeneratorState>.Empty
@@ -200,7 +200,7 @@ public abstract class ThinktectureSourceGeneratorBase
                       .SelectMany((states, _) => states)
                       .SelectMany((state, _) =>
                                   {
-                                     if (ComparisonOperatorsCodeGenerator.TryGet(state.OperatorsGeneration, state.ComparerAccessor, out var codeGenerator))
+                                     if (ComparisonOperatorsCodeGenerator.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, state.ComparerAccessor, out var codeGenerator))
                                         return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
 
                                      return ImmutableArray<(ComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
@@ -221,7 +221,7 @@ public abstract class ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options)
    {
       var operatorsWithGenerator = operators
-                                   .Where(state => state.HasKeyMemberOperators && state.OperatorsGeneration != OperatorsGeneration.None)
+                                   .Where(state => state.KeyMemberOperators != ImplementedOperators.None && state.OperatorsGeneration != OperatorsGeneration.None)
                                    .Collect()
                                    .Select(static (states, _) => states.IsDefaultOrEmpty
                                                                     ? ImmutableArray<OperatorsGeneratorState>.Empty
@@ -230,7 +230,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                    .SelectMany((states, _) => states)
                                    .SelectMany((state, _) =>
                                                {
-                                                  if (state.GeneratorProvider.TryGet(state.OperatorsGeneration, out var codeGenerator))
+                                                  if (state.GeneratorProvider.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, out var codeGenerator))
                                                      return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
 
                                                   return ImmutableArray<(OperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;

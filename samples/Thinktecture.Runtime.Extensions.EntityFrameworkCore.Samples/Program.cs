@@ -43,21 +43,44 @@ public class Program
       var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
       var ctx = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
 
-      await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, ProductType.Groceries, Boundary.Create(1, 2)));
+      var today = (EndDate)DateOnly.FromDateTime(DateTime.Today);
+
+      await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, ProductType.Groceries, Boundary.Create(1, 2), today));
 
       try
       {
+         // provoke exception by providing invalid ProductCategory
          loggingLevelSwitch.MinimumLevel = LogEventLevel.Fatal;
          await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Pear"), ProductCategory.Get("Invalid Category"), ProductType.Groceries, Boundary.Create(1, 2)));
-         loggingLevelSwitch.MinimumLevel = LogEventLevel.Information;
       }
       catch (DbUpdateException)
       {
          logger.LogError("Error during persistence of invalid category");
       }
+      finally
+      {
+         ctx.ChangeTracker.Clear(); // remove invalid product from the EF context
+         loggingLevelSwitch.MinimumLevel = LogEventLevel.Information;
+      }
 
       var products = await ctx.Products.AsNoTracking().Where(p => p.Category == ProductCategory.Fruits).ToListAsync();
       logger.LogInformation("Loaded products: {@Products}", products);
+
+      // returns the product "Apple" because "EndDate" equals "today" and (today >= today) evaluates to true
+      products = await ctx.Products.AsNoTracking().Where(p => p.EndDate >= today).ToListAsync();
+      logger.LogInformation("Products with End Data >= Today: {@Products}", products);
+
+      // returns nothing because "EndDate" equals "today" and (today > today) evaluates to false
+      products = await ctx.Products.AsNoTracking().Where(p => p.EndDate > today).ToListAsync();
+      logger.LogInformation("Products with End Data > Today: {@Products}", products);
+
+      var product = ctx.Products.Single();
+      product.EndDate = EndDate.Infinite;
+      await ctx.SaveChangesAsync();
+
+      // same query as the previous one but now "EndDate" equals "infinite" and (infinite > today) evaluates to true
+      products = await ctx.Products.AsNoTracking().Where(p => p.EndDate > today).ToListAsync();
+      logger.LogInformation("(After changing EndDate) Products with End Data > Today: {@Products}", products);
    }
 
    private static async Task InsertProductAsync(ProductsDbContext ctx, Product apple)
@@ -86,7 +109,8 @@ public class Program
 
                             builder.AddSerilog(serilogLogger);
                          })
-             .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true;TrustServerCertificate=true")
+             .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true;TrustServerCertificate=true",
+                                                                              optionsBuilder => optionsBuilder.UseDateOnlyTimeOnly())
                                                                 .EnableSensitiveDataLogging()
                                                                 .UseValueObjectValueConverter(configureEnumsAndKeyedValueObjects: property =>
                                                                                                                                   {

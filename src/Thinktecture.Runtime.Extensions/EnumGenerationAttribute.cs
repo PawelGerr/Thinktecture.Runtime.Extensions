@@ -38,8 +38,8 @@ public sealed class EnumGenerationAttribute : Attribute
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
-   /// This setting has no effect if:
-   /// - the key is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself.
+   /// This setting has no effect:
+   /// - if the key is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_GreaterThan</code>, <code>op_GreaterThanOrEqual</code>, <code>op_LessThan</code>, <code>op_LessThanOrEqual</code>).
    /// </summary>
    public OperatorsGeneration ComparisonOperators { get; set; }
 

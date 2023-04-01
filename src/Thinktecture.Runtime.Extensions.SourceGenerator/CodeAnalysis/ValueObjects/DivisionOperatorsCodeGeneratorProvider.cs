@@ -10,8 +10,8 @@ public class DivisionOperatorsCodeGeneratorProvider : IOperatorsCodeGeneratorPro
    {
    }
 
-   public bool TryGet(OperatorsGeneration operatorsGeneration, [MaybeNullWhen(false)] out IInterfaceCodeGenerator generator)
+   public bool TryGet(ImplementedOperators keyMemberOperators, OperatorsGeneration operatorsGeneration, [MaybeNullWhen(false)] out IInterfaceCodeGenerator generator)
    {
-      return DivisionOperatorsCodeGenerator.TryGet(operatorsGeneration, out generator);
+      return DivisionOperatorsCodeGenerator.TryGet(keyMemberOperators, operatorsGeneration, out generator);
    }
 }

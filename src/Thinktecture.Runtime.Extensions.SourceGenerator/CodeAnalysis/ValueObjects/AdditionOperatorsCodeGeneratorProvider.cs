@@ -10,8 +10,8 @@ public class AdditionOperatorsCodeGeneratorProvider : IOperatorsCodeGeneratorPro
    {
    }
 
-   public bool TryGet(OperatorsGeneration operatorsGeneration, [MaybeNullWhen(false)] out IInterfaceCodeGenerator generator)
+   public bool TryGet(ImplementedOperators keyMemberOperators, OperatorsGeneration operatorsGeneration, [MaybeNullWhen(false)] out IInterfaceCodeGenerator generator)
    {
-      return AdditionOperatorsCodeGenerator.TryGet(operatorsGeneration, out generator);
+      return AdditionOperatorsCodeGenerator.TryGet(keyMemberOperators, operatorsGeneration, out generator);
    }
 }

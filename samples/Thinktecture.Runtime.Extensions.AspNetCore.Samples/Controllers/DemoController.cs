@@ -125,6 +125,28 @@ public class DemoController : Controller
       return Json(boundary);
    }
 
+   [HttpGet("enddate/{endDate}")]
+   public IActionResult RoundTripGet(EndDate endDate)
+   {
+      if (!ModelState.IsValid)
+         return BadRequest(ModelState);
+
+      _logger.LogInformation("Round trip test with {Type}: {EndDate}", endDate.GetType().Name, endDate);
+
+      return Json(endDate);
+   }
+
+   [HttpPost("enddate")]
+   public IActionResult RoundTripPost([FromBody] EndDate endDate)
+   {
+      if (!ModelState.IsValid)
+         return BadRequest(ModelState);
+
+      _logger.LogInformation("Round trip test with {Type}: {EndDate}", endDate.GetType().Name, endDate);
+
+      return Json(endDate);
+   }
+
    private IActionResult RoundTripValidatableEnum<T, TKey>(T value)
       where T : IValidatableEnum<TKey>
       where TKey : notnull

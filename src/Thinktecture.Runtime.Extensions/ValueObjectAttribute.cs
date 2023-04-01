@@ -66,49 +66,49 @@ public sealed class ValueObjectAttribute : Attribute
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IAdditionOperators{TSelf,TOther,TResult}"/>.
    ///
-   /// This setting has no effect if:
+   /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
-   /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself.
+   /// - on non-keyed value objects (i.e. has more than 1 field/property)
+   /// - if key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Addition</code>, <code>op_CheckedAddition</code>).
    /// </summary>
    public OperatorsGeneration AdditionOperators { get; set; }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/>.
    ///
-   /// This setting has no effect if:
+   /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
-   /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself.
+   /// - on non-keyed value objects (i.e. has more than 1 field/property)
+   /// - if key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Subtraction</code>, <code>op_CheckedSubtraction</code>).
    /// </summary>
    public OperatorsGeneration SubtractionOperators { get; set; }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/>.
    ///
-   /// This setting has no effect if:
+   /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
-   /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself.
+   /// - on non-keyed value objects (i.e. has more than 1 field/property)
+   /// - if key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Multiply</code>, <code>op_CheckedMultiply</code>).
    /// </summary>
    public OperatorsGeneration MultiplyOperators { get; set; }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IDivisionOperators{TSelf,TOther,TResult}"/>.
    ///
-   /// This setting has no effect if:
+   /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
-   /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself.
+   /// - on non-keyed value objects (i.e. has more than 1 field/property)
+   /// - if key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Division</code>, <code>op_CheckedDivision</code>).
    /// </summary>
    public OperatorsGeneration DivisionOperators { get; set; }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
-   /// This setting has no effect if:
-   /// - non-keyed value objects (i.e. has more than 1 field/property)
-   /// - key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself.
+   /// This setting has no effect:
+   /// - on non-keyed value objects (i.e. has more than 1 field/property)
+   /// - if key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_GreaterThan</code>, <code>op_GreaterThanOrEqual</code>, <code>op_LessThan</code>, <code>op_LessThanOrEqual</code>).
    /// </summary>
    public OperatorsGeneration ComparisonOperators { get; set; }
 

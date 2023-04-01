@@ -7,20 +7,20 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
    public OperatorsGeneration OperatorsGeneration { get; }
-   public bool HasKeyMemberOperators { get; }
+   public ImplementedOperators KeyMemberOperators { get; }
    public IOperatorsCodeGeneratorProvider GeneratorProvider { get; }
 
    public OperatorsGeneratorState(
       ITypeInformation type,
       IMemberInformation keyMember,
       OperatorsGeneration operatorsGeneration,
-      bool hasKeyMemberOperators,
+      ImplementedOperators keyMemberOperators,
       IOperatorsCodeGeneratorProvider generatorProvider)
    {
       Type = type;
       KeyMember = keyMember;
       OperatorsGeneration = operatorsGeneration;
-      HasKeyMemberOperators = hasKeyMemberOperators;
+      KeyMemberOperators = keyMemberOperators;
       GeneratorProvider = generatorProvider;
    }
 
@@ -29,7 +29,7 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
              && OperatorsGeneration == other.OperatorsGeneration
-             && HasKeyMemberOperators == other.HasKeyMemberOperators
+             && KeyMemberOperators == other.KeyMemberOperators
              && ReferenceEquals(GeneratorProvider, other.GeneratorProvider);
    }
 
@@ -45,7 +45,7 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ MemberInformationComparer.Instance.GetHashCode(KeyMember);
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
-         hashCode = (hashCode * 397) ^ HasKeyMemberOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ KeyMemberOperators.GetHashCode();
          hashCode = (hashCode * 397) ^ GeneratorProvider.GetHashCode();
 
          return hashCode;

@@ -8,5 +8,5 @@ public interface IMemberState : IEquatable<IMemberState>, IMemberInformation
    bool IsFormattable { get; }
    bool IsComparable { get; }
    bool IsParsable { get; }
-   bool HasComparisonOperators { get; }
+   ImplementedComparisonOperators ComparisonOperators { get; }
 }
