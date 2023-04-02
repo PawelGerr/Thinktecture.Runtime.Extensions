@@ -21,7 +21,7 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 
 * Version 6:
   * C# 11 (or higher) for generated code
-  * SDK 7.0.102 (or higher) for building projects
+  * SDK 7.0.202 (or higher) for building projects
 * Version 5:
   * C# 9 (or higher) for generated code
   * SDK 6.0.300 (or higher) for building projects
