@@ -3,9 +3,10 @@ using System;
 namespace Thinktecture.ValueObjects;
 
 [ValueObject(DefaultInstancePropertyName = "Infinite",
-             EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)] // for comparison with DateTime without implicit cast
+             EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)] // for comparison with DateOnly without implicit cast
 public readonly partial struct EndDate
 {
+   // Source Generator should work with the property "Date" only and ignore this backing field
    [ValueObjectMemberIgnore]
    private readonly DateOnly? _date;
 
