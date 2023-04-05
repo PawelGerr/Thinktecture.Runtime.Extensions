@@ -1,8 +1,9 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject(DefaultInstancePropertyName = "Infinite",
+[ValueObject(DefaultInstancePropertyName = "Infinite",                                       // "EndDate.Infinite" represent an open-ended end date
              EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)] // for comparison with DateOnly without implicit cast
 public readonly partial struct EndDate
 {
@@ -20,7 +21,11 @@ public readonly partial struct EndDate
    // Further validation
    // static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref DateOnly date)
    // {
-   //    if (date.Year >= 2050)
-   //       validationResult = new ValidationResult("The end date lies too far in the future.");
+   //    validationResult = date.Year switch
+   //    {
+   //       < 2000 => new ValidationResult("The end date lies too far in the past."),
+   //       >= 2050 => new ValidationResult("The end date lies too far in the future."),
+   //       _ => validationResult
+   //    };
    // }
 }

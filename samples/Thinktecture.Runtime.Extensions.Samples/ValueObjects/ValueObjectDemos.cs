@@ -92,15 +92,21 @@ public class ValueObjectDemos
 
 """);
 
+      DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+      EndDate endDate = (EndDate)today;
+      // EndDate endDate = EndDate.Create(today);
+
       var defaultEndDate = default(EndDate);
       var infiniteEndDate = EndDate.Infinite;
 
       logger.Information("EndDate.Infinite and default(EndDate) are equal: {AreEqual}", infiniteEndDate == defaultEndDate);
 
+      logger.Information("EndDate.Infinite is bigger than today: {AreEqual}", EndDate.Infinite > endDate);
+
       DateOnly dateOfDefaultDate = defaultEndDate;
       DateOnly dateOfInfiniteDate = infiniteEndDate;
 
-      logger.Information("DateOnly of EndDate.Infinite and default(EndDate) are equal: {AreEqual}", dateOfInfiniteDate == dateOfDefaultDate);
+      logger.Information("DateOnly of EndDate.Infinite and default(EndDate) are equal: {AreEqual}", EndDate.Infinite == dateOfDefaultDate);
 
       logger.Information("EndDate.Infinite and DateOnly.MaxValue are equal: {AreEqual}", infiniteEndDate == DateOnly.MaxValue);
    }
