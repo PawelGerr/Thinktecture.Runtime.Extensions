@@ -17,6 +17,11 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
+I recently started writing down some **[ideas and real-world use cases](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#real-world-use-cases-and-ideas)** I used in the past to show the developers the benefits of value objects and smart enums. More examples will come very soon!
+
+Value objects:
+* [Open-ended End Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#open-ended-end-date)
+
 # Requirements
 
 * Version 6:
