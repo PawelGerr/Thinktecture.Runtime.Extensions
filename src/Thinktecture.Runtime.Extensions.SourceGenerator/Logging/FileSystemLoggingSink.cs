@@ -191,6 +191,9 @@ public class FileSystemLoggingSink : ILoggingSink, IDisposable
 
    private static async Task<bool> WriteInternalAsync(StreamWriter writer, LogItem item)
    {
+      if (item.LogLevel == LogLevel.Error)
+         SelfLog.Write(item.Datetime, GetLogLevel(item.LogLevel), item.Source, item.Message);
+
       await writer.WriteAsync("[");
       await WriteDateTimeAsync(writer, item.Datetime);
       await writer.WriteAsync(" | ");

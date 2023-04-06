@@ -18,4 +18,9 @@ public class SelfLog
          Debug.WriteLine(ex);
       }
    }
+
+   public static void Write(DateTime datetime, string logLevel, string source, string message)
+   {
+      Write($"[{datetime} | {logLevel}] | [{source}] {message}");
+   }
 }

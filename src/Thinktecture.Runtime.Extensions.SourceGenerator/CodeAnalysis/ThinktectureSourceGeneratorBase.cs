@@ -26,7 +26,7 @@ public abstract class ThinktectureSourceGeneratorBase
       _stringBuilderPool = new ConcurrentQueue<StringBuilder>();
       _stringBuilderPool.Enqueue(new StringBuilder(stringBuilderInitialSize));
       _loggerFactory = new LoggerFactory(this);
-      Logger = NullLogger.Instance;
+      Logger = new SelfLogErrorLogger(GetType().Name);
    }
 
    protected IncrementalValueProvider<GeneratorOptions> GetGeneratorOptions(IncrementalGeneratorInitializationContext context)
@@ -51,10 +51,11 @@ public abstract class ThinktectureSourceGeneratorBase
                     .Select((options, _) =>
                             {
                                var logger = Logger;
+                               var source = GetType().Name;
 
                                Logger = options is null
-                                           ? NullLogger.Instance
-                                           : _loggerFactory.CreateLogger(options.Value.Level, options.Value.FilePath, options.Value.FilePathMustBeUnique, options.Value.InitialBufferSize, GetType().Name);
+                                           ? new SelfLogErrorLogger(source)
+                                           : _loggerFactory.CreateLogger(options.Value.Level, options.Value.FilePath, options.Value.FilePathMustBeUnique, options.Value.InitialBufferSize, source);
 
                                logger.Dispose();
 

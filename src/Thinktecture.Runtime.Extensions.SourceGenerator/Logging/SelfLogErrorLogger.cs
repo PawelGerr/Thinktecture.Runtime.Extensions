@@ -3,13 +3,18 @@ using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture.Logging;
 
-public class NullLogger : ILogger
+public class SelfLogErrorLogger : ILogger
 {
-   public static readonly ILogger Instance = new NullLogger();
+   private readonly string _source;
+
+   public SelfLogErrorLogger(string source)
+   {
+      _source = source;
+   }
 
    public bool IsEnabled(LogLevel logLevel)
    {
-      return false;
+      return logLevel == LogLevel.Error;
    }
 
    public void Log(LogLevel logLevel, string message)
@@ -30,6 +35,13 @@ public class NullLogger : ILogger
 
    public void LogError(string message, TypeDeclarationSyntax? type, Exception? exception)
    {
+      if (type is not null)
+         message = $"{message}. Type: {type.Identifier}";
+
+      if (exception is not null)
+         message = $"{message}. Exception: {exception}";
+
+      SelfLog.Write(DateTime.Now, nameof(LogLevel.Error), _source, message);
    }
 
    public void Dispose()

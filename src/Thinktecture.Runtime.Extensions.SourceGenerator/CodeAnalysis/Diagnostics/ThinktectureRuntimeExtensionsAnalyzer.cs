@@ -168,7 +168,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, NullLogger.Instance);
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, new SelfLogErrorLogger(nameof(ThinktectureRuntimeExtensionsAnalyzer)));
 
       if (factory is null)
       {
@@ -276,7 +276,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          }
       }
 
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, NullLogger.Instance);
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, new SelfLogErrorLogger(nameof(ThinktectureRuntimeExtensionsAnalyzer)));
 
       if (factory is null)
       {

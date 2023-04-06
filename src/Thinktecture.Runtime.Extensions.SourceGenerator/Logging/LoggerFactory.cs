@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture.Logging;
@@ -17,18 +16,18 @@ public class LoggerFactory
    public ILogger CreateLogger(LogLevel logLevel, string filePath, bool filePathMustBeUnique, int initialBufferSize, string source)
    {
       if (logLevel is < LogLevel.Trace or > LogLevel.Error || String.IsNullOrWhiteSpace(filePath))
-         return NullLogger.Instance;
+         return new SelfLogErrorLogger(source);
 
       try
       {
          var sink = _fileSystemSinkProvider.GetSinkOrNull(filePath, filePathMustBeUnique, initialBufferSize, _owner);
 
-         return sink is null ? NullLogger.Instance : CreateLogger(logLevel, sink, source);
+         return sink is null ? new SelfLogErrorLogger(source) : CreateLogger(logLevel, sink, source);
       }
       catch (Exception ex)
       {
          SelfLog.Write(ex.ToString());
-         return NullLogger.Instance;
+         return new SelfLogErrorLogger(source);
       }
    }
 
@@ -41,7 +40,7 @@ public class LoggerFactory
          LogLevel.Information => new InformationLogger(this, sink, source),
          LogLevel.Warning => new WarningLogger(this, sink, source),
          LogLevel.Error => new ErrorLogger(this, sink, source),
-         LogLevel.None => NullLogger.Instance,
+         LogLevel.None => new SelfLogErrorLogger(source),
          _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, "Unknown log level")
       };
    }
