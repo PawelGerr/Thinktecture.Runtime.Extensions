@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <OutputType>EXE</OutputType>
-      <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>C:\temp\ef_logs.txt</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>
    </PropertyGroup>
    <ItemGroup>
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />

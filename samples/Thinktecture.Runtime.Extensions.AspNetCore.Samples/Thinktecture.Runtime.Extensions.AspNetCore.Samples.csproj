@@ -2,7 +2,6 @@
    <PropertyGroup>
       <OutputType>EXE</OutputType>
       <NoWarn>$(NoWarn);CA2007;CA2234</NoWarn>
-      <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>C:\temp\aspnet_logs.txt</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>
    </PropertyGroup>
    <ItemGroup>
       <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />

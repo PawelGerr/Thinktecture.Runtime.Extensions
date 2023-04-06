@@ -11,11 +11,14 @@
       <IsPackable>false</IsPackable>
       <ImplicitUsings>disable</ImplicitUsings>
       <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+      <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePathMustBeUnique>false</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePathMustBeUnique>
+      <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>C:\temp\ttre_samples_logs.txt</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>
    </PropertyGroup>
 
    <ItemGroup>
       <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_Counter" />
       <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath" />
+      <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogFilePathMustBeUnique" />
       <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogLevel" />
       <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize" />
    </ItemGroup>

@@ -8,14 +8,17 @@ public class FileSystemSinkContext
    private readonly List<WeakReference<ThinktectureSourceGeneratorBase>> _owners;
 
    public string OriginalFilePath { get; }
+   public bool FilePathIsUnique { get; }
    public FileSystemLoggingSink Sink { get; }
 
    public FileSystemSinkContext(
       string originalFilePath,
+      bool filePathIsUnique,
       FileSystemLoggingSink sink,
       ThinktectureSourceGeneratorBase owner)
    {
       OriginalFilePath = originalFilePath;
+      FilePathIsUnique = filePathIsUnique;
       Sink = sink;
       _lock = new object();
       _owners = new List<WeakReference<ThinktectureSourceGeneratorBase>> { new(owner) };

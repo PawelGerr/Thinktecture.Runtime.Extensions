@@ -54,7 +54,7 @@ public abstract class ThinktectureSourceGeneratorBase
 
                                Logger = options is null
                                            ? NullLogger.Instance
-                                           : _loggerFactory.CreateLogger(options.Value.Level, options.Value.FilePath, options.Value.InitialBufferSize, GetType().Name);
+                                           : _loggerFactory.CreateLogger(options.Value.Level, options.Value.FilePath, options.Value.FilePathMustBeUnique, options.Value.InitialBufferSize, GetType().Name);
 
                                logger.Dispose();
 
@@ -77,6 +77,12 @@ public abstract class ThinktectureSourceGeneratorBase
 
       logFilePath = logFilePath.Trim();
 
+      if (!options.GlobalOptions.TryGetValue(Constants.Configuration.LOG_FILE_PATH_UNIQUE, out var mustBeUnique)
+          || !Boolean.TryParse(mustBeUnique, out var isLogFileUnique))
+      {
+         isLogFileUnique = true;
+      }
+
       if (!options.GlobalOptions.TryGetValue(Constants.Configuration.LOG_LEVEL, out var logLevelValue)
           || !Enum.TryParse(logLevelValue, true, out LogLevel logLevel))
       {
@@ -90,7 +96,7 @@ public abstract class ThinktectureSourceGeneratorBase
          initialBufferSize = 1000;
       }
 
-      return new LoggingOptions(logFilePath, logLevel, initialBufferSize);
+      return new LoggingOptions(logFilePath, isLogFileUnique, logLevel, initialBufferSize);
    }
 
    private static bool IsFeatureEnable(string counterEnabledValue)

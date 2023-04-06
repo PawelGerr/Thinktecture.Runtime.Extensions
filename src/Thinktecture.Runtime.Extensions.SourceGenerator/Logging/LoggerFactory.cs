@@ -14,14 +14,14 @@ public class LoggerFactory
       _fileSystemSinkProvider = FileSystemSinkProvider.GetOrCreate();
    }
 
-   public ILogger CreateLogger(LogLevel logLevel, string filePath, int initialBufferSize, string source)
+   public ILogger CreateLogger(LogLevel logLevel, string filePath, bool filePathMustBeUnique, int initialBufferSize, string source)
    {
       if (logLevel is < LogLevel.Trace or > LogLevel.Error || String.IsNullOrWhiteSpace(filePath))
          return NullLogger.Instance;
 
       try
       {
-         var sink = _fileSystemSinkProvider.GetSinkOrNull(filePath, initialBufferSize, _owner);
+         var sink = _fileSystemSinkProvider.GetSinkOrNull(filePath, filePathMustBeUnique, initialBufferSize, _owner);
 
          return sink is null ? NullLogger.Instance : CreateLogger(logLevel, sink, source);
       }

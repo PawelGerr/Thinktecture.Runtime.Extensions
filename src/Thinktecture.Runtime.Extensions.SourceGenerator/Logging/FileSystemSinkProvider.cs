@@ -28,13 +28,13 @@ public class FileSystemSinkProvider
       }
    }
 
-   private readonly Dictionary<string, FileSystemSinkContext> _sinksByFilePath;
+   private readonly Dictionary<(string, bool), FileSystemSinkContext> _sinksByFilePath;
    private readonly object _lock;
    private readonly PeriodicCleanup _periodicCleanup;
 
    private FileSystemSinkProvider()
    {
-      _sinksByFilePath = new Dictionary<string, FileSystemSinkContext>();
+      _sinksByFilePath = new Dictionary<(string, bool), FileSystemSinkContext>();
       _lock = new object();
       _periodicCleanup = new PeriodicCleanup(this);
    }
@@ -47,13 +47,13 @@ public class FileSystemSinkProvider
       }
    }
 
-   public ILoggingSink? GetSinkOrNull(string filePath, int initialBufferSize, ThinktectureSourceGeneratorBase owner)
+   public ILoggingSink? GetSinkOrNull(string filePath, bool filePathMustBeUnique, int initialBufferSize, ThinktectureSourceGeneratorBase owner)
    {
       var fullPath = Path.GetFullPath(filePath);
 
       lock (_lock)
       {
-         if (_sinksByFilePath.TryGetValue(fullPath, out var sinkContext))
+         if (_sinksByFilePath.TryGetValue((fullPath, filePathMustBeUnique), out var sinkContext))
          {
             sinkContext.AddOwner(owner);
             _periodicCleanup.Start();
@@ -63,11 +63,11 @@ public class FileSystemSinkProvider
       }
 
       var logFileInfos = GetFileInfos(fullPath);
-      var newSink = CreateLogFileOrNull(logFileInfos, initialBufferSize);
+      var newSink = CreateLogFileOrNull(logFileInfos, filePathMustBeUnique, initialBufferSize);
 
       lock (_lock)
       {
-         if (_sinksByFilePath.TryGetValue(fullPath, out var sinkContext))
+         if (_sinksByFilePath.TryGetValue((fullPath, filePathMustBeUnique), out var sinkContext))
          {
             newSink?.Dispose();
 
@@ -80,7 +80,7 @@ public class FileSystemSinkProvider
          if (newSink is null)
             return null;
 
-         _sinksByFilePath.Add(fullPath, new FileSystemSinkContext(fullPath, newSink, owner));
+         _sinksByFilePath.Add((fullPath, filePathMustBeUnique), new FileSystemSinkContext(fullPath, filePathMustBeUnique, newSink, owner));
          _periodicCleanup.Start();
 
          return newSink;
@@ -123,19 +123,21 @@ public class FileSystemSinkProvider
 
          foreach (var sinkContext in obsoleteSinks)
          {
-            _sinksByFilePath.Remove(sinkContext.OriginalFilePath);
+            _sinksByFilePath.Remove((sinkContext.OriginalFilePath, sinkContext.FilePathIsUnique));
             sinkContext.Sink.Dispose();
          }
       }
    }
 
-   private static FileSystemLoggingSink? CreateLogFileOrNull(LogFileInfo logFileInfos, int initialBufferSize)
+   private static FileSystemLoggingSink? CreateLogFileOrNull(LogFileInfo logFileInfos, bool filePathMustBeUnique, int initialBufferSize)
    {
       if (logFileInfos.FolderPath is null)
          return null;
 
       var now = DateTime.Now;
-      var fileName = $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}_{now.Year}{now.Month:00}{now.Day:00}_{now.Hour:00}{now.Minute:00}{now.Second:00}_{Guid.NewGuid():N}{logFileInfos.FileExtension}";
+      var fileName = filePathMustBeUnique
+                        ? $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}_{now.Year}{now.Month:00}{now.Day:00}_{now.Hour:00}{now.Minute:00}{now.Second:00}_{Guid.NewGuid():N}{logFileInfos.FileExtension ?? ".log"}"
+                        : $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}{logFileInfos.FileExtension ?? ".log"}";
       var logFilePath = Path.Combine(logFileInfos.FolderPath, fileName);
 
       return new FileSystemLoggingSink(logFilePath, initialBufferSize);
