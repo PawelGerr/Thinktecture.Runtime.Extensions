@@ -16,7 +16,12 @@ public class ValueObjectDemos
 
    private static void DemoForSimpleValueObjects(ILogger logger)
    {
-      logger.Information("==== Demo for Simple Value Objects ====");
+      logger.Information("""
+
+
+==== Demo for Simple Value Objects ====
+
+""");
 
       var bread = ProductName.Create("Bread");
       logger.Information("Product name: {Bread}", bread);

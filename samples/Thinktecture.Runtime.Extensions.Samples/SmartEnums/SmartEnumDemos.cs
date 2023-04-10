@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Serilog;
 
 namespace Thinktecture.SmartEnums;
@@ -10,6 +13,79 @@ public class SmartEnumDemos
    {
       DemoForNonValidatableEnum(logger);
       DemoForValidatableEnum(logger);
+
+      DemoForDailySalesCsvImporterType(logger);
+      DemoForMonthlySalesCsvImporterType(logger);
+   }
+
+   private static void DemoForDailySalesCsvImporterType(ILogger logger)
+   {
+      logger.Information("""
+
+
+==== Demo for Daily CSV-Importer-Type ====
+
+""");
+
+      var type = SalesCsvImporterType.Daily;
+
+      using var textReader = new StringReader("""
+id,datetime,volume
+1,20230425 10:45,345.67
+""");
+
+      using var csvReader = new CsvReader(textReader, new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true });
+
+      csvReader.Read();
+      csvReader.ReadHeader();
+
+      while (csvReader.Read())
+      {
+         var articleId = csvReader.GetField<int>(type.ArticleIdIndex);
+         var volume = csvReader.GetField<decimal>(type.VolumeIndex);
+         var dateTime = type.GetDateTime(csvReader);
+
+         logger.Information("CSV ({Type}): Article-Id={Id}, DateTime={DateTime}, Volume={Volume}", type, articleId, dateTime, volume);
+      }
+   }
+
+   private static void DemoForMonthlySalesCsvImporterType(ILogger logger)
+   {
+      logger.Information("""
+
+
+==== Demo for Monthly CSV-Importer-Type ====
+
+""");
+
+      var with_3_columns = true;
+      var csvWith3Columns = """
+volume,datetime,id
+123.45,20230426 11:50,2
+""";
+
+      var csvWith4Columns = """
+volume,quantity,id,datetime
+123.45,42,2,2023-04-25
+""";
+
+      var type = SalesCsvImporterType.Monthly;
+      var csv = with_3_columns ? csvWith3Columns : csvWith4Columns;
+
+      using var textReader = new StringReader(csv);
+      using var csvReader = new CsvReader(textReader, new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true });
+
+      csvReader.Read();
+      csvReader.ReadHeader();
+
+      while (csvReader.Read())
+      {
+         var articleId = csvReader.GetField<int>(type.ArticleIdIndex);
+         var volume = csvReader.GetField<decimal>(type.VolumeIndex);
+         var dateTime = type.GetDateTime(csvReader);
+
+         logger.Information("CSV ({Type}): Article-Id={Id}, DateTime={DateTime}, Volume={Volume}", type, articleId, dateTime, volume);
+      }
    }
 
    private static void DemoForNonValidatableEnum(ILogger logger)
