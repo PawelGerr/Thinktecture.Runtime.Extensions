@@ -19,6 +19,9 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 
 I recently started writing down some **[ideas and real-world use cases](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#real-world-use-cases-and-ideas)** I used in the past to show the developers the benefits of value objects and smart enums. More examples will come very soon!
 
+Smart Enums:
+* [CSV-Importer-Type](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#csv-importer-type)
+
 Value objects:
 * [Open-ended End Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#open-ended-end-date)
 
@@ -36,6 +39,8 @@ Value objects:
 Install: `Install-Package Thinktecture.Runtime.Extensions`
 
 Documentation: [Smart Enums](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums)
+
+> Please note: I'm planing to switch from interface `IEnum<T>` to generic attribute `EnumAttribute<T>` in the next major version (v7) to support C# aliases and because Roslyn team provides improved API for attributes.
 
 Features:
 * Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
