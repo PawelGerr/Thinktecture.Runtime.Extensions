@@ -11,6 +11,8 @@ public class ValueObjectDemos
    {
       DemoForSimpleValueObjects(logger);
       DemoForEndDate(logger);
+      DemosForAmount(logger);
+
       DemoForComplexValueObjects(logger);
    }
 
@@ -67,25 +69,36 @@ public class ValueObjectDemos
 
       if (ProductName.TryParse("New product name", null, out var productName))
          logger.Information("Parsed name: {ParsedProductName}", productName);
+   }
 
-      var formattedValue = Amount.Create(42).ToString("000", CultureInfo.InvariantCulture); // "042"
+   private static void DemosForAmount(ILogger logger)
+   {
+      logger.Information("""
+
+
+==== Demo for Amount ====
+
+""");
+
+      var formattedValue = Amount.Create(42.1m).ToString("000.00", CultureInfo.InvariantCulture); // "042.10"
       logger.Information("Formatted: {Formatted}", formattedValue);
 
       var amount = Amount.Create(1);
-      var otherAmount = Amount.Create(2);
+      var otherAmount = (Amount)2;
+      var zero = Amount.Zero;
 
-      var comparison = amount.CompareTo(otherAmount);
-      logger.Information("Comparison: {Comparison}", comparison);
+      logger.Information("Comparison: 1.CompareTo(2) = {Comparison}", amount.CompareTo(otherAmount)); // -1
+      logger.Information("Comparison: 1 == 0 = {Comparison}", amount == zero);                        // false
 
       // Addition / subtraction / multiplication / division / comparison
-      logger.Information("{Amount} + {Other} = {Sum}", amount, otherAmount, amount + otherAmount);
-      logger.Information("{Amount} > {Other} = {Result}", amount, otherAmount, amount > otherAmount);
+      logger.Information("{Amount} + {Other} = {Sum}", amount, otherAmount, amount + otherAmount);    // 1 + 2 = 3
+      logger.Information("{Amount} > {Other} = {Result}", amount, otherAmount, amount > otherAmount); // 1 > 2 = False
 
       // Addition with key-member type due to [ValueObject(AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-      logger.Information("{Amount} + {Other} = {Sum}", amount, 42, amount + 42);
+      logger.Information("{Amount} + {Other} = {Sum}", amount, 42, amount + 42); // 1 + 42 = 43
 
       // Comparison with key-member type due to [ValueObject(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-      logger.Information("{Amount} > {Other} = {Result}", amount, 42, amount > 42);
+      logger.Information("{Amount} > {Other} = {Result}", amount, 42, amount > 42); // 1 > 42 = False
    }
 
    private static void DemoForEndDate(ILogger logger)

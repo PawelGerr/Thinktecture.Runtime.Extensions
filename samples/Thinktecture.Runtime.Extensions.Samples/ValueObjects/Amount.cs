@@ -2,16 +2,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
-             AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+[ValueObject(DefaultInstancePropertyName = "Zero", // renames Amount.Empty to Amount.Zero
+             ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads, // for comparison of amount with a decimal without implicit conversion: amount > 42m
+             AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,   // for arithmetic operations of amount with a decimal without implicit conversion: amount + 42m
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class Amount
+public readonly partial struct Amount
 {
-   private readonly int _value;
+   private readonly decimal _value;
 
-   static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref int value)
+   static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref decimal value)
    {
       if (value < 0)
          validationResult = new ValidationResult("Amount must be positive.");

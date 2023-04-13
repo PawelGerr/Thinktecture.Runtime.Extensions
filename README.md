@@ -24,6 +24,7 @@ Smart Enums:
 
 Value objects:
 * [Open-ended End Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#open-ended-end-date)
+* [(Always-positiv) Amount](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#always-positiv-amount)
 
 # Requirements
 

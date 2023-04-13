@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MessagePack" Version="2.5.103" />
+        <PackageReference Include="MessagePack" Version="2.5.108" />
    </ItemGroup>
 
 </Project>
