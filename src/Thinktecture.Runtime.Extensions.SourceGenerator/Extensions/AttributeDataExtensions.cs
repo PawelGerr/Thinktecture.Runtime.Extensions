@@ -80,6 +80,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipToString");
    }
 
+   public static bool? FindSkipSwitchMethods(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipSwitchMethods");
+   }
+
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
    {
       if (attributeData.AttributeClass is not { } attributeClass || attributeClass.TypeKind == TypeKind.Error)

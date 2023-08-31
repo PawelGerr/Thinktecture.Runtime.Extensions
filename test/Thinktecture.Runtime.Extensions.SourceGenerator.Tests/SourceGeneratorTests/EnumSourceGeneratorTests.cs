@@ -742,6 +742,232 @@ namespace Thinktecture.Tests
    }
 
    [Fact]
+   public void Should_generate_simple_class_without_Switch()
+   {
+      /* language=c# */
+      var source = @"
+using System;
+using Thinktecture;
+
+namespace Thinktecture.Tests
+{
+   [EnumGeneration(SkipSwitchMethods = true)]
+	public partial class TestEnum : IEnum<string>
+	{
+      public static readonly TestEnum Item1 = new(""Item1"");
+      public static readonly TestEnum Item2 = new(""Item2"");
+   }
+}
+";
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      outputs.Should().HaveCount(4);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Parsable.g.cs")).Value;
+      var equalityComparisonOperators = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs")).Value;
+
+      AssertOutput(comparableOutput, _COMPARABLE_OUTPUT_CLASS);
+      AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED);
+      AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
+
+      /* language=c# */
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+
+namespace Thinktecture.Tests
+{
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
+   partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+      global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
+   {
+      [global::System.Runtime.CompilerServices.ModuleInitializer]
+      internal static void ModuleInit()
+      {
+         var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
+         global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+
+         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
+         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
+
+         var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+
+         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+      }
+
+      public static global::System.Collections.Generic.IEqualityComparer<string?> KeyEqualityComparer => global::System.StringComparer.OrdinalIgnoreCase;
+
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+      /// <summary>
+      /// Gets all valid items.
+      /// </summary>
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+
+      /// <summary>
+      /// The identifier of the item.
+      /// </summary>
+      public string Key { get; }
+
+      private readonly int _hashCode;
+
+      private TestEnum(string key)
+      {
+         ValidateConstructorArguments(ref key);
+
+         if (key is null)
+            throw new global::System.ArgumentNullException(nameof(key));
+
+         this.Key = key;
+         this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), KeyEqualityComparer.GetHashCode(key));
+      }
+
+      static partial void ValidateConstructorArguments(ref string key);
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.Key;
+      }
+
+      /// <summary>
+      /// Gets an enumeration item for provided <paramref name="key"/>.
+      /// </summary>
+      /// <param name="key">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+      public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+      {
+         if (key is null)
+            return default;
+
+         if (!_itemsLookup.Value.TryGetValue(key, out var item))
+         {
+            throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+         }
+
+         return item;
+      }
+
+      /// <summary>
+      /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+      /// </summary>
+      /// <param name="key">The identifier to return an enumeration item for.</param>
+      /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+      /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+      {
+         if (key is null)
+         {
+            item = default;
+            return false;
+         }
+
+         return _itemsLookup.Value.TryGetValue(key, out item);
+      }
+
+      /// <summary>
+      /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name="key">The identifier to return an enumeration item for.</param>
+      /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+      {
+         if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+         {
+            return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         }
+         else
+         {
+            return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+         }
+      }
+
+      /// <summary>
+      /// Implicit conversion to the type <see cref="string"/>.
+      /// </summary>
+      /// <param name="item">Item to covert.</param>
+      /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
+      public static implicit operator string?(global::Thinktecture.Tests.TestEnum? item)
+      {
+         return item is null ? default : item.Key;
+      }
+
+      /// <summary>
+      /// Explicit conversion from the type <see cref="string"/>.
+      /// </summary>
+      /// <param name="key">Value to covert.</param>
+      /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum{TKey}"/>.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+      public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+      {
+         return global::Thinktecture.Tests.TestEnum.Get(key);
+      }
+
+      /// <inheritdoc />
+      public bool Equals(global::Thinktecture.Tests.TestEnum? other)
+      {
+         return global::System.Object.ReferenceEquals(this, other);
+      }
+
+      /// <inheritdoc />
+      public override bool Equals(object? other)
+      {
+         return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
+      }
+
+      /// <inheritdoc />
+      public override int GetHashCode()
+      {
+         return _hashCode;
+      }
+
+      /// <inheritdoc />
+      public override string ToString()
+      {
+         return this.Key.ToString();
+      }
+
+      private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+      {
+         var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, KeyEqualityComparer);
+
+         void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
+         {
+            if (item is null)
+               throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+            if (item.Key is null)
+               throw new global::System.ArgumentException($"The \"Key\" of the item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+            if (lookup.ContainsKey(item.Key))
+               throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
+
+            lookup.Add(item.Key, item);
+         }
+
+         AddItem(Item1, nameof(Item1));
+         AddItem(Item2, nameof(Item2));
+
+         return lookup;
+      }
+   }
+}
+
+""");
+   }
+
+   [Fact]
    public void Should_generate_smart_enum_with_base_class_and_non_default_constructors()
    {
       /* language=c# */

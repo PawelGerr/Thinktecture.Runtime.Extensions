@@ -75,4 +75,9 @@ public sealed class EnumGenerationAttribute : Attribute
    /// Indication whether the generator should skip the implementation of the method <see cref="object.ToString"/> or not.
    /// </summary>
    public bool SkipToString { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of the methods <code>Switch</code>.
+   /// </summary>
+   public bool SkipSwitchMethods { get; set; }
 }

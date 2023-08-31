@@ -147,10 +147,14 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.SkipToString)
          GenerateToString();
 
-      GenerateSwitchForAction(false);
-      GenerateSwitchForAction(true);
-      GenerateSwitchForFunc(false);
-      GenerateSwitchForFunc(true);
+      if (!_state.SkipSwitchMethods)
+      {
+         GenerateSwitchForAction(false);
+         GenerateSwitchForAction(true);
+         GenerateSwitchForFunc(false);
+         GenerateSwitchForFunc(true);
+      }
+
       GenerateGetLookup();
 
       _sb.Append(@"

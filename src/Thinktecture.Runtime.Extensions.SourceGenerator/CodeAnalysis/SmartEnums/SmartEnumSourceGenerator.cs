@@ -317,7 +317,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
          var attributeInfo = new AttributeInfo(type);
 
-         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, isValidatable, hasCreateInvalidItemImplementation, attributeInfo.HasStructLayoutAttribute, cancellationToken);
+         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, settings.SkipSwitchMethods, isValidatable, hasCreateInvalidItemImplementation, attributeInfo.HasStructLayoutAttribute, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
          Logger.LogDebug("The type declaration is a valid smart enum", namespaceAndName: enumState);
