@@ -47,7 +47,7 @@ Features:
 * Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
 * [Allows iteration over all items](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#what-is-implemented-for-you)
 * [Allows custom properties and methods](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#adding-behavior)
-* [Switch-case](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#switch-case)
+* [Switch-casemap](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#switch-casemap)
 * Provides appropriate constructor, based on the specified properties/fields
 * Provides means for lookup, cast and type conversion from key-type to Smart Enum and vice versa
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
