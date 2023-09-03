@@ -37,7 +37,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
                                                                                                               DiagnosticsDescriptors.ValueObjectMustBeSealed,
-                                                                                                              DiagnosticsDescriptors.SwitchMustCoverAllItems,
+                                                                                                              DiagnosticsDescriptors.SwitchAndMapMustCoverAllItems,
                                                                                                               DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics,
                                                                                                               DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
                                                                                                               DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
@@ -63,7 +63,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
           || operation.Arguments.IsDefaultOrEmpty
           || operation.Arguments.Length % 2 != 0
           || operation.TargetMethod.IsStatic
-          || operation.TargetMethod.Name != "Switch")
+          || (operation.TargetMethod.Name != "Switch" && operation.TargetMethod.Name != "Map"))
       {
          return;
       }
@@ -101,7 +101,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       if (!missingItemNames.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.SwitchMustCoverAllItems, operation.Syntax.GetLocation(), operation.Instance.Type, String.Join(", ", missingItemNames));
+         ReportDiagnostic(context, DiagnosticsDescriptors.SwitchAndMapMustCoverAllItems, operation.Syntax.GetLocation(), operation.Instance.Type, String.Join(", ", missingItemNames));
    }
 
    private static void AnalyzeSmartEnum(SymbolAnalysisContext context)

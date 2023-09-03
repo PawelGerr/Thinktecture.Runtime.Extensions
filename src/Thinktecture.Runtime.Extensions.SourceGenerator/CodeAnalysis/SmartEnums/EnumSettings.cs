@@ -12,6 +12,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
    public bool SkipIFormattable { get; }
    public bool SkipToString { get; }
    public bool SkipSwitchMethods { get; }
+   public bool SkipMapMethods { get; }
 
    public EnumSettings(AttributeData? attribute)
    {
@@ -23,6 +24,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
       SkipIFormattable = attribute?.FindSkipIFormattable() ?? false;
       SkipToString = attribute?.FindSkipToString() ?? false;
       SkipSwitchMethods = attribute?.FindSkipSwitchMethods() ?? false;
+      SkipMapMethods = attribute?.FindSkipMapMethods() ?? false;
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -48,7 +50,8 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
              && EqualityComparisonOperators == other.EqualityComparisonOperators
              && SkipIFormattable == other.SkipIFormattable
              && SkipToString == other.SkipToString
-             && SkipSwitchMethods == other.SkipSwitchMethods;
+             && SkipSwitchMethods == other.SkipSwitchMethods
+             && SkipMapMethods == other.SkipMapMethods;
    }
 
    public override int GetHashCode()
@@ -63,6 +66,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipSwitchMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipMapMethods.GetHashCode();
 
          return hashCode;
       }

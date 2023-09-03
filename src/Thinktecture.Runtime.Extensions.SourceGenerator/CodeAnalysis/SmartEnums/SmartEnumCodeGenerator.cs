@@ -155,6 +155,9 @@ namespace ").Append(_state.Namespace).Append(@"
          GenerateSwitchForFunc(true);
       }
 
+      if (!_state.SkipMapMethods)
+         GenerateMap();
+
       GenerateGetLookup();
 
       _sb.Append(@"
@@ -319,7 +322,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
          {
-            return ").Append(itemNamePrefix).Append("Func").Append(i + 1).Append(@"(");
+            return ").Append(itemNamePrefix).Append("Func").Append(i + 1).Append("(");
 
          if (withContext)
             _sb.Append("context");
@@ -332,6 +335,63 @@ namespace ").Append(_state.Namespace).Append(@"
          else
          {
             throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
+         }
+      }");
+   }
+
+   private void GenerateMap()
+   {
+      if (_state.ItemNames.Count == 0)
+         return;
+
+      _sb.Append(@"
+
+      /// <summary>
+      /// Maps an item to an instance of type <typeparamref name=""T""/>.
+      /// </summary>");
+
+      var itemNamePrefix = _state.ArgumentName;
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         _sb.Append(@"
+      /// <param name=""").Append(itemNamePrefix).Append(i + 1).Append(@""">The item to compare to.</param>
+      /// <param name=""other").Append(i + 1).Append(@""">The instance to return if the current item is equal to <paramref name=""").Append(itemNamePrefix).Append(i + 1).Append(@"""/>.</param>");
+      }
+
+      _sb.Append(@"
+      public T Map<T>(");
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         if (i != 0)
+            _sb.Append(",");
+
+         _sb.Append(@"
+         ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
+            .Append(", T ").Append("other").Append(i + 1);
+      }
+
+      _sb.Append(@")
+      {
+         ");
+
+      for (var i = 0; i < _state.ItemNames.Count; i++)
+      {
+         if (i != 0)
+            _sb.Append(@"
+         else ");
+
+         _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
+         {
+            return other").Append(i + 1).Append(@";
+         }");
+      }
+
+      _sb.Append(@"
+         else
+         {
+            throw new global::System.ArgumentOutOfRangeException($""No instance provided for the item '{this}'."");
          }
       }");
    }

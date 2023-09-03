@@ -16,6 +16,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public BaseTypeState? BaseType { get; }
    public bool SkipToString { get; }
    public bool SkipSwitchMethods { get; }
+   public bool SkipMapMethods { get; }
 
    public bool HasCreateInvalidItemImplementation { get; }
    public bool HasKeyComparerImplementation { get; }
@@ -35,6 +36,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       IMemberState keyProperty,
       bool skipToString,
       bool skipSwitchMethods,
+      bool skipMapMethods,
       bool isValidatable,
       bool hasCreateInvalidItemImplementation,
       bool hasStructLayoutAttribute,
@@ -43,6 +45,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       KeyProperty = keyProperty;
       SkipToString = skipToString;
       SkipSwitchMethods = skipSwitchMethods;
+      SkipMapMethods = skipMapMethods;
       IsValidatable = isValidatable;
       HasCreateInvalidItemImplementation = hasCreateInvalidItemImplementation;
       HasStructLayoutAttribute = hasStructLayoutAttribute;
