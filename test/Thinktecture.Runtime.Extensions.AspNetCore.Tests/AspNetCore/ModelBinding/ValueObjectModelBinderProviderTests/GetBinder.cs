@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
+using NSubstitute;
 using Thinktecture.AspNetCore.ModelBinding;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -40,12 +40,12 @@ public class GetBinder
    private static IModelBinder GetModelBinder<T>()
    {
       var provider = new ValueObjectModelBinderProvider();
-      var contextMock = new Mock<ModelBinderProviderContext>();
-      contextMock.Setup(c => c.Metadata).Returns(BindingContextHelper.CreateModelMetadata<T>());
+      var contextMock = Substitute.For<ModelBinderProviderContext>();
+      contextMock.Metadata.Returns(BindingContextHelper.CreateModelMetadata<T>());
       var serviceProvider = new ServiceCollection().AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance).BuildServiceProvider();
-      contextMock.Setup(c => c.Services).Returns(serviceProvider);
-      contextMock.Setup(c => c.BindingInfo).Returns(new BindingInfo());
+      contextMock.Services.Returns(serviceProvider);
+      contextMock.BindingInfo.Returns(new BindingInfo());
 
-      return provider.GetBinder(contextMock.Object);
+      return provider.GetBinder(contextMock);
    }
 }
