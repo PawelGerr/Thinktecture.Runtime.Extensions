@@ -47,7 +47,7 @@ Features:
 * Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
 * [Allows iteration over all items](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#what-is-implemented-for-you)
 * [Allows custom properties and methods](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#adding-behavior)
-* [Switch-casemap](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#switch-casemap)
+* [Switch-case/Map](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#switch-casemap)
 * Provides appropriate constructor, based on the specified properties/fields
 * Provides means for lookup, cast and type conversion from key-type to Smart Enum and vice versa
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
@@ -172,6 +172,10 @@ var returnValue = productType.Switch(ProductType.Groceries, static () => "Switch
 returnValue = productType.Switch(logger,
                                  ProductType.Groceries, static l => "Switch with Func<T>: Groceries",
                                  ProductType.Housewares, static l => "Switch with Func<T>: Housewares");
+
+// Maps an item to another instance
+returnValue = productType.Map(ProductType.Groceries, "Map: Groceries",
+                              ProductType.Housewares, "Map: Housewares");
 
 ------------
 
