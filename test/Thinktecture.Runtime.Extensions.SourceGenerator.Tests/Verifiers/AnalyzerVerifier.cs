@@ -45,8 +45,11 @@ public static class AnalyzerVerifier<TAnalyzer>
       {
          TestCode = source;
          ExpectedDiagnostics.AddRange(expected);
+#if NET7
          ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
-
+#else
+         ReferenceAssemblies = new ReferenceAssemblies("net8.0", new PackageIdentity("Microsoft.NETCore.App.Ref","8.0.0-rc.1.23419.4"), Path.Combine("ref", "8.0.0-rc.1.23419.4"));
+#endif
          foreach (var additionalReference in additionalReferences)
          {
             TestState.AdditionalReferences.Add(additionalReference);

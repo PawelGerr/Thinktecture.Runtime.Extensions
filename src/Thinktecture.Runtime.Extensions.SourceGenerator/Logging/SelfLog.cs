@@ -10,8 +10,10 @@ public class SelfLog
    {
       try
       {
+#pragma warning disable RS1035
          var fullPath = Path.Combine(Path.GetTempPath(), _FILE_NAME);
          File.AppendAllText(fullPath, $"[{DateTime.Now:O}] {message}{Environment.NewLine}");
+#pragma warning restore RS1035
       }
       catch (Exception ex)
       {

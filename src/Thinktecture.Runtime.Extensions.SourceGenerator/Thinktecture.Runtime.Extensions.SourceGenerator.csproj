@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <Description>Source generators for Thinktecture.Runtime.Extensions.</Description>
-      <TargetFramework>netstandard2.0</TargetFramework>
+      <TargetFrameworks>netstandard2.0</TargetFrameworks>
       <PackageTags>sourcegenerator</PackageTags>
       <NoWarn>$(NoWarn);CS1591;RS2008;NU5128</NoWarn>
       <IncludeBuildOutput>false</IncludeBuildOutput>
       <IncludeSymbols>false</IncludeSymbols>
+      <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
    </PropertyGroup>
    <ItemGroup>
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.5.0" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.7.0" PrivateAssets="all" />
    </ItemGroup>
    <ItemGroup>
       <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />

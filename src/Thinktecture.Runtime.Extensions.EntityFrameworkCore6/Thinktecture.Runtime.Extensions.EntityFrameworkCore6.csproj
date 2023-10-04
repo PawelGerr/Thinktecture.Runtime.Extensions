@@ -3,18 +3,16 @@
    <PropertyGroup>
       <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
       <PackageTags>common;EntityFrameworkCore</PackageTags>
-      <DefineConstants>$(DefineConstants);EFCORE6</DefineConstants>
    </PropertyGroup>
 
    <ItemGroup>
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
 
-      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\**\*.cs" />
-      <Compile Remove="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\obj\**\*.cs" />
+      <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Sources\**\*.cs" />
    </ItemGroup>
 
    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.21" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.22" />
    </ItemGroup>
 
 </Project>

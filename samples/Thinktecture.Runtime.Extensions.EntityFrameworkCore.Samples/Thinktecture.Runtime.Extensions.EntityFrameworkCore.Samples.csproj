@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
       <OutputType>EXE</OutputType>
+      <TargetFrameworks>net8.0</TargetFrameworks>
    </PropertyGroup>
    <ItemGroup>
-      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore8\Thinktecture.Runtime.Extensions.EntityFrameworkCore8.csproj" />
       <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
    </ItemGroup>
    <ItemGroup>
-      <PackageReference Include="ErikEJ.EntityFrameworkCore.SqlServer.DateOnlyTimeOnly" Version="7.0.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-rc.1.23419.6" />
       <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
    </ItemGroup>

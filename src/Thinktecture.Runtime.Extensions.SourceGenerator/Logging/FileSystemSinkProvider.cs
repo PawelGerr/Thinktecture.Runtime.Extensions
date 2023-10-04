@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture.Logging;
@@ -143,28 +145,37 @@ public class FileSystemSinkProvider
       return new FileSystemLoggingSink(logFilePath, initialBufferSize);
    }
 
+   [SuppressMessage("MicrosoftCodeAnalysisCorrectness", "RS1035:Do not use APIs banned for analyzers")]
    private static LogFileInfo GetFileInfos(string fullPath)
    {
-      // Path is a file?
-      if (File.Exists(fullPath))
+      try
       {
-         return new LogFileInfo(Path.GetDirectoryName(fullPath),
+         // Path is a file?
+         if (File.Exists(fullPath))
+         {
+            return new LogFileInfo(Path.GetDirectoryName(fullPath),
+                                   Path.GetFileNameWithoutExtension(fullPath),
+                                   Path.GetExtension(fullPath));
+         }
+
+         // Path is a directory?
+         if (Directory.Exists(fullPath))
+            return new LogFileInfo(fullPath, null, null);
+
+         var folderPath = Path.GetDirectoryName(fullPath);
+
+         if (String.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+            return default;
+
+         return new LogFileInfo(folderPath,
                                 Path.GetFileNameWithoutExtension(fullPath),
                                 Path.GetExtension(fullPath));
       }
-
-      // Path is a directory?
-      if (Directory.Exists(fullPath))
-         return new LogFileInfo(fullPath, null, null);
-
-      var folderPath = Path.GetDirectoryName(fullPath);
-
-      if (String.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+      catch (Exception ex)
+      {
+         Debug.WriteLine(ex);
          return default;
-
-      return new LogFileInfo(folderPath,
-                             Path.GetFileNameWithoutExtension(fullPath),
-                             Path.GetExtension(fullPath));
+      }
    }
 
    private readonly struct LogFileInfo

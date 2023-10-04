@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);COMPLEX_TYPES</DefineConstants>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore8\Thinktecture.Runtime.Extensions.EntityFrameworkCore8.csproj"/>
+        <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Tests.Sources\**\*.cs"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-rc.1.23419.6"/>
+    </ItemGroup>
+
+</Project>

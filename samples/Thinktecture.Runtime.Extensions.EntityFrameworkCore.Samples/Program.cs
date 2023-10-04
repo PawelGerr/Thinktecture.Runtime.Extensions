@@ -109,8 +109,7 @@ public class Program
 
                             builder.AddSerilog(serilogLogger);
                          })
-             .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true;TrustServerCertificate=true",
-                                                                              optionsBuilder => optionsBuilder.UseDateOnlyTimeOnly())
+             .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true;TrustServerCertificate=true")
                                                                 .EnableSensitiveDataLogging()
                                                                 .UseValueObjectValueConverter(configureEnumsAndKeyedValueObjects: property =>
                                                                                                                                   {

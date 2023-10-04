@@ -114,10 +114,12 @@ public class FileSystemLoggingSink : ILoggingSink, IDisposable
                await writer.FlushAsync();
                mustFlush = false;
 
+#pragma warning disable RS1035
                // Writer/FileStream doesn't throw an exception if file is deleted,
                // so we check for the file once per batch to recreate it on the next batch.
                if (!File.Exists(_filePath))
                   ReleaseWriter();
+#pragma warning restore RS1035
             }
          }
          catch (Exception) when (cancellationToken.IsCancellationRequested)
@@ -165,7 +167,9 @@ public class FileSystemLoggingSink : ILoggingSink, IDisposable
    {
       try
       {
+#pragma warning disable RS1035
          var stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read | FileShare.Write | FileShare.Delete);
+#pragma warning restore RS1035
 
          try
          {
