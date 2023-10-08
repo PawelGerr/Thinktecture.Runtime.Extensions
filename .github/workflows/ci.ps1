@@ -18,7 +18,11 @@ function Set-VersionSuffixOnTag([string]$dir, [string]$branch)
         {
             Set-VersionSuffix $dir $suffix
         }
+
+        return
     }
+
+    Set-VersionSuffix $dir "ci"
 }
 
 # Add xml element "VersionSuffix" to *.csproj files in $dir.
