@@ -47,8 +47,6 @@ Install: `Install-Package Thinktecture.Runtime.Extensions`
 
 Documentation: [Smart Enums](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums)
 
-> Please note: I'm planing to switch from interface `IEnum<T>` to generic attribute `EnumAttribute<T>` in the next major version (v7) to support C# aliases and because Roslyn team provides improved API for attributes.
-
 Features:
 * Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
 * [Allows iteration over all items](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#what-is-implemented-for-you)
