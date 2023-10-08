@@ -35,6 +35,9 @@ Value objects:
   * C# 9 (or higher) for generated code
   * SDK 6.0.300 (or higher) for building projects
 
+# Migrations
+* [Migration from v6 to v7](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v6-to-v7)
+
 # Smart Enums
 
 Install: `Install-Package Thinktecture.Runtime.Extensions`
