@@ -72,14 +72,16 @@ Definition of a 2 Smart Enums without any custom properties and methods. All oth
 
 ```C#
 // Smart Enum with a string as the underlying type
-public sealed partial class ProductType : IEnum<string>
+[SmartEnum<string>]
+public sealed partial class ProductType
 {
    public static readonly ProductType Groceries = new("Groceries");
    public static readonly ProductType Housewares = new("Housewares");
 }
 
 // Smart Enum with an int as the underlying type
-public sealed partial class ProductGroup : IEnum<int>
+[SmartEnum<int>]
+public sealed partial class ProductGroup
 {
    public static readonly ProductGroup Apple = new(1);
    public static readonly ProductGroup Orange = new(2);
@@ -90,7 +92,8 @@ Behind the scenes a Roslyn Source Generator, which comes with the library, gener
 
 ```C#
 // a private constructor which takes the key and additional members (if we had any)
-public sealed partial class ProductType : IEnum<string>
+[SmartEnum<string>]
+public sealed partial class ProductType
 {
    public static readonly ProductType Groceries = new("Groceries");
    ...
@@ -207,7 +210,8 @@ var isBigger = ProductGroup.Apple > ProductGroup.Orange;
 Definition of a new Smart Enum with 1 custom property `RequiresFoodVendorLicense` and 1 method `Do` with different behaviors for different enum items.
 
 ```C#
-public partial class ProductType : IEnum<string>
+[SmartEnum<string>]
+public partial class ProductType
 {
    public static readonly ProductType Groceries = new("Groceries",  requiresFoodVendorLicense: true);
    public static readonly ProductType Housewares = new HousewaresProductType();
