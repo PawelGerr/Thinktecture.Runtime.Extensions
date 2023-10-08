@@ -7,7 +7,7 @@ public static class AttributeDataExtensions
 {
    public static string? FindKeyPropertyName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, "KeyPropertyName");
+      return GetStringParameterValue(attributeData, Constants.Attributes.SmartEnum.Properties.KEY_PROPERTY_NAME);
    }
 
    public static string? FindDefaultInstancePropertyName(this AttributeData attributeData)
@@ -28,6 +28,11 @@ public static class AttributeDataExtensions
    public static bool? FindNullInFactoryMethodsYieldsNull(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "NullInFactoryMethodsYieldsNull");
+   }
+
+   public static bool? FindIsValidatable(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "IsValidatable");
    }
 
    public static bool? FindSkipIComparable(this AttributeData attributeData)

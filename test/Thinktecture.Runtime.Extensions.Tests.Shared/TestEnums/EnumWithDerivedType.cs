@@ -1,6 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public partial class EnumWithDerivedType : IValidatableEnum<int>
+[SmartEnum<int>(IsValidatable = true)]
+public partial class EnumWithDerivedType
 {
    public static readonly EnumWithDerivedType Item1 = new(1);
    public static readonly EnumWithDerivedType ItemOfDerivedType = new DerivedEnum(2);

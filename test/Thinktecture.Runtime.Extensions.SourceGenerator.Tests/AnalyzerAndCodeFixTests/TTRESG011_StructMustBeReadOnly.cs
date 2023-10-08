@@ -19,7 +19,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public partial struct {|#0:TestEnum|} : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public partial struct {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -37,7 +38,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public readonly partial struct {|#0:TestEnum|} : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public readonly partial struct {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -62,7 +64,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public readonly partial struct {|#0:TestEnum|} : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public readonly partial struct {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }

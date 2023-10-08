@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -14,19 +13,6 @@ public static class TypeSymbolExtensions
       return type is null || type.SpecialType == SpecialType.System_Object;
    }
 
-   public static bool IsSelfOrBaseTypesAnEnum(this ITypeSymbol? type)
-   {
-      while (!type.IsNullOrObject())
-      {
-         if (type.IsEnum())
-            return true;
-
-         type = type.BaseType;
-      }
-
-      return false;
-   }
-
    public static bool HasValueObjectAttribute(this ITypeSymbol type)
    {
       var valueObjectAttribute = type.FindValueObjectAttribute();
@@ -34,158 +20,19 @@ public static class TypeSymbolExtensions
       return valueObjectAttribute is not null;
    }
 
-   public static bool IsEnum([NotNullWhen(true)] this ITypeSymbol? enumType)
+   public static bool IsEnum(
+      [NotNullWhen(true)] this ITypeSymbol? enumType)
    {
-      return enumType.IsEnum(false, out _);
+      return IsEnum(enumType, out AttributeData? _);
    }
 
    public static bool IsEnum(
       [NotNullWhen(true)] this ITypeSymbol? enumType,
-      [MaybeNullWhen(false)] out IReadOnlyList<INamedTypeSymbol> enumInterfaces)
+      [NotNullWhen(true)] out AttributeData? smartEnumAttribute)
    {
-      return enumType.IsEnum(true, out enumInterfaces);
-   }
+      smartEnumAttribute = enumType?.FindAttribute(attributeClass => attributeClass.Name == "SmartEnumAttribute" && attributeClass.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
 
-   private static bool IsEnum(
-      [NotNullWhen(true)] this ITypeSymbol? enumType,
-      bool collectFoundInterfaces,
-      [MaybeNullWhen(false)] out IReadOnlyList<INamedTypeSymbol> foundEnumInterfaces)
-   {
-      while (true)
-      {
-         // The type is an enum, if
-         // a) it directly implements IEnum/IValidatableEnum OR
-         // b) it has EnumGenerationAttribute and one of its base classes is an enum
-
-         if (enumType.IsNullOrObject())
-         {
-            foundEnumInterfaces = null;
-            return false;
-         }
-
-         List<INamedTypeSymbol>? implementedInterfaces = null;
-
-         if (SearchForEnumInterfaces(enumType.Interfaces, collectFoundInterfaces, ref implementedInterfaces))
-         {
-            if (!enumType.BaseType.IsNullOrObject())
-               SearchForEnumInterfaces(enumType.BaseType.AllInterfaces, collectFoundInterfaces, ref implementedInterfaces);
-
-            foundEnumInterfaces = implementedInterfaces ?? (IReadOnlyList<INamedTypeSymbol>)Array.Empty<INamedTypeSymbol>();
-            return true;
-         }
-
-         var enumGenerationAttr = enumType.FindEnumGenerationAttribute();
-
-         if (enumGenerationAttr is null)
-         {
-            foundEnumInterfaces = null;
-            return false;
-         }
-
-         enumType = enumType.BaseType;
-      }
-   }
-
-   private static bool SearchForEnumInterfaces(ImmutableArray<INamedTypeSymbol> interfaces, bool collectFoundInterfaces, ref List<INamedTypeSymbol>? foundEnumInterfaces)
-   {
-      foreach (var @interface in interfaces)
-      {
-         if (@interface.IsNonValidatableEnumInterface() || @interface.IsValidatableEnumInterface())
-         {
-            if (!collectFoundInterfaces)
-               return true;
-
-            (foundEnumInterfaces ??= new List<INamedTypeSymbol>()).Add(@interface);
-         }
-      }
-
-      return foundEnumInterfaces?.Count > 0;
-   }
-
-   public static INamedTypeSymbol? GetValidEnumInterface(
-      this IReadOnlyList<INamedTypeSymbol> enumInterfaces,
-      ITypeSymbol enumType,
-      (Action<Diagnostic> ReportDiagnostic, Location Location)? diagnostics = null)
-   {
-      INamedTypeSymbol? validInterface = null;
-      ITypeSymbol? validKeyType = null;
-
-      var emitDontImplementEnumInterfaceWithTwoGenerics = false;
-      INamedTypeSymbol? enumInterfaceWithTwoGenerics = null;
-
-      for (var i = 0; i < enumInterfaces.Count; i++)
-      {
-         var enumInterface = enumInterfaces[i];
-         var enumInterfaceTypeArgs = enumInterface.TypeArguments;
-
-         if (!enumInterface.IsGenericType || enumInterfaceTypeArgs.IsDefaultOrEmpty)
-            continue;
-
-         if (enumInterfaceTypeArgs.Length != 1)
-         {
-            if (diagnostics is not null && enumInterfaceTypeArgs.Length == 2)
-            {
-               if (enumInterfaceWithTwoGenerics is null)
-               {
-                  enumInterfaceWithTwoGenerics = enumInterface;
-               }
-               // forbid 2 different implementations of IEnum<TKey, T>
-               else if (!SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], enumInterfaceTypeArgs[0])
-                        || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumInterfaceTypeArgs[1]))
-               {
-                  emitDontImplementEnumInterfaceWithTwoGenerics = true;
-               }
-            }
-
-            continue;
-         }
-
-         var keyType = enumInterfaceTypeArgs[0];
-
-         if (validInterface == null)
-         {
-            validInterface = enumInterface;
-            validKeyType = keyType;
-         }
-         else
-         {
-            if (!SymbolEqualityComparer.Default.Equals(validKeyType, keyType))
-            {
-               diagnostics?.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces, diagnostics.Value.Location, enumType.Name));
-
-               return null;
-            }
-
-            // if the type implements both, IEnum and IValidatableEnum
-            // then it is considered an IValidatableEnum.
-            if (enumInterface.IsValidatableEnumInterface())
-               validInterface = enumInterface;
-         }
-      }
-
-      // check the validity of IEnum<TKey, T>
-      if (diagnostics is not null && validInterface is not null && validKeyType is not null && enumInterfaceWithTwoGenerics is not null
-          && (emitDontImplementEnumInterfaceWithTwoGenerics
-              || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[0], validKeyType)
-              || !SymbolEqualityComparer.Default.Equals(enumInterfaceWithTwoGenerics.TypeArguments[1], enumType)))
-      {
-         diagnostics.Value.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics,
-                                                              diagnostics.Value.Location,
-                                                              validKeyType,
-                                                              enumType.Name));
-      }
-
-      return validInterface;
-   }
-
-   public static bool IsNonValidatableEnumInterface(this INamedTypeSymbol type)
-   {
-      return type is { Name: "IEnum", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
-   }
-
-   public static bool IsValidatableEnumInterface(this INamedTypeSymbol type)
-   {
-      return type is { Name: "IValidatableEnum", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return smartEnumAttribute?.AttributeClass != null && smartEnumAttribute.AttributeClass.TypeKind != TypeKind.Error;
    }
 
    public static bool IsMessagePackFormatterAttribute(this ITypeSymbol type)
@@ -362,11 +209,6 @@ public static class TypeSymbolExtensions
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter)
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[1], genericTypeParameter)
              && @interface.TypeArguments[2].SpecialType == SpecialType.System_Boolean;
-   }
-
-   public static AttributeData? FindEnumGenerationAttribute(this ITypeSymbol type)
-   {
-      return type.FindAttribute(static attrType => attrType is { Name: "EnumGenerationAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } });
    }
 
    private static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)

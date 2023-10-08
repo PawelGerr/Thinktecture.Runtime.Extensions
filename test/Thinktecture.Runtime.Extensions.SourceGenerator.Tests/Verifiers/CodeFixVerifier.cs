@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Thinktecture.Extensions;
 
 namespace Thinktecture.Runtime.Tests.Verifiers;
@@ -21,7 +20,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
 {
    public static DiagnosticResult Diagnostic(string diagnosticId)
    {
-      return CSharpCodeFixVerifier<TAnalyzer, TCodeFix, XUnitVerifier>.Diagnostic(diagnosticId);
+      return CSharpCodeFixVerifier<TAnalyzer, TCodeFix, DefaultVerifier>.Diagnostic(diagnosticId);
    }
 
    public static async Task VerifyAnalyzerAsync(
@@ -49,7 +48,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       await test.RunAsync(CancellationToken.None);
    }
 
-   private class CodeFixTest : CSharpCodeFixTest<TAnalyzer, TCodeFix, XUnitVerifier>
+   private class CodeFixTest : CSharpCodeFixTest<TAnalyzer, TCodeFix, DefaultVerifier>
    {
       public CodeFixTest(
          string source,

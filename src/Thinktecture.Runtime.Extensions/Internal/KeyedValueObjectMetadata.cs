@@ -44,12 +44,12 @@ public sealed class KeyedValueObjectMetadata
    public LambdaExpression ConvertToKeyExpression { get; }
 
    /// <summary>
-   /// An indication whether the type implements <see cref="IEnum{TKey}"/> or <see cref="IValidatableEnum{TKey}"/>.
+   /// An indication whether the type is a Smart Enum.
    /// </summary>
    public bool IsEnumeration { get; }
 
    /// <summary>
-   /// An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.
+   /// An indication whether the type is a validatable Smart Enum.
    /// </summary>
    public bool IsValidatableEnum { get; }
 
@@ -58,8 +58,8 @@ public sealed class KeyedValueObjectMetadata
    /// </summary>
    /// <param name="type">The type of the value object or a smart enum.</param>
    /// <param name="keyType">The type of the key property.</param>
-   /// <param name="isEnumeration">An indication whether the type implements <see cref="IEnum{TKey}"/> or <see cref="IValidatableEnum{TKey}"/>.</param>
-   /// <param name="isValidatableEnum">An indication whether the type implements <see cref="IValidatableEnum{TKey}"/>.</param>
+   /// <param name="isEnumeration">An indication whether the type is a Smart Enum.</param>
+   /// <param name="isValidatableEnum">An indication whether the type is a validatable Smart Enum.</param>
    /// <param name="convertFromKey">A delegate for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>
    /// <param name="convertFromKeyExpression">An expression for conversion of values of type <paramref name="keyType"/> to type <paramref name="type"/>.</param>
    /// <param name="convertFromKeyExpressionViaConstructor">

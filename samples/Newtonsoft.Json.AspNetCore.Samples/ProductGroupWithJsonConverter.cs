@@ -2,7 +2,8 @@ using Thinktecture.SmartEnums;
 
 namespace Thinktecture;
 
-public sealed partial class ProductGroupWithJsonConverter : IValidatableEnum<int>
+[SmartEnum<int>(IsValidatable = true)]
+public sealed partial class ProductGroupWithJsonConverter
 {
    public static readonly ProductGroupWithJsonConverter Apple = new(1, "Apple", ProductCategory.Fruits);
    public static readonly ProductGroupWithJsonConverter Orange = new(2, "Orange", ProductCategory.Fruits);

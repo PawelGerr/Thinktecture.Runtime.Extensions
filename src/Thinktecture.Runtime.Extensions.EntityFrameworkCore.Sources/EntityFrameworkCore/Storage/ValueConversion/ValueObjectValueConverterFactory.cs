@@ -5,12 +5,12 @@ using Thinktecture.Internal;
 namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 
 /// <summary>
-/// Value converter for Value Objects and <see cref="IEnum{TKey}"/>.
+/// Value converter for Value Objects and <see cref="IKeyedValueObject{TKey}"/>.
 /// </summary>
 public sealed class ValueObjectValueConverterFactory
 {
    /// <summary>
-   /// Creates a value converter for value objects with a key property and <see cref="IEnum{TKey}"/>.
+   /// Creates a value converter for value objects with a key property and <see cref="IKeyedValueObject{TKey}"/>.
    /// </summary>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <typeparam name="T">Type of the value object.</typeparam>
@@ -24,24 +24,24 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    /// <summary>
-   /// Creates a value converter for <see cref="IValidatableEnum{TKey}"/>.
+   /// Creates a value converter for a validatable Smart Enum.
    /// </summary>
    /// <param name="validateOnWrite">Ensures that the item is valid before writing it to database.</param>
    /// <typeparam name="TEnum">Type of the enum.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
    /// <returns>An instance of <see cref="ValueConverter{TEnum,TKey}"/>></returns>
    public static ValueConverter<TEnum, TKey> CreateForValidatableEnum<TEnum, TKey>(bool validateOnWrite)
-      where TEnum : IValidatableEnum<TKey>
+      where TEnum : IValidatableEnum, IEnum<TKey>
       where TKey : notnull
    {
       return new ValidatableEnumValueConverter<TEnum, TKey>(validateOnWrite);
    }
 
    /// <summary>
-   /// Creates a value converter for <see cref="IValidatableEnum{TKey}"/>.
+   /// Creates a value converter for validatable Smart Enum.
    /// </summary>
    /// <param name="type">Type of the value object/enum.</param>
-   /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
+   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <returns>An instance of <see cref="ValueConverter"/>></returns>
    public static ValueConverter Create(
@@ -107,7 +107,7 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private sealed class ValidatableEnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
-      where TEnum : IValidatableEnum<TKey>
+      where TEnum : IValidatableEnum, IEnum<TKey>
       where TKey : notnull
    {
       public ValidatableEnumValueConverter(bool validateOnWrite)

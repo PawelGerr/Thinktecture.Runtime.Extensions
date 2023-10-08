@@ -32,7 +32,7 @@ public class BoundValueObject<T, TKey> : IBoundParam
       {
          var validationResult = T.Validate(key, out var item);
 
-         if (validationResult is null || item is IValidatableEnum<TKey>)
+         if (validationResult is null || item is IValidatableEnum)
          {
             value = new BoundValueObject<T, TKey>(item);
          }
@@ -68,7 +68,7 @@ public class BoundValueObject<T> : IBoundParam
    {
       var validationResult = T.Validate(s, out var item);
 
-      if (validationResult is null || item is IValidatableEnum<string>)
+      if (validationResult is null || item is IValidatableEnum)
       {
          value = new BoundValueObject<T>(item);
       }

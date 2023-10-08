@@ -25,7 +25,8 @@ namespace TestNamespace
       public static object Field = default;
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -55,7 +56,8 @@ namespace TestNamespace
       public static readonly object Field = default;
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -84,7 +86,8 @@ namespace TestNamespace
       public object Field = default;
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -114,7 +117,8 @@ namespace TestNamespace
       public readonly object Field = default;
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -142,7 +146,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticField, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticField
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -168,7 +173,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticReadonlyField, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticReadonlyField
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -193,7 +199,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceField, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceField
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -219,7 +226,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceReadonlyField, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceReadonlyField
 	{
       public static readonly TestEnum Item1 = default;
    }

@@ -1,6 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public abstract partial class AbstractEnum : IValidatableEnum<int>
+[SmartEnum<int>(IsValidatable = true)]
+public abstract partial class AbstractEnum
 {
    public static readonly AbstractEnum Item = new ValidItem(1);
 

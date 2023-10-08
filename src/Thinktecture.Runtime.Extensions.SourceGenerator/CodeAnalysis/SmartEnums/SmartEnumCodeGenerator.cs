@@ -52,7 +52,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
-   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@">,
+   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(">,");
+
+      if (_state.IsValidatable)
+      {
+         _sb.Append(@"
+      global::Thinktecture.IValidatableEnum,");
+      }
+
+      _sb.Append(@"
       global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">
    {");
 
@@ -537,7 +545,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Explicit conversion from the type <see cref=""").Append(_state.KeyProperty.TypeFullyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(_state.KeyProperty.ArgumentName).Append(@""">Value to covert.</param>
-      /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/> if the <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum{TKey}""/>.</returns>
+      /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/> if the <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum""/>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(_state.KeyProperty.ArgumentName).Append(@""")]
       public static explicit operator ").Append(_state.TypeFullyQualifiedNullAnnotated).Append("(").Append(_state.KeyProperty.TypeFullyQualifiedNullAnnotated).Append(" ").Append(_state.KeyProperty.ArgumentName).Append(@")
       {

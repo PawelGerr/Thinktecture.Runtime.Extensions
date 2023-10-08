@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public sealed partial class TestEnumWithNonDefaultComparer : IValidatableEnum<string>
+[SmartEnum<string>(IsValidatable = true)]
+public sealed partial class TestEnumWithNonDefaultComparer
 {
    public static IEqualityComparer<string> KeyEqualityComparer => StringComparer.Ordinal;
 

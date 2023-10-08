@@ -1,6 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public sealed partial class EnumWithDuplicateKey : IValidatableEnum<string>
+[SmartEnum<string>(IsValidatable = true)]
+public sealed partial class EnumWithDuplicateKey
 {
    public static readonly EnumWithDuplicateKey Item = new("Item");
    public static readonly EnumWithDuplicateKey Duplicate = new("item");

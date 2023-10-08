@@ -17,7 +17,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class TestEnum
 	{
       internal static readonly TestEnum {|#0:Item1|} = default;
    }
@@ -35,7 +36,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class TestEnum
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -60,7 +62,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class TestEnum
 	{
       static private readonly TestEnum {|#0:Item1|} = default;
    }
@@ -78,7 +81,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class TestEnum
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -103,7 +107,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class TestEnum
 	{
       static readonly TestEnum {|#0:Item1|} = default;
    }
@@ -121,7 +126,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class TestEnum
 	{
       public static readonly TestEnum Item1 = default;
    }

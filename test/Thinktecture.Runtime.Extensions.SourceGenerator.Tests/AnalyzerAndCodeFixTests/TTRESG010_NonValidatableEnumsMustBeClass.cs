@@ -17,7 +17,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public readonly partial struct {|#0:TestEnum|} : IEnum<string>
+   [SmartEnum<string>]
+	public readonly partial struct {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -42,7 +43,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : IEnum<string>
+   [SmartEnum<string>]
+	public sealed partial class {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }

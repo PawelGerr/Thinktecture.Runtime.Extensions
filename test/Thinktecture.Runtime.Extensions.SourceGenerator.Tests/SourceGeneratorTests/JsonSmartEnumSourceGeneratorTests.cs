@@ -18,7 +18,8 @@ using System;
 
 namespace Thinktecture.Tests
 {
-	public partial class TestEnum : IEnum<string>
+   [SmartEnum<string>]
+	public partial class TestEnum
 	{
       public static readonly TestEnum Item1 = new(""Item1"");
       public static readonly TestEnum Item2 = new(""Item2"");
@@ -50,7 +51,8 @@ partial class TestEnum
 using System;
 using Thinktecture;
 
-public partial class TestEnum : IEnum<string>
+[SmartEnum<string>]
+public partial class TestEnum
 {
    public static readonly TestEnum Item1 = new(""Item1"");
    public static readonly TestEnum Item2 = new(""Item2"");
@@ -80,7 +82,8 @@ using System;
 
 namespace Thinktecture.Tests
 {
-	public readonly partial struct TestEnum : IEnum<string>
+   [SmartEnum<string>]
+	public readonly partial struct TestEnum
 	{
       public static readonly TestEnum Item1 = new(""Item1"");
       public static readonly TestEnum Item2 = new(""Item2"");
@@ -128,8 +131,9 @@ namespace Thinktecture.Tests
       }
    }
 
+   [SmartEnum<string>]
    [JsonConverter(typeof(TestEnumJsonConverter))]
-	public partial class TestEnum : IEnum<string>
+	public partial class TestEnum
 	{
       public static readonly TestEnum Item1 = new(""Item1"");
       public static readonly TestEnum Item2 = new(""Item2"");

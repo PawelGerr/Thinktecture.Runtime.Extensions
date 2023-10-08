@@ -148,7 +148,7 @@ public class DemoController : Controller
    }
 
    private IActionResult RoundTripValidatableEnum<T, TKey>(T value)
-      where T : IValidatableEnum<TKey>
+      where T : IValidatableEnum, IEnum<TKey>
       where TKey : notnull
    {
       if (!ModelState.IsValid)

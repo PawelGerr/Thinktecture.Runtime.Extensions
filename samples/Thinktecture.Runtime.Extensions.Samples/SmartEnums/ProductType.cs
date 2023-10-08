@@ -1,6 +1,7 @@
 namespace Thinktecture.SmartEnums;
 
-public sealed partial class ProductType : IEnum<string>
+[SmartEnum<string>]
+public sealed partial class ProductType
 {
    public static readonly ProductType Groceries = new("Groceries");
    public static readonly ProductType Housewares = new("Housewares");

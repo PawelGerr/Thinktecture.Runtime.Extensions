@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Thinktecture.Extensions;
 
 namespace Thinktecture.Runtime.Tests.Verifiers;
@@ -17,7 +16,7 @@ public static class AnalyzerVerifier<TAnalyzer>
 {
    public static DiagnosticResult Diagnostic(string diagnosticId)
    {
-      return CSharpAnalyzerVerifier<TAnalyzer, XUnitVerifier>.Diagnostic(diagnosticId);
+      return CSharpAnalyzerVerifier<TAnalyzer, DefaultVerifier>.Diagnostic(diagnosticId);
    }
 
    public static Task VerifyAnalyzerAsync(
@@ -36,7 +35,7 @@ public static class AnalyzerVerifier<TAnalyzer>
       await test.RunAsync(CancellationToken.None);
    }
 
-   private class AnalyzerTest : CSharpAnalyzerTest<TAnalyzer, XUnitVerifier>
+   private class AnalyzerTest : CSharpAnalyzerTest<TAnalyzer, DefaultVerifier>
    {
       public AnalyzerTest(
          string source,
@@ -48,7 +47,7 @@ public static class AnalyzerVerifier<TAnalyzer>
 #if NET7
          ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
 #else
-         ReferenceAssemblies = new ReferenceAssemblies("net8.0", new PackageIdentity("Microsoft.NETCore.App.Ref","8.0.0-rc.1.23419.4"), Path.Combine("ref", "8.0.0-rc.1.23419.4"));
+         ReferenceAssemblies = new ReferenceAssemblies("net8.0", new PackageIdentity("Microsoft.NETCore.App.Ref", "8.0.0-rc.1.23419.4"), Path.Combine("ref", "8.0.0-rc.1.23419.4"));
 #endif
          foreach (var additionalReference in additionalReferences)
          {

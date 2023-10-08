@@ -1,7 +1,8 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-[EnumGeneration(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class IntegerEnum : IValidatableEnum<int>
+[SmartEnum<int>(IsValidatable = true,
+                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+public sealed partial class IntegerEnum
 {
    public static readonly IntegerEnum Item1 = new(1);
    public static readonly IntegerEnum Item2 = new(2);

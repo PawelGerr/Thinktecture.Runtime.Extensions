@@ -3,8 +3,8 @@ using CsvHelper;
 
 namespace Thinktecture.SmartEnums;
 
-[EnumGeneration(KeyPropertyName = "Name")]
-public sealed partial class SalesCsvImporterType : IEnum<string>
+[SmartEnum<string>(KeyPropertyName = "Name")]
+public sealed partial class SalesCsvImporterType
 {
    public static readonly SalesCsvImporterType Daily = new(name: "Daily", articleIdIndex: 0, volumeIndex: 2, GetDateTimeForDaily);
    public static readonly SalesCsvImporterType Monthly = new(name: "Monthly", articleIdIndex: 2, volumeIndex: 0, GetDateTimeForMonthly);

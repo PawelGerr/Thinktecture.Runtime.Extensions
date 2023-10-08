@@ -90,7 +90,7 @@ public class SmartEnumDemos
 
    private static void DemoForNonValidatableEnum(ILogger logger)
    {
-      logger.Information("==== Demo for IEnum<T> ====");
+      logger.Information("==== Demo for SmartEnum<T> ====");
 
       logger.Information("Product types: {Types}", ProductType.Items);
 
@@ -195,7 +195,7 @@ public class SmartEnumDemos
 
    private static void DemoForValidatableEnum(ILogger logger)
    {
-      logger.Information("==== Demo for IValidatableEnum<T> ====");
+      logger.Information("==== Demo for SmartEnum<T>(IsValidatable = true) ====");
 
       var categories = ProductCategory.Items;
       logger.Information("Categories: {Categories}", categories);

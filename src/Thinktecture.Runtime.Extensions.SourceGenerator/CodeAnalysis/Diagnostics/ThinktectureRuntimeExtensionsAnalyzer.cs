@@ -23,8 +23,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
                                                                                                               DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
                                                                                                               DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
-                                                                                                              DiagnosticsDescriptors.MultipleIncompatibleEnumInterfaces,
-                                                                                                              DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces,
                                                                                                               DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
                                                                                                               DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
                                                                                                               DiagnosticsDescriptors.TypeCannotBeNestedClass,
@@ -38,7 +36,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
                                                                                                               DiagnosticsDescriptors.ValueObjectMustBeSealed,
                                                                                                               DiagnosticsDescriptors.SwitchAndMapMustCoverAllItems,
-                                                                                                              DiagnosticsDescriptors.DontImplementEnumInterfaceWithTwoGenerics,
                                                                                                               DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
                                                                                                               DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                                                                               DiagnosticsDescriptors.InitAccessorMustBePrivate);
@@ -114,10 +111,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
             return;
 
-         if (!type.IsEnum(out var enumInterfaces))
+         if (!type.IsEnum(out var smartEnumAttribute))
             return;
 
-         ValidateEnum(context, type, enumInterfaces);
+         ValidateEnum(context, type, smartEnumAttribute);
       }
       catch (Exception ex)
       {
@@ -257,7 +254,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ValidateEnum(
       SymbolAnalysisContext context,
       INamedTypeSymbol enumType,
-      IReadOnlyList<INamedTypeSymbol> enumInterfaces)
+      AttributeData smartEnumAttribute)
    {
       var locationOfFirstDeclaration = enumType.Locations.IsDefaultOrEmpty ? Location.None : enumType.Locations[0]; // a representative for all
 
@@ -269,11 +266,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (enumType.ContainingType is not null) // is nested class
       {
-         if (!enumType.BaseType.IsSelfOrBaseTypesAnEnum()) // base class is not an enum because in this case "DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces" kicks in
-         {
-            ReportDiagnostic(context, DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, enumType);
-            return;
-         }
+         ReportDiagnostic(context, DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, enumType);
+         return;
       }
 
       var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, new SelfLogErrorLogger(nameof(ThinktectureRuntimeExtensionsAnalyzer)));
@@ -291,20 +285,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, enumType);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
-      var validEnumInterface = enumInterfaces.GetValidEnumInterface(enumType, (context.ReportDiagnostic, locationOfFirstDeclaration));
+      var keyType = smartEnumAttribute.AttributeClass?.TypeArguments[0];
 
-      if (validEnumInterface is null || validEnumInterface.TypeKind == TypeKind.Error)
-         return;
-
-      var keyType = validEnumInterface.TypeArguments[0];
-
-      if (keyType.TypeKind == TypeKind.Error)
+      if (keyType is null || keyType.TypeKind == TypeKind.Error)
          return;
 
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
 
-      var isValidatable = validEnumInterface.IsValidatableEnumInterface();
+      var isValidatable = smartEnumAttribute.FindIsValidatable() ?? false;
 
       StructMustBeReadOnly(context, enumType, locationOfFirstDeclaration);
 
@@ -332,10 +321,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          baseClass = baseClass.BaseType;
       }
 
-      var enumAttr = enumType.FindEnumGenerationAttribute();
-
-      if (enumAttr is not null)
-         EnumKeyPropertyNameMustNotBeItem(context, enumAttr, locationOfFirstDeclaration);
+      EnumKeyPropertyNameMustNotBeItem(context, smartEnumAttribute, locationOfFirstDeclaration);
 
       var derivedTypes = ValidateDerivedTypes(context, enumType);
 
@@ -366,9 +352,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       for (var i = 0; i < derivedTypes.Count; i++)
       {
          var (type, level) = derivedTypes[i];
-
-         if (type.IsEnum())
-            ReportDiagnostic(context, DiagnosticsDescriptors.DerivedTypeMustNotImplementEnumInterfaces, GetDerivedTypeLocation(type, context), type);
 
          if (level == 1)
          {
@@ -423,7 +406,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken);
 
       ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
-                       attributeSyntax?.ArgumentList?.GetLocation() ?? location, keyPropName);
+                       attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.SmartEnum.Properties.KEY_PROPERTY_NAME)?.GetLocation() ?? location, keyPropName);
    }
 
    private static void EnumItemsMustBePublic(SymbolAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<IFieldSymbol> items)

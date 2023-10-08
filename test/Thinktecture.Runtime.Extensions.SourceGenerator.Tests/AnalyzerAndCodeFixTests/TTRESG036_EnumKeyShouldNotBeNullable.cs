@@ -11,60 +11,6 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    private const string _DIAGNOSTIC_ID = "TTRESG036";
 
    [Fact]
-   public async Task Should_trigger_on_nullable_string_in_IValidatableEnum()
-   {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-#pragma warning disable CS8632
-	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string?>
-#pragma warning restore CS8632
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
-
-      var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
-      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
-   }
-
-   [Fact]
-   public async Task Should_trigger_on_nullable_string_in_IEnum()
-   {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-#pragma warning disable CS8632
-	public sealed partial class {|#0:TestEnum|} : IEnum<string?>
-#pragma warning restore CS8632
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
-
-      var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
-      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
-   }
-
-   [Fact]
    public async Task Should_trigger_on_nullable_int_in_IValidatableEnum()
    {
       var code = @"
@@ -74,7 +20,8 @@ using Thinktecture;
 namespace TestNamespace
 {
 #pragma warning disable CS8632
-	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<int?>
+   [SmartEnum<int?>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|}
 #pragma warning restore CS8632
 	{
       public static readonly TestEnum Item1 = default;
@@ -101,7 +48,8 @@ using Thinktecture;
 namespace TestNamespace
 {
 #pragma warning disable CS8632
-	public sealed partial class {|#0:TestEnum|} : IEnum<int?>
+   [SmartEnum<int?>]
+	public sealed partial class {|#0:TestEnum|}
 #pragma warning restore CS8632
 	{
       public static readonly TestEnum Item1 = default;
@@ -127,7 +75,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -151,7 +100,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : IEnum<string>
+   [SmartEnum<string>]
+	public sealed partial class {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -175,7 +125,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<int?>
+   [SmartEnum<int?>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -200,7 +151,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : IEnum<int>
+   [SmartEnum<int>]
+	public sealed partial class {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }

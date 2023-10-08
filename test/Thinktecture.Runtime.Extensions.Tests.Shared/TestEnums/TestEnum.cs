@@ -2,7 +2,8 @@ using System;
 
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public sealed partial class TestEnum : IValidatableEnum<string>
+[SmartEnum<string>(IsValidatable = true)]
+public sealed partial class TestEnum
 {
    public static readonly TestEnum Item1 = new("item1");
    public static readonly TestEnum Item2 = new("item2");

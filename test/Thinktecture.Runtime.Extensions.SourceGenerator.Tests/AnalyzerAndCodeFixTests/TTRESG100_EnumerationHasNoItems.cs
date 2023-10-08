@@ -17,7 +17,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|}
 	{
    }
 
@@ -41,7 +42,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|}
 	{
       public static readonly TestEnum Item1 = default;
    }

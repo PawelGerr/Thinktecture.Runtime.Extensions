@@ -26,7 +26,8 @@ namespace TestNamespace
       public int Property { get; set; }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -56,7 +57,8 @@ namespace TestNamespace
       public int Property { get; }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -85,7 +87,8 @@ namespace TestNamespace
       public static int Property { get; set; }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -115,7 +118,8 @@ namespace TestNamespace
       public static int Property { get; }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -148,7 +152,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -181,7 +186,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -214,7 +220,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -247,7 +254,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -284,7 +292,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -321,7 +330,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -353,7 +363,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -385,7 +396,8 @@ namespace TestNamespace
       }
    }
 
-	public sealed partial class {|#0:TestEnum|} : BaseClass, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClass
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -413,7 +425,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -439,7 +452,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstancePropertyWithGetterOnly, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstancePropertyWithGetterOnly
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -464,7 +478,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -490,7 +505,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticPropertyWithGetterOnly, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticPropertyWithGetterOnly
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -515,7 +531,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -540,7 +557,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionStaticProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionStaticProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -565,7 +583,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -590,7 +609,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyStaticProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyStaticProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -617,7 +637,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -643,7 +664,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionStaticProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionStaticProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -669,7 +691,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyProperty
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -695,7 +718,8 @@ using Thinktecture.Runtime.Tests.BaseClasses;
 
 namespace TestNamespace
 {
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyStaticProperty, IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyStaticProperty
 	{
       public static readonly TestEnum Item1 = default;
    }

@@ -229,15 +229,13 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       var enumType = model.GetDeclaredSymbol(declaration);
 
-      if (!enumType.IsEnum(out var enumInterfaces))
+      if (!enumType.IsEnum(out AttributeData? smartEnumAttribute))
          return document;
 
-      var enumInterface = enumInterfaces.GetValidEnumInterface(enumType);
+      var keyType = smartEnumAttribute.AttributeClass?.TypeArguments[0];
 
-      if (enumInterface is null)
+      if (keyType is null)
          return document;
-
-      var keyType = enumInterface.TypeArguments[0];
 
       var parameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("key"))
                                    .WithType(SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)));

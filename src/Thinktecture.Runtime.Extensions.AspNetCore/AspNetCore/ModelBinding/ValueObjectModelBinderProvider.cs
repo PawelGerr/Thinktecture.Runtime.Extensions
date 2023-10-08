@@ -6,7 +6,7 @@ using Thinktecture.Internal;
 namespace Thinktecture.AspNetCore.ModelBinding;
 
 /// <summary>
-/// Provider for creation of model binders implementing <see cref="IEnum{TKey}"/> or for Value Objects with a key member.
+/// Provider for creation of model binders implementing <see cref="IKeyedValueObject{TKey}"/> or for Value Objects with a key member.
 /// </summary>
 public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
 {

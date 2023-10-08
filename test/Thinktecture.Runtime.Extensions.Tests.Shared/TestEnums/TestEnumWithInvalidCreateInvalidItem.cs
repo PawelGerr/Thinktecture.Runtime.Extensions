@@ -1,6 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public sealed partial class TestEnumWithInvalidCreateInvalidItem : IValidatableEnum<int>
+[SmartEnum<int>(IsValidatable = true)]
+public sealed partial class TestEnumWithInvalidCreateInvalidItem
 {
    public const int INVALID_KEY_FOR_TESTING_KEY_REUSE = 0;
    public const int INVALID_KEY_FOR_TESTING_IS_VALID_TRUE = -1;

@@ -1,6 +1,7 @@
 namespace Thinktecture.SmartEnums;
 
-public partial class Operator : IEnum<string>
+[SmartEnum<string>]
+public partial class Operator
 {
    public static readonly Operator Item1 = new("Operator 1");
    public static readonly Operator Item2 = new GenericOperator<int>("Operator 2");

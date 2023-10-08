@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
@@ -20,7 +19,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       SetupLogger(context, options);
 
       var enumTypeOrError = context.SyntaxProvider
-                                   .CreateSyntaxProvider(IsCandidate, GetSourceGenContextOrNull)
+                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.NAME,
+                                                                 IsCandidate,
+                                                                 GetSourceGenContextOrNull)
                                    .SelectMany(static (state, _) => state.HasValue
                                                                        ? ImmutableArray.Create(state.Value)
                                                                        : ImmutableArray<SourceGenContext>.Empty);
@@ -229,8 +230,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private bool IsEnumCandidate(TypeDeclarationSyntax typeDeclaration)
    {
       var isCandidate = typeDeclaration.IsPartial()
-                        && !typeDeclaration.IsGeneric()
-                        && typeDeclaration.IsEnumCandidate();
+                        && !typeDeclaration.IsGeneric();
 
       if (isCandidate)
       {
@@ -244,19 +244,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       return isCandidate;
    }
 
-   private SourceGenContext? GetSourceGenContextOrNull(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
    {
-      var tds = (TypeDeclarationSyntax)context.Node;
+      var tds = (TypeDeclarationSyntax)context.TargetNode;
 
       try
       {
-         var type = context.SemanticModel.GetDeclaredSymbol(tds, cancellationToken);
-
-         if (type is null)
-         {
-            Logger.LogDebug("Type in semantic model not found", tds);
-            return null;
-         }
+         var type = (INamedTypeSymbol)context.TargetSymbol;
 
          if (type.TypeKind == TypeKind.Error)
          {
@@ -270,27 +264,33 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             return null;
          }
 
-         if (!type.IsEnum(out var enumInterfaces))
+         if (context.Attributes.Length > 1)
          {
-            Logger.LogDebug("Candidate isn't a Smart Enum", tds);
+            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds);
             return null;
          }
 
-         var enumInterface = enumInterfaces.GetValidEnumInterface(type);
+         var attributetype = context.Attributes[0].AttributeClass;
 
-         if (enumInterface is null)
+         if (attributetype is null)
          {
-            Logger.LogDebug("No valid Smart-Enum-interface found", tds);
+            Logger.LogDebug("The attribute type is null", tds);
             return null;
          }
 
-         if (enumInterface.TypeKind == TypeKind.Error)
+         if (attributetype.TypeKind == TypeKind.Error)
          {
-            Logger.LogDebug("Type of the Smart-Enum-interface is erroneous", tds);
+            Logger.LogDebug("The attribute type is erroneous", tds);
             return null;
          }
 
-         var keyMemberType = enumInterface.TypeArguments[0];
+         if (attributetype.TypeArguments.Length != 1)
+         {
+            Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.TypeArguments.Length}", tds);
+            return null;
+         }
+
+         var keyMemberType = attributetype.TypeArguments[0];
 
          if (keyMemberType.TypeKind == TypeKind.Error)
          {
@@ -309,16 +309,15 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
 
-         var settings = new EnumSettings(type.FindEnumGenerationAttribute());
+         var settings = new EnumSettings(context.Attributes[0]);
          var keyTypedMemberState = factory.Create(keyMemberType);
          var keyProperty = settings.CreateKeyProperty(keyTypedMemberState);
-         var isValidatable = enumInterface.IsValidatableEnumInterface();
-         var hasCreateInvalidItemImplementation = isValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
+         var hasCreateInvalidItemImplementation = settings.IsValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
 
          var attributeInfo = new AttributeInfo(type);
 
          var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, settings.SkipSwitchMethods, settings.SkipMapMethods,
-                                                      isValidatable, hasCreateInvalidItemImplementation, attributeInfo.HasStructLayoutAttribute, cancellationToken);
+                                                      settings.IsValidatable, hasCreateInvalidItemImplementation, attributeInfo.HasStructLayoutAttribute, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
          Logger.LogDebug("The type declaration is a valid smart enum", namespaceAndName: enumState);

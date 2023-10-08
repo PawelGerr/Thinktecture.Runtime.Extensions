@@ -1,7 +1,8 @@
 namespace Thinktecture.SmartEnums;
 
-[EnumGeneration(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class ProductGroup : IValidatableEnum<int>
+[SmartEnum<int>(IsValidatable = true,
+                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+public sealed partial class ProductGroup
 {
    public static readonly ProductGroup Apple = new(1, "Apple", ProductCategory.Fruits);
    public static readonly ProductGroup Orange = new(2, "Orange", ProductCategory.Fruits);

@@ -34,5 +34,15 @@ public static class Constants
    public static class Attributes
    {
       public const string VALUE_OBJECT = "Thinktecture.ValueObjectAttribute";
+
+      public static class SmartEnum
+      {
+         public const string NAME = "Thinktecture.SmartEnumAttribute`1";
+
+         public static class Properties
+         {
+            public const string KEY_PROPERTY_NAME = "KeyPropertyName";
+         }
+      }
    }
 }

@@ -5,6 +5,7 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 public sealed class EnumSettings : IEquatable<EnumSettings>
 {
    public string? KeyPropertyName { get; }
+   public bool IsValidatable { get; }
    public bool SkipIComparable { get; }
    public bool SkipIParsable { get; }
    public OperatorsGeneration ComparisonOperators { get; }
@@ -17,6 +18,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
    public EnumSettings(AttributeData? attribute)
    {
       KeyPropertyName = attribute?.FindKeyPropertyName().TrimAndNullify();
+      IsValidatable = attribute?.FindIsValidatable() ?? false;
       SkipIComparable = attribute?.FindSkipIComparable() ?? false;
       SkipIParsable = attribute?.FindSkipIParsable() ?? false;
       ComparisonOperators = attribute?.FindComparisonOperators() ?? OperatorsGeneration.Default;
@@ -44,6 +46,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
          return true;
 
       return KeyPropertyName == other.KeyPropertyName
+             && IsValidatable == other.IsValidatable
              && SkipIComparable == other.SkipIComparable
              && SkipIParsable == other.SkipIParsable
              && ComparisonOperators == other.ComparisonOperators
@@ -59,6 +62,7 @@ public sealed class EnumSettings : IEquatable<EnumSettings>
       unchecked
       {
          var hashCode = KeyPropertyName?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ ComparisonOperators.GetHashCode();

@@ -21,7 +21,7 @@ public interface IKeyedValueObject<out TKey> : IKeyedValueObject
    /// Gets the key of the item.
    /// </summary>
    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-   TKey GetKey() => throw new NotImplementedException("This method will be implemented by the source generator.");
+   TKey GetKey();
 }
 
 /// <summary>
@@ -41,5 +41,5 @@ public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>
    /// <param name="key">The value to validate.</param>
    /// <param name="item">Item with key property equals to the provided <paramref name="key"/>.</param>
    /// <returns>Validation result.</returns>
-   static virtual ValidationResult? Validate(TKey? key, out T? item) => throw new NotImplementedException("This method will be implemented by the source generator.");
+   static abstract ValidationResult? Validate(TKey? key, out T? item);
 }

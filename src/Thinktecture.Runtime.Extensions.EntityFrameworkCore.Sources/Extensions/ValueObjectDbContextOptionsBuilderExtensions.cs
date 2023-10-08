@@ -16,7 +16,7 @@ public static class ValueObjectDbContextOptionsBuilderExtensions
    /// </summary>
    /// <param name="builder">Options builder.</param>
    /// <param name="useValueObjectConventions">Indication whether to enable or disable the feature.</param>
-   /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
+   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
@@ -37,7 +37,7 @@ public static class ValueObjectDbContextOptionsBuilderExtensions
    /// </summary>
    /// <param name="builder">Options builder.</param>
    /// <param name="useValueObjectConventions">Indication whether to enable or disable the feature.</param>
-   /// <param name="validateOnWrite">In case of an <see cref="IValidatableEnum{TKey}"/>, ensures that the item is valid before writing it to database.</param>
+   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>

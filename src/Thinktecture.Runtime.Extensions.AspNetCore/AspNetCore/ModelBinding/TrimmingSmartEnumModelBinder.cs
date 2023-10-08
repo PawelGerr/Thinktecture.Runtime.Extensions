@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace Thinktecture.AspNetCore.ModelBinding;
 
 /// <summary>
-/// Model binder for implementations of string-based <see cref="IEnum{TKey}"/>.
+/// Model binder for implementations of string-based <see cref="IKeyedValueObject{TKey}"/>.
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 public sealed class TrimmingSmartEnumModelBinder<T> : ValueObjectModelBinderBase<T, string>

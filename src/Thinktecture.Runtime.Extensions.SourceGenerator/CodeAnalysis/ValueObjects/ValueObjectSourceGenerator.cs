@@ -344,7 +344,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
          if (context.Attributes.Length > 1)
          {
-            Logger.LogDebug("Type has more than 1 ValueObjectAttribute", tds);
+            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.VALUE_OBJECT}'", tds);
             return null;
          }
 

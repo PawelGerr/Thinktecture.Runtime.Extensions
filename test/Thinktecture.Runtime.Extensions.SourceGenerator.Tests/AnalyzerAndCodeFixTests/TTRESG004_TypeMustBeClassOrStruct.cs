@@ -11,24 +11,6 @@ public class TTRESG004_TypeMustBeClassOrStruct
    public class Enum_must_be_class_or_struct
    {
       [Fact]
-      public async Task Should_trigger_on_interface()
-      {
-         var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-	public partial interface {|#0:TestEnum|} : IValidatableEnum<string>
-	{
-   }
-}";
-
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
-      }
-
-      [Fact]
       public async Task Should_trigger_on_record()
       {
          var code = @"
@@ -37,7 +19,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial record {|#0:TestEnum|} : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial record {|#0:TestEnum|}
 	{
    }
 
@@ -61,7 +44,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public sealed partial class TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public sealed partial class TestEnum
 	{
       public static readonly TestEnum Item1 = default;
    }
@@ -85,7 +69,8 @@ using Thinktecture;
 
 namespace TestNamespace
 {
-	public readonly partial struct TestEnum : IValidatableEnum<string>
+   [SmartEnum<string>(IsValidatable = true)]
+	public readonly partial struct TestEnum
 	{
       public static readonly TestEnum Item1 = default;
    }
