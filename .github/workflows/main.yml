@@ -12,6 +12,7 @@ jobs:
       - name: install .NET Core 7/8 SDKs
         uses: actions/setup-dotnet@v2
         with:
+          dotnet-quality: 'preview'
           dotnet-version: |
             7.0.x
             8.0.x
