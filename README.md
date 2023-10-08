@@ -28,6 +28,9 @@ Value objects:
 
 # Requirements
 
+* Version 7:
+  * C# 11 (or higher) for generated code
+  * SDK 7.0.401 (or higher) for building projects
 * Version 6:
   * C# 11 (or higher) for generated code
   * SDK 7.0.202 (or higher) for building projects
