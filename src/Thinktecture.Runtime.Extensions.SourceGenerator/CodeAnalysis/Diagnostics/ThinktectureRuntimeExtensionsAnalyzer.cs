@@ -38,7 +38,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.SwitchAndMapMustCoverAllItems,
                                                                                                               DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
                                                                                                               DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
-                                                                                                              DiagnosticsDescriptors.InitAccessorMustBePrivate);
+                                                                                                              DiagnosticsDescriptors.InitAccessorMustBePrivate,
+                                                                                                              DiagnosticsDescriptors.PrimaryConstructorNotAllowed);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -176,6 +177,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
+      EnsureNoPrimaryConstructor(context, type);
       TypeMustBePartial(context, type);
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
@@ -458,11 +460,68 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var ctor = type.Constructors[i];
 
-         if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
+         if (ctor.IsImplicitlyDeclared)
             continue;
 
-         var location = ((ConstructorDeclarationSyntax)ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken)).Identifier.GetLocation();
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumConstructorsMustBePrivate, location, type);
+         var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
+
+         switch (declarationSyntax)
+         {
+            case ConstructorDeclarationSyntax constructorDeclarationSyntax:
+            {
+               if (ctor.DeclaredAccessibility != Accessibility.Private)
+               {
+                  var location = constructorDeclarationSyntax.Identifier.GetLocation();
+                  ReportDiagnostic(context, DiagnosticsDescriptors.EnumConstructorsMustBePrivate, location, type);
+               }
+
+               break;
+            }
+            case ClassDeclarationSyntax classDeclarationSyntax:
+            {
+               var location = classDeclarationSyntax.Identifier.GetLocation();
+               ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
+               break;
+            }
+            case StructDeclarationSyntax structDeclarationSyntax:
+            {
+               var location = structDeclarationSyntax.Identifier.GetLocation();
+               ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
+               break;
+            }
+         }
+      }
+   }
+
+   private static void EnsureNoPrimaryConstructor(SymbolAnalysisContext context, INamedTypeSymbol type)
+   {
+      if (type.Constructors.IsDefaultOrEmpty)
+         return;
+
+      for (var i = 0; i < type.Constructors.Length; i++)
+      {
+         var ctor = type.Constructors[i];
+
+         if (ctor.IsImplicitlyDeclared)
+            continue;
+
+         var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
+
+         switch (declarationSyntax)
+         {
+            case ClassDeclarationSyntax classDeclarationSyntax:
+            {
+               var location = classDeclarationSyntax.Identifier.GetLocation();
+               ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
+               break;
+            }
+            case StructDeclarationSyntax structDeclarationSyntax:
+            {
+               var location = structDeclarationSyntax.Identifier.GetLocation();
+               ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
+               break;
+            }
+         }
       }
    }
 
