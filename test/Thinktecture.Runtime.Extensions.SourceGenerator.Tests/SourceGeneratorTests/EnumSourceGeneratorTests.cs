@@ -17,7 +17,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                             """;
 
-   /* language=c# */
    private const string _MAIN_OUTPUT_CLASS = _GENERATED_HEADER + """
 
                                                                  namespace Thinktecture.Tests
@@ -334,14 +333,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                           AddItem(Item1, nameof(Item1));
                                                                           AddItem(Item2, nameof(Item2));
 
+                                                                 #if NET8_0_OR_GREATER
+                                                                          return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                                 #else
                                                                           return lookup;
+                                                                 #endif
                                                                        }
                                                                     }
                                                                  }
 
                                                                  """;
 
-   /* language=c# */
    private const string _COMPARABLE_OUTPUT_CLASS = _GENERATED_HEADER + """
 
                                                                        namespace Thinktecture.Tests;
@@ -374,7 +376,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                        """;
 
-   /* language=c# */
    private const string _PARSABLE_OUTPUT_CLASS_STRING_BASED = _GENERATED_HEADER + """
 
                                                                                   namespace Thinktecture.Tests;
@@ -412,7 +413,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                   """;
 
-   /* language=c# */
    private const string _EQUALITY_COMPARABLE_OPERATORS_CLASS = _GENERATED_HEADER + """
 
                                                                                    namespace Thinktecture.Tests;
@@ -445,7 +445,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                    """;
 
-   /* language=c# */
    private const string _EQUALITY_COMPARABLE_OPERATORS_STRUCT = _GENERATED_HEADER + """
 
                                                                                     namespace Thinktecture.Tests;
@@ -478,7 +477,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                     """;
 
-   /* language=c# */
    private const string _EQUALITY_COMPARABLE_OPERATORS_CLASS_WITH_KEY_OVERLOADS = _GENERATED_HEADER + """
 
                                                                                                       namespace Thinktecture.Tests;
@@ -564,7 +562,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                                       """;
 
-   /* language=c# */
    private const string _EQUALITY_COMPARABLE_OPERATORS_VALIDATABLE_CLASS = _GENERATED_HEADER + """
 
                                                                                                namespace Thinktecture.Tests;
@@ -600,7 +597,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                                """;
 
-   /* language=c# */
    private const string _PARSABLE_OUTPUT_VALIDATABLE_CLASS_STRING_BASED = _GENERATED_HEADER + """
 
                                                                                               namespace Thinktecture.Tests;
@@ -634,7 +630,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                               """;
 
-   /* language=c# */
    private const string _PARSABLE_OUTPUT_CLASS_INT_BASED = _GENERATED_HEADER + """
 
                                                                                namespace Thinktecture.Tests;
@@ -679,7 +674,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                """;
 
-   /* language=c# */
    private const string _FORMATTABLE_OUTPUT_CLASS = _GENERATED_HEADER + """
 
                                                                         namespace Thinktecture.Tests;
@@ -699,7 +693,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_not_generate_if_class_is_not_partial()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -720,7 +713,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_not_generate_if_generic()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -741,7 +733,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_simple_class_which_implements_IEnum()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -772,7 +763,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_simple_class_without_Switch()
    {
-      /* language=c# */
       var source = """
                    using System;
                    using Thinktecture;
@@ -799,7 +789,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -1012,7 +1001,11 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
@@ -1023,7 +1016,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_simple_class_without_Map()
    {
-      /* language=c# */
       var source = """
                    using System;
                    using Thinktecture;
@@ -1050,7 +1042,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -1342,7 +1333,11 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
@@ -1353,7 +1348,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_smart_enum_with_base_class_and_non_default_constructors()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -1390,7 +1384,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -1722,7 +1715,11 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
@@ -1733,7 +1730,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_simple_class_which_implements_IEnum_if_IEnum_is_fully_qualified()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -1764,7 +1760,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_simple_enum_which_has_no_namespace()
    {
-      /* language=c# */
       var source = """
                    using System;
                    using Thinktecture;
@@ -1784,7 +1779,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("TestEnum.Parsable.g.cs")).Value;
       var equalityComparisonOperators = outputs.Single(kvp => kvp.Key.Contains("TestEnum.EqualityComparisonOperators.g.cs")).Value;
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::TestEnum, string>))]
@@ -2099,13 +2093,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(comparableOutput, _GENERATED_HEADER + """
 
                                                          partial class TestEnum :
@@ -2136,7 +2133,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          """);
 
-      /* language=c# */
       AssertOutput(parsableOutput, _GENERATED_HEADER + """
 
                                                        partial class TestEnum :
@@ -2172,7 +2168,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                        """);
 
-      /* language=c# */
       AssertOutput(equalityComparisonOperators, _GENERATED_HEADER + """
 
                                                                     partial class TestEnum :
@@ -2207,7 +2202,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_enum_with_inner_derived_type_which_is_generic()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -2274,7 +2268,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -2771,14 +2764,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item_derived_1, nameof(Item_derived_1));
                                                             AddItem(Item_derived_2, nameof(Item_derived_2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(derivedTypesOutput, _GENERATED_HEADER + """
 
                                                            namespace Thinktecture.Tests;
@@ -2802,7 +2798,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_simple_class_which_implements_IValidatableEnum()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -2828,7 +2823,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_VALIDATABLE_CLASS_STRING_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_VALIDATABLE_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -3203,7 +3197,11 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
@@ -3214,7 +3212,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_simple_struct_which_implements_IValidatableEnum()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -3238,7 +3235,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_STRUCT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -3599,14 +3595,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(comparableOutput, _GENERATED_HEADER + """
 
                                                          namespace Thinktecture.Tests;
@@ -3636,7 +3635,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          """);
 
-      /* language=c# */
       AssertOutput(parsableOutput, _GENERATED_HEADER + """
 
                                                        namespace Thinktecture.Tests;
@@ -3674,7 +3672,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_advanced_class_which_implements_IValidatableEnum()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -3734,7 +3731,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_VALIDATABLE_CLASS_STRING_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_VALIDATABLE_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -4113,14 +4109,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(comparableOutput, _GENERATED_HEADER + """
 
                                                          namespace Thinktecture.Tests;
@@ -4157,7 +4156,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_int_based_IEnum()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -4186,7 +4184,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_INT_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -4488,14 +4485,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
                                                                   namespace Thinktecture.Tests;
@@ -4542,7 +4542,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public void Should_generate_int_based_IEnum_with_ComparisonOperators_DefaultWithKeyTypeOverloads()
    {
-      /* language=c# */
       var source = """
                    using System;
 
@@ -4571,7 +4570,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_INT_BASED);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS_WITH_KEY_OVERLOADS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
                                                    namespace Thinktecture.Tests
@@ -4873,14 +4871,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(Item1, nameof(Item1));
                                                             AddItem(Item2, nameof(Item2));
 
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
                                                             return lookup;
+                                                   #endif
                                                          }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
                                                                   namespace Thinktecture.Tests;

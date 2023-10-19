@@ -654,7 +654,11 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+#if NET8_0_OR_GREATER
+         return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, ").Append(Constants.KEY_EQUALITY_COMPARER_NAME).Append(@");
+#else
          return lookup;
+#endif
       }");
    }
 

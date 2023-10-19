@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Frozen;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -21,6 +22,7 @@ public class ItemSearch
    }
 
    private readonly Dictionary<string, SmartEnum> _dictionary;
+   private readonly FrozenDictionary<string, SmartEnum> _frozenDictionary;
    private readonly ReadOnlyDictionary<string, SmartEnum> _readOnlyDictionary;
    private readonly ImmutableDictionary<string, SmartEnum> _immutableDictionary;
    private readonly ImmutableSortedDictionary<string, SmartEnum> _immutableSortedDictionary;
@@ -53,6 +55,7 @@ public class ItemSearch
       }
 
       _dictionary = dictionary;
+      _frozenDictionary = _dictionary.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
       _readOnlyDictionary = new ReadOnlyDictionary<string, SmartEnum>(dictionary);
       _list = list;
       _readOnlyCollection = list.AsReadOnly();
@@ -64,6 +67,14 @@ public class ItemSearch
    public SmartEnum? Dictionary()
    {
       _dictionary.TryGetValue(SearchTerm, out var item);
+
+      return item;
+   }
+
+   [Benchmark]
+   public SmartEnum? FrozenDictionary()
+   {
+      _frozenDictionary.TryGetValue(SearchTerm, out var item);
 
       return item;
    }

@@ -15,7 +15,6 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 #nullable enable
 ";
 
-   /* language=c# */
    private const string _FORMATTABLE_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -32,7 +31,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARABLE_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -65,7 +63,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARABLE_STRUCT_STRING = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -95,7 +92,6 @@ partial struct TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARABLE_CLASS_STRING = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -128,7 +124,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARABLE_CLASS_STRING_WITH_ORDINAL_COMPARER = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -161,7 +156,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _PARSABLE_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -206,7 +200,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _PARSABLE_STRUCT_STRING = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -244,7 +237,6 @@ partial struct TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _PARSABLE_CLASS_STRING = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -282,7 +274,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARISON_OPERATORS_CLASS_STRING = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -326,7 +317,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARISON_OPERATORS_STRUCT_STRING = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -362,7 +352,6 @@ partial struct TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARISON_OPERATORS_STRING_WITH_ORDINAL_COMPARER = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -406,7 +395,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPARISON_OPERATORS_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -449,7 +437,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _EQUALITY_COMPARISON_OPERATORS_CLASS = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -485,7 +472,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _EQUALITY_COMPARISON_OPERATORS_STRUCT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -518,7 +504,6 @@ partial struct TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _EQUALITY_COMPARISON_OPERATORS_INT_WITH_KEY_OVERLOADS = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -607,7 +592,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _ADDITION_OPERATORS_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -634,7 +618,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _SUBTRACTION_OPERATORS_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -661,7 +644,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _MULTIPLY_OPERATORS_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -688,7 +670,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _DIVISION_OPERATORS_INT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -715,7 +696,6 @@ partial class TestValueObject :
 
 """;
 
-   /* language=c# */
    private const string _COMPLEX_VALUE_TYPE_WITHOUT_MEMBERS_OUTPUT = _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -853,7 +833,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_not_generate_code_if_not_partial()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -873,7 +852,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_not_generate_code_if_generic()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -893,7 +871,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_class_with_ValueObjectAttribute()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -913,7 +890,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_post_init_method_if_validation_method_returns_struct()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -932,7 +908,6 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
 
-      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -1071,7 +1046,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_post_init_method_if_validation_method_returns_nullable_string()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1092,7 +1066,6 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
 
-      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -1231,7 +1204,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_not_generate_code_for_class_with_generic()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1251,7 +1223,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_class_without_namespace()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1263,7 +1234,6 @@ public partial class TestValueObject
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
 
-      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
    partial class TestValueObject : global::System.IEquatable<global::TestValueObject?>,
@@ -1399,7 +1369,6 @@ public partial class TestValueObject
    [Fact]
    public void Should_generate_simple_class_with_ValueObjectAttribute_using_long_form()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1419,7 +1388,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_class_with_fully_qualified_ValueObjectAttribute()
    {
-      /* language=c# */
       var source = @"
 using System;
 
@@ -1438,7 +1406,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_not_generate_factory_methods_if_SkipFactoryMethods_is_true()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1466,7 +1433,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -1573,7 +1539,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_simple_struct_with_ValueObjectAttribute()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1588,7 +1553,6 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
 
-      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -1716,7 +1680,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_struct_with_custom_default_instance_property_name()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1731,7 +1694,6 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
 
-      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -1859,7 +1821,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_struct_with_string_key_member()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -1887,7 +1848,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRUCT_STRING);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -2039,7 +1999,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_struct_with_int_key_member()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -2069,7 +2028,6 @@ namespace Thinktecture.Tests
 
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -2219,7 +2177,6 @@ namespace Thinktecture.Tests
 
 """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2236,7 +2193,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2266,7 +2222,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(parsableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2311,7 +2266,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2346,7 +2300,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(additionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2369,7 +2322,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(subtractionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2392,7 +2344,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(multiplyOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2415,7 +2366,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(divisionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2442,7 +2392,6 @@ partial struct TestValueObject :
    [Fact]
    public void Should_generate_struct_with_int_key_member_with_init_only()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -2472,7 +2421,6 @@ namespace Thinktecture.Tests
 
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -2622,7 +2570,6 @@ namespace Thinktecture.Tests
 
 """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2639,7 +2586,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2669,7 +2615,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(parsableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2714,7 +2659,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2749,7 +2693,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(additionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2772,7 +2715,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(subtractionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2795,7 +2737,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(multiplyOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2818,7 +2759,6 @@ partial struct TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(divisionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -2845,7 +2785,6 @@ partial struct TestValueObject :
    [Fact]
    public void Should_generate_struct_with_string_key_member_and_NullInFactoryMethodsYieldsNull_should_be_ignored()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -2873,7 +2812,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRUCT_STRING);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -3025,7 +2963,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_struct_with_string_key_member_and_EmptyStringInFactoryMethodsYieldsNull_should_be_ignored()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -3053,7 +2990,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRUCT_STRING);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_STRUCT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -3205,7 +3141,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_string_key_member()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -3233,7 +3168,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -3393,7 +3327,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_int_key_member()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -3431,7 +3364,6 @@ namespace Thinktecture.Tests
       AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
       AssertOutput(divisionOperatorsOutput, _DIVISION_OPERATORS_INT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -3593,7 +3525,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_DateOnly_key_member()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -3617,7 +3548,6 @@ namespace Thinktecture.Tests
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
       var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -3775,7 +3705,6 @@ namespace Thinktecture.Tests
 
 """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -3792,7 +3721,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -3825,7 +3753,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(parsableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -3870,7 +3797,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -3913,7 +3839,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(equalityComparisonOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -3953,7 +3878,6 @@ partial class TestValueObject :
    [Fact]
    public void Should_generate_class_with_DateOnly_key_member_with_DefaultWithKeyTypeOverloads()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -3977,7 +3901,6 @@ namespace Thinktecture.Tests
       var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs")).Value;
       var equalityComparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs")).Value;
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -4135,7 +4058,6 @@ namespace Thinktecture.Tests
 
 """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4152,7 +4074,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4185,7 +4106,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(parsableOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4230,7 +4150,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4273,7 +4192,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(equalityComparisonOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4366,7 +4284,6 @@ partial class TestValueObject :
    [Fact]
    public void Should_generate_class_with_int_key_member_and_with_DefaultWithKeyTypeOverloads()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -4403,7 +4320,6 @@ namespace Thinktecture.Tests
       AssertOutput(parsableOutput, _PARSABLE_INT);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_INT_WITH_KEY_OVERLOADS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -4561,7 +4477,6 @@ namespace Thinktecture.Tests
 
 """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4661,7 +4576,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(additionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4717,7 +4631,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(subtractionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4773,7 +4686,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(multiplyOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4829,7 +4741,6 @@ partial class TestValueObject :
 
 """);
 
-      /* language=c# */
       AssertOutput(divisionOperatorsOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests;
@@ -4889,7 +4800,6 @@ partial class TestValueObject :
    [Fact]
    public void Should_generate_class_with_string_key_member_and_NullInFactoryMethodsYieldsNull()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -4917,7 +4827,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -5078,7 +4987,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_string_key_member_and_EmptyStringInFactoryMethodsYieldsNull()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -5106,7 +5014,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -5265,7 +5172,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_int_key_member_and_NullInFactoryMethodsYieldsNull_should_be_ignored()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -5303,7 +5209,6 @@ namespace Thinktecture.Tests
       AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
       AssertOutput(divisionOperatorsOutput, _DIVISION_OPERATORS_INT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -5465,7 +5370,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_int_key_member_and_EmptyStringInFactoryMethodsYieldsNull_should_be_ignored()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -5503,7 +5407,6 @@ namespace Thinktecture.Tests
       AssertOutput(multiplyOperatorsOutput, _MULTIPLY_OPERATORS_INT);
       AssertOutput(divisionOperatorsOutput, _DIVISION_OPERATORS_INT);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -5665,7 +5568,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_keyed_value_type_if_second_member_is_ignored()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -5696,7 +5598,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_CLASS_STRING);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -5856,7 +5757,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_string_key_member_having_EqualityMemberAttribute()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -5886,7 +5786,6 @@ namespace Thinktecture.Tests
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_STRING_WITH_ORDINAL_COMPARER);
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -6046,7 +5945,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_IComparable_if_member_is_not_IComparable_but_has_custom_comparer()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -6073,7 +5971,6 @@ namespace Thinktecture.Tests
 
       AssertOutput(equalityComparisonOperatorsOutput, _EQUALITY_COMPARISON_OPERATORS_CLASS);
 
-      /* language=c# */
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -6233,7 +6130,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_8_members()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -6275,7 +6171,6 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
 
-      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
@@ -6446,7 +6341,6 @@ namespace Thinktecture.Tests
    [Fact]
    public void Should_generate_class_with_9_members()
    {
-      /* language=c# */
       var source = @"
 using System;
 using Thinktecture;
@@ -6470,7 +6364,6 @@ namespace Thinktecture.Tests
 ";
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ValueObjectAttribute).Assembly);
 
-      /* language=c# */
       AssertOutput(output, _GENERATED_HEADER + """
 
 namespace Thinktecture.Tests
