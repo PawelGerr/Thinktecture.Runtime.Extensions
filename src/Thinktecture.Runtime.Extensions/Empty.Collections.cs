@@ -30,7 +30,7 @@ public partial class Empty
    public static IReadOnlyDictionary<TKey, TValue> Dictionary<TKey, TValue>()
       where TKey : notnull
    {
-      return ReadOnlyDictionary<TKey, TValue>.Instance;
+      return EmptyDictionary<TKey, TValue>.Instance;
    }
 
    /// <summary>
@@ -39,7 +39,7 @@ public partial class Empty
    /// <returns>An empty set.</returns>
    public static IReadOnlySet<T> Set<T>()
    {
-      return ReadOnlySet<T>.Instance;
+      return EmptySet<T>.Instance;
    }
 
    /// <summary>
@@ -48,6 +48,6 @@ public partial class Empty
    /// <returns>An empty lookup.</returns>
    public static ILookup<TKey, TValue> Lookup<TKey, TValue>()
    {
-      return ReadOnlyLookup<TKey, TValue>.Instance;
+      return EmptyLookup<TKey, TValue>.Instance;
    }
 }
