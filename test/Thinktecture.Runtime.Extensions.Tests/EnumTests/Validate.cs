@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTests;
@@ -121,5 +122,14 @@ public class Validate
       validationResult.ErrorMessage.Should().Be("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
 
       item.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_return_item_using_factory_specified_via_ValueObjectFactoryAttribute()
+   {
+      var validationResult = EnumWithFactory.Validate("=1=", null, out var item);
+      validationResult.Should().Be(ValidationResult.Success);
+
+      item.Should().Be(EnumWithFactory.Item1);
    }
 }

@@ -60,12 +60,14 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.HasKeyMember)
       {
          _sb.Append(@",
-      global::Thinktecture.IKeyedValueObject<").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(">");
+      global::Thinktecture.IKeyedValueObject<").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(@">,
+      global::Thinktecture.IValueObjectConverter<").Append(_state.KeyMember.Member.TypeFullyQualified).Append(">");
 
          if (!_state.Settings.SkipFactoryMethods)
          {
             _sb.Append(@",
-      global::Thinktecture.IKeyedValueObject<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(">");
+      global::Thinktecture.IKeyedValueObject<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(@">,
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(">");
          }
       }
       else

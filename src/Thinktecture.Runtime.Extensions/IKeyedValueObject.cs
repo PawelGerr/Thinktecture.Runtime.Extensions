@@ -14,7 +14,7 @@ public interface IKeyedValueObject
 /// Common interface of keyed value objects.
 /// </summary>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
-public interface IKeyedValueObject<out TKey> : IValueObjectConverter<TKey>, IKeyedValueObject
+public interface IKeyedValueObject<out TKey> : IKeyedValueObject
    where TKey : notnull
 {
    /// <summary>
@@ -32,7 +32,7 @@ public interface IKeyedValueObject<out TKey> : IValueObjectConverter<TKey>, IKey
 /// <remarks>
 /// Don't implement this interface directly. It will be implemented by a source generator.
 /// </remarks>
-public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>, IValueObjectFactory<T, TKey>
+public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>
    where TKey : notnull
 {
    /// <summary>

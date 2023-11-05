@@ -13,5 +13,5 @@ public interface IValueObjectConverter<out T>
    /// <summary>
    /// Converts the value object to type <typeparamref name="T"/>.
    /// </summary>
-   T ToValue() => throw new NotImplementedException("This method will be implemented by the source generator.");
+   T ToValue();
 }

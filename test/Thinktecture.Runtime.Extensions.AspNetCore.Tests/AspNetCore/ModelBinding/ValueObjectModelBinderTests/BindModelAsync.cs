@@ -197,7 +197,7 @@ public class BindModelAsync
    }
 
    [Fact]
-   public async Task Should_bind_successfully_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   public async Task Should_bind_successfully_value_object_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
    {
       var ctx = await BindAsync<BoundaryWithFactories, string>("1:2");
 
@@ -207,12 +207,32 @@ public class BindModelAsync
    }
 
    [Fact]
-   public async Task Should_return_error_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   public async Task Should_return_error_when_binding_value_object_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
    {
       var ctx = await BindAsync<BoundaryWithFactories, string>("1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
       ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Invalid format.") });
+      ctx.Result.IsModelSet.Should().BeFalse();
+   }
+
+   [Fact]
+   public async Task Should_bind_successfully_smart_enum_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var ctx = await BindAsync<EnumWithFactory, string>("=1=");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(EnumWithFactory.Item1);
+   }
+
+   [Fact]
+   public async Task Should_return_error_when_binding_smart_enum_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var ctx = await BindAsync<EnumWithFactory, string>("A");
+
+      ctx.ModelState.ErrorCount.Should().Be(1);
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Unknown item 'A'") });
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 

@@ -52,7 +52,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
-   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(">,");
+   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@">,
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">,
+      global::Thinktecture.IValueObjectConverter<").Append(_state.KeyProperty.TypeFullyQualified).Append(">,");
 
       foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
@@ -64,8 +66,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
-            _sb.Append(@",
-      global::Thinktecture.IValueObjectConverter<").Append(desiredFactory.TypeFullyQualified).Append(">");
+            _sb.Append(@"
+      global::Thinktecture.IValueObjectConverter<").Append(desiredFactory.TypeFullyQualified).Append(">,");
          }
       }
 

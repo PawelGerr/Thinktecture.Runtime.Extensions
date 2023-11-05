@@ -33,5 +33,5 @@ public interface IValueObjectFactory<T, TValue> : IValueObjectFactory<TValue>
    /// <param name="provider">An object that provides culture-specific formatting information.</param>
    /// <param name="item">Item with key property equals to the provided <paramref name="value"/>.</param>
    /// <returns>Validation result.</returns>
-   static virtual ValidationResult? Validate(TValue? value, IFormatProvider? provider, out T? item) => throw new NotImplementedException("This method will be implemented by the source generator.");
+   static abstract ValidationResult? Validate(TValue? value, IFormatProvider? provider, out T? item);
 }

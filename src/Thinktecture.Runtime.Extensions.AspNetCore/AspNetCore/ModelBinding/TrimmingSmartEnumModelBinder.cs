@@ -8,7 +8,7 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 public sealed class TrimmingSmartEnumModelBinder<T> : ValueObjectModelBinderBase<T, string>
-   where T : IKeyedValueObject<T, string>
+   where T : IValueObjectFactory<T, string>
 {
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey}"/>.
