@@ -405,10 +405,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                   partial class TestEnum :
                                                                                      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                   {
+                                                                                     private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                        where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                                                     {
+                                                                                        return T.Validate(key, provider, out result);
+                                                                                     }
+
                                                                                      /// <inheritdoc />
                                                                                      public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                      {
-                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out var result);
+                                                                                        var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
 
                                                                                         if(validationResult is null)
                                                                                            return result!;
@@ -428,7 +434,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                            return false;
                                                                                         }
 
-                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out result!);
+                                                                                        var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                                                         return validationResult is null;
                                                                                      }
                                                                                   }
@@ -631,10 +637,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                               partial class TestEnum :
                                                                                                  global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                               {
+                                                                                                 private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                                    where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                                                                 {
+                                                                                                    return T.Validate(key, provider, out result);
+                                                                                                 }
+
                                                                                                  /// <inheritdoc />
                                                                                                  public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                                  {
-                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out var result);
+                                                                                                    var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                                                                     return result!;
                                                                                                  }
 
@@ -650,7 +662,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                        return false;
                                                                                                     }
 
-                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out result!);
+                                                                                                    var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                                                                     return true;
                                                                                                  }
                                                                                               }
@@ -665,11 +677,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                partial class TestEnum :
                                                                                   global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                {
+                                                                                  private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                     where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>
+                                                                                  {
+                                                                                     return T.Validate(key, provider, out result);
+                                                                                  }
+
                                                                                   /// <inheritdoc />
                                                                                   public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                   {
                                                                                      var key = int.Parse(s, provider);
-                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, provider, out var result);
+                                                                                     var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out var result);
 
                                                                                      if(validationResult is null)
                                                                                         return result!;
@@ -695,7 +713,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                         return false;
                                                                                      }
 
-                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, provider, out result!);
+                                                                                     var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out result!);
                                                                                      return validationResult is null;
                                                                                   }
                                                                                }
@@ -2251,10 +2269,16 @@ public partial class TestEnum : IEnum<string>
                                                        partial class TestEnum :
                                                           global::System.IParsable<global::TestEnum>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, string>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::TestEnum.Validate(s, provider, out var result);
+                                                             var validationResult = Validate<global::TestEnum>(s, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -2274,7 +2298,7 @@ public partial class TestEnum : IEnum<string>
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::TestEnum.Validate(s, provider, out result!);
+                                                             var validationResult = Validate<global::TestEnum>(s, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -3817,10 +3841,16 @@ namespace Thinktecture.Tests
                                                        partial struct TestEnum :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                              return result!;
                                                           }
 
@@ -3836,7 +3866,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                              return true;
                                                           }
                                                        }

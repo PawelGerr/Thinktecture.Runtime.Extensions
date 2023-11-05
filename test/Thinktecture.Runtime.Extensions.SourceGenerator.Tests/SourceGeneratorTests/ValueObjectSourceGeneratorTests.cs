@@ -169,11 +169,17 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             partial class TestValueObject :
                                                                global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                             {
+                                                               private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                                  where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                               {
+                                                                  return T.Validate(key, provider, out result);
+                                                               }
+
                                                                /// <inheritdoc />
                                                                public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                                {
                                                                   var key = int.Parse(s, provider);
-                                                                  var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
+                                                                  var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
                                                                   if(validationResult is null)
                                                                      return result!;
@@ -199,7 +205,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                      return false;
                                                                   }
 
-                                                                  var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
+                                                                  var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
                                                                   return validationResult is null;
                                                                }
                                                             }
@@ -214,10 +220,16 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                       partial struct TestValueObject :
                                                                          global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                                       {
+                                                                         private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
+                                                                            where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                                         {
+                                                                            return T.Validate(key, provider, out result);
+                                                                         }
+
                                                                          /// <inheritdoc />
                                                                          public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                                          {
-                                                                            var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out var result);
+                                                                            var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
                                                                             if(validationResult is null)
                                                                                return result!;
@@ -237,7 +249,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                return false;
                                                                             }
 
-                                                                            var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out result!);
+                                                                            var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
                                                                             return validationResult is null;
                                                                          }
                                                                       }
@@ -252,10 +264,16 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                      partial class TestValueObject :
                                                                         global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                                      {
+                                                                        private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                                           where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                                        {
+                                                                           return T.Validate(key, provider, out result);
+                                                                        }
+
                                                                         /// <inheritdoc />
                                                                         public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                                         {
-                                                                           var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out var result);
+                                                                           var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
                                                                            if(validationResult is null)
                                                                               return result!;
@@ -275,7 +293,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                               return false;
                                                                            }
 
-                                                                           var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out result!);
+                                                                           var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
                                                                            return validationResult is null;
                                                                         }
                                                                      }
@@ -2322,11 +2340,17 @@ namespace Thinktecture.Tests
                                                        partial struct TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = int.Parse(s, provider);
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -2352,7 +2376,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -2744,11 +2768,17 @@ namespace Thinktecture.Tests
                                                        partial struct TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = int.Parse(s, provider);
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -2774,7 +2804,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -3995,11 +4025,17 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(global::System.DateOnly key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = global::System.DateOnly.Parse(s, provider);
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -4025,7 +4061,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -4374,11 +4410,17 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(global::System.DateOnly key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = global::System.DateOnly.Parse(s, provider);
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -4404,7 +4446,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -7001,10 +7043,16 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -7024,7 +7072,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -7258,10 +7306,16 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -7281,7 +7335,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
