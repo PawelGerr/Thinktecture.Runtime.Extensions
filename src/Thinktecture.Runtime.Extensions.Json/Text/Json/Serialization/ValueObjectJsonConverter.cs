@@ -35,7 +35,7 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
       if (key is null)
          return default;
 
-      var validationResult = T.Validate(key, out var obj);
+      var validationResult = T.Validate(key, null, out var obj);
 
       if (validationResult is not null && !_mayReturnInvalidObjects)
          throw new JsonException(validationResult.ErrorMessage ?? "JSON deserialization failed.");

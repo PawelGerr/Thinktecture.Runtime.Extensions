@@ -9,7 +9,7 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
 public sealed class ValueObjectModelBinder<T, TKey> : ValueObjectModelBinderBase<T, TKey>
-   where T : IKeyedValueObject<T, TKey>
+   where T : IValueObjectFactory<T, TKey>
    where TKey : notnull
 {
    /// <summary>

@@ -193,6 +193,11 @@ public static class TypeSymbolExtensions
       return type is { Name: "MessagePackFormatterAttribute", ContainingNamespace: { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsValueObjectFactoryAttribute(this ITypeSymbol type)
+   {
+      return type is { Name: "ValueObjectFactoryAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
    public static bool IsStructLayoutAttribute(this ITypeSymbol type)
    {
       return type is

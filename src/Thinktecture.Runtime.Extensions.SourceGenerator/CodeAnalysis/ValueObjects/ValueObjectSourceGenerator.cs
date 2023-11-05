@@ -44,7 +44,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       InitializeSerializerGenerators(context, validStates, options);
       InitializeFormattableCodeGenerator(context, keyedValueObjects, options);
       InitializeComparableCodeGenerator(context, keyedValueObjects, options);
-      InitializeParsableCodeGenerator(context, keyedValueObjects, options);
+      InitializeParsableCodeGenerator(context, validStates, options);
       InitializeComparisonOperatorsCodeGenerator(context, keyedValueObjects, options);
       InitializeEqualityComparisonOperatorsCodeGenerator(context, keyedValueObjects, options);
       InitializeAdditionOperatorsCodeGenerator(context, keyedValueObjects, options);
@@ -155,14 +155,15 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       InitializeComparableCodeGenerator(context, comparables, options);
    }
 
-   private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValueObjectState> validStates, IncrementalValueProvider<GeneratorOptions> options)
+   private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var parsables = validStates
-         .Select((state, _) => new ParsableGeneratorState(state.Type,
-                                                          state.KeyMember.Member,
+         .Select((state, _) => new ParsableGeneratorState(state.State,
+                                                          state.State.KeyMember?.Member,
                                                           state.Settings.SkipIParsable,
-                                                          state.KeyMember.Member.IsParsable,
-                                                          false));
+                                                          state.State.KeyMember?.Member.IsParsable ?? false,
+                                                          false,
+                                                          state.AttributeInfo.DesiredFactorySourceTypes.Any(t => t.SpecialType == SpecialType.System_String)));
 
       InitializeParsableCodeGenerator(context, parsables, options);
    }
@@ -353,8 +354,9 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
 
+         var attributeInfo = new AttributeInfo(type);
          var settings = new AllValueObjectSettings(context.Attributes[0]);
-         var state = new ValueObjectSourceGeneratorState(factory, type, new ValueObjectSettings(settings), cancellationToken);
+         var state = new ValueObjectSourceGeneratorState(factory, type, new ValueObjectSettings(settings, attributeInfo), cancellationToken);
 
          if (state.HasKeyMember)
          {
@@ -376,8 +378,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          {
             Logger.LogDebug("The type declaration is a valid complex value object", namespaceAndName: state);
          }
-
-         var attributeInfo = new AttributeInfo(type);
 
          return new SourceGenContext(new ValidSourceGenState(state, settings, attributeInfo));
       }

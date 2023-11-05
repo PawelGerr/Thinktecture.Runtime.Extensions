@@ -12,7 +12,7 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
 public abstract class ValueObjectModelBinderBase<T, TKey> : SimpleTypeModelBinder
-   where T : IKeyedValueObject<T, TKey>
+   where T : IValueObjectFactory<T, TKey>
    where TKey : notnull
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
@@ -37,7 +37,7 @@ public abstract class ValueObjectModelBinderBase<T, TKey> : SimpleTypeModelBinde
       }
 
       key = Prepare(key);
-      var validationResult = T.Validate(key, out var obj);
+      var validationResult = T.Validate(key, valueProviderResult.Culture, out var obj);
 
       if (validationResult == ValidationResult.Success || _mayReturnInvalidObjects)
       {

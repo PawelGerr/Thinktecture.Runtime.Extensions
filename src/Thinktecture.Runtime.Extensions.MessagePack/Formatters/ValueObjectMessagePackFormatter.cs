@@ -41,7 +41,7 @@ public sealed class ValueObjectMessagePackFormatter<T, TKey> : IMessagePackForma
       if (key is null)
          return default;
 
-      var validationResult = T.Validate(key, out var obj);
+      var validationResult = T.Validate(key, null, out var obj);
 
       if (validationResult is not null && !_mayReturnInvalidObjects)
          throw new ValidationException(validationResult.ErrorMessage ?? "MessagePack deserialization failed.");

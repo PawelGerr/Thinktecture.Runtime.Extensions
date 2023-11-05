@@ -9,18 +9,14 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public string TypeFullyQualified { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeMinimallyQualified { get; }
-   public bool IsEqualWithReferenceEquality => !IsValidatable;
+   public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
 
    public IMemberState KeyProperty { get; }
-   public bool IsValidatable { get; }
+   public EnumSettings Settings { get; }
    public BaseTypeState? BaseType { get; }
-   public bool SkipToString { get; }
-   public bool SkipSwitchMethods { get; }
-   public bool SkipMapMethods { get; }
 
    public bool HasCreateInvalidItemImplementation { get; }
    public bool HasKeyComparerImplementation { get; }
-   public bool HasStructLayoutAttribute { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
 
@@ -34,21 +30,13 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
       IMemberState keyProperty,
-      bool skipToString,
-      bool skipSwitchMethods,
-      bool skipMapMethods,
-      bool isValidatable,
+      EnumSettings settings,
       bool hasCreateInvalidItemImplementation,
-      bool hasStructLayoutAttribute,
       CancellationToken cancellationToken)
    {
       KeyProperty = keyProperty;
-      SkipToString = skipToString;
-      SkipSwitchMethods = skipSwitchMethods;
-      SkipMapMethods = skipMapMethods;
-      IsValidatable = isValidatable;
+      Settings = settings;
       HasCreateInvalidItemImplementation = hasCreateInvalidItemImplementation;
-      HasStructLayoutAttribute = hasStructLayoutAttribute;
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
@@ -91,13 +79,12 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          return true;
 
       return TypeFullyQualified == other.TypeFullyQualified
-             && IsValidatable == other.IsValidatable
              && HasCreateInvalidItemImplementation == other.HasCreateInvalidItemImplementation
              && HasKeyComparerImplementation == other.HasKeyComparerImplementation
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
-             && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && KeyProperty.Equals(other.KeyProperty)
+             && Settings.Equals(other.Settings)
              && Equals(BaseType, other.BaseType)
              && ItemNames.EqualsTo(other.ItemNames)
              && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties);
@@ -108,13 +95,12 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       unchecked
       {
          var hashCode = TypeFullyQualified.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
          hashCode = (hashCode * 397) ^ HasCreateInvalidItemImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ HasKeyComparerImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
+         hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();

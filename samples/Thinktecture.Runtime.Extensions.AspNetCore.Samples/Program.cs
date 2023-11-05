@@ -35,20 +35,6 @@ public class Program
 
       await app;
 
-      // calls
-      // 	http://localhost:5000/api/category/fruits
-      // 	http://localhost:5000/api/categoryWithConverter/fruits
-      // 	http://localhost:5000/api/group/1
-      // 	http://localhost:5000/api/group/42
-      // 	http://localhost:5000/api/groupWithConverter/1
-      // 	http://localhost:5000/api/groupWithConverter/42
-      // 	http://localhost:5000/api/productType/groceries
-      // 	http://localhost:5000/api/productType/invalid
-      // 	http://localhost:5000/api/productTypeWithJsonConverter/groceries
-      // 	http://localhost:5000/api/productTypeWithJsonConverter/invalid
-      // 	http://localhost:5000/api/productName/bread
-      // 	http://localhost:5000/api/productName/a
-      // 	http://localhost:5000/api/boundary
       await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>(), startMinimalWebApi);
 
       await Task.Delay(5000);
@@ -69,6 +55,8 @@ public class Program
       await DoRequestAsync(logger, client, "productType?productType=groceries");
       await DoRequestAsync(logger, client, "productType", "groceries");
       await DoRequestAsync(logger, client, "productType/invalid"); // invalid
+      await DoRequestAsync(logger, client, "boundary/1:2");        // uses custom factory "[ValueObjectFactory<string>]"
+      await DoRequestAsync(logger, client, "boundary/invalid");    // invalid
 
       if (forMinimalWebApi)
          await DoRequestAsync(logger, client, "productTypeWithFilter?productType=invalid"); // invalid
@@ -182,6 +170,7 @@ public class Program
 
                                       return next(context);
                                    });
+      routeGroup.MapGet("boundary/{boundary}", (Boundary boundary) => boundary);
       routeGroup.MapPost("productType", ([FromBody] ProductType productType) => productType);
       routeGroup.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);
       routeGroup.MapGet("productTypeWithJsonConverter/{productType}", (ProductTypeWithJsonConverter productType) => productType);

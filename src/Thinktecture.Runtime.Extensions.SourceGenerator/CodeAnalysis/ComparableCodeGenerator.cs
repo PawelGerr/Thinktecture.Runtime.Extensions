@@ -16,14 +16,14 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       _comparerAccessor = comparerAccessor;
    }
 
-   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       sb.Append(@"
    global::System.IComparable,
-   global::System.IComparable<").Append(type.TypeFullyQualified).Append(">");
+   global::System.IComparable<").Append(state.Type.TypeFullyQualified).Append(">");
    }
 
-   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateImplementation(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       sb.Append(@"
    /// <inheritdoc />
@@ -32,17 +32,17 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       if(obj is null)
          return 1;
 
-      if(obj is not ").Append(type.TypeFullyQualified).Append(@" item)
-         throw new global::System.ArgumentException(""Argument must be of type \""").Append(type.TypeMinimallyQualified).Append(@"\""."", nameof(obj));
+      if(obj is not ").Append(state.Type.TypeFullyQualified).Append(@" item)
+         throw new global::System.ArgumentException(""Argument must be of type \""").Append(state.Type.TypeMinimallyQualified).Append(@"\""."", nameof(obj));
 
       return this.CompareTo(item);
    }
 
    /// <inheritdoc />
-   public int CompareTo(").Append(type.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+   public int CompareTo(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" obj)
    {");
 
-      if (type.IsReferenceType)
+      if (state.Type.IsReferenceType)
       {
          sb.Append(@"
       if(obj is null)
@@ -53,12 +53,12 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       if (_comparerAccessor is null)
       {
          sb.Append(@"
-      return this.").Append(keyMember.Name).Append(".CompareTo(obj.").Append(keyMember.Name).Append(");");
+      return this.").Append(state.KeyMember.Name).Append(".CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
       }
       else
       {
          sb.Append(@"
-      return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").Append(keyMember.Name).Append(", obj.").Append(keyMember.Name).Append(");");
+      return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").Append(state.KeyMember.Name).Append(", obj.").Append(state.KeyMember.Name).Append(");");
       }
 
       sb.Append(@"

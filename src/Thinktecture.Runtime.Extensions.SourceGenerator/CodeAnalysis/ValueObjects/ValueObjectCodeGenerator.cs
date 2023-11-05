@@ -51,7 +51,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
       {
          _sb.Append(@"
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(@">))]");
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(">))]");
       }
 
       _sb.Append(@"
@@ -73,6 +73,15 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@",
       global::System.Numerics.IEqualityOperators<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@", bool>,
       global::Thinktecture.IComplexValueObject");
+      }
+
+      foreach (var sourceType in _state.Settings.DesiredFactorySourceTypes)
+      {
+         if (!_state.HasKeyMember || _state.Settings.SkipFactoryMethods || !sourceType.Equals(_state.KeyMember.Member))
+         {
+            _sb.Append(@",
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(sourceType.TypeFullyQualified).Append(">");
+         }
       }
 
       _sb.Append(@"
@@ -364,6 +373,9 @@ namespace ").Append(_state.Namespace).Append(@"
       if (fieldsAndProperties.Count > 0)
          _sb.Append(", ");
 
+      if (_state.HasKeyMember)
+         _sb.Append("null, "); // IFormatProvider
+
       _sb.Append("out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
@@ -394,6 +406,9 @@ namespace ").Append(_state.Namespace).Append(@"
       if (fieldsAndProperties.Count > 0)
          _sb.Append(", ");
 
+      if (_state.HasKeyMember)
+         _sb.Append("null, "); // IFormatProvider
+
       _sb.Append(@"out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
@@ -404,12 +419,35 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
+      if (_state.HasKeyMember)
+      {
+         _sb.Append(@"
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(");
+
+         _sb.RenderArgumentsWithType(fieldsAndProperties, @"
+         ", ",", trailingComma: true, useNullableTypes: allowNullKeyMemberInput);
+
+         _sb.Append(@"
+         out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+      {
+         return ").Append(_state.TypeFullyQualified).Append(".Validate(").Append(_state.KeyMember.Member.ArgumentName).Append(@", null, out obj);
+      }");
+      }
+
       _sb.Append(@"
 
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
          ", ",", trailingComma: true, useNullableTypes: allowNullKeyMemberInput);
+
+      if (_state.HasKeyMember)
+      {
+         var providerArgumentName = _state.KeyMember.Member.ArgumentName == "provider" ? "formatProvider" : "provider";
+         _sb.Append(@"
+         global::System.IFormatProvider? ").Append(providerArgumentName).Append(",");
+      }
 
       _sb.Append(@"
          out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj)

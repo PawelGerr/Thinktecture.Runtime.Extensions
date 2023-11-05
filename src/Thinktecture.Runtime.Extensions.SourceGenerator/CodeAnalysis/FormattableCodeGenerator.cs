@@ -9,19 +9,19 @@ public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
    public string CodeGeneratorName => "Formattable-CodeGenerator";
    public string FileNameSuffix => ".Formattable";
 
-   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       sb.Append(@"
    global::System.IFormattable");
    }
 
-   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateImplementation(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       sb.Append(@"
    /// <inheritdoc />
    public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
    {
-      return this.").Append(keyMember.Name).Append(@".ToString(format, formatProvider);
+      return this.").Append(state.KeyMember.Name).Append(@".ToString(format, formatProvider);
    }");
    }
 }

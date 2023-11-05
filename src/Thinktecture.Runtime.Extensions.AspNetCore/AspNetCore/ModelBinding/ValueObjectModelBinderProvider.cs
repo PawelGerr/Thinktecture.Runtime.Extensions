@@ -11,14 +11,19 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
 {
    private readonly bool _trimStringBasedEnums;
+   private readonly bool _skipBindingFromBody;
 
    /// <summary>
    /// Initializes new instance of <see cref="ValueObjectModelBinderProvider"/>.
    /// </summary>
    /// <param name="trimStringBasedEnums">Indication whether to trim string-values before parsing them.</param>
-   public ValueObjectModelBinderProvider(bool trimStringBasedEnums = true)
+   /// <param name="skipBindingFromBody">Indication whether to skip model binding if the raw value comes from request body.</param>
+   public ValueObjectModelBinderProvider(
+      bool trimStringBasedEnums = true,
+      bool skipBindingFromBody = true)
    {
       _trimStringBasedEnums = trimStringBasedEnums;
+      _skipBindingFromBody = skipBindingFromBody;
    }
 
    /// <inheritdoc />
@@ -31,23 +36,39 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
          return null;
 
       var metadata = KeyedValueObjectMetadataLookup.Find(context.Metadata.ModelType);
+      Type keyType;
 
-      if (metadata is null)
+      if (typeof(IValueObjectFactory<string>).IsAssignableFrom(context.Metadata.ModelType))
+      {
+         keyType = typeof(string);
+      }
+      else if (metadata is not null)
+      {
+         keyType = metadata.KeyType;
+      }
+      else
+      {
          return null;
+      }
 
       var loggerFactory = context.Services.GetRequiredService<ILoggerFactory>();
-      var modelBinderType = _trimStringBasedEnums && metadata.IsEnumeration && metadata.KeyType == typeof(string)
-                               ? typeof(TrimmingSmartEnumModelBinder<>).MakeGenericType(metadata.Type)
-                               : typeof(ValueObjectModelBinder<,>).MakeGenericType(metadata.Type, metadata.KeyType);
+      var modelBinderType = _trimStringBasedEnums && metadata?.IsEnumeration == true && keyType == typeof(string)
+                               ? typeof(TrimmingSmartEnumModelBinder<>).MakeGenericType(context.Metadata.ModelType)
+                               : typeof(ValueObjectModelBinder<,>).MakeGenericType(context.Metadata.ModelType, keyType);
       var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory)
                         ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
 
       return (IModelBinder)modelBinder;
    }
 
-   private static bool SkipModelBinding(ModelBinderProviderContext context)
+   private bool SkipModelBinding(ModelBinderProviderContext context)
    {
-      return context.BindingInfo.BindingSource != null &&
-             (context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Body) || context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Services));
+      if (context.BindingInfo.BindingSource == null)
+         return false;
+
+      if (context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Services))
+         return true;
+
+      return _skipBindingFromBody && context.BindingInfo.BindingSource.CanAcceptDataFrom(BindingSource.Body);
    }
 }

@@ -60,7 +60,7 @@ public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
       if (key is null)
          return null;
 
-      var validationResult = T.Validate(key, out var obj);
+      var validationResult = T.Validate(key, null, out var obj);
 
       if (validationResult != ValidationResult.Success && !_mayReturnInvalidObjects)
          throw new JsonSerializationException(validationResult!.ErrorMessage ?? "JSON deserialization failed.");

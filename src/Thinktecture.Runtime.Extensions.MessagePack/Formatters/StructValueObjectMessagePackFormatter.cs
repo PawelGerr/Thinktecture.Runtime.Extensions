@@ -73,7 +73,7 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey> : IMessagePac
 
    private static T Deserialize(TKey key)
    {
-      var validationResult = T.Validate(key, out var obj);
+      var validationResult = T.Validate(key, null, out var obj);
 
       if (validationResult is not null && !_mayReturnInvalidObjects)
          throw new ValidationException(validationResult.ErrorMessage ?? "MessagePack deserialization failed.");

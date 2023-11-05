@@ -2,7 +2,7 @@ namespace Thinktecture.CodeAnalysis;
 
 public sealed class MemberInformationComparer : IEqualityComparer<IMemberInformation>
 {
-   public static readonly IEqualityComparer<IMemberInformation> Instance = new MemberInformationComparer();
+   public static readonly MemberInformationComparer Instance = new();
 
    public bool Equals(IMemberInformation? x, IMemberInformation? y)
    {

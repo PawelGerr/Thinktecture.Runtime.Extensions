@@ -32,7 +32,7 @@ public interface IKeyedValueObject<out TKey> : IKeyedValueObject
 /// <remarks>
 /// Don't implement this interface directly. It will be implemented by a source generator.
 /// </remarks>
-public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>
+public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>, IValueObjectFactory<T, TKey>
    where TKey : notnull
 {
    /// <summary>

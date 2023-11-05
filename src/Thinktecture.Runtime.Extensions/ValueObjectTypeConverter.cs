@@ -54,22 +54,22 @@ public class ValueObjectTypeConverter<T, TKey> : TypeConverter
          return obj;
 
       if (value is TKey key)
-         return ConvertFrom(key);
+         return ConvertFromKey(key, culture);
 
       if (_keyConverter is not null)
       {
          var convertedValue = _keyConverter.ConvertFrom(context, culture, value);
 
          if (convertedValue is TKey convertedKey)
-            return ConvertFrom(convertedKey);
+            return ConvertFromKey(convertedKey, culture);
       }
 
       return base.ConvertFrom(context, culture, value);
    }
 
-   private static T? ConvertFrom(TKey key)
+   private static T? ConvertFromKey(TKey key, IFormatProvider? culture)
    {
-      var validationResult = T.Validate(key, out var item);
+      var validationResult = T.Validate(key, culture, out var item);
 
       if (validationResult is null || _mayReturnInvalidObjects)
          return item;

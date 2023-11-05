@@ -46,13 +46,24 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateEnum(CancellationToken cancellationToken)
    {
-      var needCreateInvalidItemImplementation = _state is { IsValidatable: true, HasCreateInvalidItemImplementation: false };
+      var needCreateInvalidItemImplementation = _state is { Settings.IsValidatable: true, HasCreateInvalidItemImplementation: false };
 
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
       _sb.Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
-   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@">,
+   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(">,");
+
+      foreach (var sourceType in _state.Settings.DesiredFactorySourceTypes)
+      {
+         if (!sourceType.Equals(_state.KeyProperty))
+         {
+            _sb.Append(@"
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(sourceType.TypeFullyQualified).Append(">,");
+         }
+      }
+
+      _sb.Append(@"
       global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">
    {");
 
@@ -94,7 +105,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       public ").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.Name).Append(" { get; }");
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
       {
          _sb.Append(@"
 
@@ -114,7 +125,7 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateGetKey();
       GenerateGet();
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
          GenerateCreateAndCheckInvalidItem(needCreateInvalidItemImplementation);
 
       if (needCreateInvalidItemImplementation && !_state.IsAbstract)
@@ -144,10 +155,10 @@ namespace ").Append(_state.Namespace).Append(@"
          return _hashCode;
       }");
 
-      if (!_state.SkipToString)
+      if (!_state.Settings.SkipToString)
          GenerateToString();
 
-      if (!_state.SkipSwitchMethods)
+      if (!_state.Settings.SkipSwitchMethods)
       {
          GenerateSwitchForAction(false);
          GenerateSwitchForAction(true);
@@ -155,7 +166,7 @@ namespace ").Append(_state.Namespace).Append(@"
          GenerateSwitchForFunc(true);
       }
 
-      if (!_state.SkipMapMethods)
+      if (!_state.Settings.SkipMapMethods)
          GenerateMap();
 
       GenerateGetLookup();
@@ -412,7 +423,7 @@ namespace ").Append(_state.Namespace).Append(@"
          global::System.Linq.Expressions.Expression<global::System.Func<").Append(enumType).Append(", ").Append(keyMember.TypeFullyQualified).Append(@">> convertToKeyExpression = static item => item.").Append(keyMember.Name).Append(@";
 
          var enumType = typeof(").Append(enumType).Append(@");
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(").Append(keyMember.TypeFullyQualified).Append("), true, ").Append(_state.IsValidatable ? "true" : "false").Append(@", convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(").Append(keyMember.TypeFullyQualified).Append("), true, ").Append(_state.Settings.IsValidatable ? "true" : "false").Append(@", convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
 
          global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }");
@@ -442,7 +453,7 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
       {
          _sb.Append(@"
          if(_itemsLookup.Value.TryGetValue(").Append(_state.KeyProperty.ArgumentName).Append(@", out item))
@@ -463,6 +474,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValidate()
    {
+      var providerArgumentName = _state.KeyProperty.ArgumentName == "provider" ? "formatProvider" : "provider";
+
       _sb.Append(@"
 
       /// <summary>
@@ -473,6 +486,20 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").Append(_state.TypeFullyQualified).Append(@" item)
       {
+         return ").Append(_state.TypeFullyQualified).Append(".Validate(").Append(_state.KeyProperty.ArgumentName).Append(@", null, out item);
+      }");
+
+      _sb.Append(@"
+
+      /// <summary>
+      /// Validates the provided <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/> and returns a valid enumeration item if found.
+      /// </summary>
+      /// <param name=""").Append(_state.KeyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
+      /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
+      /// <param name=""item"">A valid instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>; otherwise <c>null</c>.</param>
+      /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").Append(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").Append(_state.TypeFullyQualified).Append(@" item)
+      {
          if(").Append(_state.TypeFullyQualified).Append(".TryGet(").Append(_state.KeyProperty.ArgumentName).Append(@", out item))
          {
             return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
@@ -480,7 +507,7 @@ namespace ").Append(_state.Namespace).Append(@"
          else
          {");
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
       {
          if (_state.KeyProperty.IsReferenceType)
          {
@@ -553,7 +580,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public bool Equals(").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" other)
       {");
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
       {
          if (_state.IsReferenceType)
          {
@@ -621,7 +648,7 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
          }
 
-         if (_state.IsValidatable)
+         if (_state.Settings.IsValidatable)
          {
             _sb.Append(@"
             if (!item.IsValid)
@@ -689,7 +716,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").Append(_state.KeyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@""" /> if <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
 
-      if (!_state.IsValidatable)
+      if (!_state.Settings.IsValidatable)
       {
          _sb.Append(@"
       /// <exception cref=""Thinktecture.UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(_state.KeyProperty.ArgumentName).Append(@"""/>.</exception>");
@@ -712,7 +739,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (!_itemsLookup.Value.TryGetValue(").Append(_state.KeyProperty.ArgumentName).Append(@", out var item))
          {");
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
       {
          _sb.Append(@"
             item = CreateAndCheckInvalidItem(").Append(_state.KeyProperty.ArgumentName).Append(");");
@@ -851,7 +878,7 @@ namespace ").Append(_state.Namespace).Append(@"
       IReadOnlyList<ConstructorArgument> ctorArgs,
       IReadOnlyList<ConstructorArgument> baseCtorArgs)
    {
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
       {
          _sb.Append(@"
 
@@ -880,7 +907,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private ").Append(_state.Name).Append("(").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName);
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
          _sb.Append(", bool isValid");
 
       foreach (var member in ctorArgs)
@@ -912,7 +939,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          ValidateConstructorArguments(ref ").Append(_state.KeyProperty.ArgumentName);
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
          _sb.Append(", isValid");
 
       foreach (var members in ctorArgs)
@@ -934,7 +961,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          this.").Append(_state.KeyProperty.Name).Append(" = ").Append(_state.KeyProperty.ArgumentName).Append(";");
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
       {
          _sb.Append(@"
          this.IsValid = isValid;");
@@ -952,7 +979,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       static partial void ValidateConstructorArguments(ref ").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName);
 
-      if (_state.IsValidatable)
+      if (_state.Settings.IsValidatable)
          _sb.Append(", bool isValid");
 
       foreach (var members in ctorArgs)
