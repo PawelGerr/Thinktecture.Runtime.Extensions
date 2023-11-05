@@ -9,7 +9,7 @@ namespace Thinktecture;
 /// <typeparam name="T">Type of the concrete enumeration.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public class ValueObjectTypeConverter<T, TKey> : TypeConverter
-   where T : IKeyedValueObject<T, TKey>
+   where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    where TKey : notnull
 {
    private static readonly Type _type = typeof(T);
@@ -93,13 +93,13 @@ public class ValueObjectTypeConverter<T, TKey> : TypeConverter
          var underlyingType = Nullable.GetUnderlyingType(destinationType);
 
          if (destinationType == _keyType || underlyingType == _keyType)
-            return item.GetKey();
+            return item.ToValue();
 
          if (destinationType == _type || underlyingType == _type)
             return value;
 
          if (_keyConverter is not null)
-            return _keyConverter.ConvertTo(context, culture, item.GetKey(), destinationType);
+            return _keyConverter.ConvertTo(context, culture, item.ToValue(), destinationType);
       }
 
       return base.ConvertTo(context, culture, value, destinationType);

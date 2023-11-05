@@ -36,14 +36,17 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
          return null;
 
       var metadata = KeyedValueObjectMetadataLookup.Find(context.Metadata.ModelType);
+      Type type;
       Type keyType;
 
       if (typeof(IValueObjectFactory<string>).IsAssignableFrom(context.Metadata.ModelType))
       {
+         type = context.Metadata.ModelType;
          keyType = typeof(string);
       }
       else if (metadata is not null)
       {
+         type = metadata.Type;
          keyType = metadata.KeyType;
       }
       else
@@ -53,8 +56,8 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
 
       var loggerFactory = context.Services.GetRequiredService<ILoggerFactory>();
       var modelBinderType = _trimStringBasedEnums && metadata?.IsEnumeration == true && keyType == typeof(string)
-                               ? typeof(TrimmingSmartEnumModelBinder<>).MakeGenericType(context.Metadata.ModelType)
-                               : typeof(ValueObjectModelBinder<,>).MakeGenericType(context.Metadata.ModelType, keyType);
+                               ? typeof(TrimmingSmartEnumModelBinder<>).MakeGenericType(type)
+                               : typeof(ValueObjectModelBinder<,>).MakeGenericType(type, keyType);
       var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory)
                         ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
 

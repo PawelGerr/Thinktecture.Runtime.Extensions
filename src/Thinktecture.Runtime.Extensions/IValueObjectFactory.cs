@@ -6,7 +6,7 @@ namespace Thinktecture;
 /// Marker interface.
 /// </summary>
 /// <remarks>
-/// Don't implement this interface directly. It will be implemented by a source generator.
+/// Don't use this interface directly. It will be used by a source generator.
 /// </remarks>
 // ReSharper disable once UnusedTypeParameter
 public interface IValueObjectFactory<TValue>
@@ -21,7 +21,7 @@ public interface IValueObjectFactory<TValue>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TValue">Type of the value to create the item from.</typeparam>
 /// <remarks>
-/// Don't implement this interface directly. It will be implemented by a source generator.
+/// Don't use this interface directly. It will be used by a source generator.
 /// </remarks>
 public interface IValueObjectFactory<T, TValue> : IValueObjectFactory<TValue>
    where TValue : notnull

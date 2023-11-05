@@ -54,12 +54,18 @@ namespace ").Append(_state.Namespace).Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
    partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(">,");
 
-      foreach (var sourceType in _state.Settings.DesiredFactorySourceTypes)
+      foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
-         if (!sourceType.Equals(_state.KeyProperty))
+         if (desiredFactory.Equals(_state.KeyProperty))
+            continue;
+
+         _sb.Append(@"
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(desiredFactory.TypeFullyQualified).Append(">,");
+
+         if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
-            _sb.Append(@"
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(sourceType.TypeFullyQualified).Append(">,");
+            _sb.Append(@",
+      global::Thinktecture.IValueObjectConverter<").Append(desiredFactory.TypeFullyQualified).Append(">");
          }
       }
 
@@ -122,7 +128,7 @@ namespace ").Append(_state.Namespace).Append(@"
       cancellationToken.ThrowIfCancellationRequested();
 
       GenerateConstructors();
-      GenerateGetKey();
+      GenerateToValue();
       GenerateGet();
 
       if (_state.Settings.IsValidatable)
@@ -692,7 +698,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateGetKey()
+   private void GenerateToValue()
    {
       _sb.Append(@"
 
@@ -701,6 +707,17 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       ").Append(_state.KeyProperty.TypeFullyQualified).Append(" global::Thinktecture.IKeyedValueObject<").Append(_state.KeyProperty.TypeFullyQualified).Append(@">.GetKey()
+      {
+         return this.").Append(_state.KeyProperty.Name).Append(@";
+      }");
+
+      _sb.Append(@"
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      ").Append(_state.KeyProperty.TypeFullyQualified).Append(" global::Thinktecture.IValueObjectConverter<").Append(_state.KeyProperty.TypeFullyQualified).Append(@">.ToValue()
       {
          return this.").Append(_state.KeyProperty.Name).Append(@";
       }");

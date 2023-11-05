@@ -52,8 +52,8 @@ public class DemoController : Controller
       return RoundTrip<ProductType, string>(productType);
    }
 
-   [HttpGet("boundary/{boundary}")]
-   public IActionResult RoundTrip(Boundary boundary)
+   [HttpGet("boundaryWithFactories/{boundary}")]
+   public IActionResult RoundTrip(BoundaryWithFactories boundary)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);

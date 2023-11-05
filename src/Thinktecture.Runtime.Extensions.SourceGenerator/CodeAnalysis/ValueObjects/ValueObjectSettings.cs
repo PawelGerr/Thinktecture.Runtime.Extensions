@@ -10,7 +10,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool EmptyStringInFactoryMethodsYieldsNull => _allSettings.EmptyStringInFactoryMethodsYieldsNull;
    public bool NullInFactoryMethodsYieldsNull => _allSettings.NullInFactoryMethodsYieldsNull;
    public string DefaultInstancePropertyName => _allSettings.DefaultInstancePropertyName;
-   public IReadOnlyList<TypeInfo> DesiredFactorySourceTypes => _attributeInfo.DesiredFactorySourceTypes;
+   public IReadOnlyList<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
    public ValueObjectSettings(
       AllValueObjectSettings allSettings,
@@ -27,7 +27,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
              && _allSettings.EmptyStringInFactoryMethodsYieldsNull == other._allSettings.EmptyStringInFactoryMethodsYieldsNull
              && _allSettings.NullInFactoryMethodsYieldsNull == other._allSettings.NullInFactoryMethodsYieldsNull
              && _allSettings.DefaultInstancePropertyName == other._allSettings.DefaultInstancePropertyName
-             && _attributeInfo.DesiredFactorySourceTypes.EqualsTo(other._attributeInfo.DesiredFactorySourceTypes);
+             && _attributeInfo.DesiredFactories.EqualsTo(other._attributeInfo.DesiredFactories);
    }
 
    public override bool Equals(object? obj)
@@ -44,7 +44,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ _allSettings.EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ _allSettings.NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ _allSettings.DefaultInstancePropertyName.GetHashCode();
-         hashCode = (hashCode * 397) ^ _attributeInfo.DesiredFactorySourceTypes.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ _attributeInfo.DesiredFactories.ComputeHashCode();
 
          return hashCode;
       }

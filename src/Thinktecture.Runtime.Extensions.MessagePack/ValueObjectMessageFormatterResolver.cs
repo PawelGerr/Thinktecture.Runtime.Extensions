@@ -1,3 +1,4 @@
+using System.Reflection;
 using MessagePack;
 using MessagePack.Formatters;
 using Thinktecture.Formatters;
@@ -40,14 +41,31 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
       {
          var type = typeof(T);
          var metadata = KeyedValueObjectMetadataLookup.Find(type);
+         var customFactory = type.GetCustomAttributes<ValueObjectFactoryAttribute>()
+                                 .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack));
 
-         if (metadata is null)
+         Type modelType;
+         Type keyType;
+
+         if (customFactory is not null)
+         {
+            modelType = type;
+            keyType = customFactory.Type;
+         }
+         else if (metadata is not null)
+         {
+            modelType = metadata.Type;
+            keyType = metadata.KeyType;
+         }
+         else
+         {
             return;
+         }
 
-         var formatterTypeDefinition = metadata.Type.IsClass
+         var formatterTypeDefinition = modelType.IsClass
                                           ? typeof(ValueObjectMessagePackFormatter<,>)
                                           : typeof(StructValueObjectMessagePackFormatter<,>);
-         var formatterType = formatterTypeDefinition.MakeGenericType(metadata.Type, metadata.KeyType);
+         var formatterType = formatterTypeDefinition.MakeGenericType(modelType, keyType);
 
          var formatter = Activator.CreateInstance(formatterType);
 

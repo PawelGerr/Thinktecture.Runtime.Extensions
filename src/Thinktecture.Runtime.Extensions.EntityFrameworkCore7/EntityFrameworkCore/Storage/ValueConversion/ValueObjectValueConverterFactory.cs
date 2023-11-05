@@ -17,7 +17,7 @@ public sealed class ValueObjectValueConverterFactory
    /// <typeparam name="TKey">Type of the key.</typeparam>
    /// <returns>An instance of <see cref="ValueConverter{T,TKey}"/>></returns>
    public static ValueConverter<T, TKey> Create<T, TKey>(bool useConstructorForRead = true)
-      where T : IKeyedValueObject<TKey>
+      where T : IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
       where TKey : notnull
    {
       return new ValueObjectValueConverter<T, TKey>(useConstructorForRead);
@@ -31,7 +31,7 @@ public sealed class ValueObjectValueConverterFactory
    /// <typeparam name="TKey">Type of the key.</typeparam>
    /// <returns>An instance of <see cref="ValueConverter{TEnum,TKey}"/>></returns>
    public static ValueConverter<TEnum, TKey> CreateForValidatableEnum<TEnum, TKey>(bool validateOnWrite)
-      where TEnum : IValidatableEnum<TKey>
+      where TEnum : IValidatableEnum<TKey>, IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
       where TKey : notnull
    {
       return new ValidatableEnumValueConverter<TEnum, TKey>(validateOnWrite);
@@ -81,7 +81,7 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private static Expression<Func<TKey, T>> GetConverterFromKey<T, TKey>(bool useConstructor)
-      where T : IKeyedValueObject<TKey>
+      where T : IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
       where TKey : notnull
    {
       var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
@@ -97,17 +97,17 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private sealed class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
-      where T : IKeyedValueObject<TKey>
+      where T : IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
       where TKey : notnull
    {
       public ValueObjectValueConverter(bool useConstructor)
-         : base(static o => o.GetKey(), GetConverterFromKey<T, TKey>(useConstructor))
+         : base(static o => o.ToValue(), GetConverterFromKey<T, TKey>(useConstructor))
       {
       }
    }
 
    private sealed class ValidatableEnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
-      where TEnum : IValidatableEnum<TKey>
+      where TEnum : IValidatableEnum<TKey>, IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
       where TKey : notnull
    {
       public ValidatableEnumValueConverter(bool validateOnWrite)
@@ -119,13 +119,13 @@ public sealed class ValueObjectValueConverterFactory
       {
          return validateOnWrite
                    ? static item => GetKeyIfValid(item)
-                   : static item => item.GetKey();
+                   : static item => item.ToValue();
       }
 
       private static TKey GetKeyIfValid(TEnum item)
       {
          item.EnsureValid();
-         return item.GetKey();
+         return item.ToValue();
       }
    }
 }

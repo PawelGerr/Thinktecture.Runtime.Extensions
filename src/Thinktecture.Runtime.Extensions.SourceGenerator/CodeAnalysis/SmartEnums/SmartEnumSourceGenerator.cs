@@ -73,7 +73,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                           state.Settings.SkipIParsable,
                                                           state.KeyMember.IsParsable,
                                                           state.State.Settings.IsValidatable,
-                                                          state.AttributeInfo.DesiredFactorySourceTypes.Any(t => t.SpecialType == SpecialType.System_String)));
+                                                          state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
       InitializeParsableCodeGenerator(context, parsables, options);
    }
 
@@ -132,7 +132,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                  .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                  .Where(tuple =>
                                                         {
-                                                           if (tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo))
+                                                           if (tuple.Factory.MustGenerateCode(tuple.State))
                                                            {
                                                               Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
                                                               return true;

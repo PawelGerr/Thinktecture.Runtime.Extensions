@@ -10,7 +10,7 @@ namespace Thinktecture.Json;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
-   where T : IKeyedValueObject<T, TKey>
+   where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    where TKey : notnull
 {
    private static readonly Type _type = typeof(T);
@@ -29,7 +29,7 @@ public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
       }
       else
       {
-         serializer.Serialize(writer, ((T)value).GetKey());
+         serializer.Serialize(writer, ((T)value).ToValue());
       }
    }
 

@@ -12,14 +12,15 @@ public sealed class NewtonsoftJsonSmartEnumCodeGeneratorFactory : IKeyedSerializ
    {
    }
 
-   public bool MustGenerateCode(AttributeInfo attributeInfo)
+   public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
-      return !attributeInfo.HasNewtonsoftJsonConverterAttribute;
+      return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
+             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson)));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)
    {
-      return new KeyedNewtonsoftJsonCodeGenerator(state.Type, state.KeyMember, stringBuilder);
+      return new KeyedNewtonsoftJsonCodeGenerator(state, stringBuilder);
    }
 
    public bool Equals(IKeyedSerializerCodeGeneratorFactory other)

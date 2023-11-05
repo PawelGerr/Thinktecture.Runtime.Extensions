@@ -80,14 +80,14 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                                  : states.Distinct().ToImmutableArray())
                                                 .WithComparer(new SetComparer<IValueObjectSerializerCodeGeneratorFactory>());
 
-      validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods);
+      validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
 
       var keyedSerializerGeneratorStates = validStates.SelectMany((state, _) =>
                                                                   {
-                                                                     if (!state.State.HasKeyMember)
+                                                                     if (!state.State.HasKeyMember && state.AttributeInfo.DesiredFactories.All(f => f.UseForSerialization == SerializationFrameworks.None))
                                                                         return ImmutableArray<KeyedSerializerGeneratorState>.Empty;
 
-                                                                     var serializerState = new KeyedSerializerGeneratorState(state.State, state.State.KeyMember.Member, state.AttributeInfo);
+                                                                     var serializerState = new KeyedSerializerGeneratorState(state.State, state.State.KeyMember?.Member, state.AttributeInfo);
 
                                                                      return ImmutableArray.Create(serializerState);
                                                                   })
@@ -95,7 +95,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                       .Where(tuple =>
                                                              {
-                                                                if (tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo))
+                                                                if (tuple.Factory.MustGenerateCode(tuple.State))
                                                                 {
                                                                    Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
                                                                    return true;
@@ -118,7 +118,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                         .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                         .Where(tuple =>
                                                                {
-                                                                  if (tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo))
+                                                                  if (tuple.Factory.MustGenerateCode(tuple.State))
                                                                   {
                                                                      Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
                                                                      return true;
@@ -163,7 +163,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                           state.Settings.SkipIParsable,
                                                           state.State.KeyMember?.Member.IsParsable ?? false,
                                                           false,
-                                                          state.AttributeInfo.DesiredFactorySourceTypes.Any(t => t.SpecialType == SpecialType.System_String)));
+                                                          state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
 
       InitializeParsableCodeGenerator(context, parsables, options);
    }

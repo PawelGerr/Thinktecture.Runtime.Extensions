@@ -65,7 +65,16 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          }
 
          if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
-            throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."");
+         {
+            var (lineNumber, linePosition) = GetLineInfo(reader);
+
+            throw new global::Newtonsoft.Json.JsonReaderException(
+               $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."",
+               reader.Path,
+               lineNumber,
+               linePosition,
+               null);
+         }
 ");
 
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
@@ -86,12 +95,30 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                break;
 
             if (reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
-               throw new global::Newtonsoft.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."");
+            {
+               var (lineNumber, linePosition) = GetLineInfo(reader);
+
+               throw new global::Newtonsoft.Json.JsonReaderException(
+                  $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."",
+                  reader.Path,
+                  lineNumber,
+                  linePosition,
+                  null);
+            }
 
             var propName = reader.Value!.ToString();
 
             if(!reader.Read())
-               throw new global::Newtonsoft.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(_type.TypeMinimallyQualified).Append(@"\""."");
+            {
+               var (lineNumber, linePosition) = GetLineInfo(reader);
+
+               throw new global::Newtonsoft.Json.JsonReaderException(
+                  $""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(_type.TypeMinimallyQualified).Append(@"\""."",
+                  reader.Path,
+                  lineNumber,
+                  linePosition,
+                  null);
+            }
 ");
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -122,7 +149,14 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          _sb.Append(@"
             else
             {
-               throw new global::Newtonsoft.Json.JsonException($""Unknown member \""{propName}\"" encountered when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."");
+               var (lineNumber, linePosition) = GetLineInfo(reader);
+
+               throw new global::Newtonsoft.Json.JsonReaderException(
+                  $""Unknown member \""{propName}\"" encountered when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."",
+                  reader.Path,
+                  lineNumber,
+                  linePosition,
+                  null);
             }");
       }
 
@@ -145,7 +179,16 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                                     out var obj);
 
          if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
-            throw new global::Newtonsoft.Json.JsonException($""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Error: {validationResult!.ErrorMessage}."");
+         {
+            var (lineNumber, linePosition) = GetLineInfo(reader);
+
+            throw new global::Newtonsoft.Json.JsonSerializationException(
+               $""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Error: {validationResult!.ErrorMessage}."",
+                  reader.Path,
+                  lineNumber,
+                  linePosition,
+                  null);
+         }
 
          return obj;
       }
@@ -202,6 +245,20 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 
       _sb.Append(@"
          writer.WriteEndObject();
+      }
+
+      private static (int Number, int Position) GetLineInfo(global::Newtonsoft.Json.JsonReader reader)
+      {
+         var lineInfo = (reader as global::Newtonsoft.Json.IJsonLineInfo);
+
+         if (lineInfo?.HasLineInfo() == true)
+         {
+            return (lineInfo.LineNumber, lineInfo.LinePosition);
+         }
+         else
+         {
+            return (0, 0);
+         }
       }
    }
 }

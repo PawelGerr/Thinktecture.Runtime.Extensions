@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Thinktecture.SmartEnums;
@@ -75,6 +75,17 @@ public class DemoController : Controller
       _logger.LogInformation("Round trip test with {Type}: {Name}", name.GetType().Name, name);
 
       return Json(name);
+   }
+
+   [HttpPost("boundary")]
+   public IActionResult RoundTrip([FromBody] BoundaryWithJsonConverter boundary)
+   {
+      if (!ModelState.IsValid)
+         return BadRequest(ModelState);
+
+      _logger.LogInformation("Round trip test with {Type}: {Boundary}", boundary.GetType().Name, boundary);
+
+      return Json(boundary);
    }
 
    private IActionResult RoundTripValidatableEnum<T, TKey>(T value)

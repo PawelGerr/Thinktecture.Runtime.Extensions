@@ -3,13 +3,16 @@ namespace Thinktecture.CodeAnalysis;
 public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerializerGeneratorState>, INamespaceAndName
 {
    public ITypeInformation Type { get; }
-   public ITypeFullyQualified KeyMember { get; }
+   public ITypeFullyQualified? KeyMember { get; }
    public AttributeInfo AttributeInfo { get; }
 
    public string? Namespace => Type.Namespace;
    public string Name => Type.Name;
 
-   public KeyedSerializerGeneratorState(ITypeInformation type, ITypeFullyQualified keyMember, AttributeInfo attributeInfo)
+   public KeyedSerializerGeneratorState(
+      ITypeInformation type,
+      ITypeFullyQualified? keyMember,
+      AttributeInfo attributeInfo)
    {
       Type = type;
       KeyMember = keyMember;
@@ -19,7 +22,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
    public bool Equals(KeyedSerializerGeneratorState other)
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
-             && KeyMember.TypeFullyQualified == other.KeyMember.TypeFullyQualified
+             && KeyMember?.TypeFullyQualified == other.KeyMember?.TypeFullyQualified
              && AttributeInfo.Equals(other.AttributeInfo);
    }
 
@@ -33,7 +36,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
       unchecked
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
-         hashCode = (hashCode * 397) ^ KeyMember.TypeFullyQualified.GetHashCode();
+         hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : KeyMember.TypeFullyQualified.GetHashCode());
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
 
          return hashCode;

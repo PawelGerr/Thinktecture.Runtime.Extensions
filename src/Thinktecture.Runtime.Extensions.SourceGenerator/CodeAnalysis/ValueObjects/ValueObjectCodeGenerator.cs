@@ -75,12 +75,18 @@ namespace ").Append(_state.Namespace).Append(@"
       global::Thinktecture.IComplexValueObject");
       }
 
-      foreach (var sourceType in _state.Settings.DesiredFactorySourceTypes)
+      foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
-         if (!_state.HasKeyMember || _state.Settings.SkipFactoryMethods || !sourceType.Equals(_state.KeyMember.Member))
+         if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false } && desiredFactory.Equals(_state.KeyMember.Member))
+            continue;
+
+         _sb.Append(@",
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(desiredFactory.TypeFullyQualified).Append(">");
+
+         if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@",
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(sourceType.TypeFullyQualified).Append(">");
+      global::Thinktecture.IValueObjectConverter<").Append(desiredFactory.TypeFullyQualified).Append(">");
          }
       }
 
@@ -122,7 +128,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.HasKeyMember)
       {
-         GenerateGetKey(_state.KeyMember);
+         GenerateToValue(_state.KeyMember);
          GenerateImplicitConversionToKey(_state.KeyMember);
          GenerateExplicitConversionToKey(_state.KeyMember);
 
@@ -148,7 +154,7 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
-   private void GenerateGetKey(EqualityInstanceMemberInfo keyMember)
+   private void GenerateToValue(EqualityInstanceMemberInfo keyMember)
    {
       _sb.Append(@"
 
@@ -157,6 +163,17 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       ").Append(keyMember.Member.TypeFullyQualified).Append(" global::Thinktecture.IKeyedValueObject<").Append(keyMember.Member.TypeFullyQualified).Append(@">.GetKey()
+      {
+         return this.").Append(keyMember.Member.Name).Append(@";
+      }");
+
+      _sb.Append(@"
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      ").Append(keyMember.Member.TypeFullyQualified).Append(" global::Thinktecture.IValueObjectConverter<").Append(keyMember.Member.TypeFullyQualified).Append(@">.ToValue()
       {
          return this.").Append(keyMember.Member.Name).Append(@";
       }");

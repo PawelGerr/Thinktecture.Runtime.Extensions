@@ -10,7 +10,7 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
    public bool SkipSwitchMethods => _settings.SkipSwitchMethods;
    public bool SkipMapMethods => _settings.SkipMapMethods;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
-   public IReadOnlyList<TypeInfo> DesiredFactorySourceTypes => _attributeInfo.DesiredFactorySourceTypes;
+   public IReadOnlyList<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
    public EnumSettings(AllEnumSettings settings, AttributeInfo attributeInfo)
    {
@@ -30,7 +30,7 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
              && SkipSwitchMethods == other.SkipSwitchMethods
              && SkipMapMethods == other.SkipMapMethods
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
-             && DesiredFactorySourceTypes.EqualsTo(other.DesiredFactorySourceTypes);
+             && DesiredFactories.EqualsTo(other.DesiredFactories);
    }
 
    public override int GetHashCode()
@@ -42,7 +42,7 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
          hashCode = (hashCode * 397) ^ SkipSwitchMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipMapMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
-         hashCode = (hashCode * 397) ^ DesiredFactorySourceTypes.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
 
          return hashCode;
       }

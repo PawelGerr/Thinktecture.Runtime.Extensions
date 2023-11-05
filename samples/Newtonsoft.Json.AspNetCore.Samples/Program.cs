@@ -23,19 +23,6 @@ public class Program
       var loggerFactory = CreateLoggerFactory();
       var server = StartServerAsync(loggerFactory);
 
-      // calls
-      // 	http://localhost:5000/api/category/fruits
-      // 	http://localhost:5000/api/categoryWithConverter/fruits
-      // 	http://localhost:5000/api/group/1
-      // 	http://localhost:5000/api/group/42
-      // 	http://localhost:5000/api/groupWithConverter/1
-      // 	http://localhost:5000/api/groupWithConverter/42
-      // 	http://localhost:5000/api/productType/groceries
-      // 	http://localhost:5000/api/productType/invalid
-      // 	http://localhost:5000/api/productTypeWithJsonConverter/groceries
-      // 	http://localhost:5000/api/productTypeWithJsonConverter/invalid
-      // 	http://localhost:5000/api/productName/bread
-      // 	http://localhost:5000/api/productName/a
       await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>());
 
       await server;
@@ -59,6 +46,8 @@ public class Program
       await DoRequestAsync(logger, client, "productTypeWithJsonConverter/invalid"); // invalid
       await DoRequestAsync(logger, client, "productName/bread");
       await DoRequestAsync(logger, client, "productName/a"); // invalid
+      await DoRequestAsync(logger, client, "boundary", BoundaryWithJsonConverter.Create(1, 2));
+      await DoRequestAsync(logger, client, "boundary", jsonBody: "{ \"lower\": 2, \"upper\": 1 }");
    }
 
    private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url, object? body = null, string? jsonBody = null)

@@ -55,8 +55,8 @@ public class Program
       await DoRequestAsync(logger, client, "productType?productType=groceries");
       await DoRequestAsync(logger, client, "productType", "groceries");
       await DoRequestAsync(logger, client, "productType/invalid"); // invalid
-      await DoRequestAsync(logger, client, "boundary/1:2");        // uses custom factory "[ValueObjectFactory<string>]"
-      await DoRequestAsync(logger, client, "boundary/invalid");    // invalid
+      await DoRequestAsync(logger, client, "boundaryWithFactories/1:2");        // uses custom factory "[ValueObjectFactory<string>]"
+      await DoRequestAsync(logger, client, "boundaryWithFactories/invalid");    // invalid
 
       if (forMinimalWebApi)
          await DoRequestAsync(logger, client, "productTypeWithFilter?productType=invalid"); // invalid
@@ -131,7 +131,6 @@ public class Program
                                                     .AddJsonOptions(options =>
                                                                     {
                                                                        options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
-                                                                       options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
                                                                     });
                                        })
                     .Build();
@@ -147,7 +146,6 @@ public class Program
              .ConfigureHttpJsonOptions(options =>
                                        {
                                           options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
-                                          options.SerializerOptions.Converters.Add(new DateOnlyConverter());
                                        });
 
       var app = builder.Build();
@@ -170,7 +168,7 @@ public class Program
 
                                       return next(context);
                                    });
-      routeGroup.MapGet("boundary/{boundary}", (Boundary boundary) => boundary);
+      routeGroup.MapGet("boundaryWithFactories/{boundary}", (BoundaryWithFactories boundary) => boundary);
       routeGroup.MapPost("productType", ([FromBody] ProductType productType) => productType);
       routeGroup.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);
       routeGroup.MapGet("productTypeWithJsonConverter/{productType}", (ProductTypeWithJsonConverter productType) => productType);
