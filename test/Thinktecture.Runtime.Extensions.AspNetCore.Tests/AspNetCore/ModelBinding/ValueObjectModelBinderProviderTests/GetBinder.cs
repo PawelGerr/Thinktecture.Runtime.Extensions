@@ -32,6 +32,13 @@ public class GetBinder
    }
 
    [Fact]
+   public void Should_return_string_base_binder_specified_by_ValueObjectFactoryAttribute()
+   {
+      var binder = GetModelBinder<BoundaryWithFactories>();
+      binder.Should().BeOfType<ValueObjectModelBinder<BoundaryWithFactories, string>>();
+   }
+
+   [Fact]
    public void Should_return_null_for_non_enums_and_non_value_types()
    {
       GetModelBinder<GetBinder>().Should().BeNull();

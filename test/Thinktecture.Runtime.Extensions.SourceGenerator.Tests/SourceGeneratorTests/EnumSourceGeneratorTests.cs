@@ -84,6 +84,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                        }
 
                                                                        /// <summary>
+                                                                       /// Gets the identifier of the item.
+                                                                       /// </summary>
+                                                                       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                                       string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                                       {
+                                                                          return this.Key;
+                                                                       }
+
+                                                                       /// <summary>
                                                                        /// Gets an enumeration item for provided <paramref name="key"/>.
                                                                        /// </summary>
                                                                        /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -127,6 +136,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                        /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                                        /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                                        public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                       {
+                                                                          return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                                       }
+
+                                                                       /// <summary>
+                                                                       /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                                       /// </summary>
+                                                                       /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                       /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                                       /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                                       /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                                       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                                        {
                                                                           if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                                           {
@@ -385,7 +406,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                      /// <inheritdoc />
                                                                                      public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                      {
-                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out var result);
+                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out var result);
 
                                                                                         if(validationResult is null)
                                                                                            return result!;
@@ -405,7 +426,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                            return false;
                                                                                         }
 
-                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
+                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out result!);
                                                                                         return validationResult is null;
                                                                                      }
                                                                                   }
@@ -611,7 +632,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                  /// <inheritdoc />
                                                                                                  public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                                  {
-                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out var result);
+                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out var result);
                                                                                                     return result!;
                                                                                                  }
 
@@ -627,7 +648,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                        return false;
                                                                                                     }
 
-                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
+                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out result!);
                                                                                                     return true;
                                                                                                  }
                                                                                               }
@@ -646,7 +667,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                   public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                   {
                                                                                      var key = int.Parse(s, provider);
-                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, out var result);
+                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, provider, out var result);
 
                                                                                      if(validationResult is null)
                                                                                         return result!;
@@ -672,7 +693,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                         return false;
                                                                                      }
 
-                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, out result!);
+                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, provider, out result!);
                                                                                      return validationResult is null;
                                                                                   }
                                                                                }
@@ -863,6 +884,15 @@ namespace Thinktecture.Tests
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -906,6 +936,18 @@ namespace Thinktecture.Tests
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -1114,6 +1156,15 @@ namespace Thinktecture.Tests
                                                                        }
 
                                                                        /// <summary>
+                                                                       /// Gets the identifier of the item.
+                                                                       /// </summary>
+                                                                       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                                       string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                                       {
+                                                                          return this.Key;
+                                                                       }
+
+                                                                       /// <summary>
                                                                        /// Gets an enumeration item for provided <paramref name="key"/>.
                                                                        /// </summary>
                                                                        /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -1157,6 +1208,18 @@ namespace Thinktecture.Tests
                                                                        /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                                        /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                                        public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                       {
+                                                                          return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                                       }
+
+                                                                       /// <summary>
+                                                                       /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                                       /// </summary>
+                                                                       /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                       /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                                       /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                                       /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                                       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                                        {
                                                                           if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                                           {
@@ -1468,6 +1531,15 @@ namespace Thinktecture.Tests
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -1511,6 +1583,18 @@ namespace Thinktecture.Tests
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -1843,6 +1927,15 @@ public partial class TestEnum : IEnum<string>
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -1886,6 +1979,18 @@ public partial class TestEnum : IEnum<string>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
+                                                         {
+                                                            return global::TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
                                                          {
                                                             if(global::TestEnum.TryGet(key, out item))
                                                             {
@@ -2139,7 +2244,7 @@ public partial class TestEnum : IEnum<string>
                                                           /// <inheritdoc />
                                                           public static global::TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::TestEnum.Validate(s, out var result);
+                                                             var validationResult = global::TestEnum.Validate(s, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -2159,7 +2264,7 @@ public partial class TestEnum : IEnum<string>
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::TestEnum.Validate(s, out result!);
+                                                             var validationResult = global::TestEnum.Validate(s, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -2334,6 +2439,15 @@ public partial class TestEnum : IEnum<string>
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -2377,6 +2491,18 @@ public partial class TestEnum : IEnum<string>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -2906,6 +3032,15 @@ namespace Thinktecture.Tests
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -2970,6 +3105,18 @@ namespace Thinktecture.Tests
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -3315,6 +3462,15 @@ namespace Thinktecture.Tests
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -3376,6 +3532,18 @@ namespace Thinktecture.Tests
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -3636,7 +3804,7 @@ namespace Thinktecture.Tests
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out var result);
+                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out var result);
                                                              return result!;
                                                           }
 
@@ -3652,7 +3820,7 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
+                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, provider, out result!);
                                                              return true;
                                                           }
                                                        }
@@ -3815,6 +3983,15 @@ namespace Thinktecture.Tests
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         {
+                                                            return this.Name;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="name"/>.
                                                          /// </summary>
                                                          /// <param name="name">The identifier to return an enumeration item for.</param>
@@ -3877,6 +4054,18 @@ namespace Thinktecture.Tests
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="name"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(name, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="name"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="name">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="name"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(name, out item))
                                                             {
@@ -4237,6 +4426,15 @@ namespace Thinktecture.Tests
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -4271,6 +4469,18 @@ namespace Thinktecture.Tests
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -4622,6 +4832,15 @@ namespace Thinktecture.Tests
                                                          }
 
                                                          /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
@@ -4656,6 +4875,18 @@ namespace Thinktecture.Tests
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
                                                          public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Validate(key, null, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {

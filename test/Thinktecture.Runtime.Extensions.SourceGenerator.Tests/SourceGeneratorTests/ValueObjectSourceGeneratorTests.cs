@@ -173,7 +173,7 @@ partial class TestValueObject :
    public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = int.Parse(s, provider);
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
 
       if(validationResult is null)
          return result!;
@@ -199,7 +199,7 @@ partial class TestValueObject :
          return false;
       }
 
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
       return validationResult is null;
    }
 }
@@ -217,7 +217,7 @@ partial struct TestValueObject :
    /// <inheritdoc />
    public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out var result);
 
       if(validationResult is null)
          return result!;
@@ -237,7 +237,7 @@ partial struct TestValueObject :
          return false;
       }
 
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out result!);
       return validationResult is null;
    }
 }
@@ -255,7 +255,7 @@ partial class TestValueObject :
    /// <inheritdoc />
    public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out var result);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out var result);
 
       if(validationResult is null)
          return result!;
@@ -275,7 +275,7 @@ partial class TestValueObject :
          return false;
       }
 
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, out result!);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(s, provider, out result!);
       return validationResult is null;
    }
 }
@@ -1502,6 +1502,15 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
       /// Implicit conversion to the type <see cref="int"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
@@ -1921,6 +1930,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -1945,7 +1962,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -1957,7 +1974,7 @@ namespace Thinktecture.Tests
          string referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -1971,6 +1988,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -2103,6 +2129,14 @@ namespace Thinktecture.Tests
          int structField,
          out global::Thinktecture.Tests.TestValueObject obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         int structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -2121,7 +2155,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(int structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -2133,7 +2167,7 @@ namespace Thinktecture.Tests
          int structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -2147,6 +2181,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IValueObjectConverter<int>.ToValue()
       {
          return this.StructField;
       }
@@ -2278,7 +2321,7 @@ partial struct TestValueObject :
    public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = int.Parse(s, provider);
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
 
       if(validationResult is null)
          return result!;
@@ -2304,7 +2347,7 @@ partial struct TestValueObject :
          return false;
       }
 
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
       return validationResult is null;
    }
 }
@@ -2506,6 +2549,14 @@ namespace Thinktecture.Tests
          int structField,
          out global::Thinktecture.Tests.TestValueObject obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         int structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -2524,7 +2575,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(int structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -2536,7 +2587,7 @@ namespace Thinktecture.Tests
          int structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -2550,6 +2601,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IValueObjectConverter<int>.ToValue()
       {
          return this.StructField;
       }
@@ -2681,7 +2741,7 @@ partial struct TestValueObject :
    public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = int.Parse(s, provider);
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
 
       if(validationResult is null)
          return result!;
@@ -2707,7 +2767,7 @@ partial struct TestValueObject :
          return false;
       }
 
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
       return validationResult is null;
    }
 }
@@ -2907,6 +2967,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -2931,7 +2999,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -2943,7 +3011,7 @@ namespace Thinktecture.Tests
          string referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -2957,6 +3025,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -3087,6 +3164,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -3111,7 +3196,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -3123,7 +3208,7 @@ namespace Thinktecture.Tests
          string referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -3137,6 +3222,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -3265,6 +3359,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -3289,7 +3391,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -3301,7 +3403,7 @@ namespace Thinktecture.Tests
          string referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -3315,6 +3417,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -3463,6 +3574,14 @@ namespace Thinktecture.Tests
          int structField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         int structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -3481,7 +3600,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(int structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -3493,7 +3612,7 @@ namespace Thinktecture.Tests
          int structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -3507,6 +3626,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IValueObjectConverter<int>.ToValue()
       {
          return this.StructField;
       }
@@ -3649,6 +3777,14 @@ namespace Thinktecture.Tests
          global::System.DateOnly structField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         global::System.DateOnly structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -3667,7 +3803,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(global::System.DateOnly structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -3679,7 +3815,7 @@ namespace Thinktecture.Tests
          global::System.DateOnly structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -3693,6 +3829,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       global::System.DateOnly global::Thinktecture.IKeyedValueObject<global::System.DateOnly>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      global::System.DateOnly global::Thinktecture.IValueObjectConverter<global::System.DateOnly>.ToValue()
       {
          return this.StructField;
       }
@@ -3837,7 +3982,7 @@ partial class TestValueObject :
    public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = global::System.DateOnly.Parse(s, provider);
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
 
       if(validationResult is null)
          return result!;
@@ -3863,7 +4008,7 @@ partial class TestValueObject :
          return false;
       }
 
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
       return validationResult is null;
    }
 }
@@ -4009,6 +4154,14 @@ namespace Thinktecture.Tests
          global::System.DateOnly structField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         global::System.DateOnly structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -4027,7 +4180,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(global::System.DateOnly structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -4039,7 +4192,7 @@ namespace Thinktecture.Tests
          global::System.DateOnly structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -4053,6 +4206,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       global::System.DateOnly global::Thinktecture.IKeyedValueObject<global::System.DateOnly>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      global::System.DateOnly global::Thinktecture.IValueObjectConverter<global::System.DateOnly>.ToValue()
       {
          return this.StructField;
       }
@@ -4197,7 +4359,7 @@ partial class TestValueObject :
    public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = global::System.DateOnly.Parse(s, provider);
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out var result);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out var result);
 
       if(validationResult is null)
          return result!;
@@ -4223,7 +4385,7 @@ partial class TestValueObject :
          return false;
       }
 
-      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, out result!);
+      var validationResult = global::Thinktecture.Tests.TestValueObject.Validate(key, provider, out result!);
       return validationResult is null;
    }
 }
@@ -4435,6 +4597,14 @@ namespace Thinktecture.Tests
          int structField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         int structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -4453,7 +4623,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(int structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -4465,7 +4635,7 @@ namespace Thinktecture.Tests
          int structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -4479,6 +4649,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IValueObjectConverter<int>.ToValue()
       {
          return this.StructField;
       }
@@ -4949,6 +5128,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -4974,7 +5161,7 @@ namespace Thinktecture.Tests
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("referenceField")]
       public static global::Thinktecture.Tests.TestValueObject? Create(string? referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -4986,7 +5173,7 @@ namespace Thinktecture.Tests
          string? referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -5000,6 +5187,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -5138,6 +5334,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          if(global::System.String.IsNullOrWhiteSpace(referenceField))
          {
             obj = default;
@@ -5162,7 +5366,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject? Create(string? referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -5174,7 +5378,7 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -5188,6 +5392,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -5335,6 +5548,14 @@ namespace Thinktecture.Tests
          int structField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         int structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -5353,7 +5574,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(int structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -5365,7 +5586,7 @@ namespace Thinktecture.Tests
          int structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -5379,6 +5600,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IValueObjectConverter<int>.ToValue()
       {
          return this.StructField;
       }
@@ -5535,6 +5765,14 @@ namespace Thinktecture.Tests
          int structField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(structField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         int structField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
          ValidateFactoryArguments(ref validationResult, ref structField);
 
@@ -5553,7 +5791,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(int structField)
       {
-         var validationResult = Validate(structField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -5565,7 +5803,7 @@ namespace Thinktecture.Tests
          int structField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(structField, out obj);
+         var validationResult = Validate(structField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -5579,6 +5817,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+      {
+         return this.StructField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      int global::Thinktecture.IValueObjectConverter<int>.ToValue()
       {
          return this.StructField;
       }
@@ -5728,6 +5975,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -5752,7 +6007,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -5764,7 +6019,7 @@ namespace Thinktecture.Tests
          string referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -5778,6 +6033,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -5918,6 +6182,14 @@ namespace Thinktecture.Tests
          string? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         string? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -5942,7 +6214,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -5954,7 +6226,7 @@ namespace Thinktecture.Tests
          string referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -5968,6 +6240,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      string global::Thinktecture.IValueObjectConverter<string>.ToValue()
       {
          return this.ReferenceField;
       }
@@ -6105,6 +6386,14 @@ namespace Thinktecture.Tests
          global::Thinktecture.Tests.Foo? referenceField,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         return global::Thinktecture.Tests.TestValueObject.Validate(referenceField, null, out obj);
+      }
+
+      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+         global::Thinktecture.Tests.Foo? referenceField,
+         global::System.IFormatProvider? provider,
+         out global::Thinktecture.Tests.TestValueObject? obj)
+      {
          if(referenceField is null)
          {
             obj = default;
@@ -6129,7 +6418,7 @@ namespace Thinktecture.Tests
 
       public static global::Thinktecture.Tests.TestValueObject Create(global::Thinktecture.Tests.Foo referenceField)
       {
-         var validationResult = Validate(referenceField, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
@@ -6141,7 +6430,7 @@ namespace Thinktecture.Tests
          global::Thinktecture.Tests.Foo referenceField,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         var validationResult = Validate(referenceField, out obj);
+         var validationResult = Validate(referenceField, null, out obj);
 
          return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
       }
@@ -6155,6 +6444,15 @@ namespace Thinktecture.Tests
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       global::Thinktecture.Tests.Foo global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.Foo>.GetKey()
+      {
+         return this.ReferenceField;
+      }
+
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      global::Thinktecture.Tests.Foo global::Thinktecture.IValueObjectConverter<global::Thinktecture.Tests.Foo>.ToValue()
       {
          return this.ReferenceField;
       }

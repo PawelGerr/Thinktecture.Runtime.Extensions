@@ -89,6 +89,14 @@ public class ReadJson : JsonTestsBase
       value.Should().Be(expectedValue);
    }
 
+   [Fact]
+   public void Should_deserialize_using_custom_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var value = Deserialize<BoundaryWithFactories, string>("\"1:2\"");
+
+      value.Should().BeEquivalentTo(BoundaryWithFactories.Create(1, 2));
+   }
+
    [Theory]
    [MemberData(nameof(DataForValueObjectWithMultipleProperties))]
    public void Should_deserialize_value_type_with_multiple_properties(
@@ -122,7 +130,7 @@ public class ReadJson : JsonTestsBase
    private static T Deserialize<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : IKeyedValueObject<T, TKey>
+      where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    {
       return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(json, namingStrategy);
    }
@@ -130,7 +138,7 @@ public class ReadJson : JsonTestsBase
    private static T? DeserializeNullableStruct<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : struct, IKeyedValueObject<T, TKey>
+      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    {
       return DeserializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey>>(json, namingStrategy);
    }
@@ -138,7 +146,7 @@ public class ReadJson : JsonTestsBase
    private static T DeserializeStruct<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : struct, IKeyedValueObject<T, TKey>
+      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    {
       return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(json, namingStrategy);
    }

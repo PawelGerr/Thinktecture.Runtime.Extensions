@@ -114,4 +114,17 @@ public class Serialize
 
       value.Should().BeEquivalentTo(expectedValueObject);
    }
+
+   [Theory]
+   [InlineData(false)]
+   [InlineData(true)]
+   public void Should_roundtrip_serialize_using_factory_specified_by_ValueObjectFactoryAttribute(bool withCustomResolver)
+   {
+      var options = withCustomResolver ? _options : StandardResolver.Options;
+
+      var bytes = MessagePackSerializer.Serialize(BoundaryWithFactories.Create(1, 2), options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize<BoundaryWithFactories>(bytes, options, CancellationToken.None);
+
+      value.Should().BeEquivalentTo(BoundaryWithFactories.Create(1, 2));
+   }
 }
