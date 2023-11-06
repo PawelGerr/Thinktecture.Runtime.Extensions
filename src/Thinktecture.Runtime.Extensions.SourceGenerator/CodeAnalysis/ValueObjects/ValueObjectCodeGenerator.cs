@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
@@ -783,7 +784,12 @@ namespace ").Append(_state.Namespace).Append(@"
          hashCode.Add(this.").Append(member.Name);
 
                if (equalityComparerAccessor is not null)
+               {
                   _sb.Append(", ").Append(equalityComparerAccessor).Append(".EqualityComparer");
+
+                  if (member is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.Annotated })
+                     _sb.Append("!");
+               }
 
                _sb.Append(");");
             }
