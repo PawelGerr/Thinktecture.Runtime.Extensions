@@ -2000,7 +2000,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -3055,7 +3055,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -3254,7 +3254,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -3451,7 +3451,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -5243,7 +5243,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -5450,7 +5450,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -6097,7 +6097,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -6306,7 +6306,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -6512,7 +6512,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref global::Thinktecture.Tests.Foo referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref global::Thinktecture.Tests.Foo referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -6736,7 +6736,7 @@ namespace Thinktecture.Tests
                                                         return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField, ref int structField, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                      partial void FactoryPostInit();
 
@@ -6955,7 +6955,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField, ref int structField, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          partial void FactoryPostInit();
 
@@ -7218,7 +7218,7 @@ namespace Thinktecture.Tests
                                                             return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField, ref int structField, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          partial void FactoryPostInit();
 
@@ -7465,7 +7465,7 @@ namespace Thinktecture.Tests
                                                         return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref string referenceField1, ref string referenceField2, ref string referenceField3, ref string referenceField4, ref string referenceField5, ref string referenceField6, ref string referenceField7, ref string referenceField8, ref string referenceField9);
+                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField1, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField2, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField3, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField4, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField5, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField6, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField7, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField8, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField9);
 
                                                      partial void FactoryPostInit();
 
