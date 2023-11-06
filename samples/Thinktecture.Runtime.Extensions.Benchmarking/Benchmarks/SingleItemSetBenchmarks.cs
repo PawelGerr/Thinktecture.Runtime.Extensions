@@ -3,7 +3,6 @@ using BenchmarkDotNet.Attributes;
 
 namespace Thinktecture.Benchmarks;
 
-[MemoryDiagnoser]
 public class SingleItemSetBenchmarks
 {
    private readonly IReadOnlySet<int> _singleItemSet = SingleItem.Set(42);

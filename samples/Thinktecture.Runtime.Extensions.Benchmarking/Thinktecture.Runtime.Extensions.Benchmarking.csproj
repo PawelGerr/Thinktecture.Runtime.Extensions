@@ -5,14 +5,15 @@
    </PropertyGroup>
 
    <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.13.7" />
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
+      <PackageReference Include="JetBrains.Profiler.Api" Version="1.4.0" />
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
       <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
    </ItemGroup>
 
    <ItemGroup>
-      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore6\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.csproj" />
+      <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
    </ItemGroup>
 

@@ -8,7 +8,6 @@ using Thinktecture.Database;
 namespace Thinktecture.Benchmarks;
 
 // ReSharper disable InconsistentNaming
-[MemoryDiagnoser]
 public class LoadingValueObjects
 {
    private BenchmarkContext? _benchmarkContext;
@@ -19,6 +18,7 @@ public class LoadingValueObjects
 
    private readonly Entity_with_ValueObjects[] _Entity_with_ValueObjects = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_with_ValueObjects(i)).ToArray();
    private readonly Entity_without_ValueObjects[] _Entity_without_ValueObjects = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_without_ValueObjects(i)).ToArray();
+   private readonly Entity_with_StructValueObjects[] _Entity_with_StructValueObjects = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_with_StructValueObjects(i)).ToArray();
 
    [GlobalSetup]
    public void Initialize()
@@ -35,6 +35,9 @@ public class LoadingValueObjects
 
       _dbContext.RemoveRange(_dbContext.Entity_without_ValueObjects);
       _dbContext.Entity_without_ValueObjects.AddRange(_Entity_without_ValueObjects);
+
+      _dbContext.RemoveRange(_dbContext.Entity_with_StructValueObjects);
+      _dbContext.Entity_with_StructValueObjects.AddRange(_Entity_with_StructValueObjects);
 
       _dbContext.SaveChanges();
    }
@@ -62,5 +65,11 @@ public class LoadingValueObjects
    public async Task Entity_without_ValueObjects()
    {
       await _dbContext!.Entity_without_ValueObjects.ToListAsync();
+   }
+
+   [Benchmark]
+   public async Task Entity_with_StructValueObjects()
+   {
+      await _dbContext!.Entity_with_StructValueObjects.ToListAsync();
    }
 }
