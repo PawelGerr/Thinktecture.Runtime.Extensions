@@ -12,6 +12,7 @@ public sealed partial class StringBasedReferenceValueObjectWithEmptyStringInFact
    {
       if (String.IsNullOrWhiteSpace(property))
       {
+         property = null!;
          validationResult = new ValidationResult("Property cannot be empty.");
          return;
       }

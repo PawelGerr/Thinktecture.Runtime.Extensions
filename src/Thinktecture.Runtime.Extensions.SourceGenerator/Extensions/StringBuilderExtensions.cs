@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.SmartEnums;
 
@@ -38,7 +39,8 @@ public static class StringBuilderExtensions
       string comma = ", ",
       bool leadingComma = false,
       bool trailingComma = false,
-      bool useNullableTypes = false)
+      bool useNullableTypes = false,
+      bool addAllowNullNotNullCombi = false)
    {
       for (var i = 0; i < members.Count; i++)
       {
@@ -46,6 +48,10 @@ public static class StringBuilderExtensions
             sb.Append(comma);
 
          var member = members[i];
+
+         if (addAllowNullNotNullCombi && member.IsReferenceType && member.NullableAnnotation != NullableAnnotation.Annotated)
+            sb.Append("[global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ");
+
          sb.Append(prefix).Append(member.TypeFullyQualifiedWithNullability);
 
          if (useNullableTypes && !member.IsNullableStruct)

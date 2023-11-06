@@ -12,6 +12,7 @@ public sealed partial class Name
    {
       if (String.IsNullOrWhiteSpace(value))
       {
+         value = null!;
          validationResult = new ValidationResult("Name cannot be empty.");
          return;
       }

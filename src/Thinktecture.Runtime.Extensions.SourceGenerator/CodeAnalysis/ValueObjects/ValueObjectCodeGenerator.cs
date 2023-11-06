@@ -555,7 +555,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult");
 
-      _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true);
+      _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true, addAllowNullNotNullCombi: true);
 
       _sb.Append(");");
    }

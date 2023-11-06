@@ -12,6 +12,7 @@ public readonly partial struct NameStruct
    {
       if (String.IsNullOrWhiteSpace(value))
       {
+         value = null!;
          validationResult = new ValidationResult("Name cannot be empty.");
          return;
       }
