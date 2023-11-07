@@ -21,9 +21,9 @@ public class ValueObjectDemos
       logger.Information("""
 
 
-==== Demo for Simple Value Objects ====
+                         ==== Demo for Simple Value Objects ====
 
-""");
+                         """);
 
       var bread = ProductName.Create("Bread");
       logger.Information("Product name: {Bread}", bread);
@@ -41,7 +41,7 @@ public class ValueObjectDemos
          logger.Information("ValidationException is thrown because a product name cannot be an empty string.");
       }
 
-      var validationResult = ProductName.Validate("Milk", out var milk);
+      var validationResult = ProductName.Validate("Milk", null, out var milk);
       if (validationResult == ValidationResult.Success)
          logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
 
@@ -60,7 +60,7 @@ public class ValueObjectDemos
       var otherNullProductName2 = OtherProductName.Create(" ");
       logger.Information("Null-Product name: {NullProduct}", otherNullProductName2);
 
-      var nullValidationResult = ProductName.Validate(null, out nullProduct);
+      var nullValidationResult = ProductName.Validate(null, null, out nullProduct);
       if (nullValidationResult == ValidationResult.Success)
          logger.Information("Null-Product name: {NullProduct}", nullProduct);
 
@@ -76,9 +76,9 @@ public class ValueObjectDemos
       logger.Information("""
 
 
-==== Demo for Amount ====
+                         ==== Demo for Amount ====
 
-""");
+                         """);
 
       var formattedValue = Amount.Create(42.1m).ToString("000.00", CultureInfo.InvariantCulture); // "042.10"
       logger.Information("Formatted: {Formatted}", formattedValue);
@@ -106,9 +106,9 @@ public class ValueObjectDemos
       logger.Information("""
 
 
-==== Demo for End Date ====
+                         ==== Demo for End Date ====
 
-""");
+                         """);
 
       DateOnly today = DateOnly.FromDateTime(DateTime.Now);
       EndDate endDate = (EndDate)today;
@@ -134,9 +134,9 @@ public class ValueObjectDemos
       logger.Information("""
 
 
-==== Demo for Complex Value Objects ====
+                         ==== Demo for Complex Value Objects ====
 
-""");
+                         """);
 
       Boundary boundaryWithCreate = Boundary.Create(lower: 1, upper: 2);
       logger.Information("Boundary with Create: {Boundary}", boundaryWithCreate);
@@ -157,5 +157,29 @@ public class ValueObjectDemos
 
       var equal = boundaryWithCreate.Equals(boundaryWithCreate);
       logger.Information("Boundaries are equal: {Equal}", equal);
+
+      // Custom implementation of IValueObjectFactory<Boundary, string>
+      validationResult = BoundaryWithFactories.Validate("3:4", null, out var boundaryFromString);
+
+      if (validationResult == ValidationResult.Success)
+      {
+         logger.Information("BoundaryWithFactories '{Boundary}' created from string", boundaryFromString);
+      }
+      else
+      {
+         logger.Warning("Failed to create BoundaryWithFactories from string. Validation result: {ValidationResult}", validationResult!.ErrorMessage);
+      }
+
+      // Custom implementation of IValueObjectFactory<Boundary, (int Lower, int Upper)>
+      validationResult = BoundaryWithFactories.Validate((5, 6), null, out var boundaryFromTuple);
+
+      if (validationResult == ValidationResult.Success)
+      {
+         logger.Information("BoundaryWithFactories '{Boundary}' created from tuple", boundaryFromTuple);
+      }
+      else
+      {
+         logger.Warning("Failed to create BoundaryWithFactories from tuple. Validation result: {ValidationResult}", validationResult!.ErrorMessage);
+      }
    }
 }

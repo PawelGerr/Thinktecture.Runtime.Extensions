@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
-
 namespace Thinktecture;
 
 /// <summary>
@@ -14,14 +11,9 @@ public interface IKeyedValueObject
 /// Common interface of keyed value objects.
 /// </summary>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
-public interface IKeyedValueObject<out TKey> : IKeyedValueObject
+public interface IKeyedValueObject<out TKey> : IValueObjectConverter<TKey>, IKeyedValueObject
    where TKey : notnull
 {
-   /// <summary>
-   /// Gets the key of the item.
-   /// </summary>
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-   TKey GetKey();
 }
 
 /// <summary>
@@ -32,14 +24,7 @@ public interface IKeyedValueObject<out TKey> : IKeyedValueObject
 /// <remarks>
 /// Don't implement this interface directly. It will be implemented by a source generator.
 /// </remarks>
-public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>
+public interface IKeyedValueObject<T, TKey> : IKeyedValueObject<TKey>, IValueObjectFactory<T, TKey>
    where TKey : notnull
 {
-   /// <summary>
-   /// Validate the <paramref name="key"/> and returns an <paramref name="item"/> if the validation succeeded.
-   /// </summary>
-   /// <param name="key">The value to validate.</param>
-   /// <param name="item">Item with key property equals to the provided <paramref name="key"/>.</param>
-   /// <returns>Validation result.</returns>
-   static abstract ValidationResult? Validate(TKey? key, out T? item);
 }

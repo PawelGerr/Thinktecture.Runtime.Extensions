@@ -14,6 +14,7 @@ public sealed partial class ProductName
    {
       if (String.IsNullOrWhiteSpace(value))
       {
+         value = null!;
          validationResult = new ValidationResult("Product name cannot be empty.");
          return;
       }

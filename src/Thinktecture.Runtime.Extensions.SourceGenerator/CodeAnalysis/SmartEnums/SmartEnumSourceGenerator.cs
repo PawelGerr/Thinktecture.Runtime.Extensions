@@ -73,7 +73,8 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                           state.KeyMember,
                                                           state.Settings.SkipIParsable,
                                                           state.KeyMember.IsParsable,
-                                                          state.State.IsValidatable));
+                                                          state.State.Settings.IsValidatable,
+                                                          state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
       InitializeParsableCodeGenerator(context, parsables, options);
    }
 
@@ -132,7 +133,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                  .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                  .Where(tuple =>
                                                         {
-                                                           if (tuple.Factory.MustGenerateCode(tuple.State.AttributeInfo))
+                                                           if (tuple.Factory.MustGenerateCode(tuple.State))
                                                            {
                                                               Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
                                                               return true;
@@ -309,15 +310,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
 
-         var settings = new EnumSettings(context.Attributes[0]);
+         var attributeInfo = new AttributeInfo(type);
+         var settings = new AllEnumSettings(context.Attributes[0]);
          var keyTypedMemberState = factory.Create(keyMemberType);
          var keyProperty = settings.CreateKeyProperty(keyTypedMemberState);
          var hasCreateInvalidItemImplementation = settings.IsValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
 
-         var attributeInfo = new AttributeInfo(type);
-
-         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, settings.SkipToString, settings.SkipSwitchMethods, settings.SkipMapMethods,
-                                                      settings.IsValidatable, hasCreateInvalidItemImplementation, attributeInfo.HasStructLayoutAttribute, cancellationToken);
+         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
          Logger.LogDebug("The type declaration is a valid smart enum", namespaceAndName: enumState);
@@ -351,7 +350,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private readonly record struct ValidSourceGenState(EnumSourceGeneratorState State,
                                                       SmartEnumDerivedTypes DerivedTypes,
-                                                      EnumSettings Settings,
+                                                      AllEnumSettings Settings,
                                                       IMemberState KeyMember,
                                                       AttributeInfo AttributeInfo);
 

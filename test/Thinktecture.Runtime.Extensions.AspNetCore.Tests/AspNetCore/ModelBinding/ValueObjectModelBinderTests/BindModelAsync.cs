@@ -63,7 +63,7 @@ public class BindModelAsync
       var ctx = await BindAsync<IntegerEnum, int>("item1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -73,7 +73,7 @@ public class BindModelAsync
       var ctx = await BindAsync<ValidIntegerEnum, int>("42");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("There is no item of type 'ValidIntegerEnum' with the identifier '42'.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("There is no item of type 'ValidIntegerEnum' with the identifier '42'.") });
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -83,7 +83,7 @@ public class BindModelAsync
       var ctx = await BindAsync<ValidIntegerEnum, int>("item1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName].Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -196,9 +196,49 @@ public class BindModelAsync
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
+   [Fact]
+   public async Task Should_bind_successfully_value_object_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var ctx = await BindAsync<BoundaryWithFactories, string>("1:2");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().BeEquivalentTo(BoundaryWithFactories.Create(1, 2));
+   }
+
+   [Fact]
+   public async Task Should_return_error_when_binding_value_object_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var ctx = await BindAsync<BoundaryWithFactories, string>("1");
+
+      ctx.ModelState.ErrorCount.Should().Be(1);
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Invalid format.") });
+      ctx.Result.IsModelSet.Should().BeFalse();
+   }
+
+   [Fact]
+   public async Task Should_bind_successfully_smart_enum_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var ctx = await BindAsync<EnumWithFactory, string>("=1=");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(EnumWithFactory.Item1);
+   }
+
+   [Fact]
+   public async Task Should_return_error_when_binding_smart_enum_having_string_base_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var ctx = await BindAsync<EnumWithFactory, string>("A");
+
+      ctx.ModelState.ErrorCount.Should().Be(1);
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Unknown item 'A'") });
+      ctx.Result.IsModelSet.Should().BeFalse();
+   }
+
    private static async Task<DefaultModelBindingContext> BindAsync<T, TKey>(
       string value)
-      where T : IKeyedValueObject<T, TKey>
+      where T : IValueObjectFactory<T, TKey>
    {
       var binder = new ValueObjectModelBinder<T, TKey>(NullLoggerFactory.Instance);
       var query = new Dictionary<string, StringValues> { { "name", value } };

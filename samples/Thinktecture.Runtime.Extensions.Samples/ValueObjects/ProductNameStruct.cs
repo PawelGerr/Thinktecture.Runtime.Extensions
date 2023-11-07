@@ -14,6 +14,7 @@ public readonly partial struct ProductNameStruct
    {
       if (String.IsNullOrWhiteSpace(value))
       {
+         value = null!;
          validationResult = new ValidationResult("Product name cannot be empty.");
          return;
       }

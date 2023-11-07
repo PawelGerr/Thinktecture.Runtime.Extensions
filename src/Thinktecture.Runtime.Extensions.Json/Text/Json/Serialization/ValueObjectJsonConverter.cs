@@ -9,7 +9,7 @@ namespace Thinktecture.Text.Json.Serialization;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
-   where T : IKeyedValueObject<T, TKey>
+   where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    where TKey : notnull
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
@@ -35,7 +35,7 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
       if (key is null)
          return default;
 
-      var validationResult = T.Validate(key, out var obj);
+      var validationResult = T.Validate(key, null, out var obj);
 
       if (validationResult is not null && !_mayReturnInvalidObjects)
          throw new JsonException(validationResult.ErrorMessage ?? "JSON deserialization failed.");
@@ -49,6 +49,6 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
       if (value is null)
          throw new ArgumentNullException(nameof(value));
 
-      _keyConverter.Write(writer, value.GetKey(), options);
+      _keyConverter.Write(writer, value.ToValue(), options);
    }
 }

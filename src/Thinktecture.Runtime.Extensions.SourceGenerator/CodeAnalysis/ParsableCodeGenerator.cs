@@ -2,10 +2,10 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis;
 
-public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
+public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGeneratorState>
 {
-   public static readonly IInterfaceCodeGenerator Default = new ParsableCodeGenerator(false);
-   public static readonly IInterfaceCodeGenerator ForValidatableEnum = new ParsableCodeGenerator(true);
+   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> Default = new ParsableCodeGenerator(false);
+   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForValidatableEnum = new ParsableCodeGenerator(true);
 
    private readonly bool _isForValidatableEnum;
 
@@ -17,36 +17,48 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
       _isForValidatableEnum = isForValidatableEnum;
    }
 
-   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateBaseTypes(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
-   global::System.IParsable<").Append(type.TypeFullyQualified).Append(">");
+   global::System.IParsable<").Append(state.Type.TypeFullyQualified).Append(">");
    }
 
-   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateImplementation(StringBuilder sb, ParsableGeneratorState state)
    {
-      GenerateParse(sb, type, keyMember);
-
-      GenerateTryParse(sb, type, keyMember);
+      GenerateValidate(sb, state);
+      GenerateParse(sb, state);
+      GenerateTryParse(sb, state);
    }
 
-   private void GenerateParse(StringBuilder sb, ITypeInformation type, IMemberInformation member)
+   private static void GenerateValidate(StringBuilder sb, ParsableGeneratorState state)
+   {
+      var keyType = state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod ? "string" : state.KeyMember?.TypeFullyQualified;
+      sb.Append(@"
+   private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" result)
+      where T : global::Thinktecture.IValueObjectFactory<").Append(state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(@">
+   {
+      return T.Validate(key, provider, out result);
+   }");
+   }
+
+   private void GenerateParse(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
+
    /// <inheritdoc />
-   public static ").Append(type.TypeFullyQualified).Append(@" Parse(string s, global::System.IFormatProvider? provider)
+   public static ").Append(state.Type.TypeFullyQualified).Append(@" Parse(string s, global::System.IFormatProvider? provider)
    {");
 
-      if (member.IsString())
+      if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
-      var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(s, out var result);");
+      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out var result);");
       }
-      else
+      else if (state.KeyMember is not null)
       {
          sb.Append(@"
-      var key = ").Append(member.TypeFullyQualified).Append(@".Parse(s, provider);
-      var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(key, out var result);");
+      var key = ").Append(state.KeyMember.TypeFullyQualified).Append(@".Parse(s, provider);
+      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out var result);");
       }
 
       if (_isForValidatableEnum)
@@ -67,7 +79,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
       }
    }
 
-   private void GenerateTryParse(StringBuilder sb, ITypeInformation type, IMemberInformation member)
+   private void GenerateTryParse(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
 
@@ -75,7 +87,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
    public static bool TryParse(
       string? s,
       global::System.IFormatProvider? provider,
-      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").Append(type.TypeFullyQualified).Append(@" result)
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").Append(state.Type.TypeFullyQualified).Append(@" result)
    {
       if(s is null)
       {
@@ -83,23 +95,23 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator
          return false;
       }");
 
-      if (member.IsString())
+      if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
 
-      var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(s, out result!);");
+      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out result!);");
       }
-      else
+      else if (state.KeyMember is not null)
       {
          sb.Append(@"
 
-      if(!").Append(member.TypeFullyQualified).Append(@".TryParse(s, provider, out var key))
+      if(!").Append(state.KeyMember.TypeFullyQualified).Append(@".TryParse(s, provider, out var key))
       {
          result = default;
          return false;
       }
 
-      var validationResult = ").Append(type.TypeFullyQualified).Append(".Validate(key, out result!);");
+      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out result!);");
       }
 
       if (_isForValidatableEnum)

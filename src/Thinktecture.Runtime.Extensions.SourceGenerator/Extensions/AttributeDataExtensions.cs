@@ -95,6 +95,12 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipMapMethods");
    }
 
+   public static SerializationFrameworks FindUseForSerialization(this AttributeData attributeData)
+   {
+      return (SerializationFrameworks?)GetIntegerParameterValue(attributeData, "UseForSerialization")
+             ?? SerializationFrameworks.None;
+   }
+
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
    {
       if (attributeData.AttributeClass is not { } attributeClass || attributeClass.TypeKind == TypeKind.Error)
@@ -123,8 +129,13 @@ public static class AttributeDataExtensions
 
    private static OperatorsGeneration GetOperatorsGeneration(AttributeData attributeData, string name)
    {
-      return (OperatorsGeneration?)(int?)attributeData.FindNamedAttribute(name).Value
+      return (OperatorsGeneration?)GetIntegerParameterValue(attributeData, name)
              ?? OperatorsGeneration.Default;
+   }
+
+   private static int? GetIntegerParameterValue(AttributeData attributeData, string name)
+   {
+      return (int?)attributeData.FindNamedAttribute(name).Value;
    }
 
    private static bool? GetBooleanParameterValue(AttributeData attributeData, string name)

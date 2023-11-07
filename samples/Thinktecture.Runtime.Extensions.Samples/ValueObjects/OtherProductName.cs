@@ -13,6 +13,7 @@ public sealed partial class OtherProductName
    {
       if (String.IsNullOrWhiteSpace(value))
       {
+         value = null!;
          validationResult = new ValidationResult("Product name cannot be empty.");
          return;
       }

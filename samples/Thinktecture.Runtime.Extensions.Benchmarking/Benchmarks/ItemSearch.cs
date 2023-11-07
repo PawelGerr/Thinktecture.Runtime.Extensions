@@ -8,7 +8,6 @@ using BenchmarkDotNet.Attributes;
 
 namespace Thinktecture.Benchmarks;
 
-[MemoryDiagnoser]
 public class ItemSearch
 {
    public class SmartEnum

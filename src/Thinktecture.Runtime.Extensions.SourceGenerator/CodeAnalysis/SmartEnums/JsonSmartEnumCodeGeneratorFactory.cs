@@ -12,14 +12,15 @@ public sealed class JsonSmartEnumCodeGeneratorFactory : IKeyedSerializerCodeGene
    {
    }
 
-   public bool MustGenerateCode(AttributeInfo attributeInfo)
+   public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
-      return !attributeInfo.HasJsonConverterAttribute;
+      return !state.AttributeInfo.HasJsonConverterAttribute
+             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson)));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)
    {
-      return new KeyedJsonCodeGenerator(state.Type, state.KeyMember, stringBuilder);
+      return new KeyedJsonCodeGenerator(state, stringBuilder);
    }
 
    public bool Equals(IKeyedSerializerCodeGeneratorFactory other)

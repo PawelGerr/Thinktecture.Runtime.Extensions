@@ -84,11 +84,19 @@ public class WriteJson : JsonTestsBase
       json.Should().Be(expectedJson);
    }
 
+   [Fact]
+   public void Should_deserialize_using_custom_factory_specified_by_ValueObjectFactoryAttribute()
+   {
+      var json = Serialize<BoundaryWithFactories, string>(BoundaryWithFactories.Create(1, 2));
+
+      json.Should().Be("\"1:2\"");
+   }
+
    private static string Serialize<T, TKey>(
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : IKeyedValueObject<T, TKey>
+      where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    {
       return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
    }
@@ -97,7 +105,7 @@ public class WriteJson : JsonTestsBase
       T? value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : struct, IKeyedValueObject<T, TKey>
+      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    {
       return SerializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
    }
@@ -106,7 +114,7 @@ public class WriteJson : JsonTestsBase
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : struct, IKeyedValueObject<T, TKey>
+      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
    {
       return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
    }

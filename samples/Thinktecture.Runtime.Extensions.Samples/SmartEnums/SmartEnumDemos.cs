@@ -103,7 +103,7 @@ public class SmartEnumDemos
       if (ProductType.TryGet("Housewares", out var housewares))
          logger.Information("Product type {Type} with TryGet found", housewares);
 
-      var validationResult = ProductType.Validate("Groceries", out var groceries);
+      var validationResult = ProductType.Validate("Groceries", null, out var groceries);
 
       if (validationResult == ValidationResult.Success)
       {

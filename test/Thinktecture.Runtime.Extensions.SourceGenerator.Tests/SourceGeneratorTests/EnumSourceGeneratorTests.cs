@@ -23,6 +23,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                  {
                                                                     [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                                     partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                                       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                                       global::Thinktecture.IValueObjectConverter<string>,
                                                                        global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                                     {
                                                                        [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -77,7 +79,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                        /// Gets the identifier of the item.
                                                                        /// </summary>
                                                                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                                       string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                                       string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                                        {
                                                                           return this.Key;
                                                                        }
@@ -123,9 +125,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                        /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                                        /// </summary>
                                                                        /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                       /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                                        /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                                        /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                                       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                                        {
                                                                           if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                                           {
@@ -383,10 +386,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                   partial class TestEnum :
                                                                                      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                   {
+                                                                                     private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                        where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                                                     {
+                                                                                        return T.Validate(key, provider, out result);
+                                                                                     }
+
                                                                                      /// <inheritdoc />
                                                                                      public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                      {
-                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out var result);
+                                                                                        var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
 
                                                                                         if(validationResult is null)
                                                                                            return result!;
@@ -406,7 +415,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                            return false;
                                                                                         }
 
-                                                                                        var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
+                                                                                        var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                                                         return validationResult is null;
                                                                                      }
                                                                                   }
@@ -604,10 +613,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                               partial class TestEnum :
                                                                                                  global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                               {
+                                                                                                 private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                                    where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                                                                 {
+                                                                                                    return T.Validate(key, provider, out result);
+                                                                                                 }
+
                                                                                                  /// <inheritdoc />
                                                                                                  public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                                  {
-                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out var result);
+                                                                                                    var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                                                                     return result!;
                                                                                                  }
 
@@ -623,7 +638,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                        return false;
                                                                                                     }
 
-                                                                                                    var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
+                                                                                                    var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                                                                     return true;
                                                                                                  }
                                                                                               }
@@ -637,11 +652,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                partial class TestEnum :
                                                                                   global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                {
+                                                                                  private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                     where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>
+                                                                                  {
+                                                                                     return T.Validate(key, provider, out result);
+                                                                                  }
+
                                                                                   /// <inheritdoc />
                                                                                   public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                   {
                                                                                      var key = int.Parse(s, provider);
-                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, out var result);
+                                                                                     var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out var result);
 
                                                                                      if(validationResult is null)
                                                                                         return result!;
@@ -667,7 +688,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                         return false;
                                                                                      }
 
-                                                                                     var validationResult = global::Thinktecture.Tests.TestEnum.Validate(key, out result!);
+                                                                                     var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out result!);
                                                                                      return validationResult is null;
                                                                                   }
                                                                                }
@@ -795,6 +816,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -849,7 +872,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -895,9 +918,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -1048,6 +1072,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -1102,7 +1128,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -1148,9 +1174,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -1390,6 +1417,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -1459,7 +1488,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -1505,9 +1534,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -1783,6 +1813,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::TestEnum, string>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -1837,7 +1869,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -1883,9 +1915,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
                                                          {
                                                             if(global::TestEnum.TryGet(key, out item))
                                                             {
@@ -2138,10 +2171,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                        partial class TestEnum :
                                                           global::System.IParsable<global::TestEnum>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, string>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::TestEnum.Validate(s, out var result);
+                                                             var validationResult = Validate<global::TestEnum>(s, provider, out var result);
 
                                                              if(validationResult is null)
                                                                 return result!;
@@ -2161,7 +2200,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::TestEnum.Validate(s, out result!);
+                                                             var validationResult = Validate<global::TestEnum>(s, provider, out result!);
                                                              return validationResult is null;
                                                           }
                                                        }
@@ -2274,6 +2313,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2328,7 +2369,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -2374,9 +2415,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -2829,6 +2871,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -2903,7 +2947,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -2970,9 +3014,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -3242,6 +3287,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                       [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                       partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum>
                                                       {
@@ -3316,7 +3363,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -3380,9 +3427,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -3642,10 +3690,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                        partial struct TestEnum :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                        {
+                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out var result);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                              return result!;
                                                           }
 
@@ -3661,7 +3715,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                 return false;
                                                              }
 
-                                                             var validationResult = global::Thinktecture.Tests.TestEnum.Validate(s, out result!);
+                                                             var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                              return true;
                                                           }
                                                        }
@@ -3737,6 +3791,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -3817,7 +3873,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IKeyedValueObject<string>.GetKey()
+                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
                                                          {
                                                             return this.Name;
                                                          }
@@ -3882,9 +3938,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="name"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="name">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="name"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(name, out item))
                                                             {
@@ -4190,6 +4247,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                         global::Thinktecture.IValueObjectConverter<int>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -4241,7 +4300,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -4278,9 +4337,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -4576,6 +4636,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                         global::Thinktecture.IValueObjectConverter<int>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -4627,7 +4689,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IKeyedValueObject<int>.GetKey()
+                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -4664,9 +4726,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
                                                          /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
@@ -4976,6 +5039,793 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                      {
                                                                         global::System.ArgumentNullException.ThrowIfNull(nameof(right));
                                                                         return left >= right.Key;
+                                                                     }
+                                                                  }
+
+                                                                  """);
+   }
+
+   [Fact]
+   public void Should_generate_int_based_IEnum_with_ValueObjectFactoryAttribute()
+   {
+      /* language=c# */
+      var source = @"
+using System;
+
+namespace Thinktecture.Tests
+{
+   [SmartEnum<int>]
+   [ValueObjectFactory<string>]
+	public partial class TestEnum
+	{
+      public static readonly TestEnum Item1 = new(1);
+      public static readonly TestEnum Item2 = new(2);
+   }
+}
+";
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      outputs.Should().HaveCount(6);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var formattable = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperators = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs")).Value;
+
+      AssertOutput(formattable, _FORMATTABLE_OUTPUT_CLASS);
+      AssertOutput(comparableOutput, _COMPARABLE_OUTPUT_CLASS);
+      AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED); // string-based due to [ValueObjectFactory<string>]
+      AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
+
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+
+                                                   namespace Thinktecture.Tests
+                                                   {
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                         global::Thinktecture.IValueObjectConverter<int>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
+                                                      {
+                                                         [global::System.Runtime.CompilerServices.ModuleInitializer]
+                                                         internal static void ModuleInit()
+                                                         {
+                                                            var convertFromKey = new global::System.Func<int, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+
+                                                            var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, int>(static item => item.Key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, int>> convertToKeyExpression = static item => item.Key;
+
+                                                            var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+                                                            var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(int), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+
+                                                            global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+                                                         }
+
+                                                         public static global::System.Collections.Generic.IEqualityComparer<int> KeyEqualityComparer => global::System.Collections.Generic.EqualityComparer<int>.Default;
+
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         /// <summary>
+                                                         /// Gets all valid items.
+                                                         /// </summary>
+                                                         public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+
+                                                         /// <summary>
+                                                         /// The identifier of the item.
+                                                         /// </summary>
+                                                         public int Key { get; }
+
+                                                         private readonly int _hashCode;
+
+                                                         private TestEnum(int key)
+                                                         {
+                                                            ValidateConstructorArguments(ref key);
+
+                                                            this.Key = key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), KeyEqualityComparer.GetHashCode(key));
+                                                         }
+
+                                                         static partial void ValidateConstructorArguments(ref int key);
+
+                                                         /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+                                                         public static global::Thinktecture.Tests.TestEnum Get(int key)
+                                                         {
+                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                            }
+
+                                                            return item;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            {
+                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            }
+                                                            else
+                                                            {
+                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion to the type <see cref="int"/>.
+                                                         /// </summary>
+                                                         /// <param name="item">Item to covert.</param>
+                                                         /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
+                                                         [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
+                                                         public static implicit operator int(global::Thinktecture.Tests.TestEnum? item)
+                                                         {
+                                                            return item is null ? default : item.Key;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Explicit conversion from the type <see cref="int"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">Value to covert.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
+                                                         [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(int key)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public bool Equals(global::Thinktecture.Tests.TestEnum? other)
+                                                         {
+                                                            return global::System.Object.ReferenceEquals(this, other);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override bool Equals(object? other)
+                                                         {
+                                                            return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override int GetHashCode()
+                                                         {
+                                                            return _hashCode;
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override string ToString()
+                                                         {
+                                                            return this.Key.ToString();
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public void Switch(
+                                                            TestEnum testEnum1, global::System.Action testEnumAction1,
+                                                            TestEnum testEnum2, global::System.Action testEnumAction2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               testEnumAction1();
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               testEnumAction2();
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public void Switch<TContext>(
+                                                            TContext context,
+                                                            TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+                                                            TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               testEnumAction1(context);
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               testEnumAction2(context);
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public T Switch<T>(
+                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               return testEnumFunc1();
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               return testEnumFunc2();
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public T Switch<TContext, T>(
+                                                            TContext context,
+                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               return testEnumFunc1(context);
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               return testEnumFunc2(context);
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// </summary>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public T Map<T>(
+                                                            TestEnum testEnum1, T other1,
+                                                            TestEnum testEnum2, T other2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               return other1;
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               return other2;
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No instance provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         {
+                                                            var lookup = new global::System.Collections.Generic.Dictionary<int, global::Thinktecture.Tests.TestEnum>(2, KeyEqualityComparer);
+
+                                                            void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
+                                                            {
+                                                               if (item is null)
+                                                                  throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+                                                               if (lookup.ContainsKey(item.Key))
+                                                                  throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
+
+                                                               lookup.Add(item.Key, item);
+                                                            }
+
+                                                            AddItem(Item1, nameof(Item1));
+                                                            AddItem(Item2, nameof(Item2));
+
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
+                                                            return lookup;
+                                                   #endif
+                                                         }
+                                                      }
+                                                   }
+
+                                                   """);
+
+      /* language=c# */
+      AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
+
+                                                                  namespace Thinktecture.Tests;
+
+                                                                  partial class TestEnum :
+                                                                     global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>
+                                                                  {
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+                                                                     public static bool operator <(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key < right.Key;
+                                                                     }
+
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+                                                                     public static bool operator <=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key <= right.Key;
+                                                                     }
+
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+                                                                     public static bool operator >(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key > right.Key;
+                                                                     }
+
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+                                                                     public static bool operator >=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key >= right.Key;
+                                                                     }
+                                                                  }
+
+                                                                  """);
+   }
+
+   [Fact]
+   public void Should_generate_int_based_IEnum_with_ValueObjectFactoryAttribute_and_UseForSerialization()
+   {
+      /* language=c# */
+      var source = @"
+using System;
+
+namespace Thinktecture.Tests
+{
+   [SmartEnum<int>]
+   [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+	public partial class TestEnum
+	{
+      public static readonly TestEnum Item1 = new(1);
+      public static readonly TestEnum Item2 = new(2);
+   }
+}
+";
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      outputs.Should().HaveCount(6);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var formattable = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Formattable.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperators = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs")).Value;
+
+      AssertOutput(formattable, _FORMATTABLE_OUTPUT_CLASS);
+      AssertOutput(comparableOutput, _COMPARABLE_OUTPUT_CLASS);
+      AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED); // string-based due to [ValueObjectFactory<string>]
+      AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
+
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+
+                                                   namespace Thinktecture.Tests
+                                                   {
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                         global::Thinktecture.IValueObjectConverter<int>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectConverter<string>,
+                                                         global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
+                                                      {
+                                                         [global::System.Runtime.CompilerServices.ModuleInitializer]
+                                                         internal static void ModuleInit()
+                                                         {
+                                                            var convertFromKey = new global::System.Func<int, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+
+                                                            var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, int>(static item => item.Key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, int>> convertToKeyExpression = static item => item.Key;
+
+                                                            var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+                                                            var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(int), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+
+                                                            global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+                                                         }
+
+                                                         public static global::System.Collections.Generic.IEqualityComparer<int> KeyEqualityComparer => global::System.Collections.Generic.EqualityComparer<int>.Default;
+
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         /// <summary>
+                                                         /// Gets all valid items.
+                                                         /// </summary>
+                                                         public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+
+                                                         /// <summary>
+                                                         /// The identifier of the item.
+                                                         /// </summary>
+                                                         public int Key { get; }
+
+                                                         private readonly int _hashCode;
+
+                                                         private TestEnum(int key)
+                                                         {
+                                                            ValidateConstructorArguments(ref key);
+
+                                                            this.Key = key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), KeyEqualityComparer.GetHashCode(key));
+                                                         }
+
+                                                         static partial void ValidateConstructorArguments(ref int key);
+
+                                                         /// <summary>
+                                                         /// Gets the identifier of the item.
+                                                         /// </summary>
+                                                         [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         {
+                                                            return this.Key;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+                                                         public static global::Thinktecture.Tests.TestEnum Get(int key)
+                                                         {
+                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                            }
+
+                                                            return item;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
+                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
+                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            {
+                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            }
+                                                            else
+                                                            {
+                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion to the type <see cref="int"/>.
+                                                         /// </summary>
+                                                         /// <param name="item">Item to covert.</param>
+                                                         /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
+                                                         [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
+                                                         public static implicit operator int(global::Thinktecture.Tests.TestEnum? item)
+                                                         {
+                                                            return item is null ? default : item.Key;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Explicit conversion from the type <see cref="int"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">Value to covert.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
+                                                         [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(int key)
+                                                         {
+                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public bool Equals(global::Thinktecture.Tests.TestEnum? other)
+                                                         {
+                                                            return global::System.Object.ReferenceEquals(this, other);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override bool Equals(object? other)
+                                                         {
+                                                            return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override int GetHashCode()
+                                                         {
+                                                            return _hashCode;
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override string ToString()
+                                                         {
+                                                            return this.Key.ToString();
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public void Switch(
+                                                            TestEnum testEnum1, global::System.Action testEnumAction1,
+                                                            TestEnum testEnum2, global::System.Action testEnumAction2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               testEnumAction1();
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               testEnumAction2();
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public void Switch<TContext>(
+                                                            TContext context,
+                                                            TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+                                                            TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               testEnumAction1(context);
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               testEnumAction2(context);
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public T Switch<T>(
+                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               return testEnumFunc1();
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               return testEnumFunc2();
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current item.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public T Switch<TContext, T>(
+                                                            TContext context,
+                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               return testEnumFunc1(context);
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               return testEnumFunc2(context);
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// </summary>
+                                                         /// <param name="testEnum1">The item to compare to.</param>
+                                                         /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                                         /// <param name="testEnum2">The item to compare to.</param>
+                                                         /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                                         public T Map<T>(
+                                                            TestEnum testEnum1, T other1,
+                                                            TestEnum testEnum2, T other2)
+                                                         {
+                                                            if (this == testEnum1)
+                                                            {
+                                                               return other1;
+                                                            }
+                                                            else if (this == testEnum2)
+                                                            {
+                                                               return other2;
+                                                            }
+                                                            else
+                                                            {
+                                                               throw new global::System.ArgumentOutOfRangeException($"No instance provided for the item '{this}'.");
+                                                            }
+                                                         }
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         {
+                                                            var lookup = new global::System.Collections.Generic.Dictionary<int, global::Thinktecture.Tests.TestEnum>(2, KeyEqualityComparer);
+
+                                                            void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
+                                                            {
+                                                               if (item is null)
+                                                                  throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+                                                               if (lookup.ContainsKey(item.Key))
+                                                                  throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
+
+                                                               lookup.Add(item.Key, item);
+                                                            }
+
+                                                            AddItem(Item1, nameof(Item1));
+                                                            AddItem(Item2, nameof(Item2));
+
+                                                   #if NET8_0_OR_GREATER
+                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, KeyEqualityComparer);
+                                                   #else
+                                                            return lookup;
+                                                   #endif
+                                                         }
+                                                      }
+                                                   }
+
+                                                   """);
+
+      /* language=c# */
+      AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
+
+                                                                  namespace Thinktecture.Tests;
+
+                                                                  partial class TestEnum :
+                                                                     global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>
+                                                                  {
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+                                                                     public static bool operator <(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key < right.Key;
+                                                                     }
+
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+                                                                     public static bool operator <=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key <= right.Key;
+                                                                     }
+
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+                                                                     public static bool operator >(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key > right.Key;
+                                                                     }
+
+                                                                     /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+                                                                     public static bool operator >=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+                                                                     {
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+                                                                        global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+                                                                        return left.Key >= right.Key;
                                                                      }
                                                                   }
 

@@ -12,6 +12,7 @@ public sealed partial class Description
    {
       if (String.IsNullOrWhiteSpace(value))
       {
+         value = null!;
          validationResult = new ValidationResult("Description cannot be empty.");
          return;
       }

@@ -2,11 +2,15 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis;
 
-public interface IInterfaceCodeGenerator
+public interface IInterfaceCodeGenerator : IInterfaceCodeGenerator<InterfaceCodeGeneratorState>
+{
+}
+
+public interface IInterfaceCodeGenerator<TState>
 {
    string CodeGeneratorName { get; }
    string FileNameSuffix { get; }
 
-   void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember);
-   void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember);
+   void GenerateBaseTypes(StringBuilder sb, TState state);
+   void GenerateImplementation(StringBuilder sb, TState state);
 }

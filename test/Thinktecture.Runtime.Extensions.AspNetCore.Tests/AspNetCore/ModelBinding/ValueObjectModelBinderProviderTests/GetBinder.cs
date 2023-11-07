@@ -32,6 +32,20 @@ public class GetBinder
    }
 
    [Fact]
+   public void Should_return_string_base_binder_specified_by_ValueObjectFactoryAttribute_of_value_object_()
+   {
+      var binder = GetModelBinder<BoundaryWithFactories>();
+      binder.Should().BeOfType<ValueObjectModelBinder<BoundaryWithFactories, string>>();
+   }
+
+   [Fact]
+   public void Should_return_string_base_binder_specified_by_ValueObjectFactoryAttribute_smart_enum()
+   {
+      var binder = GetModelBinder<EnumWithFactory>();
+      binder.Should().BeOfType<TrimmingSmartEnumModelBinder<EnumWithFactory>>();
+   }
+
+   [Fact]
    public void Should_return_null_for_non_enums_and_non_value_types()
    {
       GetModelBinder<GetBinder>().Should().BeNull();

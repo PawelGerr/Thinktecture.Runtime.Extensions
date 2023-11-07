@@ -2,7 +2,7 @@ namespace Thinktecture.CodeAnalysis;
 
 public sealed class TypeInformationComparer : IEqualityComparer<ITypeInformation>
 {
-   public static readonly IEqualityComparer<ITypeInformation> Instance = new TypeInformationComparer();
+   public static readonly TypeInformationComparer Instance = new();
 
    public bool Equals(ITypeInformation? x, ITypeInformation? y)
    {

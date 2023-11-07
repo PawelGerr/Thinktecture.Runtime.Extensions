@@ -5,13 +5,13 @@ namespace Thinktecture;
 
 public static class EnumSettingsExtensions
 {
-   public static IMemberState CreateKeyProperty(this EnumSettings settings, ITypedMemberState keyMemberState)
+   public static IMemberState CreateKeyProperty(this AllEnumSettings settings, ITypedMemberState keyMemberState)
    {
       var keyPropertyName = settings.GetKeyPropertyName();
       return new DefaultMemberState(keyMemberState, keyPropertyName, keyPropertyName.MakeArgumentName());
    }
 
-   private static string GetKeyPropertyName(this EnumSettings settings)
+   private static string GetKeyPropertyName(this AllEnumSettings settings)
    {
       var name = settings.KeyPropertyName;
 

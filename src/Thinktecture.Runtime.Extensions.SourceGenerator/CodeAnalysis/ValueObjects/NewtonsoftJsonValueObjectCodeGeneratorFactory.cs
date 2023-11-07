@@ -12,14 +12,21 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : IValueObject
    {
    }
 
-   public bool MustGenerateCode(AttributeInfo attributeInfo)
+   public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
-      return !attributeInfo.HasNewtonsoftJsonConverterAttribute;
+      return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
+             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson)));
+   }
+
+   public bool MustGenerateCode(ComplexSerializerGeneratorState state)
+   {
+      return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
+             && !state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)
    {
-      return new KeyedNewtonsoftJsonCodeGenerator(state.Type, state.KeyMember, stringBuilder);
+      return new KeyedNewtonsoftJsonCodeGenerator(state, stringBuilder);
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState state, StringBuilder stringBuilder)
@@ -31,5 +38,5 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : IValueObject
    public bool Equals(ICodeGeneratorFactory<KeyedSerializerGeneratorState> other) => ReferenceEquals(this, other);
    public bool Equals(ICodeGeneratorFactory<ComplexSerializerGeneratorState> other) => ReferenceEquals(this, other);
    public bool Equals(IKeyedSerializerCodeGeneratorFactory other) => ReferenceEquals(this, other);
-
+   public bool Equals(IComplexSerializerCodeGeneratorFactory other) => ReferenceEquals(this, other);
 }

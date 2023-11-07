@@ -3,25 +3,31 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
 {
    private readonly AllValueObjectSettings _allSettings;
+   private readonly AttributeInfo _attributeInfo;
 
    public bool SkipFactoryMethods => _allSettings.SkipFactoryMethods;
    public bool SkipToString => _allSettings.SkipToString;
    public bool EmptyStringInFactoryMethodsYieldsNull => _allSettings.EmptyStringInFactoryMethodsYieldsNull;
    public bool NullInFactoryMethodsYieldsNull => _allSettings.NullInFactoryMethodsYieldsNull;
    public string DefaultInstancePropertyName => _allSettings.DefaultInstancePropertyName;
+   public IReadOnlyList<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
-   public ValueObjectSettings(AllValueObjectSettings allSettings)
+   public ValueObjectSettings(
+      AllValueObjectSettings allSettings,
+      AttributeInfo attributeInfo)
    {
       _allSettings = allSettings;
+      _attributeInfo = attributeInfo;
    }
 
    public bool Equals(ValueObjectSettings other)
    {
-      return _allSettings.SkipFactoryMethods == other._allSettings.SkipFactoryMethods
-             && _allSettings.SkipToString == other._allSettings.SkipToString
-             && _allSettings.EmptyStringInFactoryMethodsYieldsNull == other._allSettings.EmptyStringInFactoryMethodsYieldsNull
-             && _allSettings.NullInFactoryMethodsYieldsNull == other._allSettings.NullInFactoryMethodsYieldsNull
-             && _allSettings.DefaultInstancePropertyName == other._allSettings.DefaultInstancePropertyName;
+      return SkipFactoryMethods == other.SkipFactoryMethods
+             && SkipToString == other.SkipToString
+             && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
+             && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
+             && DefaultInstancePropertyName == other.DefaultInstancePropertyName
+             && DesiredFactories.EqualsTo(other.DesiredFactories);
    }
 
    public override bool Equals(object? obj)
@@ -33,11 +39,12 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    {
       unchecked
       {
-         var hashCode = _allSettings.SkipFactoryMethods.GetHashCode();
-         hashCode = (hashCode * 397) ^ _allSettings.SkipToString.GetHashCode();
-         hashCode = (hashCode * 397) ^ _allSettings.EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
-         hashCode = (hashCode * 397) ^ _allSettings.NullInFactoryMethodsYieldsNull.GetHashCode();
-         hashCode = (hashCode * 397) ^ _allSettings.DefaultInstancePropertyName.GetHashCode();
+         var hashCode = SkipFactoryMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
+         hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
+         hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
+         hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
+         hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
 
          return hashCode;
       }

@@ -8,8 +8,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    private readonly ITypedMemberState _typedMemberState;
    private readonly (IFieldSymbol? Field, IPropertySymbol? Property) _symbol;
 
-   private string? _argumentName;
-   public string ArgumentName => _argumentName ??= Name.MakeArgumentName();
+   private ArgumentName? _argumentName;
+   public ArgumentName ArgumentName => _argumentName ??= Name.MakeArgumentName();
 
    public string Name { get; }
    public bool IsStatic { get; }

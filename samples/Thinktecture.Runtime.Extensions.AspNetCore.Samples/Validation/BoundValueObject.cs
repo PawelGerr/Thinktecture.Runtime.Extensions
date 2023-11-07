@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture.Validation;
 
 public class BoundValueObject<T, TKey> : IBoundParam
-   where T : IKeyedValueObject<T, TKey>
+   where T : IValueObjectFactory<T, TKey>
    where TKey : IParsable<TKey>
 {
    private readonly T? _item;
@@ -30,7 +30,7 @@ public class BoundValueObject<T, TKey> : IBoundParam
       }
       else
       {
-         var validationResult = T.Validate(key, out var item);
+         var validationResult = T.Validate(key, formatProvider, out var item);
 
          if (validationResult is null || item is IValidatableEnum)
          {
@@ -47,7 +47,7 @@ public class BoundValueObject<T, TKey> : IBoundParam
 }
 
 public class BoundValueObject<T> : IBoundParam
-   where T : IKeyedValueObject<T, string>
+   where T : IValueObjectFactory<T, string>
 {
    private readonly T? _item;
    public T? Value => Error is null ? _item : throw new ValidationException(Error);
@@ -66,7 +66,7 @@ public class BoundValueObject<T> : IBoundParam
 
    public static bool TryParse(string s, IFormatProvider? formatProvider, out BoundValueObject<T> value)
    {
-      var validationResult = T.Validate(s, out var item);
+      var validationResult = T.Validate(s, formatProvider, out var item);
 
       if (validationResult is null || item is IValidatableEnum)
       {

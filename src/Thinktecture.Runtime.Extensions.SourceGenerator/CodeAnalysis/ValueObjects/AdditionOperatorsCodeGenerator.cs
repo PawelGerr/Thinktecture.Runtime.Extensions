@@ -53,33 +53,33 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
       _withKeyTypeOverloads = withKeyTypeOverloads;
    }
 
-   public void GenerateBaseTypes(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       if (!_keyMemberOperators.HasOperator(ImplementedOperators.All))
          return;
 
       sb.Append(@"
-   global::System.Numerics.IAdditionOperators<").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(">");
+   global::System.Numerics.IAdditionOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(">");
 
       if (!_withKeyTypeOverloads)
          return;
 
       sb.Append(@",
-   global::System.Numerics.IAdditionOperators<").Append(type.TypeFullyQualified).Append(", ").Append(keyMember.TypeFullyQualified).Append(", ").Append(type.TypeFullyQualified).Append(">");
+   global::System.Numerics.IAdditionOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.KeyMember.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(">");
    }
 
-   public void GenerateImplementation(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember)
+   public void GenerateImplementation(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
-      var typeLeftNullCheck = type.IsReferenceType ? _LEFT_NULL_CHECK : null;
-      var typeLightNullCheck = type.IsReferenceType ? _RIGHT_NULL_CHECK : null;
+      var typeLeftNullCheck = state.Type.IsReferenceType ? _LEFT_NULL_CHECK : null;
+      var typeLightNullCheck = state.Type.IsReferenceType ? _RIGHT_NULL_CHECK : null;
 
       if (_keyMemberOperators.HasOperator(ImplementedOperators.Default))
       {
          sb.Append(@"
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(type.TypeFullyQualified).Append(" operator +(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
+   public static ").Append(state.Type.TypeFullyQualified).Append(" operator +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left.").Append(keyMember.Name).Append(" + right.").Append(keyMember.Name).Append(@");
+      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left.").Append(state.KeyMember.Name).Append(" + right.").Append(state.KeyMember.Name).Append(@");
    }");
       }
 
@@ -88,35 +88,35 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
          sb.Append(@"
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(type.TypeFullyQualified).Append(" operator checked +(").Append(type.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
+   public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left.").Append(keyMember.Name).Append(" + right.").Append(keyMember.Name).Append(@"));
+      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left.").Append(state.KeyMember.Name).Append(" + right.").Append(state.KeyMember.Name).Append(@"));
    }");
       }
 
       if (_withKeyTypeOverloads)
-         GenerateOverloadsForKeyType(sb, type, keyMember, typeLeftNullCheck, typeLightNullCheck);
+         GenerateOverloadsForKeyType(sb, state, typeLeftNullCheck, typeLightNullCheck);
    }
 
-   private void GenerateOverloadsForKeyType(StringBuilder sb, ITypeInformation type, IMemberInformation keyMember, string? typeLeftNullCheck, string? typeLightNullCheck)
+   private void GenerateOverloadsForKeyType(StringBuilder sb, InterfaceCodeGeneratorState state, string? typeLeftNullCheck, string? typeLightNullCheck)
    {
-      var memberLeftNullCheck = keyMember.IsReferenceType ? _LEFT_NULL_CHECK : null;
-      var memberRightNullCheck = keyMember.IsReferenceType ? _RIGHT_NULL_CHECK : null;
+      var memberLeftNullCheck = state.KeyMember.IsReferenceType ? _LEFT_NULL_CHECK : null;
+      var memberRightNullCheck = state.KeyMember.IsReferenceType ? _RIGHT_NULL_CHECK : null;
 
       if (_keyMemberOperators.HasOperator(ImplementedOperators.Default))
       {
          sb.Append(@"
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(type.TypeFullyQualified).Append(" operator +(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
+   public static ").Append(state.Type.TypeFullyQualified).Append(" operator +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(left.").Append(keyMember.Name).Append(@" + right);
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(left.").Append(state.KeyMember.Name).Append(@" + right);
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(type.TypeFullyQualified).Append(" operator +(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
+   public static ").Append(state.Type.TypeFullyQualified).Append(" operator +(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left + right.").Append(keyMember.Name).Append(@");
+      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left + right.").Append(state.KeyMember.Name).Append(@");
    }");
       }
 
@@ -125,15 +125,15 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
          sb.Append(@"
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(type.TypeFullyQualified).Append(" operator checked +(").Append(type.TypeFullyQualified).Append(" left, ").Append(keyMember.TypeFullyQualified).Append(@" right)
+   public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(checked(left.").Append(keyMember.Name).Append(@" + right));
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(checked(left.").Append(state.KeyMember.Name).Append(@" + right));
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(type.TypeFullyQualified).Append(" operator checked +(").Append(keyMember.TypeFullyQualified).Append(" left, ").Append(type.TypeFullyQualified).Append(@" right)
+   public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked +(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left + right.").Append(keyMember.Name).Append(@"));
+      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left + right.").Append(state.KeyMember.Name).Append(@"));
    }");
       }
    }

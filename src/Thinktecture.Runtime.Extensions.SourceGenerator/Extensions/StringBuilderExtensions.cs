@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.SmartEnums;
 
@@ -8,7 +9,7 @@ public static class StringBuilderExtensions
 {
    public static void GenerateStructLayoutAttributeIfRequired(this StringBuilder sb, EnumSourceGeneratorState state)
    {
-      if (state is { IsReferenceType: false, HasStructLayoutAttribute: false })
+      if (state is { IsReferenceType: false, Settings.HasStructLayoutAttribute: false })
       {
          sb.Append(@"
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
@@ -27,7 +28,7 @@ public static class StringBuilderExtensions
             sb.Append(", ");
 
          var member = members[i];
-         sb.Append(prefix).Append(member.ArgumentName);
+         sb.Append(prefix).Append(member.ArgumentName.Escaped);
       }
    }
 
@@ -38,7 +39,8 @@ public static class StringBuilderExtensions
       string comma = ", ",
       bool leadingComma = false,
       bool trailingComma = false,
-      bool useNullableTypes = false)
+      bool useNullableTypes = false,
+      bool addAllowNullNotNullCombi = false)
    {
       for (var i = 0; i < members.Count; i++)
       {
@@ -46,12 +48,16 @@ public static class StringBuilderExtensions
             sb.Append(comma);
 
          var member = members[i];
+
+         if (addAllowNullNotNullCombi && member.IsReferenceType && member.NullableAnnotation != NullableAnnotation.Annotated)
+            sb.Append("[global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ");
+
          sb.Append(prefix).Append(member.TypeFullyQualifiedWithNullability);
 
          if (useNullableTypes && !member.IsNullableStruct)
             sb.Append("?");
 
-         sb.Append(' ').Append(member.ArgumentName);
+         sb.Append(' ').Append(member.ArgumentName.Escaped);
       }
 
       if (trailingComma && members.Count > 0)

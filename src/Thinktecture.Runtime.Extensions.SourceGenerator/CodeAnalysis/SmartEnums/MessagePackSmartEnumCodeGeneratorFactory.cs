@@ -12,14 +12,15 @@ public sealed class MessagePackSmartEnumCodeGeneratorFactory : IKeyedSerializerC
    {
    }
 
-   public bool MustGenerateCode(AttributeInfo attributeInfo)
+   public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
-      return !attributeInfo.HasMessagePackFormatterAttribute;
+      return !state.AttributeInfo.HasMessagePackFormatterAttribute
+             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack)));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)
    {
-      return new KeyedMessagePackCodeGenerator(state.Type, state.KeyMember, stringBuilder);
+      return new KeyedMessagePackCodeGenerator(state, stringBuilder);
    }
 
    public bool Equals(IKeyedSerializerCodeGeneratorFactory other)

@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
@@ -8,6 +9,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
    public bool HasJsonConverterAttribute { get; }
    public bool HasNewtonsoftJsonConverterAttribute { get; }
    public bool HasMessagePackFormatterAttribute { get; }
+   public IReadOnlyList<DesiredFactory> DesiredFactories { get; }
 
    public AttributeInfo(INamedTypeSymbol type)
    {
@@ -15,6 +17,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       HasJsonConverterAttribute = default;
       HasNewtonsoftJsonConverterAttribute = default;
       HasMessagePackFormatterAttribute = default;
+      var valueObjectFactories = ImmutableArray<DesiredFactory>.Empty;
 
       foreach (var attribute in type.GetAttributes())
       {
@@ -37,7 +40,17 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          {
             HasMessagePackFormatterAttribute = true;
          }
+         else if (attribute.AttributeClass.IsValueObjectFactoryAttribute())
+         {
+            var useForSerialization = attribute.FindUseForSerialization();
+            var desiredFactory = new DesiredFactory(attribute.AttributeClass.TypeArguments[0], useForSerialization);
+
+            valueObjectFactories = valueObjectFactories.RemoveAll(f => f.TypeFullyQualified == desiredFactory.TypeFullyQualified);
+            valueObjectFactories = valueObjectFactories.Add(desiredFactory);
+         }
       }
+
+      DesiredFactories = valueObjectFactories;
    }
 
    public override bool Equals(object? obj)
@@ -50,7 +63,8 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       return HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && HasJsonConverterAttribute == other.HasJsonConverterAttribute
              && HasNewtonsoftJsonConverterAttribute == other.HasNewtonsoftJsonConverterAttribute
-             && HasMessagePackFormatterAttribute == other.HasMessagePackFormatterAttribute;
+             && HasMessagePackFormatterAttribute == other.HasMessagePackFormatterAttribute
+             && DesiredFactories.EqualsTo(other.DesiredFactories);
    }
 
    public override int GetHashCode()
@@ -61,6 +75,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          hashCode = (hashCode * 397) ^ HasJsonConverterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ HasNewtonsoftJsonConverterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ HasMessagePackFormatterAttribute.GetHashCode();
+         hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
 
          return hashCode;
       }
