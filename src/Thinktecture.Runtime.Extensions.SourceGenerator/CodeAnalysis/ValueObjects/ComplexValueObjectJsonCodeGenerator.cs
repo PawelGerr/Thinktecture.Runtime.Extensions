@@ -49,11 +49,11 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          if (needsConverter)
          {
             _sb.Append(@"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("> _").Append(memberInfo.ArgumentName).Append("Converter;");
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("> _").Append(memberInfo.ArgumentName.Raw).Append("Converter;");
          }
 
          _sb.Append(@"
-      private readonly string _").Append(memberInfo.ArgumentName).Append("PropertyName;");
+      private readonly string _").Append(memberInfo.ArgumentName.Raw).Append("PropertyName;");
       }
 
       _sb.Append(@"
@@ -76,11 +76,11 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          if (needsConverter)
          {
             _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)options.GetConverter(typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("));");
+         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)options.GetConverter(typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("));");
          }
 
          _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
+         this._").Append(memberInfo.ArgumentName.Raw).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
       _sb.Append(@"
@@ -103,7 +103,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName).Append(" = default;");
+         ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName.Escaped).Append(" = default;");
       }
 
       _sb.Append(@"
@@ -141,9 +141,9 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             else if ");
          }
 
-         _sb.Append(@"(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName).Append(@"PropertyName))
+         _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyName))
             {
-               ").Append(memberInfo.ArgumentName).Append(" = ");
+               ").Append(memberInfo.ArgumentName.Escaped).Append(" = ");
 
          GenerateReadValue(_sb, memberInfo);
 
@@ -172,7 +172,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-                                    ").Append(memberInfo.ArgumentName).Append("!,");
+                                    ").Append(memberInfo.ArgumentName.Escaped).Append("!,");
       }
 
       _sb.Append(@"
@@ -200,25 +200,25 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         var ").Append(memberInfo.ArgumentName).Append(@"PropertyValue = value.").Append(memberInfo.Name).Append(@";
+         var ").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue = value.").Append(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
          {
             _sb.Append(@"
-         if(!ignoreNullValues || ").Append(memberInfo.ArgumentName).Append(@"PropertyValue is not null)
+         if(!ignoreNullValues || ").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyValue is not null)
          {
             ");
          }
          else
          {
             _sb.Append(@"
-         if(!ignoreDefaultValues || !").Append(memberInfo.ArgumentName).Append("PropertyValue.Equals(default(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@")))
+         if(!ignoreDefaultValues || !").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue.Equals(default(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@")))
          {
             ");
          }
 
-         _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append(@"PropertyName);
+         _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyName);
          ");
 
          _sb.Append("   ");
@@ -292,13 +292,13 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          }
          else
          {
-            sb?.Append("this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").Append(memberInfo.ArgumentName).Append("PropertyValue, options);");
+            sb?.Append("this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Write(writer, ").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue, options);");
 
             return true;
          }
       }
 
-      sb?.Append("writer.").Append(command).Append("(").Append(memberInfo.ArgumentName).Append("PropertyValue);");
+      sb?.Append("writer.").Append(command).Append("(").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue);");
 
       return false;
    }
@@ -342,7 +342,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          }
          else
          {
-            sb.Append("this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("), options)");
+            sb.Append("this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("), options)");
             return;
          }
       }

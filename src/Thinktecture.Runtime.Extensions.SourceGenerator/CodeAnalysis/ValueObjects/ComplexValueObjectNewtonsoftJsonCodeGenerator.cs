@@ -82,7 +82,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName).Append(" = default;");
+         ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName.Escaped).Append(" = default;");
       }
 
       _sb.Append(@"
@@ -138,9 +138,9 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             else if ");
          }
 
-         _sb.Append(@"(comparer.Equals(propName, """).Append(memberInfo.ArgumentName).Append(@"""))
+         _sb.Append(@"(comparer.Equals(propName, """).Append(memberInfo.ArgumentName.Escaped).Append(@"""))
             {
-               ").Append(memberInfo.ArgumentName).Append(" = serializer.Deserialize<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@">(reader);
+               ").Append(memberInfo.ArgumentName.Escaped).Append(" = serializer.Deserialize<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@">(reader);
             }");
       }
 
@@ -172,7 +172,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-                                    ").Append(memberInfo.ArgumentName).Append("!,");
+                                    ").Append(memberInfo.ArgumentName.Escaped).Append("!,");
       }
 
       _sb.Append(@"
@@ -214,13 +214,13 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         var ").Append(memberInfo.ArgumentName).Append(@"PropertyValue = obj.").Append(memberInfo.Name).Append(@";
+         var ").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyValue = obj.").Append(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
          {
             _sb.Append(@"
-         if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || ").Append(memberInfo.ArgumentName).Append(@"PropertyValue is not null)
+         if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || ").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyValue is not null)
          {
             ");
          }
@@ -300,11 +300,11 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                break;
 
             default:
-               sb?.Append("serializer.Serialize(writer, ").Append(memberInfo.ArgumentName).Append("PropertyValue);");
+               sb?.Append("serializer.Serialize(writer, ").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue);");
                return;
          }
       }
 
-      sb?.Append("writer.").Append(command).Append("(").Append(memberInfo.ArgumentName).Append("PropertyValue);");
+      sb?.Append("writer.").Append(command).Append("(").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue);");
    }
 }

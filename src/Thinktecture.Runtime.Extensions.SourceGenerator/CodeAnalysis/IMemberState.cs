@@ -2,7 +2,7 @@ namespace Thinktecture.CodeAnalysis;
 
 public interface IMemberState : IEquatable<IMemberState>, IMemberInformation
 {
-   string ArgumentName { get; }
+   ArgumentName ArgumentName { get; }
    string TypeFullyQualifiedNullAnnotated { get; }
    string TypeFullyQualifiedWithNullability { get; }
    bool IsFormattable { get; }

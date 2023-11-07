@@ -45,7 +45,7 @@ public static class NamedTypeSymbolExtensions
             var parameters = ctor.Parameters.IsDefaultOrEmpty
                                 ? (IReadOnlyList<IMemberState>)Array.Empty<IMemberState>()
                                 : ctor.Parameters
-                                      .Select(p => new DefaultMemberState(factory.Create(p.Type), p.Name, p.Name))
+                                      .Select(p => new DefaultMemberState(factory.Create(p.Type), p.Name, new ArgumentName(p.Name, p.Name)))
                                       .ToList();
 
             var ctorState = new ConstructorState(parameters);

@@ -20,8 +20,8 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
 
-   private string? _argumentName;
-   public string ArgumentName => _argumentName ??= Name.MakeArgumentName();
+   private ArgumentName? _argumentName;
+   public ArgumentName ArgumentName => _argumentName ??= Name.MakeArgumentName();
 
    public IReadOnlyList<string> ItemNames { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }

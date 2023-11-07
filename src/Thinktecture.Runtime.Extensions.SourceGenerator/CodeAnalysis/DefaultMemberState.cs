@@ -7,7 +7,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    private readonly ITypedMemberState _typedMemberState;
 
    public string Name { get; }
-   public string ArgumentName { get; }
+   public ArgumentName ArgumentName { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
@@ -19,7 +19,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsParsable => _typedMemberState.IsParsable;
    public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
 
-   public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName)
+   public DefaultMemberState(ITypedMemberState typedMemberState, string name, ArgumentName argumentName)
    {
       _typedMemberState = typedMemberState;
       Name = name;

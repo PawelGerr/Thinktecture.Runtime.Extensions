@@ -28,7 +28,7 @@ public static class StringBuilderExtensions
             sb.Append(", ");
 
          var member = members[i];
-         sb.Append(prefix).Append(member.ArgumentName);
+         sb.Append(prefix).Append(member.ArgumentName.Escaped);
       }
    }
 
@@ -57,7 +57,7 @@ public static class StringBuilderExtensions
          if (useNullableTypes && !member.IsNullableStruct)
             sb.Append("?");
 
-         sb.Append(' ').Append(member.ArgumentName);
+         sb.Append(' ').Append(member.ArgumentName.Escaped);
       }
 
       if (trailingComma && members.Count > 0)
