@@ -97,6 +97,9 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
+             && SkipToString == other.SkipToString
+             && SkipSwitchMethods == other.SkipSwitchMethods
+             && SkipMapMethods == other.SkipMapMethods
              && KeyProperty.Equals(other.KeyProperty)
              && Equals(BaseType, other.BaseType)
              && ItemNames.EqualsTo(other.ItemNames)
@@ -114,6 +117,9 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipSwitchMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipMapMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();
