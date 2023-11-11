@@ -6,7 +6,7 @@ public interface IInterfaceCodeGenerator : IInterfaceCodeGenerator<InterfaceCode
 {
 }
 
-public interface IInterfaceCodeGenerator<TState>
+public interface IInterfaceCodeGenerator<in TState>
 {
    string CodeGeneratorName { get; }
    string FileNameSuffix { get; }

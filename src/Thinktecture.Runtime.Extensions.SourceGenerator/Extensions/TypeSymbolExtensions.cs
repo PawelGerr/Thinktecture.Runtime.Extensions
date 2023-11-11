@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture;
@@ -23,7 +24,7 @@ public static class TypeSymbolExtensions
    public static bool IsEnum(
       [NotNullWhen(true)] this ITypeSymbol? enumType)
    {
-      return IsEnum(enumType, out AttributeData? _);
+      return IsEnum(enumType, out _);
    }
 
    public static bool IsEnum(
@@ -301,7 +302,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       bool populateValueObjectMemberSettings,
       CancellationToken cancellationToken,
-      Action<Diagnostic>? reportDiagnostic = null)
+      SymbolAnalysisContext? reportDiagnostic = null)
    {
       var allowedCaptureSymbols = reportDiagnostic is not null;
 
@@ -323,7 +324,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       CancellationToken cancellationToken,
       Location? locationOfDerivedType = null,
-      Action<Diagnostic>? reportDiagnostic = null)
+      SymbolAnalysisContext? reportDiagnostic = null)
    {
       void ReportField(IFieldSymbol field)
       {
@@ -344,7 +345,7 @@ public static class TypeSymbolExtensions
             location = locationOfDerivedType;
          }
 
-         reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, field.Name, type.Name));
+         reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, field.Name, type.Name));
       }
 
       void ReportPropertyMustBeReadOnly(IPropertySymbol property, DiagnosticSeverity? severity = null)
@@ -366,7 +367,7 @@ public static class TypeSymbolExtensions
             location = locationOfDerivedType;
          }
 
-         reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, effectiveSeverity: severity ?? descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
+         reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: severity ?? descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
       }
 
       void ReportPropertyInitAccessorMustBePrivate(IPropertySymbol property)
@@ -377,7 +378,7 @@ public static class TypeSymbolExtensions
          var descriptor = DiagnosticsDescriptors.InitAccessorMustBePrivate;
          var location = property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
 
-         reportDiagnostic.Invoke(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
+         reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
       }
 
       return type.GetNonIgnoredMembers()
@@ -486,7 +487,7 @@ public static class TypeSymbolExtensions
       this ITypeSymbol enumType,
       ITypeSymbol keyType,
       CancellationToken cancellationToken,
-      Action<Diagnostic>? reportDiagnostic = null)
+      SymbolAnalysisContext? reportDiagnostic = null)
    {
       foreach (var member in enumType.GetNonIgnoredMembers())
       {
@@ -506,10 +507,10 @@ public static class TypeSymbolExtensions
             }
          }
 
-         reportDiagnostic?.Invoke(Diagnostic.Create(DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
-                                                    method.GetIdentifier(cancellationToken).GetLocation(),
-                                                    enumType.Name,
-                                                    keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
+         reportDiagnostic?.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
+                                                              method.GetIdentifier(cancellationToken).GetLocation(),
+                                                              enumType.Name,
+                                                              keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
 
          return true;
       }

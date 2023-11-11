@@ -214,7 +214,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         var ").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyValue = obj.").Append(memberInfo.Name).Append(@";
+         var ").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue = obj.").Append(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)

@@ -65,8 +65,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>
          hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
-         hashCode = (hashCode * 397) ^ ComparisonOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ EqualityComparisonOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
+         hashCode = (hashCode * 397) ^ (int)EqualityComparisonOperators;
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipSwitchMethods.GetHashCode();

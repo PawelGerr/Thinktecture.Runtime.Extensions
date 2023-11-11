@@ -22,7 +22,7 @@ public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
          return true;
 
       return CounterEnabled == other.CounterEnabled
-             && Logging.Equals(other.Logging);
+             && Logging.EqualsTo(other.Logging);
    }
 
    public override bool Equals(object? obj)

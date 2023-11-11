@@ -19,7 +19,8 @@ internal static class PropertyInfoExtensions
                                           ?? throw new Exception($"The method '{_EF_IS_CANDIDATE_PROPERTY}' not found. The internal EF API may have been changed.");
 
       var parameter = Expression.Parameter(typeof(PropertyInfo));
-      var methodCall = Expression.Call(null, isCandidatePropertyMethodInfo, parameter, Expression.Constant(true), Expression.Constant(true));
+      var trueExpression = Expression.Constant(true);
+      var methodCall = Expression.Call(null, isCandidatePropertyMethodInfo, parameter, trueExpression, trueExpression);
 
       _isCandidateProperty = Expression.Lambda<Func<PropertyInfo, bool>>(methodCall, parameter).Compile();
    }

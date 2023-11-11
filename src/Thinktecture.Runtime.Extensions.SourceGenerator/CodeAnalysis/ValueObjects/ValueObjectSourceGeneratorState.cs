@@ -118,8 +118,8 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
              && IsReferenceType == other.IsReferenceType
              && FactoryValidationReturnType == other.FactoryValidationReturnType
              && Settings.Equals(other.Settings)
-             && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
-             && EqualityMembers.EqualsTo(other.EqualityMembers);
+             && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
+             && EqualityMembers.SequenceEqual(other.EqualityMembers);
    }
 
    public override int GetHashCode()

@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public sealed class EqualityInstanceMemberInfo : IEquatable<EqualityInstanceMemberInfo>
+public sealed class EqualityInstanceMemberInfo : IEquatable<EqualityInstanceMemberInfo>, IHashCodeComputable
 {
    public InstanceMemberInfo Member { get; }
    public string? EqualityComparerAccessor { get; }

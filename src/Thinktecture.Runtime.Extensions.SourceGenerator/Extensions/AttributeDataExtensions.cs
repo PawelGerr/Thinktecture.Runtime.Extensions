@@ -145,6 +145,6 @@ public static class AttributeDataExtensions
 
    private static TypedConstant FindNamedAttribute(this AttributeData attributeData, string name)
    {
-      return attributeData.NamedArguments.FirstOrDefault(a => a.Key == name).Value;
+      return attributeData.NamedArguments.FirstOrDefault(static (a, n) => a.Key == n, name).Value;
    }
 }

@@ -111,7 +111,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                       .Collect()
                       .Select(static (states, _) => states.IsDefaultOrEmpty
                                                        ? ImmutableArray<EnumSourceGeneratorState>.Empty
-                                                       : states.Distinct(TypeOnlyComparer<EnumSourceGeneratorState>.Instance).ToImmutableArray())
+                                                       : states.Distinct(TypeOnlyComparer.Instance))
                       .WithComparer(new SetComparer<EnumSourceGeneratorState>())
                       .SelectMany((states, _) => states);
 
@@ -125,7 +125,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                 .Collect()
                                                 .Select(static (states, _) => states.IsDefaultOrEmpty
                                                                                  ? ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty
-                                                                                 : states.Distinct().ToImmutableArray())
+                                                                                 : states.Distinct())
                                                 .WithComparer(new SetComparer<IKeyedSerializerCodeGeneratorFactory>());
 
       var serializerGeneratorStates = validStates.Select((state, _) => new KeyedSerializerGeneratorState(state.State, state.KeyMember, state.AttributeInfo))
@@ -135,11 +135,11 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                         {
                                                            if (tuple.Factory.MustGenerateCode(tuple.State))
                                                            {
-                                                              Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                              Logger.LogDebug("Code generator must generate code.", null, tuple.State, factory: tuple.Factory);
                                                               return true;
                                                            }
 
-                                                           Logger.LogInformation("Code generator must not generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                           Logger.LogInformation("Code generator must not generate code.", null, tuple.State, factory: tuple.Factory);
                                                            return false;
                                                         });
 
@@ -154,7 +154,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                          .Collect()
                          .Select(static (states, _) => states.IsDefaultOrEmpty
                                                           ? ImmutableArray<SmartEnumDerivedTypes>.Empty
-                                                          : states.Distinct(TypeOnlyComparer<SmartEnumDerivedTypes>.Instance).ToImmutableArray())
+                                                          : states.Distinct(TypeOnlyComparer.Instance))
                          .WithComparer(new SetComparer<SmartEnumDerivedTypes>())
                          .SelectMany((states, _) => states);
 
@@ -287,7 +287,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
          if (attributetype.TypeArguments.Length != 1)
          {
-            Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.TypeArguments.Length}", tds);
+            Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.TypeArguments.Length.ToString()}", tds);
             return null;
          }
 
@@ -319,7 +319,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
-         Logger.LogDebug("The type declaration is a valid smart enum", namespaceAndName: enumState);
+         Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);
 
          return new SourceGenContext(new ValidSourceGenState(enumState, derivedTypes, settings, keyProperty, attributeInfo));
       }

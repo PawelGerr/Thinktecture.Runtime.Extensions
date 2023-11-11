@@ -1,10 +1,12 @@
+using System.Collections.Immutable;
+
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class ConstructorState : IEquatable<ConstructorState>
+public sealed class ConstructorState : IEquatable<ConstructorState>, IHashCodeComputable
 {
-   public IReadOnlyList<IMemberState> Arguments { get; }
+   public ImmutableArray<DefaultMemberState> Arguments { get; }
 
-   public ConstructorState(IReadOnlyList<IMemberState> arguments)
+   public ConstructorState(ImmutableArray<DefaultMemberState> arguments)
    {
       Arguments = arguments;
    }
@@ -16,7 +18,7 @@ public sealed class ConstructorState : IEquatable<ConstructorState>
       if (ReferenceEquals(this, other))
          return true;
 
-      return Arguments.EqualsTo(other.Arguments);
+      return Arguments.SequenceEqual(other.Arguments);
    }
 
    public override bool Equals(object? obj)
@@ -31,6 +33,6 @@ public sealed class ConstructorState : IEquatable<ConstructorState>
 
    public override int GetHashCode()
    {
-      return Arguments.GetHashCode();
+      return Arguments.ComputeHashCode();
    }
 }

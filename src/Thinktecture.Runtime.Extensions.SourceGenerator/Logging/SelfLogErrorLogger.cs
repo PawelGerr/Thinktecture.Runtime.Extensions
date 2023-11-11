@@ -25,18 +25,28 @@ public class SelfLogErrorLogger : ILogger
    {
    }
 
-   public void LogDebug(string message, TypeDeclarationSyntax? type = null, INamespaceAndName? namespaceAndName = null, ICodeGeneratorFactory? factory = null)
+   public void LogDebug(string message, TypeDeclarationSyntax? type = null, ICodeGeneratorFactory? factory = null)
    {
    }
 
-   public void LogInformation(string message, TypeDeclarationSyntax? type = null, INamespaceAndName? namespaceAndName = null, ICodeGeneratorFactory? factory = null)
+   public void LogDebug<T>(string message, TypeDeclarationSyntax? type, T namespaceAndName, ICodeGeneratorFactory? factory = null)
+      where T : INamespaceAndName
+   {
+   }
+
+   public void LogInformation(string message, TypeDeclarationSyntax? type = null, ICodeGeneratorFactory? factory = null)
+   {
+   }
+
+   public void LogInformation<T>(string message, TypeDeclarationSyntax? type, T namespaceAndName, ICodeGeneratorFactory? factory = null)
+      where T : INamespaceAndName
    {
    }
 
    public void LogError(string message, TypeDeclarationSyntax? type, Exception? exception)
    {
       if (type is not null)
-         message = $"{message}. Type: {type.Identifier}";
+         message = $"{message}. Type: {type.Identifier.ToString()}";
 
       if (exception is not null)
          message = $"{message}. Exception: {exception}";

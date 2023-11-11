@@ -63,7 +63,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                          .Collect()
                          .Select(static (states, _) => states.IsDefaultOrEmpty
                                                           ? ImmutableArray<ValueObjectSourceGeneratorState>.Empty
-                                                          : states.Distinct(TypeOnlyComparer<ValueObjectSourceGeneratorState>.Instance).ToImmutableArray())
+                                                          : states.Distinct(TypeOnlyComparer.Instance))
                          .WithComparer(new SetComparer<ValueObjectSourceGeneratorState>())
                          .SelectMany((states, _) => states);
 
@@ -77,7 +77,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                 .Collect()
                                                 .Select(static (states, _) => states.IsDefaultOrEmpty
                                                                                  ? ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>.Empty
-                                                                                 : states.Distinct().ToImmutableArray())
+                                                                                 : states.Distinct())
                                                 .WithComparer(new SetComparer<IValueObjectSerializerCodeGeneratorFactory>());
 
       validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
@@ -97,11 +97,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                              {
                                                                 if (tuple.Factory.MustGenerateCode(tuple.State))
                                                                 {
-                                                                   Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                   Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
                                                                    return true;
                                                                 }
 
-                                                                Logger.LogInformation("Code generator must not generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
                                                                 return false;
                                                              });
 
@@ -120,11 +120,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                {
                                                                   if (tuple.Factory.MustGenerateCode(tuple.State))
                                                                   {
-                                                                     Logger.LogDebug("Code generator must generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                     Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
                                                                      return true;
                                                                   }
 
-                                                                  Logger.LogInformation("Code generator must not generate code.", namespaceAndName: tuple.State, factory: tuple.Factory);
+                                                                  Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
                                                                   return false;
                                                                });
 
@@ -372,11 +372,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                return null;
             }
 
-            Logger.LogDebug("The type declaration is a valid simple/keyed value object", namespaceAndName: state);
+            Logger.LogDebug("The type declaration is a valid simple/keyed value object", null, state);
          }
          else
          {
-            Logger.LogDebug("The type declaration is a valid complex value object", namespaceAndName: state);
+            Logger.LogDebug("The type declaration is a valid complex value object", null, state);
          }
 
          return new SourceGenContext(new ValidSourceGenState(state, settings, attributeInfo));

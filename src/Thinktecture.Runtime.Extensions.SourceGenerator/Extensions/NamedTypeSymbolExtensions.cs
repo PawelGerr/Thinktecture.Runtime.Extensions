@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.SmartEnums;
@@ -43,10 +44,8 @@ public static class NamedTypeSymbolExtensions
              && (!ctor.IsImplicitlyDeclared || baseType?.IsSameAssembly != true)) // default-ctor will be replaced by ctor implemented by this generator
          {
             var parameters = ctor.Parameters.IsDefaultOrEmpty
-                                ? (IReadOnlyList<IMemberState>)Array.Empty<IMemberState>()
-                                : ctor.Parameters
-                                      .Select(p => new DefaultMemberState(factory.Create(p.Type), p.Name, new ArgumentName(p.Name, p.Name)))
-                                      .ToList();
+                                ? ImmutableArray<DefaultMemberState>.Empty
+                                : ImmutableArray.CreateRange(ctor.Parameters, static (p, f) => new DefaultMemberState(f.Create(p.Type), p.Name, new ArgumentName(p.Name, p.Name)), factory);
 
             var ctorState = new ConstructorState(parameters);
             (ctorStates ??= new List<ConstructorState>()).Add(ctorState);

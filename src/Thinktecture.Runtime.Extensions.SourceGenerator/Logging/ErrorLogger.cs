@@ -14,11 +14,21 @@ public sealed class ErrorLogger : LoggerBase, ILogger
    {
    }
 
-   public void LogDebug(string message, TypeDeclarationSyntax? type, INamespaceAndName? namespaceAndName, ICodeGeneratorFactory? factory)
+   public void LogDebug(string message, TypeDeclarationSyntax? type, ICodeGeneratorFactory? factory)
    {
    }
 
-   public void LogInformation(string message, TypeDeclarationSyntax? type, INamespaceAndName? namespaceAndName, ICodeGeneratorFactory? factory)
+   public void LogDebug<T>(string message, TypeDeclarationSyntax? type, T namespaceAndName, ICodeGeneratorFactory? factory)
+      where T : INamespaceAndName
+   {
+   }
+
+   public void LogInformation(string message, TypeDeclarationSyntax? type, ICodeGeneratorFactory? factory)
+   {
+   }
+
+   public void LogInformation<T>(string message, TypeDeclarationSyntax? type, T namespaceAndName, ICodeGeneratorFactory? factory)
+      where T : INamespaceAndName
    {
    }
 

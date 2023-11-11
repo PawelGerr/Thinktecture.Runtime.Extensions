@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public readonly struct EnumSettings : IEquatable<EnumSettings>
@@ -10,7 +12,7 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
    public bool SkipSwitchMethods => _settings.SkipSwitchMethods;
    public bool SkipMapMethods => _settings.SkipMapMethods;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
-   public IReadOnlyList<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
+   public ImmutableArray<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
    public EnumSettings(AllEnumSettings settings, AttributeInfo attributeInfo)
    {
@@ -30,7 +32,7 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
              && SkipSwitchMethods == other.SkipSwitchMethods
              && SkipMapMethods == other.SkipMapMethods
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
-             && DesiredFactories.EqualsTo(other.DesiredFactories);
+             && DesiredFactories.SequenceEqual(other.DesiredFactories);
    }
 
    public override int GetHashCode()

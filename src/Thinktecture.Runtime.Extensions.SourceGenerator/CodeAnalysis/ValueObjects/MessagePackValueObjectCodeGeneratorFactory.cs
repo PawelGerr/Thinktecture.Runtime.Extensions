@@ -15,13 +15,13 @@ public sealed class MessagePackValueObjectCodeGeneratorFactory : IValueObjectSer
    public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
       return !state.AttributeInfo.HasMessagePackFormatterAttribute
-             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack)));
+             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.MessagePack)));
    }
 
    public bool MustGenerateCode(ComplexSerializerGeneratorState state)
    {
       return !state.AttributeInfo.HasMessagePackFormatterAttribute
-             && !state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack));
+             && !state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.MessagePack));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)

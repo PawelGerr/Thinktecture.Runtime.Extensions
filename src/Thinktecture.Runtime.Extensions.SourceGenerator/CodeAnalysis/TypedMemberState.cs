@@ -177,17 +177,17 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       unchecked
       {
          var hashCode = TypeFullyQualifiedWithNullability.GetHashCode();
-         hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ IsNullableStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
-         hashCode = (hashCode * 397) ^ ComparisonOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ AdditionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ SubtractionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ MultiplyOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ DivisionOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
+         hashCode = (hashCode * 397) ^ (int)AdditionOperators;
+         hashCode = (hashCode * 397) ^ (int)SubtractionOperators;
+         hashCode = (hashCode * 397) ^ (int)MultiplyOperators;
+         hashCode = (hashCode * 397) ^ (int)DivisionOperators;
 
          return hashCode;
       }

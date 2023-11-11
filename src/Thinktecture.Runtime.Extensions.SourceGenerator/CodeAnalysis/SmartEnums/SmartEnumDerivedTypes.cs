@@ -34,7 +34,7 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
              && Name == other.Name
              && TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
-             && DerivedTypesFullyQualified.EqualsTo(other.DerivedTypesFullyQualified);
+             && DerivedTypesFullyQualified.SequenceEqual(other.DerivedTypesFullyQualified);
    }
 
    public override bool Equals(object? obj)

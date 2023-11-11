@@ -182,7 +182,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
-      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context.ReportDiagnostic)
+      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context)
                                   .Where(m => !m.IsStatic)
                                   .ToList();
 
@@ -190,7 +190,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -236,7 +236,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void CheckComparerTypes(SymbolAnalysisContext context, InstanceMemberInfo member)
    {
-      if (member.ValueObjectMemberSettings is { HasInvalidEqualityComparerType: true, EqualityComparerAccessor: { } })
+      if (member.ValueObjectMemberSettings is { HasInvalidEqualityComparerType: true, EqualityComparerAccessor: not null })
       {
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
@@ -244,7 +244,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                           member.ValueObjectMemberSettings.EqualityComparerAccessor);
       }
 
-      if (member.ValueObjectMemberSettings is { HasInvalidComparerType: true, ComparerAccessor: { } })
+      if (member.ValueObjectMemberSettings is { HasInvalidComparerType: true, ComparerAccessor: not null })
       {
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
@@ -313,12 +313,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (isValidatable)
          ValidateCreateInvalidItem(context, enumType, keyType, locationOfFirstDeclaration);
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, false, context.CancellationToken, context.ReportDiagnostic).Enumerate();
+      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, false, context.CancellationToken, context).Enumerate();
       var baseClass = enumType.BaseType;
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context.ReportDiagnostic).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -387,7 +387,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, ITypeSymbol keyType, Location location)
    {
-      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(keyType, context.CancellationToken, context.ReportDiagnostic);
+      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(keyType, context.CancellationToken, context);
 
       if (!hasCreateInvalidItemImplementation && enumType.IsAbstract)
       {

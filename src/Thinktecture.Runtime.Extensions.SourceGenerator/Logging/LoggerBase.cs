@@ -34,21 +34,47 @@ public abstract class LoggerBase : IDisposable
    protected void Log(LogLevel logLevel,
                       string message,
                       TypeDeclarationSyntax? type,
-                      INamespaceAndName? namespaceAndName = null,
                       ICodeGeneratorFactory? factory = null,
                       Exception? exception = null)
    {
-      if (type is not null)
-         message = $"{message}. Type: {type.Identifier}";
-
-      if (namespaceAndName is not null)
-         message = $"{message}. Type: {namespaceAndName.Namespace}.{namespaceAndName.Name}";
-
       if (exception is not null)
+      {
          message = $"{message}. Exception: {exception}";
+      }
+      else if (type is not null)
+      {
+         message = factory is not null
+                      ? $"{message}. Type: {type.Identifier.ToString()}. Code Generator: {factory.CodeGeneratorName}."
+                      : $"{message}. Type: {type.Identifier.ToString()}";
+      }
 
-      if (factory is not null)
-         message = $"{message}. Code Generator: {factory.CodeGeneratorName}";
+      _sink.Write(_source, logLevel, DateTime.Now, message);
+   }
+
+   protected void Log<T>(LogLevel logLevel,
+                         string message,
+                         TypeDeclarationSyntax? type,
+                         T namespaceAndName,
+                         ICodeGeneratorFactory? factory = null,
+                         Exception? exception = null)
+      where T : INamespaceAndName
+   {
+      if (exception is not null)
+      {
+         message = $"{message}. Exception: {exception}";
+      }
+      else if (type is not null)
+      {
+         message = factory is not null
+                      ? $"{message}. Type: {type.Identifier.ToString()}. Code Generator: {factory.CodeGeneratorName}."
+                      : $"{message}. Type: {type.Identifier.ToString()}";
+      }
+      else
+      {
+         message = factory is not null
+                      ? $"{message}. Type: {namespaceAndName.Namespace}.{namespaceAndName.Name}. Code Generator: {factory.CodeGeneratorName}."
+                      : $"{message}. Type: {namespaceAndName.Namespace}.{namespaceAndName.Name}";
+      }
 
       _sink.Write(_source, logLevel, DateTime.Now, message);
    }

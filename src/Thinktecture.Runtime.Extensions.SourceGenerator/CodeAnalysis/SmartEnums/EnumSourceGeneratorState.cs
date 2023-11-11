@@ -86,8 +86,8 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && KeyProperty.Equals(other.KeyProperty)
              && Settings.Equals(other.Settings)
              && Equals(BaseType, other.BaseType)
-             && ItemNames.EqualsTo(other.ItemNames)
-             && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties);
+             && ItemNames.SequenceEqual(other.ItemNames)
+             && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties);
    }
 
    public override int GetHashCode()

@@ -2,28 +2,22 @@ namespace Thinktecture;
 
 public static class ReadOnlyCollectionExtensions
 {
-   public static bool EqualsTo<T>(this IReadOnlyList<T> collection, IReadOnlyList<T> other)
-      where T : IEquatable<T>
+   public static int ComputeHashCode<T>(this IReadOnlyList<T> collection)
+      where T : IEquatable<T>, IHashCodeComputable
    {
-      if (collection.Count != other.Count)
-         return false;
+      var hashCode = typeof(T).GetHashCode();
 
       for (var i = 0; i < collection.Count; i++)
       {
-         var item = collection[i];
-         var otherItem = other[i];
-
-         if (!item.Equals(otherItem))
-            return false;
+         hashCode = (hashCode * 397) ^ collection[i].GetHashCode();
       }
 
-      return true;
+      return hashCode;
    }
 
-   public static int ComputeHashCode<T>(this IReadOnlyList<T> collection)
-      where T : IEquatable<T>
+   public static int ComputeHashCode(this IReadOnlyList<string> collection)
    {
-      var hashCode = typeof(T).GetHashCode();
+      var hashCode = typeof(string).GetHashCode();
 
       for (var i = 0; i < collection.Count; i++)
       {

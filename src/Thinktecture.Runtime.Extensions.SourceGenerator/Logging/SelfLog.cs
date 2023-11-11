@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Thinktecture.Logging;
 
@@ -12,7 +13,7 @@ public class SelfLog
       {
 #pragma warning disable RS1035
          var fullPath = Path.Combine(Path.GetTempPath(), _FILE_NAME);
-         File.AppendAllText(fullPath, $"[{DateTime.Now:O}] {message}{Environment.NewLine}");
+         File.AppendAllText(fullPath, $"[{DateTime.Now.ToString("O")}] {message}{Environment.NewLine}");
 #pragma warning restore RS1035
       }
       catch (Exception ex)
@@ -23,6 +24,6 @@ public class SelfLog
 
    public static void Write(DateTime datetime, string logLevel, string source, string message)
    {
-      Write($"[{datetime} | {logLevel}] | [{source}] {message}");
+      Write($"[{datetime.ToString(CultureInfo.InvariantCulture)} | {logLevel}] | [{source}] {message}");
    }
 }

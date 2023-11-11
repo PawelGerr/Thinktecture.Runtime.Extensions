@@ -92,4 +92,17 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// Indication whether the generator should skip the implementation of the methods <code>Map</code>.
    /// </summary>
    public bool SkipMapMethods { get; set; }
+
+   /// <summary>
+   /// The type of the key-property.
+   /// </summary>
+   public Type KeyType { get; set; }
+
+   /// <summary>
+   /// Initializes new instance of <see cref="SmartEnumAttribute{TKey}"/>.
+   /// </summary>
+   public SmartEnumAttribute()
+   {
+      KeyType = typeof(TKey);
+   }
 }

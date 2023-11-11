@@ -80,12 +80,12 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
-         hashCode = (hashCode * 397) ^ AdditionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ SubtractionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ MultiplyOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ DivisionOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ ComparisonOperators.GetHashCode();
-         hashCode = (hashCode * 397) ^ EqualityComparisonOperators.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)AdditionOperators;
+         hashCode = (hashCode * 397) ^ (int)SubtractionOperators;
+         hashCode = (hashCode * 397) ^ (int)MultiplyOperators;
+         hashCode = (hashCode * 397) ^ (int)DivisionOperators;
+         hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
+         hashCode = (hashCode * 397) ^ (int)EqualityComparisonOperators;
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
 
          return hashCode;

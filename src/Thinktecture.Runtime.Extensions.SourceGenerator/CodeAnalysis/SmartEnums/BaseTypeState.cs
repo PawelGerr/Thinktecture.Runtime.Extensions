@@ -25,7 +25,7 @@ public sealed class BaseTypeState : IEquatable<BaseTypeState>
       if (ReferenceEquals(this, other))
          return true;
 
-      return Constructors.EqualsTo(other.Constructors)
+      return Constructors.SequenceEqual(other.Constructors)
              && IsSameAssembly == other.IsSameAssembly;
    }
 

@@ -9,7 +9,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
    public bool HasJsonConverterAttribute { get; }
    public bool HasNewtonsoftJsonConverterAttribute { get; }
    public bool HasMessagePackFormatterAttribute { get; }
-   public IReadOnlyList<DesiredFactory> DesiredFactories { get; }
+   public ImmutableArray<DesiredFactory> DesiredFactories { get; }
 
    public AttributeInfo(INamedTypeSymbol type)
    {
@@ -45,7 +45,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
             var useForSerialization = attribute.FindUseForSerialization();
             var desiredFactory = new DesiredFactory(attribute.AttributeClass.TypeArguments[0], useForSerialization);
 
-            valueObjectFactories = valueObjectFactories.RemoveAll(f => f.TypeFullyQualified == desiredFactory.TypeFullyQualified);
+            valueObjectFactories = valueObjectFactories.RemoveAll(static (f, fullTypeName) => f.TypeFullyQualified == fullTypeName, desiredFactory.TypeFullyQualified);
             valueObjectFactories = valueObjectFactories.Add(desiredFactory);
          }
       }
@@ -64,7 +64,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
              && HasJsonConverterAttribute == other.HasJsonConverterAttribute
              && HasNewtonsoftJsonConverterAttribute == other.HasNewtonsoftJsonConverterAttribute
              && HasMessagePackFormatterAttribute == other.HasMessagePackFormatterAttribute
-             && DesiredFactories.EqualsTo(other.DesiredFactories);
+             && DesiredFactories.SequenceEqual(other.DesiredFactories);
    }
 
    public override int GetHashCode()

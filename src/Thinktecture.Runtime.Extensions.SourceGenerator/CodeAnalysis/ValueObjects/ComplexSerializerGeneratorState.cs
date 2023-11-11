@@ -22,7 +22,7 @@ public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSeria
    public bool Equals(ComplexSerializerGeneratorState other)
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
-             && AssignableInstanceFieldsAndProperties.EqualsTo(other.AssignableInstanceFieldsAndProperties)
+             && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
              && AttributeInfo.Equals(other.AttributeInfo);
    }
 

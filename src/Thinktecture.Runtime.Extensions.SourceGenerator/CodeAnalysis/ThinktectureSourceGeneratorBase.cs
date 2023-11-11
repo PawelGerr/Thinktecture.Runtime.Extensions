@@ -151,7 +151,7 @@ public abstract class ThinktectureSourceGeneratorBase
                      .Collect()
                      .Select(static (states, _) => states.IsDefaultOrEmpty
                                                       ? ImmutableArray<FormattableGeneratorState>.Empty
-                                                      : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                                                      : states.Distinct(TypeOnlyComparer.Instance))
                      .WithComparer(new SetComparer<FormattableGeneratorState>())
                      .SelectMany((states, _) => states);
 
@@ -168,7 +168,7 @@ public abstract class ThinktectureSourceGeneratorBase
                     .Collect()
                     .Select(static (states, _) => states.IsDefaultOrEmpty
                                                      ? ImmutableArray<ComparableGeneratorState>.Empty
-                                                     : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                                                     : states.Distinct(TypeOnlyComparer.Instance))
                     .WithComparer(new SetComparer<ComparableGeneratorState>())
                     .SelectMany((states, _) => states);
 
@@ -185,7 +185,7 @@ public abstract class ThinktectureSourceGeneratorBase
                   .Collect()
                   .Select(static (states, _) => states.IsDefaultOrEmpty
                                                    ? ImmutableArray<ParsableGeneratorState>.Empty
-                                                   : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                                                   : states.Distinct(TypeOnlyComparer.Instance))
                   .WithComparer(new SetComparer<ParsableGeneratorState>())
                   .SelectMany((states, _) => states);
 
@@ -202,7 +202,7 @@ public abstract class ThinktectureSourceGeneratorBase
                       .Collect()
                       .Select(static (states, _) => states.IsDefaultOrEmpty
                                                        ? ImmutableArray<ComparisonOperatorsGeneratorState>.Empty
-                                                       : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                                                       : states.Distinct(TypeOnlyComparer.Instance))
                       .WithComparer(new SetComparer<ComparisonOperatorsGeneratorState>())
                       .SelectMany((states, _) => states)
                       .SelectMany((state, _) =>
@@ -232,7 +232,7 @@ public abstract class ThinktectureSourceGeneratorBase
                       .Collect()
                       .Select(static (states, _) => states.IsDefaultOrEmpty
                                                        ? ImmutableArray<EqualityComparisonOperatorsGeneratorState>.Empty
-                                                       : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                                                       : states.Distinct(TypeOnlyComparer.Instance))
                       .WithComparer(new SetComparer<EqualityComparisonOperatorsGeneratorState>())
                       .SelectMany((states, _) => states)
                       .SelectMany((state, _) =>
@@ -262,7 +262,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                    .Collect()
                                    .Select(static (states, _) => states.IsDefaultOrEmpty
                                                                     ? ImmutableArray<OperatorsGeneratorState>.Empty
-                                                                    : states.Distinct(TypeOnlyComparer.Instance).ToImmutableArray())
+                                                                    : states.Distinct(TypeOnlyComparer.Instance))
                                    .WithComparer(new SetComparer<OperatorsGeneratorState>())
                                    .SelectMany((states, _) => states)
                                    .SelectMany((state, _) =>

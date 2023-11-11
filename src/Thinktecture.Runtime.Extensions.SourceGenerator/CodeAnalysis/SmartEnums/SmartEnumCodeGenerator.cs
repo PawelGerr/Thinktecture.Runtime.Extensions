@@ -434,7 +434,7 @@ namespace ").Append(_state.Namespace).Append(@"
          global::System.Linq.Expressions.Expression<global::System.Func<").Append(keyMember.TypeFullyQualifiedNullAnnotated).Append(", ").Append(enumTypeNullAnnotated).Append(">> convertFromKeyExpression = static ").Append(keyMember.ArgumentName.Escaped).Append(" => ").Append(enumType).Append(".Get(").Append(keyMember.ArgumentName.Escaped).Append(@");
 
          var convertToKey = new global::System.Func<").Append(enumType).Append(", ").Append(keyMember.TypeFullyQualified).Append(">(static item => item.").Append(keyMember.Name).Append(@");
-         global::System.Linq.Expressions.Expression<global::System.Func<").Append(enumType).Append(", ").Append(keyMember.TypeFullyQualified).Append(@">> convertToKeyExpression = static item => item.").Append(keyMember.Name).Append(@";
+         global::System.Linq.Expressions.Expression<global::System.Func<").Append(enumType).Append(", ").Append(keyMember.TypeFullyQualified).Append(">> convertToKeyExpression = static item => item.").Append(keyMember.Name).Append(@";
 
          var enumType = typeof(").Append(enumType).Append(@");
          var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(").Append(keyMember.TypeFullyQualified).Append("), true, ").Append(_state.Settings.IsValidatable ? "true" : "false").Append(@", convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
@@ -843,6 +843,9 @@ namespace ").Append(_state.Namespace).Append(@"
       var baseCtorArgs = _state.BaseType.Constructors
                                .Select(ctor =>
                                        {
+                                          if (ctor.Arguments.Length == 0)
+                                             return (IReadOnlyList<ConstructorArgument>)Array.Empty<ConstructorArgument>();
+
                                           return ctor.Arguments
                                                      .Select(a =>
                                                              {
@@ -852,7 +855,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                                                 while (_state.KeyProperty.ArgumentName.Escaped == argName || _state.KeyProperty.ArgumentName.Raw == argName || ContainsArgument(ownCtorArgs, argName))
                                                                 {
                                                                    counter++;
-                                                                   argName = $"{a.ArgumentName.Raw}{counter}"; // rename the argument name if it collides with another argument
+                                                                   argName = $"{a.ArgumentName.Raw}{counter.ToString()}"; // rename the argument name if it collides with another argument
                                                                 }
 
                                                                 return new ConstructorArgument(a.TypeFullyQualifiedWithNullability, new ArgumentName(argName, argName));

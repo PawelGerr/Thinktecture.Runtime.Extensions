@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis;
 
-public sealed class DesiredFactory : ITypeFullyQualified, IEquatable<DesiredFactory>, IEquatable<ITypeFullyQualified>
+public sealed class DesiredFactory : ITypeFullyQualified, IEquatable<DesiredFactory>, IEquatable<ITypeFullyQualified>, IHashCodeComputable
 {
    public SpecialType SpecialType { get; }
    public string TypeFullyQualified { get; }
@@ -24,7 +24,7 @@ public sealed class DesiredFactory : ITypeFullyQualified, IEquatable<DesiredFact
    public bool Equals(DesiredFactory? other)
    {
       return Equals((ITypeFullyQualified?)other)
-             && UseForSerialization.Equals(other.UseForSerialization);
+             && (int)UseForSerialization == (int)other.UseForSerialization;
    }
 
    public bool Equals([NotNullWhen(true)] ITypeFullyQualified? other)
@@ -40,7 +40,7 @@ public sealed class DesiredFactory : ITypeFullyQualified, IEquatable<DesiredFact
       unchecked
       {
          var hashCode = TypeFullyQualified.GetHashCode();
-         hashCode = (hashCode * 397) ^ UseForSerialization.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)UseForSerialization;
 
          return hashCode;
       }

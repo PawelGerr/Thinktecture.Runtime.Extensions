@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
@@ -10,7 +12,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool EmptyStringInFactoryMethodsYieldsNull => _allSettings.EmptyStringInFactoryMethodsYieldsNull;
    public bool NullInFactoryMethodsYieldsNull => _allSettings.NullInFactoryMethodsYieldsNull;
    public string DefaultInstancePropertyName => _allSettings.DefaultInstancePropertyName;
-   public IReadOnlyList<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
+   public ImmutableArray<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
    public ValueObjectSettings(
       AllValueObjectSettings allSettings,
@@ -27,7 +29,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName
-             && DesiredFactories.EqualsTo(other.DesiredFactories);
+             && DesiredFactories.SequenceEqual(other.DesiredFactories);
    }
 
    public override bool Equals(object? obj)

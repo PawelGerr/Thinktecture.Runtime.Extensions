@@ -146,7 +146,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       var newAccessibilitySyntax = SyntaxFactory.Token(accessibility);
       var newModifiers = modifiers;
-      T newDeclaration = declaration;
+      var newDeclaration = declaration;
 
       if (modifiers.Count > 0)
       {
@@ -229,7 +229,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       var enumType = model.GetDeclaredSymbol(declaration);
 
-      if (!enumType.IsEnum(out AttributeData? smartEnumAttribute))
+      if (!enumType.IsEnum(out var smartEnumAttribute))
          return document;
 
       var keyType = smartEnumAttribute.AttributeClass?.TypeArguments[0];

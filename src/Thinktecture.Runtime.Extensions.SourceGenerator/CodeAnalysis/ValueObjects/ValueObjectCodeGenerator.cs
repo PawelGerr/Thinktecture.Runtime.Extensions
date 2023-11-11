@@ -307,7 +307,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
-      public static explicit operator ").Append(keyMember.TypeFullyQualifiedWithNullability).Append(@"(").Append(_state.TypeFullyQualified).Append(@" obj)
+      public static explicit operator ").Append(keyMember.TypeFullyQualifiedWithNullability).Append("(").Append(_state.TypeFullyQualified).Append(@" obj)
       {
          if(obj is null)
             throw new global::System.NullReferenceException();
@@ -604,7 +604,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      private ").Append(_state.Name).Append(@"(");
+      private ").Append(_state.Name).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties);
 
@@ -639,7 +639,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ");
 
-         _sb.Append(@");");
+         _sb.Append(");");
       }
    }
 

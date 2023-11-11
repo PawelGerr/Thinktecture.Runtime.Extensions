@@ -22,8 +22,8 @@ public static class StringExtensions
       {
          1 => name.ToLowerInvariant(),
          _ => name.StartsWith("_", StringComparison.Ordinal)
-                 ? $"{Char.ToLowerInvariant(name[1])}{name.Substring(2)}"
-                 : $"{Char.ToLowerInvariant(name[0])}{name.Substring(1)}"
+                 ? $"{Char.ToLowerInvariant(name[1]).ToString()}{name.Substring(2)}"
+                 : $"{Char.ToLowerInvariant(name[0]).ToString()}{name.Substring(1)}"
       };
 
       var escaped = _reservedIdentifiers.Contains(name) ? $"@{name}" : name;
