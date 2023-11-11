@@ -35,7 +35,7 @@ public sealed class ValueObjectMessagePackFormatter<T, TKey> : IMessagePackForma
       if (reader.TryReadNil())
          return default;
 
-      var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
+      var formatter = options.Resolver.GetFormatterWithVerify<TKey?>();
       var key = formatter.Deserialize(ref reader, options);
 
       if (key is null)
