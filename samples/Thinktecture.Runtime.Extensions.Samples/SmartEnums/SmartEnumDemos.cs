@@ -136,18 +136,18 @@ public class SmartEnumDemos
 
       var returnValue = productType.Switch(ProductType.Groceries, static () => "Switch with Func<T>: Groceries",
                                            ProductType.Housewares, static () => "Switch with Func<T>: Housewares");
-      logger.Information(returnValue);
+      logger.Information("{ReturnValue}", returnValue);
 
       returnValue = productType.Switch(logger,
                                        ProductType.Groceries, static _ => "Switch with Func<T>: Groceries",
                                        ProductType.Housewares, static _ => "Switch with Func<T>: Housewares");
 
-      logger.Information(returnValue);
+      logger.Information("{ReturnValue}", returnValue);
 
       returnValue = productType.Map(ProductType.Groceries, "Map: Groceries",
                                     ProductType.Housewares, "Map: Housewares");
 
-      logger.Information(returnValue);
+      logger.Information("{ReturnValue}", returnValue);
 
       var parsed = ProductType.TryParse("Groceries", null, out var parsedProductType);
       logger.Information("Success: {Success} Parsed: {Parsed}", parsed, parsedProductType);

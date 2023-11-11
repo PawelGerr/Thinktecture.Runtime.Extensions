@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#nullable enable
+
 namespace Thinktecture.Runtime.Tests.ReadOnlyCollectionExtensions;
 
 public class ToReadOnlyCollection
@@ -10,14 +12,14 @@ public class ToReadOnlyCollection
    [Fact]
    public void Should_throw_if_items_is_null()
    {
-      0.Invoking(_ => ((IReadOnlyCollection<int>)null)!.ToReadOnlyCollection(i => _))
-       .Should().Throw<ArgumentNullException>();
+      FluentActions.Invoking(() => ((IReadOnlyCollection<int>)null!).ToReadOnlyCollection(i => i))
+                   .Should().Throw<ArgumentNullException>();
    }
 
    [Fact]
    public void Should_throw_if_count_is_negative()
    {
-      Array.Empty<int>().Invoking(e => e.ToReadOnlyCollection((Func<int, int>)null))
+      Array.Empty<int>().Invoking(e => e.ToReadOnlyCollection((Func<int, int>?)null!))
            .Should().Throw<ArgumentException>();
    }
 

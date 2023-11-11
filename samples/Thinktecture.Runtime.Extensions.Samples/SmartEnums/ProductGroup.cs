@@ -1,7 +1,8 @@
 namespace Thinktecture.SmartEnums;
 
 [SmartEnum<int>(IsValidatable = true,
-                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                SkipToString = true)]
 public sealed partial class ProductGroup
 {
    public static readonly ProductGroup Apple = new(1, "Apple", ProductCategory.Fruits);
@@ -30,5 +31,10 @@ public sealed partial class ProductGroup
       // the values can be anything besides the key,
       // the key must not be null
       return new(key, false, "Unknown product group", ProductCategory.Get("Unknown"));
+   }
+
+   public override string ToString()
+   {
+      return DisplayName;
    }
 }

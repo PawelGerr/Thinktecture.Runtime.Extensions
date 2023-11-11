@@ -65,7 +65,7 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey> : IMessagePac
          return false;
       }
 
-      var formatter = options.Resolver.GetFormatterWithVerify<TKey>();
+      var formatter = options.Resolver.GetFormatterWithVerify<TKey?>();
       key = formatter.Deserialize(ref reader, options);
 
       return key is not null;
