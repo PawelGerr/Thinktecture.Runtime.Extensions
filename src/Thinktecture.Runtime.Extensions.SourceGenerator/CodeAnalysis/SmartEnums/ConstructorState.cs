@@ -31,6 +31,6 @@ public sealed class ConstructorState : IEquatable<ConstructorState>
 
    public override int GetHashCode()
    {
-      return Arguments.GetHashCode();
+      return Arguments.ComputeHashCode();
    }
 }
