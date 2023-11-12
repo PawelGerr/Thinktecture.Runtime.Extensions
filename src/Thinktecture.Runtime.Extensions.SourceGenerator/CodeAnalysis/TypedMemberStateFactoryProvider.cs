@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis;
 using Thinktecture.Logging;
 
 namespace Thinktecture.CodeAnalysis;

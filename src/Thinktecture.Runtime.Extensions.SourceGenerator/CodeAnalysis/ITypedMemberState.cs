@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace Thinktecture.CodeAnalysis;
 
 public interface ITypedMemberState : IEquatable<ITypedMemberState>

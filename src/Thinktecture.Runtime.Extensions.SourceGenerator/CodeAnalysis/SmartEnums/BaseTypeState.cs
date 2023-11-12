@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class BaseTypeState : IEquatable<BaseTypeState>

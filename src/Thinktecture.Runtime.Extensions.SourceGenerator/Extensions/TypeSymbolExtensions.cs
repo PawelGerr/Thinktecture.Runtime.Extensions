@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -14,11 +13,20 @@ public static class TypeSymbolExtensions
       return type is null || type.SpecialType == SpecialType.System_Object;
    }
 
-   public static bool HasValueObjectAttribute(this ITypeSymbol type)
+   public static bool IsValueObjectAttribute(this ITypeSymbol? attributeType)
    {
-      var valueObjectAttribute = type.FindValueObjectAttribute();
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
 
-      return valueObjectAttribute is not null;
+      return attributeType is { Name: Constants.Attributes.ValueObject.NAME, ContainingNamespace: { Name: Constants.Attributes.ValueObject.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsSmartEnumAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: Constants.Attributes.SmartEnum.NAME, ContainingNamespace: { Name: Constants.Attributes.SmartEnum.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsEnum(
@@ -31,9 +39,9 @@ public static class TypeSymbolExtensions
       [NotNullWhen(true)] this ITypeSymbol? enumType,
       [NotNullWhen(true)] out AttributeData? smartEnumAttribute)
    {
-      smartEnumAttribute = enumType?.FindAttribute(attributeClass => attributeClass.Name == "SmartEnumAttribute" && attributeClass.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true });
+      smartEnumAttribute = enumType?.FindAttribute(static attributeClass => attributeClass.IsSmartEnumAttribute());
 
-      return smartEnumAttribute?.AttributeClass != null && smartEnumAttribute.AttributeClass.TypeKind != TypeKind.Error;
+      return smartEnumAttribute is not null;
    }
 
    public static bool IsMessagePackFormatterAttribute(this ITypeSymbol type)
@@ -217,11 +225,6 @@ public static class TypeSymbolExtensions
              && @interface.TypeArguments[2].SpecialType == SpecialType.System_Boolean;
    }
 
-   private static AttributeData? FindValueObjectAttribute(this ITypeSymbol type)
-   {
-      return type.FindAttribute(static attrType => attrType is { Name: "ValueObjectAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } });
-   }
-
    public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerEnums(
       this ITypeSymbol enumType)
    {
@@ -302,7 +305,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       bool populateValueObjectMemberSettings,
       CancellationToken cancellationToken,
-      SymbolAnalysisContext? reportDiagnostic = null)
+      OperationAnalysisContext? reportDiagnostic = null)
    {
       var allowedCaptureSymbols = reportDiagnostic is not null;
 
@@ -324,7 +327,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       CancellationToken cancellationToken,
       Location? locationOfDerivedType = null,
-      SymbolAnalysisContext? reportDiagnostic = null)
+      OperationAnalysisContext? reportDiagnostic = null)
    {
       void ReportField(IFieldSymbol field)
       {
@@ -487,7 +490,7 @@ public static class TypeSymbolExtensions
       this ITypeSymbol enumType,
       ITypeSymbol keyType,
       CancellationToken cancellationToken,
-      SymbolAnalysisContext? reportDiagnostic = null)
+      OperationAnalysisContext? reportDiagnostic = null)
    {
       foreach (var member in enumType.GetNonIgnoredMembers())
       {

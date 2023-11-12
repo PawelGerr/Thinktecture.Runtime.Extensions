@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>

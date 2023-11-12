@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
@@ -10,6 +8,8 @@ namespace Thinktecture.CodeAnalysis.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 {
+   private static readonly ILogger _errorLogger = new SelfLogErrorLogger(nameof(ThinktectureRuntimeExtensionsAnalyzer));
+
    /// <inheritdoc />
    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial,
                                                                                                               DiagnosticsDescriptors.StructMustBeReadOnly,
@@ -47,8 +47,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
       context.EnableConcurrentExecution();
 
-      context.RegisterSymbolAction(AnalyzeSmartEnum, SymbolKind.NamedType);
-      context.RegisterSymbolAction(AnalyzeValueObject, SymbolKind.NamedType);
+      context.RegisterOperationAction(AnalyzeSmartEnum, OperationKind.Attribute);
+      context.RegisterOperationAction(AnalyzeValueObject, OperationKind.Attribute);
 
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
    }
@@ -102,20 +102,22 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.SwitchAndMapMustCoverAllItems, operation.Syntax.GetLocation(), operation.Instance.Type, String.Join(", ", missingItemNames));
    }
 
-   private static void AnalyzeSmartEnum(SymbolAnalysisContext context)
+   private static void AnalyzeSmartEnum(OperationAnalysisContext context)
    {
-      if (context.Symbol is not INamedTypeSymbol type || type.TypeKind == TypeKind.Error)
+      if (context.ContainingSymbol.Kind != SymbolKind.NamedType
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation } || !attrCreation.Type.IsSmartEnumAttribute()
+          || context.ContainingSymbol is not INamedTypeSymbol type
+          || type.TypeKind == TypeKind.Error)
+      {
          return;
+      }
 
       try
       {
          if (type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
             return;
 
-         if (!type.IsEnum(out var smartEnumAttribute))
-            return;
-
-         ValidateEnum(context, type, smartEnumAttribute);
+         ValidateEnum(context, type, attrCreation);
       }
       catch (Exception ex)
       {
@@ -125,17 +127,19 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void AnalyzeValueObject(SymbolAnalysisContext context)
+   private static void AnalyzeValueObject(OperationAnalysisContext context)
    {
-      if (context.Symbol is not INamedTypeSymbol type || type.TypeKind == TypeKind.Error)
+      if (context.ContainingSymbol.Kind != SymbolKind.NamedType
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation } || !attrCreation.Type.IsValueObjectAttribute()
+          || context.ContainingSymbol is not INamedTypeSymbol type
+          || type.TypeKind == TypeKind.Error)
+      {
          return;
+      }
 
       try
       {
          if (type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
-            return;
-
-         if (!type.HasValueObjectAttribute())
             return;
 
          ValidateValueObject(context, type);
@@ -149,7 +153,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    }
 
    private static void ValidateValueObject(
-      SymbolAnalysisContext context,
+      OperationAnalysisContext context,
       INamedTypeSymbol type)
    {
       var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
@@ -166,7 +170,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, new SelfLogErrorLogger(nameof(ThinktectureRuntimeExtensionsAnalyzer)));
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
 
       if (factory is null)
       {
@@ -213,7 +217,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.ValueObjectMustBeSealed, locationOfFirstDeclaration, type);
    }
 
-   private static void CheckAssignableMembers(SymbolAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)
+   private static void CheckAssignableMembers(OperationAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)
    {
       foreach (var assignableMember in assignableMembers)
       {
@@ -234,7 +238,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void CheckComparerTypes(SymbolAnalysisContext context, InstanceMemberInfo member)
+   private static void CheckComparerTypes(OperationAnalysisContext context, InstanceMemberInfo member)
    {
       if (member.ValueObjectMemberSettings is { HasInvalidEqualityComparerType: true, EqualityComparerAccessor: not null })
       {
@@ -254,9 +258,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    }
 
    private static void ValidateEnum(
-      SymbolAnalysisContext context,
+      OperationAnalysisContext context,
       INamedTypeSymbol enumType,
-      AttributeData smartEnumAttribute)
+      IObjectCreationOperation smartEnumAttribute)
    {
       var locationOfFirstDeclaration = enumType.Locations.IsDefaultOrEmpty ? Location.None : enumType.Locations[0]; // a representative for all
 
@@ -272,7 +276,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, new SelfLogErrorLogger(nameof(ThinktectureRuntimeExtensionsAnalyzer)));
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
 
       if (factory is null)
       {
@@ -287,7 +291,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, enumType);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
-      var keyType = smartEnumAttribute.AttributeClass?.TypeArguments[0];
+      var keyType = (smartEnumAttribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
 
       if (keyType is null || keyType.TypeKind == TypeKind.Error)
          return;
@@ -331,13 +335,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, locationOfFirstDeclaration, enumType);
    }
 
-   private static void TypeMustNotBeGeneric(SymbolAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
+   private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
    {
       if (!type.TypeParameters.IsDefaultOrEmpty)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
    }
 
-   private static void Check_ItemLike_StaticProperties(SymbolAnalysisContext context, INamedTypeSymbol enumType)
+   private static void Check_ItemLike_StaticProperties(OperationAnalysisContext context, INamedTypeSymbol enumType)
    {
       foreach (var member in enumType.GetNonIgnoredMembers())
       {
@@ -346,7 +350,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static IReadOnlyList<(INamedTypeSymbol Type, int Level)> ValidateDerivedTypes(SymbolAnalysisContext context, INamedTypeSymbol enumType)
+   private static IReadOnlyList<(INamedTypeSymbol Type, int Level)> ValidateDerivedTypes(OperationAnalysisContext context, INamedTypeSymbol enumType)
    {
       var derivedTypes = enumType.FindDerivedInnerEnums();
       var typesToLeaveOpen = ImmutableArray.Create<INamedTypeSymbol>();
@@ -358,11 +362,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (level == 1)
          {
             if (type.DeclaredAccessibility != Accessibility.Private)
-               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate, GetDerivedTypeLocation(type, context), type);
+               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate, GetDerivedTypeLocation(context, type), type);
          }
          else if (type.DeclaredAccessibility != Accessibility.Public)
          {
-            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(type, context), type);
+            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(context, type), type);
          }
 
          if (!type.BaseType.IsNullOrObject())
@@ -374,18 +378,18 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          var derivedType = derivedTypes[i];
 
          if (!derivedType.Type.IsSealed && !derivedType.Type.IsAbstract && !typesToLeaveOpen.Contains(derivedType.Type, SymbolEqualityComparer.Default))
-            ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(derivedType.Type, context), derivedType.Type);
+            ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(context, derivedType.Type), derivedType.Type);
       }
 
       return derivedTypes;
    }
 
-   private static Location GetDerivedTypeLocation(INamedTypeSymbol derivedType, SymbolAnalysisContext context)
+   private static Location GetDerivedTypeLocation(OperationAnalysisContext context, INamedTypeSymbol derivedType)
    {
       return ((TypeDeclarationSyntax)derivedType.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation();
    }
 
-   private static void ValidateCreateInvalidItem(SymbolAnalysisContext context, INamedTypeSymbol enumType, ITypeSymbol keyType, Location location)
+   private static void ValidateCreateInvalidItem(OperationAnalysisContext context, INamedTypeSymbol enumType, ITypeSymbol keyType, Location location)
    {
       var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(keyType, context.CancellationToken, context);
 
@@ -398,20 +402,20 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void EnumKeyPropertyNameMustNotBeItem(SymbolAnalysisContext context, AttributeData enumSettingsAttr, Location location)
+   private static void EnumKeyPropertyNameMustNotBeItem(OperationAnalysisContext context, IObjectCreationOperation enumSettingsAttr, Location location)
    {
       var keyPropName = enumSettingsAttr.FindKeyPropertyName();
 
       if (!StringComparer.OrdinalIgnoreCase.Equals(keyPropName, "Item"))
          return;
 
-      var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken);
+      var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.Syntax;
 
       ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
                        attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.SmartEnum.Properties.KEY_PROPERTY_NAME)?.GetLocation() ?? location, keyPropName);
    }
 
-   private static void EnumItemsMustBePublic(SymbolAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<IFieldSymbol> items)
+   private static void EnumItemsMustBePublic(OperationAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<IFieldSymbol> items)
    {
       for (var i = 0; i < items.Count; i++)
       {
@@ -426,7 +430,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void TypeMustBePartial(SymbolAnalysisContext context, INamedTypeSymbol type)
+   private static void TypeMustBePartial(OperationAnalysisContext context, INamedTypeSymbol type)
    {
       var references = type.DeclaringSyntaxReferences;
 
@@ -445,13 +449,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void StructMustBeReadOnly(SymbolAnalysisContext context, INamedTypeSymbol type, Location location)
+   private static void StructMustBeReadOnly(OperationAnalysisContext context, INamedTypeSymbol type, Location location)
    {
       if (type is { IsValueType: true, IsReadOnly: false })
          ReportDiagnostic(context, DiagnosticsDescriptors.StructMustBeReadOnly, location, type);
    }
 
-   private static void ConstructorsMustBePrivate(SymbolAnalysisContext context, INamedTypeSymbol type)
+   private static void ConstructorsMustBePrivate(OperationAnalysisContext context, INamedTypeSymbol type)
    {
       if (type.Constructors.IsDefaultOrEmpty)
          return;
@@ -460,7 +464,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var ctor = type.Constructors[i];
 
-         if (ctor.IsImplicitlyDeclared)
+         if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
             continue;
 
          var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
@@ -469,11 +473,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          {
             case ConstructorDeclarationSyntax constructorDeclarationSyntax:
             {
-               if (ctor.DeclaredAccessibility != Accessibility.Private)
-               {
-                  var location = constructorDeclarationSyntax.Identifier.GetLocation();
-                  ReportDiagnostic(context, DiagnosticsDescriptors.EnumConstructorsMustBePrivate, location, type);
-               }
+               var location = constructorDeclarationSyntax.Identifier.GetLocation();
+               ReportDiagnostic(context, DiagnosticsDescriptors.EnumConstructorsMustBePrivate, location, type);
 
                break;
             }
@@ -493,7 +494,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void EnsureNoPrimaryConstructor(SymbolAnalysisContext context, INamedTypeSymbol type)
+   private static void EnsureNoPrimaryConstructor(OperationAnalysisContext context, INamedTypeSymbol type)
    {
       if (type.Constructors.IsDefaultOrEmpty)
          return;
@@ -502,7 +503,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var ctor = type.Constructors[i];
 
-         if (ctor.IsImplicitlyDeclared)
+         // Performance optimization: primary ctor cannot be private unless it is a nested type,
+         // which is not allowed neither with Value Objects nor with Smart Enums.
+         if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
             continue;
 
          var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
@@ -525,27 +528,27 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0)
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0)
    {
       ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0));
    }
 
-   private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, ITypeSymbol arg1)
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, ITypeSymbol arg1)
    {
       ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0), BuildTypeName(arg1));
    }
 
-   private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location)
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location));
    }
 
-   private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0)
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0));
    }
 
-   private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
    }
@@ -553,11 +556,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, string arg1)
    {
       ReportDiagnostic(context, descriptor, location, BuildTypeName(arg0), arg1);
-   }
-
-   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
-   {
-      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
    }
 
    private static string BuildTypeName(ITypeSymbol type)

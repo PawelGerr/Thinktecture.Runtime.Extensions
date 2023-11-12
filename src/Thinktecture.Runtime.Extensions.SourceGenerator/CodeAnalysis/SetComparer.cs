@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Thinktecture.CodeAnalysis;
 
 public sealed class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>

@@ -1,7 +1,5 @@
 using System.Collections.Concurrent;
-using System.Collections.Immutable;
 using System.Text;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Thinktecture.Logging;
 

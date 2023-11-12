@@ -1,5 +1,4 @@
 using System.Text;
-using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.SmartEnums;
 

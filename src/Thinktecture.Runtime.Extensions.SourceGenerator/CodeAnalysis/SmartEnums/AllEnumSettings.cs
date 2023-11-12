@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class AllEnumSettings : IEquatable<AllEnumSettings>

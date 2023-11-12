@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
@@ -19,7 +17,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       SetupLogger(context, options);
 
       var valueObjectOrException = context.SyntaxProvider
-                                          .ForAttributeWithMetadataName(Constants.Attributes.VALUE_OBJECT,
+                                          .ForAttributeWithMetadataName(Constants.Attributes.ValueObject.FULL_NAME,
                                                                         IsCandidate,
                                                                         GetSourceGenContextOrNull)
                                           .SelectMany(static (state, _) => state.HasValue
@@ -345,7 +343,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
          if (context.Attributes.Length > 1)
          {
-            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.VALUE_OBJECT}'", tds);
+            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.ValueObject.FULL_NAME}'", tds);
             return null;
          }
 

@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public readonly struct EnumSettings : IEquatable<EnumSettings>

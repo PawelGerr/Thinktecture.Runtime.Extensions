@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Thinktecture;
 
 public static class ImmutableArrayExtensions

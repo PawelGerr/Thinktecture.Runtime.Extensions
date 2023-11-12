@@ -1,6 +1,3 @@
-using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-
 namespace Thinktecture.CodeAnalysis;
 
 public readonly struct AttributeInfo : IEquatable<AttributeInfo>

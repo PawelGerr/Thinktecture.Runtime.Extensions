@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class ConstructorState : IEquatable<ConstructorState>, IHashCodeComputable

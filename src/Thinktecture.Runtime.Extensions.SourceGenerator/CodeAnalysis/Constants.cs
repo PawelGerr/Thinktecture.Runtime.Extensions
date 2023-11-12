@@ -33,11 +33,18 @@ public static class Constants
 
    public static class Attributes
    {
-      public const string VALUE_OBJECT = "Thinktecture.ValueObjectAttribute";
+      public static class ValueObject
+      {
+         public const string NAMESPACE = "Thinktecture";
+         public const string NAME = "ValueObjectAttribute";
+         public const string FULL_NAME = "Thinktecture.ValueObjectAttribute";
+      }
 
       public static class SmartEnum
       {
-         public const string NAME = "Thinktecture.SmartEnumAttribute`1";
+         public const string NAMESPACE = "Thinktecture";
+         public const string NAME = "SmartEnumAttribute";
+         public const string FULL_NAME = "Thinktecture.SmartEnumAttribute`1";
 
          public static class Properties
          {

@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;

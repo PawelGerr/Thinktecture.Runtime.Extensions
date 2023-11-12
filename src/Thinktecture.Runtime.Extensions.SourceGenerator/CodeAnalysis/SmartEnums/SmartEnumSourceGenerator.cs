@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
@@ -19,7 +17,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       SetupLogger(context, options);
 
       var enumTypeOrError = context.SyntaxProvider
-                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.NAME,
+                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.FULL_NAME,
                                                                  IsCandidate,
                                                                  GetSourceGenContextOrNull)
                                    .SelectMany(static (state, _) => state.HasValue
@@ -267,7 +265,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
          if (context.Attributes.Length > 1)
          {
-            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds);
+            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.FULL_NAME}'", tds);
             return null;
          }
 

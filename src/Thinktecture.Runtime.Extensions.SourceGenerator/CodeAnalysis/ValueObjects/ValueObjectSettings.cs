@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
