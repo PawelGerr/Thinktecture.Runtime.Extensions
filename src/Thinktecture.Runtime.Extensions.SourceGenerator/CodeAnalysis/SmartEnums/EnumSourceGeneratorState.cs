@@ -21,13 +21,14 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    private ArgumentName? _argumentName;
    public ArgumentName ArgumentName => _argumentName ??= Name.MakeArgumentName();
 
-   public IReadOnlyList<string> ItemNames { get; }
+   public EnumItemNames ItemNames { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
 
    public EnumSourceGeneratorState(
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
       IMemberState keyProperty,
+      ImmutableArray<ISymbol> nonIgnoredMembers,
       EnumSettings settings,
       bool hasCreateInvalidItemImplementation,
       CancellationToken cancellationToken)
@@ -45,14 +46,14 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       IsAbstract = type.IsAbstract;
 
       BaseType = type.GetBaseType(factory);
-      HasKeyComparerImplementation = HasHasKeyComparerImplementation(type);
-      ItemNames = type.EnumerateEnumItems().Select(i => i.Name).ToList();
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, false, cancellationToken).ToList();
+      HasKeyComparerImplementation = HasHasKeyComparerImplementation(nonIgnoredMembers);
+      ItemNames = new EnumItemNames(type.GetEnumItems(nonIgnoredMembers));
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, true, false, cancellationToken).ToList();
    }
 
-   private static bool HasHasKeyComparerImplementation(INamedTypeSymbol enumType)
+   private static bool HasHasKeyComparerImplementation(ImmutableArray<ISymbol> nonIgnoredMembers)
    {
-      foreach (var member in enumType.GetMembers())
+      foreach (var member in nonIgnoredMembers)
       {
          if (member is not IPropertySymbol property)
             continue;
@@ -84,7 +85,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && KeyProperty.Equals(other.KeyProperty)
              && Settings.Equals(other.Settings)
              && Equals(BaseType, other.BaseType)
-             && ItemNames.SequenceEqual(other.ItemNames)
+             && ItemNames.Equals(other.ItemNames)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties);
    }
 
@@ -100,7 +101,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
-         hashCode = (hashCode * 397) ^ ItemNames.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ItemNames.GetHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
 
          return hashCode;

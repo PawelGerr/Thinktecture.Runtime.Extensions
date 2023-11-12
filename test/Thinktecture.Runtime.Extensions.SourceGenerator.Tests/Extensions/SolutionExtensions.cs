@@ -42,8 +42,9 @@ public static class SolutionExtensions
 
    private static Solution DisableNullableWarnings(Solution solution, ProjectId projectId)
    {
-      var compilationOptions = solution.GetProject(projectId).CompilationOptions;
-      compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(compilationOptions.SpecificDiagnosticOptions.SetItems(NullableWarnings));
+      var compilationOptions = solution.GetProject(projectId)?.CompilationOptions;
+      compilationOptions = compilationOptions?.WithSpecificDiagnosticOptions(compilationOptions.SpecificDiagnosticOptions.SetItems(NullableWarnings))
+                           ?? throw new Exception("CompilationOptions must not be null.");
       solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
 
       return solution;

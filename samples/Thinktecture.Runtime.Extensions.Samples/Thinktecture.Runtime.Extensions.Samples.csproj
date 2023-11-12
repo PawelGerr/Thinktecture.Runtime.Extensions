@@ -11,6 +11,6 @@
    </ItemGroup>
    <ItemGroup>
       <PackageReference Include="CsvHelper" Version="30.0.1" />
-      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
    </ItemGroup>
 </Project>

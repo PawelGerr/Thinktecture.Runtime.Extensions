@@ -78,61 +78,61 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          switch (customOperator.Name)
          {
             case "op_GreaterThan":
-               if (customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.GreaterThan) && customOperator.IsComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.GreaterThan;
                break;
 
             case "op_GreaterThanOrEqual":
-               if (customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.GreaterThanOrEqual) && customOperator.IsComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.GreaterThanOrEqual;
                break;
 
             case "op_LessThan":
-               if (customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.LessThan) && customOperator.IsComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.LessThan;
                break;
 
             case "op_LessThanOrEqual":
-               if (customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.LessThanOrEqual) && customOperator.IsComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.LessThanOrEqual;
                break;
 
             case "op_Addition":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!AdditionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
                   AdditionOperators |= ImplementedOperators.Default;
                break;
 
             case "op_CheckedAddition":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!AdditionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
                   AdditionOperators |= ImplementedOperators.Checked;
                break;
 
             case "op_Subtraction":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!SubtractionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
                   SubtractionOperators |= ImplementedOperators.Default;
                break;
             case "op_CheckedSubtraction":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!SubtractionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
                   SubtractionOperators |= ImplementedOperators.Checked;
                break;
 
             case "op_Division":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!DivisionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
                   DivisionOperators |= ImplementedOperators.Default;
                break;
 
             case "op_CheckedDivision":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!DivisionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
                   DivisionOperators |= ImplementedOperators.Checked;
                break;
 
             case "op_Multiply":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!MultiplyOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
                   MultiplyOperators |= ImplementedOperators.Default;
                break;
 
             case "op_CheckedMultiply":
-               if (customOperator.IsArithmeticOperator(type))
+               if (!MultiplyOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
                   MultiplyOperators |= ImplementedOperators.Checked;
                break;
          }

@@ -29,6 +29,30 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.SmartEnum.NAME, ContainingNamespace: { Name: Constants.Attributes.SmartEnum.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsValueObjectMemberEqualityComparerAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: "ValueObjectMemberEqualityComparerAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsValueObjectMemberComparerAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: "ValueObjectMemberComparerAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsValueObjectMemberIgnoreAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: "ValueObjectMemberIgnoreAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
    public static bool IsEnum(
       [NotNullWhen(true)] this ITypeSymbol? enumType)
    {
@@ -117,20 +141,26 @@ public static class TypeSymbolExtensions
       };
    }
 
-   public static IEnumerable<IFieldSymbol> EnumerateEnumItems(this ITypeSymbol enumType)
+   public static ImmutableArray<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType, ImmutableArray<ISymbol> nonIgnoredMembers)
    {
-      return enumType.GetNonIgnoredMembers()
-                     .Select(m =>
-                             {
-                                if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField())
-                                   return null;
+      return nonIgnoredMembers
+         .SelectWhere(static (ISymbol m, ITypeSymbol type, [MaybeNullWhen(false)] out IFieldSymbol result) =>
+                      {
+                         if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField())
+                         {
+                            result = null;
+                            return false;
+                         }
 
-                                if (SymbolEqualityComparer.Default.Equals(field.Type, enumType))
-                                   return field;
+                         if (SymbolEqualityComparer.Default.Equals(field.Type, type))
+                         {
+                            result = field;
+                            return true;
+                         }
 
-                                return null;
-                             })
-                     .Where(field => field is not null)!;
+                         result = null;
+                         return false;
+                      }, enumType);
    }
 
    public static bool IsFormattableInterface(this INamedTypeSymbol @interface)
@@ -293,14 +323,15 @@ public static class TypeSymbolExtensions
       return false;
    }
 
-   public static IEnumerable<ISymbol> GetNonIgnoredMembers(this ITypeSymbol type, string? name = null)
+   public static ImmutableArray<ISymbol> GetNonIgnoredMembers(this ITypeSymbol type, string? name = null)
    {
       return (name is not null ? type.GetMembers(name) : type.GetMembers())
-         .Where(m => !m.HasAttribute(static attrType => attrType.Name == "ValueObjectMemberIgnoreAttribute" && attrType.ContainingNamespace is { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }));
+         .Where(static m => !m.IsIgnored());
    }
 
    public static IEnumerable<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
+      ImmutableArray<ISymbol> nonIgnoredItems,
       TypedMemberStateFactory factory,
       bool instanceMembersOnly,
       bool populateValueObjectMemberSettings,
@@ -309,7 +340,7 @@ public static class TypeSymbolExtensions
    {
       var allowedCaptureSymbols = reportDiagnostic is not null;
 
-      return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(instanceMembersOnly, cancellationToken, null, reportDiagnostic)
+      return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredItems, instanceMembersOnly, cancellationToken, null, reportDiagnostic)
                  .Select(tuple =>
                          {
                             return tuple switch
@@ -319,11 +350,12 @@ public static class TypeSymbolExtensions
                                _ => throw new Exception("Either field or property must be set.")
                             };
                          })
-                 .Where(i => i is not null)!;
+                 .Where(m => m is not null)!;
    }
 
    public static IEnumerable<(IFieldSymbol? Field, IPropertySymbol? Property)> IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
+      ImmutableArray<ISymbol> nonIgnoredMembers,
       bool instanceMembersOnly,
       CancellationToken cancellationToken,
       Location? locationOfDerivedType = null,
@@ -384,98 +416,98 @@ public static class TypeSymbolExtensions
          reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
       }
 
-      return type.GetNonIgnoredMembers()
-                 .Select(member =>
-                         {
-                            if ((instanceMembersOnly && member.IsStatic) || !member.CanBeReferencedByName)
-                               return ((IFieldSymbol?, IPropertySymbol?)?)null;
+      return nonIgnoredMembers
+             .Select(member =>
+                     {
+                        if ((instanceMembersOnly && member.IsStatic) || !member.CanBeReferencedByName)
+                           return ((IFieldSymbol?, IPropertySymbol?)?)null;
 
-                            switch (member)
-                            {
-                               case IFieldSymbol field:
-                               {
-                                  if (!field.IsReadOnly && !field.IsConst)
-                                     ReportField(field);
+                        switch (member)
+                        {
+                           case IFieldSymbol field:
+                           {
+                              if (!field.IsReadOnly && !field.IsConst)
+                                 ReportField(field);
 
-                                  return (field, null);
-                               }
+                              return (field, null);
+                           }
 
-                               case IPropertySymbol property:
-                               {
-                                  // other assembly
-                                  if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
-                                  {
-                                     if (property is { IsReadOnly: false, IsWriteOnly: false })
-                                        ReportPropertyMustBeReadOnly(property, DiagnosticSeverity.Warning);
-                                  }
-                                  // same assembly
-                                  else
-                                  {
-                                     var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
+                           case IPropertySymbol property:
+                           {
+                              // other assembly
+                              if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+                              {
+                                 if (property is { IsReadOnly: false, IsWriteOnly: false })
+                                    ReportPropertyMustBeReadOnly(property, DiagnosticSeverity.Warning);
+                              }
+                              // same assembly
+                              else
+                              {
+                                 var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
 
-                                     if (syntax.ExpressionBody is not null) // public int Foo => 42;
-                                        return null;
+                                 if (syntax.ExpressionBody is not null) // public int Foo => 42;
+                                    return null;
 
-                                     if (syntax.AccessorList is null)
-                                        return null;
+                                 if (syntax.AccessorList is null)
+                                    return null;
 
-                                     AccessorDeclarationSyntax? getter = null;
-                                     AccessorDeclarationSyntax? setter = null;
-                                     AccessorDeclarationSyntax? init = null;
+                                 AccessorDeclarationSyntax? getter = null;
+                                 AccessorDeclarationSyntax? setter = null;
+                                 AccessorDeclarationSyntax? init = null;
 
-                                     foreach (var accessor in syntax.AccessorList.Accessors)
-                                     {
-                                        switch ((SyntaxKind)accessor.RawKind)
-                                        {
-                                           case SyntaxKind.GetAccessorDeclaration:
-                                              getter = accessor;
-                                              break;
-                                           case SyntaxKind.SetAccessorDeclaration:
-                                              setter = accessor;
-                                              break;
-                                           case SyntaxKind.InitAccessorDeclaration:
-                                              init = accessor;
-                                              break;
-                                        }
-                                     }
+                                 foreach (var accessor in syntax.AccessorList.Accessors)
+                                 {
+                                    switch ((SyntaxKind)accessor.RawKind)
+                                    {
+                                       case SyntaxKind.GetAccessorDeclaration:
+                                          getter = accessor;
+                                          break;
+                                       case SyntaxKind.SetAccessorDeclaration:
+                                          setter = accessor;
+                                          break;
+                                       case SyntaxKind.InitAccessorDeclaration:
+                                          init = accessor;
+                                          break;
+                                    }
+                                 }
 
-                                     // public int Foo { get { return 42; } }
-                                     // public int Foo { get => 42; }
-                                     // public int Foo { get => _foo; }
-                                     // If we have 'init' then continue checks
-                                     if (!IsDefaultImplementation(getter) && init is null)
-                                        return null;
+                                 // public int Foo { get { return 42; } }
+                                 // public int Foo { get => 42; }
+                                 // public int Foo { get => _foo; }
+                                 // If we have 'init' then continue checks
+                                 if (!IsDefaultImplementation(getter) && init is null)
+                                    return null;
 
-                                     if (property.SetMethod is not null)
-                                     {
-                                        // there can be init, setter or none of them
-                                        if (init is not null)
-                                        {
-                                           if (property.DeclaredAccessibility != Accessibility.Private
-                                               && property.SetMethod.DeclaredAccessibility != Accessibility.Private)
-                                           {
-                                              ReportPropertyInitAccessorMustBePrivate(property);
-                                           }
-                                        }
-                                        else if (setter is not null)
-                                        {
-                                           if (!IsDefaultImplementation(setter))
-                                              return null;
+                                 if (property.SetMethod is not null)
+                                 {
+                                    // there can be init, setter or none of them
+                                    if (init is not null)
+                                    {
+                                       if (property.DeclaredAccessibility != Accessibility.Private
+                                           && property.SetMethod.DeclaredAccessibility != Accessibility.Private)
+                                       {
+                                          ReportPropertyInitAccessorMustBePrivate(property);
+                                       }
+                                    }
+                                    else if (setter is not null)
+                                    {
+                                       if (!IsDefaultImplementation(setter))
+                                          return null;
 
-                                           ReportPropertyMustBeReadOnly(property);
-                                        }
-                                     }
-                                  }
+                                       ReportPropertyMustBeReadOnly(property);
+                                    }
+                                 }
+                              }
 
-                                  return (null, property);
-                               }
+                              return (null, property);
+                           }
 
-                               default:
-                                  return null;
-                            }
-                         })
-                 .Where(m => m is not null)
-                 .Select(m => m!.Value);
+                           default:
+                              return null;
+                        }
+                     })
+             .Where(m => m is not null)
+             .Select(m => m!.Value);
    }
 
    private static bool IsDefaultImplementation(AccessorDeclarationSyntax? accessor)
@@ -488,11 +520,12 @@ public static class TypeSymbolExtensions
 
    public static bool HasCreateInvalidItemImplementation(
       this ITypeSymbol enumType,
+      ImmutableArray<ISymbol> nonIgnoredMembers,
       ITypeSymbol keyType,
       CancellationToken cancellationToken,
       OperationAnalysisContext? reportDiagnostic = null)
    {
-      foreach (var member in enumType.GetNonIgnoredMembers())
+      foreach (var member in nonIgnoredMembers)
       {
          if (member is not IMethodSymbol { Name: Constants.Methods.CREATE_INVALID_ITEM } method)
             continue;

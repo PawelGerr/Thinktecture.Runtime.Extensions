@@ -71,8 +71,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var missingItemNames = ImmutableArray.Create<string>();
 
-      foreach (var item in operation.Instance.Type.EnumerateEnumItems())
+      var nonIgnoredMembers = operation.Instance.Type.GetNonIgnoredMembers();
+      var items = operation.Instance.Type.GetEnumItems(nonIgnoredMembers);
+
+      for (var itemIndex = 0; itemIndex < items.Length; itemIndex++)
       {
+         var item = items[itemIndex];
          var args = operation.Arguments;
 
          if (args.IsDefaultOrEmpty)
@@ -80,9 +84,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          var found = false;
 
-         for (var i = 0; i < args.Length; i += 2)
+         for (var argIndex = 0; argIndex < args.Length; argIndex += 2)
          {
-            var argument = args[i];
+            var argument = args[argIndex];
 
             if (argument.Value is not IFieldReferenceOperation fieldReferenceOperation)
                continue;
@@ -186,7 +190,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
       StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
-      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context)
+      var nonIgnoredItems = type.GetNonIgnoredMembers();
+      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredItems, factory, false, true, context.CancellationToken, context)
                                   .Where(m => !m.IsStatic)
                                   .ToList();
 
@@ -194,7 +199,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(baseClass.GetNonIgnoredMembers(), false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -306,23 +311,24 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (enumType.IsValueType && !isValidatable)
          ReportDiagnostic(context, DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType);
 
-      var items = enumType.EnumerateEnumItems().ToList();
+      var nonIgnoredMembers = enumType.GetNonIgnoredMembers();
+      var items = enumType.GetEnumItems(nonIgnoredMembers);
 
-      if (items.Count == 0)
+      if (items.Length == 0)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumerationHasNoItems, locationOfFirstDeclaration, enumType);
 
-      Check_ItemLike_StaticProperties(context, enumType);
+      Check_ItemLike_StaticProperties(context, enumType, nonIgnoredMembers);
       EnumItemsMustBePublic(context, enumType, items);
 
       if (isValidatable)
-         ValidateCreateInvalidItem(context, enumType, keyType, locationOfFirstDeclaration);
+         ValidateCreateInvalidItem(context, enumType, keyType, nonIgnoredMembers, locationOfFirstDeclaration);
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, false, context.CancellationToken, context).Enumerate();
+      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, false, false, context.CancellationToken, context).Enumerate();
       var baseClass = enumType.BaseType;
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(baseClass.GetNonIgnoredMembers(), false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -341,10 +347,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
    }
 
-   private static void Check_ItemLike_StaticProperties(OperationAnalysisContext context, INamedTypeSymbol enumType)
+   private static void Check_ItemLike_StaticProperties(
+      OperationAnalysisContext context,
+      INamedTypeSymbol enumType,
+      ImmutableArray<ISymbol> nonIgnoredMembers)
    {
-      foreach (var member in enumType.GetNonIgnoredMembers())
+      for (var i = 0; i < nonIgnoredMembers.Length; i++)
       {
+         var member = nonIgnoredMembers[i];
+
          if (member.IsStatic && member is IPropertySymbol property && SymbolEqualityComparer.Default.Equals(property.Type, enumType))
             ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier(context.CancellationToken)?.GetLocation() ?? Location.None, property.Name);
       }
@@ -389,9 +400,14 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       return ((TypeDeclarationSyntax)derivedType.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation();
    }
 
-   private static void ValidateCreateInvalidItem(OperationAnalysisContext context, INamedTypeSymbol enumType, ITypeSymbol keyType, Location location)
+   private static void ValidateCreateInvalidItem(
+      OperationAnalysisContext context,
+      INamedTypeSymbol enumType,
+      ITypeSymbol keyType,
+      ImmutableArray<ISymbol> nonIgnoredMembers,
+      Location location)
    {
-      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(keyType, context.CancellationToken, context);
+      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyType, context.CancellationToken, context);
 
       if (!hasCreateInvalidItemImplementation && enumType.IsAbstract)
       {
@@ -415,9 +431,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                        attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.SmartEnum.Properties.KEY_PROPERTY_NAME)?.GetLocation() ?? location, keyPropName);
    }
 
-   private static void EnumItemsMustBePublic(OperationAnalysisContext context, INamedTypeSymbol type, IReadOnlyList<IFieldSymbol> items)
+   private static void EnumItemsMustBePublic(OperationAnalysisContext context, INamedTypeSymbol type, ImmutableArray<IFieldSymbol> items)
    {
-      for (var i = 0; i < items.Count; i++)
+      for (var i = 0; i < items.Length; i++)
       {
          var item = items[i];
 

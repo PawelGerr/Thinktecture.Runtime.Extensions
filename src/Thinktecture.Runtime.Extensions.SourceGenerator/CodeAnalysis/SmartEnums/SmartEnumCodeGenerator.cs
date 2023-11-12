@@ -665,8 +665,10 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 ");
 
-         foreach (var itemName in _state.ItemNames)
+         for (var i = 0; i < _state.ItemNames.Count; i++)
          {
+            var itemName = _state.ItemNames[i];
+
             _sb.Append(@"
          AddItem(").Append(itemName).Append(", nameof(").Append(itemName).Append("));");
          }

@@ -24,4 +24,9 @@ public static class SymbolExtensions
    {
       return symbol.FindAttribute(predicate) is not null;
    }
+
+   public static bool IsIgnored(this ISymbol member)
+   {
+      return member.HasAttribute(static attrType => attrType.IsValueObjectMemberIgnoreAttribute());
+   }
 }

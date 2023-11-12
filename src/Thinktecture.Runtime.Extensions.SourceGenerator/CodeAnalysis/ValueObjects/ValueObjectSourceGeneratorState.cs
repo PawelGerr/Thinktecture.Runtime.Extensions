@@ -41,15 +41,14 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
       TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, true, cancellationToken).ToList();
+
+      var nonIgnoredMembers = type.GetNonIgnoredMembers();
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, true, true, cancellationToken).ToList();
       EqualityMembers = GetEqualityMembers();
 
-      var members = type.GetMembers();
-      var factoryValidationReturnType = members.IsDefaultOrEmpty
+      var factoryValidationReturnType = nonIgnoredMembers.IsDefaultOrEmpty
                                            ? null
-                                           : members.OfType<IMethodSymbol>()
-                                                    .FirstOrDefault(m => m.IsStatic && m.ReturnType.SpecialType != SpecialType.System_Void && m.Name == Constants.Methods.VALIDATE_FACTORY_ARGUMENTS)?
-                                                    .ReturnType;
+                                           : (nonIgnoredMembers.FirstOrDefault(m => m.IsStatic && m.Name == Constants.Methods.VALIDATE_FACTORY_ARGUMENTS && m is IMethodSymbol method && method.ReturnType.SpecialType != SpecialType.System_Void) as IMethodSymbol)?.ReturnType;
 
       if (factoryValidationReturnType is not null)
       {
