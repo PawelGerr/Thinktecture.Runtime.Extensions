@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
@@ -10,29 +9,28 @@ public sealed partial class BoundaryWithFactoryAndExplicitImplementation
    public decimal Lower { get; }
    public decimal Upper { get; }
 
-   static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref decimal lower, ref decimal upper)
+   static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref decimal lower, ref decimal upper)
    {
       if (lower <= upper)
          return;
 
-      validationResult = new ValidationResult($"Lower boundary '{lower}' must be less than upper boundary '{upper}'",
-                                              new[] { nameof(Lower), nameof(Upper) });
+      validationError = new ValidationError($"Lower boundary '{lower}' must be less than upper boundary '{upper}'");
    }
 
-   static ValidationResult? IValueObjectFactory<BoundaryWithFactoryAndExplicitImplementation, string>.Validate(string? value, IFormatProvider? provider, out BoundaryWithFactoryAndExplicitImplementation? item)
+   static ValidationError? IValueObjectFactory<BoundaryWithFactoryAndExplicitImplementation, string, ValidationError>.Validate(string? value, IFormatProvider? provider, out BoundaryWithFactoryAndExplicitImplementation? item)
    {
       item = null;
 
       if (value is null)
-         return ValidationResult.Success;
+         return null;
 
       var parts = value.Split(":", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
       if (parts.Length != 2)
-         return new ValidationResult("Invalid format.");
+         return new ValidationError("Invalid format.");
 
       if (!Decimal.TryParse(parts[0], provider, out var lower) || !Decimal.TryParse(parts[1], provider, out var upper))
-         return new ValidationResult("The provided values are not numbers.");
+         return new ValidationError("The provided values are not numbers.");
 
       return Validate(lower, upper, out item);
    }

@@ -41,8 +41,9 @@ public class ValueObjectDemos
          logger.Information("ValidationException is thrown because a product name cannot be an empty string.");
       }
 
-      var validationResult = ProductName.Validate("Milk", null, out var milk);
-      if (validationResult == ValidationResult.Success)
+      var validationError = ProductName.Validate("Milk", null, out var milk);
+
+      if (validationError is null)
          logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
 
       if (ProductName.TryCreate("Milk", out milk))
@@ -60,8 +61,9 @@ public class ValueObjectDemos
       var otherNullProductName2 = OtherProductName.Create(" ");
       logger.Information("Null-Product name: {NullProduct}", otherNullProductName2);
 
-      var nullValidationResult = ProductName.Validate(null, null, out nullProduct);
-      if (nullValidationResult == ValidationResult.Success)
+      var nullValidationError = ProductName.Validate(null, null, out nullProduct);
+
+      if (nullValidationError is null)
          logger.Information("Null-Product name: {NullProduct}", nullProduct);
 
       if (ProductName.TryCreate(null, out nullProduct))
@@ -144,42 +146,42 @@ public class ValueObjectDemos
       if (Boundary.TryCreate(lower: 1, upper: 2, out var boundaryWithTryCreate))
          logger.Information("Boundary with TryCreate: {Boundary}", boundaryWithTryCreate);
 
-      var validationResult = Boundary.Validate(lower: 1, upper: 2, out var boundaryWithValidate);
+      var validationError = Boundary.Validate(lower: 1, upper: 2, out var boundaryWithValidate);
 
-      if (validationResult == ValidationResult.Success)
+      if (validationError is null)
       {
          logger.Information("Boundary {Boundary} created via Validate", boundaryWithValidate);
       }
       else
       {
-         logger.Warning("Failed to create boundary. Validation result: {ValidationResult}", validationResult!.ErrorMessage);
+         logger.Warning("Failed to create boundary. Validation error: {ValidationError}", validationError.ToString());
       }
 
       var equal = boundaryWithCreate.Equals(boundaryWithCreate);
       logger.Information("Boundaries are equal: {Equal}", equal);
 
       // Custom implementation of IValueObjectFactory<Boundary, string>
-      validationResult = BoundaryWithFactories.Validate("3:4", null, out var boundaryFromString);
+      validationError = BoundaryWithFactories.Validate("3:4", null, out var boundaryFromString);
 
-      if (validationResult == ValidationResult.Success)
+      if (validationError is null)
       {
          logger.Information("BoundaryWithFactories '{Boundary}' created from string", boundaryFromString);
       }
       else
       {
-         logger.Warning("Failed to create BoundaryWithFactories from string. Validation result: {ValidationResult}", validationResult!.ErrorMessage);
+         logger.Warning("Failed to create BoundaryWithFactories from string. Validation error: {ValidationError}", validationError.ToString());
       }
 
       // Custom implementation of IValueObjectFactory<Boundary, (int Lower, int Upper)>
-      validationResult = BoundaryWithFactories.Validate((5, 6), null, out var boundaryFromTuple);
+      validationError = BoundaryWithFactories.Validate((5, 6), null, out var boundaryFromTuple);
 
-      if (validationResult == ValidationResult.Success)
+      if (validationError is null)
       {
          logger.Information("BoundaryWithFactories '{Boundary}' created from tuple", boundaryFromTuple);
       }
       else
       {
-         logger.Warning("Failed to create BoundaryWithFactories from tuple. Validation result: {ValidationResult}", validationResult!.ErrorMessage);
+         logger.Warning("Failed to create BoundaryWithFactories from tuple. Validation error: {ValidationError}", validationError.ToString());
       }
    }
 }

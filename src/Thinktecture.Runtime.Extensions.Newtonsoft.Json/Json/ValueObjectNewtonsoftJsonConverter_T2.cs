@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,9 +8,11 @@ namespace Thinktecture.Json;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
-   where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
+public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError> : JsonConverter
+   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
    where TKey : notnull
+   where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly Type _type = typeof(T);
    private static readonly Type _keyType = typeof(TKey);
@@ -60,10 +61,10 @@ public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey> : JsonConverter
       if (key is null)
          return null;
 
-      var validationResult = T.Validate(key, null, out var obj);
+      var validationError = T.Validate(key, null, out var obj);
 
-      if (validationResult != ValidationResult.Success && !_mayReturnInvalidObjects)
-         throw new JsonSerializationException(validationResult!.ErrorMessage ?? "JSON deserialization failed.");
+      if (validationError is not null && !_mayReturnInvalidObjects)
+         throw new JsonSerializationException(validationError.ToString() ?? "JSON deserialization failed.");
 
       return obj;
    }

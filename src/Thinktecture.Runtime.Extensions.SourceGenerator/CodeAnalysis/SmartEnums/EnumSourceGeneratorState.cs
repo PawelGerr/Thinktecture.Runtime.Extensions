@@ -10,6 +10,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
 
    public IMemberState KeyProperty { get; }
+   public ValidationErrorState ValidationError { get; }
    public EnumSettings Settings { get; }
    public BaseTypeState? BaseType { get; }
 
@@ -28,14 +29,15 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
       IMemberState keyProperty,
+      ValidationErrorState validationError,
       ImmutableArray<ISymbol> nonIgnoredMembers,
       EnumSettings settings,
-      bool hasCreateInvalidItemImplementation,
-      CancellationToken cancellationToken)
+      bool hasCreateInvalidItemImplementation, CancellationToken cancellationToken)
    {
       KeyProperty = keyProperty;
       Settings = settings;
       HasCreateInvalidItemImplementation = hasCreateInvalidItemImplementation;
+      ValidationError = validationError;
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
@@ -83,6 +85,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
              && KeyProperty.Equals(other.KeyProperty)
+             && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
              && Equals(BaseType, other.BaseType)
              && ItemNames.Equals(other.ItemNames)
@@ -99,6 +102,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
+         hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ItemNames.GetHashCode();

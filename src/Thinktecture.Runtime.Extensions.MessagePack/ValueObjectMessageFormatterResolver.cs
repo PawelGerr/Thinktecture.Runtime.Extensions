@@ -39,22 +39,25 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
 
       static Cache()
       {
+         // T could be derived type (like nested Smart Enum)
          var type = typeof(T);
+
          var metadata = KeyedValueObjectMetadataLookup.Find(type);
+
+         if (metadata is not null)
+            type = metadata.Type;
+
          var customFactory = type.GetCustomAttributes<ValueObjectFactoryAttribute>()
                                  .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack));
 
-         Type modelType;
          Type keyType;
 
          if (customFactory is not null)
          {
-            modelType = type;
             keyType = customFactory.Type;
          }
          else if (metadata is not null)
          {
-            modelType = metadata.Type;
             keyType = metadata.KeyType;
          }
          else
@@ -62,10 +65,12 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
             return;
          }
 
-         var formatterTypeDefinition = modelType.IsClass
-                                          ? typeof(ValueObjectMessagePackFormatter<,>)
-                                          : typeof(StructValueObjectMessagePackFormatter<,>);
-         var formatterType = formatterTypeDefinition.MakeGenericType(modelType, keyType);
+         var validationErrorType = type.GetCustomAttribute<ValueObjectValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
+
+         var formatterTypeDefinition = type.IsClass
+                                          ? typeof(ValueObjectMessagePackFormatter<,,>)
+                                          : typeof(StructValueObjectMessagePackFormatter<,,>);
+         var formatterType = formatterTypeDefinition.MakeGenericType(type, keyType, validationErrorType);
 
          var formatter = Activator.CreateInstance(formatterType);
 

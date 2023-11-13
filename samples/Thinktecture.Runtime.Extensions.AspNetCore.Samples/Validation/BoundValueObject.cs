@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture.Validation;
 
 public class BoundValueObject<T, TKey> : IBoundParam
-   where T : IValueObjectFactory<T, TKey>
+   where T : IValueObjectFactory<T, TKey, ValidationError>
    where TKey : IParsable<TKey>
 {
    private readonly T? _item;
@@ -30,15 +30,15 @@ public class BoundValueObject<T, TKey> : IBoundParam
       }
       else
       {
-         var validationResult = T.Validate(key, formatProvider, out var item);
+         var validationError = T.Validate(key, formatProvider, out var item);
 
-         if (validationResult is null || item is IValidatableEnum)
+         if (validationError is null || item is IValidatableEnum)
          {
             value = new BoundValueObject<T, TKey>(item);
          }
          else
          {
-            value = new BoundValueObject<T, TKey>(validationResult.ErrorMessage ?? $"The value '{s}' cannot be converted to '{typeof(T).FullName}'.");
+            value = new BoundValueObject<T, TKey>(validationError.ToString());
          }
       }
 
@@ -47,7 +47,7 @@ public class BoundValueObject<T, TKey> : IBoundParam
 }
 
 public class BoundValueObject<T> : IBoundParam
-   where T : IValueObjectFactory<T, string>
+   where T : IValueObjectFactory<T, string, ValidationError>
 {
    private readonly T? _item;
    public T? Value => Error is null ? _item : throw new ValidationException(Error);
@@ -66,15 +66,15 @@ public class BoundValueObject<T> : IBoundParam
 
    public static bool TryParse(string s, IFormatProvider? formatProvider, out BoundValueObject<T> value)
    {
-      var validationResult = T.Validate(s, formatProvider, out var item);
+      var validationError = T.Validate(s, formatProvider, out var item);
 
-      if (validationResult is null || item is IValidatableEnum)
+      if (validationError is null || item is IValidatableEnum)
       {
          value = new BoundValueObject<T>(item);
       }
       else
       {
-         value = new BoundValueObject<T>(validationResult.ErrorMessage ?? $"The value '{s}' cannot be converted to '{typeof(T).FullName}'.");
+         value = new BoundValueObject<T>(validationError.ToString());
       }
 
       return true;

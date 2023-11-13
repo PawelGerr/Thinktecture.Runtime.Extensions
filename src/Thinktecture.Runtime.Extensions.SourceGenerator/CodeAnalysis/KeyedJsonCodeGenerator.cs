@@ -34,7 +34,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       }
 
       _sb.Append(@"
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").Append(_state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(@">))]
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").Append(_state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(", ").Append(_state.AttributeInfo.ValidationError.TypeFullyQualified).Append(@">))]
 partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
 {
 }

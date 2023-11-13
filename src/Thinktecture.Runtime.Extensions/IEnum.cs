@@ -20,12 +20,14 @@ public interface IEnum<TKey> : IKeyedValueObject<TKey>
 /// </summary>
 /// <typeparam name="T">Type of the enumeration implementing this interface.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 /// <remarks>
 /// Don't implement this interface directly. It will be implemented by a source generator.
 /// </remarks>
-public interface IEnum<TKey, T> : IEnum<TKey>, IKeyedValueObject<T, TKey>
+public interface IEnum<TKey, T, out TValidationError> : IEnum<TKey>, IKeyedValueObject<T, TKey, TValidationError>
    where T : IEnum<TKey>
    where TKey : notnull
+   where TValidationError : class, IValidationError<TValidationError>
 {
    /// <summary>
    /// Gets all valid items.

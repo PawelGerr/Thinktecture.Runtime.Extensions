@@ -46,21 +46,21 @@ public sealed class ValueObjectNewtonsoftJsonConverter : JsonConverter
 
    private static JsonConverter CreateConverter(Type type)
    {
+      // type could be derived type (like nested Smart Enum)
       var metadata = KeyedValueObjectMetadataLookup.Find(type);
-      var customFactory = type.GetCustomAttributes<ValueObjectFactoryAttribute>()
-                              .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson));
+      var modelType = metadata?.Type ?? type;
 
-      Type modelType;
+      var customFactory = modelType.GetCustomAttributes<ValueObjectFactoryAttribute>()
+                                   .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson));
+
       Type keyType;
 
       if (customFactory is not null)
       {
-         modelType = type;
          keyType = customFactory.Type;
       }
       else if (metadata is not null)
       {
-         modelType = metadata.Type;
          keyType = metadata.KeyType;
       }
       else
@@ -68,7 +68,9 @@ public sealed class ValueObjectNewtonsoftJsonConverter : JsonConverter
          throw new InvalidOperationException($"The provided type is not serializable by the '{nameof(ValueObjectNewtonsoftJsonConverter)}'. Type: {type.FullName}");
       }
 
-      var converterType = typeof(ValueObjectNewtonsoftJsonConverter<,>).MakeGenericType(modelType, keyType);
+      var validationErrorType = modelType.GetCustomAttribute<ValueObjectValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
+
+      var converterType = typeof(ValueObjectNewtonsoftJsonConverter<,,>).MakeGenericType(modelType, keyType, validationErrorType);
       var converter = Activator.CreateInstance(converterType);
 
       return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));

@@ -10,9 +10,11 @@ namespace Thinktecture.Formatters;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public sealed class StructValueObjectMessagePackFormatter<T, TKey> : IMessagePackFormatter<T>, IMessagePackFormatter<T?>
-   where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
+public sealed class StructValueObjectMessagePackFormatter<T, TKey, TValidationError> : IMessagePackFormatter<T>, IMessagePackFormatter<T?>
+   where T : struct, IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
    where TKey : notnull
+   where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
 
@@ -73,10 +75,10 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey> : IMessagePac
 
    private static T Deserialize(TKey key)
    {
-      var validationResult = T.Validate(key, null, out var obj);
+      var validationError = T.Validate(key, null, out var obj);
 
-      if (validationResult is not null && !_mayReturnInvalidObjects)
-         throw new ValidationException(validationResult.ErrorMessage ?? "MessagePack deserialization failed.");
+      if (validationError is not null && !_mayReturnInvalidObjects)
+         throw new ValidationException(validationError.ToString() ?? "MessagePack deserialization failed.");
 
       return obj;
    }

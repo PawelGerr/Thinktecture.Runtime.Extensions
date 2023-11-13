@@ -21,9 +21,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                  namespace Thinktecture.Tests
                                                                  {
-                                                                    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                                    partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                                       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                                    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                                    partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                                       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                                        global::Thinktecture.IValueObjectConverter<string>,
                                                                        global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                                     {
@@ -127,16 +127,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                        /// <param name="key">The identifier to return an enumeration item for.</param>
                                                                        /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                                        /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                                       /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                                       public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                       /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                                       public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                                        {
                                                                           if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                                           {
-                                                                             return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                                             return null;
                                                                           }
                                                                           else
                                                                           {
-                                                                             return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                                             return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                                           }
                                                                        }
 
@@ -342,6 +342,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                           return lookup;
                                                                  #endif
                                                                        }
+
+                                                                       private static TError CreateValidationError<TError>(string message)
+                                                                          where TError : class, global::Thinktecture.IValidationError<TError>
+                                                                       {
+                                                                          return TError.Create(message);
+                                                                       }
                                                                     }
                                                                  }
 
@@ -386,8 +392,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                   partial class TestEnum :
                                                                                      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                   {
-                                                                                     private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
-                                                                                        where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                                                     private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                        where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
                                                                                      {
                                                                                         return T.Validate(key, provider, out result);
                                                                                      }
@@ -395,12 +401,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                      /// <inheritdoc />
                                                                                      public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                      {
-                                                                                        var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+                                                                                        var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
 
-                                                                                        if(validationResult is null)
+                                                                                        if(validationError is null)
                                                                                            return result!;
 
-                                                                                        throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                                                        throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
                                                                                      }
 
                                                                                      /// <inheritdoc />
@@ -415,8 +421,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                            return false;
                                                                                         }
 
-                                                                                        var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
-                                                                                        return validationResult is null;
+                                                                                        var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                                                        return validationError is null;
                                                                                      }
                                                                                   }
 
@@ -613,8 +619,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                               partial class TestEnum :
                                                                                                  global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                               {
-                                                                                                 private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
-                                                                                                    where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                                                                 private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                                    where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
                                                                                                  {
                                                                                                     return T.Validate(key, provider, out result);
                                                                                                  }
@@ -622,7 +628,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                  /// <inheritdoc />
                                                                                                  public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                                  {
-                                                                                                    var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+                                                                                                    var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                                                                     return result!;
                                                                                                  }
 
@@ -638,7 +644,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                        return false;
                                                                                                     }
 
-                                                                                                    var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                                                                    var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                                                                     return true;
                                                                                                  }
                                                                                               }
@@ -652,8 +658,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                partial class TestEnum :
                                                                                   global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                                                {
-                                                                                  private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
-                                                                                     where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>
+                                                                                  private static global::Thinktecture.ValidationError? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                     where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>
                                                                                   {
                                                                                      return T.Validate(key, provider, out result);
                                                                                   }
@@ -662,12 +668,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                   public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                   {
                                                                                      var key = int.Parse(s, provider);
-                                                                                     var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out var result);
+                                                                                     var validationError = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out var result);
 
-                                                                                     if(validationResult is null)
+                                                                                     if(validationError is null)
                                                                                         return result!;
 
-                                                                                     throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                                                     throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
                                                                                   }
 
                                                                                   /// <inheritdoc />
@@ -688,8 +694,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                         return false;
                                                                                      }
 
-                                                                                     var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out result!);
-                                                                                     return validationResult is null;
+                                                                                     var validationError = Validate<global::Thinktecture.Tests.TestEnum>(key, provider, out result!);
+                                                                                     return validationError is null;
                                                                                   }
                                                                                }
 
@@ -814,9 +820,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -920,16 +926,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -1031,6 +1037,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -1070,9 +1082,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -1176,16 +1188,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -1366,6 +1378,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -1415,9 +1433,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -1536,16 +1554,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -1751,6 +1769,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -1811,9 +1835,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       AssertOutput(mainOutput, _GENERATED_HEADER + """
 
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::TestEnum, string>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::TestEnum?>
                                                       {
@@ -1917,16 +1941,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
                                                          {
                                                             if(global::TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -2132,6 +2156,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
 
                                                    """);
@@ -2171,8 +2201,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                        partial class TestEnum :
                                                           global::System.IParsable<global::TestEnum>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::TestEnum? result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, string>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, string, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -2180,12 +2210,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                           /// <inheritdoc />
                                                           public static global::TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = Validate<global::TestEnum>(s, provider, out var result);
+                                                             var validationError = Validate<global::TestEnum>(s, provider, out var result);
 
-                                                             if(validationResult is null)
+                                                             if(validationError is null)
                                                                 return result!;
 
-                                                             throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
                                                           }
 
                                                           /// <inheritdoc />
@@ -2200,8 +2230,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::TestEnum>(s, provider, out result!);
-                                                             return validationResult is null;
+                                                             var validationError = Validate<global::TestEnum>(s, provider, out result!);
+                                                             return validationError is null;
                                                           }
                                                        }
 
@@ -2311,9 +2341,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -2417,16 +2447,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -2812,6 +2842,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -2869,9 +2905,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
@@ -3016,18 +3052,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
                                                                if(key is not null)
                                                                   item = CreateAndCheckInvalidItem(key);
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -3248,6 +3284,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -3285,9 +3327,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    namespace Thinktecture.Tests
                                                    {
                                                       [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                      partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum>
@@ -3429,18 +3471,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
                                                                if(key is not null)
                                                                   item = CreateAndCheckInvalidItem(key);
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -3649,6 +3691,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -3690,8 +3738,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                        partial struct TestEnum :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestEnum>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -3699,7 +3747,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                              return result!;
                                                           }
 
@@ -3715,7 +3763,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                              return true;
                                                           }
                                                        }
@@ -3789,9 +3837,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
@@ -3940,18 +3988,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="name">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="name"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="name"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(name, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
                                                                if(name is not null)
                                                                   item = CreateAndCheckInvalidItem(name);
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{name}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Name)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{name}'.");
                                                             }
                                                          }
 
@@ -4172,6 +4220,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -4245,9 +4299,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -4339,16 +4393,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -4550,6 +4604,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    #else
                                                             return lookup;
                                                    #endif
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -4634,9 +4694,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -4728,16 +4788,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -4939,6 +4999,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    #else
                                                             return lookup;
                                                    #endif
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -5082,11 +5148,11 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5177,16 +5243,16 @@ namespace Thinktecture.Tests
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -5389,12 +5455,17 @@ namespace Thinktecture.Tests
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
                                                                   namespace Thinktecture.Tests;
@@ -5475,11 +5546,11 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int>))]
-                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int>,
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
+                                                      partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -5571,16 +5642,16 @@ namespace Thinktecture.Tests
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">A valid instance of <see cref="TestEnum"/>; otherwise <c>null</c>.</param>
-                                                         /// <returns> <see cref="System.ComponentModel.DataAnnotations.ValidationResult.Success"/> if a valid item with provided <paramref name="key"/> exists; <see cref="System.ComponentModel.DataAnnotations.ValidationResult"/> with an error message otherwise.</returns>
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
                                                             if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
                                                             {
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
                                                             else
                                                             {
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult($"There is no item of type 'TestEnum' with the identifier '{key}'.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestEnum.Key)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
                                                             }
                                                          }
 
@@ -5783,12 +5854,17 @@ namespace Thinktecture.Tests
                                                             return lookup;
                                                    #endif
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(comparisonOperatorsOutput, _GENERATED_HEADER + """
 
                                                                   namespace Thinktecture.Tests;

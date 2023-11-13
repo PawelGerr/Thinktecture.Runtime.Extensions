@@ -130,25 +130,25 @@ public class ReadJson : JsonTestsBase
    private static T Deserialize<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(json, namingStrategy);
+      return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(json, namingStrategy);
    }
 
    private static T? DeserializeNullableStruct<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return DeserializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey>>(json, namingStrategy);
+      return DeserializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(json, namingStrategy);
    }
 
    private static T DeserializeStruct<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(json, namingStrategy);
+      return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(json, namingStrategy);
    }
 
    private static T DeserializeWithConverter<T, TConverter>(

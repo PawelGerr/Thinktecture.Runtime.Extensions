@@ -69,7 +69,7 @@ public sealed class ValueObjectAttribute : Attribute
    /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - on non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Addition</code>, <code>op_CheckedAddition</code>).
+   /// - if key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Addition</c>, <c>op_CheckedAddition</c>).
    /// </summary>
    public OperatorsGeneration AdditionOperators { get; set; }
 
@@ -79,7 +79,7 @@ public sealed class ValueObjectAttribute : Attribute
    /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - on non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Subtraction</code>, <code>op_CheckedSubtraction</code>).
+   /// - if key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Subtraction</c>, <c>op_CheckedSubtraction</c>).
    /// </summary>
    public OperatorsGeneration SubtractionOperators { get; set; }
 
@@ -89,7 +89,7 @@ public sealed class ValueObjectAttribute : Attribute
    /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - on non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Multiply</code>, <code>op_CheckedMultiply</code>).
+   /// - if key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Multiply</c>, <c>op_CheckedMultiply</c>).
    /// </summary>
    public OperatorsGeneration MultiplyOperators { get; set; }
 
@@ -99,7 +99,7 @@ public sealed class ValueObjectAttribute : Attribute
    /// This setting has no effect:
    /// - if <see cref="SkipFactoryMethods"/> is set <c>true</c>
    /// - on non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Division</code>, <code>op_CheckedDivision</code>).
+   /// - if key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Division</c>, <c>op_CheckedDivision</c>).
    /// </summary>
    public OperatorsGeneration DivisionOperators { get; set; }
 
@@ -111,7 +111,7 @@ public sealed class ValueObjectAttribute : Attribute
    ///
    /// This setting has no effect:
    /// - on non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_GreaterThan</code>, <code>op_GreaterThanOrEqual</code>, <code>op_LessThan</code>, <code>op_LessThanOrEqual</code>).
+   /// - if key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_GreaterThan</c>, <c>op_GreaterThanOrEqual</c>, <c>op_LessThan</c>, <c>op_LessThanOrEqual</c>).
    /// </summary>
    public OperatorsGeneration ComparisonOperators { get; set; }
 
@@ -125,7 +125,7 @@ public sealed class ValueObjectAttribute : Attribute
    ///
    /// This setting has no effect:
    /// - on non-keyed value objects (i.e. has more than 1 field/property)
-   /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Equality</code>, <code>op_Inequality</code>).
+   /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Equality</c>, <c>op_Inequality</c>).
    /// </summary>
    public OperatorsGeneration EqualityComparisonOperators
    {

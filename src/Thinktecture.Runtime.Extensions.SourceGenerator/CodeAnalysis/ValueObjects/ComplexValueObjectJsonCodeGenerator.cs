@@ -162,7 +162,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.Append(@"
          }
 
-         var validationResult = ").Append(_type.TypeFullyQualified).Append(".Validate(");
+         var validationError = ").Append(_type.TypeFullyQualified).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -177,8 +177,8 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.Append(@"
                                     out var obj);
 
-         if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-            throw new global::System.Text.Json.JsonException($""Unable to deserialize \""").Append(_type.Name).Append(@"\"". Error: {validationResult!.ErrorMessage}."");
+         if (validationError is not null)
+            throw new global::System.Text.Json.JsonException(validationError.ToString() ?? ""Unable to deserialize \""").Append(_type.Name).Append(@"\""."");
 
          return obj;
       }

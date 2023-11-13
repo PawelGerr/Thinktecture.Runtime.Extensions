@@ -78,6 +78,11 @@ public static class TypeSymbolExtensions
       return type is { Name: "ValueObjectFactoryAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsValueObjectValidationErrorAttribute(this INamedTypeSymbol type)
+   {
+      return type is { Name: "ValueObjectValidationErrorAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
    public static bool IsStructLayoutAttribute(this ITypeSymbol type)
    {
       return type is

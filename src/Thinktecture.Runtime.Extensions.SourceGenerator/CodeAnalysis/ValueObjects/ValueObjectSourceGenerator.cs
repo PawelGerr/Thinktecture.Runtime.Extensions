@@ -158,6 +158,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var parsables = validStates
          .Select((state, _) => new ParsableGeneratorState(state.State,
                                                           state.State.KeyMember?.Member,
+                                                          state.State.ValidationError,
                                                           state.Settings.SkipIParsable,
                                                           state.State.KeyMember?.Member.IsParsable ?? false,
                                                           false,
@@ -354,7 +355,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
          var attributeInfo = new AttributeInfo(type);
          var settings = new AllValueObjectSettings(context.Attributes[0]);
-         var state = new ValueObjectSourceGeneratorState(factory, type, new ValueObjectSettings(settings, attributeInfo), cancellationToken);
+         var state = new ValueObjectSourceGeneratorState(factory, type, attributeInfo.ValidationError, new ValueObjectSettings(settings, attributeInfo), cancellationToken);
 
          if (state.HasKeyMember)
          {

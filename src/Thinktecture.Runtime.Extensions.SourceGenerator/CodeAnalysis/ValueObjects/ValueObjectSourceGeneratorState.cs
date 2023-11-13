@@ -26,14 +26,17 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
 
    public EqualityInstanceMemberInfo? KeyMember => HasKeyMember ? EqualityMembers[0] : null;
 
+   public ValidationErrorState ValidationError { get; }
    public ValueObjectSettings Settings { get; }
 
    public ValueObjectSourceGeneratorState(
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
+      ValidationErrorState validationError,
       ValueObjectSettings settings,
       CancellationToken cancellationToken)
    {
+      ValidationError = validationError;
       Settings = settings;
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
@@ -115,6 +118,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
              && FactoryValidationReturnType == other.FactoryValidationReturnType
+             && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
              && EqualityMembers.SequenceEqual(other.EqualityMembers);
@@ -127,6 +131,7 @@ public sealed class ValueObjectSourceGeneratorState : ITypeInformation, IEquatab
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ FactoryValidationReturnType?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();

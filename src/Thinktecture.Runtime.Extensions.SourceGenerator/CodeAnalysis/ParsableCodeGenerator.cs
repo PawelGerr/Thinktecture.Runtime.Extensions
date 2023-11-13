@@ -34,8 +34,8 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    {
       var keyType = state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod ? "string" : state.KeyMember?.TypeFullyQualified;
       sb.Append(@"
-   private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" result)
-      where T : global::Thinktecture.IValueObjectFactory<").Append(state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(@">
+   private static ").Append(state.ValidationError.TypeFullyQualified).Append("? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" result)
+      where T : global::Thinktecture.IValueObjectFactory<").Append(state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(", ").Append(state.ValidationError.TypeFullyQualified).Append(@">
    {
       return T.Validate(key, provider, out result);
    }");
@@ -52,13 +52,13 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
-      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out var result);");
+      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out var result);");
       }
       else if (state.KeyMember is not null)
       {
          sb.Append(@"
       var key = ").Append(state.KeyMember.TypeFullyQualified).Append(@".Parse(s, provider);
-      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out var result);");
+      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out var result);");
       }
 
       if (_isForValidatableEnum)
@@ -71,10 +71,10 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       {
          sb.Append(@"
 
-      if(validationResult is null)
+      if(validationError is null)
          return result!;
 
-      throw new global::System.FormatException(validationResult.ErrorMessage);
+      throw new global::System.FormatException(validationError.ToString() ?? ""Unable to parse \""").Append(state.Type.Name).Append(@"\""."");
    }");
       }
    }
@@ -99,7 +99,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       {
          sb.Append(@"
 
-      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out result!);");
+      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out result!);");
       }
       else if (state.KeyMember is not null)
       {
@@ -111,7 +111,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          return false;
       }
 
-      var validationResult = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out result!);");
+      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out result!);");
       }
 
       if (_isForValidatableEnum)
@@ -123,7 +123,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       else
       {
          sb.Append(@"
-      return validationResult is null;
+      return validationError is null;
    }");
       }
    }

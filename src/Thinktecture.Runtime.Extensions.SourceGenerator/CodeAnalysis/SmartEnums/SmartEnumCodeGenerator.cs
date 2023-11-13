@@ -51,9 +51,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.GenerateStructLayoutAttributeIfRequired(_state);
 
       _sb.Append(@"
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">))]
-   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@">,
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(@">,
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(@">))]
+   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(@">,
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(@">,
       global::Thinktecture.IValueObjectConverter<").Append(_state.KeyProperty.TypeFullyQualified).Append(">,");
 
       foreach (var desiredFactory in _state.Settings.DesiredFactories)
@@ -62,7 +62,7 @@ namespace ").Append(_state.Namespace).Append(@"
             continue;
 
          _sb.Append(@"
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(desiredFactory.TypeFullyQualified).Append(">,");
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(desiredFactory.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">,");
 
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
@@ -184,6 +184,7 @@ namespace ").Append(_state.Namespace).Append(@"
          GenerateMap();
 
       GenerateGetLookup();
+      GenerateValidationErrorFactory();
 
       _sb.Append(@"
    }");
@@ -498,12 +499,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").Append(_state.KeyProperty.ArgumentName.Raw).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
       /// <param name=""item"">A valid instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>; otherwise <c>null</c>.</param>
-      /// <returns> <see cref=""System.ComponentModel.DataAnnotations.ValidationResult.Success""/> if a valid item with provided <paramref name=""").Append(_state.KeyProperty.ArgumentName.Raw).Append(@"""/> exists; <see cref=""System.ComponentModel.DataAnnotations.ValidationResult""/> with an error message otherwise.</returns>
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName.Escaped).Append(", global::System.IFormatProvider? ").Append(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").Append(_state.TypeFullyQualified).Append(@" item)
+      /// <returns><c>null</c> if a valid item with provided <paramref name=""").Append(_state.KeyProperty.ArgumentName.Raw).Append($@"""/> exists; <see cref=""").Append(_state.ValidationError.TypeFullyQualified).Append(@"""/> with an error message otherwise.</returns>
+      public static ").Append(_state.ValidationError.TypeFullyQualified).Append("? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").Append(_state.KeyProperty.TypeFullyQualified).Append(" ").Append(_state.KeyProperty.ArgumentName.Escaped).Append(", global::System.IFormatProvider? ").Append(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").Append(_state.TypeFullyQualified).Append(@" item)
       {
          if(").Append(_state.TypeFullyQualified).Append(".TryGet(").Append(_state.KeyProperty.ArgumentName.Escaped).Append(@", out item))
          {
-            return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+            return null;
          }
          else
          {");
@@ -524,7 +525,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult($""There is no item of type '").Append(_state.TypeMinimallyQualified).Append("' with the identifier '{").Append(_state.KeyProperty.ArgumentName.Escaped).Append(@"}'."", global::Thinktecture.SingleItem.Collection(nameof(").Append(_state.TypeFullyQualified).Append(".").Append(_state.KeyProperty.Name).Append(@")));
+            return CreateValidationError<").Append(_state.ValidationError.TypeFullyQualified).Append(@">($""There is no item of type '").Append(_state.TypeMinimallyQualified).Append("' with the identifier '{").Append(_state.KeyProperty.ArgumentName.Escaped).Append(@"}'."");
          }
       }");
    }
@@ -870,6 +871,17 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          GenerateConstructor(ownCtorArgs.Concat(baseArgs).ToList(), baseArgs);
       }
+   }
+
+   private void GenerateValidationErrorFactory()
+   {
+      _sb.Append(@"
+
+      private static TError CreateValidationError<TError>(string message)
+         where TError : class, global::Thinktecture.IValidationError<TError>
+      {
+         return TError.Create(message);
+      }");
    }
 
    [MethodImpl(MethodImplOptions.AggressiveInlining)]

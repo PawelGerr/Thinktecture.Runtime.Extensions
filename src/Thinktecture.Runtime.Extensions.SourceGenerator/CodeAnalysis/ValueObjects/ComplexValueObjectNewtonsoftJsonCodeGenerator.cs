@@ -162,7 +162,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.Append(@"
          }
 
-         var validationResult = ").Append(_type.TypeFullyQualified).Append(".Validate(");
+         var validationError = ").Append(_type.TypeFullyQualified).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -177,16 +177,16 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.Append(@"
                                     out var obj);
 
-         if (validationResult != System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         if (validationError is not null)
          {
             var (lineNumber, linePosition) = GetLineInfo(reader);
 
             throw new global::Newtonsoft.Json.JsonSerializationException(
-               $""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Error: {validationResult!.ErrorMessage}."",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
-                  null);
+               validationError.ToString() ?? ""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."",
+               reader.Path,
+               lineNumber,
+               linePosition,
+               null);
          }
 
          return obj;

@@ -4,7 +4,7 @@ using Thinktecture.Formatters;
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 
 [SmartEnum<string>(IsValidatable = true)]
-[MessagePackFormatter(typeof(ValueObjectMessagePackFormatter<StringBasedEnumWithFormatter, string>))]
+[MessagePackFormatter(typeof(ValueObjectMessagePackFormatter<StringBasedEnumWithFormatter, string, ValidationError>))]
 public sealed partial class StringBasedEnumWithFormatter
 {
    public static readonly StringBasedEnumWithFormatter ValueA = new("A");

@@ -8,9 +8,11 @@ namespace Thinktecture;
 /// </summary>
 /// <typeparam name="T">Type of the concrete enumeration.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public class ValueObjectTypeConverter<T, TKey> : TypeConverter
-   where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
+public class ValueObjectTypeConverter<T, TKey, TValidationError> : TypeConverter
+   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
    where TKey : notnull
+   where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly Type _type = typeof(T);
    private static readonly Type? _nullableType = !typeof(T).IsClass ? typeof(Nullable<>).MakeGenericType(typeof(T)) : null;
@@ -69,12 +71,12 @@ public class ValueObjectTypeConverter<T, TKey> : TypeConverter
 
    private static T? ConvertFromKey(TKey key, IFormatProvider? culture)
    {
-      var validationResult = T.Validate(key, culture, out var item);
+      var validationError = T.Validate(key, culture, out var item);
 
-      if (validationResult is null || _mayReturnInvalidObjects)
+      if (validationError is null || _mayReturnInvalidObjects)
          return item;
 
-      throw new FormatException(validationResult.ErrorMessage);
+      throw new FormatException(validationError.ToString());
    }
 
    /// <inheritdoc />

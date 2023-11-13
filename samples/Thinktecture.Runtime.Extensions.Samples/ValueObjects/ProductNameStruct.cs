@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.ValueObjects;
 
@@ -10,18 +9,18 @@ public readonly partial struct ProductNameStruct
    [ValueObjectMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    private string Value { get; }
 
-   static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref string value)
+   static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)
    {
       if (String.IsNullOrWhiteSpace(value))
       {
          value = null!;
-         validationResult = new ValidationResult("Product name cannot be empty.");
+         validationError = new ValidationError("Product name cannot be empty.");
          return;
       }
 
       if (value.Length == 1)
       {
-         validationResult = new ValidationResult("Product name cannot be 1 character long.");
+         validationError = new ValidationError("Product name cannot be 1 character long.");
          return;
       }
 

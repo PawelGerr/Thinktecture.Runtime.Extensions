@@ -6,11 +6,12 @@ using Thinktecture.Internal;
 namespace Thinktecture.Text.Json.Serialization;
 
 /// <summary>
-/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey}"/>.
+/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
 /// </summary>
-public sealed class ValueObjectJsonConverterFactory<T, TKey> : JsonConverterFactory
-   where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+public sealed class ValueObjectJsonConverterFactory<T, TKey, TValidationError> : JsonConverterFactory
+   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
    where TKey : notnull
+   where TValidationError : class, IValidationError<TValidationError>
 {
    /// <inheritdoc />
    public override bool CanConvert(Type typeToConvert)
@@ -24,12 +25,12 @@ public sealed class ValueObjectJsonConverterFactory<T, TKey> : JsonConverterFact
       ArgumentNullException.ThrowIfNull(typeToConvert);
       ArgumentNullException.ThrowIfNull(options);
 
-      return new ValueObjectJsonConverter<T, TKey>(options);
+      return new ValueObjectJsonConverter<T, TKey, TValidationError>(options);
    }
 }
 
 /// <summary>
-/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey}"/>.
+/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
 /// </summary>
 public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
 {
@@ -46,21 +47,21 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
       ArgumentNullException.ThrowIfNull(typeToConvert);
       ArgumentNullException.ThrowIfNull(options);
 
+      // typeToConvert could be derived type (like nested Smart Enum)
       var metadata = KeyedValueObjectMetadataLookup.Find(typeToConvert);
-      var customFactory = typeToConvert.GetCustomAttributes<ValueObjectFactoryAttribute>()
-                                       .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson));
+      var type = metadata?.Type ?? typeToConvert;
 
-      Type type;
+      var customFactory = type.GetCustomAttributes<ValueObjectFactoryAttribute>()
+                              .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson));
+
       Type keyType;
 
       if (customFactory is not null)
       {
-         type = typeToConvert;
          keyType = customFactory.Type;
       }
       else if (metadata is not null)
       {
-         type = metadata.Type;
          keyType = metadata.KeyType;
       }
       else
@@ -68,7 +69,9 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
          throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");
       }
 
-      var converterType = typeof(ValueObjectJsonConverter<,>).MakeGenericType(type, keyType);
+      var validationErrorType = type.GetCustomAttribute<ValueObjectValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
+
+      var converterType = typeof(ValueObjectJsonConverter<,,>).MakeGenericType(type, keyType, validationErrorType);
       var converter = Activator.CreateInstance(converterType, options);
 
       return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));

@@ -163,8 +163,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             partial class TestValueObject :
                                                                global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                             {
-                                                               private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
-                                                                  where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                               private static global::Thinktecture.ValidationError? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                                  where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                                {
                                                                   return T.Validate(key, provider, out result);
                                                                }
@@ -173,12 +173,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                                {
                                                                   var key = int.Parse(s, provider);
-                                                                  var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
+                                                                  var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
-                                                                  if(validationResult is null)
+                                                                  if(validationError is null)
                                                                      return result!;
 
-                                                                  throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                                  throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                                }
 
                                                                /// <inheritdoc />
@@ -199,8 +199,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                      return false;
                                                                   }
 
-                                                                  var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
-                                                                  return validationResult is null;
+                                                                  var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
+                                                                  return validationError is null;
                                                                }
                                                             }
 
@@ -214,8 +214,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                       partial struct TestValueObject :
                                                                          global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                                       {
-                                                                         private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
-                                                                            where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                                         private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
+                                                                            where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                                          {
                                                                             return T.Validate(key, provider, out result);
                                                                          }
@@ -223,12 +223,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                          /// <inheritdoc />
                                                                          public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                                          {
-                                                                            var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
+                                                                            var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
-                                                                            if(validationResult is null)
+                                                                            if(validationError is null)
                                                                                return result!;
 
-                                                                            throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                                            throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                                          }
 
                                                                          /// <inheritdoc />
@@ -243,8 +243,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                return false;
                                                                             }
 
-                                                                            var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
-                                                                            return validationResult is null;
+                                                                            var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
+                                                                            return validationError is null;
                                                                          }
                                                                       }
 
@@ -258,8 +258,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                      partial class TestValueObject :
                                                                         global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                                      {
-                                                                        private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
-                                                                           where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                                        private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                                           where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                                         {
                                                                            return T.Validate(key, provider, out result);
                                                                         }
@@ -267,12 +267,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                         /// <inheritdoc />
                                                                         public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                                         {
-                                                                           var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
+                                                                           var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
-                                                                           if(validationResult is null)
+                                                                           if(validationError is null)
                                                                               return result!;
 
-                                                                           throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                                           throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                                         }
 
                                                                         /// <inheritdoc />
@@ -287,8 +287,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                               return false;
                                                                            }
 
-                                                                           var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
-                                                                           return validationResult is null;
+                                                                           var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
+                                                                           return validationError is null;
                                                                         }
                                                                      }
 
@@ -747,13 +747,13 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                                private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                                                               public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                                                               public static global::Thinktecture.ValidationError? Validate(
                                                                                                   out global::Thinktecture.Tests.TestValueObject? obj)
                                                                                                {
-                                                                                                  var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                                                                  ValidateFactoryArguments(ref validationResult);
+                                                                                                  global::Thinktecture.ValidationError? validationError = null;
+                                                                                                  ValidateFactoryArguments(ref validationError);
 
-                                                                                                  if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                                                                  if (validationError is null)
                                                                                                   {
                                                                                                      obj = new global::Thinktecture.Tests.TestValueObject();
                                                                                                      obj.FactoryPostInit();
@@ -763,15 +763,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                      obj = default;
                                                                                                   }
 
-                                                                                                  return validationResult;
+                                                                                                  return validationError;
                                                                                                }
 
                                                                                                public static global::Thinktecture.Tests.TestValueObject Create()
                                                                                                {
-                                                                                                  var validationResult = Validate(out global::Thinktecture.Tests.TestValueObject? obj);
+                                                                                                  var validationError = Validate(out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                                                                  if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                                                                     throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                                                                  if (validationError is not null)
+                                                                                                     throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                                                                   return obj!;
                                                                                                }
@@ -779,12 +779,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                public static bool TryCreate(
                                                                                                   [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                                                                {
-                                                                                                  var validationResult = Validate(out obj);
+                                                                                                  var validationError = Validate(out obj);
 
-                                                                                                  return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                                                                  return validationError is null;
                                                                                                }
 
-                                                                                               static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+                                                                                               static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError);
 
                                                                                                partial void FactoryPostInit();
 
@@ -845,6 +845,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                public override string ToString()
                                                                                                {
                                                                                                   return "TestValueObject";
+                                                                                               }
+
+                                                                                               private static TError CreateValidationError<TError>(string message)
+                                                                                                  where TError : class, global::Thinktecture.IValidationError<TError>
+                                                                                               {
+                                                                                                  return TError.Create(message);
                                                                                                }
                                                                                             }
                                                                                          }
@@ -920,7 +926,7 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      static partial int ValidateFactoryArguments(ref ValidationResult? validationResult)
+      static partial int ValidateFactoryArguments(ref ValidationResult? validationError)
       {
          return 42;
       }
@@ -959,31 +965,31 @@ namespace Thinktecture.Tests
 
                                                      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                     public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                     public static global::Thinktecture.ValidationError? Validate(
                                                         out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                        var factoryArgumentsValidationResult = ValidateFactoryArguments(ref validationResult);
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        var factoryArgumentsValidationError = ValidateFactoryArguments(ref validationError);
 
-                                                        if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                        if (validationError is null)
                                                         {
                                                            obj = new global::Thinktecture.Tests.TestValueObject();
-                                                           obj.FactoryPostInit(factoryArgumentsValidationResult);
+                                                           obj.FactoryPostInit(factoryArgumentsValidationError);
                                                         }
                                                         else
                                                         {
                                                            obj = default;
                                                         }
 
-                                                        return validationResult;
+                                                        return validationError;
                                                      }
 
                                                      public static global::Thinktecture.Tests.TestValueObject Create()
                                                      {
-                                                        var validationResult = Validate(out global::Thinktecture.Tests.TestValueObject? obj);
+                                                        var validationError = Validate(out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                        if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                         return obj!;
                                                      }
@@ -991,14 +997,14 @@ namespace Thinktecture.Tests
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = Validate(out obj);
+                                                        var validationError = Validate(out obj);
 
-                                                        return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                        return validationError is null;
                                                      }
 
-                                                     private static partial int ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+                                                     private static partial int ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError);
 
-                                                     partial void FactoryPostInit(int factoryArgumentsValidationResult);
+                                                     partial void FactoryPostInit(int factoryArgumentsValidationError);
 
                                                      private TestValueObject()
                                                      {
@@ -1058,6 +1064,12 @@ namespace Thinktecture.Tests
                                                      {
                                                         return "TestValueObject";
                                                      }
+
+                                                     private static TError CreateValidationError<TError>(string message)
+                                                        where TError : class, global::Thinktecture.IValidationError<TError>
+                                                     {
+                                                        return TError.Create(message);
+                                                     }
                                                   }
                                                }
 
@@ -1078,7 +1090,7 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      static partial string? ValidateFactoryArguments(ref ValidationResult? validationResult)
+      static partial string? ValidateFactoryArguments(ref ValidationResult? validationError)
       {
          return String.Empty;
       }
@@ -1117,31 +1129,31 @@ namespace Thinktecture.Tests
 
                                                      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                     public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                     public static global::Thinktecture.ValidationError? Validate(
                                                         out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                        var factoryArgumentsValidationResult = ValidateFactoryArguments(ref validationResult);
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        var factoryArgumentsValidationError = ValidateFactoryArguments(ref validationError);
 
-                                                        if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                        if (validationError is null)
                                                         {
                                                            obj = new global::Thinktecture.Tests.TestValueObject();
-                                                           obj.FactoryPostInit(factoryArgumentsValidationResult);
+                                                           obj.FactoryPostInit(factoryArgumentsValidationError);
                                                         }
                                                         else
                                                         {
                                                            obj = default;
                                                         }
 
-                                                        return validationResult;
+                                                        return validationError;
                                                      }
 
                                                      public static global::Thinktecture.Tests.TestValueObject Create()
                                                      {
-                                                        var validationResult = Validate(out global::Thinktecture.Tests.TestValueObject? obj);
+                                                        var validationError = Validate(out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                        if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                         return obj!;
                                                      }
@@ -1149,14 +1161,14 @@ namespace Thinktecture.Tests
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = Validate(out obj);
+                                                        var validationError = Validate(out obj);
 
-                                                        return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                        return validationError is null;
                                                      }
 
-                                                     private static partial string? ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+                                                     private static partial string? ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError);
 
-                                                     partial void FactoryPostInit(string? factoryArgumentsValidationResult);
+                                                     partial void FactoryPostInit(string? factoryArgumentsValidationError);
 
                                                      private TestValueObject()
                                                      {
@@ -1215,6 +1227,12 @@ namespace Thinktecture.Tests
                                                      public override string ToString()
                                                      {
                                                         return "TestValueObject";
+                                                     }
+
+                                                     private static TError CreateValidationError<TError>(string message)
+                                                        where TError : class, global::Thinktecture.IValidationError<TError>
+                                                     {
+                                                        return TError.Create(message);
                                                      }
                                                   }
                                                }
@@ -1283,13 +1301,13 @@ public partial class TestValueObject
 
                                                      private static readonly global::System.Type _type = typeof(global::TestValueObject);
 
-                                                     public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                     public static global::Thinktecture.ValidationError? Validate(
                                                         out global::TestValueObject? obj)
                                                      {
-                                                        var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                        ValidateFactoryArguments(ref validationResult);
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        ValidateFactoryArguments(ref validationError);
 
-                                                        if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                        if (validationError is null)
                                                         {
                                                            obj = new global::TestValueObject();
                                                            obj.FactoryPostInit();
@@ -1299,15 +1317,15 @@ public partial class TestValueObject
                                                            obj = default;
                                                         }
 
-                                                        return validationResult;
+                                                        return validationError;
                                                      }
 
                                                      public static global::TestValueObject Create()
                                                      {
-                                                        var validationResult = Validate(out global::TestValueObject? obj);
+                                                        var validationError = Validate(out global::TestValueObject? obj);
 
-                                                        if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                         return obj!;
                                                      }
@@ -1315,12 +1333,12 @@ public partial class TestValueObject
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::TestValueObject? obj)
                                                      {
-                                                        var validationResult = Validate(out obj);
+                                                        var validationError = Validate(out obj);
 
-                                                        return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                        return validationError is null;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError);
 
                                                      partial void FactoryPostInit();
 
@@ -1381,6 +1399,12 @@ public partial class TestValueObject
                                                      public override string ToString()
                                                      {
                                                         return "TestValueObject";
+                                                     }
+
+                                                     private static TError CreateValidationError<TError>(string message)
+                                                        where TError : class, global::Thinktecture.IValidationError<TError>
+                                                     {
+                                                        return TError.Create(message);
                                                      }
                                                   }
 
@@ -1552,6 +1576,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.StructField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -1607,13 +1637,13 @@ namespace Thinktecture.Tests
 
                                                      public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
-                                                     public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                     public static global::Thinktecture.ValidationError? Validate(
                                                         out global::Thinktecture.Tests.TestValueObject obj)
                                                      {
-                                                        var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                        ValidateFactoryArguments(ref validationResult);
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        ValidateFactoryArguments(ref validationError);
 
-                                                        if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                        if (validationError is null)
                                                         {
                                                            obj = new global::Thinktecture.Tests.TestValueObject();
                                                            obj.FactoryPostInit();
@@ -1623,15 +1653,15 @@ namespace Thinktecture.Tests
                                                            obj = default;
                                                         }
 
-                                                        return validationResult;
+                                                        return validationError;
                                                      }
 
                                                      public static global::Thinktecture.Tests.TestValueObject Create()
                                                      {
-                                                        var validationResult = Validate(out global::Thinktecture.Tests.TestValueObject obj);
+                                                        var validationError = Validate(out global::Thinktecture.Tests.TestValueObject obj);
 
-                                                        if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                         return obj!;
                                                      }
@@ -1639,12 +1669,12 @@ namespace Thinktecture.Tests
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                      {
-                                                        var validationResult = Validate(out obj);
+                                                        var validationError = Validate(out obj);
 
-                                                        return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                        return validationError is null;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError);
 
                                                      partial void FactoryPostInit();
 
@@ -1692,6 +1722,12 @@ namespace Thinktecture.Tests
                                                      public override string ToString()
                                                      {
                                                         return "TestValueObject";
+                                                     }
+
+                                                     private static TError CreateValidationError<TError>(string message)
+                                                        where TError : class, global::Thinktecture.IValidationError<TError>
+                                                     {
+                                                        return TError.Create(message);
                                                      }
                                                   }
                                                }
@@ -1748,13 +1784,13 @@ namespace Thinktecture.Tests
 
                                                      public static readonly global::Thinktecture.Tests.TestValueObject Null = default;
 
-                                                     public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                     public static global::Thinktecture.ValidationError? Validate(
                                                         out global::Thinktecture.Tests.TestValueObject obj)
                                                      {
-                                                        var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                        ValidateFactoryArguments(ref validationResult);
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        ValidateFactoryArguments(ref validationError);
 
-                                                        if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                        if (validationError is null)
                                                         {
                                                            obj = new global::Thinktecture.Tests.TestValueObject();
                                                            obj.FactoryPostInit();
@@ -1764,15 +1800,15 @@ namespace Thinktecture.Tests
                                                            obj = default;
                                                         }
 
-                                                        return validationResult;
+                                                        return validationError;
                                                      }
 
                                                      public static global::Thinktecture.Tests.TestValueObject Create()
                                                      {
-                                                        var validationResult = Validate(out global::Thinktecture.Tests.TestValueObject obj);
+                                                        var validationError = Validate(out global::Thinktecture.Tests.TestValueObject obj);
 
-                                                        if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                         return obj!;
                                                      }
@@ -1780,12 +1816,12 @@ namespace Thinktecture.Tests
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                      {
-                                                        var validationResult = Validate(out obj);
+                                                        var validationError = Validate(out obj);
 
-                                                        return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                        return validationError is null;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult);
+                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError);
 
                                                      partial void FactoryPostInit();
 
@@ -1834,6 +1870,12 @@ namespace Thinktecture.Tests
                                                      {
                                                         return "TestValueObject";
                                                      }
+
+                                                     private static TError CreateValidationError<TError>(string message)
+                                                        where TError : class, global::Thinktecture.IValidationError<TError>
+                                                     {
+                                                        return TError.Create(message);
+                                                     }
                                                   }
                                                }
 
@@ -1874,12 +1916,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -1901,7 +1943,7 @@ namespace Thinktecture.Tests
 
                                                          public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject obj)
@@ -1909,13 +1951,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>("The argument 'referenceField' must not be null.");
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -1925,15 +1967,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -1942,12 +1984,12 @@ namespace Thinktecture.Tests
                                                             string referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -2015,6 +2057,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.ReferenceField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -2057,12 +2105,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -2084,15 +2132,15 @@ namespace Thinktecture.Tests
 
                                                          public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             int structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -2102,15 +2150,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(int structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -2119,12 +2167,12 @@ namespace Thinktecture.Tests
                                                             int structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int structField);
 
                                                          partial void FactoryPostInit();
 
@@ -2200,12 +2248,17 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.StructField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
                                                           namespace Thinktecture.Tests;
@@ -2258,8 +2311,8 @@ namespace Thinktecture.Tests
                                                        partial struct TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -2268,12 +2321,12 @@ namespace Thinktecture.Tests
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = int.Parse(s, provider);
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
-                                                             if(validationResult is null)
+                                                             if(validationError is null)
                                                                 return result!;
 
-                                                             throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                           }
 
                                                           /// <inheritdoc />
@@ -2294,8 +2347,8 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
-                                                             return validationResult is null;
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
+                                                             return validationError is null;
                                                           }
                                                        }
 
@@ -2461,12 +2514,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -2488,15 +2541,15 @@ namespace Thinktecture.Tests
 
                                                          public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             int structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -2506,15 +2559,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(int structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -2523,12 +2576,12 @@ namespace Thinktecture.Tests
                                                             int structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int structField);
 
                                                          partial void FactoryPostInit();
 
@@ -2604,12 +2657,17 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.StructField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
                                                           namespace Thinktecture.Tests;
@@ -2662,8 +2720,8 @@ namespace Thinktecture.Tests
                                                        partial struct TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -2672,12 +2730,12 @@ namespace Thinktecture.Tests
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = int.Parse(s, provider);
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
-                                                             if(validationResult is null)
+                                                             if(validationError is null)
                                                                 return result!;
 
-                                                             throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                           }
 
                                                           /// <inheritdoc />
@@ -2698,8 +2756,8 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
-                                                             return validationResult is null;
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
+                                                             return validationError is null;
                                                           }
                                                        }
 
@@ -2863,12 +2921,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -2890,7 +2948,7 @@ namespace Thinktecture.Tests
 
                                                          public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject obj)
@@ -2898,13 +2956,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>("The argument 'referenceField' must not be null.");
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -2914,15 +2972,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -2931,12 +2989,12 @@ namespace Thinktecture.Tests
                                                             string referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -3003,6 +3061,12 @@ namespace Thinktecture.Tests
                                                          public override string ToString()
                                                          {
                                                             return this.ReferenceField.ToString();
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -3044,12 +3108,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -3071,7 +3135,7 @@ namespace Thinktecture.Tests
 
                                                          public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject obj)
@@ -3079,13 +3143,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>("The argument 'referenceField' must not be null.");
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -3095,15 +3159,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -3112,12 +3176,12 @@ namespace Thinktecture.Tests
                                                             string referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -3185,6 +3249,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.ReferenceField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -3225,12 +3295,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -3250,7 +3320,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
@@ -3258,13 +3328,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>("The argument 'referenceField' must not be null.");
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -3274,15 +3344,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -3291,12 +3361,12 @@ namespace Thinktecture.Tests
                                                             string referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -3374,6 +3444,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.ReferenceField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -3424,12 +3500,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -3449,15 +3525,15 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             int structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -3467,15 +3543,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(int structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -3484,12 +3560,12 @@ namespace Thinktecture.Tests
                                                             int structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int structField);
 
                                                          partial void FactoryPostInit();
 
@@ -3575,6 +3651,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.StructField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -3611,12 +3693,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectConverter<global::System.DateOnly>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -3636,15 +3718,15 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             global::System.DateOnly structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -3654,15 +3736,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(global::System.DateOnly structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -3671,12 +3753,12 @@ namespace Thinktecture.Tests
                                                             global::System.DateOnly structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref global::System.DateOnly structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref global::System.DateOnly structField);
 
                                                          partial void FactoryPostInit();
 
@@ -3762,12 +3844,17 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.StructField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
                                                           namespace Thinktecture.Tests;
@@ -3823,8 +3910,8 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(global::System.DateOnly key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(global::System.DateOnly key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -3833,12 +3920,12 @@ namespace Thinktecture.Tests
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = global::System.DateOnly.Parse(s, provider);
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
-                                                             if(validationResult is null)
+                                                             if(validationError is null)
                                                                 return result!;
 
-                                                             throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                           }
 
                                                           /// <inheritdoc />
@@ -3859,8 +3946,8 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
-                                                             return validationResult is null;
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
+                                                             return validationError is null;
                                                           }
                                                        }
 
@@ -3975,12 +4062,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectConverter<global::System.DateOnly>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -4000,15 +4087,15 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             global::System.DateOnly structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -4018,15 +4105,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(global::System.DateOnly structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -4035,12 +4122,12 @@ namespace Thinktecture.Tests
                                                             global::System.DateOnly structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref global::System.DateOnly structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref global::System.DateOnly structField);
 
                                                          partial void FactoryPostInit();
 
@@ -4126,12 +4213,17 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.StructField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
                                                    """);
 
-      /* language=c# */
       AssertOutput(formattableOutput, _GENERATED_HEADER + """
 
                                                           namespace Thinktecture.Tests;
@@ -4187,8 +4279,8 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(global::System.DateOnly key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(global::System.DateOnly key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -4197,12 +4289,12 @@ namespace Thinktecture.Tests
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var key = global::System.DateOnly.Parse(s, provider);
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out var result);
 
-                                                             if(validationResult is null)
+                                                             if(validationError is null)
                                                                 return result!;
 
-                                                             throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                           }
 
                                                           /// <inheritdoc />
@@ -4223,8 +4315,8 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
-                                                             return validationResult is null;
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(key, provider, out result!);
+                                                             return validationError is null;
                                                           }
                                                        }
 
@@ -4405,12 +4497,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -4430,15 +4522,15 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             int structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -4448,15 +4540,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(int structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -4465,12 +4557,12 @@ namespace Thinktecture.Tests
                                                             int structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int structField);
 
                                                          partial void FactoryPostInit();
 
@@ -4555,6 +4647,12 @@ namespace Thinktecture.Tests
                                                          public override string ToString()
                                                          {
                                                             return this.StructField.ToString();
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -4916,12 +5014,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -4941,7 +5039,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
@@ -4949,13 +5047,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -4965,16 +5063,16 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("referenceField")]
                                                          public static global::Thinktecture.Tests.TestValueObject? Create(string? referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj;
                                                          }
@@ -4983,12 +5081,12 @@ namespace Thinktecture.Tests
                                                             string? referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -5065,6 +5163,12 @@ namespace Thinktecture.Tests
                                                          public override string ToString()
                                                          {
                                                             return this.ReferenceField.ToString();
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -5106,12 +5210,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -5131,7 +5235,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
@@ -5139,13 +5243,13 @@ namespace Thinktecture.Tests
                                                             if(global::System.String.IsNullOrWhiteSpace(referenceField))
                                                             {
                                                                obj = default;
-                                                               return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                               return null;
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -5155,15 +5259,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject? Create(string? referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj;
                                                          }
@@ -5172,12 +5276,12 @@ namespace Thinktecture.Tests
                                                             string? referenceField,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -5253,6 +5357,12 @@ namespace Thinktecture.Tests
                                                          public override string ToString()
                                                          {
                                                             return this.ReferenceField.ToString();
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -5304,12 +5414,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -5329,15 +5439,15 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             int structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -5347,15 +5457,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(int structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -5364,12 +5474,12 @@ namespace Thinktecture.Tests
                                                             int structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int structField);
 
                                                          partial void FactoryPostInit();
 
@@ -5454,6 +5564,12 @@ namespace Thinktecture.Tests
                                                          public override string ToString()
                                                          {
                                                             return this.StructField.ToString();
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -5505,12 +5621,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -5530,15 +5646,15 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             int structField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref structField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref structField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(structField);
                                                                obj.FactoryPostInit();
@@ -5548,15 +5664,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(int structField)
                                                          {
-                                                            var validationResult = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(structField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -5565,12 +5681,12 @@ namespace Thinktecture.Tests
                                                             int structField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(structField, null, out obj);
+                                                            var validationError = Validate(structField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, ref int structField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int structField);
 
                                                          partial void FactoryPostInit();
 
@@ -5656,6 +5772,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.StructField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -5699,12 +5821,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -5724,7 +5846,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
@@ -5732,13 +5854,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>("The argument 'referenceField' must not be null.");
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -5748,15 +5870,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -5765,12 +5887,12 @@ namespace Thinktecture.Tests
                                                             string referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -5848,6 +5970,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.ReferenceField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -5890,12 +6018,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -5915,7 +6043,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
@@ -5923,13 +6051,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>("The argument 'referenceField' must not be null.");
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -5939,15 +6067,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -5956,12 +6084,12 @@ namespace Thinktecture.Tests
                                                             string referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -6039,6 +6167,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return this.ReferenceField.ToString();
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -6078,12 +6212,12 @@ namespace Thinktecture.Tests
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>))]
+                                                      [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.Foo>,
                                                          global::Thinktecture.IValueObjectConverter<global::Thinktecture.Tests.Foo>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>
+                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -6103,7 +6237,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             global::Thinktecture.Tests.Foo? referenceField,
                                                             global::System.IFormatProvider? provider,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
@@ -6111,13 +6245,13 @@ namespace Thinktecture.Tests
                                                             if(referenceField is null)
                                                             {
                                                                obj = default;
-                                                               return new global::System.ComponentModel.DataAnnotations.ValidationResult("The argument 'referenceField' must not be null.", global::Thinktecture.SingleItem.Collection(nameof(global::Thinktecture.Tests.TestValueObject.ReferenceField)));
+                                                               return CreateValidationError<global::Thinktecture.ValidationError>("The argument 'referenceField' must not be null.");
                                                             }
 
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField);
                                                                obj.FactoryPostInit();
@@ -6127,15 +6261,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(global::Thinktecture.Tests.Foo referenceField)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, null, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -6144,12 +6278,12 @@ namespace Thinktecture.Tests
                                                             global::Thinktecture.Tests.Foo referenceField,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, null, out obj);
+                                                            var validationError = Validate(referenceField, null, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref global::Thinktecture.Tests.Foo referenceField);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref global::Thinktecture.Tests.Foo referenceField);
 
                                                          partial void FactoryPostInit();
 
@@ -6226,6 +6360,12 @@ namespace Thinktecture.Tests
                                                          public override string ToString()
                                                          {
                                                             return this.ReferenceField.ToString();
+                                                         }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
                                                          }
                                                       }
                                                    }
@@ -6313,7 +6453,7 @@ namespace Thinktecture.Tests
 
                                                      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                     public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                     public static global::Thinktecture.ValidationError? Validate(
                                                         string referenceField,
                                                         int structField,
                                                         string referenceProperty,
@@ -6322,10 +6462,10 @@ namespace Thinktecture.Tests
                                                         int? nullableStructProperty,
                                                         out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                        ValidateFactoryArguments(ref validationResult, ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        ValidateFactoryArguments(ref validationError, ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
-                                                        if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                        if (validationError is null)
                                                         {
                                                            obj = new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
                                                            obj.FactoryPostInit();
@@ -6335,15 +6475,15 @@ namespace Thinktecture.Tests
                                                            obj = default;
                                                         }
 
-                                                        return validationResult;
+                                                        return validationError;
                                                      }
 
                                                      public static global::Thinktecture.Tests.TestValueObject Create(string referenceField, int structField, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                      {
-                                                        var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                        var validationError = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                        if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                         return obj!;
                                                      }
@@ -6357,12 +6497,12 @@ namespace Thinktecture.Tests
                                                         int? nullableStructProperty,
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
+                                                        var validationError = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
 
-                                                        return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                        return validationError is null;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                      partial void FactoryPostInit();
 
@@ -6438,6 +6578,12 @@ namespace Thinktecture.Tests
                                                      {
                                                         return $"{{ ReferenceField = {this.ReferenceField}, StructField = {this.StructField} }}";
                                                      }
+
+                                                     private static TError CreateValidationError<TError>(string message)
+                                                        where TError : class, global::Thinktecture.IValidationError<TError>
+                                                     {
+                                                        return TError.Create(message);
+                                                     }
                                                   }
                                                }
 
@@ -6502,7 +6648,7 @@ namespace Thinktecture.Tests
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                          global::Thinktecture.IComplexValueObject,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -6532,7 +6678,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string referenceField,
                                                             int structField,
                                                             string referenceProperty,
@@ -6541,10 +6687,10 @@ namespace Thinktecture.Tests
                                                             int? nullableStructProperty,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
                                                                obj.FactoryPostInit();
@@ -6554,15 +6700,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField, int structField, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                          {
-                                                            var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -6576,12 +6722,12 @@ namespace Thinktecture.Tests
                                                             int? nullableStructProperty,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
+                                                            var validationError = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          partial void FactoryPostInit();
 
@@ -6657,6 +6803,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return $"{{ ReferenceField = {this.ReferenceField}, StructField = {this.StructField} }}";
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -6669,8 +6821,8 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -6678,12 +6830,12 @@ namespace Thinktecture.Tests
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
-                                                             if(validationResult is null)
+                                                             if(validationError is null)
                                                                 return result!;
 
-                                                             throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                           }
 
                                                           /// <inheritdoc />
@@ -6698,8 +6850,8 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
-                                                             return validationResult is null;
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
+                                                             return validationError is null;
                                                           }
                                                        }
 
@@ -6764,7 +6916,7 @@ namespace Thinktecture.Tests
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                          global::Thinktecture.IComplexValueObject,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>,
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
                                                          global::Thinktecture.IValueObjectConverter<string>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -6795,7 +6947,7 @@ namespace Thinktecture.Tests
 
                                                          private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                         public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                         public static global::Thinktecture.ValidationError? Validate(
                                                             string referenceField,
                                                             int structField,
                                                             string referenceProperty,
@@ -6804,10 +6956,10 @@ namespace Thinktecture.Tests
                                                             int? nullableStructProperty,
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                            ValidateFactoryArguments(ref validationResult, ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                            global::Thinktecture.ValidationError? validationError = null;
+                                                            ValidateFactoryArguments(ref validationError, ref referenceField, ref structField, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
-                                                            if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                            if (validationError is null)
                                                             {
                                                                obj = new global::Thinktecture.Tests.TestValueObject(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
                                                                obj.FactoryPostInit();
@@ -6817,15 +6969,15 @@ namespace Thinktecture.Tests
                                                                obj = default;
                                                             }
 
-                                                            return validationResult;
+                                                            return validationError;
                                                          }
 
                                                          public static global::Thinktecture.Tests.TestValueObject Create(string referenceField, int structField, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                          {
-                                                            var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                            if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                            if (validationError is not null)
+                                                               throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                             return obj!;
                                                          }
@@ -6839,12 +6991,12 @@ namespace Thinktecture.Tests
                                                             int? nullableStructProperty,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationResult = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
+                                                            var validationError = Validate(referenceField, structField, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
 
-                                                            return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                            return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField, ref int structField, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          partial void FactoryPostInit();
 
@@ -6920,6 +7072,12 @@ namespace Thinktecture.Tests
                                                          {
                                                             return $"{{ ReferenceField = {this.ReferenceField}, StructField = {this.StructField} }}";
                                                          }
+
+                                                         private static TError CreateValidationError<TError>(string message)
+                                                            where TError : class, global::Thinktecture.IValidationError<TError>
+                                                         {
+                                                            return TError.Create(message);
+                                                         }
                                                       }
                                                    }
 
@@ -6932,8 +7090,8 @@ namespace Thinktecture.Tests
                                                        partial class TestValueObject :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
                                                        {
-                                                          private static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
-                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string>
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
@@ -6941,12 +7099,12 @@ namespace Thinktecture.Tests
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestValueObject Parse(string s, global::System.IFormatProvider? provider)
                                                           {
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out var result);
 
-                                                             if(validationResult is null)
+                                                             if(validationError is null)
                                                                 return result!;
 
-                                                             throw new global::System.FormatException(validationResult.ErrorMessage);
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestValueObject\".");
                                                           }
 
                                                           /// <inheritdoc />
@@ -6961,8 +7119,8 @@ namespace Thinktecture.Tests
                                                                 return false;
                                                              }
 
-                                                             var validationResult = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
-                                                             return validationResult is null;
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestValueObject>(s, provider, out result!);
+                                                             return validationError is null;
                                                           }
                                                        }
 
@@ -7034,7 +7192,7 @@ namespace Thinktecture.Tests
 
                                                      private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);
 
-                                                     public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(
+                                                     public static global::Thinktecture.ValidationError? Validate(
                                                         string referenceField1,
                                                         string referenceField2,
                                                         string referenceField3,
@@ -7046,10 +7204,10 @@ namespace Thinktecture.Tests
                                                         string referenceField9,
                                                         out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
-                                                        ValidateFactoryArguments(ref validationResult, ref referenceField1, ref referenceField2, ref referenceField3, ref referenceField4, ref referenceField5, ref referenceField6, ref referenceField7, ref referenceField8, ref referenceField9);
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        ValidateFactoryArguments(ref validationError, ref referenceField1, ref referenceField2, ref referenceField3, ref referenceField4, ref referenceField5, ref referenceField6, ref referenceField7, ref referenceField8, ref referenceField9);
 
-                                                        if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+                                                        if (validationError is null)
                                                         {
                                                            obj = new global::Thinktecture.Tests.TestValueObject(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9);
                                                            obj.FactoryPostInit();
@@ -7059,15 +7217,15 @@ namespace Thinktecture.Tests
                                                            obj = default;
                                                         }
 
-                                                        return validationResult;
+                                                        return validationError;
                                                      }
 
                                                      public static global::Thinktecture.Tests.TestValueObject Create(string referenceField1, string referenceField2, string referenceField3, string referenceField4, string referenceField5, string referenceField6, string referenceField7, string referenceField8, string referenceField9)
                                                      {
-                                                        var validationResult = Validate(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                        var validationError = Validate(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9, out global::Thinktecture.Tests.TestValueObject? obj);
 
-                                                        if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? "Validation failed.");
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
 
                                                         return obj!;
                                                      }
@@ -7084,12 +7242,12 @@ namespace Thinktecture.Tests
                                                         string referenceField9,
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationResult = Validate(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9, out obj);
+                                                        var validationError = Validate(referenceField1, referenceField2, referenceField3, referenceField4, referenceField5, referenceField6, referenceField7, referenceField8, referenceField9, out obj);
 
-                                                        return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+                                                        return validationError is null;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField1, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField2, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField3, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField4, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField5, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField6, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField7, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField8, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField9);
+                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField1, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField2, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField3, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField4, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField5, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField6, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField7, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField8, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceField9);
 
                                                      partial void FactoryPostInit();
 
@@ -7181,6 +7339,12 @@ namespace Thinktecture.Tests
                                                      public override string ToString()
                                                      {
                                                         return $"{{ ReferenceField1 = {this.ReferenceField1}, ReferenceField2 = {this.ReferenceField2}, ReferenceField3 = {this.ReferenceField3}, ReferenceField4 = {this.ReferenceField4}, ReferenceField5 = {this.ReferenceField5}, ReferenceField6 = {this.ReferenceField6}, ReferenceField7 = {this.ReferenceField7}, ReferenceField8 = {this.ReferenceField8}, ReferenceField9 = {this.ReferenceField9} }}";
+                                                     }
+
+                                                     private static TError CreateValidationError<TError>(string message)
+                                                        where TError : class, global::Thinktecture.IValidationError<TError>
+                                                     {
+                                                        return TError.Create(message);
                                                      }
                                                   }
                                                }

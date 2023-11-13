@@ -15,34 +15,34 @@ public class GetBinder
    public void Should_return_binder_for_int_based_enum()
    {
       var binder = GetModelBinder<IntegerEnum>();
-      binder.Should().BeOfType<ValueObjectModelBinder<IntegerEnum, int>>();
+      binder.Should().BeOfType<ValueObjectModelBinder<IntegerEnum, int, ValidationError>>();
    }
 
    [Fact]
    public void Should_return_binder_for_string_based_enum()
    {
-      GetModelBinder<TestEnum>().Should().BeOfType<TrimmingSmartEnumModelBinder<TestEnum>>();
+      GetModelBinder<TestEnum>().Should().BeOfType<TrimmingSmartEnumModelBinder<TestEnum, ValidationError>>();
    }
 
    [Fact]
    public void Should_return_binder_for_string_based_value_type()
    {
       var binder = GetModelBinder<StringBasedReferenceValueObject>();
-      binder.Should().BeOfType<ValueObjectModelBinder<StringBasedReferenceValueObject, string>>();
+      binder.Should().BeOfType<ValueObjectModelBinder<StringBasedReferenceValueObject, string, ValidationError>>();
    }
 
    [Fact]
    public void Should_return_string_base_binder_specified_by_ValueObjectFactoryAttribute_of_value_object_()
    {
       var binder = GetModelBinder<BoundaryWithFactories>();
-      binder.Should().BeOfType<ValueObjectModelBinder<BoundaryWithFactories, string>>();
+      binder.Should().BeOfType<ValueObjectModelBinder<BoundaryWithFactories, string, ValidationError>>();
    }
 
    [Fact]
    public void Should_return_string_base_binder_specified_by_ValueObjectFactoryAttribute_smart_enum()
    {
       var binder = GetModelBinder<EnumWithFactory>();
-      binder.Should().BeOfType<TrimmingSmartEnumModelBinder<EnumWithFactory>>();
+      binder.Should().BeOfType<TrimmingSmartEnumModelBinder<EnumWithFactory, ValidationError>>();
    }
 
    [Fact]

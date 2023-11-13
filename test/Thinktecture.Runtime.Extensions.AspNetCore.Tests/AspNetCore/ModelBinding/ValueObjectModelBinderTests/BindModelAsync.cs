@@ -238,9 +238,9 @@ public class BindModelAsync
 
    private static async Task<DefaultModelBindingContext> BindAsync<T, TKey>(
       string value)
-      where T : IValueObjectFactory<T, TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>
    {
-      var binder = new ValueObjectModelBinder<T, TKey>(NullLoggerFactory.Instance);
+      var binder = new ValueObjectModelBinder<T, TKey, ValidationError>(NullLoggerFactory.Instance);
       var query = new Dictionary<string, StringValues> { { "name", value } };
 
       var ctx = new DefaultModelBindingContext

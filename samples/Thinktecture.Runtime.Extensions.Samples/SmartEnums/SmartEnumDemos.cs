@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using CsvHelper;
@@ -103,15 +102,15 @@ public class SmartEnumDemos
       if (ProductType.TryGet("Housewares", out var housewares))
          logger.Information("Product type {Type} with TryGet found", housewares);
 
-      var validationResult = ProductType.Validate("Groceries", null, out var groceries);
+      var validationError = ProductType.Validate("Groceries", null, out var groceries);
 
-      if (validationResult == ValidationResult.Success)
+      if (validationError is null)
       {
          logger.Information("Product type {Type} found with Validate", groceries);
       }
       else
       {
-         logger.Warning("Failed to fetch the product type with Validate. Validation result: {ValidationResult}", validationResult!.ErrorMessage);
+         logger.Warning("Failed to fetch the product type with Validate. Validation error: {ValidationError}", validationError.ToString());
       }
 
       string keyOfTheProductType = productType;
@@ -173,7 +172,7 @@ public class SmartEnumDemos
    }
 
    private static void PrintAllItems<T, TKey>(ILogger logger)
-      where T : IEnum<TKey, T>, IEnum<TKey>
+      where T : IEnum<TKey, T, ValidationError>, IEnum<TKey>
       where TKey : notnull
    {
       logger.Information("Print all items of '{Name}':", typeof(T).Name);
@@ -185,7 +184,7 @@ public class SmartEnumDemos
    }
 
    private static void Get<T, TKey>(ILogger logger, TKey key)
-      where T : IEnum<TKey, T>, IEnum<TKey>
+      where T : IEnum<TKey, T, ValidationError>, IEnum<TKey>
       where TKey : notnull
    {
       var item = T.Get(key);

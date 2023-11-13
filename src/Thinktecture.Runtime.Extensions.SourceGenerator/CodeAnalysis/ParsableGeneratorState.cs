@@ -4,6 +4,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
 {
    public ITypeInformation Type { get; }
    public IMemberInformation? KeyMember { get; }
+   public ValidationErrorState ValidationError { get; }
    public bool SkipIParsable { get; }
    public bool IsKeyMemberParsable { get; }
    public bool IsValidatableEnum { get; }
@@ -12,6 +13,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    public ParsableGeneratorState(
       ITypeInformation type,
       IMemberInformation? keyMember,
+      ValidationErrorState validationError,
       bool skipIParsable,
       bool isKeyMemberParsable,
       bool isValidatableEnum,
@@ -19,6 +21,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    {
       Type = type;
       KeyMember = keyMember;
+      ValidationError = validationError;
       SkipIParsable = skipIParsable;
       IsKeyMemberParsable = isKeyMemberParsable;
       IsValidatableEnum = isValidatableEnum;
@@ -29,6 +32,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
+             && ValidationError.Equals(other.ValidationError)
              && SkipIParsable == other.SkipIParsable
              && IsKeyMemberParsable == other.IsKeyMemberParsable
              && IsValidatableEnum == other.IsValidatableEnum
@@ -46,6 +50,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
+         hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValidatableEnum.GetHashCode();

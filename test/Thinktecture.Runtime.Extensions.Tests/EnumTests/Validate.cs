@@ -9,17 +9,15 @@ public class Validate
    [Fact]
    public void Should_return_error_if_null_is_provided()
    {
-      var testEnumValidationResult = TestEnum.Validate(null!, null, out var testEnum);
-      testEnumValidationResult.Should().NotBeNull();
-      testEnumValidationResult.ErrorMessage.Should().Be("There is no item of type 'TestEnum' with the identifier ''.");
-      testEnumValidationResult.MemberNames.Should().BeEquivalentTo(nameof(TestEnum.Key));
+      var testEnumValidationError = TestEnum.Validate(null!, null, out var testEnum);
+      testEnumValidationError.Should().NotBeNull();
+      testEnumValidationError.ToString().Should().Be("There is no item of type 'TestEnum' with the identifier ''.");
 
       testEnum.Should().BeNull();
 
-      var validTestEnumValidationResult = ValidTestEnum.Validate(null!, null, out var validTestEnum);
-      validTestEnumValidationResult.Should().NotBeNull();
-      validTestEnumValidationResult.ErrorMessage.Should().Be("There is no item of type 'ValidTestEnum' with the identifier ''.");
-      validTestEnumValidationResult.MemberNames.Should().BeEquivalentTo(nameof(TestEnum.Key));
+      var validTestEnumValidationError = ValidTestEnum.Validate(null!, null, out var validTestEnum);
+      validTestEnumValidationError.Should().NotBeNull();
+      validTestEnumValidationError.ToString().Should().Be("There is no item of type 'ValidTestEnum' with the identifier ''.");
 
       validTestEnum.Should().BeNull();
    }
@@ -27,11 +25,10 @@ public class Validate
    [Fact]
    public void Should_return_invalid_item_if_enum_doesnt_have_any_items()
    {
-      var validationResult = EmptyEnum.Validate("unknown", null, out var item);
+      var validationError = EmptyEnum.Validate("unknown", null, out var item);
 
-      validationResult.Should().NotBeNull();
-      validationResult.ErrorMessage.Should().Be("There is no item of type 'EmptyEnum' with the identifier 'unknown'.");
-      validationResult.MemberNames.Should().BeEquivalentTo(nameof(EmptyEnum.Key));
+      validationError.Should().NotBeNull();
+      validationError.ToString().Should().Be("There is no item of type 'EmptyEnum' with the identifier 'unknown'.");
 
       item.Should().NotBeNull();
       item!.IsValid.Should().BeFalse();
@@ -41,11 +38,10 @@ public class Validate
    [Fact]
    public void Should_return_invalid_item_if_enum_doesnt_have_item_with_provided_key()
    {
-      var validationResult = TestEnum.Validate("unknown", null, out var item);
+      var validationError = TestEnum.Validate("unknown", null, out var item);
 
-      validationResult.Should().NotBeNull();
-      validationResult.ErrorMessage.Should().Be("There is no item of type 'TestEnum' with the identifier 'unknown'.");
-      validationResult.MemberNames.Should().BeEquivalentTo(nameof(TestEnum.Key));
+      validationError.Should().NotBeNull();
+      validationError.ToString().Should().Be("There is no item of type 'TestEnum' with the identifier 'unknown'.");
 
       item.Should().NotBeNull();
       item!.IsValid.Should().BeFalse();
@@ -96,10 +92,9 @@ public class Validate
    [Fact]
    public void Should_return_invalid_item_if_the_casing_does_not_match_according_to_comparer()
    {
-      var validationResult = TestEnumWithNonDefaultComparer.Validate("Item2", null, out var item);
-      validationResult.Should().NotBeNull();
-      validationResult.ErrorMessage.Should().Be("There is no item of type 'TestEnumWithNonDefaultComparer' with the identifier 'Item2'.");
-      validationResult.MemberNames.Should().BeEquivalentTo(nameof(TestEnum.Key));
+      var validationError = TestEnumWithNonDefaultComparer.Validate("Item2", null, out var item);
+      validationError.Should().NotBeNull();
+      validationError.ToString().Should().Be("There is no item of type 'TestEnumWithNonDefaultComparer' with the identifier 'Item2'.");
 
       item!.Key.Should().Be("Item2");
       item.IsValid.Should().BeFalse();
@@ -118,8 +113,8 @@ public class Validate
    [Fact]
    public void Should_return_error_if_key_is_unknown_to_non_validatable_enum()
    {
-      var validationResult = ValidTestEnum.Validate("invalid", null, out var item);
-      validationResult.ErrorMessage.Should().Be("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+      var validationError = ValidTestEnum.Validate("invalid", null, out var item);
+      validationError.ToString().Should().Be("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
 
       item.Should().BeNull();
    }
@@ -127,8 +122,8 @@ public class Validate
    [Fact]
    public void Should_return_item_using_factory_specified_via_ValueObjectFactoryAttribute()
    {
-      var validationResult = EnumWithFactory.Validate("=1=", null, out var item);
-      validationResult.Should().Be(ValidationResult.Success);
+      var validationError = EnumWithFactory.Validate("=1=", null, out var item);
+      validationError.Should().BeNull();
 
       item.Should().Be(EnumWithFactory.Item1);
    }

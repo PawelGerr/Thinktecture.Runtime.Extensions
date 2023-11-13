@@ -8,16 +8,18 @@ namespace Thinktecture.Text.Json.Serialization;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
-   where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
+public sealed class ValueObjectJsonConverter<T, TKey, TValidationError> : JsonConverter<T>
+   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
    where TKey : notnull
+   where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
 
    private readonly JsonConverter<TKey> _keyConverter;
 
    /// <summary>
-   /// Initializes a new instance of <see cref="ValueObjectJsonConverter{T,TKey}"/>.
+   /// Initializes a new instance of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
    /// </summary>
    /// <param name="options">JSON serializer options.</param>
    public ValueObjectJsonConverter(JsonSerializerOptions options)
@@ -35,10 +37,10 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
       if (key is null)
          return default;
 
-      var validationResult = T.Validate(key, null, out var obj);
+      var validationError = T.Validate(key, null, out var obj);
 
-      if (validationResult is not null && !_mayReturnInvalidObjects)
-         throw new JsonException(validationResult.ErrorMessage ?? "JSON deserialization failed.");
+      if (validationError is not null && !_mayReturnInvalidObjects)
+         throw new JsonException(validationError.ToString() ?? "JSON deserialization failed.");
 
       return obj;
    }

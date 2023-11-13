@@ -96,27 +96,27 @@ public class WriteJson : JsonTestsBase
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
+      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
    }
 
    private static string SerializeNullableStruct<T, TKey>(
       T? value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return SerializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
+      return SerializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
    }
 
    private static string SerializeStruct<T, TKey>(
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : struct, IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey>>(value, namingStrategy, nullValueHandling);
+      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
    }
 
    private static string SerializeWithConverter<T, TConverter>(

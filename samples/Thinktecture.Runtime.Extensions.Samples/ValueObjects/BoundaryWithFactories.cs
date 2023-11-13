@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.ValueObjects;
 
@@ -11,33 +10,32 @@ public sealed partial class BoundaryWithFactories
    public decimal Lower { get; }
    public decimal Upper { get; }
 
-   static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref decimal lower, ref decimal upper)
+   static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref decimal lower, ref decimal upper)
    {
       if (lower <= upper)
          return;
 
-      validationResult = new ValidationResult($"Lower boundary '{lower}' must be less than upper boundary '{upper}'",
-                                              new[] { nameof(Lower), nameof(Upper) });
+      validationError = new ValidationError($"Lower boundary '{lower}' must be less than upper boundary '{upper}'");
    }
 
    /// <summary>
    /// Custom implementation of "IValueObjectFactory&lt;Boundary, string&gt;"
    /// requested by "ValueObjectFactory&lt;string&gt;".
    /// </summary>
-   public static ValidationResult? Validate(string? value, IFormatProvider? provider, out BoundaryWithFactories? item)
+   public static ValidationError? Validate(string? value, IFormatProvider? provider, out BoundaryWithFactories? item)
    {
       item = null;
 
       if (value is null)
-         return ValidationResult.Success;
+         return null;
 
       var parts = value.Split(":", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
       if (parts.Length != 2)
-         return new ValidationResult("Invalid format.");
+         return new ValidationError("Invalid format.");
 
       if (!Decimal.TryParse(parts[0], provider, out var lower) || !Decimal.TryParse(parts[1], provider, out var upper))
-         return new ValidationResult("The provided values are not numbers.");
+         return new ValidationError("The provided values are not numbers.");
 
       return Validate(lower, upper, out item);
    }
@@ -54,7 +52,7 @@ public sealed partial class BoundaryWithFactories
    /// <summary>
    /// Custom implementation of "IValueObjectFactory&lt;Boundary, (int, int)&gt;"
    /// </summary>
-   public static ValidationResult? Validate((int, int) value, IFormatProvider? provider, out BoundaryWithFactories? item)
+   public static ValidationError? Validate((int, int) value, IFormatProvider? provider, out BoundaryWithFactories? item)
    {
       return Validate(value.Item1, value.Item2, out item);
    }

@@ -7,6 +7,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
    public bool HasNewtonsoftJsonConverterAttribute { get; }
    public bool HasMessagePackFormatterAttribute { get; }
    public ImmutableArray<DesiredFactory> DesiredFactories { get; }
+   public ValidationErrorState ValidationError { get; }
 
    public AttributeInfo(INamedTypeSymbol type)
    {
@@ -14,6 +15,8 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       HasJsonConverterAttribute = default;
       HasNewtonsoftJsonConverterAttribute = default;
       HasMessagePackFormatterAttribute = default;
+      ValidationError = ValidationErrorState.Default;
+
       var valueObjectFactories = ImmutableArray<DesiredFactory>.Empty;
 
       foreach (var attribute in type.GetAttributes())
@@ -45,6 +48,10 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
             valueObjectFactories = valueObjectFactories.RemoveAll(static (f, fullTypeName) => f.TypeFullyQualified == fullTypeName, desiredFactory.TypeFullyQualified);
             valueObjectFactories = valueObjectFactories.Add(desiredFactory);
          }
+         else if (attribute.AttributeClass.IsValueObjectValidationErrorAttribute())
+         {
+            ValidationError = new ValidationErrorState(attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+         }
       }
 
       DesiredFactories = valueObjectFactories;
@@ -61,7 +68,8 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
              && HasJsonConverterAttribute == other.HasJsonConverterAttribute
              && HasNewtonsoftJsonConverterAttribute == other.HasNewtonsoftJsonConverterAttribute
              && HasMessagePackFormatterAttribute == other.HasMessagePackFormatterAttribute
-             && DesiredFactories.SequenceEqual(other.DesiredFactories);
+             && DesiredFactories.SequenceEqual(other.DesiredFactories)
+             && ValidationError.Equals(other.ValidationError);
    }
 
    public override int GetHashCode()
@@ -73,6 +81,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          hashCode = (hashCode * 397) ^ HasNewtonsoftJsonConverterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ HasMessagePackFormatterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
 
          return hashCode;
       }

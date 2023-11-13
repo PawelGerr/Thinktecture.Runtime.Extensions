@@ -69,6 +69,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       var parsables = validStates
          .Select((state, _) => new ParsableGeneratorState(state.State,
                                                           state.KeyMember,
+                                                          state.State.ValidationError,
                                                           state.Settings.SkipIParsable,
                                                           state.KeyMember.IsParsable,
                                                           state.State.Settings.IsValidatable,
@@ -315,7 +316,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          var nonIgnoredMembers = type.GetNonIgnoredMembers();
          var hasCreateInvalidItemImplementation = settings.IsValidatable && type.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyMemberType, cancellationToken);
 
-         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, nonIgnoredMembers, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
+         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, attributeInfo.ValidationError, nonIgnoredMembers, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
          Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);

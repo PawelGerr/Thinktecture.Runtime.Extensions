@@ -7,11 +7,13 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// Model binder for implementations of string-based <see cref="IKeyedValueObject{TKey}"/>.
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
-public sealed class TrimmingSmartEnumModelBinder<T> : ValueObjectModelBinderBase<T, string>
-   where T : IValueObjectFactory<T, string>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
+public sealed class TrimmingSmartEnumModelBinder<T, TValidationError> : ValueObjectModelBinderBase<T, string, TValidationError>
+   where T : IValueObjectFactory<T, string, TValidationError>
+   where TValidationError : class, IValidationError<TValidationError>
 {
    /// <summary>
-   /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey}"/>.
+   /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey,TValidationError}"/>.
    /// </summary>
    /// <param name="loggerFactory">Logger factory.</param>
    public TrimmingSmartEnumModelBinder(

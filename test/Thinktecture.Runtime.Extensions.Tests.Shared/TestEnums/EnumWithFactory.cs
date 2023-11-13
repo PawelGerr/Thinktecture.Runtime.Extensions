@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
@@ -10,19 +9,19 @@ public sealed partial class EnumWithFactory
    public static readonly EnumWithFactory Item1 = new(1);
    public static readonly EnumWithFactory Item2 = new(2);
 
-   public static ValidationResult? Validate(string? value, IFormatProvider? provider, out EnumWithFactory? item)
+   public static ValidationError? Validate(string? value, IFormatProvider? provider, out EnumWithFactory? item)
    {
       switch (value)
       {
          case "=1=":
             item = Item1;
-            return ValidationResult.Success;
+            return null;
          case "=2=":
             item = Item2;
-            return ValidationResult.Success;
+            return null;
          default:
             item = null;
-            return new ValidationResult($"Unknown item '{value}'");
+            return new ValidationError($"Unknown item '{value}'");
       }
    }
 

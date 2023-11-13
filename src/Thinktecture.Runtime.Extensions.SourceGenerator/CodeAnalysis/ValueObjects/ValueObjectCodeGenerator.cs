@@ -4,7 +4,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ValueObjectCodeGenerator : CodeGeneratorBase
 {
-   private const string _FACTORY_ARGUMENTS_VALIDATION_RESULT = "factoryArgumentsValidationResult";
+   private const string _FACTORY_ARGUMENTS_VALIDATION_ERROR = "factoryArgumentsValidationError";
    private const string _FACTORY_POST_INIT = "FactoryPostInit";
 
    private readonly ValueObjectSourceGeneratorState _state;
@@ -51,7 +51,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state is { HasKeyMember: true, Settings.SkipFactoryMethods: false })
       {
          _sb.Append(@"
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(">))]");
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">))]");
       }
 
       _sb.Append(@"
@@ -66,8 +66,8 @@ namespace ").Append(_state.Namespace).Append(@"
          if (!_state.Settings.SkipFactoryMethods)
          {
             _sb.Append(@",
-      global::Thinktecture.IKeyedValueObject<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(@">,
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(">");
+      global::Thinktecture.IKeyedValueObject<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(@">,
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">");
          }
       }
       else
@@ -83,7 +83,7 @@ namespace ").Append(_state.Namespace).Append(@"
             continue;
 
          _sb.Append(@",
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(desiredFactory.TypeFullyQualified).Append(">");
+      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(desiredFactory.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">");
 
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
@@ -151,6 +151,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipToString)
          GenerateToString();
+
+      GenerateValidationErrorFactory();
 
       _sb.Append(@"
    }");
@@ -374,7 +376,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@")
       {
-         var validationResult = Validate(");
+         var validationError = Validate(");
 
       _sb.RenderArguments(fieldsAndProperties);
 
@@ -386,8 +388,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append("out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj);
 
-         if (validationResult != global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
-            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationResult!.ErrorMessage ?? ""Validation failed."");
+         if (validationError is not null)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? ""Validation failed."");
 
          return obj").Append(allowNullOutput ? null : "!").Append(@";
       }");
@@ -407,7 +409,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          ").Append(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj)
       {
-         var validationResult = Validate(");
+         var validationError = Validate(");
 
       _sb.RenderArguments(fieldsAndProperties);
 
@@ -419,7 +421,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"out obj);
 
-         return validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         return validationError is null;
       }");
    }
 
@@ -429,7 +431,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      public static global::System.ComponentModel.DataAnnotations.ValidationResult? Validate(");
+      public static ").Append(_state.ValidationError.TypeFullyQualified).Append("? Validate(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
          ", ",", trailingComma: true, useNullableTypes: allowNullKeyMemberInput);
@@ -453,7 +455,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if(global::System.String.IsNullOrWhiteSpace(").Append(_state.KeyMember.Member.ArgumentName.Escaped).Append(@"))
          {
             obj = default;
-            return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+            return null;
          }
 ");
          }
@@ -463,7 +465,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if(").Append(_state.KeyMember.Member.ArgumentName.Escaped).Append(@" is null)
          {
             obj = default;
-            return global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+            return null;
          }
 ");
          }
@@ -473,26 +475,26 @@ namespace ").Append(_state.Namespace).Append(@"
          if(").Append(_state.KeyMember.Member.ArgumentName.Escaped).Append(@" is null)
          {
             obj = default;
-            return new global::System.ComponentModel.DataAnnotations.ValidationResult(""The argument '").Append(_state.KeyMember.Member.ArgumentName.Escaped).Append(@"' must not be null."", global::Thinktecture.SingleItem.Collection(nameof(").Append(_state.TypeFullyQualified).Append(".").Append(_state.KeyMember.Member.Name).Append(@")));
+            return CreateValidationError<").Append(_state.ValidationError.TypeFullyQualified).Append(@">(""The argument '").Append(_state.KeyMember.Member.ArgumentName.Escaped).Append(@"' must not be null."");
          }
 ");
          }
       }
 
       _sb.Append(@"
-         var validationResult = global::System.ComponentModel.DataAnnotations.ValidationResult.Success;
+         ").Append(_state.ValidationError.TypeFullyQualified).Append(@"? validationError = null;
          ");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT).Append(" = ");
+         _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
 
-      _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref validationResult");
+      _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref validationError");
 
       _sb.RenderArguments(fieldsAndProperties, "ref ", true);
 
       _sb.Append(@");
 
-         if (validationResult == global::System.ComponentModel.DataAnnotations.ValidationResult.Success)
+         if (validationError is null)
          {
             obj = ");
 
@@ -502,7 +504,7 @@ namespace ").Append(_state.Namespace).Append(@"
             obj.").Append(_FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT);
+         _sb.Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR);
 
       _sb.Append(@");
          }
@@ -511,7 +513,7 @@ namespace ").Append(_state.Namespace).Append(@"
             obj = default;
          }
 
-         return validationResult;
+         return validationError;
       }");
    }
 
@@ -526,7 +528,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("private ");
 
-      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref global::System.ComponentModel.DataAnnotations.ValidationResult? validationResult");
+      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref ").Append(_state.ValidationError.TypeFullyQualified).Append("? validationError");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true, addAllowNullNotNullCombi: true);
 
@@ -540,7 +542,7 @@ namespace ").Append(_state.Namespace).Append(@"
       partial void ").Append(_FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(_FACTORY_ARGUMENTS_VALIDATION_RESULT);
+         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR);
 
       _sb.Append(");");
    }
@@ -826,6 +828,17 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      }");
+   }
+
+   private void GenerateValidationErrorFactory()
+   {
+      _sb.Append(@"
+
+      private static TError CreateValidationError<TError>(string message)
+         where TError : class, global::Thinktecture.IValidationError<TError>
+      {
+         return TError.Create(message);
       }");
    }
 }

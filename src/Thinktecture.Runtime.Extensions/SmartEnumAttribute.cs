@@ -49,7 +49,7 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// then the <see cref="EqualityComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/> as well.
    ///
    /// This setting has no effect:
-   /// - if key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_GreaterThan</code>, <code>op_GreaterThanOrEqual</code>, <code>op_LessThan</code>, <code>op_LessThanOrEqual</code>).
+   /// - if key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_GreaterThan</c>, <c>op_GreaterThanOrEqual</c>, <c>op_LessThan</c>, <c>op_LessThanOrEqual</c>).
    /// </summary>
    public OperatorsGeneration ComparisonOperators { get; set; }
 
@@ -62,7 +62,7 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// then the <see cref="EqualityComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/> as well.
    ///
    /// This setting has no effect:
-   /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<code>op_Equality</code>, <code>op_Inequality</code>).
+   /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Equality</c>, <c>op_Inequality</c>).
    /// </summary>
    public OperatorsGeneration EqualityComparisonOperators
    {
@@ -84,12 +84,12 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public bool SkipToString { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of the methods <code>Switch</code>.
+   /// Indication whether the generator should skip the implementation of the methods <c>Switch</c>.
    /// </summary>
    public bool SkipSwitchMethods { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of the methods <code>Map</code>.
+   /// Indication whether the generator should skip the implementation of the methods <c>Map</c>.
    /// </summary>
    public bool SkipMapMethods { get; set; }
 

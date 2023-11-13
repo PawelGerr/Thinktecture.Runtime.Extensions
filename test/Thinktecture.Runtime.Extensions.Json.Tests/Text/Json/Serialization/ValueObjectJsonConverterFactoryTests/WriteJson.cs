@@ -30,23 +30,23 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_enum_if_null_and_default()
    {
-      SerializeWithConverter<TestSmartEnum_Class_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_IntBased, int>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Class_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_StringBased, string>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_IntBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_StringBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int>>(default).Should().Be("0");
-      SerializeWithConverter<TestSmartEnum_Struct_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string>>(default).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Class_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_IntBased, int, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Class_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_StringBased, string, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Struct_IntBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Struct_StringBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Struct_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int, ValidationError>>(default).Should().Be("0");
+      SerializeWithConverter<TestSmartEnum_Struct_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string, ValidationError>>(default).Should().Be("null");
    }
 
    [Fact]
    public void Should_deserialize_keyed_value_object_if_null_and_default()
    {
-      SerializeWithConverter<IntBasedReferenceValueObject, ValueObjectJsonConverterFactory<IntBasedReferenceValueObject, int>>(null).Should().Be("null");
-      SerializeWithConverter<StringBasedReferenceValueObject, ValueObjectJsonConverterFactory<StringBasedReferenceValueObject, string>>(null).Should().Be("null");
-      SerializeWithConverter<IntBasedStructValueObject?, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int>>(null).Should().Be("null");
-      SerializeWithConverter<StringBasedStructValueObject?, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string>>(null).Should().Be("null");
-      SerializeWithConverter<IntBasedStructValueObject, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int>>(default).Should().Be("0");
-      SerializeWithConverter<StringBasedStructValueObject, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string>>(default).Should().Be("null");
+      SerializeWithConverter<IntBasedReferenceValueObject, ValueObjectJsonConverterFactory<IntBasedReferenceValueObject, int, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<StringBasedReferenceValueObject, ValueObjectJsonConverterFactory<StringBasedReferenceValueObject, string, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<IntBasedStructValueObject?, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<StringBasedStructValueObject?, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<IntBasedStructValueObject, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int, ValidationError>>(default).Should().Be("0");
+      SerializeWithConverter<StringBasedStructValueObject, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string, ValidationError>>(default).Should().Be("null");
    }
 
    [Fact]
@@ -61,7 +61,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForStringBasedEnumTest))]
    public void Should_serialize_string_based_enum(TestEnum enumValue, string expectedJson)
    {
-      var json = SerializeWithConverter<TestEnum, ValueObjectJsonConverterFactory<TestEnum, string>>(enumValue);
+      var json = SerializeWithConverter<TestEnum, ValueObjectJsonConverterFactory<TestEnum, string, ValidationError>>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -70,7 +70,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForIntBasedEnumTest))]
    public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
    {
-      var json = SerializeWithConverter<IntegerEnum, ValueObjectJsonConverterFactory<IntegerEnum, int>>(enumValue);
+      var json = SerializeWithConverter<IntegerEnum, ValueObjectJsonConverterFactory<IntegerEnum, int, ValidationError>>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -79,7 +79,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
    public void Should_serialize_class_containing_string_based_enum(ClassWithStringBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
    {
-      var json = SerializeWithConverter<ClassWithStringBasedEnum, ValueObjectJsonConverterFactory<TestEnum, string>>(classWithEnum, null, ignoreNullValues);
+      var json = SerializeWithConverter<ClassWithStringBasedEnum, ValueObjectJsonConverterFactory<TestEnum, string, ValidationError>>(classWithEnum, null, ignoreNullValues);
 
       json.Should().Be(expectedJson);
    }
@@ -88,7 +88,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
    public void Should_serialize_class_containing_int_based_enum(ClassWithIntBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
    {
-      var json = SerializeWithConverter<ClassWithIntBasedEnum, ValueObjectJsonConverterFactory<IntegerEnum, int>>(classWithEnum, null, ignoreNullValues);
+      var json = SerializeWithConverter<ClassWithIntBasedEnum, ValueObjectJsonConverterFactory<IntegerEnum, int, ValidationError>>(classWithEnum, null, ignoreNullValues);
 
       json.Should().Be(expectedJson);
    }
@@ -118,7 +118,7 @@ public class WriteJson : JsonTestsBase
       T value,
       JsonNamingPolicy namingStrategy = null,
       bool ignoreNullValues = false)
-      where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
       return SerializeWithConverter<T, ValueObjectJsonConverterFactory>(value, namingStrategy, ignoreNullValues);
    }

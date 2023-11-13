@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.ValueObjects;
 
@@ -19,13 +18,13 @@ public readonly partial struct EndDate
    }
 
    // Further validation
-   // static partial void ValidateFactoryArguments(ref ValidationResult? validationResult, ref DateOnly date)
+   // static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref DateOnly date)
    // {
-   //    validationResult = date.Year switch
+   //    validationError = date.Year switch
    //    {
-   //       < 2000 => new ValidationResult("The end date lies too far in the past."),
-   //       >= 2050 => new ValidationResult("The end date lies too far in the future."),
-   //       _ => validationResult
+   //       < 2000 => new ValidationError("The end date lies too far in the past."),
+   //       >= 2050 => new ValidationError("The end date lies too far in the future."),
+   //       _ => validationError
    //    };
    // }
 }

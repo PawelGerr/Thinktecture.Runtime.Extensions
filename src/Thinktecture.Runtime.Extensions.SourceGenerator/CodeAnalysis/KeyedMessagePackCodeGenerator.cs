@@ -34,7 +34,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       }
 
       _sb.Append(@"
-[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.").Append(_state.Type.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter").Append("<").Append(_state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(@">))]
+[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.").Append(_state.Type.IsReferenceType ? "ValueObjectMessagePackFormatter" : "StructValueObjectMessagePackFormatter").Append("<").Append(_state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(", ").Append(_state.AttributeInfo.ValidationError.TypeFullyQualified).Append(@">))]
 partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
 {
 }

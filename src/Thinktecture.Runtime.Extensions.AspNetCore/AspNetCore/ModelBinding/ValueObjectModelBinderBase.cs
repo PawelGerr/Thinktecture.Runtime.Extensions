@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
@@ -11,14 +10,16 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
-public abstract class ValueObjectModelBinderBase<T, TKey> : SimpleTypeModelBinder
-   where T : IValueObjectFactory<T, TKey>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
+public abstract class ValueObjectModelBinderBase<T, TKey, TValidationError> : SimpleTypeModelBinder
+   where T : IValueObjectFactory<T, TKey, TValidationError>
    where TKey : notnull
+   where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
 
    /// <summary>
-   /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey}"/>.
+   /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey,TValidationError}"/>.
    /// </summary>
    /// <param name="loggerFactory">Logger factory.</param>
    protected ValueObjectModelBinderBase(
@@ -37,15 +38,15 @@ public abstract class ValueObjectModelBinderBase<T, TKey> : SimpleTypeModelBinde
       }
 
       key = Prepare(key);
-      var validationResult = T.Validate(key, valueProviderResult.Culture, out var obj);
+      var validationError = T.Validate(key, valueProviderResult.Culture, out var obj);
 
-      if (validationResult == ValidationResult.Success || _mayReturnInvalidObjects)
+      if (validationError is null || _mayReturnInvalidObjects)
       {
          bindingContext.Result = ModelBindingResult.Success(obj);
          return;
       }
 
-      bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, validationResult!.ErrorMessage ?? $"There is no item of type '{typeof(T).Name}' with the identifier '{key}'.");
+      bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, validationError.ToString() ?? $"There is no item of type '{typeof(T).Name}' with the identifier '{key}'.");
    }
 
    /// <summary>
