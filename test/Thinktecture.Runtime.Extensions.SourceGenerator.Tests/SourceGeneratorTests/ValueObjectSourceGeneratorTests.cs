@@ -926,7 +926,7 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      static partial int ValidateFactoryArguments(ref ValidationResult? validationError)
+      static partial int ValidateFactoryArguments(ref ValidationError? validationError)
       {
          return 42;
       }
@@ -1090,7 +1090,7 @@ namespace Thinktecture.Tests
    [ValueObject]
 	public partial class TestValueObject
 	{
-      static partial string? ValidateFactoryArguments(ref ValidationResult? validationError)
+      static partial string? ValidateFactoryArguments(ref ValidationError? validationError)
       {
          return String.Empty;
       }

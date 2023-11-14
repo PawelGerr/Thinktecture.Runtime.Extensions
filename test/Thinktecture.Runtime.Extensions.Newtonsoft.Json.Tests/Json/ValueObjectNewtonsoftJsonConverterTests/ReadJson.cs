@@ -97,6 +97,30 @@ public class ReadJson : JsonTestsBase
       value.Should().BeEquivalentTo(BoundaryWithFactories.Create(1, 2));
    }
 
+   [Fact]
+   public void Should_deserialize_enum_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Deserialize<TestEnumWithCustomError, string, TestEnumValidationError>("\"item1\"");
+
+      value.Should().BeEquivalentTo(TestEnumWithCustomError.Item1);
+   }
+
+   [Fact]
+   public void Should_deserialize_simple_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Deserialize<StringBasedReferenceValueObjectWithCustomError, string, StringBasedReferenceValueObjectValidationError>("\"value\"");
+
+      value.Should().BeEquivalentTo(StringBasedReferenceValueObjectWithCustomError.Create("value"));
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = DeserializeWithConverter<BoundaryWithCustomError, BoundaryWithCustomError.ValueObjectNewtonsoftJsonConverter>("{ \"lower\": 1, \"upper\": 2 }");
+
+      value.Should().BeEquivalentTo(BoundaryWithCustomError.Create(1, 2));
+   }
+
    [Theory]
    [MemberData(nameof(DataForValueObjectWithMultipleProperties))]
    public void Should_deserialize_value_type_with_multiple_properties(
@@ -132,7 +156,16 @@ public class ReadJson : JsonTestsBase
       NamingStrategy namingStrategy = null)
       where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(json, namingStrategy);
+      return Deserialize<T, TKey, ValidationError>(json, namingStrategy);
+   }
+
+   private static T Deserialize<T, TKey, TValidationError>(
+      string json,
+      NamingStrategy namingStrategy = null)
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where TValidationError : class, IValidationError<TValidationError>
+   {
+      return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError>>(json, namingStrategy);
    }
 
    private static T? DeserializeNullableStruct<T, TKey>(

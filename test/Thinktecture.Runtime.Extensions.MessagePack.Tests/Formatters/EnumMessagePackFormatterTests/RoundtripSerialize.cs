@@ -127,4 +127,37 @@ public class Serialize
 
       value.Should().BeEquivalentTo(BoundaryWithFactories.Create(1, 2));
    }
+
+   [Fact]
+   public void Should_roundtrip_serialize_enum_with_ValueObjectValidationErrorAttribute()
+   {
+      var options = StandardResolver.Options;
+
+      var bytes = MessagePackSerializer.Serialize(TestEnumWithCustomError.Item1, options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize<TestEnumWithCustomError>(bytes, options, CancellationToken.None);
+
+      value.Should().BeEquivalentTo(TestEnumWithCustomError.Item1);
+   }
+
+   [Fact]
+   public void Should_deserialize_simple_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var options = StandardResolver.Options;
+
+      var bytes = MessagePackSerializer.Serialize(StringBasedReferenceValueObjectWithCustomError.Create("value"), options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize<StringBasedReferenceValueObjectWithCustomError>(bytes, options, CancellationToken.None);
+
+      value.Should().BeEquivalentTo(StringBasedReferenceValueObjectWithCustomError.Create("value"));
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var options = StandardResolver.Options;
+
+      var bytes = MessagePackSerializer.Serialize(BoundaryWithCustomError.Create(1, 2), options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize<BoundaryWithCustomError>(bytes, options, CancellationToken.None);
+
+      value.Should().BeEquivalentTo(BoundaryWithCustomError.Create(1, 2));
+   }
 }

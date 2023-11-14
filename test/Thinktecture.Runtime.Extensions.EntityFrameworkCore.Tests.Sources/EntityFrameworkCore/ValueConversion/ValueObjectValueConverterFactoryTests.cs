@@ -25,14 +25,17 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                    {
                       Id = new Guid("A53F60CD-B53E-40E3-B16F-05E9A223E238"),
                       TestEnum = TestEnum.Item1,
+                      TestEnumWithCustomError = TestEnumWithCustomError.Item1,
                       IntBasedReferenceValueObject = IntBasedReferenceValueObject.Create(42),
                       IntBasedStructValueObject = IntBasedStructValueObject.Create(43),
                       StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value 1"),
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("value 2"),
+                      StringBasedReferenceValueObjectWithCustomError = StringBasedReferenceValueObjectWithCustomError.Create("value 3"),
                       TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased.Value1,
                       TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
                       NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
-                      Boundary = Boundary.Create(10, 20)
+                      Boundary = Boundary.Create(10, 20),
+                      BoundaryWithCustomError = BoundaryWithCustomError.Create(11, 21)
                    };
       _ctx.Add(entity);
       await _ctx.SaveChangesAsync();
@@ -43,7 +46,7 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
    }
 
    [Fact]
-   public async Task Should_use_ctor_of_value_types_instead_of_factory_because_EF_is_source_of_truth()
+   public async Task Should_use_ctor_of_value_types_instead_of_factory_because_DB_is_source_of_truth()
    {
       var entity = new TestEntity_with_Enum_and_ValueObjects
                    {

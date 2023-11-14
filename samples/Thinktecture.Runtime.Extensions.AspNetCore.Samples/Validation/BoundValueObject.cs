@@ -3,9 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Thinktecture.Validation;
 
-public class BoundValueObject<T, TKey> : IBoundParam
-   where T : IValueObjectFactory<T, TKey, ValidationError>
+public class BoundValueObject<T, TKey, TValidationError> : IBoundParam
+   where T : IValueObjectFactory<T, TKey, TValidationError>
    where TKey : IParsable<TKey>
+   where TValidationError : class, IValidationError<TValidationError>
 {
    private readonly T? _item;
    public T? Item => Error is null ? _item : throw new ValidationException(Error);
@@ -22,11 +23,11 @@ public class BoundValueObject<T, TKey> : IBoundParam
       Error = error ?? throw new ArgumentNullException(nameof(error));
    }
 
-   public static bool TryParse(string s, IFormatProvider? formatProvider, out BoundValueObject<T, TKey> value)
+   public static bool TryParse(string s, IFormatProvider? formatProvider, out BoundValueObject<T, TKey, TValidationError> value)
    {
       if (!TKey.TryParse(s, formatProvider, out var key))
       {
-         value = new BoundValueObject<T, TKey>($"The value '{s}' cannot be converted to '{typeof(TKey).FullName}'.");
+         value = new BoundValueObject<T, TKey, TValidationError>($"The value '{s}' cannot be converted to '{typeof(TKey).FullName}'.");
       }
       else
       {
@@ -34,11 +35,11 @@ public class BoundValueObject<T, TKey> : IBoundParam
 
          if (validationError is null || item is IValidatableEnum)
          {
-            value = new BoundValueObject<T, TKey>(item);
+            value = new BoundValueObject<T, TKey, TValidationError>(item);
          }
          else
          {
-            value = new BoundValueObject<T, TKey>(validationError.ToString());
+            value = new BoundValueObject<T, TKey, TValidationError>(validationError.ToString() ?? "Invalid format");
          }
       }
 
@@ -46,8 +47,9 @@ public class BoundValueObject<T, TKey> : IBoundParam
    }
 }
 
-public class BoundValueObject<T> : IBoundParam
-   where T : IValueObjectFactory<T, string, ValidationError>
+public class BoundValueObject<T, TValidationError> : IBoundParam
+   where T : IValueObjectFactory<T, string, TValidationError>
+   where TValidationError : class, IValidationError<TValidationError>
 {
    private readonly T? _item;
    public T? Value => Error is null ? _item : throw new ValidationException(Error);
@@ -64,17 +66,17 @@ public class BoundValueObject<T> : IBoundParam
       Error = error ?? throw new ArgumentNullException(nameof(error));
    }
 
-   public static bool TryParse(string s, IFormatProvider? formatProvider, out BoundValueObject<T> value)
+   public static bool TryParse(string s, IFormatProvider? formatProvider, out BoundValueObject<T, TValidationError> value)
    {
       var validationError = T.Validate(s, formatProvider, out var item);
 
       if (validationError is null || item is IValidatableEnum)
       {
-         value = new BoundValueObject<T>(item);
+         value = new BoundValueObject<T, TValidationError>(item);
       }
       else
       {
-         value = new BoundValueObject<T>(validationError.ToString());
+         value = new BoundValueObject<T, TValidationError>(validationError.ToString() ?? "Invalid format");
       }
 
       return true;

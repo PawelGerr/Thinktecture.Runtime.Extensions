@@ -127,4 +127,14 @@ public class Validate
 
       item.Should().Be(EnumWithFactory.Item1);
    }
+
+   [Fact]
+   public void Should_return_custom_error_if_enum_uses_ValueObjectValidationErrorAttribute()
+   {
+      var validationError = TestEnumWithCustomError.Validate("invalid", null, out var item);
+      validationError.Should().BeOfType<TestEnumValidationError>();
+      validationError.ToString().Should().Be("There is no item of type 'TestEnumWithCustomError' with the identifier 'invalid'.");
+
+      item.Should().BeNull();
+   }
 }

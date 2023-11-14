@@ -85,11 +85,35 @@ public class WriteJson : JsonTestsBase
    }
 
    [Fact]
-   public void Should_deserialize_using_custom_factory_specified_by_ValueObjectFactoryAttribute()
+   public void Should_serialize_using_custom_factory_specified_by_ValueObjectFactoryAttribute()
    {
       var json = Serialize<BoundaryWithFactories, string>(BoundaryWithFactories.Create(1, 2));
 
       json.Should().Be("\"1:2\"");
+   }
+
+   [Fact]
+   public void Should_serialize_enum_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Serialize<TestEnumWithCustomError, string, TestEnumValidationError>(TestEnumWithCustomError.Item1);
+
+      value.Should().BeEquivalentTo("\"item1\"");
+   }
+
+   [Fact]
+   public void Should_serialize_simple_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Serialize<StringBasedReferenceValueObjectWithCustomError, string, StringBasedReferenceValueObjectValidationError>(StringBasedReferenceValueObjectWithCustomError.Create("value"));
+
+      value.Should().BeEquivalentTo("\"value\"");
+   }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = SerializeWithConverter<BoundaryWithCustomError, BoundaryWithCustomError.ValueObjectNewtonsoftJsonConverter>(BoundaryWithCustomError.Create(1, 2), new CamelCaseNamingStrategy());
+
+      value.Should().BeEquivalentTo("{\"lower\":1.0,\"upper\":2.0}");
    }
 
    private static string Serialize<T, TKey>(
@@ -98,7 +122,17 @@ public class WriteJson : JsonTestsBase
       NullValueHandling nullValueHandling = NullValueHandling.Include)
       where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
    {
-      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
+      return Serialize<T, TKey, ValidationError>(value, namingStrategy, nullValueHandling);
+   }
+
+   private static string Serialize<T, TKey, TValidationError>(
+      T value,
+      NamingStrategy namingStrategy = null,
+      NullValueHandling nullValueHandling = NullValueHandling.Include)
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where TValidationError : class, IValidationError<TValidationError>
+   {
+      return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError>>(value, namingStrategy, nullValueHandling);
    }
 
    private static string SerializeNullableStruct<T, TKey>(

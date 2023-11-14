@@ -161,27 +161,27 @@ public class ValueObjectDemos
       logger.Information("Boundaries are equal: {Equal}", equal);
 
       // Custom implementation of IValueObjectFactory<Boundary, string>
-      validationError = BoundaryWithFactories.Validate("3:4", null, out var boundaryFromString);
+      var boundaryValidationError = BoundaryWithFactories.Validate("3:4", null, out var boundaryFromString);
 
-      if (validationError is null)
+      if (boundaryValidationError is null)
       {
          logger.Information("BoundaryWithFactories '{Boundary}' created from string", boundaryFromString);
       }
       else
       {
-         logger.Warning("Failed to create BoundaryWithFactories from string. Validation error: {ValidationError}", validationError.ToString());
+         logger.Warning("Failed to create BoundaryWithFactories from string. Validation error: {ValidationError}", boundaryValidationError.ToString());
       }
 
       // Custom implementation of IValueObjectFactory<Boundary, (int Lower, int Upper)>
-      validationError = BoundaryWithFactories.Validate((5, 6), null, out var boundaryFromTuple);
+      boundaryValidationError = BoundaryWithFactories.Validate((5, 6), null, out var boundaryFromTuple);
 
-      if (validationError is null)
+      if (boundaryValidationError is null)
       {
          logger.Information("BoundaryWithFactories '{Boundary}' created from tuple", boundaryFromTuple);
       }
       else
       {
-         logger.Warning("Failed to create BoundaryWithFactories from tuple. Validation error: {ValidationError}", validationError.ToString());
+         logger.Warning("Failed to create BoundaryWithFactories from tuple. Validation error: {ValidationError}", boundaryValidationError.ToString());
       }
    }
 }

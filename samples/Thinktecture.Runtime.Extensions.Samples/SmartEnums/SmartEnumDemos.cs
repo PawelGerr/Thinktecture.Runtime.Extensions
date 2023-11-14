@@ -166,14 +166,22 @@ public class SmartEnumDemos
 
       logger.Information("==== Demo for abstract static members ====");
 
-      PrintAllItems<ProductType, string>(logger);
+      PrintAllItems<ProductType, string, ProductTypeValidationError>(logger);
 
-      Get<ProductType, string>(logger, "Groceries");
+      Get<ProductType, string, ProductTypeValidationError>(logger, "Groceries");
    }
 
    private static void PrintAllItems<T, TKey>(ILogger logger)
       where T : IEnum<TKey, T, ValidationError>, IEnum<TKey>
       where TKey : notnull
+   {
+      PrintAllItems<T, TKey, ValidationError>(logger);
+   }
+
+   private static void PrintAllItems<T, TKey, TValidationError>(ILogger logger)
+      where T : IEnum<TKey, T, TValidationError>, IEnum<TKey>
+      where TKey : notnull
+      where TValidationError : class, IValidationError<TValidationError>
    {
       logger.Information("Print all items of '{Name}':", typeof(T).Name);
 
@@ -186,6 +194,14 @@ public class SmartEnumDemos
    private static void Get<T, TKey>(ILogger logger, TKey key)
       where T : IEnum<TKey, T, ValidationError>, IEnum<TKey>
       where TKey : notnull
+   {
+      Get<T, TKey, ValidationError>(logger, key);
+   }
+
+   private static void Get<T, TKey, TValidationError>(ILogger logger, TKey key)
+      where T : IEnum<TKey, T, TValidationError>, IEnum<TKey>
+      where TKey : notnull
+      where TValidationError : class, IValidationError<TValidationError>
    {
       var item = T.Get(key);
 

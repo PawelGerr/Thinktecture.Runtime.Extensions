@@ -114,11 +114,45 @@ public class WriteJson : JsonTestsBase
       json.Should().Be("\"1:2\"");
    }
 
+   [Fact]
+   public void Should_serialize_enum_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Serialize<TestEnumWithCustomError, string, TestEnumValidationError>(TestEnumWithCustomError.Item1);
+
+      value.Should().BeEquivalentTo("\"item1\"");
+   }
+
+   [Fact]
+   public void Should_serialize_simple_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Serialize<StringBasedReferenceValueObjectWithCustomError, string, StringBasedReferenceValueObjectValidationError>(StringBasedReferenceValueObjectWithCustomError.Create("value"));
+
+      value.Should().BeEquivalentTo("\"value\"");
+   }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = SerializeWithConverter<BoundaryWithCustomError, BoundaryWithCustomError.ValueObjectJsonConverterFactory>(BoundaryWithCustomError.Create(1, 2), JsonNamingPolicy.CamelCase);
+
+      value.Should().BeEquivalentTo("{\"lower\":1,\"upper\":2}");
+   }
+
    private static string Serialize<T, TKey>(
       T value,
       JsonNamingPolicy namingStrategy = null,
       bool ignoreNullValues = false)
       where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+   {
+      return Serialize<T, TKey, ValidationError>(value, namingStrategy, ignoreNullValues);
+   }
+
+   private static string Serialize<T, TKey, TValidationError>(
+      T value,
+      JsonNamingPolicy namingStrategy = null,
+      bool ignoreNullValues = false)
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where TValidationError : class, IValidationError<TValidationError>
    {
       return SerializeWithConverter<T, ValueObjectJsonConverterFactory>(value, namingStrategy, ignoreNullValues);
    }

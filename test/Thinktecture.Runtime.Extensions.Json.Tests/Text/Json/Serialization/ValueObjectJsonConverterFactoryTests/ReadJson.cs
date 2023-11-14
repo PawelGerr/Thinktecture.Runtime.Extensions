@@ -147,10 +147,43 @@ public class ReadJson : JsonTestsBase
       value.Should().BeEquivalentTo(BoundaryWithFactories.Create(1, 2));
    }
 
+   [Fact]
+   public void Should_deserialize_enum_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Deserialize<TestEnumWithCustomError, string, TestEnumValidationError>("\"item1\"");
+
+      value.Should().BeEquivalentTo(TestEnumWithCustomError.Item1);
+   }
+
+   [Fact]
+   public void Should_deserialize_simple_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = Deserialize<StringBasedReferenceValueObjectWithCustomError, string, StringBasedReferenceValueObjectValidationError>("\"value\"");
+
+      value.Should().BeEquivalentTo(StringBasedReferenceValueObjectWithCustomError.Create("value"));
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_with_ValueObjectValidationErrorAttribute()
+   {
+      var value = DeserializeWithConverter<BoundaryWithCustomError, BoundaryWithCustomError.ValueObjectJsonConverterFactory>("{ \"lower\": 1, \"upper\": 2 }", JsonNamingPolicy.CamelCase);
+
+      value.Should().BeEquivalentTo(BoundaryWithCustomError.Create(1, 2));
+   }
+
    private static T Deserialize<T, TKey>(
       string json,
       JsonNamingPolicy namingPolicy = null)
       where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+   {
+      return Deserialize<T, TKey, ValidationError>(json, namingPolicy);
+   }
+
+   private static T Deserialize<T, TKey, TValidationError>(
+      string json,
+      JsonNamingPolicy namingPolicy = null)
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where TValidationError : class, IValidationError<TValidationError>
    {
       return DeserializeWithConverter<T, ValueObjectJsonConverterFactory>(json, namingPolicy);
    }
