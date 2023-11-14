@@ -47,7 +47,7 @@ public static class AnalyzerVerifier<TAnalyzer>
 #if NET7
          ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
 #else
-         ReferenceAssemblies = new ReferenceAssemblies("net8.0", new PackageIdentity("Microsoft.NETCore.App.Ref", "8.0.0-rc.2.23479.6"), Path.Combine("ref", "8.0.0-rc.2.23479.6"));
+         ReferenceAssemblies = new ReferenceAssemblies("net8.0", new PackageIdentity("Microsoft.NETCore.App.Ref", "8.0.0"), Path.Combine("ref", "8.0.0"));
 #endif
          foreach (var additionalReference in additionalReferences)
          {
