@@ -119,16 +119,16 @@ bool found = ProductType.TryGet("Groceries", out ProductType productType);
 
 ------------
 
-// similar to TryGet but returns a ValidationResult instead of a boolean.
-ValidationResult? validationResult = ProductType.Validate("Groceries", out productType);
+// similar to TryGet but returns a ValidationError instead of a boolean.
+ValidationError? validationError = ProductType.Validate("Groceries", null, out productType);
 
-if (validationResult == ValidationResult.Success)
+if (validationError is null)
 {
     logger.Information("Product type {Type} found with Validate", productType);
 }
 else
 {
-    logger.Warning("Failed to fetch the product type with Validate. Validation result: {ValidationResult}", validationResult.ErrorMessage);
+    logger.Warning("Failed to fetch the product type with Validate. Validation result: {ValidationError}", validationError.ToString());
 }
 
 ------------
@@ -297,16 +297,16 @@ bool created = ProductName.TryCreate("Milk", out ProductName milk);
 
 -----------
 
-// similar to TryCreate but returns a ValidationResult instead of a boolean.
-ValidationResult? validationResult = ProductName.Validate("Milk", out var milk);
+// similar to TryCreate but returns a ValidationError instead of a boolean.
+ValidationError? validationError = ProductName.Validate("Milk", out var milk);
 
-if (validationResult == ValidationResult.Success)
+if (validationError is null)
 {
     logger.Information("Product name {Name} created", milk);
 }
 else
 {
-    logger.Warning("Failed to create product name. Validation result: {ValidationResult}", validationResult.ErrorMessage);
+    logger.Warning("Failed to create product name. Validation result: {ValidationError}", validationError.ToString());
 }
 
 -----------
@@ -398,16 +398,16 @@ bool created = Boundary.TryCreate(lower: 1, upper: 2, out Boundary boundary);
 
 -----------
 
-// similar to TryCreate but returns a ValidationResult instead of a boolean.
-ValidationResult? validationResult = Boundary.Validate(lower: 1, upper: 2, out Boundary boundary);
+// similar to TryCreate but returns a ValidationError instead of a boolean.
+ValidationError? validationError = Boundary.Validate(lower: 1, upper: 2, out Boundary boundary);
 
-if (validationResult == ValidationResult.Success)
+if (validationError is null)
 {
     logger.Information("Boundary {Boundary} created", boundary);
 }
 else
 {
-    logger.Warning("Failed to create boundary. Validation result: {ValidationResult}", validationResult.ErrorMessage);
+    logger.Warning("Failed to create boundary. Validation result: {ValidationError}", validationError.ToString());
 }
 
 -----------
