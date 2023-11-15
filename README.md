@@ -249,6 +249,7 @@ Features:
 * Allows custom properties and methods
 * Provides appropriate factory methods for creation of new value objects based on the specified properties/fields
 * Allows custom [validation](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#validation) of [constructor](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#validation-of-the-constructor-arguments) and [factory method](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#validation-of-the-factory-method-arguments) arguments
+* Allows [custom type to pass validation error(s)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#custom-type-for-validation-errors)
 * Additional features for [simple Value Objects (1 "key"-property/field)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#simple-value-objects) and [complex Value Objects (2 properties/fields or more)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#complex-value-objects)
 * Simple Value Objects: allows cast and type conversion from key-type to Value Object and vice versa
 * Simple Value Objects: provides an implementation of `IFormattable` if the key-property/field is an `IFormattable`
