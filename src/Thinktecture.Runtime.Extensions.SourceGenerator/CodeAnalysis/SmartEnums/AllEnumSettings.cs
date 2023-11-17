@@ -10,8 +10,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>
    public OperatorsGeneration EqualityComparisonOperators { get; }
    public bool SkipIFormattable { get; }
    public bool SkipToString { get; }
-   public bool SkipSwitchMethods { get; }
-   public bool SkipMapMethods { get; }
+   public bool? SkipSwitchMethods { get; }
+   public bool? SkipMapMethods { get; }
 
    public AllEnumSettings(AttributeData? attribute)
    {
@@ -23,8 +23,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>
       EqualityComparisonOperators = attribute?.FindEqualityComparisonOperators() ?? OperatorsGeneration.Default;
       SkipIFormattable = attribute?.FindSkipIFormattable() ?? false;
       SkipToString = attribute?.FindSkipToString() ?? false;
-      SkipSwitchMethods = attribute?.FindSkipSwitchMethods() ?? false;
-      SkipMapMethods = attribute?.FindSkipMapMethods() ?? false;
+      SkipSwitchMethods = attribute?.FindSkipSwitchMethods();
+      SkipMapMethods = attribute?.FindSkipMapMethods();
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
