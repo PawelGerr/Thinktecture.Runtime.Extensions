@@ -7,8 +7,8 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
 
    public bool IsValidatable => _settings.IsValidatable;
    public bool SkipToString => _settings.SkipToString;
-   public bool SkipSwitchMethods => _settings.SkipSwitchMethods;
-   public bool SkipMapMethods => _settings.SkipMapMethods;
+   public bool? SkipSwitchMethods => _settings.SkipSwitchMethods;
+   public bool? SkipMapMethods => _settings.SkipMapMethods;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
    public IReadOnlyList<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 

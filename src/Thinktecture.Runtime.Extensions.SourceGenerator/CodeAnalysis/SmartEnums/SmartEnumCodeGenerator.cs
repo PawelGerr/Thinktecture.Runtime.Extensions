@@ -166,7 +166,9 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.Settings.SkipToString)
          GenerateToString();
 
-      if (!_state.Settings.SkipSwitchMethods)
+      var hasSaneNumberOfItems = _state.ItemNames.Count < 1000;
+
+      if (!_state.Settings.SkipSwitchMethods.GetValueOrDefault() && hasSaneNumberOfItems)
       {
          GenerateSwitchForAction(false);
          GenerateSwitchForAction(true);
@@ -174,7 +176,7 @@ namespace ").Append(_state.Namespace).Append(@"
          GenerateSwitchForFunc(true);
       }
 
-      if (!_state.Settings.SkipMapMethods)
+      if (!_state.Settings.SkipMapMethods.GetValueOrDefault() && hasSaneNumberOfItems)
          GenerateMap();
 
       GenerateGetLookup();
