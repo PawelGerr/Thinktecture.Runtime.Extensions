@@ -353,7 +353,14 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
 
-         var attributeInfo = new AttributeInfo(type);
+         var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo);
+
+         if (errorMessage is not null)
+         {
+            Logger.LogDebug(errorMessage, tds);
+            return null;
+         }
+
          var settings = new AllValueObjectSettings(context.Attributes[0]);
          var state = new ValueObjectSourceGeneratorState(factory, type, attributeInfo.ValidationError, new ValueObjectSettings(settings, attributeInfo), cancellationToken);
 

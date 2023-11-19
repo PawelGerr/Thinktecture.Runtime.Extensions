@@ -9,15 +9,31 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
    public ImmutableArray<DesiredFactory> DesiredFactories { get; }
    public ValidationErrorState ValidationError { get; }
 
-   public AttributeInfo(INamedTypeSymbol type)
+   public AttributeInfo(
+      bool hasStructLayoutAttribute,
+      bool hasJsonConverterAttribute,
+      bool hasNewtonsoftJsonConverterAttribute,
+      bool hasMessagePackFormatterAttribute,
+      ImmutableArray<DesiredFactory> desiredFactories,
+      ValidationErrorState validationError)
    {
-      HasStructLayoutAttribute = default;
-      HasJsonConverterAttribute = default;
-      HasNewtonsoftJsonConverterAttribute = default;
-      HasMessagePackFormatterAttribute = default;
-      ValidationError = ValidationErrorState.Default;
+      HasStructLayoutAttribute = hasStructLayoutAttribute;
+      HasJsonConverterAttribute = hasJsonConverterAttribute;
+      HasNewtonsoftJsonConverterAttribute = hasNewtonsoftJsonConverterAttribute;
+      HasMessagePackFormatterAttribute = hasMessagePackFormatterAttribute;
+      DesiredFactories = desiredFactories;
+      ValidationError = validationError;
+   }
 
+   public static string? TryCreate(INamedTypeSymbol type, out AttributeInfo info)
+   {
+      var hasStructLayoutAttribute = false;
+      var hasJsonConverterAttribute = false;
+      var hasNewtonsoftJsonConverterAttribute = false;
+      var hasMessagePackFormatterAttribute = false;
+      var validationError = ValidationErrorState.Default;
       var valueObjectFactories = ImmutableArray<DesiredFactory>.Empty;
+      var numberOfSourceGenAttributes = 0;
 
       foreach (var attribute in type.GetAttributes())
       {
@@ -26,19 +42,19 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
 
          if (attribute.AttributeClass.IsStructLayoutAttribute())
          {
-            HasStructLayoutAttribute = true;
+            hasStructLayoutAttribute = true;
          }
          else if (attribute.AttributeClass.IsJsonConverterAttribute())
          {
-            HasJsonConverterAttribute = true;
+            hasJsonConverterAttribute = true;
          }
          else if (attribute.AttributeClass.IsNewtonsoftJsonConverterAttribute())
          {
-            HasNewtonsoftJsonConverterAttribute = true;
+            hasNewtonsoftJsonConverterAttribute = true;
          }
          else if (attribute.AttributeClass.IsMessagePackFormatterAttribute())
          {
-            HasMessagePackFormatterAttribute = true;
+            hasMessagePackFormatterAttribute = true;
          }
          else if (attribute.AttributeClass.IsValueObjectFactoryAttribute())
          {
@@ -50,11 +66,31 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          }
          else if (attribute.AttributeClass.IsValueObjectValidationErrorAttribute())
          {
-            ValidationError = new ValidationErrorState(attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            validationError = new ValidationErrorState(attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+         }
+         else if (attribute.AttributeClass.IsSmartEnumAttribute())
+         {
+            ++numberOfSourceGenAttributes;
+         }
+         else if (attribute.AttributeClass.IsValueObjectAttribute())
+         {
+            ++numberOfSourceGenAttributes;
+         }
+
+         if (numberOfSourceGenAttributes > 1)
+         {
+            info = default;
+            return "Multiple ValueObject/SmartEnum-attributes found";
          }
       }
 
-      DesiredFactories = valueObjectFactories;
+      info = new AttributeInfo(hasStructLayoutAttribute,
+                               hasJsonConverterAttribute,
+                               hasNewtonsoftJsonConverterAttribute,
+                               hasMessagePackFormatterAttribute,
+                               valueObjectFactories,
+                               validationError);
+      return null;
    }
 
    public override bool Equals(object? obj)

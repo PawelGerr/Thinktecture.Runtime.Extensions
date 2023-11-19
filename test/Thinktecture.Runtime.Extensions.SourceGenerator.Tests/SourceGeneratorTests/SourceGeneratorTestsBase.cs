@@ -10,6 +10,8 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 
 public abstract class SourceGeneratorTestsBase
 {
+   private const string _GENERATION_ERROR = "CS8785";
+
    private readonly ITestOutputHelper _output;
 
    protected SourceGeneratorTestsBase(ITestOutputHelper output)
@@ -63,12 +65,10 @@ public abstract class SourceGeneratorTestsBase
                                                  references,
                                                  new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
 
-      // compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error).Should().BeEmpty();
-
       var generator = new T();
       CSharpGeneratorDriver.Create(generator).RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
 
-      var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
+      var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Id == _GENERATION_ERROR).ToList();
       errors.Should().BeEmpty();
 
       return outputCompilation.SyntaxTrees
