@@ -20,4 +20,12 @@ public class Find
       metadata.Should().BeSameAs(genericDecimalMetadata);
       metadata.Should().BeSameAs(openGenericMetadata);
    }
+
+   [Fact]
+   public void Should_not_find_metadata_of_keyless_enum()
+   {
+      var keylessMetadata = KeyedValueObjectMetadataLookup.Find(KeylessTestEnum.Item1.GetType());
+
+      keylessMetadata.Should().BeNull();
+   }
 }

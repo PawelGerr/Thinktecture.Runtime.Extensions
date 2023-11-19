@@ -142,4 +142,27 @@ namespace Thinktecture.Tests
 
       output.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_not_generate_MessagePackFormatter_for_keyless_enum()
+   {
+      var source = @"
+using System;
+
+namespace Thinktecture.Tests
+{
+   [SmartEnum]
+	public partial class TestEnum
+	{
+      public static readonly TestEnum Item1 = new(""Item1"");
+      public static readonly TestEnum Item2 = new(""Item2"");
+   }
+}
+";
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".MessagePack",
+                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      output.Should().BeNull();
+   }
 }

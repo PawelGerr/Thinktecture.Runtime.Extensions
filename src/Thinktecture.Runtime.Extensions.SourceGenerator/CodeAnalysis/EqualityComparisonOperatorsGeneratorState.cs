@@ -1,15 +1,15 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<EqualityComparisonOperatorsGeneratorState>
+public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<EqualityComparisonOperatorsGeneratorState>, ITypeInformationProvider
 {
    public ITypeInformation Type { get; }
-   public IMemberInformation KeyMember { get; }
+   public IMemberInformation? KeyMember { get; }
    public OperatorsGeneration OperatorsGeneration { get; }
    public ComparerInfo? EqualityComparer { get; }
 
    public EqualityComparisonOperatorsGeneratorState(
       ITypeInformation type,
-      IMemberInformation keyMember,
+      IMemberInformation? keyMember,
       OperatorsGeneration operatorsGeneration,
       ComparerInfo? equalityComparer)
    {
@@ -37,7 +37,7 @@ public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<Eq
       unchecked
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
-         hashCode = (hashCode * 397) ^ MemberInformationComparer.Instance.GetHashCode(KeyMember);
+         hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
          hashCode = (hashCode * 397) ^ EqualityComparer?.GetHashCode() ?? 0;
 

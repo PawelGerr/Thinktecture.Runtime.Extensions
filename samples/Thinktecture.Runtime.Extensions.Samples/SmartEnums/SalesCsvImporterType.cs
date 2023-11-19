@@ -3,11 +3,11 @@ using CsvHelper;
 
 namespace Thinktecture.SmartEnums;
 
-[SmartEnum<string>(KeyPropertyName = "Name")]
+[SmartEnum]
 public sealed partial class SalesCsvImporterType
 {
-   public static readonly SalesCsvImporterType Daily = new(name: "Daily", articleIdIndex: 0, volumeIndex: 2, GetDateTimeForDaily);
-   public static readonly SalesCsvImporterType Monthly = new(name: "Monthly", articleIdIndex: 2, volumeIndex: 0, GetDateTimeForMonthly);
+   public static readonly SalesCsvImporterType Daily = new(articleIdIndex: 0, volumeIndex: 2, GetDateTimeForDaily);
+   public static readonly SalesCsvImporterType Monthly = new(articleIdIndex: 2, volumeIndex: 0, GetDateTimeForMonthly);
 
    public int ArticleIdIndex { get; }
    public int VolumeIndex { get; }

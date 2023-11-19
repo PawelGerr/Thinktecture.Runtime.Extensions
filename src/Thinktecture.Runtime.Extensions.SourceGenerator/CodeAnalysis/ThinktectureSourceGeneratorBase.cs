@@ -232,21 +232,12 @@ public abstract class ThinktectureSourceGeneratorBase
                                                        ? ImmutableArray<EqualityComparisonOperatorsGeneratorState>.Empty
                                                        : states.Distinct(TypeOnlyComparer.Instance))
                       .WithComparer(new SetComparer<EqualityComparisonOperatorsGeneratorState>())
-                      .SelectMany((states, _) => states)
-                      .SelectMany((state, _) =>
-                                  {
-                                     if (EqualityComparisonOperatorsCodeGenerator.TryGet(state.OperatorsGeneration, state.EqualityComparer, out var codeGenerator))
-                                        return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
-
-                                     return ImmutableArray<(EqualityComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
-                                  });
+                      .SelectMany((states, _) => states);
 
       context.RegisterSourceOutput(operators.Combine(options), (ctx, tuple) =>
                                                                {
-                                                                  var state = tuple.Left.State;
-                                                                  var generator = tuple.Left.CodeGenerator;
-
-                                                                  GenerateCode(ctx, state.Type.Namespace, state.Type.Name, new InterfaceCodeGeneratorState(state.Type, state.KeyMember), tuple.Right, InterfaceCodeGeneratorFactory.Create(generator));
+                                                                  if (InterfaceCodeGeneratorFactory.EqualityComparison(tuple.Left.OperatorsGeneration, tuple.Left.EqualityComparer, out var generator))
+                                                                     GenerateCode(ctx, tuple.Left.Type.Namespace, tuple.Left.Type.Name, tuple.Left, tuple.Right, generator);
                                                                });
    }
 

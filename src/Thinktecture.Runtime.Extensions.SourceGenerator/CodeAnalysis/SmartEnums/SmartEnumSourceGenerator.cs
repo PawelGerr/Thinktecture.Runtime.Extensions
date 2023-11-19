@@ -16,10 +16,16 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
       SetupLogger(context, options);
 
+      InitializeKeyedSmartEnum(context, options);
+      InitializeKeylessSmartEnum(context, options);
+   }
+
+   private void InitializeKeyedSmartEnum(IncrementalGeneratorInitializationContext context, IncrementalValueProvider<GeneratorOptions> options)
+   {
       var enumTypeOrError = context.SyntaxProvider
-                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.FULL_NAME,
-                                                                 IsCandidate,
-                                                                 GetSourceGenContextOrNull)
+                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.KEYED_FULL_NAME,
+                                                                 IsKeyedCandidate,
+                                                                 (ctx, token) => GetSourceGenContextOrNull(ctx, true, token))
                                    .SelectMany(static (state, _) => state.HasValue
                                                                        ? ImmutableArray.Create(state.Value)
                                                                        : ImmutableArray<SourceGenContext>.Empty);
@@ -41,14 +47,41 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       InitializeExceptionReporting(context, enumTypeOrError);
    }
 
+   private void InitializeKeylessSmartEnum(IncrementalGeneratorInitializationContext context, IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var enumTypeOrError = context.SyntaxProvider
+                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.KEYLESS_FULL_NAME,
+                                                                 IsKeylessCandidate,
+                                                                 (ctx, token) => GetSourceGenContextOrNull(ctx, false, token))
+                                   .SelectMany(static (state, _) => state.HasValue
+                                                                       ? ImmutableArray.Create(state.Value)
+                                                                       : ImmutableArray<SourceGenContext>.Empty);
+
+      var validStates = enumTypeOrError.SelectMany(static (state, _) => state.ValidState is not null
+                                                                           ? ImmutableArray.Create(state.ValidState.Value)
+                                                                           : ImmutableArray<ValidSourceGenState>.Empty);
+
+      InitializeEnumTypeGeneration(context, validStates, options);
+      InitializeEqualityComparisonOperatorsCodeGenerator(context, validStates, options);
+
+      InitializeErrorReporting(context, enumTypeOrError);
+      InitializeExceptionReporting(context, enumTypeOrError);
+   }
+
    private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
-         .Select((state, _) => new ComparisonOperatorsGeneratorState(state.State,
-                                                                     state.KeyMember,
-                                                                     state.Settings.ComparisonOperators,
-                                                                     state.KeyMember.ComparisonOperators,
-                                                                     null));
+         .SelectMany((state, _) =>
+                     {
+                        if (state.KeyMember is null)
+                           return ImmutableArray<ComparisonOperatorsGeneratorState>.Empty;
+
+                        return ImmutableArray.Create(new ComparisonOperatorsGeneratorState(state.State,
+                                                                                           state.KeyMember,
+                                                                                           state.Settings.ComparisonOperators,
+                                                                                           state.KeyMember.ComparisonOperators,
+                                                                                           null));
+                     });
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
    }
@@ -67,24 +100,36 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var parsables = validStates
-         .Select((state, _) => new ParsableGeneratorState(state.State,
-                                                          state.KeyMember,
-                                                          state.State.ValidationError,
-                                                          state.Settings.SkipIParsable,
-                                                          state.KeyMember.IsParsable,
-                                                          state.State.Settings.IsValidatable,
-                                                          state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
+         .SelectMany((state, _) =>
+                     {
+                        if (state.KeyMember is null)
+                           return ImmutableArray<ParsableGeneratorState>.Empty;
+
+                        return ImmutableArray.Create(new ParsableGeneratorState(state.State,
+                                                                                state.KeyMember,
+                                                                                state.State.ValidationError,
+                                                                                state.Settings.SkipIParsable,
+                                                                                state.KeyMember.IsParsable,
+                                                                                state.State.Settings.IsValidatable,
+                                                                                state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
+                     });
       InitializeParsableCodeGenerator(context, parsables, options);
    }
 
    private void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
-         .Select((state, _) => new ComparableGeneratorState(state.State,
-                                                            state.KeyMember,
-                                                            state.Settings.SkipIComparable,
-                                                            state.KeyMember.IsComparable,
-                                                            null));
+         .SelectMany((state, _) =>
+                     {
+                        if (state.KeyMember is null)
+                           return ImmutableArray<ComparableGeneratorState>.Empty;
+
+                        return ImmutableArray.Create(new ComparableGeneratorState(state.State,
+                                                                                  state.KeyMember,
+                                                                                  state.Settings.SkipIComparable,
+                                                                                  state.KeyMember.IsComparable,
+                                                                                  null));
+                     });
 
       InitializeComparableCodeGenerator(context, comparables, options);
    }
@@ -92,10 +137,16 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var formattables = validStates
-         .Select((state, _) => new FormattableGeneratorState(state.State,
-                                                             state.KeyMember,
-                                                             state.Settings.SkipIFormattable,
-                                                             state.KeyMember.IsFormattable));
+         .SelectMany((state, _) =>
+                     {
+                        if (state.KeyMember is null)
+                           return ImmutableArray<FormattableGeneratorState>.Empty;
+
+                        return ImmutableArray.Create(new FormattableGeneratorState(state.State,
+                                                                                   state.KeyMember,
+                                                                                   state.Settings.SkipIFormattable,
+                                                                                   state.KeyMember.IsFormattable));
+                     });
 
       InitializeFormattableCodeGenerator(context, formattables, options);
    }
@@ -209,7 +260,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       return factories;
    }
 
-   private bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   private bool IsKeyedCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
       try
       {
@@ -217,6 +268,23 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          {
             ClassDeclarationSyntax classDeclaration when IsEnumCandidate(classDeclaration) => true,
             StructDeclarationSyntax structDeclaration when IsEnumCandidate(structDeclaration) => true,
+            _ => false
+         };
+      }
+      catch (Exception ex)
+      {
+         Logger.LogError("Error during checking whether a syntax node is a smart enum candidate", exception: ex);
+         return false;
+      }
+   }
+
+   private bool IsKeylessCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   {
+      try
+      {
+         return syntaxNode switch
+         {
+            ClassDeclarationSyntax classDeclaration when IsEnumCandidate(classDeclaration) => true,
             _ => false
          };
       }
@@ -244,7 +312,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       return isCandidate;
    }
 
-   private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, bool isKeyed, CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.TargetNode;
 
@@ -266,42 +334,47 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
          if (context.Attributes.Length > 1)
          {
-            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.FULL_NAME}'", tds);
+            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds);
             return null;
          }
 
-         var attributetype = context.Attributes[0].AttributeClass;
+         ITypeSymbol? keyMemberType = null;
 
-         if (attributetype is null)
+         if (isKeyed)
          {
-            Logger.LogDebug("The attribute type is null", tds);
-            return null;
-         }
+            var attributetype = context.Attributes[0].AttributeClass;
 
-         if (attributetype.TypeKind == TypeKind.Error)
-         {
-            Logger.LogDebug("The attribute type is erroneous", tds);
-            return null;
-         }
+            if (attributetype is null)
+            {
+               Logger.LogDebug("The attribute type is null", tds);
+               return null;
+            }
 
-         if (attributetype.TypeArguments.Length != 1)
-         {
-            Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.TypeArguments.Length.ToString()}", tds);
-            return null;
-         }
+            if (attributetype.TypeKind == TypeKind.Error)
+            {
+               Logger.LogDebug("The attribute type is erroneous", tds);
+               return null;
+            }
 
-         var keyMemberType = attributetype.TypeArguments[0];
+            if (attributetype.TypeArguments.Length != 1)
+            {
+               Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.TypeArguments.Length.ToString()}", tds);
+               return null;
+            }
 
-         if (keyMemberType.TypeKind == TypeKind.Error)
-         {
-            Logger.LogDebug("Type of the key member is erroneous", tds);
-            return null;
-         }
+            keyMemberType = attributetype.TypeArguments[0];
 
-         if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated)
-         {
-            Logger.LogDebug("Type of the key member must not be nullable", tds);
-            return null;
+            if (keyMemberType.TypeKind == TypeKind.Error)
+            {
+               Logger.LogDebug("Type of the key member is erroneous", tds);
+               return null;
+            }
+
+            if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated)
+            {
+               Logger.LogDebug("Type of the key member must not be nullable", tds);
+               return null;
+            }
          }
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
@@ -311,10 +384,16 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
          var attributeInfo = new AttributeInfo(type);
          var settings = new AllEnumSettings(context.Attributes[0]);
-         var keyTypedMemberState = factory.Create(keyMemberType);
-         var keyProperty = settings.CreateKeyProperty(keyTypedMemberState);
+         IMemberState? keyProperty = null;
+
+         if (keyMemberType is not null)
+         {
+            var keyTypedMemberState = factory.Create(keyMemberType);
+            keyProperty = settings.CreateKeyProperty(keyTypedMemberState);
+         }
+
          var nonIgnoredMembers = type.GetNonIgnoredMembers();
-         var hasCreateInvalidItemImplementation = settings.IsValidatable && type.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyMemberType, cancellationToken);
+         var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyMemberType, cancellationToken);
 
          var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, attributeInfo.ValidationError, nonIgnoredMembers, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
@@ -351,7 +430,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private readonly record struct ValidSourceGenState(EnumSourceGeneratorState State,
                                                       SmartEnumDerivedTypes DerivedTypes,
                                                       AllEnumSettings Settings,
-                                                      IMemberState KeyMember,
+                                                      IMemberState? KeyMember,
                                                       AttributeInfo AttributeInfo);
 
    private readonly record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)

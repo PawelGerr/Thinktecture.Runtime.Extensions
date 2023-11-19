@@ -236,6 +236,26 @@ public class BindModelAsync
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
+   [Fact]
+   public async Task Should_bind_successfully_keyless_enum_with_factory()
+   {
+      var ctx = await BindAsync<KeylessTestEnumWithFactory, string>("1");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(KeylessTestEnumWithFactory.Item1);
+   }
+
+   [Fact]
+   public async Task Should_return_error_when_binding_keyless_enum_with_factories_with_invalid_intput()
+   {
+      var ctx = await BindAsync<KeylessTestEnumWithFactory, string>("A");
+
+      ctx.ModelState.ErrorCount.Should().Be(1);
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Unknown item 'A'") });
+      ctx.Result.IsModelSet.Should().BeFalse();
+   }
+
    private static async Task<DefaultModelBindingContext> BindAsync<T, TKey>(
       string value)
       where T : IValueObjectFactory<T, TKey, ValidationError>

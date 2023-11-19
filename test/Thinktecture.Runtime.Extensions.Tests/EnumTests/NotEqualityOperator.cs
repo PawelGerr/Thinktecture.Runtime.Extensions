@@ -44,4 +44,12 @@ public class NotEqualityOperator
    {
       (TestEnumWithNonDefaultComparer.Get("Item") != TestEnumWithNonDefaultComparer.Get("item")).Should().BeTrue();
    }
+
+   [Fact]
+   public void Should_compare_keyless_smart_enum_via_reference_equality()
+   {
+      (KeylessTestEnum.Item1 != KeylessTestEnum.Item1).Should().BeFalse();
+      (KeylessTestEnum.Item2 != KeylessTestEnum.Item2).Should().BeFalse();
+      (KeylessTestEnum.Item1 != KeylessTestEnum.Item2).Should().BeTrue();
+   }
 }

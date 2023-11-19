@@ -49,4 +49,14 @@ public class Items
       enums.Should().Contain(TestEnum.Item1);
       enums.Should().Contain(TestEnum.Item2);
    }
+
+   [Fact]
+   public void Should_return_items_of_keyless_enum()
+   {
+      var enums = KeylessTestEnum.Items;
+
+      enums.Should().HaveCount(2);
+      enums.Should().Contain(KeylessTestEnum.Item1);
+      enums.Should().Contain(KeylessTestEnum.Item2);
+   }
 }

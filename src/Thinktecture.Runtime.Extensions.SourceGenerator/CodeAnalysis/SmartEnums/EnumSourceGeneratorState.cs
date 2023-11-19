@@ -9,7 +9,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
 
-   public IMemberState KeyProperty { get; }
+   public IMemberState? KeyProperty { get; }
    public ValidationErrorState ValidationError { get; }
    public EnumSettings Settings { get; }
    public BaseTypeState? BaseType { get; }
@@ -28,7 +28,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public EnumSourceGeneratorState(
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
-      IMemberState keyProperty,
+      IMemberState? keyProperty,
       ValidationErrorState validationError,
       ImmutableArray<ISymbol> nonIgnoredMembers,
       EnumSettings settings,
@@ -48,7 +48,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       IsAbstract = type.IsAbstract;
 
       BaseType = type.GetBaseType(factory);
-      HasKeyComparerImplementation = HasHasKeyComparerImplementation(nonIgnoredMembers);
+      HasKeyComparerImplementation = keyProperty is not null && HasHasKeyComparerImplementation(nonIgnoredMembers);
       ItemNames = new EnumItemNames(type.GetEnumItems(nonIgnoredMembers));
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, true, false, cancellationToken).ToList();
    }
@@ -84,7 +84,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && HasKeyComparerImplementation == other.HasKeyComparerImplementation
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
-             && KeyProperty.Equals(other.KeyProperty)
+             && Equals(KeyProperty, other.KeyProperty)
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
              && Equals(BaseType, other.BaseType)
@@ -101,7 +101,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ HasKeyComparerImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
-         hashCode = (hashCode * 397) ^ KeyProperty.GetHashCode();
+         hashCode = (hashCode * 397) ^ (KeyProperty?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Thinktecture.CodeAnalysis.SmartEnums;
 
@@ -42,6 +43,21 @@ public static class InterfaceCodeGeneratorFactory
    public static ICodeGeneratorFactory<ParsableGeneratorState> Parsable(bool forValidatableEnum)
    {
       return forValidatableEnum ? _parsableForValidatableEnum : _parsable;
+   }
+
+   public static bool EqualityComparison(
+      OperatorsGeneration operatorsGeneration,
+      ComparerInfo? equalityComparer,
+      [MaybeNullWhen(false)] out ICodeGeneratorFactory<EqualityComparisonOperatorsGeneratorState> generatorFactory)
+   {
+      if (EqualityComparisonOperatorsCodeGenerator.TryGet(operatorsGeneration, equalityComparer, out var generator))
+      {
+         generatorFactory = new InterfaceCodeGeneratorFactory<EqualityComparisonOperatorsGeneratorState>(generator);
+         return true;
+      }
+
+      generatorFactory = null;
+      return false;
    }
 
    public static ICodeGeneratorFactory<InterfaceCodeGeneratorState> Create(IInterfaceCodeGenerator codeGenerator)

@@ -3,15 +3,15 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis;
 
-public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
+public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator<EqualityComparisonOperatorsGeneratorState>
 {
-   private static readonly IInterfaceCodeGenerator _default = new EqualityComparisonOperatorsCodeGenerator(false, null);
-   private static readonly IInterfaceCodeGenerator _defaultWithKeyTypeOverloads = new EqualityComparisonOperatorsCodeGenerator(true, null);
+   private static readonly IInterfaceCodeGenerator<EqualityComparisonOperatorsGeneratorState> _default = new EqualityComparisonOperatorsCodeGenerator(false, null);
+   private static readonly IInterfaceCodeGenerator<EqualityComparisonOperatorsGeneratorState> _defaultWithKeyTypeOverloads = new EqualityComparisonOperatorsCodeGenerator(true, null);
 
    public static bool TryGet(
       OperatorsGeneration operatorsGeneration,
       ComparerInfo? equalityComparer,
-      [MaybeNullWhen(false)] out IInterfaceCodeGenerator generator)
+      [MaybeNullWhen(false)] out IInterfaceCodeGenerator<EqualityComparisonOperatorsGeneratorState> generator)
    {
       switch (operatorsGeneration)
       {
@@ -47,19 +47,19 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       _equalityComparer = equalityComparer;
    }
 
-   public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
+   public void GenerateBaseTypes(StringBuilder sb, EqualityComparisonOperatorsGeneratorState state)
    {
       sb.Append(@"
    global::System.Numerics.IEqualityOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(", bool>");
 
-      if (!_withKeyTypeOverloads)
+      if (!_withKeyTypeOverloads || state.KeyMember is null)
          return;
 
       sb.Append(@",
    global::System.Numerics.IEqualityOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.KeyMember.TypeFullyQualified).Append(", bool>");
    }
 
-   public void GenerateImplementation(StringBuilder sb, InterfaceCodeGeneratorState state)
+   public void GenerateImplementation(StringBuilder sb, EqualityComparisonOperatorsGeneratorState state)
    {
       GenerateUsingEquals(sb, state);
 
@@ -67,7 +67,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
          GenerateKeyOverloads(sb, state);
    }
 
-   private static void GenerateUsingEquals(StringBuilder sb, InterfaceCodeGeneratorState state)
+   private static void GenerateUsingEquals(StringBuilder sb, EqualityComparisonOperatorsGeneratorState state)
    {
       sb.Append(@"
       /// <summary>
@@ -118,8 +118,11 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
 
    private void GenerateKeyOverloads(
       StringBuilder sb,
-      InterfaceCodeGeneratorState state)
+      EqualityComparisonOperatorsGeneratorState state)
    {
+      if (state.KeyMember is null)
+         return;
+
       sb.Append(@"
 
       private static bool Equals(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(state.KeyMember.TypeFullyQualified).Append(@" value)

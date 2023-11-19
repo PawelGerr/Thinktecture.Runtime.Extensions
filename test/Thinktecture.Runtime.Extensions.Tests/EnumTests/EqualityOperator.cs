@@ -78,4 +78,12 @@ public class EqualityOperator
    {
       (TestEnumWithNonDefaultComparer.Get("Item") == TestEnumWithNonDefaultComparer.Get("item")).Should().BeFalse();
    }
+
+   [Fact]
+   public void Should_compare_keyless_smart_enum_via_reference_equality()
+   {
+      (KeylessTestEnum.Item1 == KeylessTestEnum.Item1).Should().BeTrue();
+      (KeylessTestEnum.Item2 == KeylessTestEnum.Item2).Should().BeTrue();
+      (KeylessTestEnum.Item1 == KeylessTestEnum.Item2).Should().BeFalse();
+   }
 }

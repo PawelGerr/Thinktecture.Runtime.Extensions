@@ -15,4 +15,16 @@ public class Map
                          TestEnum.Item2, 2)
               .Should().Be(2);
    }
+
+   [Fact]
+   public void Should_return_correct_item_with_keyless_enum()
+   {
+      KeylessTestEnum.Item1.Map(KeylessTestEnum.Item1, 1,
+                                KeylessTestEnum.Item2, 2)
+                     .Should().Be(1);
+
+      KeylessTestEnum.Item2.Map(KeylessTestEnum.Item1, 1,
+                                KeylessTestEnum.Item2, 2)
+                     .Should().Be(2);
+   }
 }

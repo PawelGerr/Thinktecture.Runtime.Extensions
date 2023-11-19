@@ -44,7 +44,8 @@ public static class Constants
       {
          public const string NAMESPACE = "Thinktecture";
          public const string NAME = "SmartEnumAttribute";
-         public const string FULL_NAME = "Thinktecture.SmartEnumAttribute`1";
+         public const string KEYED_FULL_NAME = "Thinktecture.SmartEnumAttribute`1";
+         public const string KEYLESS_FULL_NAME = "Thinktecture.SmartEnumAttribute";
 
          public static class Properties
          {

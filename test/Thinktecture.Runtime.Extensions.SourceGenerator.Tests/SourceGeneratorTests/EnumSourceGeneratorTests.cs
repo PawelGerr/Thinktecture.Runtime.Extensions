@@ -788,6 +788,446 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public void Should_generate_simple_keyless_enum()
+   {
+      var source = """
+                   using System;
+
+                   namespace Thinktecture.Tests
+                   {
+                   	[SmartEnum]
+                   	public partial class TestEnum
+                   	{
+                         public static readonly TestEnum Item1 = new("Item1");
+                         public static readonly TestEnum Item2 = new("Item2");
+                      }
+                   }
+                   """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      outputs.Should().HaveCount(2);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var equalityComparisonOperators = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs")).Value;
+
+      AssertOutput(mainOutput,  _GENERATED_HEADER + """
+
+                               namespace Thinktecture.Tests
+                               {
+                                  partial class TestEnum :
+                                     global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
+                                  {
+                                     private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                                                            = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(GetItems, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                     /// <summary>
+                                     /// Gets all valid items.
+                                     /// </summary>
+                                     public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+
+                                     private readonly int _hashCode;
+
+                                     private TestEnum()
+                                     {
+                                        ValidateConstructorArguments();
+
+                                        this._hashCode = base.GetHashCode();
+                                     }
+
+                                     static partial void ValidateConstructorArguments();
+
+                                     /// <inheritdoc />
+                                     public bool Equals(global::Thinktecture.Tests.TestEnum? other)
+                                     {
+                                        return global::System.Object.ReferenceEquals(this, other);
+                                     }
+
+                                     /// <inheritdoc />
+                                     public override bool Equals(object? other)
+                                     {
+                                        return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
+                                     }
+
+                                     /// <inheritdoc />
+                                     public override int GetHashCode()
+                                     {
+                                        return _hashCode;
+                                     }
+
+                                     /// <summary>
+                                     /// Executes an action depending on the current item.
+                                     /// </summary>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public void Switch(
+                                        TestEnum testEnum1, global::System.Action testEnumAction1,
+                                        TestEnum testEnum2, global::System.Action testEnumAction2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           testEnumAction1();
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           testEnumAction2();
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Executes an action depending on the current item.
+                                     /// </summary>
+                                     /// <param name="context">Context to be passed to the callbacks.</param>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public void Switch<TContext>(
+                                        TContext context,
+                                        TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+                                        TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           testEnumAction1(context);
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           testEnumAction2(context);
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Executes a function depending on the current item.
+                                     /// </summary>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public T Switch<T>(
+                                        TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+                                        TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           return testEnumFunc1();
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           return testEnumFunc2();
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Executes a function depending on the current item.
+                                     /// </summary>
+                                     /// <param name="context">Context to be passed to the callbacks.</param>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public T Switch<TContext, T>(
+                                        TContext context,
+                                        TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+                                        TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           return testEnumFunc1(context);
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           return testEnumFunc2(context);
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                     /// </summary>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public T Map<T>(
+                                        TestEnum testEnum1, T other1,
+                                        TestEnum testEnum2, T other2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           return other1;
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           return other2;
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No instance provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> GetItems()
+                                     {
+                                        var list = new global::System.Collections.Generic.List<global::Thinktecture.Tests.TestEnum>(2);
+
+                                        void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
+                                        {
+                                           if (item is null)
+                                              throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+                                           list.Add(item);
+                                        }
+
+                                        AddItem(Item1, nameof(Item1));
+                                        AddItem(Item2, nameof(Item2));
+
+                                        return list.AsReadOnly();
+                                     }
+                                  }
+                               }
+
+                               """);
+      AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
+   }
+
+   [Fact]
+   public void Should_generate_simple_keyless_enum_with_factory()
+   {
+      var source = """
+                   using System;
+
+                   namespace Thinktecture.Tests
+                   {
+                   	[SmartEnum]
+                     [ValueObjectFactory<string>]
+                   	public partial class TestEnum
+                   	{
+                         public static readonly TestEnum Item1 = new("Item1");
+                         public static readonly TestEnum Item2 = new("Item2");
+                      }
+                   }
+                   """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      outputs.Should().HaveCount(2);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var equalityComparisonOperators = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs")).Value;
+
+      AssertOutput(mainOutput,  _GENERATED_HEADER + """
+
+                               namespace Thinktecture.Tests
+                               {
+                                  partial class TestEnum :
+                                     global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
+                                     global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
+                                  {
+                                     private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                                                            = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(GetItems, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                     /// <summary>
+                                     /// Gets all valid items.
+                                     /// </summary>
+                                     public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+
+                                     private readonly int _hashCode;
+
+                                     private TestEnum()
+                                     {
+                                        ValidateConstructorArguments();
+
+                                        this._hashCode = base.GetHashCode();
+                                     }
+
+                                     static partial void ValidateConstructorArguments();
+
+                                     /// <inheritdoc />
+                                     public bool Equals(global::Thinktecture.Tests.TestEnum? other)
+                                     {
+                                        return global::System.Object.ReferenceEquals(this, other);
+                                     }
+
+                                     /// <inheritdoc />
+                                     public override bool Equals(object? other)
+                                     {
+                                        return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
+                                     }
+
+                                     /// <inheritdoc />
+                                     public override int GetHashCode()
+                                     {
+                                        return _hashCode;
+                                     }
+
+                                     /// <summary>
+                                     /// Executes an action depending on the current item.
+                                     /// </summary>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public void Switch(
+                                        TestEnum testEnum1, global::System.Action testEnumAction1,
+                                        TestEnum testEnum2, global::System.Action testEnumAction2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           testEnumAction1();
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           testEnumAction2();
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Executes an action depending on the current item.
+                                     /// </summary>
+                                     /// <param name="context">Context to be passed to the callbacks.</param>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumAction1">The action to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumAction2">The action to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public void Switch<TContext>(
+                                        TContext context,
+                                        TestEnum testEnum1, global::System.Action<TContext> testEnumAction1,
+                                        TestEnum testEnum2, global::System.Action<TContext> testEnumAction2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           testEnumAction1(context);
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           testEnumAction2(context);
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No action provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Executes a function depending on the current item.
+                                     /// </summary>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public T Switch<T>(
+                                        TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
+                                        TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           return testEnumFunc1();
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           return testEnumFunc2();
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Executes a function depending on the current item.
+                                     /// </summary>
+                                     /// <param name="context">Context to be passed to the callbacks.</param>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public T Switch<TContext, T>(
+                                        TContext context,
+                                        TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
+                                        TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           return testEnumFunc1(context);
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           return testEnumFunc2(context);
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No function provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     /// <summary>
+                                     /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                     /// </summary>
+                                     /// <param name="testEnum1">The item to compare to.</param>
+                                     /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
+                                     /// <param name="testEnum2">The item to compare to.</param>
+                                     /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
+                                     public T Map<T>(
+                                        TestEnum testEnum1, T other1,
+                                        TestEnum testEnum2, T other2)
+                                     {
+                                        if (this == testEnum1)
+                                        {
+                                           return other1;
+                                        }
+                                        else if (this == testEnum2)
+                                        {
+                                           return other2;
+                                        }
+                                        else
+                                        {
+                                           throw new global::System.ArgumentOutOfRangeException($"No instance provided for the item '{this}'.");
+                                        }
+                                     }
+
+                                     private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> GetItems()
+                                     {
+                                        var list = new global::System.Collections.Generic.List<global::Thinktecture.Tests.TestEnum>(2);
+
+                                        void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
+                                        {
+                                           if (item is null)
+                                              throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+                                           list.Add(item);
+                                        }
+
+                                        AddItem(Item1, nameof(Item1));
+                                        AddItem(Item2, nameof(Item2));
+
+                                        return list.AsReadOnly();
+                                     }
+                                  }
+                               }
+
+                               """);
+      AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
+   }
+
+   [Fact]
    public void Should_generate_simple_class_having_ValueObjectValidationErrorAttribute()
    {
       var source = """
@@ -1170,46 +1610,46 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       AssertOutput(comparableOutput, _COMPARABLE_OUTPUT_CLASS);
       AssertOutput(parsableOutput, _GENERATED_HEADER + """
 
-                                                                                  namespace Thinktecture.Tests;
+                                                       namespace Thinktecture.Tests;
 
-                                                                                  partial class TestEnum :
-                                                                                     global::System.IParsable<global::Thinktecture.Tests.TestEnum>
-                                                                                  {
-                                                                                     private static global::Thinktecture.Tests.TestEnumValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
-                                                                                        where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.Tests.TestEnumValidationError>
-                                                                                     {
-                                                                                        return T.Validate(key, provider, out result);
-                                                                                     }
+                                                       partial class TestEnum :
+                                                          global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+                                                       {
+                                                          private static global::Thinktecture.Tests.TestEnumValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.Tests.TestEnumValidationError>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
 
-                                                                                     /// <inheritdoc />
-                                                                                     public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
-                                                                                     {
-                                                                                        var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+                                                          /// <inheritdoc />
+                                                          public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
+                                                          {
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
 
-                                                                                        if(validationError is null)
-                                                                                           return result!;
+                                                             if(validationError is null)
+                                                                return result!;
 
-                                                                                        throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
-                                                                                     }
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
+                                                          }
 
-                                                                                     /// <inheritdoc />
-                                                                                     public static bool TryParse(
-                                                                                        string? s,
-                                                                                        global::System.IFormatProvider? provider,
-                                                                                        [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
-                                                                                     {
-                                                                                        if(s is null)
-                                                                                        {
-                                                                                           result = default;
-                                                                                           return false;
-                                                                                        }
+                                                          /// <inheritdoc />
+                                                          public static bool TryParse(
+                                                             string? s,
+                                                             global::System.IFormatProvider? provider,
+                                                             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+                                                          {
+                                                             if(s is null)
+                                                             {
+                                                                result = default;
+                                                                return false;
+                                                             }
 
-                                                                                        var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
-                                                                                        return validationError is null;
-                                                                                     }
-                                                                                  }
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                             return validationError is null;
+                                                          }
+                                                       }
 
-                                                                                  """);
+                                                       """);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
    }
 

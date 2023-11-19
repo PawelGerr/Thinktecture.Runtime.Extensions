@@ -3,7 +3,31 @@ using System.Numerics;
 namespace Thinktecture;
 
 /// <summary>
-/// Marks the type as a Smart Enum.
+/// Marks the type as a Smart Enum that has no identifier (i.e. no key-member).
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public sealed class SmartEnumAttribute : Attribute
+{
+   /// <summary>
+   /// Indication whether and how the generator should generate the implementation of <see cref="IEqualityOperators{TSelf,TOther,TResult}"/>.
+   ///
+   /// The value <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/> will generate the same code as <see cref="OperatorsGeneration.Default"/> because the Smart Enum has no key-member.
+   /// </summary>
+   public OperatorsGeneration EqualityComparisonOperators { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of the methods <c>Switch</c>.
+   /// </summary>
+   public bool SkipSwitchMethods { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of the methods <c>Map</c>.
+   /// </summary>
+   public bool SkipMapMethods { get; set; }
+}
+
+/// <summary>
+/// Marks the type as a Smart Enum with an identifier of type <typeparamref name="TKey"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public sealed class SmartEnumAttribute<TKey> : Attribute
@@ -57,9 +81,6 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IEqualityOperators{TSelf,TOther,TResult}"/>.
-   ///
-   /// Please note that the comparison operators depend on <see cref="EqualityComparisonOperators"/>. For example, if <see cref="ComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/>
-   /// then the <see cref="EqualityComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/> as well.
    ///
    /// This setting has no effect:
    /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Equality</c>, <c>op_Inequality</c>).

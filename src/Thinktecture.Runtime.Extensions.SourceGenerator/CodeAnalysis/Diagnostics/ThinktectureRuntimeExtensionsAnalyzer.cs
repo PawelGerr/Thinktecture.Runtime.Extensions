@@ -298,13 +298,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var keyType = (smartEnumAttribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
 
-      if (keyType is null || keyType.TypeKind == TypeKind.Error)
+      if (keyType?.TypeKind == TypeKind.Error)
          return;
 
-      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
+      if (keyType?.NullableAnnotation == NullableAnnotation.Annotated || keyType?.SpecialType == SpecialType.System_Nullable_T)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
 
-      var isValidatable = smartEnumAttribute.FindIsValidatable() ?? false;
+      var isValidatable = keyType is not null && (smartEnumAttribute.FindIsValidatable() ?? false);
 
       StructMustBeReadOnly(context, enumType, locationOfFirstDeclaration);
 
@@ -320,7 +320,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       Check_ItemLike_StaticProperties(context, enumType, nonIgnoredMembers);
       EnumItemsMustBePublic(context, enumType, items);
 
-      if (isValidatable)
+      if (isValidatable && keyType is not null)
          ValidateCreateInvalidItem(context, enumType, keyType, nonIgnoredMembers, locationOfFirstDeclaration);
 
       enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, false, false, context.CancellationToken, context).Enumerate();
@@ -333,7 +333,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          baseClass = baseClass.BaseType;
       }
 
-      EnumKeyPropertyNameMustNotBeItem(context, smartEnumAttribute, locationOfFirstDeclaration);
+      if (keyType is not null)
+         EnumKeyPropertyNameMustNotBeItem(context, smartEnumAttribute, locationOfFirstDeclaration);
 
       var derivedTypes = ValidateDerivedTypes(context, enumType);
 

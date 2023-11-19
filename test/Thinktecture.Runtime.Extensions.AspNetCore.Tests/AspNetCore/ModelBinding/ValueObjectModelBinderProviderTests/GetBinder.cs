@@ -39,6 +39,20 @@ public class GetBinder
    }
 
    [Fact]
+   public void Should_return_null_for_keyless_enum()
+   {
+      var binder = GetModelBinder<KeylessTestEnum>();
+      binder.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_return_binder_for_keyless_enum_with_factory()
+   {
+      var binder = GetModelBinder<KeylessTestEnumWithFactory>();
+      binder.Should().BeOfType<ValueObjectModelBinder<KeylessTestEnumWithFactory, string, ValidationError>>();
+   }
+
+   [Fact]
    public void Should_return_string_base_binder_specified_by_ValueObjectFactoryAttribute_smart_enum()
    {
       var binder = GetModelBinder<EnumWithFactory>();

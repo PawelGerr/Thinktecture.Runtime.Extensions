@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTests;
@@ -20,5 +21,11 @@ public class GetHashCode
 
       var keyHashCode = StructIntegerEnum.Item1.Key.GetHashCode();
       hashCode.Should().Be(HashCode.Combine(typeof(StructIntegerEnum), keyHashCode));
+   }
+
+   [Fact]
+   public void Should_return_hashcode_of_instance_of_keyless_smart_enum()
+   {
+      KeylessTestEnum.Item1.GetHashCode().Should().Be(RuntimeHelpers.GetHashCode(KeylessTestEnum.Item1));
    }
 }
