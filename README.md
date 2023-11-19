@@ -86,6 +86,17 @@ public sealed partial class ProductGroup
    public static readonly ProductGroup Apple = new(1);
    public static readonly ProductGroup Orange = new(2);
 }
+
+// Smart Enum without identifier (keyless)
+[SmartEnum]
+public sealed partial class SalesCsvImporterType
+{
+   public static readonly SalesCsvImporterType Daily = new(articleIdIndex: 0, volumeIndex: 2);
+   public static readonly SalesCsvImporterType Monthly = new(articleIdIndex: 2, volumeIndex: 0);
+
+   public int ArticleIdIndex { get; }
+   public int VolumeIndex { get; }
+}
 ```
 
 Behind the scenes a Roslyn Source Generator, which comes with the library, generates additional code. Some of the features that are now available are ...

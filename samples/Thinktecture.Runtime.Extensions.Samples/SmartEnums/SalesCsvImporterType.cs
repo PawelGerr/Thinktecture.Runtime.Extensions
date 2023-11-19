@@ -13,6 +13,7 @@ public sealed partial class SalesCsvImporterType
    public int VolumeIndex { get; }
 
    private readonly Func<CsvReader, DateTime> _getDateTime;
+
    public DateTime GetDateTime(CsvReader csvReader) => _getDateTime(csvReader);
 
    private static DateTime GetDateTimeForDaily(CsvReader csvReader)
