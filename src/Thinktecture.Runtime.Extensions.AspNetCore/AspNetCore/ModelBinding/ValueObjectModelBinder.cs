@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace Thinktecture.AspNetCore.ModelBinding;
 
 /// <summary>
-/// Model binder for implementations of <see cref="IKeyedValueObject{TKey}"/> and Value Objects with a key member.
+/// Model binder for Smart Enums Value Objects with a key member.
 /// </summary>
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key member.</typeparam>

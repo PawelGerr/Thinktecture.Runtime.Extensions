@@ -60,11 +60,7 @@ namespace ").Append(_state.Namespace).Append(@"
    partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" :");
 
       if (_state.KeyProperty is not null)
-      {
-         _sb.Append(" global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(@">,
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(@">,
-      global::Thinktecture.IValueObjectConverter<").Append(_state.KeyProperty.TypeFullyQualified).Append(">,");
-      }
+         _sb.Append(" global::Thinktecture.IEnum<").Append(_state.KeyProperty.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">,");
 
       foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
@@ -77,7 +73,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@"
-      global::Thinktecture.IValueObjectConverter<").Append(desiredFactory.TypeFullyQualified).Append(">,");
+      global::Thinktecture.IValueObjectConvertable<").Append(desiredFactory.TypeFullyQualified).Append(">,");
          }
       }
 
@@ -801,7 +797,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      ").Append(keyProperty.TypeFullyQualified).Append(" global::Thinktecture.IValueObjectConverter<").Append(keyProperty.TypeFullyQualified).Append(@">.ToValue()
+      ").Append(keyProperty.TypeFullyQualified).Append(" global::Thinktecture.IValueObjectConvertable<").Append(keyProperty.TypeFullyQualified).Append(@">.ToValue()
       {
          return this.").Append(keyProperty.Name).Append(@";
       }");

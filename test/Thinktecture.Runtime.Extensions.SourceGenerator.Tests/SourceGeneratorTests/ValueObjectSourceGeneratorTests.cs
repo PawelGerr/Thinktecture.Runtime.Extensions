@@ -1483,8 +1483,8 @@ namespace Thinktecture.Tests
                                                    namespace Thinktecture.Tests
                                                    {
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<int>,
-                                                         global::Thinktecture.IValueObjectConverter<int>
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<int>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()
@@ -1508,7 +1508,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -1918,9 +1918,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -1997,7 +1996,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -2107,9 +2106,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-                                                         global::Thinktecture.IKeyedValueObject<int>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2180,7 +2178,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -2516,9 +2514,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-                                                         global::Thinktecture.IKeyedValueObject<int>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2589,7 +2586,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -2923,9 +2920,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3002,7 +2998,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -3110,9 +3106,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3189,7 +3184,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -3297,9 +3292,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3374,7 +3368,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -3502,9 +3496,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<int>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3573,7 +3566,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -3695,9 +3688,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
-                                                         global::Thinktecture.IValueObjectConverter<global::System.DateOnly>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3766,7 +3758,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         global::System.DateOnly global::Thinktecture.IValueObjectConverter<global::System.DateOnly>.ToValue()
+                                                         global::System.DateOnly global::Thinktecture.IValueObjectConvertable<global::System.DateOnly>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -4064,9 +4056,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
-                                                         global::Thinktecture.IValueObjectConverter<global::System.DateOnly>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -4135,7 +4126,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         global::System.DateOnly global::Thinktecture.IValueObjectConverter<global::System.DateOnly>.ToValue()
+                                                         global::System.DateOnly global::Thinktecture.IValueObjectConvertable<global::System.DateOnly>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -4499,9 +4490,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<int>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -4570,7 +4560,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -5016,9 +5006,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5094,7 +5083,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -5212,9 +5201,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5289,7 +5277,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -5416,9 +5404,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<int>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5487,7 +5474,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -5623,9 +5610,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<int>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5694,7 +5680,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.StructField;
                                                          }
@@ -5823,9 +5809,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5900,7 +5885,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -6020,9 +6005,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<string>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -6097,7 +6081,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -6214,9 +6198,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>))]
                                                       partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.Foo>,
-                                                         global::Thinktecture.IValueObjectConverter<global::Thinktecture.Tests.Foo>,
-                                                         global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>,
+                                                         global::Thinktecture.IKeyedValueObject,
+                                                         global::Thinktecture.IValueObjectConvertable<global::Thinktecture.Tests.Foo>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -6291,7 +6274,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         global::Thinktecture.Tests.Foo global::Thinktecture.IValueObjectConverter<global::Thinktecture.Tests.Foo>.ToValue()
+                                                         global::Thinktecture.Tests.Foo global::Thinktecture.IValueObjectConvertable<global::Thinktecture.Tests.Foo>.ToValue()
                                                          {
                                                             return this.ReferenceField;
                                                          }
@@ -6917,7 +6900,7 @@ namespace Thinktecture.Tests
                                                          global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                          global::Thinktecture.IComplexValueObject,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>
+                                                         global::Thinktecture.IValueObjectConvertable<string>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
                                                          internal static void ModuleInit()

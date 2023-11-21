@@ -6,7 +6,7 @@ namespace Thinktecture;
 /// Interface of a Smart Enum.
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public interface IEnum<TKey> : IKeyedValueObject<TKey>
+public interface IEnum<TKey> : IValueObjectConvertable<TKey>, IKeyedValueObject
    where TKey : notnull
 {
    /// <summary>
@@ -24,7 +24,7 @@ public interface IEnum<TKey> : IKeyedValueObject<TKey>
 /// <remarks>
 /// Don't implement this interface directly. It will be implemented by a source generator.
 /// </remarks>
-public interface IEnum<TKey, T, out TValidationError> : IEnum<TKey>, IKeyedValueObject<T, TKey, TValidationError>
+public interface IEnum<TKey, T, out TValidationError> : IEnum<TKey>, IValueObjectFactory<T, TKey, TValidationError>
    where T : IEnum<TKey>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>

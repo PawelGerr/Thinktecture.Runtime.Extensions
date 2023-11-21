@@ -9,7 +9,7 @@ namespace Thinktecture.Text.Json.Serialization;
 /// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
 /// </summary>
 public sealed class ValueObjectJsonConverterFactory<T, TKey, TValidationError> : JsonConverterFactory
-   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {

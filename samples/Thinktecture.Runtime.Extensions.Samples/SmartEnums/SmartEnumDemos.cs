@@ -171,15 +171,8 @@ public class SmartEnumDemos
       Get<ProductType, string, ProductTypeValidationError>(logger, "Groceries");
    }
 
-   private static void PrintAllItems<T, TKey>(ILogger logger)
-      where T : IEnum<TKey, T, ValidationError>, IEnum<TKey>
-      where TKey : notnull
-   {
-      PrintAllItems<T, TKey, ValidationError>(logger);
-   }
-
    private static void PrintAllItems<T, TKey, TValidationError>(ILogger logger)
-      where T : IEnum<TKey, T, TValidationError>, IEnum<TKey>
+      where T : IEnum<TKey, T, TValidationError>
       where TKey : notnull
       where TValidationError : class, IValidationError<TValidationError>
    {
@@ -191,15 +184,8 @@ public class SmartEnumDemos
       }
    }
 
-   private static void Get<T, TKey>(ILogger logger, TKey key)
-      where T : IEnum<TKey, T, ValidationError>, IEnum<TKey>
-      where TKey : notnull
-   {
-      Get<T, TKey, ValidationError>(logger, key);
-   }
-
    private static void Get<T, TKey, TValidationError>(ILogger logger, TKey key)
-      where T : IEnum<TKey, T, TValidationError>, IEnum<TKey>
+      where T : IEnum<TKey, T, TValidationError>
       where TKey : notnull
       where TValidationError : class, IValidationError<TValidationError>
    {

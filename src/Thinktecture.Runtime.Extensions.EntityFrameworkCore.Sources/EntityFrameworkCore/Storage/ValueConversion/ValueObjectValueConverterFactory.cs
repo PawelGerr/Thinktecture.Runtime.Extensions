@@ -5,19 +5,19 @@ using Thinktecture.Internal;
 namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 
 /// <summary>
-/// Value converter for Value Objects and <see cref="IKeyedValueObject{TKey}"/>.
+/// Value converter for Smart Enums and for Value Objects with a key member.
 /// </summary>
 public sealed class ValueObjectValueConverterFactory
 {
    /// <summary>
-   /// Creates a value converter for value objects with a key property and <see cref="IKeyedValueObject{TKey}"/>.
+   /// Creates a value converter for Smart Enums and for Value Objects with a key member.
    /// </summary>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <typeparam name="T">Type of the value object.</typeparam>
    /// <typeparam name="TKey">Type of the key.</typeparam>
    /// <returns>An instance of <see cref="ValueConverter{T,TKey}"/>></returns>
    public static ValueConverter<T, TKey> Create<T, TKey>(bool useConstructorForRead = true)
-      where T : IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
    {
       return new ValueObjectValueConverter<T, TKey>(useConstructorForRead);
@@ -31,7 +31,7 @@ public sealed class ValueObjectValueConverterFactory
    /// <typeparam name="TKey">Type of the key.</typeparam>
    /// <returns>An instance of <see cref="ValueConverter{TEnum,TKey}"/>></returns>
    public static ValueConverter<TEnum, TKey> CreateForValidatableEnum<TEnum, TKey>(bool validateOnWrite)
-      where TEnum : IValidatableEnum, IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
+      where TEnum : IValidatableEnum, IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
    {
       return new ValidatableEnumValueConverter<TEnum, TKey>(validateOnWrite);
@@ -81,7 +81,7 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private static Expression<Func<TKey, T>> GetConverterFromKey<T, TKey>(bool useConstructor)
-      where T : IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
    {
       var metadata = KeyedValueObjectMetadataLookup.Find(typeof(T));
@@ -97,7 +97,7 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private sealed class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
-      where T : IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
    {
       public ValueObjectValueConverter(bool useConstructor)
@@ -107,7 +107,7 @@ public sealed class ValueObjectValueConverterFactory
    }
 
    private sealed class ValidatableEnumValueConverter<TEnum, TKey> : ValueConverter<TEnum, TKey>
-      where TEnum : IValidatableEnum, IValueObjectFactory<TKey>, IValueObjectConverter<TKey>
+      where TEnum : IValidatableEnum, IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
    {
       public ValidatableEnumValueConverter(bool validateOnWrite)

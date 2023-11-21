@@ -142,7 +142,7 @@ public class WriteJson : JsonTestsBase
       T value,
       JsonNamingPolicy namingStrategy = null,
       bool ignoreNullValues = false)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return Serialize<T, TKey, ValidationError>(value, namingStrategy, ignoreNullValues);
    }
@@ -151,7 +151,7 @@ public class WriteJson : JsonTestsBase
       T value,
       JsonNamingPolicy namingStrategy = null,
       bool ignoreNullValues = false)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
       where TValidationError : class, IValidationError<TValidationError>
    {
       return SerializeWithConverter<T, ValueObjectJsonConverterFactory>(value, namingStrategy, ignoreNullValues);

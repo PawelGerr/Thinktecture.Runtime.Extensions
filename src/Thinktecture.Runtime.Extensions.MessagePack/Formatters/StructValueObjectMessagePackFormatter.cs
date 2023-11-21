@@ -12,7 +12,7 @@ namespace Thinktecture.Formatters;
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 public sealed class StructValueObjectMessagePackFormatter<T, TKey, TValidationError> : IMessagePackFormatter<T>, IMessagePackFormatter<T?>
-   where T : struct, IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+   where T : struct, IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {

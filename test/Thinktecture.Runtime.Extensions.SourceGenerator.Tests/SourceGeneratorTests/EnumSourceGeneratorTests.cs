@@ -23,8 +23,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                  {
                                                                     [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                                     partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                                       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                                       global::Thinktecture.IValueObjectConverter<string>,
                                                                        global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                                     {
                                                                        [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -79,7 +77,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                        /// Gets the identifier of the item.
                                                                        /// </summary>
                                                                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                                       string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                                       string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                                        {
                                                                           return this.Key;
                                                                        }
@@ -1300,8 +1298,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.Tests.TestEnumValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnumValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.Tests.TestEnumValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -1356,7 +1352,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -1710,8 +1706,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -1766,7 +1760,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -1972,8 +1966,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2028,7 +2020,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -2323,8 +2315,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2394,7 +2384,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -2725,8 +2715,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2781,7 +2769,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -3231,8 +3219,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3287,7 +3273,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -3795,8 +3781,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -3871,7 +3855,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -4217,8 +4201,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                       [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum>
                                                       {
@@ -4293,7 +4275,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -4727,8 +4709,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -4809,7 +4789,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         string global::Thinktecture.IValueObjectConverter<string>.ToValue()
+                                                         string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
                                                          {
                                                             return this.Name;
                                                          }
@@ -5189,8 +5169,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5242,7 +5220,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -5584,8 +5562,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -5637,7 +5613,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -6038,8 +6014,6 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -6092,7 +6066,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }
@@ -6436,10 +6410,8 @@ namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-                                                         global::Thinktecture.IValueObjectConverter<string>,
+                                                         global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -6491,7 +6463,7 @@ namespace Thinktecture.Tests
                                                          /// Gets the identifier of the item.
                                                          /// </summary>
                                                          [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                         int global::Thinktecture.IValueObjectConverter<int>.ToValue()
+                                                         int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
                                                          {
                                                             return this.Key;
                                                          }

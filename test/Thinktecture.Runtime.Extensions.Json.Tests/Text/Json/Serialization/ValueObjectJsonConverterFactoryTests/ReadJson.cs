@@ -174,7 +174,7 @@ public class ReadJson : JsonTestsBase
    private static T Deserialize<T, TKey>(
       string json,
       JsonNamingPolicy namingPolicy = null)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return Deserialize<T, TKey, ValidationError>(json, namingPolicy);
    }
@@ -182,7 +182,7 @@ public class ReadJson : JsonTestsBase
    private static T Deserialize<T, TKey, TValidationError>(
       string json,
       JsonNamingPolicy namingPolicy = null)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
       where TValidationError : class, IValidationError<TValidationError>
    {
       return DeserializeWithConverter<T, ValueObjectJsonConverterFactory>(json, namingPolicy);

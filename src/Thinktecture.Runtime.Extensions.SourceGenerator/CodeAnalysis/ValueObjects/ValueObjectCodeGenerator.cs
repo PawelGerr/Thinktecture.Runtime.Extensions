@@ -60,13 +60,12 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.HasKeyMember)
       {
          _sb.Append(@",
-      global::Thinktecture.IKeyedValueObject<").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(@">,
-      global::Thinktecture.IValueObjectConverter<").Append(_state.KeyMember.Member.TypeFullyQualified).Append(">");
+      global::Thinktecture.IKeyedValueObject,
+      global::Thinktecture.IValueObjectConvertable<").Append(_state.KeyMember.Member.TypeFullyQualified).Append(">");
 
          if (!_state.Settings.SkipFactoryMethods)
          {
             _sb.Append(@",
-      global::Thinktecture.IKeyedValueObject<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualifiedWithNullability).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(@">,
       global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.KeyMember.Member.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">");
          }
       }
@@ -88,7 +87,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@",
-      global::Thinktecture.IValueObjectConverter<").Append(desiredFactory.TypeFullyQualified).Append(">");
+      global::Thinktecture.IValueObjectConvertable<").Append(desiredFactory.TypeFullyQualified).Append(">");
          }
       }
 
@@ -166,7 +165,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      ").Append(keyMember.Member.TypeFullyQualified).Append(" global::Thinktecture.IValueObjectConverter<").Append(keyMember.Member.TypeFullyQualified).Append(@">.ToValue()
+      ").Append(keyMember.Member.TypeFullyQualified).Append(" global::Thinktecture.IValueObjectConvertable<").Append(keyMember.Member.TypeFullyQualified).Append(@">.ToValue()
       {
          return this.").Append(keyMember.Member.Name).Append(@";
       }");

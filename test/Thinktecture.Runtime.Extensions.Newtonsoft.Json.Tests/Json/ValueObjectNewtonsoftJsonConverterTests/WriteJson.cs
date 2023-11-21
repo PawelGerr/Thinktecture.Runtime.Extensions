@@ -120,7 +120,7 @@ public class WriteJson : JsonTestsBase
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return Serialize<T, TKey, ValidationError>(value, namingStrategy, nullValueHandling);
    }
@@ -129,7 +129,7 @@ public class WriteJson : JsonTestsBase
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
       where TValidationError : class, IValidationError<TValidationError>
    {
       return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError>>(value, namingStrategy, nullValueHandling);
@@ -139,7 +139,7 @@ public class WriteJson : JsonTestsBase
       T? value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return SerializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
    }
@@ -148,7 +148,7 @@ public class WriteJson : JsonTestsBase
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return SerializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
    }

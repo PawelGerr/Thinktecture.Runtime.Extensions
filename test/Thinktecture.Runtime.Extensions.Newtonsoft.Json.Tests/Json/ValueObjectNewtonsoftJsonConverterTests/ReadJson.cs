@@ -154,7 +154,7 @@ public class ReadJson : JsonTestsBase
    private static T Deserialize<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return Deserialize<T, TKey, ValidationError>(json, namingStrategy);
    }
@@ -162,7 +162,7 @@ public class ReadJson : JsonTestsBase
    private static T Deserialize<T, TKey, TValidationError>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
       where TValidationError : class, IValidationError<TValidationError>
    {
       return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError>>(json, namingStrategy);
@@ -171,7 +171,7 @@ public class ReadJson : JsonTestsBase
    private static T? DeserializeNullableStruct<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return DeserializeWithConverter<T?, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(json, namingStrategy);
    }
@@ -179,7 +179,7 @@ public class ReadJson : JsonTestsBase
    private static T DeserializeStruct<T, TKey>(
       string json,
       NamingStrategy namingStrategy = null)
-      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConverter<TKey>
+      where T : struct, IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
    {
       return DeserializeWithConverter<T, ValueObjectNewtonsoftJsonConverter<T, TKey, ValidationError>>(json, namingStrategy);
    }

@@ -10,7 +10,7 @@ namespace Thinktecture.Json;
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError> : JsonConverter
-   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConverter<TKey>
+   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {

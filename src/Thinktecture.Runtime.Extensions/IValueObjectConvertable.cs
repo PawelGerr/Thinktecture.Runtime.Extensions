@@ -7,7 +7,7 @@ namespace Thinktecture;
 /// <remarks>
 /// Don't use this interface directly. It will be used by a source generator.
 /// </remarks>
-public interface IValueObjectConverter<out T>
+public interface IValueObjectConvertable<out T>
    where T : notnull
 {
    /// <summary>
