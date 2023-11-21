@@ -19,37 +19,37 @@ public class DemoController : Controller
    [HttpGet("category/{category}")]
    public IActionResult RoundTrip(ProductCategory category)
    {
-      return RoundTripValidatableEnum<ProductCategory, string>(category);
+      return RoundTripValidatableEnum(category);
    }
 
    [HttpGet("categoryWithConverter/{category}")]
    public IActionResult RoundTrip(ProductCategoryWithJsonConverter category)
    {
-      return RoundTripValidatableEnum<ProductCategoryWithJsonConverter, string>(category);
+      return RoundTripValidatableEnum(category);
    }
 
    [HttpGet("group/{group}")]
    public IActionResult RoundTrip(ProductGroup group)
    {
-      return RoundTripValidatableEnum<ProductGroup, int>(group);
+      return RoundTripValidatableEnum(group);
    }
 
    [HttpGet("groupWithConverter/{group}")]
    public IActionResult RoundTrip(ProductGroupWithJsonConverter group)
    {
-      return RoundTripValidatableEnum<ProductGroupWithJsonConverter, int>(group);
+      return RoundTripValidatableEnum(group);
    }
 
    [HttpGet("productType/{productType}")]
    public IActionResult RoundTrip(ProductType productType)
    {
-      return RoundTrip<ProductType, string>(productType);
+      return RoundTripInternal(productType);
    }
 
    [HttpGet("productType")]
    public IActionResult RoundTripWithQueryString(ProductType productType)
    {
-      return RoundTrip<ProductType, string>(productType);
+      return RoundTripInternal(productType);
    }
 
    [HttpGet("boundaryWithFactories/{boundary}")]
@@ -66,19 +66,19 @@ public class DemoController : Controller
    [HttpPost("productType")]
    public IActionResult RoundTripPost([FromBody] ProductType productType)
    {
-      return RoundTrip<ProductType, string>(productType);
+      return RoundTripInternal(productType);
    }
 
    [HttpPost("productTypeWrapper")]
    public IActionResult RoundTripPost([FromBody] ProductTypeWrapper productType)
    {
-      return RoundTrip<ProductType, string>(productType.ProductType);
+      return RoundTripInternal(productType.ProductType);
    }
 
    [HttpGet("productTypeWithJsonConverter/{productType}")]
    public IActionResult RoundTrip(ProductTypeWithJsonConverter productType)
    {
-      return RoundTrip<ProductTypeWithJsonConverter, string>(productType);
+      return RoundTripInternal(productType);
    }
 
    [HttpGet("productName/{name}")]
@@ -158,26 +158,24 @@ public class DemoController : Controller
       return Json(endDate);
    }
 
-   private IActionResult RoundTripValidatableEnum<T, TKey>(T value)
-      where T : IValidatableEnum, IEnum<TKey>
-      where TKey : notnull
+   private IActionResult RoundTripValidatableEnum<T>(T value)
+      where T : IValidatableEnum
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
 
-      _logger.LogInformation("Round trip test with {Type}: {Name}", value.GetType().Name, value);
+      _logger.LogInformation("Round trip test with {Type}: {Value}", value.GetType().Name, value);
 
       return Json(new { Value = value, value.IsValid });
    }
 
-   private IActionResult RoundTrip<T, TKey>(T value)
-      where T : IEnum<TKey>
-      where TKey : notnull
+   private IActionResult RoundTripInternal<T>(T value)
+      where T : notnull
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
 
-      _logger.LogInformation("Round trip test with {Type}: {Name}", value.GetType().Name, value);
+      _logger.LogInformation("Round trip test with {Type}: {Value}", value.GetType().Name, value);
 
       return Json(value);
    }
