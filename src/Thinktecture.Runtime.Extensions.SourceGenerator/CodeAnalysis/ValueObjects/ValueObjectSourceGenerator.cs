@@ -135,6 +135,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var formattables = validStates
          .Select((state, _) => new FormattableGeneratorState(state.Type,
                                                              state.KeyMember.Member,
+                                                             state.Settings.CreateFactoryMethodName,
                                                              state.Settings.SkipIFormattable,
                                                              state.KeyMember.Member.IsFormattable));
 
@@ -146,6 +147,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var comparables = validStates
          .Select((state, _) => new ComparableGeneratorState(state.Type,
                                                             state.KeyMember.Member,
+                                                            state.Settings.CreateFactoryMethodName,
                                                             state.Settings.SkipIComparable,
                                                             state.KeyMember.Member.IsComparable,
                                                             state.KeyMember.ComparerAccessor));
@@ -172,6 +174,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var comparables = validStates
          .Select((state, _) => new ComparisonOperatorsGeneratorState(state.Type,
                                                                      state.KeyMember.Member,
+                                                                     state.Settings.CreateFactoryMethodName,
                                                                      state.Settings.ComparisonOperators,
                                                                      state.KeyMember.Member.ComparisonOperators,
                                                                      state.KeyMember.ComparerAccessor));
@@ -195,6 +198,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
+                                                           state.Settings.CreateFactoryMethodName,
                                                            state.Settings.AdditionOperators,
                                                            state.KeyMember.Member.AdditionOperators,
                                                            AdditionOperatorsCodeGeneratorProvider.Instance));
@@ -207,6 +211,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
+                                                           state.Settings.CreateFactoryMethodName,
                                                            state.Settings.SubtractionOperators,
                                                            state.KeyMember.Member.SubtractionOperators,
                                                            SubtractionOperatorsCodeGeneratorProvider.Instance));
@@ -219,6 +224,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
+                                                           state.Settings.CreateFactoryMethodName,
                                                            state.Settings.MultiplyOperators,
                                                            state.KeyMember.Member.MultiplyOperators,
                                                            MultiplyOperatorsCodeGeneratorProvider.Instance));
@@ -231,6 +237,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       var operators = validStates
          .Select((state, _) => new OperatorsGeneratorState(state.Type,
                                                            state.KeyMember.Member,
+                                                           state.Settings.CreateFactoryMethodName,
                                                            state.Settings.DivisionOperators,
                                                            state.KeyMember.Member.DivisionOperators,
                                                            DivisionOperatorsCodeGeneratorProvider.Instance));

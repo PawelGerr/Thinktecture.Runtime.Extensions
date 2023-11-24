@@ -256,6 +256,16 @@ public class BindModelAsync
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
+   [Fact]
+   public async Task Should_bind_simple_value_object_having_custom_factory_name()
+   {
+      var ctx = await BindAsync<IntBasedReferenceValueObjectWithCustomFactoryNames, int>("1");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEmpty();
+      ctx.Result.Model.Should().Be(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1));
+   }
+
    private static async Task<DefaultModelBindingContext> BindAsync<T, TKey>(
       string value)
       where T : IValueObjectFactory<T, TKey, ValidationError>

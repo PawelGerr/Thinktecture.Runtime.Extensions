@@ -4,6 +4,7 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
+   public string CreateFactoryMethodName { get; }
    public OperatorsGeneration OperatorsGeneration { get; }
    public ImplementedComparisonOperators KeyMemberOperators { get; }
    public string? ComparerAccessor { get; }
@@ -11,12 +12,14 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
    public ComparisonOperatorsGeneratorState(
       ITypeInformation type,
       IMemberInformation keyMember,
+      string createFactoryMethodName,
       OperatorsGeneration operatorsGeneration,
       ImplementedComparisonOperators keyMemberOperators,
       string? comparerAccessor)
    {
       Type = type;
       KeyMember = keyMember;
+      CreateFactoryMethodName = createFactoryMethodName;
       OperatorsGeneration = operatorsGeneration;
       KeyMemberOperators = keyMemberOperators;
       ComparerAccessor = comparerAccessor;
@@ -26,6 +29,7 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
+             && CreateFactoryMethodName == other.CreateFactoryMethodName
              && OperatorsGeneration == other.OperatorsGeneration
              && KeyMemberOperators == other.KeyMemberOperators
              && ComparerAccessor == other.ComparerAccessor;
@@ -42,6 +46,7 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ MemberInformationComparer.Instance.GetHashCode(KeyMember);
+         hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
          hashCode = (hashCode * 397) ^ (int)KeyMemberOperators;
          hashCode = (hashCode * 397) ^ ComparerAccessor?.GetHashCode() ?? 0;

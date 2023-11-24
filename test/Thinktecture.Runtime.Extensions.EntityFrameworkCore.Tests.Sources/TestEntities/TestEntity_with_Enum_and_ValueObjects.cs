@@ -29,6 +29,8 @@ public class TestEntity_with_Enum_and_ValueObjects
 
    public Boundary? Boundary { get; set; }
    public BoundaryWithCustomError? BoundaryWithCustomError { get; set; }
+   public BoundaryWithCustomFactoryNames? BoundaryWithCustomFactoryNames { get; set; }
+   public IntBasedReferenceValueObjectWithCustomFactoryNames? IntBasedReferenceValueObjectWitCustomFactoryName { get; set; }
 
    public static void Configure(ModelBuilder modelBuilder)
    {
@@ -36,6 +38,7 @@ public class TestEntity_with_Enum_and_ValueObjects
                                                                  {
                                                                     builder.OwnsOne(e => e.Boundary);
                                                                     builder.OwnsOne(e => e.BoundaryWithCustomError);
+                                                                    builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames);
                                                                  });
    }
 }

@@ -60,6 +60,13 @@ public class GetBinder
    }
 
    [Fact]
+   public void Should_return_int_base_binder_for_simple_value_object_with_custom_factory_name()
+   {
+      var binder = GetModelBinder<IntBasedReferenceValueObjectWithCustomFactoryNames>();
+      binder.Should().BeOfType<ValueObjectModelBinder<IntBasedReferenceValueObjectWithCustomFactoryNames, int, ValidationError>>();
+   }
+
+   [Fact]
    public void Should_return_null_for_non_enums_and_non_value_types()
    {
       GetModelBinder<GetBinder>().Should().BeNull();

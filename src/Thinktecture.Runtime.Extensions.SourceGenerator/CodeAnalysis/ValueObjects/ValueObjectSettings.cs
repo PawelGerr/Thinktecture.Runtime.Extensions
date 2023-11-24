@@ -6,6 +6,8 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    private readonly AttributeInfo _attributeInfo;
 
    public bool SkipFactoryMethods => _allSettings.SkipFactoryMethods;
+   public string CreateFactoryMethodName => _allSettings.CreateFactoryMethodName;
+   public string TryCreateFactoryMethodName => _allSettings.TryCreateFactoryMethodName;
    public bool SkipToString => _allSettings.SkipToString;
    public bool EmptyStringInFactoryMethodsYieldsNull => _allSettings.EmptyStringInFactoryMethodsYieldsNull;
    public bool NullInFactoryMethodsYieldsNull => _allSettings.NullInFactoryMethodsYieldsNull;
@@ -23,6 +25,8 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool Equals(ValueObjectSettings other)
    {
       return SkipFactoryMethods == other.SkipFactoryMethods
+             && CreateFactoryMethodName == other.CreateFactoryMethodName
+             && TryCreateFactoryMethodName == other.TryCreateFactoryMethodName
              && SkipToString == other.SkipToString
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
@@ -40,6 +44,8 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
       unchecked
       {
          var hashCode = SkipFactoryMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
+         hashCode = (hashCode * 397) ^ TryCreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();

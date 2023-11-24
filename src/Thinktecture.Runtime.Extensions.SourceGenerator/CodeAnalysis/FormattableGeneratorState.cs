@@ -4,17 +4,20 @@ public readonly struct FormattableGeneratorState : IEquatable<FormattableGenerat
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
+   public string CreateFactoryMethodName { get; }
    public bool SkipIFormattable { get; }
    public bool IsKeyMemberFormattable { get; }
 
    public FormattableGeneratorState(
       ITypeInformation type,
       IMemberInformation keyMember,
+      string createFactoryMethodName,
       bool skipIFormattable,
       bool isKeyMemberFormattable)
    {
       Type = type;
       KeyMember = keyMember;
+      CreateFactoryMethodName = createFactoryMethodName;
       SkipIFormattable = skipIFormattable;
       IsKeyMemberFormattable = isKeyMemberFormattable;
    }
@@ -23,6 +26,7 @@ public readonly struct FormattableGeneratorState : IEquatable<FormattableGenerat
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
+             && CreateFactoryMethodName == other.CreateFactoryMethodName
              && SkipIFormattable == other.SkipIFormattable
              && IsKeyMemberFormattable == other.IsKeyMemberFormattable;
    }
@@ -38,6 +42,7 @@ public readonly struct FormattableGeneratorState : IEquatable<FormattableGenerat
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ MemberInformationComparer.Instance.GetHashCode(KeyMember);
+         hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberFormattable.GetHashCode();
 

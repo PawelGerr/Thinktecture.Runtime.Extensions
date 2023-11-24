@@ -15,6 +15,12 @@ public class Parse
    }
 
    [Fact]
+   public void Should_parse_valid_value_having_custom_factory_method()
+   {
+      IntBasedReferenceValueObjectWithCustomFactoryNames.Parse("1", null).Should().Be(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1));
+   }
+
+   [Fact]
    public void Should_use_format_provider_parse_valid_value()
    {
       var german = CultureInfo.CreateSpecificCulture("de-DE");

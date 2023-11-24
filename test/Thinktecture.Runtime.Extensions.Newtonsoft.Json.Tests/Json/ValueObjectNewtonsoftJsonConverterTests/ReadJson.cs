@@ -121,6 +121,22 @@ public class ReadJson : JsonTestsBase
       value.Should().BeEquivalentTo(BoundaryWithCustomError.Create(1, 2));
    }
 
+   [Fact]
+   public void Should_deserialize_keyed_value_object_having_custom_factory()
+   {
+      var value = Deserialize<IntBasedReferenceValueObjectWithCustomFactoryNames, int>("1");
+
+      value.Should().BeEquivalentTo(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1));
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_having_custom_factory()
+   {
+      var value = DeserializeWithConverter<BoundaryWithCustomFactoryNames, BoundaryWithCustomFactoryNames.ValueObjectNewtonsoftJsonConverter>("{ \"lower\": 1, \"upper\": 2 }");
+
+      value.Should().BeEquivalentTo(BoundaryWithCustomFactoryNames.Get(1, 2));
+   }
+
    [Theory]
    [MemberData(nameof(DataForValueObjectWithMultipleProperties))]
    public void Should_deserialize_value_type_with_multiple_properties(

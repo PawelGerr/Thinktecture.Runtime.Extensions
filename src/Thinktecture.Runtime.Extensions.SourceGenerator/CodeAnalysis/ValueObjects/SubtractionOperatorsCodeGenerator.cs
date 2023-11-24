@@ -77,7 +77,7 @@ public sealed class SubtractionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)"" />
    public static ").Append(state.Type.TypeFullyQualified).Append(" operator -(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left.").Append(state.KeyMember.Name).Append(" - right.").Append(state.KeyMember.Name).Append(@");
+      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(left.").Append(state.KeyMember.Name).Append(" - right.").Append(state.KeyMember.Name).Append(@");
    }");
       }
 
@@ -88,7 +88,7 @@ public sealed class SubtractionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)"" />
    public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked -(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left.").Append(state.KeyMember.Name).Append(" - right.").Append(state.KeyMember.Name).Append(@"));
+      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(left.").Append(state.KeyMember.Name).Append(" - right.").Append(state.KeyMember.Name).Append(@"));
    }");
       }
 
@@ -108,13 +108,13 @@ public sealed class SubtractionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)"" />
    public static ").Append(state.Type.TypeFullyQualified).Append(" operator -(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(left.").Append(state.KeyMember.Name).Append(@" - right);
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(left.").Append(state.KeyMember.Name).Append(@" - right);
    }
 
    /// <inheritdoc cref=""global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)"" />
    public static ").Append(state.Type.TypeFullyQualified).Append(" operator -(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(left - right.").Append(state.KeyMember.Name).Append(@");
+      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(left - right.").Append(state.KeyMember.Name).Append(@");
    }");
       }
 
@@ -125,13 +125,13 @@ public sealed class SubtractionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)"" />
    public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked -(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return Create(checked(left.").Append(state.KeyMember.Name).Append(@" - right));
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(left.").Append(state.KeyMember.Name).Append(@" - right));
    }
 
    /// <inheritdoc cref=""global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)"" />
    public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked -(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return Create(checked(left - right.").Append(state.KeyMember.Name).Append(@"));
+      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(left - right.").Append(state.KeyMember.Name).Append(@"));
    }");
       }
    }

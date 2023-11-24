@@ -24,4 +24,25 @@ public class DivisionOperators
 
       result.Should().Be(DecimalBasedClassValueObject.Create(3));
    }
+
+   [Fact]
+   public void Should_divide_value_objects_having_custom_factory_name()
+   {
+      var obj = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(6);
+      var other = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(2);
+
+      IntBasedReferenceValueObjectWithCustomFactoryNames result = obj / other;
+
+      result.Should().Be(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(3));
+   }
+
+   [Fact]
+   public void Should_divide_value_object_with_key_type_having_custom_factory_name()
+   {
+      var obj = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(6);
+
+      IntBasedReferenceValueObjectWithCustomFactoryNames result = obj / 2;
+
+      result.Should().Be(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(3));
+   }
 }

@@ -24,4 +24,25 @@ public class SubtractionOperators
 
       result.Should().Be(DecimalBasedClassValueObject.Create(2));
    }
+
+   [Fact]
+   public void Should_subtract_value_objects_having_custom_factory_name()
+   {
+      var obj = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(3);
+      var other = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1);
+
+      IntBasedReferenceValueObjectWithCustomFactoryNames result = obj - other;
+
+      result.Should().Be(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(2));
+   }
+
+   [Fact]
+   public void Should_subtract_value_object_with_key_type_having_custom_factory_name()
+   {
+      var obj = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(3);
+
+      IntBasedReferenceValueObjectWithCustomFactoryNames result = obj - 1;
+
+      result.Should().Be(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(2));
+   }
 }

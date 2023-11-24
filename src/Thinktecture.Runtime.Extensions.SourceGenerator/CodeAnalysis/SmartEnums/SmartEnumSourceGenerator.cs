@@ -78,6 +78,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
                         return ImmutableArray.Create(new ComparisonOperatorsGeneratorState(state.State,
                                                                                            state.KeyMember,
+                                                                                           Constants.Methods.GET,
                                                                                            state.Settings.ComparisonOperators,
                                                                                            state.KeyMember.ComparisonOperators,
                                                                                            null));
@@ -126,6 +127,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
                         return ImmutableArray.Create(new ComparableGeneratorState(state.State,
                                                                                   state.KeyMember,
+                                                                                  Constants.Methods.GET,
                                                                                   state.Settings.SkipIComparable,
                                                                                   state.KeyMember.IsComparable,
                                                                                   null));
@@ -144,6 +146,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
                         return ImmutableArray.Create(new FormattableGeneratorState(state.State,
                                                                                    state.KeyMember,
+                                                                                   Constants.Methods.GET,
                                                                                    state.Settings.SkipIFormattable,
                                                                                    state.KeyMember.IsFormattable));
                      });
@@ -434,11 +437,12 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
              .ToList();
    }
 
-   private readonly record struct ValidSourceGenState(EnumSourceGeneratorState State,
-                                                      SmartEnumDerivedTypes DerivedTypes,
-                                                      AllEnumSettings Settings,
-                                                      IMemberState? KeyMember,
-                                                      AttributeInfo AttributeInfo);
+   private readonly record struct ValidSourceGenState(
+      EnumSourceGeneratorState State,
+      SmartEnumDerivedTypes DerivedTypes,
+      AllEnumSettings Settings,
+      IMemberState? KeyMember,
+      AttributeInfo AttributeInfo);
 
    private readonly record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
    {

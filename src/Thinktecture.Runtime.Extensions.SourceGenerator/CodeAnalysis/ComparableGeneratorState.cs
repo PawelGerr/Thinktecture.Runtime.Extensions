@@ -4,6 +4,7 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
+   public string CreateFactoryMethodName { get; }
    public bool SkipIComparable { get; }
    public bool IsKeyMemberComparable { get; }
    public string? ComparerAccessor { get; }
@@ -11,12 +12,14 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
    public ComparableGeneratorState(
       ITypeInformation type,
       IMemberInformation keyMember,
+      string createFactoryMethodName,
       bool skipIComparable,
       bool isKeyMemberComparable,
       string? comparerAccessor)
    {
       Type = type;
       KeyMember = keyMember;
+      CreateFactoryMethodName = createFactoryMethodName;
       SkipIComparable = skipIComparable;
       IsKeyMemberComparable = isKeyMemberComparable;
       ComparerAccessor = comparerAccessor;
@@ -26,6 +29,7 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
+             && CreateFactoryMethodName == other.CreateFactoryMethodName
              && SkipIComparable == other.SkipIComparable
              && IsKeyMemberComparable == other.IsKeyMemberComparable
              && ComparerAccessor == other.ComparerAccessor;
@@ -42,6 +46,7 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ MemberInformationComparer.Instance.GetHashCode(KeyMember);
+         hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ ComparerAccessor?.GetHashCode() ?? 0;

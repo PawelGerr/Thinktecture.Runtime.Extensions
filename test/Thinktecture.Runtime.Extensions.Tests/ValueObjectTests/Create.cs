@@ -35,6 +35,20 @@ public class Create
    }
 
    [Fact]
+   public void Simple_value_object_with_custom_factory_name()
+   {
+      IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1)
+                                                        .Should().BeEquivalentTo(new { Property = 1 });
+   }
+
+   [Fact]
+   public void Complex_value_object_with_custom_factory_name()
+   {
+      BoundaryWithCustomFactoryNames.Get(1, 2)
+                                    .Should().BeEquivalentTo(new { Lower = 1, Upper = 2 });
+   }
+
+   [Fact]
    public void With_NullInFactoryMethodsYieldsNull_empty_string_should_yield_null()
    {
       FluentActions.Invoking(() => StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Create(String.Empty))

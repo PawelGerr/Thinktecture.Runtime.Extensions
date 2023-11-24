@@ -466,7 +466,7 @@ namespace ").Append(_state.Namespace).Append(@"
       internal static void ModuleInit()
       {
          var convertFromKey = new global::System.Func<").Append(keyMember.TypeFullyQualifiedNullAnnotated).Append(", ").Append(enumTypeNullAnnotated).Append(">(").Append(enumType).Append(@".Get);
-         global::System.Linq.Expressions.Expression<global::System.Func<").Append(keyMember.TypeFullyQualifiedNullAnnotated).Append(", ").Append(enumTypeNullAnnotated).Append(">> convertFromKeyExpression = static ").Append(keyMember.ArgumentName.Escaped).Append(" => ").Append(enumType).Append(".Get(").Append(keyMember.ArgumentName.Escaped).Append(@");
+         global::System.Linq.Expressions.Expression<global::System.Func<").Append(keyMember.TypeFullyQualifiedNullAnnotated).Append(", ").Append(enumTypeNullAnnotated).Append(">> convertFromKeyExpression = static ").Append(keyMember.ArgumentName.Escaped).Append(" => ").Append(enumType).Append(".").Append(Constants.Methods.GET).Append("(").Append(keyMember.ArgumentName.Escaped).Append(@");
 
          var convertToKey = new global::System.Func<").Append(enumType).Append(", ").Append(keyMember.TypeFullyQualified).Append(">(static item => item.").Append(keyMember.Name).Append(@");
          global::System.Linq.Expressions.Expression<global::System.Func<").Append(enumType).Append(", ").Append(keyMember.TypeFullyQualified).Append(">> convertToKeyExpression = static item => item.").Append(keyMember.Name).Append(@";
@@ -604,7 +604,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName.Escaped).Append(@""")]
       public static explicit operator ").Append(_state.TypeFullyQualifiedNullAnnotated).Append("(").Append(keyProperty.TypeFullyQualifiedNullAnnotated).Append(" ").Append(keyProperty.ArgumentName.Escaped).Append(@")
       {
-         return ").Append(_state.TypeFullyQualified).Append(".Get(").Append(keyProperty.ArgumentName.Escaped).Append(@");
+         return ").Append(_state.TypeFullyQualified).Append(".").Append(Constants.Methods.GET).Append("(").Append(keyProperty.ArgumentName.Escaped).Append(@");
       }");
    }
 
@@ -821,7 +821,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName.Escaped).Append(@""")]
-      public static ").Append(keyProperty.IsReferenceType ? _state.TypeFullyQualifiedNullAnnotated : _state.TypeFullyQualified).Append(" Get(").Append(keyProperty.TypeFullyQualifiedNullAnnotated).Append(" ").Append(keyProperty.ArgumentName.Escaped).Append(@")
+      public static ").Append(keyProperty.IsReferenceType ? _state.TypeFullyQualifiedNullAnnotated : _state.TypeFullyQualified).Append(" ").Append(Constants.Methods.GET).Append("(").Append(keyProperty.TypeFullyQualifiedNullAnnotated).Append(" ").Append(keyProperty.ArgumentName.Escaped).Append(@")
       {");
 
       if (keyProperty.IsReferenceType)

@@ -6,6 +6,7 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
+   public string CreateFactoryMethodName { get; }
    public OperatorsGeneration OperatorsGeneration { get; }
    public ImplementedOperators KeyMemberOperators { get; }
    public IOperatorsCodeGeneratorProvider GeneratorProvider { get; }
@@ -13,12 +14,14 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
    public OperatorsGeneratorState(
       ITypeInformation type,
       IMemberInformation keyMember,
+      string createFactoryMethodName,
       OperatorsGeneration operatorsGeneration,
       ImplementedOperators keyMemberOperators,
       IOperatorsCodeGeneratorProvider generatorProvider)
    {
       Type = type;
       KeyMember = keyMember;
+      CreateFactoryMethodName = createFactoryMethodName;
       OperatorsGeneration = operatorsGeneration;
       KeyMemberOperators = keyMemberOperators;
       GeneratorProvider = generatorProvider;
@@ -28,6 +31,7 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
+             && CreateFactoryMethodName == other.CreateFactoryMethodName
              && OperatorsGeneration == other.OperatorsGeneration
              && KeyMemberOperators == other.KeyMemberOperators
              && ReferenceEquals(GeneratorProvider, other.GeneratorProvider);
@@ -44,6 +48,7 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ MemberInformationComparer.Instance.GetHashCode(KeyMember);
+         hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
          hashCode = (hashCode * 397) ^ (int)KeyMemberOperators;
          hashCode = (hashCode * 397) ^ GeneratorProvider.GetHashCode();

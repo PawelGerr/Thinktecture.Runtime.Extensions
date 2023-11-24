@@ -160,4 +160,26 @@ public class Serialize
 
       value.Should().BeEquivalentTo(BoundaryWithCustomError.Create(1, 2));
    }
+
+   [Fact]
+   public void Should_deserialize_keyed_value_object_having_custom_factory()
+   {
+      var options = StandardResolver.Options;
+
+      var bytes = MessagePackSerializer.Serialize(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1), options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize<IntBasedReferenceValueObjectWithCustomFactoryNames>(bytes, options, CancellationToken.None);
+
+      value.Should().BeEquivalentTo(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1));
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_having_custom_factory()
+   {
+      var options = StandardResolver.Options;
+
+      var bytes = MessagePackSerializer.Serialize(BoundaryWithCustomFactoryNames.Get(1, 2), options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize<BoundaryWithCustomFactoryNames>(bytes, options, CancellationToken.None);
+
+      value.Should().BeEquivalentTo(BoundaryWithCustomFactoryNames.Get(1, 2));
+   }
 }

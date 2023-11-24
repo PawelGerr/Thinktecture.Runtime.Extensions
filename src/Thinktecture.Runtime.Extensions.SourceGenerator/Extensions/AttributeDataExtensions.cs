@@ -19,6 +19,16 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");
    }
 
+   public static string? FindCreateFactoryMethodName(this AttributeData attributeData)
+   {
+      return GetStringParameterValue(attributeData, "CreateFactoryMethodName");
+   }
+
+   public static string? FindTryCreateFactoryMethodName(this AttributeData attributeData)
+   {
+      return GetStringParameterValue(attributeData, "TryCreateFactoryMethodName");
+   }
+
    public static bool? FindEmptyStringInFactoryMethodsYieldsNull(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "EmptyStringInFactoryMethodsYieldsNull");

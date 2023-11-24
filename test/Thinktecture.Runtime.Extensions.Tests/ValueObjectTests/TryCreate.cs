@@ -46,4 +46,18 @@ public class TryCreate
       StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate(" ", out var obj).Should().BeFalse();
       obj.Should().BeNull();
    }
+
+   [Fact]
+   public void With_custom_factory_name()
+   {
+      IntBasedReferenceValueObjectWithCustomFactoryNames.TryGet(1, out var obj).Should().BeTrue();
+      obj.Should().BeEquivalentTo(new { Property = 1 });
+   }
+
+   [Fact]
+   public void Simple_value_object_wWith_custom_factory_name()
+   {
+      BoundaryWithCustomFactoryNames.TryGet(1, 2, out var obj).Should().BeTrue();
+      obj.Should().BeEquivalentTo(new { Lower = 1, Upper = 2 });
+   }
 }

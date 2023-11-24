@@ -3,6 +3,8 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
 {
    public bool SkipFactoryMethods { get; }
+   public string CreateFactoryMethodName { get; }
+   public string TryCreateFactoryMethodName { get; }
    public bool EmptyStringInFactoryMethodsYieldsNull { get; }
    public bool NullInFactoryMethodsYieldsNull { get; }
    public bool SkipIComparable { get; }
@@ -20,6 +22,8 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
    public AllValueObjectSettings(AttributeData valueObjectAttribute)
    {
       SkipFactoryMethods = valueObjectAttribute.FindSkipFactoryMethods() ?? false;
+      CreateFactoryMethodName = valueObjectAttribute.FindCreateFactoryMethodName() ?? "Create";
+      TryCreateFactoryMethodName = valueObjectAttribute.FindTryCreateFactoryMethodName() ?? "TryCreate";
       EmptyStringInFactoryMethodsYieldsNull = valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false;
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
       SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;
@@ -52,6 +56,8 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
          return true;
 
       return SkipFactoryMethods == other.SkipFactoryMethods
+             && CreateFactoryMethodName == other.CreateFactoryMethodName
+             && TryCreateFactoryMethodName == other.TryCreateFactoryMethodName
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && SkipIComparable == other.SkipIComparable
@@ -72,6 +78,8 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
       unchecked
       {
          var hashCode = SkipFactoryMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
+         hashCode = (hashCode * 397) ^ TryCreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();

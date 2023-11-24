@@ -189,7 +189,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
       else
       {
-         _sb.Append("new (").Append(typeFullyQualified).Append(".Create)");
+         _sb.Append("new (").Append(typeFullyQualified).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append(")");
       }
 
       _sb.Append(@";
@@ -201,7 +201,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
       else
       {
-         _sb.Append("static ").Append(keyMember.ArgumentName.Escaped).Append(" => ").Append(typeFullyQualified).Append(".Create(").Append(keyMember.ArgumentName.Escaped).Append(")");
+         _sb.Append("static ").Append(keyMember.ArgumentName.Escaped).Append(" => ").Append(typeFullyQualified).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append("(").Append(keyMember.ArgumentName.Escaped).Append(")");
       }
 
       _sb.Append(@";
@@ -349,7 +349,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-         return ").Append(_state.TypeFullyQualified).Append(".Create(").Append(keyMember.ArgumentName.Escaped).Append(@");
+         return ").Append(_state.TypeFullyQualified).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append("(").Append(keyMember.ArgumentName.Escaped).Append(@");
       }");
    }
 
@@ -369,7 +369,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      public static ").Append(_state.TypeFullyQualified).Append(allowNullOutput ? "?" : null).Append(" Create(");
+      public static ").Append(_state.TypeFullyQualified).Append(allowNullOutput ? "?" : null).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, useNullableTypes: allowNullOutput);
 
@@ -400,7 +400,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      public static bool TryCreate(");
+      public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
          ", ",", trailingComma: true, useNullableTypes: allowNullOutput);

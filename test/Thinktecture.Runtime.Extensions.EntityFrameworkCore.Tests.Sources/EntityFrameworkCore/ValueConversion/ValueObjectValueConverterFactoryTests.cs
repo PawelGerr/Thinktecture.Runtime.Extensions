@@ -35,7 +35,9 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
                       NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
                       Boundary = Boundary.Create(10, 20),
-                      BoundaryWithCustomError = BoundaryWithCustomError.Create(11, 21)
+                      BoundaryWithCustomError = BoundaryWithCustomError.Create(11, 21),
+                      BoundaryWithCustomFactoryNames = BoundaryWithCustomFactoryNames.Get(11, 21),
+                      IntBasedReferenceValueObjectWitCustomFactoryName = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1)
                    };
       _ctx.Add(entity);
       await _ctx.SaveChangesAsync();
