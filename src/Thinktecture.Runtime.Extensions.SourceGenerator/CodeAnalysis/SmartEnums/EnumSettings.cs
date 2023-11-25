@@ -10,6 +10,8 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
    public bool? SkipSwitchMethods => _settings.SkipSwitchMethods;
    public bool? SkipMapMethods => _settings.SkipMapMethods;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
+   public bool SkipKeyMember => _settings.SkipKeyMember;
+   public string? KeyMemberEqualityComparerAccessor => _attributeInfo.KeyMemberEqualityComparerAccessor;
    public ImmutableArray<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
    public EnumSettings(AllEnumSettings settings, AttributeInfo attributeInfo)
@@ -30,6 +32,8 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
              && SkipSwitchMethods == other.SkipSwitchMethods
              && SkipMapMethods == other.SkipMapMethods
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
+             && SkipKeyMember == other.SkipKeyMember
+             && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor
              && DesiredFactories.SequenceEqual(other.DesiredFactories);
    }
 
@@ -42,6 +46,8 @@ public readonly struct EnumSettings : IEquatable<EnumSettings>
          hashCode = (hashCode * 397) ^ SkipSwitchMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipMapMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipKeyMember.GetHashCode();
+         hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
 
          return hashCode;

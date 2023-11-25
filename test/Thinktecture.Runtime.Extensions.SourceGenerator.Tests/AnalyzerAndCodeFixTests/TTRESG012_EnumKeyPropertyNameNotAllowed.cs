@@ -11,24 +11,20 @@ public class TTRESG012_EnumKeyPropertyNameNotAllowed
    [Fact]
    public async Task Should_trigger_if_name_is_item()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true, {|#0:KeyPropertyName = ""Item""|})]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Item"|})]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -37,24 +33,20 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_if_name_is_not_item()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true, {|#0:KeyPropertyName = ""Foo""|})]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Foo"|})]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject]
+[ComplexValueObject]
 public readonly partial struct StructValueObjectWithoutMembers
 {
 }

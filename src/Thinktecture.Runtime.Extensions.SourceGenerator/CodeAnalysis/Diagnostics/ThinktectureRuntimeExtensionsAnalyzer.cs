@@ -22,13 +22,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.PropertyMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
                                                                                                               DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
-                                                                                                              DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
+                                                                                                              DiagnosticsDescriptors.EnumKeyMemberNameNotAllowed,
                                                                                                               DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
                                                                                                               DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
                                                                                                               DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-                                                                                                              DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
                                                                                                               DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
@@ -39,7 +38,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
                                                                                                               DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                                                                               DiagnosticsDescriptors.InitAccessorMustBePrivate,
-                                                                                                              DiagnosticsDescriptors.PrimaryConstructorNotAllowed);
+                                                                                                              DiagnosticsDescriptors.PrimaryConstructorNotAllowed,
+                                                                                                              DiagnosticsDescriptors.CustomKeyMemberImplementationNotFound,
+                                                                                                              DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -134,19 +135,30 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void AnalyzeValueObject(OperationAnalysisContext context)
    {
       if (context.ContainingSymbol.Kind != SymbolKind.NamedType
-          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation } || !attrCreation.Type.IsValueObjectAttribute()
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation }
           || context.ContainingSymbol is not INamedTypeSymbol type
-          || type.TypeKind == TypeKind.Error)
+          || type.TypeKind == TypeKind.Error
+          || type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
       {
          return;
       }
 
       try
       {
-         if (type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+         var isKeyed = attrCreation.Type.IsKeyedValueObjectAttribute();
+         var isComplex = attrCreation.Type.IsComplexValueObjectAttribute();
+
+         if (!isKeyed && !isComplex)
             return;
 
-         ValidateValueObject(context, type);
+         var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
+         var assignableMembers = ValidateSharedValueObject(context, type, locationOfFirstDeclaration);
+
+         if (isKeyed)
+            ValidateKeyedValueObject(context, assignableMembers, type, attrCreation, locationOfFirstDeclaration);
+
+         if (isComplex && assignableMembers is not null)
+            ValidateComplexValueObject(context, assignableMembers);
       }
       catch (Exception ex)
       {
@@ -156,22 +168,129 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ValidateValueObject(
-      OperationAnalysisContext context,
-      INamedTypeSymbol type)
+   private static void ValidateKeyedValueObject(OperationAnalysisContext context,
+                                                IReadOnlyList<InstanceMemberInfo>? assignableMembers,
+                                                INamedTypeSymbol type,
+                                                IObjectCreationOperation attribute,
+                                                Location locationOfFirstDeclaration)
    {
-      var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
+      var keyType = (attribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
 
+      if (keyType is null)
+         return;
+
+      if (keyType.TypeKind == TypeKind.Error)
+         return;
+
+      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, attribute.Syntax.GetLocation());
+         return;
+      }
+
+      if (attribute.FindSkipKeyMember() == true)
+         ValidateValueObjectCustomKeyMemberImplementation(context, keyType, assignableMembers, attribute, locationOfFirstDeclaration);
+
+      ValidateKeyMemberComparers(context, type, keyType);
+   }
+
+   private static void ValidateKeyMemberComparers(OperationAnalysisContext context, INamedTypeSymbol type, ITypeSymbol keyType)
+   {
+      AttributeData? keyMemberComparerAttr = null;
+      AttributeData? keyMemberEqualityComparerAttr = null;
+
+      foreach (var attribute in type.GetAttributes())
+      {
+         if (attribute.AttributeClass.IsValueObjectKeyMemberComparerAttribute())
+         {
+            keyMemberComparerAttr = attribute;
+         }
+         else if (attribute.AttributeClass.IsValueObjectKeyMemberEqualityComparerAttribute())
+         {
+            keyMemberEqualityComparerAttr = attribute;
+         }
+      }
+
+      ValidateComparer(context, keyType, keyMemberComparerAttr);
+      ValidateComparer(context, keyType, keyMemberEqualityComparerAttr);
+   }
+
+   private static void ValidateComparer(OperationAnalysisContext context, ITypeSymbol keyType, AttributeData? keyMemberComparerAttr)
+   {
+      var comparerGenericTypes = keyMemberComparerAttr?.GetComparerTypes();
+
+      if (comparerGenericTypes is null || SymbolEqualityComparer.Default.Equals(comparerGenericTypes.Value.ItemType, keyType))
+         return;
+
+      ReportDiagnostic(context,
+                       DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
+                       keyMemberComparerAttr?.ApplicationSyntaxReference?.GetSyntax().GetLocation() ?? Location.None,
+                       BuildTypeName(comparerGenericTypes.Value.ComparerType),
+                       BuildTypeName(keyType));
+   }
+
+   private static void ValidateValueObjectCustomKeyMemberImplementation(
+      OperationAnalysisContext context,
+      ITypeSymbol keyType,
+      IReadOnlyList<InstanceMemberInfo>? assignableMembers,
+      IObjectCreationOperation attribute,
+      Location locationOfFirstDeclaration)
+   {
+      var keyMemberAccessModifier = attribute.FindKeyMemberAccessModifier() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
+      var keyMemberKind = attribute.FindKeyMemberKind() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_KIND;
+      var keyMemberName = attribute.FindKeyMemberName() ?? Helper.GetDefaultValueObjectKeyMemberName(keyMemberAccessModifier, keyMemberKind);
+
+      ValidateCustomKeyMemberImplementation(context, keyType, assignableMembers, keyMemberName, locationOfFirstDeclaration);
+   }
+
+   private static void ValidateSmartEnumCustomKeyMemberImplementation(
+      OperationAnalysisContext context,
+      ITypeSymbol keyType,
+      IReadOnlyList<InstanceMemberInfo>? assignableMembers,
+      IObjectCreationOperation attribute,
+      Location locationOfFirstDeclaration)
+   {
+      var keyMemberAccessModifier = attribute.FindKeyMemberAccessModifier() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
+      var keyMemberKind = attribute.FindKeyMemberKind() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_KIND;
+      var keyMemberName = attribute.FindKeyMemberName() ?? Helper.GetDefaultSmartEnumKeyMemberName(keyMemberAccessModifier, keyMemberKind);
+
+      ValidateCustomKeyMemberImplementation(context, keyType, assignableMembers, keyMemberName, locationOfFirstDeclaration);
+   }
+
+   private static void ValidateCustomKeyMemberImplementation(
+      OperationAnalysisContext context,
+      ITypeSymbol keyType,
+      IReadOnlyList<InstanceMemberInfo>? assignableMembers,
+      string keyMemberName,
+      Location locationOfFirstDeclaration)
+   {
+      var keyMember = assignableMembers?.FirstOrDefault(m => !m.IsStatic && m.Name == keyMemberName);
+
+      if (keyMember is null)
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.CustomKeyMemberImplementationNotFound, locationOfFirstDeclaration, keyMemberName);
+         return;
+      }
+
+      if (!keyMember.IsOfType(keyType))
+         ReportDiagnostic(context, DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch, keyMember.GetIdentifierLocation(context.CancellationToken) ?? locationOfFirstDeclaration, keyMemberName, keyMember.TypeMinimallyQualified, BuildTypeName(keyType));
+   }
+
+   private static IReadOnlyList<InstanceMemberInfo>? ValidateSharedValueObject(
+      OperationAnalysisContext context,
+      INamedTypeSymbol type,
+      Location locationOfFirstDeclaration)
+   {
       if (type.IsRecord || type.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, type);
-         return;
+         return null;
       }
 
       if (type.ContainingType is not null) // is nested class
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, type);
-         return;
+         return null;
       }
 
       var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
@@ -182,7 +301,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                     locationOfFirstDeclaration,
                                                     type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                                                     "Could not fetch type information for analysis of the value object."));
-         return;
+         return null;
       }
 
       EnsureNoPrimaryConstructor(context, type);
@@ -204,42 +323,27 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          baseClass = baseClass.BaseType;
       }
 
-      if (assignableMembers.Count == 1)
-      {
-         var keyMember = assignableMembers[0];
-
-         if (keyMember.NullableAnnotation == NullableAnnotation.Annotated)
-            ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, keyMember.GetIdentifierLocation(context.CancellationToken), keyMember.Name);
-
-         CheckComparerTypes(context, keyMember);
-      }
-      else
-      {
-         CheckAssignableMembers(context, assignableMembers);
-      }
-
       if (type is { IsSealed: false, IsAbstract: false })
          ReportDiagnostic(context, DiagnosticsDescriptors.ValueObjectMustBeSealed, locationOfFirstDeclaration, type);
+
+      return assignableMembers;
+   }
+
+   private static void ValidateComplexValueObject(OperationAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)
+   {
+      CheckAssignableMembers(context, assignableMembers);
    }
 
    private static void CheckAssignableMembers(OperationAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)
    {
-      foreach (var assignableMember in assignableMembers)
+      for (var i = 0; i < assignableMembers.Count; i++)
       {
+         var assignableMember = assignableMembers[i];
+
          if (!assignableMember.ValueObjectMemberSettings.IsExplicitlyDeclared)
             continue;
 
          CheckComparerTypes(context, assignableMember);
-
-         var comparerAccessor = assignableMember.ValueObjectMemberSettings.ComparerAccessor;
-
-         if (comparerAccessor is not null)
-         {
-            ReportDiagnostic(context,
-                             DiagnosticsDescriptors.ComparerApplicableOnKeyMemberOnly,
-                             assignableMember.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? assignableMember.GetIdentifierLocation(context.CancellationToken),
-                             comparerAccessor);
-         }
       }
    }
 
@@ -249,23 +353,16 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
-                          member.ValueObjectMemberSettings.GetEqualityComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(context.CancellationToken),
-                          member.ValueObjectMemberSettings.EqualityComparerAccessor);
-      }
-
-      if (member.ValueObjectMemberSettings is { HasInvalidComparerType: true, ComparerAccessor: not null })
-      {
-         ReportDiagnostic(context,
-                          DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
-                          member.ValueObjectMemberSettings.GetComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(context.CancellationToken),
-                          member.ValueObjectMemberSettings.ComparerAccessor);
+                          member.ValueObjectMemberSettings.GetEqualityComparerAttributeLocationOrNull(context.CancellationToken) ?? member.GetIdentifierLocation(context.CancellationToken) ?? Location.None,
+                          member.ValueObjectMemberSettings.EqualityComparerAccessor,
+                          member.TypeMinimallyQualified);
       }
    }
 
    private static void ValidateEnum(
       OperationAnalysisContext context,
       INamedTypeSymbol enumType,
-      IObjectCreationOperation smartEnumAttribute)
+      IObjectCreationOperation attribute)
    {
       var locationOfFirstDeclaration = enumType.Locations.IsDefaultOrEmpty ? Location.None : enumType.Locations[0]; // a representative for all
 
@@ -295,21 +392,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ConstructorsMustBePrivate(context, enumType);
       TypeMustBePartial(context, enumType);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
-
-      var keyType = (smartEnumAttribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
-
-      if (keyType?.TypeKind == TypeKind.Error)
-         return;
-
-      if (keyType?.NullableAnnotation == NullableAnnotation.Annotated || keyType?.SpecialType == SpecialType.System_Nullable_T)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
-
-      var isValidatable = keyType is not null && (smartEnumAttribute.FindIsValidatable() ?? false);
-
       StructMustBeReadOnly(context, enumType, locationOfFirstDeclaration);
-
-      if (enumType.IsValueType && !isValidatable)
-         ReportDiagnostic(context, DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType);
 
       var nonIgnoredMembers = enumType.GetNonIgnoredMembers();
       var items = enumType.GetEnumItems(nonIgnoredMembers);
@@ -320,10 +403,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       Check_ItemLike_StaticProperties(context, enumType, nonIgnoredMembers);
       EnumItemsMustBePublic(context, enumType, items);
 
-      if (isValidatable && keyType is not null)
-         ValidateCreateInvalidItem(context, enumType, keyType, nonIgnoredMembers, locationOfFirstDeclaration);
+      var assignableMembers = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, false, false, context.CancellationToken, context).ToList();
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, false, false, context.CancellationToken, context).Enumerate();
       var baseClass = enumType.BaseType;
 
       while (!baseClass.IsNullOrObject())
@@ -333,13 +414,53 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          baseClass = baseClass.BaseType;
       }
 
-      if (keyType is not null)
-         EnumKeyPropertyNameMustNotBeItem(context, smartEnumAttribute, locationOfFirstDeclaration);
-
       var derivedTypes = ValidateDerivedTypes(context, enumType);
 
       if (enumType is { IsSealed: false, IsAbstract: false } && derivedTypes.Count == 0)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, locationOfFirstDeclaration, enumType);
+
+      EnumKeyMemberNameMustNotBeItem(context, attribute, locationOfFirstDeclaration);
+
+      ValidateKeyedSmartEnum(context, enumType, attribute, assignableMembers, nonIgnoredMembers, locationOfFirstDeclaration);
+   }
+
+   private static void ValidateKeyedSmartEnum(
+      OperationAnalysisContext context,
+      INamedTypeSymbol enumType,
+      IObjectCreationOperation attribute,
+      IReadOnlyList<InstanceMemberInfo> assignableMembers,
+      ImmutableArray<ISymbol> nonIgnoredMembers,
+      Location locationOfFirstDeclaration)
+   {
+      var keyType = (attribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
+
+      if (keyType is null)
+         return;
+
+      if (keyType.TypeKind == TypeKind.Error)
+         return;
+
+      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
+         return;
+      }
+
+      if (attribute.FindSkipKeyMember() == true)
+         ValidateSmartEnumCustomKeyMemberImplementation(context, keyType, assignableMembers, attribute, locationOfFirstDeclaration);
+
+      var isValidatable = attribute.FindIsValidatable() ?? false;
+
+      if (isValidatable)
+      {
+         ValidateCreateInvalidItem(context, enumType, keyType, nonIgnoredMembers, locationOfFirstDeclaration);
+      }
+      else if (enumType.IsValueType)
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType);
+      }
+
+      ValidateKeyMemberComparers(context, enumType, keyType);
    }
 
    private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
@@ -419,17 +540,17 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void EnumKeyPropertyNameMustNotBeItem(OperationAnalysisContext context, IObjectCreationOperation enumSettingsAttr, Location location)
+   private static void EnumKeyMemberNameMustNotBeItem(OperationAnalysisContext context, IObjectCreationOperation enumSettingsAttr, Location location)
    {
-      var keyPropName = enumSettingsAttr.FindKeyPropertyName();
+      var keyMemberName = enumSettingsAttr.FindKeyMemberName();
 
-      if (!StringComparer.OrdinalIgnoreCase.Equals(keyPropName, "Item"))
+      if (!StringComparer.OrdinalIgnoreCase.Equals(keyMemberName, "Item"))
          return;
 
       var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.Syntax;
 
-      ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyPropertyNameNotAllowed,
-                       attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.SmartEnum.Properties.KEY_PROPERTY_NAME)?.GetLocation() ?? location, keyPropName);
+      ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyMemberNameNotAllowed,
+                       attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.Properties.KEY_MEMBER_NAME)?.GetLocation() ?? location, keyMemberName);
    }
 
    private static void EnumItemsMustBePublic(OperationAnalysisContext context, INamedTypeSymbol type, ImmutableArray<IFieldSymbol> items)
@@ -568,6 +689,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1, string arg2)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1, arg2));
    }
 
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, string arg1)

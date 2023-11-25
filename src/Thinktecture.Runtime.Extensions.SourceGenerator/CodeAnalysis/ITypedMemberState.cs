@@ -6,6 +6,7 @@ public interface ITypedMemberState : IEquatable<ITypedMemberState>
    string TypeFullyQualifiedNullable { get; }
    string TypeFullyQualifiedNullAnnotated { get; }
    string TypeFullyQualifiedWithNullability { get; }
+   string TypeMinimallyQualified { get; }
    SpecialType SpecialType { get; }
    bool IsReferenceType { get; }
    bool IsReferenceTypeOrNullableStruct { get; }

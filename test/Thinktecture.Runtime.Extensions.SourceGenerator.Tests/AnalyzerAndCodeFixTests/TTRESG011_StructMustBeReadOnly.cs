@@ -13,43 +13,35 @@ public class TTRESG011_StructMustBeReadOnly
       [Fact]
       public async Task Should_trigger_if_struct_is_not_readonly()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public partial struct {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   // simulate source gen
-	partial struct TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public partial struct {|#0:TestEnum|}
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
-         var expectedCode = @"
-using System;
-using Thinktecture;
+         var expectedCode = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public readonly partial struct {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                            using System;
+                            using Thinktecture;
 
-   // simulate source gen
-	partial struct TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                            namespace TestNamespace
+                            {
+                               [SmartEnum<string>(IsValidatable = true)]
+                            	public readonly partial struct {|#0:TestEnum|}
+                            	{
+                                  public static readonly TestEnum Item1 = default;
+                               }
+                            }
+                            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -58,78 +50,138 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_if_struct_is_readonly()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public readonly partial struct {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   // simulate source gen
-	partial struct TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public readonly partial struct {|#0:TestEnum|}
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
    }
 
-   public class ValueObject_struct_must_be_readonly
+   public class KeyedValueObject_struct_must_be_readonly
    {
       [Fact]
       public async Task Should_trigger_if_struct_is_not_readonly()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public partial struct {|#0:TestValueObject|}
-	{
-   }
-}";
+                    using System;
+                    using Thinktecture;
 
-         var expectedCode = @"
-using System;
-using Thinktecture;
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public partial struct {|#0:TestValueObject|}
+                    	{
+                       }
+                    }
+                    """;
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public readonly partial struct {|#0:TestValueObject|}
-	{
-   }
-}";
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ValueObject<string>]
+                            	public readonly partial struct {|#0:TestValueObject|}
+                            	{
+                               }
+                            }
+                            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_if_struct_is_readonly()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public readonly partial struct {|#0:TestValueObject|}
-	{
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public readonly partial struct {|#0:TestValueObject|}
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
    }
-}";
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+   public class ComplexValueObject_struct_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_if_struct_is_not_readonly()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public partial struct {|#0:TestValueObject|}
+                    	{
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ComplexValueObject]
+                            	public readonly partial struct {|#0:TestValueObject|}
+                            	{
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_if_struct_is_readonly()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public readonly partial struct {|#0:TestValueObject|}
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
    }
 }

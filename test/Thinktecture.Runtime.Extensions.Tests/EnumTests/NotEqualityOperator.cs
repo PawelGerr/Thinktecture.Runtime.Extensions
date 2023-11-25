@@ -17,7 +17,7 @@ public class NotEqualityOperator
    public void Should_return_true_if_item_is_of_different_type()
    {
       // ReSharper disable once SuspiciousTypeConversion.Global
-      (TestEnum.Item1 != TestEnumWithNonDefaultComparer.Item).Should().BeTrue();
+      (TestEnum.Item1 != ValidatableTestEnumCaseSensitive.LowerCased).Should().BeTrue();
    }
 
    [Fact]
@@ -42,7 +42,7 @@ public class NotEqualityOperator
    [Fact]
    public void Should_return_true_if_both_items_are_invalid_and_have_keys_that_differ_in_casing_if_comparer_honors_casing()
    {
-      (TestEnumWithNonDefaultComparer.Get("Item") != TestEnumWithNonDefaultComparer.Get("item")).Should().BeTrue();
+      (ValidatableTestEnumCaseSensitive.Get("INVALID") != ValidatableTestEnumCaseSensitive.Get("invalid")).Should().BeTrue();
    }
 
    [Fact]

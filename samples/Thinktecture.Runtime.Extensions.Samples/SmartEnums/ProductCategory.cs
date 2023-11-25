@@ -1,7 +1,7 @@
 namespace Thinktecture.SmartEnums;
 
 [SmartEnum<string>(IsValidatable = true,
-                   KeyPropertyName = "Name")]
+                   KeyMemberName = "Name")]
 public sealed partial class ProductCategory
 {
    public static readonly ProductCategory Fruits = new("Fruits");

@@ -16,6 +16,8 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsComparable => _typedMemberState.IsComparable;
    public bool IsParsable => _typedMemberState.IsParsable;
    public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
+   public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
+   public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
 
    public DefaultMemberState(ITypedMemberState typedMemberState, string name, ArgumentName argumentName)
    {

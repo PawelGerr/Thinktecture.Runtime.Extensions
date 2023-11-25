@@ -81,7 +81,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                                            Constants.Methods.GET,
                                                                                            state.Settings.ComparisonOperators,
                                                                                            state.KeyMember.ComparisonOperators,
-                                                                                           null));
+                                                                                           state.AttributeInfo.KeyMemberComparerAccessor));
                      });
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
@@ -93,7 +93,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          .Select((state, _) => new EqualityComparisonOperatorsGeneratorState(state.State,
                                                                              state.KeyMember,
                                                                              state.Settings.EqualityComparisonOperators,
-                                                                             new ComparerInfo(Constants.KEY_EQUALITY_COMPARER_NAME, false)));
+                                                                             state.AttributeInfo.KeyMemberEqualityComparerAccessor is null ? null : new ComparerInfo(state.AttributeInfo.KeyMemberEqualityComparerAccessor, true)));
 
       InitializeEqualityComparisonOperatorsCodeGenerator(context, comparables, options);
    }
@@ -130,7 +130,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                                   Constants.Methods.GET,
                                                                                   state.Settings.SkipIComparable,
                                                                                   state.KeyMember.IsComparable,
-                                                                                  null));
+                                                                                  state.AttributeInfo.KeyMemberComparerAccessor));
                      });
 
       InitializeComparableCodeGenerator(context, comparables, options);
@@ -394,23 +394,23 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          }
 
          var settings = new AllEnumSettings(context.Attributes[0]);
-         IMemberState? keyProperty = null;
+         KeyMemberState? keyMember = null;
 
          if (keyMemberType is not null)
          {
             var keyTypedMemberState = factory.Create(keyMemberType);
-            keyProperty = settings.CreateKeyProperty(keyTypedMemberState);
+            keyMember = settings.CreateKeyMember(keyTypedMemberState);
          }
 
          var nonIgnoredMembers = type.GetNonIgnoredMembers();
          var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyMemberType, cancellationToken);
 
-         var enumState = new EnumSourceGeneratorState(factory, type, keyProperty, attributeInfo.ValidationError, nonIgnoredMembers, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
+         var enumState = new EnumSourceGeneratorState(factory, type, keyMember, attributeInfo.ValidationError, nonIgnoredMembers, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
 
          Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);
 
-         return new SourceGenContext(new ValidSourceGenState(enumState, derivedTypes, settings, keyProperty, attributeInfo));
+         return new SourceGenContext(new ValidSourceGenState(enumState, derivedTypes, settings, keyMember, attributeInfo));
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -441,7 +441,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       EnumSourceGeneratorState State,
       SmartEnumDerivedTypes DerivedTypes,
       AllEnumSettings Settings,
-      IMemberState? KeyMember,
+      KeyMemberState? KeyMember,
       AttributeInfo AttributeInfo);
 
    private readonly record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)

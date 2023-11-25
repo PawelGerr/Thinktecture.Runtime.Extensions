@@ -2,11 +2,9 @@ using System;
 
 namespace Thinktecture.Database;
 
-[ValueObject]
+[ValueObject<string>]
 public sealed partial class Description
 {
-   private readonly string _value;
-
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)
    {
       if (String.IsNullOrWhiteSpace(value))

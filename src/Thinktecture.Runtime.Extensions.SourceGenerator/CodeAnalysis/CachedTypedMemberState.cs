@@ -8,6 +8,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
    public string TypeFullyQualifiedNullable { get; }
    public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeFullyQualifiedWithNullability { get; }
+   public string TypeMinimallyQualified { get; }
    public SpecialType SpecialType { get; }
    public bool IsReferenceType { get; }
    public bool IsReferenceTypeOrNullableStruct { get; }
@@ -30,6 +31,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
       TypeFullyQualifiedNullable = typedMemberState.TypeFullyQualifiedNullable;
       TypeFullyQualifiedNullAnnotated = typedMemberState.TypeFullyQualifiedNullAnnotated;
       TypeFullyQualifiedWithNullability = typedMemberState.TypeFullyQualifiedWithNullability;
+      TypeMinimallyQualified = typedMemberState.TypeMinimallyQualified;
       SpecialType = typedMemberState.SpecialType;
       IsReferenceType = typedMemberState.IsReferenceType;
       IsReferenceTypeOrNullableStruct = typedMemberState.IsReferenceTypeOrNullableStruct;

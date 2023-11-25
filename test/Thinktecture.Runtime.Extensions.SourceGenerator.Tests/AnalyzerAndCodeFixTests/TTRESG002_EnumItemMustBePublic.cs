@@ -11,43 +11,35 @@ public class TTRESG002_EnumItemMustBePublic
    [Fact]
    public async Task Should_trigger_on_internal_enum_item()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      internal static readonly TestEnum {|#0:Item1|} = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       internal static readonly TestEnum {|#0:Item1|} = default;
+                    }
+                 }
+                 """;
 
-      var expectedCode = @"
-using System;
-using Thinktecture;
+      var expectedCode = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                         using System;
+                         using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                         namespace TestNamespace
+                         {
+                            [SmartEnum<string>(IsValidatable = true)]
+                         	public sealed partial class TestEnum
+                         	{
+                               public static readonly TestEnum Item1 = default;
+                            }
+                         }
+                         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -56,43 +48,35 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_even_if_modifier_is_not_first_one()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      static private readonly TestEnum {|#0:Item1|} = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       static private readonly TestEnum {|#0:Item1|} = default;
+                    }
+                 }
+                 """;
 
-      var expectedCode = @"
-using System;
-using Thinktecture;
+      var expectedCode = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                         using System;
+                         using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                         namespace TestNamespace
+                         {
+                            [SmartEnum<string>(IsValidatable = true)]
+                         	public sealed partial class TestEnum
+                         	{
+                               public static readonly TestEnum Item1 = default;
+                            }
+                         }
+                         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -101,43 +85,35 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_on_non_enum_item_without_explicit_modifier()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      static readonly TestEnum {|#0:Item1|} = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       static readonly TestEnum {|#0:Item1|} = default;
+                    }
+                 }
+                 """;
 
-      var expectedCode = @"
-using System;
-using Thinktecture;
+      var expectedCode = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                         using System;
+                         using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                         namespace TestNamespace
+                         {
+                            [SmartEnum<string>(IsValidatable = true)]
+                         	public sealed partial class TestEnum
+                         	{
+                               public static readonly TestEnum Item1 = default;
+                            }
+                         }
+                         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);

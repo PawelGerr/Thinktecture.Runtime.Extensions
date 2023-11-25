@@ -10,10 +10,12 @@ public class ValueObjectDemos
    public static void Demo(ILogger logger)
    {
       DemoForSimpleValueObjects(logger);
+      DemoForSimpleValueObjectWithCustomComparer(logger);
       DemoForEndDate(logger);
       DemosForAmount(logger);
 
       DemoForComplexValueObjects(logger);
+      DemoForComplexValueObjectWithCustomComparison(logger);
    }
 
    private static void DemoForSimpleValueObjects(ILogger logger)
@@ -71,6 +73,39 @@ public class ValueObjectDemos
 
       if (ProductName.TryParse("New product name", null, out var productName))
          logger.Information("Parsed name: {ParsedProductName}", productName);
+   }
+
+   private static void DemoForSimpleValueObjectWithCustomComparer(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Simple Value Objects with custom Comparer ====
+
+                         """);
+
+      var lowerCasedName = ProductNameWithCaseSensitiveComparer.Create("foo");
+      var upperCasedName = ProductNameWithCaseSensitiveComparer.Create("FOO");
+
+      logger.Information("With case-sensitive comparer: \"{LowerCasedName}\".Equals(\"{UpperCasedName}\") = {Result}",
+                         lowerCasedName,
+                         upperCasedName,
+                         lowerCasedName.Equals(upperCasedName));
+
+      logger.Information("With case-sensitive comparer: \"{LowerCasedName}\" == \"{UpperCasedName}\" = {Result}",
+                         lowerCasedName,
+                         upperCasedName,
+                         lowerCasedName == upperCasedName);
+
+      logger.Information("With case-sensitive comparer: \"{LowerCasedName}\".CompareTo(\"{UpperCasedName}\") = {Result}",
+                         lowerCasedName,
+                         upperCasedName,
+                         lowerCasedName.CompareTo(upperCasedName));
+
+      logger.Information("With case-sensitive comparer: \"{LowerCasedName}\" > \"{UpperCasedName}\" = {Result}",
+                         lowerCasedName,
+                         upperCasedName,
+                         lowerCasedName > upperCasedName);
    }
 
    private static void DemosForAmount(ILogger logger)
@@ -183,5 +218,22 @@ public class ValueObjectDemos
       {
          logger.Warning("Failed to create BoundaryWithFactories from tuple. Validation error: {ValidationError}", boundaryValidationError.ToString());
       }
+   }
+
+   private static void DemoForComplexValueObjectWithCustomComparison(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Complex Value Object with custom Comparison ====
+
+                         """);
+
+      var item1 = ComplexValueObjectWithCustomEqualityComparison.Create("1", "Item 1");
+      var item2 = ComplexValueObjectWithCustomEqualityComparison.Create("1", "Item 2");
+      var item3 = ComplexValueObjectWithCustomEqualityComparison.Create("2", "Item 3");
+
+      logger.Information("{Item1} == {Item2}: {Result}", item1, item2, item1 == item2);
+      logger.Information("{Item1} == {Item3}: {Result}", item1, item3, item1 == item3);
    }
 }

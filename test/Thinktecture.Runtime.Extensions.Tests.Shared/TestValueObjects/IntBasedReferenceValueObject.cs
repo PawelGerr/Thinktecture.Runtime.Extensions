@@ -1,7 +1,8 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject]
+[ValueObject<int>(KeyMemberKind = ValueObjectMemberKind.Property,
+                  KeyMemberName = "Property",
+                  KeyMemberAccessModifier = ValueObjectAccessModifier.Public)]
 public sealed partial class IntBasedReferenceValueObject
 {
-   public int Property { get; }
 }

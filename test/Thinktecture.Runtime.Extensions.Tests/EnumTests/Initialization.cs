@@ -16,7 +16,7 @@ public class Initialization
    [Fact]
    public void Should_not_throw_if_enum_has_2_keys_that_differ_in_casing_only_if_comparer_honors_casing()
    {
-      Action action = () => _ = TestEnumWithNonDefaultComparer.Items;
+      Action action = () => _ = ValidatableTestEnumCaseSensitive.Items;
       action.Should().NotThrow<Exception>();
    }
 }

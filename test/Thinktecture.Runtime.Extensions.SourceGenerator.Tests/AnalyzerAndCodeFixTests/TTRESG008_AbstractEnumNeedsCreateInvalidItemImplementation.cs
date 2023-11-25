@@ -11,48 +11,40 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
    [Fact]
    public async Task Should_trigger_if_abstract_class_has_no_CreateInvalidItem()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public abstract partial class {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public abstract partial class {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
-      var expectedCode = @"
-using System;
-using Thinktecture;
+      var expectedCode = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public abstract partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                         using System;
+                         using Thinktecture;
 
-        private static TestEnum CreateInvalidItem(string key)
-        {
-            throw new global::System.NotImplementedException();
-        }
-    }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                         namespace TestNamespace
+                         {
+                            [SmartEnum<string>(IsValidatable = true)]
+                         	public abstract partial class TestEnum
+                         	{
+                               public static readonly TestEnum Item1 = default;
+                         
+                                 private static TestEnum CreateInvalidItem(string key)
+                                 {
+                                     throw new global::System.NotImplementedException();
+                                 }
+                             }
+                         }
+                         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -61,29 +53,25 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_if_abstract_class_has_a_CreateInvalidItem()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public abstract partial class {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private static TestEnum CreateInvalidItem(string key)
-      {
-         throw new System.NotImplementedException();
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public abstract partial class {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private static TestEnum CreateInvalidItem(string key)
+                       {
+                          throw new System.NotImplementedException();
+                       }
+                    }
+                 }
+                 """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

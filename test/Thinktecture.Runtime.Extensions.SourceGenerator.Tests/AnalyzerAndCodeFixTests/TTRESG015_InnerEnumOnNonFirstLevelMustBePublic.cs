@@ -11,57 +11,49 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
    [Fact]
    public async Task Should_trigger_if_2st_level_type_is_public()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private sealed class InnerTestEnum : TestEnum
-	   {
-         private sealed class {|#0:MostInnerTestEnum|} : TestEnum
-	      {
-         }
-      }
-   }
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private sealed class InnerTestEnum : TestEnum
+                 	   {
+                          private sealed class {|#0:MostInnerTestEnum|} : TestEnum
+                 	      {
+                          }
+                       }
+                    }
+                 }
+                 """;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+      var expectedCode = """
 
-      var expectedCode = @"
-using System;
-using Thinktecture;
+                         using System;
+                         using Thinktecture;
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-
-      private sealed class InnerTestEnum : TestEnum
-	   {
-         public sealed class {|#0:MostInnerTestEnum|} : TestEnum
-	      {
-         }
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                         namespace TestNamespace
+                         {
+                            [SmartEnum<string>(IsValidatable = true)]
+                         	public partial class TestEnum
+                         	{
+                               public static readonly TestEnum Item1 = default;
+                         
+                               private sealed class InnerTestEnum : TestEnum
+                         	   {
+                                  public sealed class {|#0:MostInnerTestEnum|} : TestEnum
+                         	      {
+                                  }
+                               }
+                            }
+                         }
+                         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("MostInnerTestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -70,31 +62,27 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_if_2nd_level_type_is_public()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private sealed class InnerTestEnum : TestEnum
-	   {
-         public sealed class {|#0:MostInnerTestEnum|} : TestEnum
-	      {
-         }
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private sealed class InnerTestEnum : TestEnum
+                 	   {
+                          public sealed class {|#0:MostInnerTestEnum|} : TestEnum
+                 	      {
+                          }
+                       }
+                    }
+                 }
+                 """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

@@ -1,6 +1,6 @@
 namespace Thinktecture.ValueObjects;
 
-[ValueObject]
+[ComplexValueObject]
 [ValueObjectValidationError<BoundaryValidationError>]
 public sealed partial class Boundary
 {

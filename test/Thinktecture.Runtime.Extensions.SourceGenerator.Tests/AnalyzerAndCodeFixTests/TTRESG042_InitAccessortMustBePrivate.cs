@@ -4,205 +4,445 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable InconsistentNaming
-public class TTRESG042_InitAccessortMustBePrivate
+public class TTRESG042_InitAccessorMustBePrivate
 {
    private const string _DIAGNOSTIC_ID = "TTRESG042";
 
-   [Fact]
-   public async Task Should_trigger_on_public_property_with_default_init()
+   public class KeyedValueObject_InitAccessorMustBePrivate
    {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      public int {|#0:InstanceProperty|} { get; init; }
-   }
-}";
-
-      var expectedCode = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      public int InstanceProperty { get; private init; }
-   }
-}";
-
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-   }
-
-   [Fact]
-   public async Task Should_trigger_on_public_property_with_init_expression()
-   {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [ValueObjectMemberIgnore]
-      private readonly int _instanceProperty;
-
-      public int {|#0:InstanceProperty|}
+      [Fact]
+      public async Task Should_trigger_on_public_property_with_default_init()
       {
-         get => _instanceProperty;
-         init => _instanceProperty = value;
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          public int {|#0:InstanceProperty|} { get; init; }
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ValueObject<string>]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  public int InstanceProperty { get; private init; }
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_public_property_with_init_expression()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          public int {|#0:InstanceProperty|}
+                          {
+                             get => _instanceProperty;
+                             init => _instanceProperty = value;
+                          }
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ValueObject<string>]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  [ValueObjectMemberIgnore]
+                                  private readonly int _instanceProperty;
+                            
+                                  public int {|#0:InstanceProperty|}
+                                  {
+                                     get => _instanceProperty;
+                                     private init => _instanceProperty = value;
+                                  }
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_public_property_with_init_body()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          public int {|#0:InstanceProperty|}
+                          {
+                             get { return _instanceProperty; }
+                             init { _instanceProperty = value; }
+                          }
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ValueObject<string>]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  [ValueObjectMemberIgnore]
+                                  private readonly int _instanceProperty;
+                            
+                                  public int {|#0:InstanceProperty|}
+                                  {
+                                     get { return _instanceProperty; }
+                                     private init { _instanceProperty = value; }
+                                  }
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_private_property_with_default_init()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          private int {|#0:InstanceProperty|} { get; init; }
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_private_property_with_init_expression()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          private int {|#0:InstanceProperty|}
+                          {
+                             get => _instanceProperty;
+                             init => _instanceProperty = value;
+                          }
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_private_property_with_init_body()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          private int {|#0:InstanceProperty|}
+                          {
+                             get { return _instanceProperty; }
+                             init { _instanceProperty = value; }
+                          }
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
    }
-}";
 
-      var expectedCode = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [ValueObjectMemberIgnore]
-      private readonly int _instanceProperty;
-
-      public int {|#0:InstanceProperty|}
-      {
-         get => _instanceProperty;
-         private init => _instanceProperty = value;
-      }
-   }
-}";
-
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-   }
-
-   [Fact]
-   public async Task Should_trigger_on_public_property_with_init_body()
+   public class ComplexValueObject_InitAccessorMustBePrivate
    {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [ValueObjectMemberIgnore]
-      private readonly int _instanceProperty;
-
-      public int {|#0:InstanceProperty|}
+      [Fact]
+      public async Task Should_trigger_on_public_property_with_default_init()
       {
-         get { return _instanceProperty; }
-         init { _instanceProperty = value; }
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          public int {|#0:InstanceProperty|} { get; init; }
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ComplexValueObject]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  public int InstanceProperty { get; private init; }
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
-   }
-}";
 
-      var expectedCode = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [ValueObjectMemberIgnore]
-      private readonly int _instanceProperty;
-
-      public int {|#0:InstanceProperty|}
+      [Fact]
+      public async Task Should_trigger_on_public_property_with_init_expression()
       {
-         get { return _instanceProperty; }
-         private init { _instanceProperty = value; }
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          public int {|#0:InstanceProperty|}
+                          {
+                             get => _instanceProperty;
+                             init => _instanceProperty = value;
+                          }
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ComplexValueObject]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  [ValueObjectMemberIgnore]
+                                  private readonly int _instanceProperty;
+                            
+                                  public int {|#0:InstanceProperty|}
+                                  {
+                                     get => _instanceProperty;
+                                     private init => _instanceProperty = value;
+                                  }
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
-   }
-}";
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-   }
-
-   [Fact]
-   public async Task Should_not_trigger_on_private_property_with_default_init()
-   {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      private int {|#0:InstanceProperty|} { get; init; }
-   }
-}";
-
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
-   }
-
-   [Fact]
-   public async Task Should_not_trigger_on_private_property_with_init_expression()
-   {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [ValueObjectMemberIgnore]
-      private readonly int _instanceProperty;
-
-      private int {|#0:InstanceProperty|}
+      [Fact]
+      public async Task Should_trigger_on_public_property_with_init_body()
       {
-         get => _instanceProperty;
-         init => _instanceProperty = value;
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          public int {|#0:InstanceProperty|}
+                          {
+                             get { return _instanceProperty; }
+                             init { _instanceProperty = value; }
+                          }
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ComplexValueObject]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  [ValueObjectMemberIgnore]
+                                  private readonly int _instanceProperty;
+                            
+                                  public int {|#0:InstanceProperty|}
+                                  {
+                                     get { return _instanceProperty; }
+                                     private init { _instanceProperty = value; }
+                                  }
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
-   }
-}";
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
-   }
-
-   [Fact]
-   public async Task Should_not_trigger_on_private_property_with_init_body()
-   {
-      var code = @"
-using System;
-using Thinktecture;
-
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [ValueObjectMemberIgnore]
-      private readonly int _instanceProperty;
-
-      private int {|#0:InstanceProperty|}
+      [Fact]
+      public async Task Should_not_trigger_on_private_property_with_default_init()
       {
-         get { return _instanceProperty; }
-         init { _instanceProperty = value; }
-      }
-   }
-}";
+         var code = """
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          private int {|#0:InstanceProperty|} { get; init; }
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_private_property_with_init_expression()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          private int {|#0:InstanceProperty|}
+                          {
+                             get => _instanceProperty;
+                             init => _instanceProperty = value;
+                          }
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_private_property_with_init_body()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          [ValueObjectMemberIgnore]
+                          private readonly int _instanceProperty;
+                    
+                          private int {|#0:InstanceProperty|}
+                          {
+                             get { return _instanceProperty; }
+                             init { _instanceProperty = value; }
+                          }
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
    }
 }

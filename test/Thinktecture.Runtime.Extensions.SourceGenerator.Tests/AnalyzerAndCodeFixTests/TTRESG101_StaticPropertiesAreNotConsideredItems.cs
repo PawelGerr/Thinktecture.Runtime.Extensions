@@ -11,26 +11,22 @@ public class TTRESG101_StaticPropertiesAreNotConsideredItems
    [Fact]
    public async Task Should_trigger_if_potential_item_is_a_property()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      public static TestEnum {|#0:Item2|} => default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       public static TestEnum {|#0:Item2|} => default;
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item2");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);

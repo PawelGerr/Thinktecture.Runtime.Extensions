@@ -13,24 +13,20 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       [Fact]
       public async Task Should_trigger_if_enum_is_class_and_has_primary_constructor()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>]
-   public sealed partial class {|#0:TestEnum|}()
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>]
+                       public sealed partial class {|#0:TestEnum|}()
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -39,24 +35,20 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_if_enum_is_struct_and_has_primary_constructor()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-   public readonly partial struct {|#0:TestEnum|}()
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   // simulate source gen
-   partial struct TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                       public readonly partial struct {|#0:TestEnum|}()
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -68,17 +60,19 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_if_value_object_is_class_and_has_primary_constructor()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-   public sealed partial class {|#0:ValueObject|}()
-	{
-   }
-}";
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                       public sealed partial class {|#0:ValueObject|}()
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -87,17 +81,64 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_if_value_object_is_struct_and_has_primary_constructor()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-   public readonly partial struct {|#0:ValueObject|}()
-	{
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                       public readonly partial struct {|#0:ValueObject|}()
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      }
    }
-}";
+
+   public class ComplexValueObject_cannot_have_a_primary_constructor
+   {
+      [Fact]
+      public async Task Should_trigger_if_value_object_is_class_and_has_primary_constructor()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                       public sealed partial class {|#0:ValueObject|}()
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_if_value_object_is_struct_and_has_primary_constructor()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                       public readonly partial struct {|#0:ValueObject|}()
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);

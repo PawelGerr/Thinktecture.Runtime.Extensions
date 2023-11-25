@@ -1,8 +1,11 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class AllEnumSettings : IEquatable<AllEnumSettings>
+public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSettings
 {
-   public string? KeyPropertyName { get; }
+   public ValueObjectAccessModifier KeyMemberAccessModifier { get; }
+   public ValueObjectMemberKind KeyMemberKind { get; }
+   public string KeyMemberName { get; }
+   public bool SkipKeyMember { get; }
    public bool IsValidatable { get; }
    public bool SkipIComparable { get; }
    public bool SkipIParsable { get; }
@@ -13,18 +16,21 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>
    public bool? SkipSwitchMethods { get; }
    public bool? SkipMapMethods { get; }
 
-   public AllEnumSettings(AttributeData? attribute)
+   public AllEnumSettings(AttributeData attribute)
    {
-      KeyPropertyName = attribute?.FindKeyPropertyName().TrimAndNullify();
-      IsValidatable = attribute?.FindIsValidatable() ?? false;
-      SkipIComparable = attribute?.FindSkipIComparable() ?? false;
-      SkipIParsable = attribute?.FindSkipIParsable() ?? false;
-      ComparisonOperators = attribute?.FindComparisonOperators() ?? OperatorsGeneration.Default;
-      EqualityComparisonOperators = attribute?.FindEqualityComparisonOperators() ?? OperatorsGeneration.Default;
-      SkipIFormattable = attribute?.FindSkipIFormattable() ?? false;
-      SkipToString = attribute?.FindSkipToString() ?? false;
-      SkipSwitchMethods = attribute?.FindSkipSwitchMethods();
-      SkipMapMethods = attribute?.FindSkipMapMethods();
+      KeyMemberAccessModifier = attribute.FindKeyMemberAccessModifier() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
+      KeyMemberKind = attribute.FindKeyMemberKind() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_KIND;
+      KeyMemberName = attribute.FindKeyMemberName() ?? Helper.GetDefaultSmartEnumKeyMemberName(KeyMemberAccessModifier, KeyMemberKind);
+      SkipKeyMember = attribute.FindSkipKeyMember() ?? false;
+      IsValidatable = attribute.FindIsValidatable() ?? false;
+      SkipIComparable = attribute.FindSkipIComparable() ?? false;
+      SkipIParsable = attribute.FindSkipIParsable() ?? false;
+      ComparisonOperators = attribute.FindComparisonOperators();
+      EqualityComparisonOperators = attribute.FindEqualityComparisonOperators();
+      SkipIFormattable = attribute.FindSkipIFormattable() ?? false;
+      SkipToString = attribute.FindSkipToString() ?? false;
+      SkipSwitchMethods = attribute.FindSkipSwitchMethods();
+      SkipMapMethods = attribute.FindSkipMapMethods();
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -43,7 +49,10 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>
       if (ReferenceEquals(this, other))
          return true;
 
-      return KeyPropertyName == other.KeyPropertyName
+      return KeyMemberAccessModifier == other.KeyMemberAccessModifier
+             && KeyMemberKind == other.KeyMemberKind
+             && KeyMemberName == other.KeyMemberName
+             && SkipKeyMember == other.SkipKeyMember
              && IsValidatable == other.IsValidatable
              && SkipIComparable == other.SkipIComparable
              && SkipIParsable == other.SkipIParsable
@@ -59,7 +68,10 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>
    {
       unchecked
       {
-         var hashCode = KeyPropertyName?.GetHashCode() ?? 0;
+         var hashCode = (int)KeyMemberAccessModifier;
+         hashCode = (hashCode * 397) ^ (int)KeyMemberKind;
+         hashCode = (hashCode * 397) ^ KeyMemberName.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipKeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();

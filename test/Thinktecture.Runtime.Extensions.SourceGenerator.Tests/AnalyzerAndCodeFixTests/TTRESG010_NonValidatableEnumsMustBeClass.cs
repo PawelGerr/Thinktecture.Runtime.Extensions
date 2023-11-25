@@ -11,24 +11,20 @@ public class TTRESG010_NonValidatableEnumsMustBeClass
    [Fact]
    public async Task Should_trigger_if_IEnum_is_struct()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>]
-	public readonly partial struct {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial struct TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>]
+                 	public readonly partial struct {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -37,24 +33,20 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_if_IEnum_is_class()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>]
-	public sealed partial class {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>]
+                 	public sealed partial class {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

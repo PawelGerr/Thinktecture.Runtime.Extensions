@@ -16,7 +16,7 @@ public class EqualityOperator
    [Fact]
    public void Should_return_false_if_item_is_of_different_type()
    {
-      (TestEnum.Item1 == TestEnumWithNonDefaultComparer.Item).Should().BeFalse();
+      (TestEnum.Item1 == ValidatableTestEnumCaseSensitive.LowerCased).Should().BeFalse();
    }
 
    [Fact]
@@ -76,7 +76,7 @@ public class EqualityOperator
    [Fact]
    public void Should_return_false_if_both_items_are_invalid_and_have_keys_that_differ_in_casing_if_comparer_honors_casing()
    {
-      (TestEnumWithNonDefaultComparer.Get("Item") == TestEnumWithNonDefaultComparer.Get("item")).Should().BeFalse();
+      (ValidatableTestEnumCaseSensitive.Get("INVALID") == ValidatableTestEnumCaseSensitive.Get("invalid")).Should().BeFalse();
    }
 
    [Fact]

@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests.TestClasses;
 
-[ValueObject]
+[ComplexValueObject]
 public sealed partial class ValueObjectWithMultipleProperties
 {
    public decimal StructProperty { get; }

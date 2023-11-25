@@ -2,9 +2,11 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class ValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<ValueObjectSourceGeneratorState>
+public sealed class ValueObjectCodeGeneratorFactory
+   : ICodeGeneratorFactory<KeyedValueObjectSourceGeneratorState>,
+     ICodeGeneratorFactory<ComplexValueObjectSourceGeneratorState>
 {
-   public static readonly ICodeGeneratorFactory<ValueObjectSourceGeneratorState> Instance = new ValueObjectCodeGeneratorFactory();
+   public static readonly ValueObjectCodeGeneratorFactory Instance = new();
 
    public string CodeGeneratorName => "ValueObject-CodeGenerator";
 
@@ -12,13 +14,23 @@ public sealed class ValueObjectCodeGeneratorFactory : ICodeGeneratorFactory<Valu
    {
    }
 
-   public CodeGeneratorBase Create(ValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
+   public CodeGeneratorBase Create(KeyedValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
-      return new ValueObjectCodeGenerator(state, stringBuilder);
+      return new KeyedValueObjectCodeGenerator(state, stringBuilder);
    }
 
-   public bool Equals(ICodeGeneratorFactory<ValueObjectSourceGeneratorState>? obj)
+   public CodeGeneratorBase Create(ComplexValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {
-      return ReferenceEquals(this, obj);
+      return new ComplexValueObjectCodeGenerator(state, stringBuilder);
+   }
+
+   public bool Equals(ICodeGeneratorFactory<KeyedValueObjectSourceGeneratorState>? other)
+   {
+      return ReferenceEquals(this, other);
+   }
+
+   public bool Equals(ICodeGeneratorFactory<ComplexValueObjectSourceGeneratorState> other)
+   {
+      return ReferenceEquals(this, other);
    }
 }

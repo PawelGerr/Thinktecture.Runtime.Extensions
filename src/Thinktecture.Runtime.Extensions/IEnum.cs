@@ -6,13 +6,9 @@ namespace Thinktecture;
 /// Interface of a Smart Enum.
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-public interface IEnum<TKey> : IValueObjectConvertable<TKey>, IKeyedValueObject
+public interface IEnum<TKey> : IKeyedValueObject<TKey>
    where TKey : notnull
 {
-   /// <summary>
-   /// Key equality comparer.
-   /// </summary>
-   static abstract IEqualityComparer<TKey> KeyEqualityComparer { get; }
 }
 
 /// <summary>
@@ -46,7 +42,7 @@ public interface IEnum<TKey, T, out TValidationError> : IEnum<TKey>, IValueObjec
    /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
    /// </summary>
    /// <param name="key">The identifier to return an enumeration item for.</param>
-   /// <param name="item">A valid instance of <typeparamref name="T"/>; otherwise <c>null</c>.</param>
+   /// <param name="item">An instance of <typeparamref name="T"/>.</param>
    /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
    static abstract bool TryGet(TKey? key, [MaybeNullWhen(false)] out T item);
 }

@@ -79,10 +79,17 @@ public class Get
    }
 
    [Fact]
+   public void Should_return_item_of_case_sensitive_enum()
+   {
+      ValidatableTestEnumCaseSensitive.Get("item").Should().Be(ValidatableTestEnumCaseSensitive.LowerCased);
+      ValidatableTestEnumCaseSensitive.Get("ITEM").Should().Be(ValidatableTestEnumCaseSensitive.UpperCased);
+   }
+
+   [Fact]
    public void Should_return_invalid_item_if_the_casing_does_not_match_according_to_comparer()
    {
-      var item = TestEnumWithNonDefaultComparer.Get("Item2");
-      item.Key.Should().Be("Item2");
+      var item = ValidatableTestEnumCaseSensitive.Get("ITEM2");
+      item.Key.Should().Be("ITEM2");
       item.IsValid.Should().BeFalse();
    }
 

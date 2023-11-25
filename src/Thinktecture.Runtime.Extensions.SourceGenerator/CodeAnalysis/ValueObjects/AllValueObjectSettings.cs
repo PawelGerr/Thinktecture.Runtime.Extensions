@@ -1,7 +1,11 @@
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
+public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>, IKeyMemberSettings
 {
+   public ValueObjectAccessModifier KeyMemberAccessModifier { get; }
+   public ValueObjectMemberKind KeyMemberKind { get; }
+   public string KeyMemberName { get; }
+   public bool SkipKeyMember { get; }
    public bool SkipFactoryMethods { get; }
    public string CreateFactoryMethodName { get; }
    public string TryCreateFactoryMethodName { get; }
@@ -21,6 +25,10 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
 
    public AllValueObjectSettings(AttributeData valueObjectAttribute)
    {
+      KeyMemberAccessModifier = valueObjectAttribute.FindKeyMemberAccessModifier() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
+      KeyMemberKind = valueObjectAttribute.FindKeyMemberKind() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_KIND;
+      KeyMemberName = valueObjectAttribute.FindKeyMemberName() ?? Helper.GetDefaultValueObjectKeyMemberName(KeyMemberAccessModifier, KeyMemberKind);
+      SkipKeyMember = valueObjectAttribute.FindSkipKeyMember() ?? false;
       SkipFactoryMethods = valueObjectAttribute.FindSkipFactoryMethods() ?? false;
       CreateFactoryMethodName = valueObjectAttribute.FindCreateFactoryMethodName() ?? "Create";
       TryCreateFactoryMethodName = valueObjectAttribute.FindTryCreateFactoryMethodName() ?? "TryCreate";
@@ -55,7 +63,11 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
       if (ReferenceEquals(this, other))
          return true;
 
-      return SkipFactoryMethods == other.SkipFactoryMethods
+      return KeyMemberAccessModifier == other.KeyMemberAccessModifier
+             && KeyMemberKind == other.KeyMemberKind
+             && KeyMemberName == other.KeyMemberName
+             && SkipKeyMember == other.SkipKeyMember
+             && SkipFactoryMethods == other.SkipFactoryMethods
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && TryCreateFactoryMethodName == other.TryCreateFactoryMethodName
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
@@ -77,7 +89,11 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>
    {
       unchecked
       {
-         var hashCode = SkipFactoryMethods.GetHashCode();
+         var hashCode = (int)KeyMemberAccessModifier;
+         hashCode = (hashCode * 397) ^ (int)KeyMemberKind;
+         hashCode = (hashCode * 397) ^ KeyMemberName.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipKeyMember.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipFactoryMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ TryCreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();

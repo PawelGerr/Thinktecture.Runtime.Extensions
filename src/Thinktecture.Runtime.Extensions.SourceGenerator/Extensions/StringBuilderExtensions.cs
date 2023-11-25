@@ -1,21 +1,49 @@
 using System.Text;
 using Thinktecture.CodeAnalysis;
-using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture;
 
 public static class StringBuilderExtensions
 {
-   public static void GenerateStructLayoutAttributeIfRequired(this StringBuilder sb, EnumSourceGeneratorState state)
+   public static void GenerateStructLayoutAttributeIfRequired(this StringBuilder sb, bool isReferenceType, bool hasStructLayoutAttribute)
    {
-      if (state is { IsReferenceType: false, Settings.HasStructLayoutAttribute: false })
+      if (!isReferenceType && !hasStructLayoutAttribute)
       {
          sb.Append(@"
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
       }
    }
 
-   public static void RenderArguments(
+   public static StringBuilder RenderAccessModifier(
+      this StringBuilder sb,
+      ValueObjectAccessModifier accessModifier)
+   {
+      switch (accessModifier)
+      {
+         case ValueObjectAccessModifier.Private:
+            sb.Append("private");
+            break;
+         case ValueObjectAccessModifier.Protected:
+            sb.Append("protected");
+            break;
+         case ValueObjectAccessModifier.Internal:
+            sb.Append("internal");
+            break;
+         case ValueObjectAccessModifier.Public:
+            sb.Append("public");
+            break;
+         case ValueObjectAccessModifier.PrivateProtected:
+            sb.Append("private protected");
+            break;
+         case ValueObjectAccessModifier.ProtectedInternal:
+            sb.Append("protected internal");
+            break;
+      }
+
+      return sb;
+   }
+
+   public static StringBuilder RenderArguments(
       this StringBuilder sb,
       IReadOnlyList<InstanceMemberInfo> members,
       string? prefix = null,
@@ -26,12 +54,21 @@ public static class StringBuilderExtensions
          if (leadingComma || i > 0)
             sb.Append(", ");
 
-         var member = members[i];
-         sb.Append(prefix).Append(member.ArgumentName.Escaped);
+         sb.RenderArgument(members[i], prefix);
       }
+
+      return sb;
    }
 
-   public static void RenderArgumentsWithType(
+   public static StringBuilder RenderArgument(
+      this StringBuilder sb,
+      IMemberState member,
+      string? prefix = null)
+   {
+      return sb.Append(prefix).Append(member.ArgumentName.Escaped);
+   }
+
+   public static StringBuilder RenderArgumentsWithType(
       this StringBuilder sb,
       IReadOnlyList<InstanceMemberInfo> members,
       string? prefix = null,
@@ -46,20 +83,30 @@ public static class StringBuilderExtensions
          if (leadingComma || i > 0)
             sb.Append(comma);
 
-         var member = members[i];
-
-         if (addAllowNullNotNullCombi && member.IsReferenceType && member.NullableAnnotation != NullableAnnotation.Annotated)
-            sb.Append("[global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ");
-
-         sb.Append(prefix).Append(member.TypeFullyQualifiedWithNullability);
-
-         if (useNullableTypes && !member.IsNullableStruct)
-            sb.Append("?");
-
-         sb.Append(' ').Append(member.ArgumentName.Escaped);
+         sb.RenderArgumentWithType(members[i], prefix, useNullableTypes, addAllowNullNotNullCombi);
       }
 
       if (trailingComma && members.Count > 0)
          sb.Append(comma);
+
+      return sb;
+   }
+
+   public static StringBuilder RenderArgumentWithType(
+      this StringBuilder sb,
+      IMemberState member,
+      string? prefix = null,
+      bool useNullableTypes = false,
+      bool addAllowNullNotNullCombi = false)
+   {
+      if (addAllowNullNotNullCombi && member.IsReferenceType && member.NullableAnnotation != NullableAnnotation.Annotated)
+         sb.Append("[global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ");
+
+      sb.Append(prefix).Append(member.TypeFullyQualifiedWithNullability);
+
+      if (useNullableTypes && !member.IsNullableStruct)
+         sb.Append("?");
+
+      return sb.Append(' ').Append(member.ArgumentName.Escaped);
    }
 }

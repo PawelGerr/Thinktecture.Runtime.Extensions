@@ -196,7 +196,8 @@ public abstract class ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = comparables
-                      .Where(state => state.OperatorsGeneration != OperatorsGeneration.None && (state.KeyMemberOperators != ImplementedComparisonOperators.None || state.ComparerAccessor is not null))
+                      .Where(state => state.OperatorsGeneration != OperatorsGeneration.None
+                                      && (state.KeyMemberOperators != ImplementedComparisonOperators.None || state.ComparerAccessor is not null || state.KeyMember.IsString()))
                       .Collect()
                       .Select(static (states, _) => states.IsDefaultOrEmpty
                                                        ? ImmutableArray<ComparisonOperatorsGeneratorState>.Empty

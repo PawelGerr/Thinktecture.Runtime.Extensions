@@ -2,11 +2,12 @@ using System;
 
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject(EmptyStringInFactoryMethodsYieldsNull = true)]
+[ValueObject<string>(KeyMemberKind = ValueObjectMemberKind.Property,
+                     KeyMemberName = "Property",
+                     KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
+                     EmptyStringInFactoryMethodsYieldsNull = true)]
 public sealed partial class StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull
 {
-   public string Property { get; }
-
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string property)
    {
       if (String.IsNullOrWhiteSpace(property))

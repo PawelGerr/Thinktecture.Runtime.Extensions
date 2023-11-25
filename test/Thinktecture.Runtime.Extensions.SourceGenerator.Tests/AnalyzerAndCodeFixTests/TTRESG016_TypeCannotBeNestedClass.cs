@@ -13,55 +13,80 @@ public class TTRESG016_TypeCannotBeNestedClass
       [Fact]
       public async Task Should_trigger_if_enum_is_nested_class()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-	public class SomeClass
-	{
-      [SmartEnum<string>(IsValidatable = true)]
-      public sealed partial class {|#0:TestEnum|}
-	   {
-         public static readonly TestEnum Item1 = default;
-      }
+                    using System;
+                    using Thinktecture;
 
-      // simulate source gen
-      partial class TestEnum
-      {
-         public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-      }
-   }
-}";
+                    namespace TestNamespace
+                    {
+                    	public class SomeClass
+                    	{
+                          [SmartEnum<string>(IsValidatable = true)]
+                          public sealed partial class {|#0:TestEnum|}
+                    	   {
+                             public static readonly TestEnum Item1 = default;
+                          }
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
       }
    }
 
-   public class ValueObject_cannot_be_nested_class
+   public class KeyedValueObject_cannot_be_nested_class
    {
       [Fact]
       public async Task Should_trigger_if_valueobject_is_nested_class()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-	public class SomeClass
-	{
-      [ValueObject]
-      public partial class {|#0:TestValueObject|}
-	   {
-      }
-   }
-}";
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                    	public class SomeClass
+                    	{
+                          [ValueObject<string>]
+                          public partial class {|#0:TestValueObject|}
+                    	   {
+                          }
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+   }
+
+   public class ComplexValueObject_cannot_be_nested_class
+   {
+      [Fact]
+      public async Task Should_trigger_if_valueobject_is_nested_class()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                    	public class SomeClass
+                    	{
+                          [ComplexValueObject]
+                          public partial class {|#0:TestValueObject|}
+                    	   {
+                          }
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
    }
 }

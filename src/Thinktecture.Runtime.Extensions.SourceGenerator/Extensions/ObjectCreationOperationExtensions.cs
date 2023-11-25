@@ -10,14 +10,44 @@ public static class ObjectCreationOperationExtensions
       return GetBooleanParameterValue(operation.Initializer, "IsValidatable");
    }
 
-   public static string? FindKeyPropertyName(this IObjectCreationOperation operation)
+   public static string? FindKeyMemberName(this IObjectCreationOperation operation)
    {
-      return GetStringParameterValue(operation.Initializer, Constants.Attributes.SmartEnum.Properties.KEY_PROPERTY_NAME);
+      return GetStringParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_NAME);
+   }
+
+   public static bool? FindSkipKeyMember(this IObjectCreationOperation operation)
+   {
+      return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.SKIP_KEY_MEMBER);
+   }
+
+   public static ValueObjectAccessModifier? FindKeyMemberAccessModifier(this IObjectCreationOperation operation)
+   {
+      var modifier = (ValueObjectAccessModifier?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
+
+      if (modifier is null || !modifier.Value.IsValid())
+         return null;
+
+      return modifier.Value;
+   }
+
+   public static ValueObjectMemberKind? FindKeyMemberKind(this IObjectCreationOperation operation)
+   {
+      var kind = (ValueObjectMemberKind?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_KIND);
+
+      if (kind is null || !kind.Value.IsValid())
+         return null;
+
+      return kind.Value;
    }
 
    private static bool? GetBooleanParameterValue(IObjectOrCollectionInitializerOperation? initializer, string name)
    {
       return (bool?)initializer?.Initializers.FindInitialization(name);
+   }
+
+   private static int? GetIntegerParameterValue(IObjectOrCollectionInitializerOperation? initializer, string name)
+   {
+      return (int?)initializer?.Initializers.FindInitialization(name);
    }
 
    private static string? GetStringParameterValue(IObjectOrCollectionInitializerOperation? initializer, string name)

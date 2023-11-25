@@ -1,7 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 // ReSharper disable once InconsistentNaming
-[ValueObject]
+[ComplexValueObject]
 public readonly partial struct TestValueObject_Complex_Struct
 {
    public string Property1 { get; }

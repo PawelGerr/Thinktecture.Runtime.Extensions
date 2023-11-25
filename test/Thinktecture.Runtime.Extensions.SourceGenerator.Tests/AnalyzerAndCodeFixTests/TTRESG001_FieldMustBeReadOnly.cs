@@ -13,45 +13,37 @@ public class TTRESG001_FieldMustBeReadOnly
       [Fact]
       public async Task Should_trigger_on_non_readonly_enum_item()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static TestEnum {|#0:Item1|} = default;
-      public static readonly TestEnum Item2 = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class TestEnum
+                    	{
+                          public static TestEnum {|#0:Item1|} = default;
+                          public static readonly TestEnum Item2 = default;
+                       }
+                    }
+                    """;
 
-         var expectedCode = @"
-using System;
-using Thinktecture;
+         var expectedCode = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-      public static readonly TestEnum Item2 = default;
-   }
+                            using System;
+                            using Thinktecture;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                            namespace TestNamespace
+                            {
+                               [SmartEnum<string>(IsValidatable = true)]
+                            	public sealed partial class TestEnum
+                            	{
+                                  public static readonly TestEnum Item1 = default;
+                                  public static readonly TestEnum Item2 = default;
+                               }
+                            }
+                            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -60,47 +52,39 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_static_non_readonly_non_enum_item()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                    using System;
+                    using Thinktecture;
 
-      public static object {|#0:SomeStaticField|} = default;
-   }
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class TestEnum
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                    
+                          public static object {|#0:SomeStaticField|} = default;
+                       }
+                    }
+                    """;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+         var expectedCode = """
 
-         var expectedCode = @"
-using System;
-using Thinktecture;
+                            using System;
+                            using Thinktecture;
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-
-      public static readonly object {|#0:SomeStaticField|} = default;
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                            namespace TestNamespace
+                            {
+                               [SmartEnum<string>(IsValidatable = true)]
+                            	public sealed partial class TestEnum
+                            	{
+                                  public static readonly TestEnum Item1 = default;
+                            
+                                  public static readonly object {|#0:SomeStaticField|} = default;
+                               }
+                            }
+                            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("SomeStaticField", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -109,47 +93,39 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_non_readonly_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                    using System;
+                    using Thinktecture;
 
-      public int {|#0:InstanceField|};
-   }
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class TestEnum
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                    
+                          public int {|#0:InstanceField|};
+                       }
+                    }
+                    """;
 
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+         var expectedCode = """
 
-         var expectedCode = @"
-using System;
-using Thinktecture;
+                            using System;
+                            using Thinktecture;
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
-
-      public readonly int InstanceField;
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                            namespace TestNamespace
+                            {
+                               [SmartEnum<string>(IsValidatable = true)]
+                            	public sealed partial class TestEnum
+                            	{
+                                  public static readonly TestEnum Item1 = default;
+                            
+                                  public readonly int InstanceField;
+                               }
+                            }
+                            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceField", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -158,97 +134,178 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_readonly_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                    using System;
+                    using Thinktecture;
 
-      public readonly int {|#0:InstanceField|};
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class TestEnum
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                    
+                          public readonly int {|#0:InstanceField|};
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
    }
 
-   public class ValueObject_fields_must_be_readonly
+   public class KeyedValueObject_fields_must_be_readonly
    {
       [Fact]
       public async Task Should_trigger_on_static_non_readonly_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      public static object {|#0:Field|} = default;
-   }
-}";
+                    using System;
+                    using Thinktecture;
 
-         var expectedCode = @"
-using System;
-using Thinktecture;
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          public static object {|#0:Field|} = default;
+                       }
+                    }
+                    """;
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      public static readonly object {|#0:Field|} = default;
-   }
-}";
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ValueObject<string>]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  public static readonly object {|#0:Field|} = default;
+                               }
+                            }
+                            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_trigger_on_instance_non_readonly_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      public object {|#0:Field|} = default;
-   }
-}";
+                    using System;
+                    using Thinktecture;
 
-         var expectedCode = @"
-using System;
-using Thinktecture;
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class TestValueObject
+                    	{
+                          public object {|#0:Field|} = default;
+                       }
+                    }
+                    """;
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      public readonly object {|#0:Field|} = default;
-   }
-}";
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ValueObject<string>]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  public readonly object {|#0:Field|} = default;
+                               }
+                            }
+                            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+   }
+
+   public class ComplexValueObject_fields_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_on_static_non_readonly_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          public static object {|#0:Field|} = default;
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ComplexValueObject]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  public static readonly object {|#0:Field|} = default;
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_instance_non_readonly_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class TestValueObject
+                    	{
+                          public object {|#0:Field|} = default;
+                       }
+                    }
+                    """;
+
+         var expectedCode = """
+
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                               [ComplexValueObject]
+                            	public sealed partial class TestValueObject
+                            	{
+                                  public readonly object {|#0:Field|} = default;
+                               }
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
    }
 }

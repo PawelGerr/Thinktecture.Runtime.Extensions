@@ -10,50 +10,109 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
 {
    private const string _DIAGNOSTIC_ID = "TTRESG041";
 
-   [Fact]
-   public async Task Should_trigger_if_placed_on_member_of_different_type()
+   public class SmartEnum_ComparerTypeMustMatchMemberType
    {
-      var code = @"
-#nullable enable
+      [Fact]
+      public async Task Should_trigger_if_comparable_type_differs_from_key_member_of_different_type()
+      {
+         var code = """
 
-using System;
-using System.Collections.Generic;
-using Thinktecture;
+                    #nullable enable
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [{|#0:ValueObjectMemberComparer<ComparerAccessors.Default<string>, string>|}]
-      public readonly int Field;
+                    using System;
+                    using System.Collections.Generic;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<int>]
+                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
+                    	public sealed partial class TestEnum
+                    	{
+                          public static readonly TestEnum Item1 = default!;
+                       }
+                    }
+                    """;
+
+         var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Default<string>", "int");
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_if_comparable_type_equals_to_key_member_type()
+      {
+         var code = """
+
+                    #nullable enable
+
+                    using System;
+                    using System.Collections.Generic;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<int>]
+                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
+                    	public sealed partial class TestEnum
+                    	{
+                          public static readonly TestEnum Item1 = default!;
+                       }
+                    }
+                    """;
+
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
    }
-}";
 
-      var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("global::Thinktecture.ComparerAccessors.Default<string>");
-      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
-   }
-
-   [Fact]
-   public async Task Should_not_trigger_if_placed_on_member_of_same_type()
+   public class KeyedValueObject_ComparerTypeMustMatchMemberType
    {
-      var code = @"
-#nullable enable
+      [Fact]
+      public async Task Should_trigger_if_comparable_type_differs_from_key_member_of_different_type()
+      {
+         var code = """
 
-using System;
-using System.Collections.Generic;
-using Thinktecture;
+                    #nullable enable
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class TestValueObject
-	{
-      [{|#0:ValueObjectMemberComparer<ComparerAccessors.Default<int>, int>|}]
-      public readonly int Field;
-   }
-}";
+                    using System;
+                    using System.Collections.Generic;
+                    using Thinktecture;
 
-      await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+                    namespace TestNamespace
+                    {
+                       [ValueObject<int>]
+                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
+                    	public sealed partial class TestValueObject
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Default<string>", "int");
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_if_comparable_type_equals_to_key_member_type()
+      {
+         var code = """
+
+                    #nullable enable
+
+                    using System;
+                    using System.Collections.Generic;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<int>]
+                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
+                    	public sealed partial class TestValueObject
+                    	{
+                       }
+                    }
+                    """;
+
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
    }
 }

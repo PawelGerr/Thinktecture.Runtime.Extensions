@@ -92,9 +92,9 @@ public class Validate
    [Fact]
    public void Should_return_invalid_item_if_the_casing_does_not_match_according_to_comparer()
    {
-      var validationError = TestEnumWithNonDefaultComparer.Validate("Item2", null, out var item);
+      var validationError = ValidatableTestEnumCaseSensitive.Validate("Item2", null, out var item);
       validationError.Should().NotBeNull();
-      validationError.ToString().Should().Be("There is no item of type 'TestEnumWithNonDefaultComparer' with the identifier 'Item2'.");
+      validationError.ToString().Should().Be("There is no item of type 'ValidatableTestEnumCaseSensitive' with the identifier 'Item2'.");
 
       item!.Key.Should().Be("Item2");
       item.IsValid.Should().BeFalse();

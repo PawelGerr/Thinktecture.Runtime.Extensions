@@ -55,11 +55,21 @@ public class TryGet
    }
 
    [Fact]
+   public void Should_return_item_of_case_sensitive_enum()
+   {
+      ValidatableTestEnumCaseSensitive.TryGet("item", out var item).Should().BeTrue();
+      item.Should().Be(ValidatableTestEnumCaseSensitive.LowerCased);
+
+      ValidatableTestEnumCaseSensitive.TryGet("ITEM", out item).Should().BeTrue();
+      item.Should().Be(ValidatableTestEnumCaseSensitive.UpperCased);
+   }
+
+   [Fact]
    public void Should_return_false_if_the_casing_does_not_match_according_to_comparer()
    {
-      TestEnumWithNonDefaultComparer.TryGet("Item2", out var item).Should().BeFalse();
+      ValidatableTestEnumCaseSensitive.TryGet("ITEM2", out var item).Should().BeFalse();
       item.Should().NotBeNull();
       item!.IsValid.Should().BeFalse();
-      item!.Key.Should().Be("Item2");
+      item!.Key.Should().Be("ITEM2");
    }
 }

@@ -15,29 +15,25 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
       [Fact]
       public async Task Should_trigger_on_instance_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public int Property { get; set; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property { get; set; }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -46,29 +42,25 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public int Property { get; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property { get; }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -76,29 +68,25 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_static_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static int Property { get; set; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property { get; set; }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -107,29 +95,25 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static int Property { get; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property { get; }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -137,33 +121,29 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_getter_expression_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public int Property
-      {
-         get => 42;
-         set { }
-      }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property
+                          {
+                             get => 42;
+                             set { }
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -171,33 +151,29 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_getter_expression_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static int Property
-      {
-         get => 42;
-         set { }
-      }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property
+                          {
+                             get => 42;
+                             set { }
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -205,33 +181,29 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_getter_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public int Property
-      {
-         get { return 42; }
-         set { }
-      }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property
+                          {
+                             get { return 42; }
+                             set { }
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -239,33 +211,29 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_getter_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static int Property
-      {
-         get { return 42; }
-         set { }
-      }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property
+                          {
+                             get { return 42; }
+                             set { }
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -273,37 +241,33 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_setter_expression_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public static class Helper
-   {
-      public static int Property { get; set; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   public class BaseClass
-   {
-      public int Property
-      {
-         set => Helper.Property = value;
-      }
-   }
-
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public static class Helper
+                       {
+                          public static int Property { get; set; }
+                       }
+                    
+                       public class BaseClass
+                       {
+                          public int Property
+                          {
+                             set => Helper.Property = value;
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -311,37 +275,33 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_setter_expression_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public static class Helper
-   {
-      public static int Property { get; set; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   public class BaseClass
-   {
-      public static int Property
-      {
-         set => Helper.Property = value;
-      }
-   }
-
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public static class Helper
+                       {
+                          public static int Property { get; set; }
+                       }
+                    
+                       public class BaseClass
+                       {
+                          public static int Property
+                          {
+                             set => Helper.Property = value;
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -349,32 +309,28 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_setter_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public int Property
-      {
-         set { }
-      }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property
+                          {
+                             set { }
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -382,32 +338,28 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_setter_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static int Property
-      {
-         set { }
-      }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property
+                          {
+                             set { }
+                          }
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -418,25 +370,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_instance_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceProperty
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithInstanceProperty").WithSeverity(DiagnosticSeverity.Warning);
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceProperty).Assembly }, expected);
@@ -445,25 +393,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstancePropertyWithGetterOnly
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstancePropertyWithGetterOnly
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly });
       }
@@ -471,25 +415,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_static_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticProperty
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticProperty).Assembly }, expected);
@@ -498,25 +438,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticPropertyWithGetterOnly
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticPropertyWithGetterOnly
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly });
       }
@@ -524,25 +460,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_setter_expression_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionProperty
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetExpressionProperty).Assembly });
       }
@@ -550,25 +482,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_setter_expression_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionStaticProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionStaticProperty
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetExpressionStaticProperty).Assembly });
       }
@@ -576,25 +504,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_setter_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyProperty
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetBodyProperty).Assembly });
       }
@@ -602,25 +526,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_setter_body()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyStaticProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyStaticProperty
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetBodyStaticProperty).Assembly });
       }
@@ -630,25 +550,21 @@ namespace TestNamespace
          [Fact]
          public async Task Should_not_BUT_DOES_trigger_on_instance_property_with_getter_expression_body()
          {
-            var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+            var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                       namespace TestNamespace
+                       {
+                          [SmartEnum<string>(IsValidatable = true)]
+                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionProperty
+                       	{
+                             public static readonly TestEnum Item1 = default;
+                          }
+                       }
+                       """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetExpressionProperty").WithSeverity(DiagnosticSeverity.Warning);
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetExpressionProperty).Assembly }, expected);
@@ -657,25 +573,21 @@ namespace TestNamespace
          [Fact]
          public async Task Should_not_BUT_DOES_trigger_on_static_property_with_getter_expression_body()
          {
-            var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+            var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionStaticProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                       namespace TestNamespace
+                       {
+                          [SmartEnum<string>(IsValidatable = true)]
+                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionStaticProperty
+                       	{
+                             public static readonly TestEnum Item1 = default;
+                          }
+                       }
+                       """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetExpressionStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetExpressionStaticProperty).Assembly }, expected);
@@ -684,25 +596,21 @@ namespace TestNamespace
          [Fact]
          public async Task Should_not_BUT_DOES_trigger_on_instance_property_with_getter_body()
          {
-            var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+            var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                       namespace TestNamespace
+                       {
+                          [SmartEnum<string>(IsValidatable = true)]
+                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyProperty
+                       	{
+                             public static readonly TestEnum Item1 = default;
+                          }
+                       }
+                       """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetBodyProperty").WithSeverity(DiagnosticSeverity.Warning);
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetBodyProperty).Assembly }, expected);
@@ -711,25 +619,21 @@ namespace TestNamespace
          [Fact]
          public async Task Should_not_BUT_DOES_trigger_on_static_property_with_getter_body()
          {
-            var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+            var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyStaticProperty
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                       namespace TestNamespace
+                       {
+                          [SmartEnum<string>(IsValidatable = true)]
+                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyStaticProperty
+                       	{
+                             public static readonly TestEnum Item1 = default;
+                          }
+                       }
+                       """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetBodyStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
             await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetBodyStaticProperty).Assembly }, expected);
@@ -737,181 +641,391 @@ namespace TestNamespace
       }
    }
 
-   public class SameAssembly_ValueObjectBaseClass_properties_must_be_readonly
+   public class SameAssembly_KeyedValueObjectBaseClass_properties_must_be_readonly
    {
       [Fact]
       public async Task Should_trigger_on_instance_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public int Property { get; set; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property { get; set; }
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public int Property { get; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property { get; }
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
 
       [Fact]
       public async Task Should_trigger_on_static_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static int Property { get; set; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property { get; set; }
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static int Property { get; }
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property { get; }
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
    }
 
-   public class OtherAssembly_ValueObjectBaseClass_properties_must_be_readonly
+   public class SameAssembly_ComplexValueObjectBaseClass_properties_must_be_readonly
    {
       [Fact]
       public async Task Should_trigger_on_instance_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
-	{
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property { get; set; }
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_property_with_getter_only()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public int Property { get; }
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_static_property()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property { get; set; }
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_property_with_getter_only()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static int Property { get; }
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
    }
-}";
+
+   public class OtherAssembly_KeyedValueObjectBaseClass_properties_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_on_instance_property()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithInstanceProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceProperty).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_instance_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
-	{
-   }
-}";
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly });
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly });
       }
 
       [Fact]
       public async Task Should_trigger_on_static_property()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
-	{
-   }
-}";
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithStaticProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticProperty).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_static_property_with_getter_only()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
-	{
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly });
+      }
    }
-}";
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly });
+   public class OtherAssembly_ComplexValueObjectBaseClass_properties_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_on_instance_property()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithInstanceProperty").WithSeverity(DiagnosticSeverity.Warning);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceProperty).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_property_with_getter_only()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_static_property()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticProperty).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_property_with_getter_only()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly });
       }
    }
 }

@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject]
+[ComplexValueObject]
 public sealed partial class BoundaryWithStrings
 {
    public string Lower { get; }

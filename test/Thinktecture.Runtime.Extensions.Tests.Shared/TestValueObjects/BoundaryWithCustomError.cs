@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject]
+[ComplexValueObject]
 [ValueObjectValidationError<BoundaryValidationError>]
 public sealed partial class BoundaryWithCustomError
 {

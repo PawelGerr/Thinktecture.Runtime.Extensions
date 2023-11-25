@@ -1,7 +1,7 @@
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 
 // ReSharper disable InconsistentNaming
-[ValueObject]
+[ComplexValueObject]
 public sealed partial class TestValueObject_Complex_Class_WithFormatter
 {
    public string Property1 { get; }

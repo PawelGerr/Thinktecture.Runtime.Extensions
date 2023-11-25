@@ -13,26 +13,22 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    [Fact]
    public async Task Should_trigger_on_nullable_int_in_IValidatableEnum()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-#pragma warning disable CS8632
-   [SmartEnum<int?>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|}
-#pragma warning restore CS8632
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<int?> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                 #pragma warning disable CS8632
+                    [SmartEnum<int?>(IsValidatable = true)]
+                 	public sealed partial class {|#0:TestEnum|}
+                 #pragma warning restore CS8632
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -41,26 +37,22 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_on_nullable_int_in_IEnum()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-#pragma warning disable CS8632
-   [SmartEnum<int?>]
-	public sealed partial class {|#0:TestEnum|}
-#pragma warning restore CS8632
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<int?> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                 #pragma warning disable CS8632
+                    [SmartEnum<int?>]
+                 	public sealed partial class {|#0:TestEnum|}
+                 #pragma warning restore CS8632
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -69,24 +61,20 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_on_string_in_IValidatableEnum()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -94,24 +82,20 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_on_string_in_IEnum()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>]
-	public sealed partial class {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>]
+                 	public sealed partial class {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -119,24 +103,20 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_on_int_in_IValidatableEnum()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<int?>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<int?> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<int?>(IsValidatable = true)]
+                 	public sealed partial class {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -145,24 +125,20 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_on_int_in_IEnum()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<int>]
-	public sealed partial class {|#0:TestEnum|}
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                 using System;
+                 using Thinktecture;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<int> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<int>]
+                 	public sealed partial class {|#0:TestEnum|}
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                    }
+                 }
+                 """;
 
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

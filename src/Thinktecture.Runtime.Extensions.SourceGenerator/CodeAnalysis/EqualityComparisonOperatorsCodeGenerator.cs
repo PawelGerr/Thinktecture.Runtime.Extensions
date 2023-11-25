@@ -149,18 +149,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       sb.Append(@"
          return ");
 
-      if (_equalityComparer == null)
-      {
-         if (state.KeyMember.IsReferenceType)
-         {
-            sb.Append("obj.").Append(state.KeyMember.Name).Append(" is null ? value").Append(" is null : obj.").Append(state.KeyMember.Name).Append(".Equals(value").Append(")");
-         }
-         else
-         {
-            sb.Append("obj.").Append(state.KeyMember.Name).Append(".Equals(value)");
-         }
-      }
-      else
+      if (_equalityComparer != null)
       {
          sb.Append(_equalityComparer.Value.Comparer);
 
@@ -168,6 +157,18 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
             sb.Append(".EqualityComparer");
 
          sb.Append(".Equals(obj.").Append(state.KeyMember.Name).Append(", value)");
+      }
+      else if (state.KeyMember.IsString())
+      {
+         sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(obj.").Append(state.KeyMember.Name).Append(", value)");
+      }
+      else if (state.KeyMember.IsReferenceType)
+      {
+         sb.Append("obj.").Append(state.KeyMember.Name).Append(" is null ? value").Append(" is null : obj.").Append(state.KeyMember.Name).Append(".Equals(value").Append(")");
+      }
+      else
+      {
+         sb.Append("obj.").Append(state.KeyMember.Name).Append(".Equals(value)");
       }
 
       sb.Append(@";

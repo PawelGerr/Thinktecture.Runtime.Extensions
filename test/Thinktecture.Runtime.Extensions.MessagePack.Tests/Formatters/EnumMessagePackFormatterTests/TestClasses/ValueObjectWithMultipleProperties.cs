@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 
-[ValueObject]
+[ComplexValueObject]
 public sealed partial class ValueObjectWithMultipleProperties
 {
    public decimal StructProperty { get; }

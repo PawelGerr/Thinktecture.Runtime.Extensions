@@ -1,7 +1,8 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject]
+[ValueObject<string>(KeyMemberKind = ValueObjectMemberKind.Property,
+                     KeyMemberName = "Property",
+                     KeyMemberAccessModifier = ValueObjectAccessModifier.Public)]
 public readonly partial struct StringBasedStructValueObject
 {
-   public string Property { get; }
 }

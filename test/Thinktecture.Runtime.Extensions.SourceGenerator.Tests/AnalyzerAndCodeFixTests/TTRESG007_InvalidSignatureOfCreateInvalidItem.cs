@@ -11,29 +11,25 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
    [Fact]
    public async Task Should_trigger_if_not_private()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      public static TestEnum {|#0:CreateInvalidItem|}(string key)
-      {
-         return null;
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       public static TestEnum {|#0:CreateInvalidItem|}(string key)
+                       {
+                          return null;
+                       }
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -42,29 +38,25 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_if_not_static()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private TestEnum {|#0:CreateInvalidItem|}(string key)
-      {
-         return null;
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private TestEnum {|#0:CreateInvalidItem|}(string key)
+                       {
+                          return null;
+                       }
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -73,29 +65,25 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_if_return_type_incorrect()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private static string {|#0:CreateInvalidItem|}(string key)
-      {
-         return null;
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private static string {|#0:CreateInvalidItem|}(string key)
+                       {
+                          return null;
+                       }
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -104,29 +92,25 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_if_argument_type_incorrect()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private static TestEnum {|#0:CreateInvalidItem|}(int key)
-      {
-         return null;
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private static TestEnum {|#0:CreateInvalidItem|}(int key)
+                       {
+                          return null;
+                       }
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -135,29 +119,25 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_if_argument_count_incorrect()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private static TestEnum {|#0:CreateInvalidItem|}(string key, string other)
-      {
-         return null;
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private static TestEnum {|#0:CreateInvalidItem|}(string key, string other)
+                       {
+                          return null;
+                       }
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -166,29 +146,25 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_on_valid_implementation()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private static TestEnum {|#0:CreateInvalidItem|}(string key)
-      {
-         return null;
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private static TestEnum {|#0:CreateInvalidItem|}(string key)
+                       {
+                          return null;
+                       }
+                    }
+                 }
+                 """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

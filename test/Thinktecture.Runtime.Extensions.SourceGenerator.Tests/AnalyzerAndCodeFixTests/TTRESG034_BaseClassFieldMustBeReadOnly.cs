@@ -14,29 +14,25 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       [Fact]
       public async Task Should_trigger_on_static_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static object Field = default;
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -45,29 +41,25 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_readonly_static_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static readonly object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static readonly object Field = default;
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -75,29 +67,25 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public object Field = default;
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -106,29 +94,25 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_readonly_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public readonly object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClass
-	{
-      public static readonly TestEnum Item1 = default;
-   }
-
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public readonly object Field = default;
+                       }
+                    
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -139,25 +123,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_static_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticField
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticField
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
@@ -166,25 +146,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_static_readonly_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticReadonlyField
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticReadonlyField
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
       }
@@ -192,25 +168,21 @@ namespace TestNamespace
       [Fact]
       public async Task Should_trigger_on_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceField
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceField
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
@@ -219,205 +191,411 @@ namespace TestNamespace
       [Fact]
       public async Task Should_not_trigger_on_readonly_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceReadonlyField
-	{
-      public static readonly TestEnum Item1 = default;
-   }
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-   // simulate source gen
-   partial class TestEnum
-   {
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       [SmartEnum<string>(IsValidatable = true)]
+                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceReadonlyField
+                    	{
+                          public static readonly TestEnum Item1 = default;
+                       }
+                    }
+                    """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
       }
    }
 
-   public class SameAssembly_ValueObjectBaseClass_fields_must_be_readonly
+   public class SameAssembly_KeyedValueObjectBaseClass_fields_must_be_readonly
    {
       [Fact]
       public async Task Should_trigger_on_static_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static object Field = default;
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_static_readonly_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public static readonly object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static readonly object Field = default;
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
 
       [Fact]
       public async Task Should_trigger_on_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public object Field = default;
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_instance_readonly_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
+         var code = """
 
-namespace TestNamespace
-{
-   public class BaseClass
-   {
-      public readonly object Field = default;
-   }
+                    using System;
+                    using Thinktecture;
 
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClass
-	{
-   }
-}";
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public readonly object Field = default;
+                       }
+                    
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
    }
 
-   public class OtherAssembly_ValueObjectBaseClass_fields_must_be_readonly
+   public class SameAssembly_ComplexValueObjectBaseClass_fields_must_be_readonly
    {
       [Fact]
       public async Task Should_trigger_on_static_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticField
-	{
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static object Field = default;
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_readonly_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public static readonly object Field = default;
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_instance_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public object Field = default;
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_readonly_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class BaseClass
+                       {
+                          public readonly object Field = default;
+                       }
+                    
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
    }
-}";
+
+   public class OtherAssembly_KeyedValueObjectBaseClass_fields_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_on_static_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticField
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_static_readonly_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticReadonlyField
-	{
-   }
-}";
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticReadonlyField
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
       }
 
       [Fact]
       public async Task Should_trigger_on_instance_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceField
-	{
-   }
-}";
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceField
+                    	{
+                       }
+                    }
+                    """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
       }
 
       [Fact]
       public async Task Should_not_trigger_on_instance_readonly_field()
       {
-         var code = @"
-using System;
-using Thinktecture;
-using Thinktecture.Runtime.Tests.BaseClasses;
+         var code = """
 
-namespace TestNamespace
-{
-   [ValueObject]
-	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceReadonlyField
-	{
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ValueObject<string>]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceReadonlyField
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
+      }
    }
-}";
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
+   public class OtherAssembly_ComplexValueObjectBaseClass_fields_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_on_static_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticField
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_readonly_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticReadonlyField
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_instance_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceField
+                    	{
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_readonly_field()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+                    using Thinktecture.Runtime.Tests.BaseClasses;
+
+                    namespace TestNamespace
+                    {
+                       [ComplexValueObject]
+                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceReadonlyField
+                    	{
+                       }
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
       }
    }
 }

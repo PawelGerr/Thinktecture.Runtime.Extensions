@@ -2,12 +2,9 @@ using System;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject(EmptyStringInFactoryMethodsYieldsNull = true)]
+[ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
 public sealed partial class OtherProductName
 {
-   [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-   private string Value { get; }
-
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)
    {
       if (String.IsNullOrWhiteSpace(value))

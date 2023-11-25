@@ -2,6 +2,8 @@ namespace Thinktecture.CodeAnalysis;
 
 public class TypedMemberStateFactory
 {
+   private const string _SYSTEM_RUNTIME_DLL = "System.Runtime.dll";
+
    private readonly TypedMemberStates _boolean;
    private readonly TypedMemberStates _char;
    private readonly TypedMemberStates _sByte;
@@ -17,6 +19,8 @@ public class TypedMemberStateFactory
    private readonly TypedMemberStates _double;
    private readonly TypedMemberStates _string;
    private readonly TypedMemberStates _dateTime;
+
+   private readonly IReadOnlyDictionary<(string ModuleName, int MetadataToken), TypedMemberStates> _statesByTokens;
 
    private TypedMemberStateFactory(Compilation compilation)
    {
@@ -35,11 +39,62 @@ public class TypedMemberStateFactory
       _double = CreateStates(compilation, SpecialType.System_Double);
       _string = CreateStates(compilation, SpecialType.System_String);
       _dateTime = CreateStates(compilation, SpecialType.System_DateTime);
+
+      var lookup = new Dictionary<(string, int), TypedMemberStates>();
+      _statesByTokens = lookup;
+
+      CreateAndAddStatesForSystemRuntime(compilation, "System.DateOnly", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.TimeOnly", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.TimeSpan", lookup);
    }
 
    private static TypedMemberStates CreateStates(Compilation compilation, SpecialType specialType)
    {
       var type = compilation.GetSpecialType(specialType);
+      return CreateStates(type);
+   }
+
+   private static void CreateAndAddStatesForSystemRuntime(Compilation compilation, string fullName, Dictionary<(string, int), TypedMemberStates> lookup)
+   {
+      var types = compilation.GetTypesByMetadataName(fullName);
+
+      if (types.IsDefaultOrEmpty)
+         return;
+
+      INamedTypeSymbol? type = null;
+
+      if (types.Length == 1)
+      {
+         type = types[0];
+
+         if (type.ContainingModule.MetadataName != _SYSTEM_RUNTIME_DLL)
+            return;
+      }
+      else
+      {
+         for (var i = 0; i < types.Length; i++)
+         {
+            var candidate = types[i];
+
+            if (candidate.ContainingModule.MetadataName != _SYSTEM_RUNTIME_DLL)
+               continue;
+
+            // duplicate?
+            if (type is not null)
+               return;
+
+            type = candidate;
+         }
+      }
+
+      if (type is null)
+         return;
+
+      lookup.Add((type.ContainingModule.MetadataName, type.MetadataToken), CreateStates(type));
+   }
+
+   private static TypedMemberStates CreateStates(INamedTypeSymbol type)
+   {
       var nullableType = type.WithNullableAnnotation(NullableAnnotation.Annotated);
 
       var notNullable = new CachedTypedMemberState(new TypedMemberState(type));
@@ -67,15 +122,15 @@ public class TypedMemberStateFactory
          SpecialType.System_Double => _double,
          SpecialType.System_String => _string,
          SpecialType.System_DateTime => _dateTime,
-         _ => (TypedMemberStates?)null
+         _ => _statesByTokens.TryGetValue((type.ContainingModule.MetadataName, type.MetadataToken), out var states) ? states : default
       };
 
-      if (cachedStates is null)
+      if (cachedStates == default)
          return new TypedMemberState(type);
 
       return type.NullableAnnotation == NullableAnnotation.Annotated
-                ? cachedStates.Value.Nullable
-                : cachedStates.Value.NotNullable;
+                ? cachedStates.Nullable
+                : cachedStates.NotNullable;
    }
 
    public static TypedMemberStateFactory Create(Compilation compilation)

@@ -14,6 +14,9 @@ public class TryParse
 
       TestSmartEnum_Class_DecimalBased.TryParse("1.0", null, out item).Should().BeTrue();
       item.Should().Be(TestSmartEnum_Class_DecimalBased.Value1);
+
+      TestEnumCaseSensitive.TryParse("item", null, out var caseSensitiveItem).Should().BeTrue();
+      caseSensitiveItem.Should().Be(TestEnumCaseSensitive.LowerCased);
    }
 
    [Fact]
@@ -25,6 +28,9 @@ public class TryParse
 
       TestSmartEnum_Class_DecimalBased.TryParse("1,0", german, out item).Should().BeTrue();
       item.Should().Be(TestSmartEnum_Class_DecimalBased.Value1);
+
+      TestEnumCaseSensitive.TryParse("item", german, out var caseSensitiveItem).Should().BeTrue();
+      caseSensitiveItem.Should().Be(TestEnumCaseSensitive.LowerCased);
    }
 
    [Fact]
@@ -42,5 +48,11 @@ public class TryParse
 
       TestSmartEnum_Class_DecimalBased.TryParse("invalid", null, out item).Should().BeFalse();
       item.Should().BeNull();
+
+      TestEnumCaseSensitive.TryParse("invalid", null, out var caseSensitiveItem).Should().BeFalse();
+      caseSensitiveItem.Should().BeNull();
+
+      TestEnumCaseSensitive.TryParse("ITEM2", null, out caseSensitiveItem).Should().BeFalse();
+      caseSensitiveItem.Should().BeNull();
    }
 }

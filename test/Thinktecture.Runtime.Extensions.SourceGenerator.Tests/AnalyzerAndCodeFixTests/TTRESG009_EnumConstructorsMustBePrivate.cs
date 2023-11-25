@@ -11,28 +11,24 @@ public class TTRESG009_EnumConstructorsMustBePrivate
    [Fact]
    public async Task Should_trigger_if_constructor_is_protected()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      protected {|#0:TestEnum|}()
-      {
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       protected {|#0:TestEnum|}()
+                       {
+                       }
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -41,28 +37,24 @@ namespace TestNamespace
    [Fact]
    public async Task Should_trigger_if_constructor_is_private_protected()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private protected {|#0:TestEnum|}()
-      {
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private protected {|#0:TestEnum|}()
+                       {
+                       }
+                    }
+                 }
+                 """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -71,28 +63,24 @@ namespace TestNamespace
    [Fact]
    public async Task Should_not_trigger_if_constructor_is_private()
    {
-      var code = @"
-using System;
-using Thinktecture;
+      var code = """
 
-namespace TestNamespace
-{
-   [SmartEnum<string>(IsValidatable = true)]
-	public sealed partial class TestEnum
-	{
-      public static readonly TestEnum Item1 = default;
+                 using System;
+                 using Thinktecture;
 
-      private {|#0:TestEnum|}()
-      {
-      }
-   }
-
-   // simulate source gen
-	partial class TestEnum
-	{
-      public static global::System.Collections.Generic.IEqualityComparer<string> KeyEqualityComparer => default;
-   }
-}";
+                 namespace TestNamespace
+                 {
+                    [SmartEnum<string>(IsValidatable = true)]
+                 	public sealed partial class TestEnum
+                 	{
+                       public static readonly TestEnum Item1 = default;
+                 
+                       private {|#0:TestEnum|}()
+                       {
+                       }
+                    }
+                 }
+                 """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

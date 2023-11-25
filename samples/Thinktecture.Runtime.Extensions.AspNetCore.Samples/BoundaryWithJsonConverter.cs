@@ -1,6 +1,6 @@
 namespace Thinktecture;
 
-[ValueObject]
+[ComplexValueObject]
 public sealed partial class BoundaryWithJsonConverter
 {
    public decimal Lower { get; }

@@ -33,16 +33,42 @@ public sealed class SmartEnumAttribute : Attribute
 public sealed class SmartEnumAttribute<TKey> : Attribute
    where TKey : notnull
 {
-   private string? _keyPropertyName;
+   /// <summary>
+   /// The type of the key-property.
+   /// </summary>
+   public Type KeyMemberType { get; set; }
 
    /// <summary>
-   /// The name of the key property. Default name is 'Key'.
+   /// Access modifier of the key member.
+   /// Default is <see cref="ValueObjectAccessModifier.Public"/>.
    /// </summary>
-   public string KeyPropertyName
+   public ValueObjectAccessModifier KeyMemberAccessModifier { get; set; }
+
+   /// <summary>
+   /// Kind of the key member.
+   /// Default is <see cref="ValueObjectMemberKind.Property"/>.
+   /// </summary>
+   public ValueObjectMemberKind KeyMemberKind { get; set; }
+
+   private string? _keyMemberName;
+
+   /// <summary>
+   /// The name of the key member.
+   /// Default: <c>_key</c> if the key member is a private field; otherwise <c>Key</c>.
+   /// </summary>
+   public string KeyMemberName
    {
-      get => _keyPropertyName ?? "Key";
-      set => _keyPropertyName = value;
+      get => _keyMemberName ?? (KeyMemberAccessModifier == ValueObjectAccessModifier.Private && KeyMemberKind == ValueObjectMemberKind.Field ? "_key" : "Key");
+      set => _keyMemberName = value;
    }
+
+   /// <summary>
+   /// Indication whether to generate the key member of type <typeparamref name="TKey"/>.
+   /// If set to <c>true</c> then the key member must be implemented manually.
+   /// Use <see cref="KeyMemberName"/> to tell source generator the chosen name of the field/property.
+   /// If the member is a property with a backing field, then the property must have an <c>init</c> setter.
+   /// </summary>
+   public bool SkipKeyMember { get; set; }
 
    /// <summary>
    /// Indication whether the Smart Enum should be "validatable" or always-valid one.
@@ -115,15 +141,12 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public bool SkipMapMethods { get; set; }
 
    /// <summary>
-   /// The type of the key-property.
-   /// </summary>
-   public Type KeyType { get; set; }
-
-   /// <summary>
    /// Initializes new instance of <see cref="SmartEnumAttribute{TKey}"/>.
    /// </summary>
    public SmartEnumAttribute()
    {
-      KeyType = typeof(TKey);
+      KeyMemberType = typeof(TKey);
+      KeyMemberAccessModifier = ValueObjectAccessModifier.Public;
+      KeyMemberKind = ValueObjectMemberKind.Property;
    }
 }

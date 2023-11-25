@@ -50,15 +50,20 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 ");
       }
 
-      if (_comparerAccessor is null)
+      if (_comparerAccessor is not null)
       {
          sb.Append(@"
-      return this.").Append(state.KeyMember.Name).Append(".CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
+      return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").Append(state.KeyMember.Name).Append(", obj.").Append(state.KeyMember.Name).Append(");");
+      }
+      else if (state.KeyMember.IsString())
+      {
+         sb.Append(@"
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(this.").Append(state.KeyMember.Name).Append(", obj.").Append(state.KeyMember.Name).Append(");");
       }
       else
       {
          sb.Append(@"
-      return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").Append(state.KeyMember.Name).Append(", obj.").Append(state.KeyMember.Name).Append(");");
+      return this.").Append(state.KeyMember.Name).Append(".CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
       }
 
       sb.Append(@"

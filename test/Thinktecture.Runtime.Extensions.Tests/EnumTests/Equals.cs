@@ -14,7 +14,7 @@ public class Equals
    [Fact]
    public void Should_return_false_if_item_is_of_different_type()
    {
-      TestEnum.Item1.Equals(TestEnumWithNonDefaultComparer.Item).Should().BeFalse();
+      TestEnum.Item1.Equals(ValidatableTestEnumCaseSensitive.LowerCased).Should().BeFalse();
    }
 
    [Fact]
@@ -38,7 +38,7 @@ public class Equals
    [Fact]
    public void Should_return_false_if_both_items_are_invalid_and_have_keys_that_differ_in_casing_if_comparer_honors_casing()
    {
-      TestEnumWithNonDefaultComparer.Get("Item").Equals(TestEnumWithNonDefaultComparer.Get("item")).Should().BeFalse();
+      ValidatableTestEnumCaseSensitive.Get("Item").Equals(ValidatableTestEnumCaseSensitive.Get("item")).Should().BeFalse();
    }
 
    [Fact]

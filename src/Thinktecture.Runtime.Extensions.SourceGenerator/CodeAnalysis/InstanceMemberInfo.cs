@@ -19,7 +19,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public string TypeFullyQualifiedNullAnnotated => _typedMemberState.TypeFullyQualifiedNullAnnotated;
    public string TypeFullyQualifiedWithNullability => _typedMemberState.TypeFullyQualifiedWithNullability;
-   public string TypeFullyQualifiedNullable => _typedMemberState.TypeFullyQualifiedNullable;
+   public string TypeMinimallyQualified => _typedMemberState.TypeMinimallyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsReferenceTypeOrNullableStruct => _typedMemberState.IsReferenceTypeOrNullableStruct;
    public bool IsFormattable => _typedMemberState.IsFormattable;
@@ -28,10 +28,6 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
    public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
-   public ImplementedOperators AdditionOperators => _typedMemberState.AdditionOperators;
-   public ImplementedOperators SubtractionOperators => _typedMemberState.SubtractionOperators;
-   public ImplementedOperators MultiplyOperators => _typedMemberState.MultiplyOperators;
-   public ImplementedOperators DivisionOperators => _typedMemberState.DivisionOperators;
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,
@@ -80,7 +76,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       return new(factory.Create(property.Type), settings, property.Name, (null, symbol), property.IsStatic, property.Type.TypeKind == TypeKind.Error);
    }
 
-   public Location GetIdentifierLocation(CancellationToken cancellationToken)
+   public Location? GetIdentifierLocation(CancellationToken cancellationToken)
    {
       if (_symbol.Field is not null)
          return _symbol.Field.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
@@ -88,7 +84,12 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       if (_symbol.Property is not null)
          return _symbol.Property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
 
-      return Location.None;
+      return null;
+   }
+
+   public bool IsOfType(ITypeSymbol type)
+   {
+      return SymbolEqualityComparer.IncludeNullability.Equals(_symbol.Field?.Type ?? _symbol.Property?.Type, type);
    }
 
    public override bool Equals(object? obj)

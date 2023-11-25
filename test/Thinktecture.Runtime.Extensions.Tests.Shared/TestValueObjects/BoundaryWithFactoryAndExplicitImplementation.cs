@@ -2,7 +2,7 @@ using System;
 
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject]
+[ComplexValueObject]
 [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
 public sealed partial class BoundaryWithFactoryAndExplicitImplementation
 {

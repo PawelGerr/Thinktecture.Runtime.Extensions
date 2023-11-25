@@ -4,19 +4,44 @@ namespace Thinktecture;
 
 public static class AttributeDataExtensions
 {
-   public static string? FindKeyPropertyName(this AttributeData attributeData)
-   {
-      return GetStringParameterValue(attributeData, Constants.Attributes.SmartEnum.Properties.KEY_PROPERTY_NAME);
-   }
-
    public static string? FindDefaultInstancePropertyName(this AttributeData attributeData)
    {
       return GetStringParameterValue(attributeData, "DefaultInstancePropertyName");
    }
 
+   public static bool? FindSkipKeyMember(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_KEY_MEMBER);
+   }
+
    public static bool? FindSkipFactoryMethods(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");
+   }
+
+   public static ValueObjectAccessModifier? FindKeyMemberAccessModifier(this AttributeData attributeData)
+   {
+      var modifier = (ValueObjectAccessModifier?)GetIntegerParameterValue(attributeData, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
+
+      if (modifier is null || !modifier.Value.IsValid())
+         return null;
+
+      return modifier;
+   }
+
+   public static ValueObjectMemberKind? FindKeyMemberKind(this AttributeData attributeData)
+   {
+      var kind = (ValueObjectMemberKind?)GetIntegerParameterValue(attributeData, Constants.Attributes.Properties.KEY_MEMBER_KIND);
+
+      if (kind is null || !kind.Value.IsValid())
+         return null;
+
+      return kind;
+   }
+
+   public static string? FindKeyMemberName(this AttributeData attributeData)
+   {
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.KEY_MEMBER_NAME);
    }
 
    public static string? FindCreateFactoryMethodName(this AttributeData attributeData)
@@ -106,8 +131,12 @@ public static class AttributeDataExtensions
 
    public static SerializationFrameworks FindUseForSerialization(this AttributeData attributeData)
    {
-      return (SerializationFrameworks?)GetIntegerParameterValue(attributeData, "UseForSerialization")
-             ?? SerializationFrameworks.None;
+      var frameworks = (SerializationFrameworks?)GetIntegerParameterValue(attributeData, "UseForSerialization");
+
+      if (frameworks is null || !frameworks.Value.IsValid())
+         return SerializationFrameworks.None;
+
+      return frameworks.Value;
    }
 
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
@@ -138,8 +167,12 @@ public static class AttributeDataExtensions
 
    private static OperatorsGeneration GetOperatorsGeneration(AttributeData attributeData, string name)
    {
-      return (OperatorsGeneration?)GetIntegerParameterValue(attributeData, name)
-             ?? OperatorsGeneration.Default;
+      var generation = (OperatorsGeneration?)GetIntegerParameterValue(attributeData, name);
+
+      if (generation is null || !generation.Value.IsValid())
+         return OperatorsGeneration.Default;
+
+      return generation.Value;
    }
 
    private static int? GetIntegerParameterValue(AttributeData attributeData, string name)

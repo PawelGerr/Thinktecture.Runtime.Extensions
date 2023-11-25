@@ -8,14 +8,18 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
    public bool HasMessagePackFormatterAttribute { get; }
    public ImmutableArray<DesiredFactory> DesiredFactories { get; }
    public ValidationErrorState ValidationError { get; }
+   public string? KeyMemberComparerAccessor { get; }
+   public string? KeyMemberEqualityComparerAccessor { get; }
 
-   public AttributeInfo(
+   private AttributeInfo(
       bool hasStructLayoutAttribute,
       bool hasJsonConverterAttribute,
       bool hasNewtonsoftJsonConverterAttribute,
       bool hasMessagePackFormatterAttribute,
       ImmutableArray<DesiredFactory> desiredFactories,
-      ValidationErrorState validationError)
+      ValidationErrorState validationError,
+      string? keyMemberComparerAccessor,
+      string? keyMemberEqualityComparerAccessor)
    {
       HasStructLayoutAttribute = hasStructLayoutAttribute;
       HasJsonConverterAttribute = hasJsonConverterAttribute;
@@ -23,6 +27,8 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       HasMessagePackFormatterAttribute = hasMessagePackFormatterAttribute;
       DesiredFactories = desiredFactories;
       ValidationError = validationError;
+      KeyMemberComparerAccessor = keyMemberComparerAccessor;
+      KeyMemberEqualityComparerAccessor = keyMemberEqualityComparerAccessor;
    }
 
    public static string? TryCreate(INamedTypeSymbol type, out AttributeInfo info)
@@ -33,6 +39,8 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       var hasMessagePackFormatterAttribute = false;
       var validationError = ValidationErrorState.Default;
       var valueObjectFactories = ImmutableArray<DesiredFactory>.Empty;
+      string? keyMemberComparerAccessor = null;
+      string? keyMemberEqualityComparerAccessor = null;
       var numberOfSourceGenAttributes = 0;
 
       foreach (var attribute in type.GetAttributes())
@@ -68,11 +76,17 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          {
             validationError = new ValidationErrorState(attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
          }
-         else if (attribute.AttributeClass.IsSmartEnumAttribute())
+         else if (attribute.AttributeClass.IsValueObjectKeyMemberComparerAttribute())
          {
-            ++numberOfSourceGenAttributes;
+            keyMemberComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
          }
-         else if (attribute.AttributeClass.IsValueObjectAttribute())
+         else if (attribute.AttributeClass.IsValueObjectKeyMemberEqualityComparerAttribute())
+         {
+            keyMemberEqualityComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+         }
+         else if (attribute.AttributeClass.IsSmartEnumAttribute()
+                  || attribute.AttributeClass.IsKeyedValueObjectAttribute()
+                  || attribute.AttributeClass.IsComplexValueObjectAttribute())
          {
             ++numberOfSourceGenAttributes;
          }
@@ -89,7 +103,9 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
                                hasNewtonsoftJsonConverterAttribute,
                                hasMessagePackFormatterAttribute,
                                valueObjectFactories,
-                               validationError);
+                               validationError,
+                               keyMemberComparerAccessor,
+                               keyMemberEqualityComparerAccessor);
       return null;
    }
 
@@ -105,7 +121,9 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
              && HasNewtonsoftJsonConverterAttribute == other.HasNewtonsoftJsonConverterAttribute
              && HasMessagePackFormatterAttribute == other.HasMessagePackFormatterAttribute
              && DesiredFactories.SequenceEqual(other.DesiredFactories)
-             && ValidationError.Equals(other.ValidationError);
+             && ValidationError.Equals(other.ValidationError)
+             && KeyMemberComparerAccessor == other.KeyMemberComparerAccessor
+             && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor;
    }
 
    public override int GetHashCode()
@@ -118,6 +136,8 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          hashCode = (hashCode * 397) ^ HasMessagePackFormatterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
+         hashCode = (hashCode * 397) ^ (KeyMemberComparerAccessor?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);
 
          return hashCode;
       }

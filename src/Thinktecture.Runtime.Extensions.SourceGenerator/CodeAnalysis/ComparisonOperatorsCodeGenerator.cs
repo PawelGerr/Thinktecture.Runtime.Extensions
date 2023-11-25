@@ -60,7 +60,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       // If we have a custom comparer then we don't care whether the key member has the operators or not
-      if (!_keyMemberOperators.HasOperator(ImplementedComparisonOperators.All) && _comparerAccessor is null)
+      if (!_keyMemberOperators.HasOperator(ImplementedComparisonOperators.All) && _comparerAccessor is null && !state.KeyMember.IsString())
          return;
 
       sb.Append(@"
@@ -78,13 +78,17 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
       var leftNullCheck = state.Type.IsReferenceType ? _LEFT_NULL_CHECK : null;
       var rightNullCheck = state.Type.IsReferenceType ? _RIGHT_NULL_CHECK : null;
 
-      if (_comparerAccessor is null)
+      if (_comparerAccessor is not null)
       {
-         GenerateUsingOperators(sb, state, _keyMemberOperators, leftNullCheck, rightNullCheck);
+         GenerateUsingComparerAccessor(sb, state, _comparerAccessor, leftNullCheck, rightNullCheck);
+      }
+      else if (state.KeyMember.IsString())
+      {
+         GenerateUsingOrdinalIgnoreCaseComparer(sb, state, leftNullCheck, rightNullCheck);
       }
       else
       {
-         GenerateUsingComparer(sb, state, _comparerAccessor, leftNullCheck, rightNullCheck);
+         GenerateUsingOperators(sb, state, _keyMemberOperators, leftNullCheck, rightNullCheck);
       }
 
       if (_withKeyTypeOverloads)
@@ -142,7 +146,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
       }
    }
 
-   private static void GenerateUsingComparer(
+   private static void GenerateUsingComparerAccessor(
       StringBuilder sb,
       InterfaceCodeGeneratorState state,
       string comparerAccessor,
@@ -176,6 +180,39 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    }");
    }
 
+   private static void GenerateUsingOrdinalIgnoreCaseComparer(
+      StringBuilder sb,
+      InterfaceCodeGeneratorState state,
+      string? leftNullCheck,
+      string? rightNullCheck)
+   {
+      sb.Append(@"
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+   public static bool operator <(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") < 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+   public static bool operator <=(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") <= 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+   public static bool operator >(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") > 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+   public static bool operator >=(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") >= 0;
+   }");
+   }
+
    private void GenerateOverloadsForKeyType(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       var typeLeftNullCheck = state.Type.IsReferenceType ? _LEFT_NULL_CHECK : null;
@@ -183,13 +220,17 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
       var memberLeftNullCheck = state.KeyMember.IsReferenceType ? _LEFT_NULL_CHECK : null;
       var memberRightNullCheck = state.KeyMember.IsReferenceType ? _RIGHT_NULL_CHECK : null;
 
-      if (_comparerAccessor is null)
+      if (_comparerAccessor is not null)
       {
-         GenerateKeyOverloadsUsingOperators(sb, state, _keyMemberOperators, typeLeftNullCheck, memberRightNullCheck, memberLeftNullCheck, typeRightNullCheck);
+         GenerateKeyOverloadsUsingComparerAccessor(sb, state, _comparerAccessor, typeLeftNullCheck, memberRightNullCheck, memberLeftNullCheck, typeRightNullCheck);
+      }
+      else if (state.KeyMember.IsString())
+      {
+         GenerateKeyOverloadsUsingOrdinalIgnoreCaseComparer(sb, state, typeLeftNullCheck, memberRightNullCheck, memberLeftNullCheck, typeRightNullCheck);
       }
       else
       {
-         GenerateKeyOverloadsUsingComparer(sb, state, _comparerAccessor, typeLeftNullCheck, memberRightNullCheck, memberLeftNullCheck, typeRightNullCheck);
+         GenerateKeyOverloadsUsingOperators(sb, state, _keyMemberOperators, typeLeftNullCheck, memberRightNullCheck, memberLeftNullCheck, typeRightNullCheck);
       }
    }
 
@@ -271,7 +312,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
       }
    }
 
-   private static void GenerateKeyOverloadsUsingComparer(
+   private static void GenerateKeyOverloadsUsingComparerAccessor(
       StringBuilder sb,
       InterfaceCodeGeneratorState state,
       string comparerAccessor,
@@ -328,6 +369,65 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    public static bool operator >=(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
    {
       ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").Append(state.KeyMember.Name).Append(@") >= 0;
+   }");
+   }
+
+   private static void GenerateKeyOverloadsUsingOrdinalIgnoreCaseComparer(
+      StringBuilder sb,
+      InterfaceCodeGeneratorState state,
+      string? typeLeftNullCheck,
+      string? memberRightNullCheck,
+      string? memberLeftNullCheck,
+      string? typeRightNullCheck)
+   {
+      sb.Append(@"
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+   public static bool operator <(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) < 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
+   public static bool operator <(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") < 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+   public static bool operator <=(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) <= 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
+   public static bool operator <=(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") <= 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+   public static bool operator >(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) > 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
+   public static bool operator >(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") > 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+   public static bool operator >=(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) >= 0;
+   }
+
+   /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
+   public static bool operator >=(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   {
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") >= 0;
    }");
    }
 }

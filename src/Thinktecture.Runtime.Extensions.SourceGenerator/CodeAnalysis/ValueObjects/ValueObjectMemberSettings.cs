@@ -3,15 +3,11 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSettings>
 {
    public static readonly ValueObjectMemberSettings None = new(false);
-   private static readonly ValueObjectMemberSettings _noneForString = new(false, null, Constants.ComparerAccessor.ORDINAL_IGNORE_CASE, false, null, Constants.ComparerAccessor.ORDINAL_IGNORE_CASE, false);
 
    private readonly SyntaxReference? _equalityComparerAttr;
-   private readonly SyntaxReference? _comparerAttr;
 
    public bool IsExplicitlyDeclared { get; }
-   public string? ComparerAccessor { get; }
    public string? EqualityComparerAccessor { get; }
-   public bool HasInvalidComparerType { get; }
    public bool HasInvalidEqualityComparerType { get; }
 
    private ValueObjectMemberSettings(bool isExplicitlyDeclared)
@@ -23,67 +19,42 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
       bool isExplicitlyDeclared,
       SyntaxReference? equalityComparerAttr,
       string? equalityComparerAccessorType,
-      bool hasInvalidEqualityComparerType,
-      SyntaxReference? comparerAttr,
-      string? comparerAccessorType,
-      bool hasInvalidComparerType)
+      bool hasInvalidEqualityComparerType)
       : this(true)
    {
       _equalityComparerAttr = equalityComparerAttr;
-      _comparerAttr = comparerAttr;
 
       IsExplicitlyDeclared = isExplicitlyDeclared;
-      HasInvalidComparerType = hasInvalidComparerType;
       HasInvalidEqualityComparerType = hasInvalidEqualityComparerType;
-      ComparerAccessor = comparerAccessorType;
       EqualityComparerAccessor = equalityComparerAccessorType;
    }
 
    public static ValueObjectMemberSettings Create(ISymbol member, ITypeSymbol type, bool canCaptureSymbols)
    {
       AttributeData? equalityComparerAttr = null;
-      AttributeData? comparerAttr = null;
 
       foreach (var attribute in member.GetAttributes())
       {
          if (attribute.AttributeClass.IsValueObjectMemberEqualityComparerAttribute())
-         {
             equalityComparerAttr = attribute;
-         }
-         else if (attribute.AttributeClass.IsValueObjectMemberComparerAttribute())
-         {
-            comparerAttr = attribute;
-         }
       }
 
-      if (equalityComparerAttr is null && comparerAttr is null)
-         return type.SpecialType == SpecialType.System_String ? _noneForString : None;
+      if (equalityComparerAttr is null)
+         return None;
 
-      var equalityComparerGenericTypes = equalityComparerAttr?.GetComparerTypes();
-      var equalityComparerAccessorType = equalityComparerGenericTypes?.ComparerType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ?? (type.SpecialType == SpecialType.System_String ? Constants.ComparerAccessor.ORDINAL_IGNORE_CASE : null);
+      var equalityComparerGenericTypes = equalityComparerAttr.GetComparerTypes();
+      var equalityComparerAccessorType = equalityComparerGenericTypes?.ComparerType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
       var hasInvalidEqualityComparerType = equalityComparerGenericTypes is not null && !SymbolEqualityComparer.Default.Equals(equalityComparerGenericTypes.Value.ItemType, type);
 
-      var comparerGenericTypes = comparerAttr?.GetComparerTypes();
-      var comparerAccessorType = comparerGenericTypes?.ComparerType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ?? (type.SpecialType == SpecialType.System_String ? Constants.ComparerAccessor.ORDINAL_IGNORE_CASE : null);
-      var hasInvalidComparerType = comparerGenericTypes is not null && !SymbolEqualityComparer.Default.Equals(comparerGenericTypes.Value.ItemType, type);
-
       return new ValueObjectMemberSettings(true,
-                                           canCaptureSymbols ? equalityComparerAttr?.ApplicationSyntaxReference : null,
+                                           canCaptureSymbols ? equalityComparerAttr.ApplicationSyntaxReference : null,
                                            equalityComparerAccessorType,
-                                           hasInvalidEqualityComparerType,
-                                           canCaptureSymbols ? comparerAttr?.ApplicationSyntaxReference : null,
-                                           comparerAccessorType,
-                                           hasInvalidComparerType);
+                                           hasInvalidEqualityComparerType);
    }
 
    public Location? GetEqualityComparerAttributeLocationOrNull(CancellationToken cancellationToken)
    {
       return _equalityComparerAttr?.GetSyntax(cancellationToken).GetLocation();
-   }
-
-   public Location? GetComparerAttributeLocationOrNull(CancellationToken cancellationToken)
-   {
-      return _comparerAttr?.GetSyntax(cancellationToken).GetLocation();
    }
 
    public override bool Equals(object? obj)
@@ -99,10 +70,8 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
          return true;
 
       return IsExplicitlyDeclared == other.IsExplicitlyDeclared
-             && ComparerAccessor == other.ComparerAccessor
              && EqualityComparerAccessor == other.EqualityComparerAccessor
-             && HasInvalidEqualityComparerType == other.HasInvalidEqualityComparerType
-             && HasInvalidComparerType == other.HasInvalidComparerType;
+             && HasInvalidEqualityComparerType == other.HasInvalidEqualityComparerType;
    }
 
    public override int GetHashCode()
@@ -110,10 +79,8 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
       unchecked
       {
          var hashCode = IsExplicitlyDeclared.GetHashCode();
-         hashCode = (hashCode * 397) ^ (ComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ (EqualityComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ HasInvalidEqualityComparerType.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasInvalidComparerType.GetHashCode();
          return hashCode;
       }
    }

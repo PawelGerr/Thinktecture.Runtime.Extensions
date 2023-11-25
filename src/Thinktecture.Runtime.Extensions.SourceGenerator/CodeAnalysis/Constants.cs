@@ -2,7 +2,17 @@ namespace Thinktecture.CodeAnalysis;
 
 public static class Constants
 {
-   public const string KEY_EQUALITY_COMPARER_NAME = "KeyEqualityComparer";
+   public static class SmartEnum
+   {
+      public const ValueObjectAccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = ValueObjectAccessModifier.Public;
+      public const ValueObjectMemberKind DEFAULT_KEY_MEMBER_KIND = ValueObjectMemberKind.Property;
+   }
+
+   public static class ValueObject
+   {
+      public const ValueObjectAccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = ValueObjectAccessModifier.Private;
+      public const ValueObjectMemberKind DEFAULT_KEY_MEMBER_KIND = ValueObjectMemberKind.Field;
+   }
 
    public static class Modules
    {
@@ -34,11 +44,21 @@ public static class Constants
 
    public static class Attributes
    {
+      public static class Properties
+      {
+         public const string KEY_MEMBER_NAME = "KeyMemberName";
+         public const string SKIP_KEY_MEMBER = "SkipKeyMember";
+         public const string KEY_MEMBER_ACCESS_MODIFIER = "KeyMemberAccessModifier";
+         public const string KEY_MEMBER_KIND = "KeyMemberKind";
+      }
+
       public static class ValueObject
       {
          public const string NAMESPACE = "Thinktecture";
-         public const string NAME = "ValueObjectAttribute";
-         public const string FULL_NAME = "Thinktecture.ValueObjectAttribute";
+         public const string KEYED_NAME = "ValueObjectAttribute";
+         public const string COMPLEX_NAME = "ComplexValueObjectAttribute";
+         public const string KEYED_FULL_NAME = "Thinktecture.ValueObjectAttribute`1";
+         public const string COMPLEX_FULL_NAME = "Thinktecture.ComplexValueObjectAttribute";
       }
 
       public static class SmartEnum
@@ -47,11 +67,6 @@ public static class Constants
          public const string NAME = "SmartEnumAttribute";
          public const string KEYED_FULL_NAME = "Thinktecture.SmartEnumAttribute`1";
          public const string KEYLESS_FULL_NAME = "Thinktecture.SmartEnumAttribute";
-
-         public static class Properties
-         {
-            public const string KEY_PROPERTY_NAME = "KeyPropertyName";
-         }
       }
    }
 }

@@ -13,12 +13,20 @@ public static class TypeSymbolExtensions
       return type is null || type.SpecialType == SpecialType.System_Object;
    }
 
-   public static bool IsValueObjectAttribute(this ITypeSymbol? attributeType)
+   public static bool IsKeyedValueObjectAttribute(this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.ValueObject.NAME, ContainingNamespace: { Name: Constants.Attributes.ValueObject.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.ValueObject.KEYED_NAME, ContainingNamespace: { Name: Constants.Attributes.ValueObject.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsComplexValueObjectAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: Constants.Attributes.ValueObject.COMPLEX_NAME, ContainingNamespace: { Name: Constants.Attributes.ValueObject.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsSmartEnumAttribute(this ITypeSymbol? attributeType)
@@ -35,14 +43,6 @@ public static class TypeSymbolExtensions
          return false;
 
       return attributeType is { Name: "ValueObjectMemberEqualityComparerAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
-   }
-
-   public static bool IsValueObjectMemberComparerAttribute(this ITypeSymbol? attributeType)
-   {
-      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
-         return false;
-
-      return attributeType is { Name: "ValueObjectMemberComparerAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsValueObjectMemberIgnoreAttribute(this ITypeSymbol? attributeType)
@@ -81,6 +81,22 @@ public static class TypeSymbolExtensions
    public static bool IsValueObjectValidationErrorAttribute(this INamedTypeSymbol type)
    {
       return type is { Name: "ValueObjectValidationErrorAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsValueObjectKeyMemberComparerAttribute(this INamedTypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: "ValueObjectKeyMemberComparerAttribute", TypeArguments.Length: 2, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsValueObjectKeyMemberEqualityComparerAttribute(this INamedTypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: "ValueObjectKeyMemberEqualityComparerAttribute", TypeArguments.Length: 2, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsStructLayoutAttribute(this ITypeSymbol type)
