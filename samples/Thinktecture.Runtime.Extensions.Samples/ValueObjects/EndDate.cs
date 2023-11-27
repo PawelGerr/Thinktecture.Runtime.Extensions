@@ -2,13 +2,12 @@ using System;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject<DateOnly>(KeyMemberName = "Date",                                                         // Source Generator needs to know the name we've chosen
-                       SkipKeyMember = true,                                                           // We implement the key member "Date" ourselves
+[ValueObject<DateOnly>(SkipKeyMember = true,                                                           // We implement the key member "Date" ourselves
+                       KeyMemberName = "Date",                                                         // Source Generator needs to know the name we've chosen
                        DefaultInstancePropertyName = "Infinite",                                       // "EndDate.Infinite" represent an open-ended end date
                        EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)] // for comparison with DateOnly without implicit cast
 public readonly partial struct EndDate
 {
-   // Source Generator should work with the property "Date" only and ignore this backing field
    private readonly DateOnly? _date;
 
    // can be public as well
