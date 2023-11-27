@@ -23,7 +23,7 @@ public static class ModelBuilderExtensions
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <exception cref="ArgumentNullException">If <paramref name="modelBuilder"/> is <c>null</c>.</exception>
-   public static void AddEnumAndValueObjectConverters(
+   public static void AddValueObjectConverters(
       this ModelBuilder modelBuilder,
       bool validateOnWrite,
       bool useConstructorForRead = true,

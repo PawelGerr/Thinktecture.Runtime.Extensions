@@ -28,11 +28,11 @@ public class ProductsDbContext : DbContext
                                    });
 
       // Alternative way to apply ValueConverters to Smart Enums and Value Objects
-      // modelBuilder.AddEnumAndValueObjectConverters(validateOnWrite: true,
-      //                                              configureEnumsAndKeyedValueObjects: property =>
-      //                                                                                  {
-      //                                                                                     if (property.ClrType == typeof(ProductType))
-      //                                                                                        property.SetMaxLength(20);
-      //                                                                                  });
+      // modelBuilder.AddValueObjectConverters(validateOnWrite: true,
+      //                                       configureEnumsAndKeyedValueObjects: property =>
+      //                                                                           {
+      //                                                                              if (property.ClrType == typeof(ProductType))
+      //                                                                                 property.SetMaxLength(20);
+      //                                                                           });
    }
 }

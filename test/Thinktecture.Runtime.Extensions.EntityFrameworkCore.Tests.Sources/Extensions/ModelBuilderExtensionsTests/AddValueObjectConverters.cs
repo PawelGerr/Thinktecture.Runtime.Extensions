@@ -10,7 +10,7 @@ using Thinktecture.Runtime.Tests.TestEnums;
 // ReSharper disable InconsistentNaming
 namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
 {
-   public class AddEnumAndValueObjectConverters : IDisposable
+   public class AddValueObjectConverters : IDisposable
    {
       private static readonly Type _validateableConverterType = typeof(ValueObjectValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
                                                                                                         .Single(t => t.Name.StartsWith("ValidatableEnumValueConverter", StringComparison.Ordinal));

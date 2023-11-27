@@ -38,6 +38,6 @@ public class TestDbContext : DbContext
 #endif
 
       if (_registerConverters)
-         modelBuilder.AddEnumAndValueObjectConverters(true);
+         modelBuilder.AddValueObjectConverters(true);
    }
 }
