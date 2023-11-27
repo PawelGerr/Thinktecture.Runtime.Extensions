@@ -450,17 +450,19 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.EqualityMembers.Count > 0)
       {
-         var useShortForm = _state.EqualityMembers.Count <= 8 && _state.EqualityMembers.All(m => m.EqualityComparerAccessor == null);
+         var useShortForm = _state.EqualityMembers.Count < 8 && _state.EqualityMembers.All(m => m.EqualityComparerAccessor == null);
 
          if (useShortForm)
          {
             _sb.Append(@"
-         return global::System.HashCode.Combine(");
+         return global::System.HashCode.Combine(
+            _typeHashCode");
          }
          else
          {
             _sb.Append(@"
-         var hashCode = new global::System.HashCode();");
+         var hashCode = new global::System.HashCode();
+         hashCode.Add(_typeHashCode);");
          }
 
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
@@ -469,13 +471,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
             if (useShortForm)
             {
-               if (i > 0)
-               {
-                  _sb.Append(@",
-            ");
-               }
-
-               _sb.Append("this.").Append(member.Name);
+               _sb.Append(@",
+            this.").Append(member.Name);
             }
             else
             {

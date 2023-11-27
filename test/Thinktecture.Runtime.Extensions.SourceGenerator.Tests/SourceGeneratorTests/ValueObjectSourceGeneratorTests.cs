@@ -5207,6 +5207,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      public override int GetHashCode()
                                                      {
                                                         var hashCode = new global::System.HashCode();
+                                                        hashCode.Add(_typeHashCode);
                                                         hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
                                                         hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
                                                         return hashCode.ToHashCode();
@@ -5426,6 +5427,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public override int GetHashCode()
                                                          {
                                                             var hashCode = new global::System.HashCode();
+                                                            hashCode.Add(_typeHashCode);
                                                             hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
                                                             hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
                                                             return hashCode.ToHashCode();
@@ -5689,6 +5691,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public override int GetHashCode()
                                                          {
                                                             var hashCode = new global::System.HashCode();
+                                                            hashCode.Add(_typeHashCode);
                                                             hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
                                                             hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
                                                             return hashCode.ToHashCode();
@@ -5946,6 +5949,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      public override int GetHashCode()
                                                      {
                                                         var hashCode = new global::System.HashCode();
+                                                        hashCode.Add(_typeHashCode);
                                                         hashCode.Add(this._value1, global::System.StringComparer.OrdinalIgnoreCase);
                                                         hashCode.Add(this._value2, global::System.StringComparer.OrdinalIgnoreCase);
                                                         hashCode.Add(this._value3, global::System.StringComparer.OrdinalIgnoreCase);
