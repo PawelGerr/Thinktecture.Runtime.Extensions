@@ -8,54 +8,6 @@ public class TTRESG044_CustomKeyMemberImplementationNotFound
 {
    private const string _DIAGNOSTIC_ID = "TTRESG044";
 
-   public class Enum_CustomKeyMemberImplementationNotFound
-   {
-      [Fact]
-      public async Task Should_trigger_if_key_member_implementation_missing()
-      {
-         var code = """
-
-                    using System;
-                    using Thinktecture;
-
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(SkipKeyMember = true)]
-                       public sealed partial class {|#0:TestEnum|}
-                    	{
-                          public static readonly TestEnum Item1 = default!;
-                       }
-                    }
-                    """;
-
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Key");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
-      }
-
-      [Fact]
-      public async Task Should_not_trigger_if_key_member_implementation_found()
-      {
-         var code = """
-
-                    using System;
-                    using Thinktecture;
-
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(SkipKeyMember = true)]
-                       public sealed partial class {|#0:TestEnum|}
-                    	{
-                          public string Key { get; }
-                    
-                          public static readonly TestEnum Item1 = default!;
-                       }
-                    }
-                    """;
-
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
-      }
-   }
-
    public class KeyedValueObject_CustomKeyMemberImplementationNotFound
    {
       [Fact]

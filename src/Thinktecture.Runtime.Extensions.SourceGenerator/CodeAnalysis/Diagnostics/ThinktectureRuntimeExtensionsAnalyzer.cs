@@ -243,20 +243,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ValidateCustomKeyMemberImplementation(context, keyType, assignableMembers, keyMemberName, locationOfFirstDeclaration);
    }
 
-   private static void ValidateSmartEnumCustomKeyMemberImplementation(
-      OperationAnalysisContext context,
-      ITypeSymbol keyType,
-      IReadOnlyList<InstanceMemberInfo>? assignableMembers,
-      IObjectCreationOperation attribute,
-      Location locationOfFirstDeclaration)
-   {
-      var keyMemberAccessModifier = attribute.FindKeyMemberAccessModifier() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
-      var keyMemberKind = attribute.FindKeyMemberKind() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_KIND;
-      var keyMemberName = attribute.FindKeyMemberName() ?? Helper.GetDefaultSmartEnumKeyMemberName(keyMemberAccessModifier, keyMemberKind);
-
-      ValidateCustomKeyMemberImplementation(context, keyType, assignableMembers, keyMemberName, locationOfFirstDeclaration);
-   }
-
    private static void ValidateCustomKeyMemberImplementation(
       OperationAnalysisContext context,
       ITypeSymbol keyType,
@@ -445,9 +431,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
          return;
       }
-
-      if (attribute.FindSkipKeyMember() == true)
-         ValidateSmartEnumCustomKeyMemberImplementation(context, keyType, assignableMembers, attribute, locationOfFirstDeclaration);
 
       var isValidatable = attribute.FindIsValidatable() ?? false;
 

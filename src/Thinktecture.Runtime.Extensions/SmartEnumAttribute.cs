@@ -63,14 +63,6 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    }
 
    /// <summary>
-   /// Indication whether to generate the key member of type <typeparamref name="TKey"/>.
-   /// If set to <c>true</c> then the key member must be implemented manually.
-   /// Use <see cref="KeyMemberName"/> to tell source generator the chosen name of the field/property.
-   /// If the member is a property with a backing field, then the property must have an <c>init</c> setter.
-   /// </summary>
-   public bool SkipKeyMember { get; set; }
-
-   /// <summary>
    /// Indication whether the Smart Enum should be "validatable" or always-valid one.
    /// Default is "false", i.e. always-valid.
    /// </summary>

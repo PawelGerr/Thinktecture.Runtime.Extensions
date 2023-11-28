@@ -5,7 +5,6 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
    public ValueObjectAccessModifier KeyMemberAccessModifier { get; }
    public ValueObjectMemberKind KeyMemberKind { get; }
    public string KeyMemberName { get; }
-   public bool SkipKeyMember { get; }
    public bool IsValidatable { get; }
    public bool SkipIComparable { get; }
    public bool SkipIParsable { get; }
@@ -21,7 +20,6 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
       KeyMemberAccessModifier = attribute.FindKeyMemberAccessModifier() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
       KeyMemberKind = attribute.FindKeyMemberKind() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_KIND;
       KeyMemberName = attribute.FindKeyMemberName() ?? Helper.GetDefaultSmartEnumKeyMemberName(KeyMemberAccessModifier, KeyMemberKind);
-      SkipKeyMember = attribute.FindSkipKeyMember() ?? false;
       IsValidatable = attribute.FindIsValidatable() ?? false;
       SkipIComparable = attribute.FindSkipIComparable() ?? false;
       SkipIParsable = attribute.FindSkipIParsable() ?? false;
@@ -52,7 +50,6 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
       return KeyMemberAccessModifier == other.KeyMemberAccessModifier
              && KeyMemberKind == other.KeyMemberKind
              && KeyMemberName == other.KeyMemberName
-             && SkipKeyMember == other.SkipKeyMember
              && IsValidatable == other.IsValidatable
              && SkipIComparable == other.SkipIComparable
              && SkipIParsable == other.SkipIParsable
@@ -71,7 +68,6 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
          var hashCode = (int)KeyMemberAccessModifier;
          hashCode = (hashCode * 397) ^ (int)KeyMemberKind;
          hashCode = (hashCode * 397) ^ KeyMemberName.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipKeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValidatable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();

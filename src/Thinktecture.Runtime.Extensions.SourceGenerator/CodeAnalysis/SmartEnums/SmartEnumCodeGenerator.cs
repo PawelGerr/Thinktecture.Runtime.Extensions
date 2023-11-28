@@ -102,8 +102,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       public static global::System.Collections.Generic.IReadOnlyList<").Append(_state.TypeFullyQualified).Append("> Items => _items.Value;");
 
-         if (!_state.Settings.SkipKeyMember)
-            GenerateKeyMember(_sb, _state.KeyMember, true);
+         GenerateKeyMember(_sb, _state.KeyMember, true);
       }
       else
       {
