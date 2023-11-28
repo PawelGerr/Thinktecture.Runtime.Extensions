@@ -50,20 +50,21 @@ Documentation: [Smart Enums](https://github.com/PawelGerr/Thinktecture.Runtime.E
 Features:
 * Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
 * [Allows iteration over all items](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#what-is-implemented-for-you)
-* [Allows custom properties and methods](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#adding-behavior)
+* [Allows custom properties and methods](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-fields-properties-and-methods)
 * [Switch-case/Map](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#switch-casemap)
 * Provides appropriate constructor, based on the specified properties/fields
 * Provides means for lookup, cast and type conversion from key-type to Smart Enum and vice versa
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
 * Provides implementation of `IComparable`, `IComparable<T>`, `IFormattable`, `IParsable<T>` and comparison operators `<`, `<=`, `>`, `>=` (if applicable to the underlying type)
 * [Choice between always-valid and maybe-valid Smart Enum](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#always-valid-vs-maybe-valid-smart-enum)
+* Smart Enum can also be keyless, i.e. without a key member
 * [Makes use of abstract static members](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#make-use-of-abstract-static-members)
 * [Derived types can be generic](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#generic-derived-types)
 * [Allows custom validation of constructor arguments](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#validation-of-the-constructor-arguments)
-* [Allows changing the property name `Key`](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#changing-the-key-property-name), which holds the underlying value - thanks to [Roslyn Source Generator](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)
-* [Allows custom key comparer](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-key-comparer)
+* [Allows changing the key member name, kind and access modifier](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#key-member-generation), which holds the underlying value - thanks to [Roslyn Source Generator](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)
+* Allows [custom key equality comparer](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-equality-comparer) and [custom comparer](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-comparer)
 * [JSON support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#json-serialization) (`System.Text.Json` and `Newtonsoft.Json`)
-* [Support for Minimal Web Api Parameter Binding and ASP.NET Core Model Binding](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#support-for-minimal-web-api-parameter-binding-and-aspnet-core-model-binding)
+* [Support for Minimal Api Parameter Binding and ASP.NET Core Model Binding](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#support-for-minimal-api-parameter-binding-and-aspnet-core-model-binding)
 * [Entity Framework Core support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#support-for-entity-framework-core) (`ValueConverter`)
 * [MessagePack support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#messagepack-serialization) (`IMessagePackFormatter`)
 * [Logging for debugging or getting insights](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#logging-v610-or-higher)
@@ -99,10 +100,10 @@ public sealed partial class SalesCsvImporterType
 }
 ```
 
-Behind the scenes a Roslyn Source Generator, which comes with the library, generates additional code. Some of the features that are now available are ...
+Behind the scenes a Roslyn Source Generator generates additional code. Some of the features that are now available are ...
 
 ```C#
-// a private constructor which takes the key and additional members (if we had any)
+// A private constructor which takes the key "Groceries" and additional members (if we had any)
 [SmartEnum<string>]
 public sealed partial class ProductType
 {
@@ -111,27 +112,27 @@ public sealed partial class ProductType
 
 ------------
 
-// a property for iteration over all items
+// A property for iteration over all items
 IReadOnlyList<ProductType> allTypes = ProductType.Items;
 
 ------------
 
-// getting the item with specific name, i.e. its key
-// throw UnknownEnumIdentifierException if the provided key doesn't match to any item
+// Getting the item with specific name, i.e. its key.
+// Throws UnknownEnumIdentifierException if the provided key doesn't belong to any item
 ProductType productType = ProductType.Get("Groceries");
 
-// Alternatively, using an explicit cast (behaves the same as with Get)
+// Alternatively, using an explicit cast (behaves the same as "Get")
 ProductType productType = (ProductType)"Groceries";
 
 ------------
 
 // the same as above but returns a bool instead of throwing an exception (dictionary-style)
-bool found = ProductType.TryGet("Groceries", out ProductType productType);
+bool found = ProductType.TryGet("Groceries", out ProductType? productType);
 
 ------------
 
-// similar to TryGet but returns a ValidationError instead of a boolean.
-ValidationError? validationError = ProductType.Validate("Groceries", null, out productType);
+// similar to TryGet but accepts `IFormatProvider` and returns a ValidationError instead of a boolean.
+ValidationError? validationError = ProductType.Validate("Groceries", null, out ProductType? productType);
 
 if (validationError is null)
 {
@@ -139,7 +140,7 @@ if (validationError is null)
 }
 else
 {
-    logger.Warning("Failed to fetch the product type with Validate. Validation result: {ValidationError}", validationError.ToString());
+    logger.Warning("Failed to fetch the product type with Validate. Validation error: {validationError}", validationError.ToString());
 }
 
 ------------
@@ -149,8 +150,7 @@ string key = ProductType.Groceries; // "Groceries"
 
 ------------
 
-// Equality comparison with 'Equals' 
-// which compares the keys using default or custom 'IEqualityComparer<T>'
+// Equality comparison
 bool equal = ProductType.Groceries.Equals(ProductType.Groceries);
 
 ------------
@@ -173,7 +173,7 @@ string key = ProductType.Groceries.ToString(); // "Groceries"
 
 ILogger logger = ...;
 
-// Switch-case (Action)
+// Switch-case (with "Action")
 productType.Switch(ProductType.Groceries, () => logger.Information("Switch with Action: Groceries"),
                    ProductType.Housewares, () => logger.Information("Switch with Action: Housewares"));
                    
@@ -187,35 +187,30 @@ var returnValue = productType.Switch(ProductType.Groceries, static () => "Switch
                                      ProductType.Housewares, static () => "Switch with Func<T>: Housewares");
 
 // Switch case with parameter returning a value (Func<TParam, TResult>) to prevent closures
-returnValue = productType.Switch(logger,
-                                 ProductType.Groceries, static l => "Switch with Func<T>: Groceries",
-                                 ProductType.Housewares, static l => "Switch with Func<T>: Housewares");
+var returnValue = productType.Switch(logger,
+                                     ProductType.Groceries, static l => "Switch with Func<T>: Groceries",
+                                     ProductType.Housewares, static l => "Switch with Func<T>: Housewares");
 
-// Maps an item to another instance
+// Map an item to another instance
 returnValue = productType.Map(ProductType.Groceries, "Map: Groceries",
                               ProductType.Housewares, "Map: Housewares");
-
 ------------
 
-// Implements IParsable<T> which is especially helpful with minimal web apis.
-// This feature can be disabled if it doesn't make sense (see EnumGenerationAttribute).
-bool parsed = ProductType.TryParse("Groceries", null, out var parsedProductType);
+// Implements IParsable<T> which is especially helpful with minimal apis.
+bool parsed = ProductType.TryParse("Groceries", null, out ProductType? parsedProductType);
 
 ------------
 
 // Implements IFormattable if the underlyng type (like int) is an IFormattable itself.
-// This feature can be disabled if it doesn't make sense (see EnumGenerationAttribute).
-var formatted = ProductGroup.Apple.ToString("000", CultureInfo.InvariantCulture); // 001
+var formatted = ProductGroup.Fruits.ToString("000", CultureInfo.InvariantCulture); // 001
 
 ------------
 
-// Implements IComparable and IComparable<T> if the underlyng type (like int) is an IComparable itself.
-// This feature can be disabled if it doesn't make sense (see EnumGenerationAttribute).
-var comparison = ProductGroup.Apple.CompareTo(ProductGroup.Orange); // -1
+// Implements IComparable and IComparable<T> if the key member type (like int) is an IComparable itself.
+var comparison = ProductGroup.Fruits.CompareTo(ProductGroup.Vegetables); // -1
 
 // Implements comparison operators (<,<=,>,>=) if the underlyng type (like int) has comparison operators itself.
-// This feature can be disabled if it doesn't make sense (see EnumGenerationAttribute).
-var isBigger = ProductGroup.Apple > ProductGroup.Orange;       
+var isBigger = ProductGroup.Fruits > ProductGroup.Vegetables;       
 ```
 
 Definition of a new Smart Enum with 1 custom property `RequiresFoodVendorLicense` and 1 method `Do` with different behaviors for different enum items.
@@ -234,7 +229,7 @@ public partial class ProductType
       // do default stuff
    }
 
-   private class HousewaresProductType : ProductType
+   private sealed class HousewaresProductType : ProductType
    {
       public HousewaresProductType()
          : base("Housewares", requiresFoodVendorLicense: false)
@@ -257,138 +252,154 @@ Documentation: [Value Objects](https://github.com/PawelGerr/Thinktecture.Runtime
 
 Features:
 * Roslyn Analyzers and CodeFixes help the developers to implement the Value Objects correctly
-* Allows custom properties and methods
+* Choice between [Simple Value Objects](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#simple-value-objects) and [Complex Value Objects](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#complex-value-objects)
+* Allows custom fields, properties and methods
 * Provides appropriate factory methods for creation of new value objects based on the specified properties/fields
+* [Factory methods can be renamed](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#rename-factory-methods)
 * Allows custom [validation](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#validation) of [constructor](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#validation-of-the-constructor-arguments) and [factory method](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#validation-of-the-factory-method-arguments) arguments
 * Allows [custom type to pass validation error(s)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#custom-type-for-validation-errors)
-* Additional features for [simple Value Objects (1 "key"-property/field)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#simple-value-objects) and [complex Value Objects (2 properties/fields or more)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#complex-value-objects)
-* Simple Value Objects: allows cast and type conversion from key-type to Value Object and vice versa
-* Simple Value Objects: provides an implementation of `IFormattable` if the key-property/field is an `IFormattable`
+* *[Simple Value Objects only]* Allows cast and type conversion from key-member type to Value Object and vice versa
+* *[Simple Value Objects only]* Provides an implementation of `IFormattable` if the key member is an `IFormattable`
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
 * Provides implementation of `IComparable`, `IComparable<T>`, `IFormattable`, `IParsable<T>` and comparison operators `<`, `<=`, `>`, `>=`
-* [Allows custom equality comparison](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#custom-comparer) and [custom comparer](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#custom-comparer)
-* Handling of [null](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#null-in-factory-methods-yields-null) and [empty strings](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#empty-string-in-factory-methods-yields-null)
+* [Allows custom equality comparison](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#custom-equality-comparer) and [custom comparer](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#custom-comparer)
+* Configurable handling of [null](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#null-in-factory-methods-yields-null) and [empty strings](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#empty-string-in-factory-methods-yields-null)
 * [JSON support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#json-serialization) (`System.Text.Json` and `Newtonsoft.Json`)
-* [Support for Minimal Web Api Parameter Binding and ASP.NET Core Model Binding](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#support-for-minimal-web-api-parameter-binding-and-aspnet-core-model-binding)
+* [Support for Minimal Api Parameter Binding and ASP.NET Core Model Binding](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#support-for-minimal-api-parameter-binding-and-aspnet-core-model-binding)
 * [Entity Framework Core support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#support-for-entity-framework-core) (`ValueConverter`)
 * [MessagePack support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#messagepack-serialization) (`IMessagePackFormatter`)
 * [Logging for debugging or getting insights](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#logging-v610-or-higher)
 
 ## Simple Value Object
 
-Definition of 2 value objects, one with 1 `string` property `Value` and the other with an `int`.
+A simple value object has 1 field/property only, i.e., it is kind of wrapper for another (primitive) type. The main use case is to prevent creation of values/instances which are considered invalid according to some rules.
+In DDD (domain-driven design), working with primitive types, like string, directly is called primitive obsession and should be avoided.
+
+Most simple value objects with a key member of type `string` and another one (which is a struct) with an `int`.
 
 ```C#
-[ValueObject]
+[ValueObject<string>]
 public sealed partial class ProductName
 {
-   public string Value { get; }
 }
 
-[ValueObject]
-public sealed partial class Amount
+[ValueObject<int>]
+public readonly partial struct Amount
 {
-   private readonly int _value;
 }
 ```
 
-After the implementation of the `ProductName`, a Roslyn source generator kicks in and implements the rest. Following API is available from now on.
+After the implementation of a value object, a Roslyn source generator kicks in and implements the rest. Following API is available from now on.
 
 ```C#
 // Factory method for creation of new instances.
-// Throws ValidationException if the validation fails
-ProductName bread = ProductName.Create("Bread");
+// Throws ValidationException if the validation fails (if we had any)
+ProductName apple = ProductName.Create("Apple");
 
-// Alternatively, using an explicit cast (behaves the same as with Create)
-ProductName bread = (ProductName)"Bread"; // is the same as calling "ProductName.Create"
-
------------
-
-// the same as above but returns a bool instead of throwing an exception (dictionary-style)
-bool created = ProductName.TryCreate("Milk", out ProductName milk);
+// Alternatively, using an explicit cast, which behaves the same way as calling "ProductName.Create"
+ProductName apple = (ProductName)"Apple";
 
 -----------
 
-// similar to TryCreate but returns a ValidationError instead of a boolean.
-ValidationError? validationError = ProductName.Validate("Milk", out var milk);
+// The same as above but returns a bool instead of throwing an exception (dictionary-style)
+bool created = ProductName.TryCreate("Chocolate", out ProductName? chocolate);
+
+-----------
+
+// Similar to TryCreate but returns a ValidationError instead of a boolean.
+ValidationError? validationError = ProductName.Validate("Chocolate", null, out var chocolate);
 
 if (validationError is null)
 {
-    logger.Information("Product name {Name} created", milk);
+    logger.Information("Product name {Name} created", chocolate);
 }
 else
 {
-    logger.Warning("Failed to create product name. Validation result: {ValidationError}", validationError.ToString());
+    logger.Warning("Failed to create product name. Validation result: {validationError}", validationError.ToString());
 }
 
 -----------
 
-// implicit conversion to the type of the key member
-string valueOfTheProductName = bread; // "Bread"
+// Implicit conversion to the type of the key member
+string valueOfTheProductName = apple; // "Apple"
 
 -----------
 
-// Equality comparison with 'Equals'
-// which compares the key members using default or custom 'IEqualityComparer<T>'
-bool equal = bread.Equals(bread);
+// Equality comparison compares the key member using default comparer by default.
+// Key members of type `string` are compared with 'StringComparer.OrdinalIgnoreCase' by default.
+bool equal = apple.Equals(apple);
 
 -----------
 
-// Equality comparison with '==' and '!='
-bool equal = bread == bread;
-bool notEqual = bread != bread;
+// Equality comparison operators: '==' and '!='
+bool equal = apple == apple;
+bool notEqual = apple != apple;
 
 -----------
 
-// Hash code
-int hashCode = bread.GetHashCode();
+// Hash code: combined hash code of type and key member. 
+// Strings are using 'StringComparer.OrdinalIgnoreCase' by default.
+int hashCode = apple.GetHashCode();
 
 -----------
 
-// 'ToString' implementation
-string value = bread.ToString(); // "Bread"
+// 'ToString' implementation return the string representation of the key member
+string value = apple.ToString(); // "Apple"
 
 ------------
 
-// Implements IParsable<T> which is especially helpful with minimal web apis.
-// This feature can be disabled if it doesn't make sense (see ValueObjectAttribute).
+// Implements IParsable<T> which is especially helpful with minimal apis.
 bool success = ProductName.TryParse("New product name", null, out var productName);
+
+ProductName productName = ProductName.Parse("New product name", null);
 
 ------------
 
 // Implements "IFormattable" if the key member is an "IFormattable".
-// This feature can be disabled if it doesn't make sense (see ValueObjectAttribute).
-var amount = Amount.Create(42);
+Amount amount = Amount.Create(42);
 string formattedValue = amount.ToString("000", CultureInfo.InvariantCulture); // "042"
 
 ------------
 
-// Implements "IComparable<ProductName>" if the key member is an "IComparable"
-// This feature can be disabled if it doesn't make sense (see ValueObjectAttribute).
-var amount = Amount.Create(1);
-var otherAmount = Amount.Create(2);
+// Implements "IComparable<ProductName>" if the key member is an "IComparable",
+// or if custom comparer is provided.
+Amount amount = Amount.Create(1);
+Amount otherAmount = Amount.Create(2);
 
-var comparison = amount.CompareTo(otherAmount); // -1
-
-// Implements comparison operators (<,<=,>,>=) if the key member has comparison operators itself.
-// This feature can be disabled if it doesn't make sense (see ValueObjectAttribute).
-var isBigger = amount > otherAmount;  
+int comparison = amount.CompareTo(otherAmount); // -1
 
 ------------
 
-// Implements addition / subtraction / multiplication / division if the key member supports operators
-// This feature can be disabled if it doesn't make sense (see ValueObjectAttribute).
-var sum = amount + otherAmount;
+// Implements comparison operators (<,<=,>,>=) if the key member has comparison operators itself.
+bool isBigger = amount > otherAmount;
+
+// Implements comparison operators to compare the value object with an instance of key-member-type,
+// if "ComparisonOperators" is set "OperatorsGeneration.DefaultWithKeyTypeOverloads"
+bool isBigger = amount > 2;
+
+------------
+
+// Implements addition / subtraction / multiplication / division if the key member supports corresponding operators
+Amount sum = amount + otherAmount;
+
+// Implements operators that accept an instance of key-member-type,
+// if the "OperatorsGeneration" is set "DefaultWithKeyTypeOverloads"
+Amount sum = amount + 2;
+
+------------
+
+// Provides a static default value "Empty" (similar to "Guid.Empty"), if the value object is a struct
+Amount defaultValue = Amount.Empty; // same as "Amount defaultValue = default;"
 ```
 
 ## Complex Value Objects
 
-A complex value object is considered a `class` or a `readonly struct` with a `ValueObjectAttribute` and with more than 1 "assignable" properties/fields. The main use case is to *manage* multiple values as a whole.
+A complex value object is an immutable `class` or a `readonly struct` with a `ComplexValueObjectAttribute`. Complex value object usually has multiple readonly fields/properties.
 
-A simple example would be a `Boundary` with 2 properties, one is the lower boundary and the other is the upper boundary. Yet again, we skip the validation at the moment.
+A simple example would be a `Boundary` with 2 properties. One property is the lower boundary and the other is the upper boundary. Yet again, we skip the validation at the moment.
 
 ```C#
-[ValueObject]
+[ComplexValueObject]
 public sealed partial class Boundary
 {
    public decimal Lower { get; }
@@ -400,18 +411,18 @@ The rest is implemented by a Roslyn source generator, providing the following AP
 
 ```C#
 // Factory method for creation of new instances.
-// Throws ValidationException if the validation fails
+// Throws ValidationException if the validation fails (if we had any)
 Boundary boundary = Boundary.Create(lower: 1, upper: 2);
 
 -----------
 
 // the same as above but returns a bool instead of throwing an exception (dictionary-style)
-bool created = Boundary.TryCreate(lower: 1, upper: 2, out Boundary boundary);
+bool created = Boundary.TryCreate(lower: 1, upper: 2, out Boundary? boundary);
 
 -----------
 
 // similar to TryCreate but returns a ValidationError instead of a boolean.
-ValidationError? validationError = Boundary.Validate(lower: 1, upper: 2, out Boundary boundary);
+ValidationError? validationError = Boundary.Validate(lower: 1, upper: 2, out Boundary? boundary);
 
 if (validationError is null)
 {
@@ -419,13 +430,12 @@ if (validationError is null)
 }
 else
 {
-    logger.Warning("Failed to create boundary. Validation result: {ValidationError}", validationError.ToString());
+    logger.Warning("Failed to create boundary. Validation result: {validationError}", validationError.ToString());
 }
 
 -----------
 
-// Equality comparison with 'Equals'
-// which compares the members using default or custom comparers.
+// Equality comparison compares the members using default or custom comparers.
 // Strings are compared with 'StringComparer.OrdinalIgnoreCase' by default.
 bool equal = boundary.Equals(boundary);
 
