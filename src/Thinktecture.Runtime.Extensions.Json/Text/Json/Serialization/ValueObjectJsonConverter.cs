@@ -24,7 +24,7 @@ public sealed class ValueObjectJsonConverter<T, TKey> : JsonConverter<T>
    {
       ArgumentNullException.ThrowIfNull(options);
 
-      _keyConverter = (JsonConverter<TKey>)options.GetConverter(typeof(TKey));
+      _keyConverter = (JsonConverter<TKey>)JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(TKey));
    }
 
    /// <inheritdoc />

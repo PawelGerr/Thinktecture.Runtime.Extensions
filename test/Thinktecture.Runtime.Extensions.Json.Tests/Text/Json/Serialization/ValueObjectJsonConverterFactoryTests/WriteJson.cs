@@ -113,39 +113,4 @@ public class WriteJson : JsonTestsBase
 
       json.Should().Be("\"1:2\"");
    }
-
-   private static string Serialize<T, TKey>(
-      T value,
-      JsonNamingPolicy namingStrategy = null,
-      bool ignoreNullValues = false)
-      where T : IValueObjectFactory<T, TKey>, IValueObjectConverter<TKey>
-   {
-      return SerializeWithConverter<T, ValueObjectJsonConverterFactory>(value, namingStrategy, ignoreNullValues);
-   }
-
-   private static string SerializeWithConverter<T, TConverterFactory>(
-      T value,
-      JsonNamingPolicy namingPolicy = null,
-      bool ignoreNullValues = false)
-      where TConverterFactory : JsonConverterFactory, new()
-   {
-      return SerializeWithConverter<T, TConverterFactory>(value, namingPolicy, ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never);
-   }
-
-   private static string SerializeWithConverter<T, TConverterFactory>(
-      T value,
-      JsonNamingPolicy namingPolicy,
-      JsonIgnoreCondition jsonIgnoreCondition)
-      where TConverterFactory : JsonConverterFactory, new()
-   {
-      var factory = new TConverterFactory();
-      var options = new JsonSerializerOptions
-                    {
-                       Converters = { factory },
-                       PropertyNamingPolicy = namingPolicy,
-                       DefaultIgnoreCondition = jsonIgnoreCondition
-                    };
-
-      return JsonSerializer.Serialize(value, options);
-   }
 }

@@ -140,6 +140,7 @@ partial class TestValueObject
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
    {
       private readonly string _referenceFieldPropertyName;
+      private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
       private readonly string _structPropertyPropertyName;
       private readonly global::System.Text.Json.Serialization.JsonConverter<decimal?> _nullableStructPropertyConverter;
       private readonly string _nullableStructPropertyPropertyName;
@@ -152,8 +153,9 @@ partial class TestValueObject
          var namingPolicy = options.PropertyNamingPolicy;
 
          this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
+         this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
          this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
-         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
+         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(decimal?));
          this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
       }
 
@@ -191,7 +193,7 @@ partial class TestValueObject
             }
             else if (comparer.Equals(propName, this._structPropertyPropertyName))
             {
-               structProperty = reader.GetInt32();
+               structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
             }
             else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
             {
@@ -235,7 +237,7 @@ partial class TestValueObject
          if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
          {
             writer.WritePropertyName(this._structPropertyPropertyName);
-            writer.WriteNumberValue(structPropertyPropertyValue);
+            this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
          }
          var nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
@@ -304,6 +306,7 @@ partial struct TestValueObject
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
    {
       private readonly string _referenceFieldPropertyName;
+      private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
       private readonly string _structPropertyPropertyName;
       private readonly global::System.Text.Json.Serialization.JsonConverter<decimal?> _nullableStructPropertyConverter;
       private readonly string _nullableStructPropertyPropertyName;
@@ -316,8 +319,9 @@ partial struct TestValueObject
          var namingPolicy = options.PropertyNamingPolicy;
 
          this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
+         this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
          this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
-         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
+         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(decimal?));
          this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
       }
 
@@ -355,7 +359,7 @@ partial struct TestValueObject
             }
             else if (comparer.Equals(propName, this._structPropertyPropertyName))
             {
-               structProperty = reader.GetInt32();
+               structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
             }
             else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
             {
@@ -399,7 +403,7 @@ partial struct TestValueObject
          if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
          {
             writer.WritePropertyName(this._structPropertyPropertyName);
-            writer.WriteNumberValue(structPropertyPropertyValue);
+            this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
          }
          var nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
@@ -468,6 +472,7 @@ partial struct TestValueObject
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
    {
       private readonly string _referenceFieldPropertyName;
+      private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
       private readonly string _structPropertyPropertyName;
       private readonly global::System.Text.Json.Serialization.JsonConverter<decimal?> _nullableStructPropertyConverter;
       private readonly string _nullableStructPropertyPropertyName;
@@ -480,8 +485,9 @@ partial struct TestValueObject
          var namingPolicy = options.PropertyNamingPolicy;
 
          this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
+         this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
          this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
-         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
+         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(decimal?));
          this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
       }
 
@@ -519,7 +525,7 @@ partial struct TestValueObject
             }
             else if (comparer.Equals(propName, this._structPropertyPropertyName))
             {
-               structProperty = reader.GetInt32();
+               structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
             }
             else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
             {
@@ -563,7 +569,7 @@ partial struct TestValueObject
          if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
          {
             writer.WritePropertyName(this._structPropertyPropertyName);
-            writer.WriteNumberValue(structPropertyPropertyValue);
+            this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
          }
          var nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
@@ -627,6 +633,7 @@ partial struct TestValueObject
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::TestValueObject>
    {
       private readonly string _referenceFieldPropertyName;
+      private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
       private readonly string _structPropertyPropertyName;
       private readonly global::System.Text.Json.Serialization.JsonConverter<decimal?> _nullableStructPropertyConverter;
       private readonly string _nullableStructPropertyPropertyName;
@@ -639,8 +646,9 @@ partial struct TestValueObject
          var namingPolicy = options.PropertyNamingPolicy;
 
          this._referenceFieldPropertyName = namingPolicy?.ConvertName(""ReferenceField"") ?? ""ReferenceField"";
+         this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
          this._structPropertyPropertyName = namingPolicy?.ConvertName(""StructProperty"") ?? ""StructProperty"";
-         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)options.GetConverter(typeof(decimal?));
+         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(decimal?));
          this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName(""NullableStructProperty"") ?? ""NullableStructProperty"";
       }
 
@@ -678,7 +686,7 @@ partial struct TestValueObject
             }
             else if (comparer.Equals(propName, this._structPropertyPropertyName))
             {
-               structProperty = reader.GetInt32();
+               structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
             }
             else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
             {
@@ -722,7 +730,7 @@ partial struct TestValueObject
          if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
          {
             writer.WritePropertyName(this._structPropertyPropertyName);
-            writer.WriteNumberValue(structPropertyPropertyValue);
+            this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
          }
          var nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
