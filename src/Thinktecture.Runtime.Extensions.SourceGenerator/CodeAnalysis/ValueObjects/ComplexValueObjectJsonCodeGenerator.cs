@@ -75,7 +75,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          if (needsConverter)
          {
             _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)options.GetConverter(typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("));");
+         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").Append(memberInfo.TypeFullyQualified).Append("));");
          }
 
          _sb.Append(@"
@@ -265,17 +265,6 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          SpecialType.System_String => "WriteStringValue",
          SpecialType.System_DateTime => "WriteStringValue",
 
-         SpecialType.System_Byte => "WriteNumberValue",
-         SpecialType.System_SByte => "WriteNumberValue",
-         SpecialType.System_Int16 => "WriteNumberValue",
-         SpecialType.System_UInt16 => "WriteNumberValue",
-         SpecialType.System_Int32 => "WriteNumberValue",
-         SpecialType.System_UInt32 => "WriteNumberValue",
-         SpecialType.System_Int64 => "WriteNumberValue",
-         SpecialType.System_UInt64 => "WriteNumberValue",
-         SpecialType.System_Single => "WriteNumberValue",
-         SpecialType.System_Double => "WriteNumberValue",
-         SpecialType.System_Decimal => "WriteNumberValue",
          _ => null
       };
 
@@ -311,21 +300,6 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          SpecialType.System_String => "GetString",
          SpecialType.System_DateTime => "GetDateTime",
 
-         SpecialType.System_Byte => "GetByte",
-         SpecialType.System_SByte => "GetSByte",
-
-         SpecialType.System_Int16 => "GetInt16",
-         SpecialType.System_UInt16 => "GetUInt16",
-
-         SpecialType.System_Int32 => "GetInt32",
-         SpecialType.System_UInt32 => "GetUInt32",
-
-         SpecialType.System_Int64 => "GetInt64",
-         SpecialType.System_UInt64 => "GetUInt64",
-
-         SpecialType.System_Single => "GetSingle",
-         SpecialType.System_Double => "GetDouble",
-         SpecialType.System_Decimal => "GetDecimal",
          _ => null
       };
 
@@ -341,7 +315,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          }
          else
          {
-            sb.Append("this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("), options)");
+            sb.Append("this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualified).Append("), options)");
             return;
          }
       }

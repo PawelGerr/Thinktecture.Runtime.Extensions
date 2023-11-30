@@ -376,13 +376,13 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                             /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                             public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                             {
-                                                                               return Create(left._value + right._value);
+                                                                               return Create((left._value + right._value));
                                                                             }
 
                                                                             /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                             public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                             {
-                                                                               return Create(checked(left._value + right._value));
+                                                                               return Create(checked((left._value + right._value)));
                                                                             }
                                                                          }
 
@@ -400,7 +400,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                            {
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                              return Create(left._value + right._value);
+                                                                              return Create((left._value + right._value));
                                                                            }
 
                                                                            /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
@@ -408,7 +408,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                            {
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                              return Create(checked(left._value + right._value));
+                                                                              return Create(checked((left._value + right._value)));
                                                                            }
                                                                         }
 
@@ -424,13 +424,13 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                                public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                                {
-                                                                                  return Create(left._value - right._value);
+                                                                                  return Create((left._value - right._value));
                                                                                }
 
                                                                                /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                                public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                                {
-                                                                                  return Create(checked(left._value - right._value));
+                                                                                  return Create(checked((left._value - right._value)));
                                                                                }
                                                                             }
 
@@ -448,7 +448,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                               {
                                                                                  global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                                  global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                                 return Create(left._value - right._value);
+                                                                                 return Create((left._value - right._value));
                                                                               }
 
                                                                               /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
@@ -456,7 +456,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                               {
                                                                                  global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                                  global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                                 return Create(checked(left._value - right._value));
+                                                                                 return Create(checked((left._value - right._value)));
                                                                               }
                                                                            }
 
@@ -472,13 +472,13 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                             /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                             public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                             {
-                                                                               return Create(left._value * right._value);
+                                                                               return Create((left._value * right._value));
                                                                             }
 
                                                                             /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                             public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                             {
-                                                                               return Create(checked(left._value * right._value));
+                                                                               return Create(checked((left._value * right._value)));
                                                                             }
                                                                          }
 
@@ -496,7 +496,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                            {
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                              return Create(left._value * right._value);
+                                                                              return Create((left._value * right._value));
                                                                            }
 
                                                                            /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
@@ -504,7 +504,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                            {
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                              return Create(checked(left._value * right._value));
+                                                                              return Create(checked((left._value * right._value)));
                                                                            }
                                                                         }
 
@@ -520,13 +520,13 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                             /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                             public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                             {
-                                                                               return Create(left._value / right._value);
+                                                                               return Create((left._value / right._value));
                                                                             }
 
                                                                             /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                             public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                             {
-                                                                               return Create(checked(left._value / right._value));
+                                                                               return Create(checked((left._value / right._value)));
                                                                             }
                                                                          }
 
@@ -544,7 +544,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                            {
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                              return Create(left._value / right._value);
+                                                                              return Create((left._value / right._value));
                                                                            }
 
                                                                            /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
@@ -552,7 +552,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                            {
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                               global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                              return Create(checked(left._value / right._value));
+                                                                              return Create(checked((left._value / right._value)));
                                                                            }
                                                                         }
 
@@ -4019,7 +4019,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left._value + right._value);
+                                                                      return Create((left._value + right._value));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
@@ -4027,35 +4027,35 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left._value + right._value));
+                                                                      return Create(checked((left._value + right._value)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(left._value + right);
+                                                                      return Create((left._value + right));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator +(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left + right._value);
+                                                                      return Create((left + right._value));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(checked(left._value + right));
+                                                                      return Create(checked((left._value + right)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked +(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left + right._value));
+                                                                      return Create(checked((left + right._value)));
                                                                    }
                                                                 }
 
@@ -4074,7 +4074,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(left._value - right._value);
+                                                                         return Create((left._value - right._value));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
@@ -4082,35 +4082,35 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(checked(left._value - right._value));
+                                                                         return Create(checked((left._value - right._value)));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                         return Create(left._value - right);
+                                                                         return Create((left._value - right));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator -(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(left - right._value);
+                                                                         return Create((left - right._value));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                         return Create(checked(left._value - right));
+                                                                         return Create(checked((left._value - right)));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator checked -(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(checked(left - right._value));
+                                                                         return Create(checked((left - right._value)));
                                                                       }
                                                                    }
 
@@ -4129,7 +4129,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left._value * right._value);
+                                                                      return Create((left._value * right._value));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
@@ -4137,35 +4137,35 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left._value * right._value));
+                                                                      return Create(checked((left._value * right._value)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(left._value * right);
+                                                                      return Create((left._value * right));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator *(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left * right._value);
+                                                                      return Create((left * right._value));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(checked(left._value * right));
+                                                                      return Create(checked((left._value * right)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked *(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left * right._value));
+                                                                      return Create(checked((left * right._value)));
                                                                    }
                                                                 }
 
@@ -4184,7 +4184,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left._value / right._value);
+                                                                      return Create((left._value / right._value));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
@@ -4192,35 +4192,35 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left._value / right._value));
+                                                                      return Create(checked((left._value / right._value)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(left._value / right);
+                                                                      return Create((left._value / right));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator /(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left / right._value);
+                                                                      return Create((left / right._value));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(checked(left._value / right));
+                                                                      return Create(checked((left._value / right)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked /(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left / right._value));
+                                                                      return Create(checked((left / right._value)));
                                                                    }
                                                                 }
 

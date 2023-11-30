@@ -109,4 +109,15 @@ public static class StringBuilderExtensions
 
       return sb.Append(' ').Append(member.ArgumentName.Escaped);
    }
+
+   public static StringBuilder AppendCast(
+      this StringBuilder sb,
+      ITypeFullyQualified type,
+      bool condition = true)
+   {
+      if (condition)
+         sb.Append("(").Append(type.TypeFullyQualified).Append(")");
+
+      return sb;
+   }
 }

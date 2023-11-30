@@ -187,39 +187,13 @@ public class ReadJson : JsonTestsBase
       value.Should().BeEquivalentTo(BoundaryWithCustomFactoryNames.Get(1, 2));
    }
 
-   private static T Deserialize<T, TKey>(
-      string json,
-      JsonNamingPolicy namingPolicy = null)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
+   [Fact]
+   public void Should_deserialize_complex_value_object_with_numbers_as_string()
    {
-      return Deserialize<T, TKey, ValidationError>(json, namingPolicy);
-   }
+      var value = DeserializeWithConverter<Boundary, Boundary.ValueObjectJsonConverterFactory>("""{ "lower": "1", "upper": 2}""",
+                                                                                               JsonNamingPolicy.CamelCase,
+                                                                                               numberHandling: JsonNumberHandling.AllowReadingFromString);
 
-   private static T Deserialize<T, TKey, TValidationError>(
-      string json,
-      JsonNamingPolicy namingPolicy = null)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
-      where TValidationError : class, IValidationError<TValidationError>
-   {
-      return DeserializeWithConverter<T, ValueObjectJsonConverterFactory>(json, namingPolicy);
-   }
-
-   private static T DeserializeWithConverter<T, TConverterFactory>(
-      string json,
-      JsonNamingPolicy namingPolicy = null,
-      bool propertyNameCaseInsensitive = false,
-      bool ignoreNullValues = false)
-      where TConverterFactory : JsonConverterFactory, new()
-   {
-      var factory = new TConverterFactory();
-      var options = new JsonSerializerOptions
-                    {
-                       Converters = { factory },
-                       PropertyNamingPolicy = namingPolicy,
-                       PropertyNameCaseInsensitive = propertyNameCaseInsensitive,
-                       DefaultIgnoreCondition = ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never
-                    };
-
-      return JsonSerializer.Deserialize<T>(json, options);
+      value.Should().BeEquivalentTo(Boundary.Create(1, 2));
    }
 }

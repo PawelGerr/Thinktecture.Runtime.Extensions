@@ -137,49 +137,4 @@ public class WriteJson : JsonTestsBase
 
       value.Should().BeEquivalentTo("{\"lower\":1,\"upper\":2}");
    }
-
-   private static string Serialize<T, TKey>(
-      T value,
-      JsonNamingPolicy namingStrategy = null,
-      bool ignoreNullValues = false)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
-   {
-      return Serialize<T, TKey, ValidationError>(value, namingStrategy, ignoreNullValues);
-   }
-
-   private static string Serialize<T, TKey, TValidationError>(
-      T value,
-      JsonNamingPolicy namingStrategy = null,
-      bool ignoreNullValues = false)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
-      where TValidationError : class, IValidationError<TValidationError>
-   {
-      return SerializeWithConverter<T, ValueObjectJsonConverterFactory>(value, namingStrategy, ignoreNullValues);
-   }
-
-   private static string SerializeWithConverter<T, TConverterFactory>(
-      T value,
-      JsonNamingPolicy namingPolicy = null,
-      bool ignoreNullValues = false)
-      where TConverterFactory : JsonConverterFactory, new()
-   {
-      return SerializeWithConverter<T, TConverterFactory>(value, namingPolicy, ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never);
-   }
-
-   private static string SerializeWithConverter<T, TConverterFactory>(
-      T value,
-      JsonNamingPolicy namingPolicy,
-      JsonIgnoreCondition jsonIgnoreCondition)
-      where TConverterFactory : JsonConverterFactory, new()
-   {
-      var factory = new TConverterFactory();
-      var options = new JsonSerializerOptions
-                    {
-                       Converters = { factory },
-                       PropertyNamingPolicy = namingPolicy,
-                       DefaultIgnoreCondition = jsonIgnoreCondition
-                    };
-
-      return JsonSerializer.Serialize(value, options);
-   }
 }
