@@ -63,4 +63,15 @@ public static class StringBuilderExtensions
       if (trailingComma && members.Count > 0)
          sb.Append(comma);
    }
+
+   public static StringBuilder AppendCast(
+      this StringBuilder sb,
+      ITypeFullyQualified type,
+      bool condition = true)
+   {
+      if (condition)
+         sb.Append("(").Append(type.TypeFullyQualified).Append(")");
+
+      return sb;
+   }
 }

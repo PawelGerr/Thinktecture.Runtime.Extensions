@@ -638,7 +638,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                          {
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                            return Create(left.StructField + right.StructField);
+                                                                            return Create((left.StructField + right.StructField));
                                                                          }
 
                                                                          /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
@@ -646,7 +646,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                          {
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                            return Create(checked(left.StructField + right.StructField));
+                                                                            return Create(checked((left.StructField + right.StructField)));
                                                                          }
                                                                       }
 
@@ -665,7 +665,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                             {
                                                                                global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                                global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                               return Create(left.StructField - right.StructField);
+                                                                               return Create((left.StructField - right.StructField));
                                                                             }
 
                                                                             /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
@@ -673,7 +673,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                             {
                                                                                global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                                global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                               return Create(checked(left.StructField - right.StructField));
+                                                                               return Create(checked((left.StructField - right.StructField)));
                                                                             }
                                                                          }
 
@@ -692,7 +692,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                          {
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                            return Create(left.StructField * right.StructField);
+                                                                            return Create((left.StructField * right.StructField));
                                                                          }
 
                                                                          /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
@@ -700,7 +700,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                          {
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                            return Create(checked(left.StructField * right.StructField));
+                                                                            return Create(checked((left.StructField * right.StructField)));
                                                                          }
                                                                       }
 
@@ -719,7 +719,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                          {
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                            return Create(left.StructField / right.StructField);
+                                                                            return Create((left.StructField / right.StructField));
                                                                          }
 
                                                                          /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
@@ -727,7 +727,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                          {
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                             global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                            return Create(checked(left.StructField / right.StructField));
+                                                                            return Create(checked((left.StructField / right.StructField)));
                                                                          }
                                                                       }
 
@@ -2429,13 +2429,13 @@ namespace Thinktecture.Tests
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(left.StructField + right.StructField);
+                                                                      return Create((left.StructField + right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(checked(left.StructField + right.StructField));
+                                                                      return Create(checked((left.StructField + right.StructField)));
                                                                    }
                                                                 }
 
@@ -2452,13 +2452,13 @@ namespace Thinktecture.Tests
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
-                                                                         return Create(left.StructField - right.StructField);
+                                                                         return Create((left.StructField - right.StructField));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
-                                                                         return Create(checked(left.StructField - right.StructField));
+                                                                         return Create(checked((left.StructField - right.StructField)));
                                                                       }
                                                                    }
 
@@ -2475,13 +2475,13 @@ namespace Thinktecture.Tests
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(left.StructField * right.StructField);
+                                                                      return Create((left.StructField * right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(checked(left.StructField * right.StructField));
+                                                                      return Create(checked((left.StructField * right.StructField)));
                                                                    }
                                                                 }
 
@@ -2498,13 +2498,13 @@ namespace Thinktecture.Tests
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(left.StructField / right.StructField);
+                                                                      return Create((left.StructField / right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(checked(left.StructField / right.StructField));
+                                                                      return Create(checked((left.StructField / right.StructField)));
                                                                    }
                                                                 }
 
@@ -2857,13 +2857,13 @@ namespace Thinktecture.Tests
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(left.StructField + right.StructField);
+                                                                      return Create((left.StructField + right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(checked(left.StructField + right.StructField));
+                                                                      return Create(checked((left.StructField + right.StructField)));
                                                                    }
                                                                 }
 
@@ -2880,13 +2880,13 @@ namespace Thinktecture.Tests
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
-                                                                         return Create(left.StructField - right.StructField);
+                                                                         return Create((left.StructField - right.StructField));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
-                                                                         return Create(checked(left.StructField - right.StructField));
+                                                                         return Create(checked((left.StructField - right.StructField)));
                                                                       }
                                                                    }
 
@@ -2903,13 +2903,13 @@ namespace Thinktecture.Tests
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(left.StructField * right.StructField);
+                                                                      return Create((left.StructField * right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(checked(left.StructField * right.StructField));
+                                                                      return Create(checked((left.StructField * right.StructField)));
                                                                    }
                                                                 }
 
@@ -2926,13 +2926,13 @@ namespace Thinktecture.Tests
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(left.StructField / right.StructField);
+                                                                      return Create((left.StructField / right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
-                                                                      return Create(checked(left.StructField / right.StructField));
+                                                                      return Create(checked((left.StructField / right.StructField)));
                                                                    }
                                                                 }
 
@@ -4917,7 +4917,7 @@ namespace Thinktecture.Tests
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left.StructField + right.StructField);
+                                                                      return Create((left.StructField + right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
@@ -4925,35 +4925,35 @@ namespace Thinktecture.Tests
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left.StructField + right.StructField));
+                                                                      return Create(checked((left.StructField + right.StructField)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(left.StructField + right);
+                                                                      return Create((left.StructField + right));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator +(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left + right.StructField);
+                                                                      return Create((left + right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(checked(left.StructField + right));
+                                                                      return Create(checked((left.StructField + right)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked +(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left + right.StructField));
+                                                                      return Create(checked((left + right.StructField)));
                                                                    }
                                                                 }
 
@@ -4973,7 +4973,7 @@ namespace Thinktecture.Tests
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(left.StructField - right.StructField);
+                                                                         return Create((left.StructField - right.StructField));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
@@ -4981,35 +4981,35 @@ namespace Thinktecture.Tests
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(checked(left.StructField - right.StructField));
+                                                                         return Create(checked((left.StructField - right.StructField)));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                         return Create(left.StructField - right);
+                                                                         return Create((left.StructField - right));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator -(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(left - right.StructField);
+                                                                         return Create((left - right.StructField));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                         return Create(checked(left.StructField - right));
+                                                                         return Create(checked((left.StructField - right)));
                                                                       }
 
                                                                       /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
                                                                       public static global::Thinktecture.Tests.TestValueObject operator checked -(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                       {
                                                                          global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                         return Create(checked(left - right.StructField));
+                                                                         return Create(checked((left - right.StructField)));
                                                                       }
                                                                    }
 
@@ -5029,7 +5029,7 @@ namespace Thinktecture.Tests
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left.StructField * right.StructField);
+                                                                      return Create((left.StructField * right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
@@ -5037,35 +5037,35 @@ namespace Thinktecture.Tests
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left.StructField * right.StructField));
+                                                                      return Create(checked((left.StructField * right.StructField)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(left.StructField * right);
+                                                                      return Create((left.StructField * right));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator *(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left * right.StructField);
+                                                                      return Create((left * right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(checked(left.StructField * right));
+                                                                      return Create(checked((left.StructField * right)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked *(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left * right.StructField));
+                                                                      return Create(checked((left * right.StructField)));
                                                                    }
                                                                 }
 
@@ -5085,7 +5085,7 @@ namespace Thinktecture.Tests
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left.StructField / right.StructField);
+                                                                      return Create((left.StructField / right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
@@ -5093,35 +5093,35 @@ namespace Thinktecture.Tests
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left.StructField / right.StructField));
+                                                                      return Create(checked((left.StructField / right.StructField)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(left.StructField / right);
+                                                                      return Create((left.StructField / right));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator /(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(left / right.StructField);
+                                                                      return Create((left / right.StructField));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, int right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-                                                                      return Create(checked(left.StructField / right));
+                                                                      return Create(checked((left.StructField / right)));
                                                                    }
 
                                                                    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
                                                                    public static global::Thinktecture.Tests.TestValueObject operator checked /(int left, global::Thinktecture.Tests.TestValueObject right)
                                                                    {
                                                                       global::System.ArgumentNullException.ThrowIfNull(nameof(right));
-                                                                      return Create(checked(left / right.StructField));
+                                                                      return Create(checked((left / right.StructField)));
                                                                    }
                                                                 }
 
