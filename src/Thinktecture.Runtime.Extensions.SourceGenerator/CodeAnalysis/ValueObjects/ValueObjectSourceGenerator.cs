@@ -38,19 +38,13 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options,
       IncrementalValueProvider<ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>> serializerGeneratorFactories)
    {
-      var statesOrErrors = context.SyntaxProvider
-                                  .ForAttributeWithMetadataName(Constants.Attributes.ValueObject.KEYED_FULL_NAME,
-                                                                IsCandidate,
-                                                                GetKeyedSourceGenContextOrNull)
-                                  .SelectMany(static (state, _) => state.HasValue
-                                                                      ? ImmutableArray.Create(state.Value)
-                                                                      : ImmutableArray<SourceGenContext<KeyedValidSourceGenState>>.Empty);
+      var states = InitializeSourceGen<KeyedValidSourceGenState, KeyedValueObjectSourceGeneratorState>(context,
+                                                                                                       options,
+                                                                                                       Constants.Attributes.ValueObject.KEYED_FULL_NAME,
+                                                                                                       GetKeyedSourceGenContextOrNull,
+                                                                                                       TypeOnlyComparer.Instance,
+                                                                                                       ValueObjectCodeGeneratorFactory.Instance);
 
-      var states = statesOrErrors.SelectMany(static (state, _) => state.ValidState is not null
-                                                                     ? ImmutableArray.Create(state.ValidState.Value)
-                                                                     : ImmutableArray<KeyedValidSourceGenState>.Empty);
-
-      InitializeValueObjectsGeneration(context, states.Select((state, _) => state.State), options, TypeOnlyComparer.Instance, ValueObjectCodeGeneratorFactory.Instance);
       InitializeSerializerGenerators(context, states, options, serializerGeneratorFactories);
       InitializeParsableCodeGenerator(context, states, options);
 
@@ -62,9 +56,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       InitializeSubtractionOperatorsCodeGenerator(context, states, options);
       InitializeMultiplyOperatorsCodeGenerator(context, states, options);
       InitializeDivisionOperatorsCodeGenerator(context, states, options);
-
-      InitializeErrorReporting(context, statesOrErrors);
-      InitializeExceptionReporting(context, statesOrErrors);
    }
 
    private void InitializeComplexCodeGen(
@@ -72,43 +63,54 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options,
       IncrementalValueProvider<ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>> serializerGeneratorFactories)
    {
-      var complexValueObjectOrException = context.SyntaxProvider
-                                                 .ForAttributeWithMetadataName(Constants.Attributes.ValueObject.COMPLEX_FULL_NAME,
-                                                                               IsCandidate,
-                                                                               GetComplexSourceGenContextOrNull)
-                                                 .SelectMany(static (state, _) => state.HasValue
-                                                                                     ? ImmutableArray.Create(state.Value)
-                                                                                     : ImmutableArray<SourceGenContext<ComplexValidSourceGenState>>.Empty);
+      var validComplexValueObjects = InitializeSourceGen<ComplexValidSourceGenState, ComplexValueObjectSourceGeneratorState>(context,
+                                                                                                                             options,
+                                                                                                                             Constants.Attributes.ValueObject.COMPLEX_FULL_NAME,
+                                                                                                                             GetComplexSourceGenContextOrNull,
+                                                                                                                             TypeOnlyComparer.Instance,
+                                                                                                                             ValueObjectCodeGeneratorFactory.Instance);
 
-      var validComplexValueObjects = complexValueObjectOrException.SelectMany(static (state, _) => state.ValidState is not null
-                                                                                                      ? ImmutableArray.Create(state.ValidState.Value)
-                                                                                                      : ImmutableArray<ComplexValidSourceGenState>.Empty);
-
-      InitializeValueObjectsGeneration(context, validComplexValueObjects.Select((state, _) => state.State), options, TypeOnlyComparer.Instance, ValueObjectCodeGeneratorFactory.Instance);
       InitializeSerializerGenerators(context, validComplexValueObjects, options, serializerGeneratorFactories);
       InitializeParsableCodeGenerator(context, validComplexValueObjects, options);
-
-      InitializeErrorReporting(context, complexValueObjectOrException);
-      InitializeExceptionReporting(context, complexValueObjectOrException);
    }
 
-   private void InitializeValueObjectsGeneration<TState>(
+   private IncrementalValuesProvider<TState> InitializeSourceGen<TState, TGenState>(
       IncrementalGeneratorInitializationContext context,
-      IncrementalValuesProvider<TState> validStates,
       IncrementalValueProvider<GeneratorOptions> options,
-      IEqualityComparer<TState> typeOnlyComparer,
-      ICodeGeneratorFactory<TState> codeGeneratorFactory)
-      where TState : INamespaceAndName, IEquatable<TState>
+      string fullyQualifiedMetadataName,
+      Func<GeneratorAttributeSyntaxContext, CancellationToken, SourceGenContext<TState>?> transform,
+      IEqualityComparer<TGenState> typeOnlyComparer,
+      ICodeGeneratorFactory<TGenState> codeGeneratorFactory)
+      where TState : struct, ISourceGenState<TGenState>
+      where TGenState : class, IEquatable<TGenState>, INamespaceAndName
    {
-      var valueObjects = validStates
-                         .Collect()
-                         .Select((states, _) => states.IsDefaultOrEmpty
-                                                   ? ImmutableArray<TState>.Empty
-                                                   : states.Distinct(typeOnlyComparer))
-                         .WithComparer(new SetComparer<TState>())
-                         .SelectMany((states, _) => states);
+      var valueObjectOrException = context.SyntaxProvider
+                                          .ForAttributeWithMetadataName(fullyQualifiedMetadataName,
+                                                                        IsCandidate,
+                                                                        transform)
+                                          .SelectMany(static (state, _) => state.HasValue
+                                                                              ? ImmutableArray.Create(state.Value)
+                                                                              : ImmutableArray<SourceGenContext<TState>>.Empty);
 
-      context.RegisterSourceOutput(valueObjects.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left, state.Right, codeGeneratorFactory));
+      var validValueObjects = valueObjectOrException.SelectMany(static (state, _) => state.ValidState is not null
+                                                                                        ? ImmutableArray.Create(state.ValidState.Value)
+                                                                                        : ImmutableArray<TState>.Empty);
+
+      var sourceGenStates = validValueObjects
+                            .Select(static (state, _) => state.State)
+                            .Collect()
+                            .Select((states, _) => states.IsDefaultOrEmpty
+                                                      ? ImmutableArray<TGenState>.Empty
+                                                      : states.Distinct(typeOnlyComparer))
+                            .WithComparer(new SetComparer<TGenState>())
+                            .SelectMany(static (states, _) => states);
+
+      context.RegisterSourceOutput(sourceGenStates.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left, state.Right, codeGeneratorFactory));
+
+      InitializeErrorReporting(context, valueObjectOrException);
+      InitializeExceptionReporting(context, valueObjectOrException);
+
+      return validValueObjects;
    }
 
    private void InitializeSerializerGenerators(
@@ -555,12 +557,12 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
    private readonly record struct KeyedValidSourceGenState(
       KeyedValueObjectSourceGeneratorState State,
       AllValueObjectSettings Settings,
-      AttributeInfo AttributeInfo);
+      AttributeInfo AttributeInfo) : ISourceGenState<KeyedValueObjectSourceGeneratorState>;
 
    private readonly record struct ComplexValidSourceGenState(
       ComplexValueObjectSourceGeneratorState State,
       AllValueObjectSettings Settings,
-      AttributeInfo AttributeInfo);
+      AttributeInfo AttributeInfo) : ISourceGenState<ComplexValueObjectSourceGeneratorState>;
 
    private readonly record struct SourceGenContext<TState>(TState? ValidState, SourceGenException? Exception, SourceGenError? Error)
       : ISourceGenContext
@@ -586,5 +588,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
    {
       SourceGenException? Exception { get; }
       SourceGenError? Error { get; }
+   }
+
+   private interface ISourceGenState<out TState>
+   {
+      TState State { get; }
    }
 }

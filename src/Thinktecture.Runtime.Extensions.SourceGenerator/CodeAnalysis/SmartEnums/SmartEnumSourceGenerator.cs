@@ -22,37 +22,32 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private void InitializeKeyedSmartEnum(IncrementalGeneratorInitializationContext context, IncrementalValueProvider<GeneratorOptions> options)
    {
-      var enumTypeOrError = context.SyntaxProvider
-                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.KEYED_FULL_NAME,
-                                                                 IsKeyedCandidate,
-                                                                 (ctx, token) => GetSourceGenContextOrNull(ctx, true, token))
-                                   .SelectMany(static (state, _) => state.HasValue
-                                                                       ? ImmutableArray.Create(state.Value)
-                                                                       : ImmutableArray<SourceGenContext>.Empty);
+      var validStates = InitializeSmartEnum(context, options, Constants.Attributes.SmartEnum.KEYED_FULL_NAME, true, IsKeyedCandidate);
 
-      var validStates = enumTypeOrError.SelectMany(static (state, _) => state.ValidState is not null
-                                                                           ? ImmutableArray.Create(state.ValidState.Value)
-                                                                           : ImmutableArray<ValidSourceGenState>.Empty);
-
-      InitializeEnumTypeGeneration(context, validStates, options);
       InitializeSerializerGenerators(context, validStates, options);
       InitializeDerivedTypesGeneration(context, validStates, options);
       InitializeFormattableCodeGenerator(context, validStates, options);
       InitializeComparableCodeGenerator(context, validStates, options);
       InitializeParsableCodeGenerator(context, validStates, options);
       InitializeComparisonOperatorsCodeGenerator(context, validStates, options);
-      InitializeEqualityComparisonOperatorsCodeGenerator(context, validStates, options);
-
-      InitializeErrorReporting(context, enumTypeOrError);
-      InitializeExceptionReporting(context, enumTypeOrError);
    }
 
    private void InitializeKeylessSmartEnum(IncrementalGeneratorInitializationContext context, IncrementalValueProvider<GeneratorOptions> options)
    {
+      InitializeSmartEnum(context, options, Constants.Attributes.SmartEnum.KEYLESS_FULL_NAME, false, IsKeylessCandidate);
+   }
+
+   private IncrementalValuesProvider<ValidSourceGenState> InitializeSmartEnum(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValueProvider<GeneratorOptions> options,
+      string fullyQualifiedMetadataName,
+      bool isKeyed,
+      Func<SyntaxNode, CancellationToken, bool> predicate)
+   {
       var enumTypeOrError = context.SyntaxProvider
-                                   .ForAttributeWithMetadataName(Constants.Attributes.SmartEnum.KEYLESS_FULL_NAME,
-                                                                 IsKeylessCandidate,
-                                                                 (ctx, token) => GetSourceGenContextOrNull(ctx, false, token))
+                                   .ForAttributeWithMetadataName(fullyQualifiedMetadataName,
+                                                                 predicate,
+                                                                 (ctx, token) => GetSourceGenContextOrNull(ctx, isKeyed, token))
                                    .SelectMany(static (state, _) => state.HasValue
                                                                        ? ImmutableArray.Create(state.Value)
                                                                        : ImmutableArray<SourceGenContext>.Empty);
@@ -66,6 +61,8 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
       InitializeErrorReporting(context, enumTypeOrError);
       InitializeExceptionReporting(context, enumTypeOrError);
+
+      return validStates;
    }
 
    private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
