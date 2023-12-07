@@ -43,15 +43,9 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
-         var needsConverter = GenerateWriteValue(null, memberInfo);
-
-         if (needsConverter)
-         {
-            _sb.Append(@"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("> _").Append(memberInfo.ArgumentName.Raw).Append("Converter;");
-         }
 
          _sb.Append(@"
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("> _").Append(memberInfo.ArgumentName.Raw).Append(@"Converter;
       private readonly string _").Append(memberInfo.ArgumentName.Raw).Append("PropertyName;");
       }
 
@@ -70,15 +64,9 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
-         var needsConverter = GenerateWriteValue(null, memberInfo);
-
-         if (needsConverter)
-         {
-            _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").Append(memberInfo.TypeFullyQualified).Append("));");
-         }
 
          _sb.Append(@"
+         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").Append(memberInfo.TypeFullyQualified).Append(@"));
          this._").Append(memberInfo.ArgumentName.Raw).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
@@ -142,11 +130,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 
          _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyName))
             {
-               ").Append(memberInfo.ArgumentName.Escaped).Append(" = ");
-
-         GenerateReadValue(_sb, memberInfo);
-
-         _sb.Append(@";
+               ").Append(memberInfo.ArgumentName.Escaped).Append(" = this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualified).Append(@"), options);
             }");
       }
 
@@ -220,11 +204,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyName);
          ");
 
-         _sb.Append("   ");
-
-         GenerateWriteValue(_sb, memberInfo);
-
-         _sb.Append(@"
+         _sb.Append("   this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Write(writer, ").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyValue, options);
          }");
       }
 
@@ -254,72 +234,5 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
    }
 }
 ");
-   }
-
-   private static bool GenerateWriteValue(StringBuilder? sb, InstanceMemberInfo memberInfo)
-   {
-      var command = memberInfo.SpecialType switch
-      {
-         SpecialType.System_Boolean => "WriteBooleanValue",
-
-         SpecialType.System_String => "WriteStringValue",
-         SpecialType.System_DateTime => "WriteStringValue",
-
-         _ => null
-      };
-
-      if (command is null)
-      {
-         if (memberInfo.TypeFullyQualified == "global::System.Guid")
-         {
-            command = "WriteStringValue";
-         }
-         else if (memberInfo.TypeFullyQualified == "global::System.DateTimeOffset")
-         {
-            command = "WriteStringValue";
-         }
-         else
-         {
-            sb?.Append("this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Write(writer, ").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue, options);");
-
-            return true;
-         }
-      }
-
-      sb?.Append("writer.").Append(command).Append("(").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue);");
-
-      return false;
-   }
-
-   private static void GenerateReadValue(StringBuilder sb, InstanceMemberInfo memberInfo)
-   {
-      var command = memberInfo.SpecialType switch
-      {
-         SpecialType.System_Boolean => "GetBoolean",
-
-         SpecialType.System_String => "GetString",
-         SpecialType.System_DateTime => "GetDateTime",
-
-         _ => null
-      };
-
-      if (command is null)
-      {
-         if (memberInfo.TypeFullyQualified == "global::System.Guid")
-         {
-            command = "GetGuid";
-         }
-         else if (memberInfo.TypeFullyQualified == "global::System.DateTimeOffset")
-         {
-            command = "GetDateTimeOffset";
-         }
-         else
-         {
-            sb.Append("this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualified).Append("), options)");
-            return;
-         }
-      }
-
-      sb.Append("reader.").Append(command).Append("()");
    }
 }

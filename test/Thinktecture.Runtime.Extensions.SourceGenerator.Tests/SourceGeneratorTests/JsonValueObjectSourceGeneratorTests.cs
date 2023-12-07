@@ -145,6 +145,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                            {
                               public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
                               {
+                                 private readonly global::System.Text.Json.Serialization.JsonConverter<string> _referenceFieldConverter;
                                  private readonly string _referenceFieldPropertyName;
                                  private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
                                  private readonly string _structPropertyPropertyName;
@@ -158,6 +159,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                     var namingPolicy = options.PropertyNamingPolicy;
 
+                                    this._referenceFieldConverter = (global::System.Text.Json.Serialization.JsonConverter<string>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(string));
                                     this._referenceFieldPropertyName = namingPolicy?.ConvertName("ReferenceField") ?? "ReferenceField";
                                     this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
                                     this._structPropertyPropertyName = namingPolicy?.ConvertName("StructProperty") ?? "StructProperty";
@@ -195,7 +197,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = reader.GetString();
+                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
@@ -236,7 +238,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if(!ignoreNullValues || referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       writer.WriteStringValue(referenceFieldPropertyValue);
+                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
                                     }
                                     var structPropertyPropertyValue = value.StructProperty;
 
@@ -315,6 +317,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                            {
                               public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
                               {
+                                 private readonly global::System.Text.Json.Serialization.JsonConverter<string> _referenceFieldConverter;
                                  private readonly string _referenceFieldPropertyName;
                                  private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
                                  private readonly string _structPropertyPropertyName;
@@ -328,6 +331,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                     var namingPolicy = options.PropertyNamingPolicy;
 
+                                    this._referenceFieldConverter = (global::System.Text.Json.Serialization.JsonConverter<string>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(string));
                                     this._referenceFieldPropertyName = namingPolicy?.ConvertName("ReferenceField") ?? "ReferenceField";
                                     this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
                                     this._structPropertyPropertyName = namingPolicy?.ConvertName("StructProperty") ?? "StructProperty";
@@ -365,7 +369,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = reader.GetString();
+                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
@@ -406,7 +410,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if(!ignoreNullValues || referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       writer.WriteStringValue(referenceFieldPropertyValue);
+                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
                                     }
                                     var structPropertyPropertyValue = value.StructProperty;
 
@@ -485,6 +489,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                            {
                               public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
                               {
+                                 private readonly global::System.Text.Json.Serialization.JsonConverter<string> _referenceFieldConverter;
                                  private readonly string _referenceFieldPropertyName;
                                  private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
                                  private readonly string _structPropertyPropertyName;
@@ -498,6 +503,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                     var namingPolicy = options.PropertyNamingPolicy;
 
+                                    this._referenceFieldConverter = (global::System.Text.Json.Serialization.JsonConverter<string>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(string));
                                     this._referenceFieldPropertyName = namingPolicy?.ConvertName("ReferenceField") ?? "ReferenceField";
                                     this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
                                     this._structPropertyPropertyName = namingPolicy?.ConvertName("StructProperty") ?? "StructProperty";
@@ -535,7 +541,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = reader.GetString();
+                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
@@ -576,7 +582,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if(!ignoreNullValues || referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       writer.WriteStringValue(referenceFieldPropertyValue);
+                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
                                     }
                                     var structPropertyPropertyValue = value.StructProperty;
 
@@ -650,6 +656,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                            {
                               public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::TestValueObject>
                               {
+                                 private readonly global::System.Text.Json.Serialization.JsonConverter<string> _referenceFieldConverter;
                                  private readonly string _referenceFieldPropertyName;
                                  private readonly global::System.Text.Json.Serialization.JsonConverter<int> _structPropertyConverter;
                                  private readonly string _structPropertyPropertyName;
@@ -663,6 +670,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                     var namingPolicy = options.PropertyNamingPolicy;
 
+                                    this._referenceFieldConverter = (global::System.Text.Json.Serialization.JsonConverter<string>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(string));
                                     this._referenceFieldPropertyName = namingPolicy?.ConvertName("ReferenceField") ?? "ReferenceField";
                                     this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
                                     this._structPropertyPropertyName = namingPolicy?.ConvertName("StructProperty") ?? "StructProperty";
@@ -700,7 +708,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = reader.GetString();
+                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
@@ -741,7 +749,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if(!ignoreNullValues || referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       writer.WriteStringValue(referenceFieldPropertyValue);
+                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
                                     }
                                     var structPropertyPropertyValue = value.StructProperty;
 
