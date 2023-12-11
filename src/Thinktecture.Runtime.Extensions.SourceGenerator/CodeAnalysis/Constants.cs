@@ -12,6 +12,7 @@ public static class Constants
    {
       public const ValueObjectAccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = ValueObjectAccessModifier.Private;
       public const ValueObjectMemberKind DEFAULT_KEY_MEMBER_KIND = ValueObjectMemberKind.Field;
+      public const ValueObjectAccessModifier DEFAULT_CONSTRUCTOR_ACCESS_MODIFIER = ValueObjectAccessModifier.Private;
    }
 
    public static class Modules
@@ -50,6 +51,7 @@ public static class Constants
          public const string SKIP_KEY_MEMBER = "SkipKeyMember";
          public const string KEY_MEMBER_ACCESS_MODIFIER = "KeyMemberAccessModifier";
          public const string KEY_MEMBER_KIND = "KeyMemberKind";
+         public const string CONSTRUCTOR_ACCESS_MODIFIER = "ConstructorAccessModifier";
       }
 
       public static class ValueObject

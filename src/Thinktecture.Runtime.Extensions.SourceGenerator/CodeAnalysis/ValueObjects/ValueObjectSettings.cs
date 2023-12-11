@@ -6,6 +6,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    private readonly AttributeInfo _attributeInfo;
 
    public bool SkipFactoryMethods => _allSettings.SkipFactoryMethods;
+   public ValueObjectAccessModifier ConstructorAccessModifier => _allSettings.ConstructorAccessModifier;
    public bool SkipKeyMember => _allSettings.SkipKeyMember;
    public string CreateFactoryMethodName => _allSettings.CreateFactoryMethodName;
    public string TryCreateFactoryMethodName => _allSettings.TryCreateFactoryMethodName;
@@ -28,6 +29,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool Equals(ValueObjectSettings other)
    {
       return SkipFactoryMethods == other.SkipFactoryMethods
+             && ConstructorAccessModifier == other.ConstructorAccessModifier
              && SkipKeyMember == other.SkipKeyMember
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && TryCreateFactoryMethodName == other.TryCreateFactoryMethodName
@@ -50,6 +52,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
       unchecked
       {
          var hashCode = SkipFactoryMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)ConstructorAccessModifier;
          hashCode = (hashCode * 397) ^ SkipKeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ TryCreateFactoryMethodName.GetHashCode();

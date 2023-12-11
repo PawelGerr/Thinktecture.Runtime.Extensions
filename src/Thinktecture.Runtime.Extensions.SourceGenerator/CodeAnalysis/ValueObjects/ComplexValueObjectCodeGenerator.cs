@@ -326,7 +326,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      private ").Append(_state.Name).Append("(");
+      ").RenderAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties);
 

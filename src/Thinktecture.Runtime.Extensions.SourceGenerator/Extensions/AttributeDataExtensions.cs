@@ -21,7 +21,17 @@ public static class AttributeDataExtensions
 
    public static ValueObjectAccessModifier? FindKeyMemberAccessModifier(this AttributeData attributeData)
    {
-      var modifier = (ValueObjectAccessModifier?)GetIntegerParameterValue(attributeData, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
+      return attributeData.FindAccessModifier(Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
+   }
+
+   public static ValueObjectAccessModifier? FindConstructorAccessModifier(this AttributeData attributeData)
+   {
+      return attributeData.FindAccessModifier(Constants.Attributes.Properties.CONSTRUCTOR_ACCESS_MODIFIER);
+   }
+
+   private static ValueObjectAccessModifier? FindAccessModifier(this AttributeData attributeData, string propertyName)
+   {
+      var modifier = (ValueObjectAccessModifier?)GetIntegerParameterValue(attributeData, propertyName);
 
       if (modifier is null || !modifier.Value.IsValid())
          return null;

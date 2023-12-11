@@ -434,7 +434,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
-      private ").Append(_state.Name).Append("(").RenderArgumentWithType(_state.KeyMember).Append(@")
+      ").RenderAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(").RenderArgumentWithType(_state.KeyMember).Append(@")
       {
          ValidateConstructorArguments(").RenderArgument(_state.KeyMember, "ref ").Append(@");
 

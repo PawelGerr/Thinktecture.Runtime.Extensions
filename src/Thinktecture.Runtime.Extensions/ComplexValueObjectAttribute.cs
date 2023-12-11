@@ -13,6 +13,12 @@ public sealed class ComplexValueObjectAttribute : Attribute
    /// </summary>
    public bool SkipFactoryMethods { get; set; }
 
+   /// <summary>
+   /// Access modifier of the constructor.
+   /// Default is <see cref="ValueObjectAccessModifier.Private"/>.
+   /// </summary>
+   public ValueObjectAccessModifier ConstructorAccessModifier { get; set; }
+
    private string? _createFactoryMethodName;
 
    /// <summary>
@@ -62,5 +68,13 @@ public sealed class ComplexValueObjectAttribute : Attribute
    {
       get => _defaultInstancePropertyName ?? "Empty";
       set => _defaultInstancePropertyName = value;
+   }
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ComplexValueObjectAttribute"/>.
+   /// </summary>
+   public ComplexValueObjectAttribute()
+   {
+      ConstructorAccessModifier = ValueObjectAccessModifier.Private;
    }
 }

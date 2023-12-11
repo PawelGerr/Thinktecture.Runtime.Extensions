@@ -7,6 +7,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public string KeyMemberName { get; }
    public bool SkipKeyMember { get; }
    public bool SkipFactoryMethods { get; }
+   public ValueObjectAccessModifier ConstructorAccessModifier { get; }
    public string CreateFactoryMethodName { get; }
    public string TryCreateFactoryMethodName { get; }
    public bool EmptyStringInFactoryMethodsYieldsNull { get; }
@@ -30,6 +31,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       KeyMemberName = valueObjectAttribute.FindKeyMemberName() ?? Helper.GetDefaultValueObjectKeyMemberName(KeyMemberAccessModifier, KeyMemberKind);
       SkipKeyMember = valueObjectAttribute.FindSkipKeyMember() ?? false;
       SkipFactoryMethods = valueObjectAttribute.FindSkipFactoryMethods() ?? false;
+      ConstructorAccessModifier = valueObjectAttribute.FindConstructorAccessModifier() ?? Constants.ValueObject.DEFAULT_CONSTRUCTOR_ACCESS_MODIFIER;
       CreateFactoryMethodName = valueObjectAttribute.FindCreateFactoryMethodName() ?? "Create";
       TryCreateFactoryMethodName = valueObjectAttribute.FindTryCreateFactoryMethodName() ?? "TryCreate";
       EmptyStringInFactoryMethodsYieldsNull = valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false;
@@ -68,6 +70,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
              && KeyMemberName == other.KeyMemberName
              && SkipKeyMember == other.SkipKeyMember
              && SkipFactoryMethods == other.SkipFactoryMethods
+             && ConstructorAccessModifier == other.ConstructorAccessModifier
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && TryCreateFactoryMethodName == other.TryCreateFactoryMethodName
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
@@ -94,6 +97,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
          hashCode = (hashCode * 397) ^ KeyMemberName.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipKeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipFactoryMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ ConstructorAccessModifier.GetHashCode();
          hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ TryCreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();

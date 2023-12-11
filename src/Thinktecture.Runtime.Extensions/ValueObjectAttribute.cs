@@ -51,6 +51,12 @@ public sealed class ValueObjectAttribute<TKey> : Attribute
    /// </summary>
    public bool SkipFactoryMethods { get; set; }
 
+   /// <summary>
+   /// Access modifier of the constructor.
+   /// Default is <see cref="ValueObjectAccessModifier.Private"/>.
+   /// </summary>
+   public ValueObjectAccessModifier ConstructorAccessModifier { get; set; }
+
    private string? _createFactoryMethodName;
 
    /// <summary>
@@ -215,5 +221,6 @@ public sealed class ValueObjectAttribute<TKey> : Attribute
    {
       KeyMemberType = typeof(TKey);
       KeyMemberAccessModifier = ValueObjectAccessModifier.Private;
+      ConstructorAccessModifier = ValueObjectAccessModifier.Private;
    }
 }
