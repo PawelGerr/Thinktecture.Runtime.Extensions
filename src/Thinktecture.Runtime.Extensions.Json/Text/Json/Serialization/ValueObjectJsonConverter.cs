@@ -26,7 +26,7 @@ public sealed class ValueObjectJsonConverter<T, TKey, TValidationError> : JsonCo
    {
       ArgumentNullException.ThrowIfNull(options);
 
-      _keyConverter = (JsonConverter<TKey>)JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(TKey));
+      _keyConverter = (JsonConverter<TKey>)options.GetCustomValueObjectMemberConverter(typeof(TKey));
    }
 
    /// <inheritdoc />
