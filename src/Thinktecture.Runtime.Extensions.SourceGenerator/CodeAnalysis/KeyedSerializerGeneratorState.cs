@@ -3,7 +3,7 @@ namespace Thinktecture.CodeAnalysis;
 public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerializerGeneratorState>, INamespaceAndName
 {
    public ITypeInformation Type { get; }
-   public ITypeFullyQualified? KeyMember { get; }
+   public IMemberInformation? KeyMember { get; }
    public AttributeInfo AttributeInfo { get; }
 
    public string? Namespace => Type.Namespace;
@@ -11,7 +11,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
 
    public KeyedSerializerGeneratorState(
       ITypeInformation type,
-      ITypeFullyQualified? keyMember,
+      IMemberInformation? keyMember,
       AttributeInfo attributeInfo)
    {
       Type = type;

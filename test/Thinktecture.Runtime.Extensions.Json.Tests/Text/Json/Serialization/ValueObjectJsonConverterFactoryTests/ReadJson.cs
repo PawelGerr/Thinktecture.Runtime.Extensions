@@ -196,4 +196,13 @@ public class ReadJson : JsonTestsBase
 
       value.Should().BeEquivalentTo(Boundary.Create(1, 2));
    }
+
+   [Fact]
+   public void Should_throw_if_non_string_based_enum_is_used_as_dictionary_key()
+   {
+      var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
+
+      FluentActions.Invoking(() => JsonSerializer.Deserialize<Dictionary<TestSmartEnum_Class_IntBased, int>>("""{ "1": 1 }""", options))
+                   .Should().Throw<NotSupportedException>();
+   }
 }

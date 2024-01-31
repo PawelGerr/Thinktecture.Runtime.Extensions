@@ -1,6 +1,10 @@
+using System.Collections.Generic;
 using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
+using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ValueObjectJsonConverterFactoryTests;
 
@@ -190,5 +194,22 @@ public class RoundTrip : JsonTestsBase
       Serialize<TestValueObjectDecimal, decimal>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectDecimal, decimal>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
       Deserialize<TestValueObjectDecimal, decimal>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_dictionary_with_string_based_enum_key()
+   {
+      var dictionary = new Dictionary<TestSmartEnum_Class_StringBased, int>
+                       {
+                          { TestSmartEnum_Class_StringBased.Value1, 1 },
+                          { TestSmartEnum_Class_StringBased.Value2, 2 }
+                       };
+
+      var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
+
+      var json = JsonSerializer.Serialize(dictionary, options);
+      var deserializedDictionary = JsonSerializer.Deserialize<Dictionary<TestSmartEnum_Class_StringBased, int>>(json, options);
+
+      dictionary.Should().BeEquivalentTo(deserializedDictionary);
    }
 }

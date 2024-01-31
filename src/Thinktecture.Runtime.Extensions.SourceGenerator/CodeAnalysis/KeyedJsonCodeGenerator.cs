@@ -22,6 +22,9 @@ public sealed class KeyedJsonCodeGenerator : CodeGeneratorBase
                                 .DesiredFactories
                                 .FirstOrDefault(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
+      var isString = customFactory is null
+                        ? _state.KeyMember?.SpecialType == SpecialType.System_String
+                        : customFactory.SpecialType == SpecialType.System_String;
 
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
@@ -34,7 +37,12 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       }
 
       _sb.Append(@"
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").Append(_state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(", ").Append(_state.AttributeInfo.ValidationError.TypeFullyQualified).Append(@">))]
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").Append(_state.Type.TypeFullyQualified).Append(", ");
+
+      if (!isString)
+         _sb.Append(keyType).Append(", ");
+
+      _sb.Append(_state.AttributeInfo.ValidationError.TypeFullyQualified).Append(@">))]
 partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
 {
 }

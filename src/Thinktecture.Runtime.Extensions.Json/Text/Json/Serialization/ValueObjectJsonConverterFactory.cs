@@ -32,6 +32,29 @@ public sealed class ValueObjectJsonConverterFactory<T, TKey, TValidationError> :
 /// <summary>
 /// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
 /// </summary>
+public sealed class ValueObjectJsonConverterFactory<T, TValidationError> : JsonConverterFactory
+   where T : IValueObjectFactory<T, string, TValidationError>, IValueObjectConvertable<string>
+   where TValidationError : class, IValidationError<TValidationError>
+{
+   /// <inheritdoc />
+   public override bool CanConvert(Type typeToConvert)
+   {
+      return typeof(T).IsAssignableFrom(typeToConvert);
+   }
+
+   /// <inheritdoc />
+   public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+   {
+      ArgumentNullException.ThrowIfNull(typeToConvert);
+      ArgumentNullException.ThrowIfNull(options);
+
+      return new ValueObjectJsonConverter<T, TValidationError>(options);
+   }
+}
+
+/// <summary>
+/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
+/// </summary>
 public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
 {
    /// <inheritdoc />
@@ -71,7 +94,9 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
 
       var validationErrorType = type.GetCustomAttribute<ValueObjectValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
 
-      var converterType = typeof(ValueObjectJsonConverter<,,>).MakeGenericType(type, keyType, validationErrorType);
+      var converterType = keyType == typeof(string)
+                             ? typeof(ValueObjectJsonConverter<,>).MakeGenericType(type, validationErrorType)
+                             : typeof(ValueObjectJsonConverter<,,>).MakeGenericType(type, keyType, validationErrorType);
       var converter = Activator.CreateInstance(converterType, options);
 
       return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));

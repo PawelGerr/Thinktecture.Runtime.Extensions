@@ -137,4 +137,18 @@ public class WriteJson : JsonTestsBase
 
       value.Should().BeEquivalentTo("{\"lower\":1,\"upper\":2}");
    }
+
+   [Fact]
+   public void Should_throw_if_non_string_based_enum_is_used_as_dictionary_key()
+   {
+      var dictionary = new Dictionary<TestSmartEnum_Class_IntBased, int>
+                       {
+                          { TestSmartEnum_Class_IntBased.Value1, 1 }
+                       };
+
+      var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
+
+      FluentActions.Invoking(() => JsonSerializer.Serialize(dictionary, options))
+                   .Should().Throw<NotSupportedException>();
+   }
 }
