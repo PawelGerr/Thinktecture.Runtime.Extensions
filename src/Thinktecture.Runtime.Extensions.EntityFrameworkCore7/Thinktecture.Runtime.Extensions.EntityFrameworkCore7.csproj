@@ -12,7 +12,7 @@
    </ItemGroup>
 
    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.14" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.18" />
    </ItemGroup>
 
 </Project>
