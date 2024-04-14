@@ -73,10 +73,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Benchmarking", "samples\Thinktecture.Runtime.Extensions.Benchmarking\Thinktecture.Runtime.Extensions.Benchmarking.csproj", "{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore5", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore5\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.csproj", "{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore5.Tests", "test\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore5.Tests.csproj", "{70C5A190-2227-473B-B54B-89082A041240}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore7", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj", "{9A80C790-3BE2-4FA7-ACC1-574577E759EF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests", "test\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests.csproj", "{47D09BE4-27F2-4C1A-8797-E8AF64E1ACEA}"
@@ -175,14 +171,6 @@ Global
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{70C5A190-2227-473B-B54B-89082A041240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70C5A190-2227-473B-B54B-89082A041240}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70C5A190-2227-473B-B54B-89082A041240}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70C5A190-2227-473B-B54B-89082A041240}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A80C790-3BE2-4FA7-ACC1-574577E759EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A80C790-3BE2-4FA7-ACC1-574577E759EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A80C790-3BE2-4FA7-ACC1-574577E759EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -225,8 +213,6 @@ Global
 		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{B1E357B7-7F91-4558-85BA-F6784C33FF97} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
-		{5FDAF5A0-C0F8-4AE4-B3B5-B922A53DF07F} = {8F117684-7943-4DCE-8861-F2B854924837}
-		{70C5A190-2227-473B-B54B-89082A041240} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{9A80C790-3BE2-4FA7-ACC1-574577E759EF} = {8F117684-7943-4DCE-8861-F2B854924837}
 		{47D09BE4-27F2-4C1A-8797-E8AF64E1ACEA} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{C95464AC-EC8A-404A-A8BE-7D6B17F87D80} = {8F117684-7943-4DCE-8861-F2B854924837}

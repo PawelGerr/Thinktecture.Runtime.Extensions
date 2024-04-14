@@ -6,10 +6,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Internal;
 
-#if EFCORE5
-using Microsoft.EntityFrameworkCore;
-#endif
-
 namespace Thinktecture.EntityFrameworkCore.Conventions;
 
 internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, IPropertyAddedConvention, IEntityTypeAddedConvention

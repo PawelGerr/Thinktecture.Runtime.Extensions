@@ -77,12 +77,6 @@ internal sealed class ValueObjectDbContextOptionsExtension : IDbContextOptionsEx
          _extension = extension;
       }
 
-#if EFCORE5
-      public override long GetServiceProviderHashCode()
-      {
-         return HashCode.Combine(_extension.ValueObjectValueConverterSettings);
-      }
-#else
       public override bool ShouldUseSameServiceProvider(DbContextOptionsExtensionInfo other)
       {
          return other is ValueObjectDbContextOptionsExtensionInfo otherInfo
@@ -93,7 +87,6 @@ internal sealed class ValueObjectDbContextOptionsExtension : IDbContextOptionsEx
       {
          return HashCode.Combine(_extension.ValueObjectValueConverterSettings);
       }
-#endif
 
       public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
       {
