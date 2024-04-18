@@ -200,10 +200,10 @@ public class RoundTrip : JsonTestsBase
    public void Should_roundtrip_serialize_dictionary_with_string_based_enum_key()
    {
       var dictionary = new Dictionary<TestSmartEnum_Class_StringBased, int>
-                       {
-                          { TestSmartEnum_Class_StringBased.Value1, 1 },
-                          { TestSmartEnum_Class_StringBased.Value2, 2 }
-                       };
+      {
+         { TestSmartEnum_Class_StringBased.Value1, 1 },
+         { TestSmartEnum_Class_StringBased.Value2, 2 }
+      };
 
       var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
 
@@ -211,5 +211,38 @@ public class RoundTrip : JsonTestsBase
       var deserializedDictionary = JsonSerializer.Deserialize<Dictionary<TestSmartEnum_Class_StringBased, int>>(json, options);
 
       dictionary.Should().BeEquivalentTo(deserializedDictionary);
+   }
+
+   public static IEnumerable<object[]> ObjectWithStructTestData =
+   [
+      [new { Prop = IntBasedStructValueObject.Create(42) }, """{"Prop":42}"""],
+      [new { Prop = (IntBasedStructValueObject?)IntBasedStructValueObject.Create(42) }, """{"Prop":42}"""],
+      [new { Prop = IntBasedReferenceValueObject.Create(42) }, """{"Prop":42}"""],
+      [new TestStruct<IntBasedStructValueObject>(IntBasedStructValueObject.Create(42)), """{"Prop":42}"""],
+      [new TestStruct<IntBasedStructValueObject?>(IntBasedStructValueObject.Create(42)), """{"Prop":42}"""],
+      [new TestStruct<IntBasedReferenceValueObject>(IntBasedReferenceValueObject.Create(42)), """{"Prop":42}"""],
+   ];
+
+   [Theory]
+   [MemberData(nameof(ObjectWithStructTestData))]
+   public void Should_roundtrip_serialize_types_with_struct_properties_using_non_generic_factory(object obj, string expectedJson)
+   {
+      var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
+
+      var json = JsonSerializer.Serialize(obj, options);
+      json.Should().Be(expectedJson);
+
+      var deserializedObj = JsonSerializer.Deserialize(json, obj.GetType(), options);
+      obj.Should().BeEquivalentTo(deserializedObj);
+   }
+
+   private struct TestStruct<T>
+   {
+      public T Prop { get; set; }
+
+      public TestStruct(T prop)
+      {
+         Prop = prop;
+      }
    }
 }

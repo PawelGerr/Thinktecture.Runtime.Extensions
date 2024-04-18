@@ -60,6 +60,10 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
    /// <inheritdoc />
    public override bool CanConvert(Type typeToConvert)
    {
+      // Handling of Nullable<T> should be done by System.Text.Json
+      if (typeToConvert.IsValueType && Nullable.GetUnderlyingType(typeToConvert) is not null)
+         return false;
+
       return KeyedValueObjectMetadataLookup.Find(typeToConvert) is not null
              || typeToConvert.GetCustomAttributes<ValueObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson));
    }
