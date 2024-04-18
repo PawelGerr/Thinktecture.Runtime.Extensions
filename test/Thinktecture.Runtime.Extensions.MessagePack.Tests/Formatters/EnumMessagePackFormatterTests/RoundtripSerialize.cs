@@ -72,12 +72,12 @@ public class Serialize
    }
 
    public static IEnumerable<object[]> DataForValueObject => new[]
-                                                             {
-                                                                new object[] { new ClassWithIntBasedEnum(IntegerEnum.Item1) },
-                                                                new object[] { new ClassWithStringBasedEnum(TestEnum.Item1) },
-                                                                new object[] { TestEnum.Item1 },
-                                                                new object[] { IntegerEnum.Item1 }
-                                                             };
+   {
+      new object[] { new ClassWithIntBasedEnum(IntegerEnum.Item1) },
+      new object[] { new ClassWithStringBasedEnum(TestEnum.Item1) },
+      new object[] { TestEnum.Item1 },
+      new object[] { IntegerEnum.Item1 }
+   };
 
    [Theory]
    [MemberData(nameof(DataForValueObject))]
@@ -95,15 +95,15 @@ public class Serialize
    }
 
    public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties => new[]
-                                                                                   {
-                                                                                      new object[] { null },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty) },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") }
-                                                                                   };
+   {
+      new object[] { null },
+      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
+      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
+      new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty) },
+      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
+      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
+      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") }
+   };
 
    [Theory]
    [MemberData(nameof(DataForValueObjectWithMultipleProperties))]
@@ -181,5 +181,60 @@ public class Serialize
       var value = MessagePackSerializer.Deserialize<BoundaryWithCustomFactoryNames>(bytes, options, CancellationToken.None);
 
       value.Should().BeEquivalentTo(BoundaryWithCustomFactoryNames.Get(1, 2));
+   }
+
+   public static IEnumerable<object[]> ObjectWithStructTestData =
+   [
+      [new TestClass<IntBasedStructValueObject>(IntBasedStructValueObject.Create(42))],
+      [new TestClass<IntBasedStructValueObject?>(IntBasedStructValueObject.Create(42))],
+      [new TestClass<IntBasedReferenceValueObject>(IntBasedReferenceValueObject.Create(42))],
+      [new TestStruct<IntBasedStructValueObject>(IntBasedStructValueObject.Create(42))],
+      [new TestStruct<IntBasedStructValueObject?>(IntBasedStructValueObject.Create(42))],
+      [new TestStruct<IntBasedReferenceValueObject>(IntBasedReferenceValueObject.Create(42))],
+   ];
+
+   [Theory]
+   [MemberData(nameof(ObjectWithStructTestData))]
+   public void Should_roundtrip_serialize_types_with_struct_properties_using_resolver(object obj)
+   {
+      Roundtrip_serialize_types_with_struct_properties_using_resolver(true, obj);
+      Roundtrip_serialize_types_with_struct_properties_using_resolver(false, obj);
+   }
+
+   private static void Roundtrip_serialize_types_with_struct_properties_using_resolver(
+      bool skipValueObjectsWithMessagePackFormatter,
+      object obj)
+   {
+      var resolver = CompositeResolver.Create(new ValueObjectMessageFormatterResolver(skipValueObjectsWithMessagePackFormatter), StandardResolver.Instance);
+      var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
+
+      var bytes = MessagePackSerializer.Serialize(obj, options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize(obj.GetType(), bytes, options, CancellationToken.None);
+
+      value.Should().BeEquivalentTo(obj);
+   }
+
+   [MessagePackObject]
+   public struct TestClass<T>
+   {
+      [Key(0)]
+      public T Prop { get; set; }
+
+      public TestClass(T prop)
+      {
+         Prop = prop;
+      }
+   }
+
+   [MessagePackObject]
+   public struct TestStruct<T>
+   {
+      [Key(0)]
+      public T Prop { get; set; }
+
+      public TestStruct(T prop)
+      {
+         Prop = prop;
+      }
    }
 }

@@ -16,9 +16,33 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
    /// </summary>
    public static readonly IFormatterResolver Instance = new ValueObjectMessageFormatterResolver();
 
+   private readonly bool _skipValueObjectsWithMessagePackFormatterAttribute;
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ValueObjectMessageFormatterResolver"/>.
+   /// </summary>
+   public ValueObjectMessageFormatterResolver()
+      : this(true)
+   {
+   }
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ValueObjectMessageFormatterResolver"/>.
+   /// </summary>
+   /// <param name="skipValueObjectsWithMessagePackFormatterAttribute">
+   /// Indication whether to skip value objects with <see cref="MessagePackFormatterAttribute"/>.
+   /// </param>
+   public ValueObjectMessageFormatterResolver(bool skipValueObjectsWithMessagePackFormatterAttribute)
+   {
+      _skipValueObjectsWithMessagePackFormatterAttribute = skipValueObjectsWithMessagePackFormatterAttribute;
+   }
+
    /// <inheritdoc />
    public IMessagePackFormatter<T>? GetFormatter<T>()
    {
+      if (_skipValueObjectsWithMessagePackFormatterAttribute && Cache<T>.HasMessagePackFormatterAttribute)
+         return null;
+
       var formatter = Cache<T>.Formatter;
 
       if (formatter != null)
@@ -34,8 +58,10 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
    {
       public static readonly IMessagePackFormatter<T>? Formatter;
 
-      // ReSharper disable once StaticMemberInGenericType
+      // ReSharper disable StaticMemberInGenericType
+      public static readonly bool HasMessagePackFormatterAttribute;
       public static readonly string? InitError;
+      // ReSharper restore StaticMemberInGenericType
 
       static Cache()
       {
@@ -81,6 +107,7 @@ public class ValueObjectMessageFormatterResolver : IFormatterResolver
          }
 
          Formatter = (IMessagePackFormatter<T>)formatter;
+         HasMessagePackFormatterAttribute = type.GetCustomAttribute<MessagePackFormatterAttribute>() is not null;
       }
    }
 }

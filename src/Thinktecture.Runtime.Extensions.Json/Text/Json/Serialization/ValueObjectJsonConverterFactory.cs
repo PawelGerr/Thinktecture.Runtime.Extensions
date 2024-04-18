@@ -91,15 +91,21 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
       if (valueObjectType is null)
          return false;
 
-      return !_skipValueObjectsWithJsonConverterAttribute || !valueObjectType.GetCustomAttributes<JsonConverterAttribute>().Any();
+      return !_skipValueObjectsWithJsonConverterAttribute || valueObjectType.GetCustomAttribute<JsonConverterAttribute>() is null;
    }
 
    private static Type? GetValueObjectType(Type typeToConvert)
    {
+      // typeToConvert could be derived type (like nested Smart Enum)
+      var metadata = KeyedValueObjectMetadataLookup.Find(typeToConvert);
+
+      if (metadata is not null)
+         return metadata.Type;
+
       if (typeToConvert.GetCustomAttributes<ValueObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson)))
          return typeToConvert;
 
-      return KeyedValueObjectMetadataLookup.Find(typeToConvert)?.Type;
+      return null;
    }
 
    /// <inheritdoc />
