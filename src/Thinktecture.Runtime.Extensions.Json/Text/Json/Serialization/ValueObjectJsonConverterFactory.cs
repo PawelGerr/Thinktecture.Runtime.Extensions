@@ -57,6 +57,28 @@ public sealed class ValueObjectJsonConverterFactory<T, TValidationError> : JsonC
 /// </summary>
 public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
 {
+   private readonly bool _skipValueObjectsWithJsonConverterAttribute;
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ValueObjectJsonConverterFactory"/>.
+   /// </summary>
+   public ValueObjectJsonConverterFactory()
+      : this(true)
+   {
+   }
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ValueObjectJsonConverterFactory"/>.
+   /// </summary>
+   /// <param name="skipValueObjectsWithJsonConverterAttribute">
+   /// Indication whether to skip value objects with <see cref="JsonConverterAttribute"/>.
+   /// </param>
+   public ValueObjectJsonConverterFactory(
+      bool skipValueObjectsWithJsonConverterAttribute)
+   {
+      _skipValueObjectsWithJsonConverterAttribute = skipValueObjectsWithJsonConverterAttribute;
+   }
+
    /// <inheritdoc />
    public override bool CanConvert(Type typeToConvert)
    {
@@ -64,8 +86,20 @@ public sealed class ValueObjectJsonConverterFactory : JsonConverterFactory
       if (typeToConvert.IsValueType && Nullable.GetUnderlyingType(typeToConvert) is not null)
          return false;
 
-      return KeyedValueObjectMetadataLookup.Find(typeToConvert) is not null
-             || typeToConvert.GetCustomAttributes<ValueObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson));
+      var valueObjectType = GetValueObjectType(typeToConvert);
+
+      if (valueObjectType is null)
+         return false;
+
+      return !_skipValueObjectsWithJsonConverterAttribute || !valueObjectType.GetCustomAttributes<JsonConverterAttribute>().Any();
+   }
+
+   private static Type? GetValueObjectType(Type typeToConvert)
+   {
+      if (typeToConvert.GetCustomAttributes<ValueObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson)))
+         return typeToConvert;
+
+      return KeyedValueObjectMetadataLookup.Find(typeToConvert)?.Type;
    }
 
    /// <inheritdoc />

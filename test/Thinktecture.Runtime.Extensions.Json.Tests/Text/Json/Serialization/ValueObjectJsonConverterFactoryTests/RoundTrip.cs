@@ -225,9 +225,20 @@ public class RoundTrip : JsonTestsBase
 
    [Theory]
    [MemberData(nameof(ObjectWithStructTestData))]
-   public void Should_roundtrip_serialize_types_with_struct_properties_using_non_generic_factory(object obj, string expectedJson)
+   public void Should_roundtrip_serialize_types_with_struct_properties_using_non_generic_factory(
+      object obj,
+      string expectedJson)
    {
-      var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
+      Roundtrip_serialize_types_with_struct_properties_using_non_generic_factory(true, obj, expectedJson);
+      Roundtrip_serialize_types_with_struct_properties_using_non_generic_factory(false, obj, expectedJson);
+   }
+
+   private static void Roundtrip_serialize_types_with_struct_properties_using_non_generic_factory(
+      bool skipValueObjectsWithJsonConverterAttribute,
+      object obj,
+      string expectedJson)
+   {
+      var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory(skipValueObjectsWithJsonConverterAttribute) } };
 
       var json = JsonSerializer.Serialize(obj, options);
       json.Should().Be(expectedJson);
