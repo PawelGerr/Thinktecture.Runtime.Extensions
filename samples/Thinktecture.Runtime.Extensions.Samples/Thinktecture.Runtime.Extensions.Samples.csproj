@@ -10,7 +10,7 @@
       <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
    </ItemGroup>
    <ItemGroup>
-      <PackageReference Include="CsvHelper" Version="31.0.3" />
+      <PackageReference Include="CsvHelper" Version="32.0.3" />
       <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
    </ItemGroup>
 </Project>
