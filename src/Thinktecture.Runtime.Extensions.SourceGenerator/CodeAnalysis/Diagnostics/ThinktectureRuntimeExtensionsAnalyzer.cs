@@ -60,7 +60,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (operation.Instance is null
           || operation.Arguments.IsDefaultOrEmpty
-          || operation.Arguments.Length % 2 != 0
           || operation.TargetMethod.IsStatic
           || (operation.TargetMethod.Name != "Switch" && operation.TargetMethod.Name != "Map"))
       {
@@ -74,18 +73,19 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var nonIgnoredMembers = operation.Instance.Type.GetNonIgnoredMembers();
       var items = operation.Instance.Type.GetEnumItems(nonIgnoredMembers);
+      var argsIndex = operation.TargetMethod.Parameters.Length % 2;
+      var args = operation.Arguments;
 
       for (var itemIndex = 0; itemIndex < items.Length; itemIndex++)
       {
          var item = items[itemIndex];
-         var args = operation.Arguments;
 
          if (args.IsDefaultOrEmpty)
             continue;
 
          var found = false;
 
-         for (var argIndex = 0; argIndex < args.Length; argIndex += 2)
+         for (var argIndex = argsIndex; argIndex < args.Length; argIndex += 2)
          {
             var argument = args[argIndex];
 

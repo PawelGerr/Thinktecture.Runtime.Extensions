@@ -38,6 +38,35 @@ public class TTRESG033_SwitchAndMapMustCoverAllItems
    }
 
    [Fact]
+   public async Task Should_trigger_on_Switch_missing_items_having_action_with_context()
+   {
+      var code = """
+
+                 using System;
+                 using Thinktecture;
+                 using Thinktecture.Runtime.Tests.TestEnums;
+
+                 namespace TestNamespace
+                 {
+                    public class Test
+                    {
+                       public void Do()
+                       {
+                          var testEnum = TestEnum.Item1;
+
+                          {|#0:testEnum.Switch(42,
+                                             TestEnum.Item1, value => {},
+                                             TestEnum.Item1, value => {})|};
+                       }
+                    }
+                 }
+                 """;
+
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "Item2");
+      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+   }
+
+   [Fact]
    public async Task Should_not_trigger_on_Switch_when_all_items_are_covered_having_action()
    {
       var code = """
