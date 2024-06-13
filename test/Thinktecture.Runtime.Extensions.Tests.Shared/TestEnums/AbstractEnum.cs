@@ -3,7 +3,9 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 [SmartEnum<int>(IsValidatable = true)]
 public abstract partial class AbstractEnum
 {
-   public static readonly AbstractEnum Item = new ValidItem(1);
+   public static readonly AbstractEnum Item = new ValidItem(1, 200);
+
+   public abstract int Value { get; }
 
    private static AbstractEnum CreateInvalidItem(int key)
    {
@@ -12,6 +14,8 @@ public abstract partial class AbstractEnum
 
    private sealed class InvalidItem : AbstractEnum
    {
+      public override int Value => 100;
+
       public InvalidItem(int key)
          : base(key, false)
       {
@@ -20,9 +24,12 @@ public abstract partial class AbstractEnum
 
    private sealed class ValidItem : AbstractEnum
    {
-      public ValidItem(int key)
+      public override int Value { get; }
+
+      public ValidItem(int key, int value)
          : base(key)
       {
+         Value = value;
       }
    }
 }

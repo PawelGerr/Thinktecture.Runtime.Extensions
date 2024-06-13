@@ -920,6 +920,7 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateConstructors()
    {
       var ownCtorArgs = _state.AssignableInstanceFieldsAndProperties
+                              .Where(p => !p.IsAbstract)
                               .Select(a => new ConstructorArgument(a.TypeFullyQualifiedWithNullability, a.ArgumentName))
                               .ToList();
 
@@ -1124,7 +1125,7 @@ namespace ").Append(_state.Namespace).Append(@"
          this.IsValid = isValid;");
       }
 
-      foreach (var memberInfo in _state.AssignableInstanceFieldsAndProperties)
+      foreach (var memberInfo in _state.AssignableInstanceFieldsAndProperties.Where(p => !p.IsAbstract))
       {
          _sb.Append(@"
          this.").Append(memberInfo.Name).Append(" = ").Append(memberInfo.ArgumentName.Escaped).Append(";");

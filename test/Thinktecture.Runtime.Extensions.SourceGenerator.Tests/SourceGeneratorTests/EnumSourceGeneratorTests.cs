@@ -6450,4 +6450,64 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    """);
    }
+
+   [Fact]
+   public void Should_generate_class_with_abstract_property()
+   {
+      var source = """
+                   using System;
+
+                   namespace Thinktecture.Tests
+                   {
+                   	[SmartEnum<string>]
+                   	public abstract partial class TestEnum
+                   	{
+                         public static readonly TestEnum Item1 = null!;
+                         public static readonly TestEnum Item2 = null!;
+
+                         public abstract int Value { get; }
+
+                         private sealed class ConcreteEnum : TestEnum
+                         {
+                            public override int Value => 100;
+
+                            public ConcreteEnum(int key)
+                               : base(key)
+                            {
+                            }
+                         }
+                      }
+                   }
+                   """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      outputs.Should().HaveCount(6);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.g.cs")).Value;
+      var comparableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Comparable.g.cs")).Value;
+      var parsableOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.Parsable.g.cs")).Value;
+      var comparisonOperatorsOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs")).Value;
+      var equalityComparisonOperators = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs")).Value;
+      var derivedTypes = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestEnum.DerivedTypes.g.cs")).Value;
+
+      AssertOutput(mainOutput, _MAIN_OUTPUT_STRING_BASED_CLASS);
+      AssertOutput(comparableOutput, _COMPARABLE_OUTPUT_CLASS_STRING_BASED);
+      AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED);
+      AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_OUTPUT_CLASS_STRING_BASED);
+      AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
+      AssertOutput(derivedTypes, _GENERATED_HEADER + """
+
+                                                     namespace Thinktecture.Tests;
+
+                                                     partial class TestEnum
+                                                     {
+                                                        [global::System.Runtime.CompilerServices.ModuleInitializer]
+                                                        internal static void DerivedTypesModuleInit()
+                                                        {
+                                                           var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+                                                           global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddDerivedType(enumType, typeof(global::Thinktecture.Tests.TestEnum.ConcreteEnum));
+                                                        }
+                                                     }
+
+                                                     """);
+   }
 }
