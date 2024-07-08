@@ -5,11 +5,11 @@
    </PropertyGroup>
 
    <ItemGroup>
-      <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
-      <PackageReference Include="JetBrains.Profiler.Api" Version="1.4.3" />
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+      <PackageReference Include="BenchmarkDotNet" />
+      <PackageReference Include="JetBrains.Profiler.Api" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" />
    </ItemGroup>
 
    <ItemGroup>

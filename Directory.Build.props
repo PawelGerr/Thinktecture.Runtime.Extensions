@@ -14,6 +14,7 @@
       <RootNamespace>Thinktecture</RootNamespace>
       <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
       <LangVersion>12.0</LangVersion>
+      <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally> 
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>
       <NoWarn>$(NoWarn);CA1303;MSB3884;NETSDK1138;</NoWarn>

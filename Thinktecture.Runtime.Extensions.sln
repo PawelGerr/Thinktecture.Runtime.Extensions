@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{21EB22
 		.gitignore = .gitignore
 		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
 		global.json = global.json
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E6F200ED-86D2-4D5C-9D5F-34592908B107}"
