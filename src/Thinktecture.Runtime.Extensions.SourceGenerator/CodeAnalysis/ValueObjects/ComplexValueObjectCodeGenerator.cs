@@ -180,7 +180,28 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj)
       {
-         var validationError = Validate(");
+         return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
+
+      _sb.RenderArguments(fieldsAndProperties);
+
+      if (fieldsAndProperties.Count > 0)
+         _sb.Append(", ");
+
+      _sb.Append(@"out obj, out _);
+      }");
+
+      _sb.Append(@"
+
+      public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
+
+      _sb.RenderArgumentsWithType(fieldsAndProperties, @"
+         ", ",", trailingComma: true);
+
+      _sb.Append(@"
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj,
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").Append(_state.ValidationError.TypeFullyQualified).Append(@"? validationError)
+      {
+         validationError = Validate(");
 
       _sb.RenderArguments(fieldsAndProperties);
 

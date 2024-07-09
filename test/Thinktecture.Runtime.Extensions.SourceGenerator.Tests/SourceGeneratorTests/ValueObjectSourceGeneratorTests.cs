@@ -77,7 +77,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                   public static bool TryCreate(int value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                                                   {
-                                                                                     var validationError = Validate(value, null, out obj);
+                                                                                     return TryCreate(value, out obj, out _);
+                                                                                  }
+
+                                                                                  public static bool TryCreate(
+                                                                                     int value,
+                                                                                     [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj,
+                                                                                     [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                                                  {
+                                                                                     validationError = Validate(value, null, out obj);
 
                                                                                      return validationError is null;
                                                                                   }
@@ -637,7 +645,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                  public static bool TryCreate(int value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                                                  {
-                                                                                    var validationError = Validate(value, null, out obj);
+                                                                                    return TryCreate(value, out obj, out _);
+                                                                                 }
+
+                                                                                 public static bool TryCreate(
+                                                                                    int value,
+                                                                                    [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                                                    [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                                                 {
+                                                                                    validationError = Validate(value, null, out obj);
 
                                                                                     return validationError is null;
                                                                                  }
@@ -1306,7 +1322,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                    public static bool TryCreate(
                                                                                       [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                                                    {
-                                                                                      var validationError = Validate(out obj);
+                                                                                      return TryCreate(out obj, out _);
+                                                                                   }
+
+                                                                                   public static bool TryCreate(
+                                                                                      [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                                                      [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                                                   {
+                                                                                      validationError = Validate(out obj);
 
                                                                                       return validationError is null;
                                                                                    }
@@ -1442,7 +1465,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     public static bool TryCreate(
                                                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                                                     {
-                                                                                       var validationError = Validate(out obj);
+                                                                                       return TryCreate(out obj, out _);
+                                                                                    }
+
+                                                                                    public static bool TryCreate(
+                                                                                       [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj,
+                                                                                       [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                                                    {
+                                                                                       validationError = Validate(out obj);
 
                                                                                        return validationError is null;
                                                                                     }
@@ -1570,7 +1600,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                     public static bool TryCreate(string value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                                                     {
-                                                                                       var validationError = Validate(value, null, out obj);
+                                                                                       return TryCreate(value, out obj, out _);
+                                                                                    }
+
+                                                                                    public static bool TryCreate(
+                                                                                       string value,
+                                                                                       [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                                                       [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                                                    {
+                                                                                       validationError = Validate(value, null, out obj);
 
                                                                                        return validationError is null;
                                                                                     }
@@ -1728,7 +1766,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                      public static bool TryCreate(string value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                                                      {
-                                                                                        var validationError = Validate(value, null, out obj);
+                                                                                        return TryCreate(value, out obj, out _);
+                                                                                     }
+
+                                                                                     public static bool TryCreate(
+                                                                                        string value,
+                                                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj,
+                                                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                                                     {
+                                                                                        validationError = Validate(value, null, out obj);
 
                                                                                         return validationError is null;
                                                                                      }
@@ -1931,7 +1977,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationError = Validate(out obj);
+                                                        return TryCreate(out obj, out _);
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                     {
+                                                        validationError = Validate(out obj);
 
                                                         return validationError is null;
                                                      }
@@ -2091,7 +2144,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationError = Validate(out obj);
+                                                        return TryCreate(out obj, out _);
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                     {
+                                                        validationError = Validate(out obj);
 
                                                         return validationError is null;
                                                      }
@@ -2282,7 +2342,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::TestValueObject? obj)
                                                      {
-                                                        var validationError = Validate(out obj);
+                                                        return TryCreate(out obj, out _);
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::TestValueObject? obj,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                     {
+                                                        validationError = Validate(out obj);
 
                                                         return validationError is null;
                                                      }
@@ -2620,7 +2687,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      public static bool TryCreate(
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                      {
-                                                        var validationError = Validate(out obj);
+                                                        return TryCreate(out obj, out _);
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                     {
+                                                        validationError = Validate(out obj);
 
                                                         return validationError is null;
                                                      }
@@ -2859,7 +2933,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          public static bool TryCreate(int value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
                                                          {
-                                                            var validationError = Validate(value, null, out obj);
+                                                            return TryCreate(value, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            int value,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(value, null, out obj);
 
                                                             return validationError is null;
                                                          }
@@ -3178,7 +3260,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          public static bool TryCreate(global::System.DateOnly value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, null, out obj);
+                                                            return TryCreate(value, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            global::System.DateOnly value,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(value, null, out obj);
 
                                                             return validationError is null;
                                                          }
@@ -3541,7 +3631,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          public static bool TryCreate(global::System.DateOnly value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, null, out obj);
+                                                            return TryCreate(value, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            global::System.DateOnly value,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(value, null, out obj);
 
                                                             return validationError is null;
                                                          }
@@ -4328,7 +4426,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          public static bool TryCreate(string? value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, null, out obj);
+                                                            return TryCreate(value, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            string? value,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(value, null, out obj);
 
                                                             return validationError is null;
                                                          }
@@ -4515,7 +4621,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          public static bool TryCreate(string? value, out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, null, out obj);
+                                                            return TryCreate(value, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            string? value,
+                                                            out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(value, null, out obj);
 
                                                             return validationError is null;
                                                          }
@@ -4737,7 +4851,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          public static bool TryCreate(string value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, null, out obj);
+                                                            return TryCreate(value, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            string value,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(value, null, out obj);
 
                                                             return validationError is null;
                                                          }
@@ -4923,7 +5045,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                          public static bool TryCreate(global::Thinktecture.Tests.Foo value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, null, out obj);
+                                                            return TryCreate(value, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            global::Thinktecture.Tests.Foo value,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(value, null, out obj);
 
                                                             return validationError is null;
                                                          }
@@ -5024,10 +5154,10 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    	public partial class TestValueObject
                    	{
                          [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-                         public readonly string _value;
+                         public readonly string _stringValue;
 
                          [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                         public readonly int _value;
+                         public readonly int _intValue;
 
                          public string ReferenceProperty { get; }
                          public string? NullableReferenceProperty { get; }
@@ -5069,8 +5199,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      {
                                                         global::System.Linq.Expressions.Expression<global::System.Func<TestValueObject, object>> action = o => new
                                                                                                                                                            {
-                                                                                                                                                              o._value,
-                                                                                                                                                              o._value,
+                                                                                                                                                              o._stringValue,
+                                                                                                                                                              o._intValue,
                                                                                                                                                               o.ReferenceProperty,
                                                                                                                                                               o.NullableReferenceProperty,
                                                                                                                                                               o.StructProperty,
@@ -5093,8 +5223,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
                                                      public static global::Thinktecture.ValidationError? Validate(
-                                                        string value,
-                                                        int value,
+                                                        string stringValue,
+                                                        int intValue,
                                                         string referenceProperty,
                                                         string? nullableReferenceProperty,
                                                         int structProperty,
@@ -5102,11 +5232,11 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                         out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
                                                         global::Thinktecture.ValidationError? validationError = null;
-                                                        ValidateFactoryArguments(ref validationError, ref value, ref value, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                        ValidateFactoryArguments(ref validationError, ref stringValue, ref intValue, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
                                                         if (validationError is null)
                                                         {
-                                                           obj = new global::Thinktecture.Tests.TestValueObject(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
+                                                           obj = new global::Thinktecture.Tests.TestValueObject(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
                                                            obj.FactoryPostInit();
                                                         }
                                                         else
@@ -5117,9 +5247,9 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                         return validationError;
                                                      }
 
-                                                     public static global::Thinktecture.Tests.TestValueObject Create(string value, int value, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
+                                                     public static global::Thinktecture.Tests.TestValueObject Create(string stringValue, int intValue, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                      {
-                                                        var validationError = Validate(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                        var validationError = Validate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
 
                                                         if (validationError is not null)
                                                            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
@@ -5128,36 +5258,49 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      public static bool TryCreate(
-                                                        string value,
-                                                        int value,
+                                                        string stringValue,
+                                                        int intValue,
                                                         string referenceProperty,
                                                         string? nullableReferenceProperty,
                                                         int structProperty,
                                                         int? nullableStructProperty,
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationError = Validate(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
+                                                        return TryCreate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj, out _);
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        string stringValue,
+                                                        int intValue,
+                                                        string referenceProperty,
+                                                        string? nullableReferenceProperty,
+                                                        int structProperty,
+                                                        int? nullableStructProperty,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                     {
+                                                        validationError = Validate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
 
                                                         return validationError is null;
                                                      }
 
-                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string value, ref int value, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string stringValue, ref int intValue, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                      partial void FactoryPostInit();
 
-                                                     private TestValueObject(string value, int value, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
+                                                     private TestValueObject(string stringValue, int intValue, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                      {
-                                                        ValidateConstructorArguments(ref value, ref value, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                        ValidateConstructorArguments(ref stringValue, ref intValue, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
-                                                        this._value = value;
-                                                        this._value = value;
+                                                        this._stringValue = stringValue;
+                                                        this._intValue = intValue;
                                                         this.ReferenceProperty = referenceProperty;
                                                         this.NullableReferenceProperty = nullableReferenceProperty;
                                                         this.StructProperty = structProperty;
                                                         this.NullableStructProperty = nullableStructProperty;
                                                      }
 
-                                                     static partial void ValidateConstructorArguments(ref string value, ref int value, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                     static partial void ValidateConstructorArguments(ref string stringValue, ref int intValue, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                      /// <summary>
                                                      /// Compares to instances of <see cref="TestValueObject"/>.
@@ -5199,8 +5342,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                         if (global::System.Object.ReferenceEquals(this, other))
                                                            return true;
 
-                                                        return global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.Equals(this._value, other._value)
-                                                            && global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer.Equals(this._value, other._value);
+                                                        return global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.Equals(this._stringValue, other._stringValue)
+                                                            && global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer.Equals(this._intValue, other._intValue);
                                                      }
 
                                                      /// <inheritdoc />
@@ -5208,15 +5351,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      {
                                                         var hashCode = new global::System.HashCode();
                                                         hashCode.Add(_typeHashCode);
-                                                        hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
-                                                        hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
+                                                        hashCode.Add(this._stringValue, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
+                                                        hashCode.Add(this._intValue, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
                                                         return hashCode.ToHashCode();
                                                      }
 
                                                      /// <inheritdoc />
                                                      public override string ToString()
                                                      {
-                                                        return $"{{ _value = {this._value}, _value = {this._value} }}";
+                                                        return $"{{ _stringValue = {this._stringValue}, _intValue = {this._intValue} }}";
                                                      }
                                                   }
                                                }
@@ -5239,10 +5382,10 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    	public partial class TestValueObject
                    	{
                          [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-                         public readonly string _value;
+                         public readonly string _stringValue;
 
                          [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                         public readonly int _value;
+                         public readonly int _intValue;
 
                          public string ReferenceProperty { get; }
                          public string? NullableReferenceProperty { get; }
@@ -5289,8 +5432,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             global::System.Linq.Expressions.Expression<global::System.Func<TestValueObject, object>> action = o => new
                                                                                                                                                                {
-                                                                                                                                                                  o._value,
-                                                                                                                                                                  o._value,
+                                                                                                                                                                  o._stringValue,
+                                                                                                                                                                  o._intValue,
                                                                                                                                                                   o.ReferenceProperty,
                                                                                                                                                                   o.NullableReferenceProperty,
                                                                                                                                                                   o.StructProperty,
@@ -5313,8 +5456,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
                                                          public static global::Thinktecture.ValidationError? Validate(
-                                                            string value,
-                                                            int value,
+                                                            string stringValue,
+                                                            int intValue,
                                                             string referenceProperty,
                                                             string? nullableReferenceProperty,
                                                             int structProperty,
@@ -5322,11 +5465,11 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
                                                             global::Thinktecture.ValidationError? validationError = null;
-                                                            ValidateFactoryArguments(ref validationError, ref value, ref value, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                            ValidateFactoryArguments(ref validationError, ref stringValue, ref intValue, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
                                                             if (validationError is null)
                                                             {
-                                                               obj = new global::Thinktecture.Tests.TestValueObject(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
+                                                               obj = new global::Thinktecture.Tests.TestValueObject(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
                                                                obj.FactoryPostInit();
                                                             }
                                                             else
@@ -5337,9 +5480,9 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return validationError;
                                                          }
 
-                                                         public static global::Thinktecture.Tests.TestValueObject Create(string value, int value, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
+                                                         public static global::Thinktecture.Tests.TestValueObject Create(string stringValue, int intValue, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                          {
-                                                            var validationError = Validate(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
 
                                                             if (validationError is not null)
                                                                throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
@@ -5348,36 +5491,49 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          public static bool TryCreate(
-                                                            string value,
-                                                            int value,
+                                                            string stringValue,
+                                                            int intValue,
                                                             string referenceProperty,
                                                             string? nullableReferenceProperty,
                                                             int structProperty,
                                                             int? nullableStructProperty,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
+                                                            return TryCreate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            string stringValue,
+                                                            int intValue,
+                                                            string referenceProperty,
+                                                            string? nullableReferenceProperty,
+                                                            int structProperty,
+                                                            int? nullableStructProperty,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
 
                                                             return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string value, ref int value, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string stringValue, ref int intValue, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          partial void FactoryPostInit();
 
-                                                         private TestValueObject(string value, int value, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
+                                                         private TestValueObject(string stringValue, int intValue, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                          {
-                                                            ValidateConstructorArguments(ref value, ref value, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                            ValidateConstructorArguments(ref stringValue, ref intValue, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
-                                                            this._value = value;
-                                                            this._value = value;
+                                                            this._stringValue = stringValue;
+                                                            this._intValue = intValue;
                                                             this.ReferenceProperty = referenceProperty;
                                                             this.NullableReferenceProperty = nullableReferenceProperty;
                                                             this.StructProperty = structProperty;
                                                             this.NullableStructProperty = nullableStructProperty;
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string value, ref int value, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateConstructorArguments(ref string stringValue, ref int intValue, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          /// <summary>
                                                          /// Compares to instances of <see cref="TestValueObject"/>.
@@ -5419,8 +5575,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (global::System.Object.ReferenceEquals(this, other))
                                                                return true;
 
-                                                            return global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.Equals(this._value, other._value)
-                                                                && global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer.Equals(this._value, other._value);
+                                                            return global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.Equals(this._stringValue, other._stringValue)
+                                                                && global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer.Equals(this._intValue, other._intValue);
                                                          }
 
                                                          /// <inheritdoc />
@@ -5428,15 +5584,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             var hashCode = new global::System.HashCode();
                                                             hashCode.Add(_typeHashCode);
-                                                            hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
-                                                            hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
+                                                            hashCode.Add(this._stringValue, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
+                                                            hashCode.Add(this._intValue, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
                                                             return hashCode.ToHashCode();
                                                          }
 
                                                          /// <inheritdoc />
                                                          public override string ToString()
                                                          {
-                                                            return $"{{ _value = {this._value}, _value = {this._value} }}";
+                                                            return $"{{ _stringValue = {this._stringValue}, _intValue = {this._intValue} }}";
                                                          }
                                                       }
                                                    }
@@ -5502,10 +5658,10 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    	public partial class TestValueObject
                    	{
                          [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-                         public readonly string _value;
+                         public readonly string _stringValue;
 
                          [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                         public readonly int _value;
+                         public readonly int _intValue;
 
                          public string ReferenceProperty { get; }
                          public string? NullableReferenceProperty { get; }
@@ -5553,8 +5709,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             global::System.Linq.Expressions.Expression<global::System.Func<TestValueObject, object>> action = o => new
                                                                                                                                                                {
-                                                                                                                                                                  o._value,
-                                                                                                                                                                  o._value,
+                                                                                                                                                                  o._stringValue,
+                                                                                                                                                                  o._intValue,
                                                                                                                                                                   o.ReferenceProperty,
                                                                                                                                                                   o.NullableReferenceProperty,
                                                                                                                                                                   o.StructProperty,
@@ -5577,8 +5733,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
                                                          public static global::Thinktecture.ValidationError? Validate(
-                                                            string value,
-                                                            int value,
+                                                            string stringValue,
+                                                            int intValue,
                                                             string referenceProperty,
                                                             string? nullableReferenceProperty,
                                                             int structProperty,
@@ -5586,11 +5742,11 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
                                                             global::Thinktecture.ValidationError? validationError = null;
-                                                            ValidateFactoryArguments(ref validationError, ref value, ref value, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                            ValidateFactoryArguments(ref validationError, ref stringValue, ref intValue, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
                                                             if (validationError is null)
                                                             {
-                                                               obj = new global::Thinktecture.Tests.TestValueObject(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
+                                                               obj = new global::Thinktecture.Tests.TestValueObject(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty);
                                                                obj.FactoryPostInit();
                                                             }
                                                             else
@@ -5601,9 +5757,9 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return validationError;
                                                          }
 
-                                                         public static global::Thinktecture.Tests.TestValueObject Create(string value, int value, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
+                                                         public static global::Thinktecture.Tests.TestValueObject Create(string stringValue, int intValue, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                          {
-                                                            var validationError = Validate(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
+                                                            var validationError = Validate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out global::Thinktecture.Tests.TestValueObject? obj);
 
                                                             if (validationError is not null)
                                                                throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
@@ -5612,36 +5768,49 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          public static bool TryCreate(
-                                                            string value,
-                                                            int value,
+                                                            string stringValue,
+                                                            int intValue,
                                                             string referenceProperty,
                                                             string? nullableReferenceProperty,
                                                             int structProperty,
                                                             int? nullableStructProperty,
                                                             [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                          {
-                                                            var validationError = Validate(value, value, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
+                                                            return TryCreate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj, out _);
+                                                         }
+
+                                                         public static bool TryCreate(
+                                                            string stringValue,
+                                                            int intValue,
+                                                            string referenceProperty,
+                                                            string? nullableReferenceProperty,
+                                                            int structProperty,
+                                                            int? nullableStructProperty,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                            [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                         {
+                                                            validationError = Validate(stringValue, intValue, referenceProperty, nullableReferenceProperty, structProperty, nullableStructProperty, out obj);
 
                                                             return validationError is null;
                                                          }
 
-                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string value, ref int value, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string stringValue, ref int intValue, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          partial void FactoryPostInit();
 
-                                                         private TestValueObject(string value, int value, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
+                                                         private TestValueObject(string stringValue, int intValue, string referenceProperty, string? nullableReferenceProperty, int structProperty, int? nullableStructProperty)
                                                          {
-                                                            ValidateConstructorArguments(ref value, ref value, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
+                                                            ValidateConstructorArguments(ref stringValue, ref intValue, ref referenceProperty, ref nullableReferenceProperty, ref structProperty, ref nullableStructProperty);
 
-                                                            this._value = value;
-                                                            this._value = value;
+                                                            this._stringValue = stringValue;
+                                                            this._intValue = intValue;
                                                             this.ReferenceProperty = referenceProperty;
                                                             this.NullableReferenceProperty = nullableReferenceProperty;
                                                             this.StructProperty = structProperty;
                                                             this.NullableStructProperty = nullableStructProperty;
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string value, ref int value, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
+                                                         static partial void ValidateConstructorArguments(ref string stringValue, ref int intValue, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          /// <summary>
                                                          /// Compares to instances of <see cref="TestValueObject"/>.
@@ -5683,8 +5852,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (global::System.Object.ReferenceEquals(this, other))
                                                                return true;
 
-                                                            return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this._value, other._value)
-                                                                && global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer.Equals(this._value, other._value);
+                                                            return global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer.Equals(this._stringValue, other._stringValue)
+                                                                && global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer.Equals(this._intValue, other._intValue);
                                                          }
 
                                                          /// <inheritdoc />
@@ -5692,15 +5861,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             var hashCode = new global::System.HashCode();
                                                             hashCode.Add(_typeHashCode);
-                                                            hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
-                                                            hashCode.Add(this._value, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
+                                                            hashCode.Add(this._stringValue, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
+                                                            hashCode.Add(this._intValue, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
                                                             return hashCode.ToHashCode();
                                                          }
 
                                                          /// <inheritdoc />
                                                          public override string ToString()
                                                          {
-                                                            return $"{{ _value = {this._value}, _value = {this._value} }}";
+                                                            return $"{{ _stringValue = {this._stringValue}, _intValue = {this._intValue} }}";
                                                          }
                                                       }
                                                    }
@@ -5868,7 +6037,23 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                         string value9,
                                                         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
                                                      {
-                                                        var validationError = Validate(value1, value2, value3, value4, value5, value6, value7, value8, value9, out obj);
+                                                        return TryCreate(value1, value2, value3, value4, value5, value6, value7, value8, value9, out obj, out _);
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        string value1,
+                                                        string value2,
+                                                        string value3,
+                                                        string value4,
+                                                        string value5,
+                                                        string value6,
+                                                        string value7,
+                                                        string value8,
+                                                        string value9,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                     {
+                                                        validationError = Validate(value1, value2, value3, value4, value5, value6, value7, value8, value9, out obj);
 
                                                         return validationError is null;
                                                      }

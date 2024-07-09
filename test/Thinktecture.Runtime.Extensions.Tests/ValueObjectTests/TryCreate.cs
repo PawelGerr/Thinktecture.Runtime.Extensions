@@ -10,6 +10,10 @@ public class TryCreate
    {
       StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate(null, out var obj).Should().BeTrue();
       obj.Should().BeNull();
+
+      StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate(null, out obj, out var error).Should().BeTrue();
+      obj.Should().BeNull();
+      error.Should().BeNull();
    }
 
    [Fact]
@@ -17,6 +21,10 @@ public class TryCreate
    {
       StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate(String.Empty, out var obj).Should().BeTrue();
       obj.Should().BeNull();
+
+      StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate(String.Empty, out obj, out var error).Should().BeTrue();
+      obj.Should().BeNull();
+      error.Should().BeNull();
    }
 
    [Fact]
@@ -24,6 +32,10 @@ public class TryCreate
    {
       StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate(" ", out var obj).Should().BeTrue();
       obj.Should().BeNull();
+
+      StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryCreate(" ", out obj, out var error).Should().BeTrue();
+      obj.Should().BeNull();
+      error.Should().BeNull();
    }
 
    [Fact]
@@ -31,6 +43,9 @@ public class TryCreate
    {
       StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate(null, out var obj).Should().BeTrue();
       obj.Should().BeNull();
+
+      StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate(null, out obj, out var error).Should().BeTrue();
+      error.Should().BeNull();
    }
 
    [Fact]
@@ -38,6 +53,10 @@ public class TryCreate
    {
       StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate(String.Empty, out var obj).Should().BeFalse();
       obj.Should().BeNull();
+
+      StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate(String.Empty, out obj, out var error).Should().BeFalse();
+      obj.Should().BeNull();
+      error.Should().NotBeNull();
    }
 
    [Fact]
@@ -45,6 +64,10 @@ public class TryCreate
    {
       StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate(" ", out var obj).Should().BeFalse();
       obj.Should().BeNull();
+
+      StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryCreate(" ", out obj, out var error).Should().BeFalse();
+      obj.Should().BeNull();
+      error.Should().NotBeNull();
    }
 
    [Fact]
@@ -52,6 +75,10 @@ public class TryCreate
    {
       IntBasedReferenceValueObjectWithCustomFactoryNames.TryGet(1, out var obj).Should().BeTrue();
       obj.Should().BeEquivalentTo(new { Property = 1 });
+
+      IntBasedReferenceValueObjectWithCustomFactoryNames.TryGet(1, out obj, out var error).Should().BeTrue();
+      obj.Should().BeEquivalentTo(new { Property = 1 });
+      error.Should().BeNull();
    }
 
    [Fact]
@@ -59,5 +86,9 @@ public class TryCreate
    {
       BoundaryWithCustomFactoryNames.TryGet(1, 2, out var obj).Should().BeTrue();
       obj.Should().BeEquivalentTo(new { Lower = 1, Upper = 2 });
+
+      BoundaryWithCustomFactoryNames.TryGet(1, 2, out obj, out var error).Should().BeTrue();
+      obj.Should().BeEquivalentTo(new { Lower = 1, Upper = 2 });
+      error.Should().BeNull();
    }
 }

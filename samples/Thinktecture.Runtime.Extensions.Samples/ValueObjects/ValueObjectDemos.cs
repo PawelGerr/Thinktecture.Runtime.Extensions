@@ -51,6 +51,9 @@ public class ValueObjectDemos
       if (ProductName.TryCreate("Milk", out milk))
          logger.Information("Product name '{Name}' created with 'TryCreate'.", milk);
 
+      if (!ProductName.TryCreate("X", out _, out var error))
+         logger.Information("Failed to create a product with name 'X'. Error: {Error}", error.Message);
+
       // Thanks to setting "NullInFactoryMethodsYieldsNull = true" the method "Create" returns null
       var nullProduct = ProductName.Create(null);
       logger.Information("Null-Product name: {NullProduct}", nullProduct);
@@ -180,6 +183,9 @@ public class ValueObjectDemos
 
       if (Boundary.TryCreate(lower: 1, upper: 2, out var boundaryWithTryCreate))
          logger.Information("Boundary with TryCreate: {Boundary}", boundaryWithTryCreate);
+
+      if (!Boundary.TryCreate(lower: 2, upper: 1, out _, out var error))
+         logger.Information("Failed to create Boundary (2, 1). Error: {Error}", error.Message);
 
       var validationError = Boundary.Validate(lower: 1, upper: 2, out var boundaryWithValidate);
 

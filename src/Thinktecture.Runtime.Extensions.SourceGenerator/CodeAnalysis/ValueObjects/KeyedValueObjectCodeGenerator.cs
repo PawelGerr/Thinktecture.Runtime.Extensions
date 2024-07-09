@@ -323,7 +323,17 @@ namespace ").Append(_state.Namespace).Append(@"
 
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(emptyStringYieldsNull ? "," : ", [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)]").Append(" out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj)
       {
-         var validationError = Validate(").RenderArgument(_state.KeyMember).Append(@", null, out obj);
+         return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgument(_state.KeyMember).Append(@", out obj, out _);
+      }");
+
+      _sb.Append(@"
+
+      public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append(@"(
+         ").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(@",
+         ").Append(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj,
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").Append(_state.ValidationError.TypeFullyQualified).Append(@"? validationError)
+      {
+         validationError = Validate(").RenderArgument(_state.KeyMember).Append(@", null, out obj);
 
          return validationError is null;
       }");
