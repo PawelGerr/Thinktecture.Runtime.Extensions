@@ -371,8 +371,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                           lookup.Add(item.Key, item);
                                                                                        }
 
-                                                                                       AddItem(Item1, nameof(Item1));
-                                                                                       AddItem(Item2, nameof(Item2));
+                                                                                       AddItem(@Item1, nameof(@Item1));
+                                                                                       AddItem(@Item2, nameof(@Item2));
 
                                                                               #if NET8_0_OR_GREATER
                                                                                        return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -682,8 +682,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        lookup.Add(item.Key, item);
                                                                                     }
 
-                                                                                    AddItem(Item1, nameof(Item1));
-                                                                                    AddItem(Item2, nameof(Item2));
+                                                                                    AddItem(@Item1, nameof(@Item1));
+                                                                                    AddItem(@Item2, nameof(@Item2));
 
                                                                            #if NET8_0_OR_GREATER
                                                                                     return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
@@ -1436,8 +1436,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                list.Add(item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                             return list.AsReadOnly();
                                                          }
@@ -1657,8 +1657,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                list.Add(item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                             return list.AsReadOnly();
                                                          }
@@ -2031,8 +2031,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -2328,8 +2328,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -2661,8 +2661,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -3044,8 +3044,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -3392,8 +3392,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -4106,13 +4106,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item_1, nameof(Item_1));
-                                                            AddItem(Item_2, nameof(Item_2));
-                                                            AddItem(Item_int_1, nameof(Item_int_1));
-                                                            AddItem(Item_decimal_1, nameof(Item_decimal_1));
-                                                            AddItem(Item_decimal_2, nameof(Item_decimal_2));
-                                                            AddItem(Item_derived_1, nameof(Item_derived_1));
-                                                            AddItem(Item_derived_2, nameof(Item_derived_2));
+                                                            AddItem(@Item_1, nameof(@Item_1));
+                                                            AddItem(@Item_2, nameof(@Item_2));
+                                                            AddItem(@Item_int_1, nameof(@Item_int_1));
+                                                            AddItem(@Item_decimal_1, nameof(@Item_decimal_1));
+                                                            AddItem(@Item_decimal_2, nameof(@Item_decimal_2));
+                                                            AddItem(@Item_derived_1, nameof(@Item_derived_1));
+                                                            AddItem(@Item_derived_2, nameof(@Item_derived_2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -4545,8 +4545,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -4943,8 +4943,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
@@ -5498,8 +5498,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Name, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
@@ -6087,8 +6087,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
@@ -6436,8 +6436,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                lookup.Add(item.Key, item);
                                                             }
 
-                                                            AddItem(Item1, nameof(Item1));
-                                                            AddItem(Item2, nameof(Item2));
+                                                            AddItem(@Item1, nameof(@Item1));
+                                                            AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
                                                             return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);

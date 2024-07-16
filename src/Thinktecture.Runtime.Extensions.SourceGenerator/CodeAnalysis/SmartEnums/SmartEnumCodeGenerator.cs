@@ -708,7 +708,7 @@ namespace ").Append(_state.Namespace).Append(@"
             var itemName = _state.ItemNames[i];
 
             _sb.Append(@"
-         AddItem(").Append(itemName).Append(", nameof(").Append(itemName).Append("));");
+         AddItem(@").Append(itemName).Append(", nameof(@").Append(itemName).Append("));");
          }
       }
 
@@ -761,7 +761,7 @@ namespace ").Append(_state.Namespace).Append(@"
             var itemName = _state.ItemNames[i];
 
             _sb.Append(@"
-         AddItem(").Append(itemName).Append(", nameof(").Append(itemName).Append("));");
+         AddItem(@").Append(itemName).Append(", nameof(@").Append(itemName).Append("));");
          }
       }
 
