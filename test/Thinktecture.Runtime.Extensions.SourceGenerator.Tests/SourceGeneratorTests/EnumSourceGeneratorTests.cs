@@ -283,9 +283,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                                                     /// <param name="testEnum2">The item to compare to.</param>
                                                                                     /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                                                    public T Switch<T>(
-                                                                                       TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                                                       TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                                                    public TResult Switch<TResult>(
+                                                                                       TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                                                       TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                                                     {
                                                                                        if (this == testEnum1)
                                                                                        {
@@ -309,10 +309,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                                                     /// <param name="testEnum2">The item to compare to.</param>
                                                                                     /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                                                    public T Switch<TContext, T>(
+                                                                                    public TResult Switch<TContext, TResult>(
                                                                                        TContext context,
-                                                                                       TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                                                       TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                                                       TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                                                       TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                                                     {
                                                                                        if (this == testEnum1)
                                                                                        {
@@ -329,15 +329,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     }
 
                                                                                     /// <summary>
-                                                                                    /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                                                    /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                                                     /// </summary>
                                                                                     /// <param name="testEnum1">The item to compare to.</param>
                                                                                     /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                                                     /// <param name="testEnum2">The item to compare to.</param>
                                                                                     /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                                                    public T Map<T>(
-                                                                                       TestEnum testEnum1, T other1,
-                                                                                       TestEnum testEnum2, T other2)
+                                                                                    public TResult Map<TResult>(
+                                                                                       TestEnum testEnum1, TResult other1,
+                                                                                       TestEnum testEnum2, TResult other2)
                                                                                     {
                                                                                        if (this == testEnum1)
                                                                                        {
@@ -597,9 +597,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                                                  /// <param name="testEnum2">The item to compare to.</param>
                                                                                  /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                                                 public T Switch<T>(
-                                                                                    TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                                                    TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                                                 public TResult Switch<TResult>(
+                                                                                    TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                                                    TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                                                  {
                                                                                     if (this == testEnum1)
                                                                                     {
@@ -623,10 +623,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                                                  /// <param name="testEnum2">The item to compare to.</param>
                                                                                  /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                                                 public T Switch<TContext, T>(
+                                                                                 public TResult Switch<TContext, TResult>(
                                                                                     TContext context,
-                                                                                    TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                                                    TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                                                    TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                                                    TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                                                  {
                                                                                     if (this == testEnum1)
                                                                                     {
@@ -643,15 +643,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  }
 
                                                                                  /// <summary>
-                                                                                 /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                                                 /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                                                  /// </summary>
                                                                                  /// <param name="testEnum1">The item to compare to.</param>
                                                                                  /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                                                  /// <param name="testEnum2">The item to compare to.</param>
                                                                                  /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                                                 public T Map<T>(
-                                                                                    TestEnum testEnum1, T other1,
-                                                                                    TestEnum testEnum2, T other2)
+                                                                                 public TResult Map<TResult>(
+                                                                                    TestEnum testEnum1, TResult other1,
+                                                                                    TestEnum testEnum2, TResult other2)
                                                                                  {
                                                                                     if (this == testEnum1)
                                                                                     {
@@ -1354,9 +1354,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1380,10 +1380,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1400,15 +1400,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1575,9 +1575,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1601,10 +1601,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1621,15 +1621,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1943,9 +1943,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1969,10 +1969,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -1989,15 +1989,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -2286,15 +2286,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -2598,9 +2598,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -2624,10 +2624,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -2956,9 +2956,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -2982,10 +2982,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -3002,15 +3002,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -3304,9 +3304,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -3330,10 +3330,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -3350,15 +3350,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -3923,14 +3923,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc6">The function to execute if the current item is equal to <paramref name="testEnum6"/>.</param>
                                                          /// <param name="testEnum7">The item to compare to.</param>
                                                          /// <param name="testEnumFunc7">The function to execute if the current item is equal to <paramref name="testEnum7"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2,
-                                                            TestEnum testEnum3, global::System.Func<T> testEnumFunc3,
-                                                            TestEnum testEnum4, global::System.Func<T> testEnumFunc4,
-                                                            TestEnum testEnum5, global::System.Func<T> testEnumFunc5,
-                                                            TestEnum testEnum6, global::System.Func<T> testEnumFunc6,
-                                                            TestEnum testEnum7, global::System.Func<T> testEnumFunc7)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2,
+                                                            TestEnum testEnum3, global::System.Func<TResult> testEnumFunc3,
+                                                            TestEnum testEnum4, global::System.Func<TResult> testEnumFunc4,
+                                                            TestEnum testEnum5, global::System.Func<TResult> testEnumFunc5,
+                                                            TestEnum testEnum6, global::System.Func<TResult> testEnumFunc6,
+                                                            TestEnum testEnum7, global::System.Func<TResult> testEnumFunc7)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -3984,15 +3984,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc6">The function to execute if the current item is equal to <paramref name="testEnum6"/>.</param>
                                                          /// <param name="testEnum7">The item to compare to.</param>
                                                          /// <param name="testEnumFunc7">The function to execute if the current item is equal to <paramref name="testEnum7"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2,
-                                                            TestEnum testEnum3, global::System.Func<TContext, T> testEnumFunc3,
-                                                            TestEnum testEnum4, global::System.Func<TContext, T> testEnumFunc4,
-                                                            TestEnum testEnum5, global::System.Func<TContext, T> testEnumFunc5,
-                                                            TestEnum testEnum6, global::System.Func<TContext, T> testEnumFunc6,
-                                                            TestEnum testEnum7, global::System.Func<TContext, T> testEnumFunc7)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2,
+                                                            TestEnum testEnum3, global::System.Func<TContext, TResult> testEnumFunc3,
+                                                            TestEnum testEnum4, global::System.Func<TContext, TResult> testEnumFunc4,
+                                                            TestEnum testEnum5, global::System.Func<TContext, TResult> testEnumFunc5,
+                                                            TestEnum testEnum6, global::System.Func<TContext, TResult> testEnumFunc6,
+                                                            TestEnum testEnum7, global::System.Func<TContext, TResult> testEnumFunc7)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -4029,7 +4029,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
@@ -4045,14 +4045,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="other6">The instance to return if the current item is equal to <paramref name="testEnum6"/>.</param>
                                                          /// <param name="testEnum7">The item to compare to.</param>
                                                          /// <param name="other7">The instance to return if the current item is equal to <paramref name="testEnum7"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2,
-                                                            TestEnum testEnum3, T other3,
-                                                            TestEnum testEnum4, T other4,
-                                                            TestEnum testEnum5, T other5,
-                                                            TestEnum testEnum6, T other6,
-                                                            TestEnum testEnum7, T other7)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2,
+                                                            TestEnum testEnum3, TResult other3,
+                                                            TestEnum testEnum4, TResult other4,
+                                                            TestEnum testEnum5, TResult other5,
+                                                            TestEnum testEnum6, TResult other6,
+                                                            TestEnum testEnum7, TResult other7)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -4454,9 +4454,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -4480,10 +4480,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -4500,15 +4500,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -4855,9 +4855,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -4881,10 +4881,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -4901,15 +4901,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -5407,9 +5407,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -5433,10 +5433,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -5453,15 +5453,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -6002,9 +6002,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -6028,10 +6028,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -6048,15 +6048,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -6351,9 +6351,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<T>(
-                                                            TestEnum testEnum1, global::System.Func<T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<T> testEnumFunc2)
+                                                         public TResult Switch<TResult>(
+                                                            TestEnum testEnum1, global::System.Func<TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -6377,10 +6377,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="testEnumFunc1">The function to execute if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="testEnumFunc2">The function to execute if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Switch<TContext, T>(
+                                                         public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            TestEnum testEnum1, global::System.Func<TContext, T> testEnumFunc1,
-                                                            TestEnum testEnum2, global::System.Func<TContext, T> testEnumFunc2)
+                                                            TestEnum testEnum1, global::System.Func<TContext, TResult> testEnumFunc1,
+                                                            TestEnum testEnum2, global::System.Func<TContext, TResult> testEnumFunc2)
                                                          {
                                                             if (this == testEnum1)
                                                             {
@@ -6397,15 +6397,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Maps an item to an instance of type <typeparamref name="T"/>.
+                                                         /// Maps an item to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="testEnum1">The item to compare to.</param>
                                                          /// <param name="other1">The instance to return if the current item is equal to <paramref name="testEnum1"/>.</param>
                                                          /// <param name="testEnum2">The item to compare to.</param>
                                                          /// <param name="other2">The instance to return if the current item is equal to <paramref name="testEnum2"/>.</param>
-                                                         public T Map<T>(
-                                                            TestEnum testEnum1, T other1,
-                                                            TestEnum testEnum2, T other2)
+                                                         public TResult Map<TResult>(
+                                                            TestEnum testEnum1, TResult other1,
+                                                            TestEnum testEnum2, TResult other2)
                                                          {
                                                             if (this == testEnum1)
                                                             {

@@ -322,13 +322,13 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withContext)
       {
          _sb.Append(@"
-      public T Switch<TContext, T>(
+      public TResult Switch<TContext, TResult>(
          TContext context,");
       }
       else
       {
          _sb.Append(@"
-      public T Switch<T>(");
+      public TResult Switch<TResult>(");
       }
 
       for (var i = 0; i < _state.ItemNames.Count; i++)
@@ -343,7 +343,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withContext)
             _sb.Append("TContext, ");
 
-         _sb.Append("T> ").Append(itemNamePrefix).Append("Func").Append(i + 1);
+         _sb.Append("TResult> ").Append(itemNamePrefix).Append("Func").Append(i + 1);
       }
 
       _sb.Append(@")
@@ -383,7 +383,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Maps an item to an instance of type <typeparamref name=""T""/>.
+      /// Maps an item to an instance of type <typeparamref name=""TResult""/>.
       /// </summary>");
 
       var itemNamePrefix = _state.ArgumentName.Raw;
@@ -396,7 +396,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      public T Map<T>(");
+      public TResult Map<TResult>(");
 
       for (var i = 0; i < _state.ItemNames.Count; i++)
       {
@@ -405,7 +405,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@"
          ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
-            .Append(", T ").Append("other").Append(i + 1);
+            .Append(", TResult ").Append("other").Append(i + 1);
       }
 
       _sb.Append(@")
