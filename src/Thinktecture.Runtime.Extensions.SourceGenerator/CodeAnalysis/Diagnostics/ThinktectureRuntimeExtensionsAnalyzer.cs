@@ -8,6 +8,9 @@ namespace Thinktecture.CodeAnalysis.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 {
+   private const string _SWITCH_PARTIALLY = "SwitchPartially";
+   private const string _MAP_PARTIALLY = "MapPartially";
+
    private static readonly ILogger _errorLogger = new SelfLogErrorLogger(nameof(ThinktectureRuntimeExtensionsAnalyzer));
 
    /// <inheritdoc />
@@ -34,13 +37,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
                                                                                                               DiagnosticsDescriptors.ValueObjectMustBeSealed,
-                                                                                                              DiagnosticsDescriptors.SwitchAndMapMustCoverAllItems,
                                                                                                               DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
                                                                                                               DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                                                                               DiagnosticsDescriptors.InitAccessorMustBePrivate,
                                                                                                               DiagnosticsDescriptors.PrimaryConstructorNotAllowed,
                                                                                                               DiagnosticsDescriptors.CustomKeyMemberImplementationNotFound,
-                                                                                                              DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch);
+                                                                                                              DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch,
+                                                                                                              DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -61,50 +64,58 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (operation.Instance is null
           || operation.Arguments.IsDefaultOrEmpty
           || operation.TargetMethod.IsStatic
-          || (operation.TargetMethod.Name != "Switch" && operation.TargetMethod.Name != "Map"))
+          || (operation.TargetMethod.Name != "Switch"
+              && operation.TargetMethod.Name != _SWITCH_PARTIALLY
+              && operation.TargetMethod.Name != "Map"
+              && operation.TargetMethod.Name != _MAP_PARTIALLY))
       {
          return;
       }
 
-      if (!operation.Instance.Type.IsEnum())
+      if (!operation.Instance.Type.IsEnum(out var attribute))
          return;
 
-      var missingItemNames = ImmutableArray.Create<string>();
-
+      var isValidatable = attribute.FindIsValidatable() ?? false;
       var nonIgnoredMembers = operation.Instance.Type.GetNonIgnoredMembers();
       var items = operation.Instance.Type.GetEnumItems(nonIgnoredMembers);
-      var argsIndex = operation.TargetMethod.Parameters.Length % 2;
       var args = operation.Arguments;
 
-      for (var itemIndex = 0; itemIndex < items.Length; itemIndex++)
-      {
-         var item = items[itemIndex];
+      AnalyzeIndexBasedSwitchMap(context, items, args, operation, isValidatable);
+   }
 
-         if (args.IsDefaultOrEmpty)
+   private static void AnalyzeIndexBasedSwitchMap(
+      OperationAnalysisContext context,
+      ImmutableArray<IFieldSymbol> items,
+      ImmutableArray<IArgumentOperation> args,
+      IInvocationOperation operation,
+      bool isValidatable)
+   {
+      // The enum must have a type
+      if (operation.Instance?.Type is null || args.IsDefaultOrEmpty)
+         return;
+
+      var hasNonNamedParameters = false;
+      var numberOfCallbacks = items.Length
+                              + (isValidatable ? 1 : 0)
+                              + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
+      var argsStartIndex = operation.TargetMethod.Parameters.Length == numberOfCallbacks ? 0 : 1;
+
+      for (var argIndex = argsStartIndex; argIndex < args.Length; argIndex++)
+      {
+         var argument = args[argIndex];
+
+         if (argument.Syntax is not ArgumentSyntax argSyntax)
             continue;
 
-         var found = false;
+         if (argSyntax.NameColon is not null)
+            continue;
 
-         for (var argIndex = argsIndex; argIndex < args.Length; argIndex += 2)
-         {
-            var argument = args[argIndex];
-
-            if (argument.Value is not IFieldReferenceOperation fieldReferenceOperation)
-               continue;
-
-            if (!SymbolEqualityComparer.Default.Equals(fieldReferenceOperation.Field, item))
-               continue;
-
-            found = true;
-            break;
-         }
-
-         if (!found)
-            missingItemNames = missingItemNames.Add(item.Name);
+         hasNonNamedParameters = true;
+         break;
       }
 
-      if (!missingItemNames.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.SwitchAndMapMustCoverAllItems, operation.Syntax.GetLocation(), operation.Instance.Type, String.Join(", ", missingItemNames));
+      if (hasNonNamedParameters)
+         ReportDiagnostic(context, DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters, operation.Syntax.GetLocation(), operation.Instance.Type);
    }
 
    private static void AnalyzeSmartEnum(OperationAnalysisContext context)
@@ -389,7 +400,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       Check_ItemLike_StaticProperties(context, enumType, nonIgnoredMembers);
       EnumItemsMustBePublic(context, enumType, items);
 
-      var assignableMembers = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, false, false, context.CancellationToken, context).ToList();
+      _ = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, false, false, context.CancellationToken, context).ToList();
 
       var baseClass = enumType.BaseType;
 
@@ -407,14 +418,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       EnumKeyMemberNameMustNotBeItem(context, attribute, locationOfFirstDeclaration);
 
-      ValidateKeyedSmartEnum(context, enumType, attribute, assignableMembers, nonIgnoredMembers, locationOfFirstDeclaration);
+      ValidateKeyedSmartEnum(context, enumType, attribute, nonIgnoredMembers, locationOfFirstDeclaration);
    }
 
    private static void ValidateKeyedSmartEnum(
       OperationAnalysisContext context,
       INamedTypeSymbol enumType,
       IObjectCreationOperation attribute,
-      IReadOnlyList<InstanceMemberInfo> assignableMembers,
       ImmutableArray<ISymbol> nonIgnoredMembers,
       Location locationOfFirstDeclaration)
    {

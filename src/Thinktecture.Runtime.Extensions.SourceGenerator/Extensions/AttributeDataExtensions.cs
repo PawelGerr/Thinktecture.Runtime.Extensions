@@ -129,14 +129,14 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipToString");
    }
 
-   public static bool? FindSkipSwitchMethods(this AttributeData attributeData)
+   public static SwitchMapMethodsGeneration FindSwitchMethods(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipSwitchMethods");
+      return GetSwitchMapGeneration(attributeData, "SwitchMethods");
    }
 
-   public static bool? FindSkipMapMethods(this AttributeData attributeData)
+   public static SwitchMapMethodsGeneration FindMapMethods(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipMapMethods");
+      return GetSwitchMapGeneration(attributeData, "MapMethods");
    }
 
    public static SerializationFrameworks FindUseForSerialization(this AttributeData attributeData)
@@ -181,6 +181,16 @@ public static class AttributeDataExtensions
 
       if (generation is null || !generation.Value.IsValid())
          return OperatorsGeneration.Default;
+
+      return generation.Value;
+   }
+
+   private static SwitchMapMethodsGeneration GetSwitchMapGeneration(AttributeData attributeData, string name)
+   {
+      var generation = (SwitchMapMethodsGeneration?)GetIntegerParameterValue(attributeData, name);
+
+      if (generation is null || !generation.Value.IsValid())
+         return SwitchMapMethodsGeneration.Default;
 
       return generation.Value;
    }

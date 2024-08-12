@@ -16,14 +16,14 @@ public sealed class SmartEnumAttribute : Attribute
    public OperatorsGeneration EqualityComparisonOperators { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of the methods <c>Switch</c>.
+   /// Indication whether and how the generator should generate the methods <c>Switch</c>.
    /// </summary>
-   public bool SkipSwitchMethods { get; set; }
+   public SwitchMapMethodsGeneration SwitchMethods { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of the methods <c>Map</c>.
+   /// Indication whether and how the generator should generate the methods <c>Map</c>.
    /// </summary>
-   public bool SkipMapMethods { get; set; }
+   public SwitchMapMethodsGeneration MapMethods { get; set; }
 }
 
 /// <summary>
@@ -123,14 +123,14 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public bool SkipToString { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of the methods <c>Switch</c>.
+   /// Indication whether and how the generator should generate the methods <c>Switch</c>.
    /// </summary>
-   public bool SkipSwitchMethods { get; set; }
+   public SwitchMapMethodsGeneration SwitchMethods { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of the methods <c>Map</c>.
+   /// Indication whether and how the generator should generate the methods <c>Map</c>.
    /// </summary>
-   public bool SkipMapMethods { get; set; }
+   public SwitchMapMethodsGeneration MapMethods { get; set; }
 
    /// <summary>
    /// Initializes new instance of <see cref="SmartEnumAttribute{TKey}"/>.

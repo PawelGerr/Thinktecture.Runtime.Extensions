@@ -1,6 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-[SmartEnum<string>]
+[SmartEnum<string>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+                   MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
 public sealed partial class ValidTestEnum
 {
    public static readonly ValidTestEnum Item1 = new("item1");

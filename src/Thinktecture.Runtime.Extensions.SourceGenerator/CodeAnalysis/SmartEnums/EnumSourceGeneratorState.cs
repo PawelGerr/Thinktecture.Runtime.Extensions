@@ -21,7 +21,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    private ArgumentName? _argumentName;
    public ArgumentName ArgumentName => _argumentName ??= Name.MakeArgumentName();
 
-   public EnumItemNames ItemNames { get; }
+   public EnumItems Items { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
 
    public EnumSourceGeneratorState(
@@ -48,7 +48,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       IsAbstract = type.IsAbstract;
 
       BaseType = type.GetBaseType(factory);
-      ItemNames = new EnumItemNames(type.GetEnumItems(nonIgnoredMembers));
+      Items = new EnumItems(type.GetEnumItems(nonIgnoredMembers));
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, true, false, cancellationToken).ToList();
    }
 
@@ -72,7 +72,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
              && Equals(BaseType, other.BaseType)
-             && ItemNames.Equals(other.ItemNames)
+             && Items.Equals(other.Items)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties);
    }
 
@@ -88,7 +88,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
-         hashCode = (hashCode * 397) ^ ItemNames.GetHashCode();
+         hashCode = (hashCode * 397) ^ Items.GetHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
 
          return hashCode;

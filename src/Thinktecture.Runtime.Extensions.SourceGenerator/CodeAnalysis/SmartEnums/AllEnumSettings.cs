@@ -12,8 +12,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
    public OperatorsGeneration EqualityComparisonOperators { get; }
    public bool SkipIFormattable { get; }
    public bool SkipToString { get; }
-   public bool? SkipSwitchMethods { get; }
-   public bool? SkipMapMethods { get; }
+   public SwitchMapMethodsGeneration SwitchMethods { get; }
+   public SwitchMapMethodsGeneration MapMethods { get; }
 
    public AllEnumSettings(AttributeData attribute)
    {
@@ -27,8 +27,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
       EqualityComparisonOperators = attribute.FindEqualityComparisonOperators();
       SkipIFormattable = attribute.FindSkipIFormattable() ?? false;
       SkipToString = attribute.FindSkipToString() ?? false;
-      SkipSwitchMethods = attribute.FindSkipSwitchMethods();
-      SkipMapMethods = attribute.FindSkipMapMethods();
+      SwitchMethods = attribute.FindSwitchMethods();
+      MapMethods = attribute.FindMapMethods();
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -57,8 +57,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
              && EqualityComparisonOperators == other.EqualityComparisonOperators
              && SkipIFormattable == other.SkipIFormattable
              && SkipToString == other.SkipToString
-             && SkipSwitchMethods == other.SkipSwitchMethods
-             && SkipMapMethods == other.SkipMapMethods;
+             && SwitchMethods == other.SwitchMethods
+             && MapMethods == other.MapMethods;
    }
 
    public override int GetHashCode()
@@ -75,8 +75,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
          hashCode = (hashCode * 397) ^ (int)EqualityComparisonOperators;
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipSwitchMethods.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipMapMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ SwitchMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
 
          return hashCode;
       }

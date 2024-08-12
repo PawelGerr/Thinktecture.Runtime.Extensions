@@ -1,7 +1,9 @@
 namespace Thinktecture.SmartEnums;
 
 [SmartEnum<int>(IsValidatable = true,
-                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+                MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
 public readonly partial struct ProductGroupStruct
 {
    public static readonly ProductGroupStruct Apple = new(1);

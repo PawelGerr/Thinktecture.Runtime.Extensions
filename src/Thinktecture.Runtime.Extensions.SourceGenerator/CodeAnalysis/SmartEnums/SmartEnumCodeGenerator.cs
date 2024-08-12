@@ -130,6 +130,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       private readonly int _hashCode;");
 
+      // Keyless structs cannot be compared properly thus no switch/map
+      var generateIndexBasedSwitchMap = _state.KeyMember is not null || _state.IsReferenceType;
+
+      if (generateIndexBasedSwitchMap)
+      {
+         _sb.Append(@"
+      private readonly global::System.Lazy<int> _itemIndex;");
+      }
+
       cancellationToken.ThrowIfCancellationRequested();
 
       GenerateConstructors();
@@ -174,18 +183,38 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null && !_state.Settings.SkipToString)
          GenerateToString(_state.KeyMember);
 
-      var hasSaneNumberOfItems = _state.ItemNames.Count < 1000;
+      var hasSaneNumberOfItems = _state.Items.Count < 1000;
 
-      if (!_state.Settings.SkipSwitchMethods.GetValueOrDefault() && hasSaneNumberOfItems)
+      if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None && generateIndexBasedSwitchMap && hasSaneNumberOfItems)
       {
-         GenerateSwitchForAction(false);
-         GenerateSwitchForAction(true);
-         GenerateSwitchForFunc(false);
-         GenerateSwitchForFunc(true);
+         GenerateSwitchForAction(false, false);
+
+         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+            GenerateSwitchForAction(false, true);
+
+         GenerateSwitchForAction(true, false);
+
+         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+            GenerateSwitchForAction(true, true);
+
+         GenerateSwitchForFunc(false, false);
+
+         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+            GenerateSwitchForFunc(false, true);
+
+         GenerateSwitchForFunc(true, false);
+
+         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+            GenerateSwitchForFunc(true, true);
       }
 
-      if (!_state.Settings.SkipMapMethods.GetValueOrDefault() && hasSaneNumberOfItems)
-         GenerateMap();
+      if (_state.Settings.MapMethods != SwitchMapMethodsGeneration.None && generateIndexBasedSwitchMap && hasSaneNumberOfItems)
+      {
+         GenerateMap(false);
+
+         if (_state.Settings.MapMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+            GenerateMap(true);
+      }
 
       if (_state.KeyMember is not null)
       {
@@ -211,9 +240,9 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateSwitchForAction(bool withContext)
+   private void GenerateSwitchForAction(bool withContext, bool isPartially)
    {
-      if (_state.ItemNames.Count == 0)
+      if (_state.Items.Count == 0)
          return;
 
       _sb.Append(@"
@@ -222,80 +251,193 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Executes an action depending on the current item.
       /// </summary>");
 
-      var itemNamePrefix = _state.ArgumentName.Raw;
-
       if (withContext)
       {
          _sb.Append(@"
       /// <param name=""context"">Context to be passed to the callbacks.</param>");
       }
 
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""").Append(itemNamePrefix).Append(i + 1).Append(@""">The item to compare to.</param>
-      /// <param name=""").Append(itemNamePrefix).Append("Action").Append(i + 1).Append(@""">The action to execute if the current item is equal to <paramref name=""").Append(itemNamePrefix).Append(i + 1).Append(@"""/>.</param>");
+      /// <param name=""default"">The action to execute if no item-specific action is provided.</param>");
       }
+
+      if (_state.Settings.IsValidatable)
+      {
+         _sb.Append(@"
+      /// <param name=""invalid"">The action to execute if the current item is an invalid item.</param>");
+      }
+
+      for (var i = 0; i < _state.Items.Count; i++)
+      {
+         _sb.Append(@"
+      /// <param name=""");
+
+         var item = _state.Items[i];
+         _sb.Append(item.ArgumentName.Raw);
+         _sb.Append(@""">The action to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
+      }
+
+      var methodName = isPartially ? "SwitchPartially" : "Switch";
 
       if (withContext)
       {
          _sb.Append(@"
-      public void Switch<TContext>(
+      public void ").Append(methodName).Append(@"<TContext>(
          TContext context,");
       }
       else
       {
          _sb.Append(@"
-      public void Switch(");
+      public void ").Append(methodName).Append("(");
       }
 
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (isPartially)
+      {
+         _sb.Append(@"
+         global::System.Action<");
+
+         if (withContext)
+            _sb.Append("TContext, ");
+
+         _sb.Append(_state.TypeFullyQualified).Append(">? @default = null,");
+      }
+
+      if (_state.Settings.IsValidatable)
+      {
+         _sb.Append(@"
+         global::System.Action<");
+
+         if (withContext)
+            _sb.Append("TContext, ");
+
+         _sb.Append(_state.TypeFullyQualified).Append(">");
+
+         if (isPartially)
+            _sb.Append('?');
+
+         _sb.Append(" invalid");
+
+         if (isPartially)
+            _sb.Append(" = null");
+
+         _sb.Append(',');
+      }
+
+      for (var i = 0; i < _state.Items.Count; i++)
       {
          if (i != 0)
             _sb.Append(",");
 
          _sb.Append(@"
-         ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
-            .Append(", global::System.Action");
+         global::System.Action");
 
          if (withContext)
             _sb.Append("<TContext>");
 
-         _sb.Append(' ').Append(itemNamePrefix).Append("Action").Append(i + 1);
+         if (isPartially)
+            _sb.Append('?');
+
+         _sb.Append(' ').Append(_state.Items[i].ArgumentName.Escaped);
+
+         if (isPartially)
+            _sb.Append(" = null");
       }
 
       _sb.Append(@")
-      {
-         ");
+      {");
 
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (_state.Settings.IsValidatable)
       {
-         if (i != 0)
-            _sb.Append(@"
-         else ");
+         _sb.Append(@"
+         if (!this.IsValid)
+         {");
 
-         _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
+         if (isPartially)
          {
-            ").Append(itemNamePrefix).Append("Action").Append(i + 1).Append("(");
+            _sb.Append(@"
+            if(invalid is null)
+            {
+               @default?.Invoke(");
+
+            if (withContext)
+               _sb.Append("context, ");
+
+            _sb.Append(@"this);
+               return;
+            }
+");
+         }
+
+         _sb.Append(@"
+            invalid(");
+
+         if (withContext)
+            _sb.Append("context, ");
+
+         _sb.Append(@"this);
+            return;
+         }
+");
+      }
+
+      GenerateIndexBasedActionSwitchBody(withContext, isPartially);
+
+      _sb.Append(@"
+      }");
+   }
+
+   private void GenerateIndexBasedActionSwitchBody(bool withContext, bool isPartially)
+   {
+      _sb.Append(@"
+         switch (_itemIndex.Value)
+         {");
+
+      for (var i = 0; i < _state.Items.Count; i++)
+      {
+         _sb.Append(@"
+            case ").Append(i).Append(":");
+
+         if (isPartially)
+         {
+            _sb.Append(@"
+               if (").Append(_state.Items[i].ArgumentName.Escaped).Append(@" is null)
+                  break;
+");
+         }
+
+         _sb.Append(@"
+               ").Append(_state.Items[i].ArgumentName.Escaped).Append("(");
 
          if (withContext)
             _sb.Append("context");
 
          _sb.Append(@");
-         }");
+               return;");
       }
 
       _sb.Append(@"
-         else
-         {
-            throw new global::System.ArgumentOutOfRangeException($""No action provided for the item '{this}'."");
-         }
-      }");
+            default:
+               throw new global::System.ArgumentOutOfRangeException($""Unknown item '{this}'."");
+         }");
+
+      if (isPartially)
+      {
+         _sb.Append(@"
+
+         @default?.Invoke(");
+
+         if (withContext)
+            _sb.Append("context, ");
+
+         _sb.Append("this);");
+      }
    }
 
-   private void GenerateSwitchForFunc(bool withContext)
+   private void GenerateSwitchForFunc(bool withContext, bool isPartially)
    {
-      if (_state.ItemNames.Count == 0)
+      if (_state.Items.Count == 0)
          return;
 
       _sb.Append(@"
@@ -310,74 +452,186 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""context"">Context to be passed to the callbacks.</param>");
       }
 
-      var itemNamePrefix = _state.ArgumentName.Raw;
-
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""").Append(itemNamePrefix).Append(i + 1).Append(@""">The item to compare to.</param>
-      /// <param name=""").Append(itemNamePrefix).Append("Func").Append(i + 1).Append(@""">The function to execute if the current item is equal to <paramref name=""").Append(itemNamePrefix).Append(i + 1).Append(@"""/>.</param>");
+      /// <param name=""default"">The function to execute if no item-specific action is provided.</param>");
       }
+
+      if (_state.Settings.IsValidatable)
+      {
+         _sb.Append(@"
+      /// <param name=""invalid"">The function to execute if the current item is an invalid item.</param>");
+      }
+
+      for (var i = 0; i < _state.Items.Count; i++)
+      {
+         _sb.Append(@"
+      /// <param name=""");
+
+         var item = _state.Items[i];
+         _sb.Append(item.ArgumentName.Raw);
+         _sb.Append(@""">The function to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
+      }
+
+      var methodName = isPartially ? "SwitchPartially" : "Switch";
 
       if (withContext)
       {
          _sb.Append(@"
-      public TResult Switch<TContext, TResult>(
+      public TResult ").Append(methodName).Append(@"<TContext, TResult>(
          TContext context,");
       }
       else
       {
          _sb.Append(@"
-      public TResult Switch<TResult>(");
+      public TResult ").Append(methodName).Append("<TResult>(");
       }
 
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (isPartially)
+      {
+         _sb.Append(@"
+         global::System.Func<");
+
+         if (withContext)
+            _sb.Append("TContext, ");
+
+         _sb.Append(_state.TypeFullyQualified).Append(", TResult> @default,");
+      }
+
+      if (_state.Settings.IsValidatable)
+      {
+         _sb.Append(@"
+         global::System.Func<");
+
+         if (withContext)
+            _sb.Append("TContext, ");
+
+         _sb.Append(_state.TypeFullyQualified).Append(", TResult>");
+
+         if (isPartially)
+            _sb.Append('?');
+
+         _sb.Append(" invalid");
+
+         if (isPartially)
+            _sb.Append(" = null");
+
+         _sb.Append(',');
+      }
+
+      for (var i = 0; i < _state.Items.Count; i++)
       {
          if (i != 0)
             _sb.Append(",");
 
          _sb.Append(@"
-         ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
-            .Append(", global::System.Func<");
+         ");
+
+         _sb.Append("global::System.Func<");
 
          if (withContext)
             _sb.Append("TContext, ");
 
-         _sb.Append("TResult> ").Append(itemNamePrefix).Append("Func").Append(i + 1);
+         _sb.Append("TResult>");
+
+         if (isPartially)
+            _sb.Append('?');
+
+         _sb.Append(' ').Append(_state.Items[i].ArgumentName.Escaped);
+
+         if (isPartially)
+            _sb.Append(" = null");
       }
 
       _sb.Append(@")
-      {
-         ");
+      {");
 
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (_state.Settings.IsValidatable)
       {
-         if (i != 0)
-            _sb.Append(@"
-         else ");
+         _sb.Append(@"
+         if (!this.IsValid)
+         {");
 
-         _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
+         if (isPartially)
          {
-            return ").Append(itemNamePrefix).Append("Func").Append(i + 1).Append("(");
+            _sb.Append(@"
+            if(invalid is null)
+               return @default(");
+
+            if (withContext)
+               _sb.Append("context, ");
+
+            _sb.Append(@"this);
+");
+         }
+
+         _sb.Append(@"
+            return invalid(");
+
+         if (withContext)
+            _sb.Append("context, ");
+
+         _sb.Append(@"this);
+         }
+");
+      }
+
+      GenerateIndexBasedFuncSwitchBody(withContext, isPartially);
+
+      _sb.Append(@"
+      }");
+   }
+
+   private void GenerateIndexBasedFuncSwitchBody(bool withContext, bool isPartially)
+   {
+      _sb.Append(@"
+         switch (_itemIndex.Value)
+         {");
+
+      for (var i = 0; i < _state.Items.Count; i++)
+      {
+         _sb.Append(@"
+            case ").Append(i).Append(":");
+
+         if (isPartially)
+         {
+            _sb.Append(@"
+               if (").Append(_state.Items[i].ArgumentName.Escaped).Append(@" is null)
+                  break;
+");
+         }
+
+         _sb.Append(@"
+               return ").Append(_state.Items[i].ArgumentName.Escaped).Append("(");
 
          if (withContext)
             _sb.Append("context");
 
-         _sb.Append(@");
-         }");
+         _sb.Append(");");
       }
 
       _sb.Append(@"
-         else
-         {
-            throw new global::System.ArgumentOutOfRangeException($""No function provided for the item '{this}'."");
-         }
-      }");
+            default:
+               throw new global::System.ArgumentOutOfRangeException($""Unknown item '{this}'."");
+         }");
+
+      if (isPartially)
+      {
+         _sb.Append(@"
+
+         return @default(");
+
+         if (withContext)
+            _sb.Append("context, ");
+
+         _sb.Append("this);");
+      }
    }
 
-   private void GenerateMap()
+   private void GenerateMap(bool isPartially)
    {
-      if (_state.ItemNames.Count == 0)
+      if (_state.Items.Count == 0)
          return;
 
       _sb.Append(@"
@@ -386,50 +640,141 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Maps an item to an instance of type <typeparamref name=""TResult""/>.
       /// </summary>");
 
-      var itemNamePrefix = _state.ArgumentName.Raw;
-
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""").Append(itemNamePrefix).Append(i + 1).Append(@""">The item to compare to.</param>
-      /// <param name=""other").Append(i + 1).Append(@""">The instance to return if the current item is equal to <paramref name=""").Append(itemNamePrefix).Append(i + 1).Append(@"""/>.</param>");
+      /// <param name=""default"">The instance to return if no value is provided for current item.</param>");
       }
 
-      _sb.Append(@"
-      public TResult Map<TResult>(");
+      if (_state.Settings.IsValidatable)
+      {
+         _sb.Append(@"
+      /// <param name=""invalid"">The instance to return if the current item is an invalid item.</param>");
+      }
 
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      for (var i = 0; i < _state.Items.Count; i++)
+      {
+         var item = _state.Items[i];
+
+         _sb.Append(@"
+      /// <param name=""").Append(item.ArgumentName.Raw).Append(@""">The instance to return if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
+      }
+
+      var methodName = isPartially ? "MapPartially" : "Map";
+
+      _sb.Append(@"
+      public TResult ").Append(methodName).Append("<TResult>(");
+
+      if (isPartially)
+      {
+         _sb.Append(@"
+         TResult @default,");
+      }
+
+      if (_state.Settings.IsValidatable)
+      {
+         _sb.Append(@"
+         ");
+
+         if (isPartially)
+            _sb.Append("global::Thinktecture.Argument<");
+
+         _sb.Append("TResult");
+
+         if (isPartially)
+            _sb.Append(">");
+
+         _sb.Append(" invalid");
+
+         if (isPartially)
+            _sb.Append(" = default");
+
+         _sb.Append(",");
+      }
+
+      for (var i = 0; i < _state.Items.Count; i++)
       {
          if (i != 0)
             _sb.Append(",");
 
          _sb.Append(@"
-         ").Append(_state.Name).Append(" ").Append(itemNamePrefix).Append(i + 1)
-            .Append(", TResult ").Append("other").Append(i + 1);
+         ");
+
+         if (isPartially)
+            _sb.Append("global::Thinktecture.Argument<");
+
+         _sb.Append("TResult");
+
+         if (isPartially)
+            _sb.Append(">");
+
+         _sb.Append(" ").Append(_state.Items[i].ArgumentName.Escaped);
+
+         if (isPartially)
+            _sb.Append(" = default");
       }
 
       _sb.Append(@")
-      {
-         ");
+      {");
 
-      for (var i = 0; i < _state.ItemNames.Count; i++)
+      if (_state.Settings.IsValidatable)
       {
-         if (i != 0)
-            _sb.Append(@"
-         else ");
+         _sb.Append(@"
+         if (!this.IsValid)
+            return invalid");
 
-         _sb.Append("if (this == ").Append(itemNamePrefix).Append(i + 1).Append(@")
+         if (isPartially)
+            _sb.Append(".IsSet ? invalid.Value : @default");
+
+         _sb.Append(@";
+");
+      }
+
+      GenerateIndexBasedMapSwitchBody(isPartially);
+
+      _sb.Append(@"
+      }");
+   }
+
+   private void GenerateIndexBasedMapSwitchBody(bool isPartially)
+   {
+      _sb.Append(@"
+         switch (_itemIndex.Value)
+         {");
+
+      for (var i = 0; i < _state.Items.Count; i++)
+      {
+         _sb.Append(@"
+            case ").Append(i).Append(":");
+
+         if (isPartially)
          {
-            return other").Append(i + 1).Append(@";
-         }");
+            _sb.Append(@"
+               if (!").Append(_state.Items[i].ArgumentName.Escaped).Append(@".IsSet)
+                  break;
+");
+         }
+
+         _sb.Append(@"
+               return ").Append(_state.Items[i].ArgumentName.Escaped);
+
+         if (isPartially)
+            _sb.Append(".Value");
+
+         _sb.Append(";");
       }
 
       _sb.Append(@"
-         else
-         {
-            throw new global::System.ArgumentOutOfRangeException($""No instance provided for the item '{this}'."");
-         }
-      }");
+            default:
+               throw new global::System.ArgumentOutOfRangeException($""Unknown item '{this}'."");
+         }");
+
+      if (isPartially)
+      {
+         _sb.Append(@"
+
+         return @default;");
+      }
    }
 
    private void GenerateModuleInitializer(IMemberState keyMember)
@@ -645,7 +990,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateGetLookup(KeyMemberState keyMember)
    {
-      var totalNumberOfItems = _state.ItemNames.Count;
+      var totalNumberOfItems = _state.Items.Count;
 
       _sb.Append(@"
 
@@ -664,7 +1009,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(");");
 
-      if (_state.ItemNames.Count > 0)
+      if (_state.Items.Count > 0)
       {
          _sb.Append(@"
 
@@ -703,9 +1048,9 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 ");
 
-         for (var i = 0; i < _state.ItemNames.Count; i++)
+         for (var i = 0; i < _state.Items.Count; i++)
          {
-            var itemName = _state.ItemNames[i];
+            var itemName = _state.Items[i].Name;
 
             _sb.Append(@"
          AddItem(@").Append(itemName).Append(", nameof(@").Append(itemName).Append("));");
@@ -735,7 +1080,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateGetItems()
    {
-      var totalNumberOfItems = _state.ItemNames.Count;
+      var totalNumberOfItems = _state.Items.Count;
 
       _sb.Append(@"
 
@@ -743,7 +1088,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var list = new global::System.Collections.Generic.List<").Append(_state.TypeFullyQualified).Append(">(").Append(totalNumberOfItems).Append(");");
 
-      if (_state.ItemNames.Count > 0)
+      if (_state.Items.Count > 0)
       {
          _sb.Append(@"
 
@@ -756,9 +1101,9 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 ");
 
-         for (var i = 0; i < _state.ItemNames.Count; i++)
+         for (var i = 0; i < _state.Items.Count; i++)
          {
-            var itemName = _state.ItemNames[i];
+            var itemName = _state.Items[i].Name;
 
             _sb.Append(@"
          AddItem(@").Append(itemName).Append(", nameof(@").Append(itemName).Append("));");
@@ -1149,17 +1494,53 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(_state.KeyMember.ArgumentName.Escaped).Append(".GetHashCode()");
          }
 
-         _sb.Append(@");
-      }");
+         _sb.Append(");");
       }
       else
       {
          _sb.Append(@"
-         this._hashCode = base.GetHashCode();
-      }");
+         this._hashCode = base.GetHashCode();");
+      }
+
+      if (_state.KeyMember is not null || _state.IsReferenceType)
+      {
+         _sb.Append(@"
+         this._itemIndex = new global::System.Lazy<int>(() =>
+                                                        {
+                                                           for (var i = 0; i < Items.Count; i++)
+                                                           {
+                                                              if (");
+
+         if (_state.IsReferenceType)
+         {
+            _sb.Append("this == Items[i]");
+         }
+         else if (_state.KeyMember is not null)
+         {
+            if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
+            {
+               _sb.Append(_state.Settings.KeyMemberEqualityComparerAccessor).Append(".EqualityComparer.Equals(").Append(_state.KeyMember.ArgumentName.Escaped).Append(", Items[i].").Append(_state.KeyMember.Name).Append(")");
+            }
+            else if (_state.KeyMember.IsString())
+            {
+               _sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(").Append(_state.KeyMember.ArgumentName.Escaped).Append(", Items[i].").Append(_state.KeyMember.Name).Append(")");
+            }
+            else
+            {
+               _sb.Append(_state.KeyMember.ArgumentName.Escaped).Append(".Equals(").Append("Items[i].").Append(_state.KeyMember.Name).Append(")");
+            }
+         }
+
+         _sb.Append(@")
+                                                                 return i;
+                                                           }
+
+                                                           throw new global::System.Exception($""Current item '{").Append(_state.KeyMember?.ArgumentName.Escaped ?? "this").Append(@"}' not found in 'Items'."");
+                                                        }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);");
       }
 
       _sb.Append(@"
+      }
 
       static partial void ValidateConstructorArguments(");
 

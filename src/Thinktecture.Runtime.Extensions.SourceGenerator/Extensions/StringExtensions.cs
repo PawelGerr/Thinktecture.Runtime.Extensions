@@ -30,12 +30,4 @@ public static class StringExtensions
 
       return new ArgumentName(name, escaped);
    }
-
-   public static string? TrimAndNullify(this string? text)
-   {
-      if (String.IsNullOrWhiteSpace(text))
-         return null;
-
-      return text!.Trim();
-   }
 }

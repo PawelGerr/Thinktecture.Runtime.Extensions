@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.IO;
 using CsvHelper;
@@ -22,17 +23,36 @@ public class SmartEnumDemos
    {
       logger.Information("==== Demo for SmartEnum<T> ====");
 
+      // Iteration over all items
       logger.Information("Product types: {Types}", ProductType.Items);
 
+      // Iteration over all items using "abstract static member" Items
+      PrintAllItems<ProductType, string, ProductTypeValidationError>(logger);
+
+      // Lookup/conversion from key type (throws if invalid)
       var productType = ProductType.Get("Groceries");
       logger.Information("Product type: {Type}", productType);
 
+      try
+      {
+         // Throws if the provided value is invalid/unknown
+         ProductType.Get("Unknown");
+         logger.Warning("This line won't be reached.");
+      }
+      catch (UnknownEnumIdentifierException)
+      {
+         logger.Information("UnknownEnumIdentifierException is thrown because there is no product type with the key 'Unknown'.");
+      }
+
+      // Conversion to key type (throws if invalid)
       productType = (ProductType)"Groceries";
       logger.Information("Explicitly casted product type: {Type}", productType);
 
+      // Conversion from key type
       if (ProductType.TryGet("Housewares", out var housewares))
          logger.Information("Product type {Type} with TryGet found", housewares);
 
+      // Conversion from key type (this overload is mainly used for writing other libs)
       var validationError = ProductType.Validate("Groceries", null, out var groceries);
 
       if (validationError is null)
@@ -44,50 +64,27 @@ public class SmartEnumDemos
          logger.Warning("Failed to fetch the product type with Validate. Validation error: {ValidationError}", validationError.ToString());
       }
 
+      // Implicit conversion to key type
       string keyOfTheProductType = productType;
       logger.Information("Implicit conversion of ProductType -> string: {Key}", keyOfTheProductType);
 
-      try
-      {
-         ProductType.Get("Unknown");
-         logger.Warning("This line won't be reached.");
-      }
-      catch (UnknownEnumIdentifierException)
-      {
-         logger.Information("UnknownEnumIdentifierException is thrown because there is no product type with the key 'Unknown'.");
-      }
+      SwitchWithAction(logger);
+      SwitchWithFunc(logger);
+      Map(logger);
 
-      productType.Switch(ProductType.Groceries, () => logger.Information("Switch with Action: Groceries"),
-                         ProductType.Housewares, () => logger.Information("Switch with Action: Housewares"));
-
-      productType.Switch(logger,
-                         ProductType.Groceries, static l => l.Information("Switch with Action: Groceries"),
-                         ProductType.Housewares, static l => l.Information("Switch with Action: Housewares"));
-
-      var returnValue = productType.Switch(ProductType.Groceries, static () => "Switch with Func<T>: Groceries",
-                                           ProductType.Housewares, static () => "Switch with Func<T>: Housewares");
-      logger.Information("{ReturnValue}", returnValue);
-
-      returnValue = productType.Switch(logger,
-                                       ProductType.Groceries, static _ => "Switch with Func<T>: Groceries",
-                                       ProductType.Housewares, static _ => "Switch with Func<T>: Housewares");
-
-      logger.Information("{ReturnValue}", returnValue);
-
-      returnValue = productType.Map(ProductType.Groceries, "Map: Groceries",
-                                    ProductType.Housewares, "Map: Housewares");
-
-      logger.Information("{ReturnValue}", returnValue);
-
+      // Implements IParsable if the key is a string
       var parsed = ProductType.TryParse("Groceries", null, out var parsedProductType);
       logger.Information("Success: {Success} Parsed: {Parsed}", parsed, parsedProductType);
 
+      // Implements IFormattable if the key is IFormattable
       var formatted = ProductGroup.Apple.ToString("000", CultureInfo.InvariantCulture); // 001
       logger.Information("Formatted: {Formatted}", formatted);
 
+      // Implements IComparable if the key is IComparable
       var comparison = ProductGroup.Apple.CompareTo(ProductGroup.Orange); // -1
       logger.Information("Comparison: {Comparison}", comparison);
 
+      // Implements comparison operators if the key is comparable
       var isBigger = ProductGroup.Apple > ProductGroup.Orange;
       logger.Information("{Apple} > {Orange} = {IsBigger}", ProductGroup.Apple, ProductGroup.Orange, isBigger);
 
@@ -97,9 +94,114 @@ public class SmartEnumDemos
 
       logger.Information("==== Demo for abstract static members ====");
 
-      PrintAllItems<ProductType, string, ProductTypeValidationError>(logger);
-
       Get<ProductType, string, ProductTypeValidationError>(logger, "Groceries");
+   }
+
+   private static void Map(ILogger logger)
+   {
+      var productType = ProductType.Groceries;
+
+      // Map
+      var returnValue = productType.Map(groceries: "Map: Groceries",
+                                        housewares: "Map: Housewares");
+      logger.Information("{ReturnValue}", returnValue);
+
+      // MapPartially
+      returnValue = productType.MapPartially(@default: "MapPartially: default",
+                                             housewares: "MapPartially: Housewares");
+      logger.Information("{ReturnValue}", returnValue);
+   }
+
+   private static void SwitchWithFunc(ILogger logger)
+   {
+      var productType = ProductType.Groceries;
+
+      // Switch with Func<TResult>
+      var returnValue = productType.Switch(groceries: static () => "Switch with Func<TResult>: Groceries",
+                                           housewares: static () => "Switch with Func<TResult>: Housewares");
+      logger.Information("{ReturnValue}", returnValue);
+
+      // Switch with Func<TContext, TResult>
+      returnValue = productType.Switch(logger,
+                                       groceries: static _ => "Switch with Func<TContext, TResult>: Groceries",
+                                       housewares: static _ => "Switch with Func<TContext, TResult>: Housewares");
+      logger.Information("{ReturnValue}", returnValue);
+
+      // SwitchPartially with Func<TResult>
+      returnValue = productType.SwitchPartially(@default: static item => $"SwitchPartially with Func<TResult>: default ('{item}')",
+                                                groceries: static () => "SwitchPartially with Func<TResult>: Groceries");
+      logger.Information("{ReturnValue}", returnValue);
+
+      returnValue = productType.SwitchPartially(@default: item => $"SwitchPartially with Func<TResult>: '{item}' (default only)");
+      logger.Information("{ReturnValue}", returnValue);
+
+      returnValue = ProductType.Housewares.SwitchPartially(@default: item => $"SwitchPartially with Func<TResult>: default ('{item}')",
+                                                           groceries: () => "SwitchPartially with Func<TResult>: Groceries");
+      logger.Information("{ReturnValue}", returnValue);
+
+      // SwitchPartially with Func<TContext, TResult>
+      returnValue = productType.SwitchPartially(logger,
+                                                @default: static (_, item) => $"SwitchPartially with Func<TContext, TResult>: default ('{item}')",
+                                                groceries: static _ => "SwitchPartially with Func<TContext, TResult>: Groceries");
+      logger.Information("{ReturnValue}", returnValue);
+
+      returnValue = productType.SwitchPartially(logger,
+                                                @default: static (_, item) => $"SwitchPartially with Func<TContext, TResult>: {item} (default only)");
+      logger.Information("{ReturnValue}", returnValue);
+
+      returnValue = ProductType.Housewares.SwitchPartially(logger,
+                                                           @default: static (_, item) => $"SwitchPartially with Func<TContext, TResult>: default ('{item}')",
+                                                           groceries: static _ => "SwitchPartially with Func<TContext, TResult>: Groceries");
+      logger.Information("{ReturnValue}", returnValue);
+   }
+
+   private static void SwitchWithAction(ILogger logger)
+   {
+      var productType = ProductType.Groceries;
+
+      // Switch with Action
+      productType.Switch(groceries: () => logger.Information("Switch with Action: Groceries"),
+                         housewares: () => logger.Information("Switch with Action: Housewares"));
+
+      // Switch with Action<TContext>
+      productType.Switch(logger,
+                         groceries: static l => l.Information("Switch with Action: Groceries"),
+                         housewares: static l => l.Information("Switch with Action: Housewares"));
+
+      // Switch of a "validatable" enum
+      ProductGroupStruct.Get(42).Switch(invalid: invalidItem => Console.WriteLine($"Invalid item: {invalidItem}"),
+                                        apple: () => Console.WriteLine("apple"),
+                                        orange: () => Console.WriteLine("orange"));
+
+      // SwitchPartially with Action
+      productType.SwitchPartially(@default: item => logger.Information("SwitchPartially with Action: default ('{Item}')", item),
+                                  groceries: () => logger.Information("SwitchPartially with Action: Groceries"));
+
+      productType.SwitchPartially(groceries: () => logger.Information("SwitchPartially with Action: Groceries (no default)"));
+      productType.SwitchPartially(@default: item => logger.Information("SwitchPartially with Action: {Item} (default only)", item));
+
+      ProductType.Housewares.SwitchPartially(@default: item => logger.Information("SwitchPartially with Action: default ('{Item}')", item),
+                                             groceries: () => logger.Information("SwitchPartially with Action: Groceries"));
+
+      // Switch of a "validatable" enum
+      ProductGroupStruct.Get(42).SwitchPartially(invalid: invalidItem => Console.WriteLine($"SwitchPartially with Action: Invalid item ({invalidItem})"),
+                                                 apple: () => Console.WriteLine("SwitchPartially with Action: apple"),
+                                                 orange: () => Console.WriteLine("SwitchPartially with Action: orange"));
+
+      // SwitchPartially with Action<TContext>
+      productType.SwitchPartially(logger,
+                                  @default: static (l, item) => l.Information("SwitchPartially with Action<TContext>: default ('{Item}')", item),
+                                  groceries: static l => l.Information("SwitchPartially with Action<TContext>: Groceries"));
+
+      productType.SwitchPartially(logger,
+                                  groceries: static l => l.Information("SwitchPartially with Action<TContext>: Groceries (no default)"));
+
+      productType.SwitchPartially(logger,
+                                  @default: static (l, item) => l.Information("SwitchPartially with Action<TContext>: {Item} (default only)", item));
+
+      ProductType.Housewares.SwitchPartially(logger,
+                                             @default: static (l, item) => l.Information("SwitchPartially with Action<TContext>: default ('{Item}')", item),
+                                             groceries: static l => l.Information("SwitchPartially with Action<TContext>: Groceries"));
    }
 
    private static void DemoForSmartEnumWithCustomComparer(ILogger logger)

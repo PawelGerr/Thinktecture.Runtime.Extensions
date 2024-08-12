@@ -40,6 +40,7 @@ Value objects:
   * SDK 6.0.300 (or higher) for building projects
 
 # Migrations
+* [Migration from v7 to v8](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v7-to-v8)
 * [Migration from v6 to v7](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v6-to-v7)
 
 # Smart Enums
