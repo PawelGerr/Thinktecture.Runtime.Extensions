@@ -14,11 +14,11 @@
 
 This library provides some interfaces, classes, [Roslyn Source Generators](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview), Roslyn Analyzers and Roslyn CodeFixes for implementation of **Smart Enums** and **Value Objects**.
 
-# Documentation for version 7
+# Documentation
 
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
-I recently started writing down some **[ideas and real-world use cases](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#real-world-use-cases-and-ideas)** I used in the past to show the developers the benefits of value objects and smart enums. More examples will come very soon!
+## **[Ideas and real-world use cases](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#real-world-use-cases-and-ideas)**
 
 Smart Enums:
 * [CSV-Importer-Type](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#csv-importer-type)
@@ -29,6 +29,9 @@ Value objects:
 
 # Requirements
 
+* Version 8:
+  * C# 11 (or higher) for generated code
+  * SDK 8.0.300 (or higher) for building projects
 * Version 7:
   * C# 11 (or higher) for generated code
   * SDK 7.0.401 (or higher) for building projects
