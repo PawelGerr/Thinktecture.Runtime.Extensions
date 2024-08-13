@@ -79,6 +79,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
             TestState.AdditionalReferences.Add(additionalReference);
          }
 
+         CodeFixTestBehaviors = CodeFixTestBehaviors.SkipLocalDiagnosticCheck;
          this.DisableNullableReferenceWarnings();
       }
 
