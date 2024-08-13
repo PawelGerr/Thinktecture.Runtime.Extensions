@@ -179,26 +179,26 @@ string key = ProductType.Groceries.ToString(); // "Groceries"
 ILogger logger = ...;
 
 // Switch-case (with "Action")
-productType.Switch(ProductType.Groceries, () => logger.Information("Switch with Action: Groceries"),
-                   ProductType.Housewares, () => logger.Information("Switch with Action: Housewares"));
+productType.Switch(groceries: () => logger.Information("Switch with Action: Groceries"),
+                   housewares: () => logger.Information("Switch with Action: Housewares"));
                    
 // Switch-case with parameter (Action<TParam>) to prevent closures
 productType.Switch(logger,
-                   ProductType.Groceries, static l => l.Information("Switch with Action: Groceries"),
-                   ProductType.Housewares, static l => l.Information("Switch with Action: Housewares"));
+                   groceries: static l => l.Information("Switch with Action: Groceries"),
+                   housewares: static l => l.Information("Switch with Action: Housewares"));
 
 // Switch case returning a value (Func<TResult>)
-var returnValue = productType.Switch(ProductType.Groceries, static () => "Switch with Func<T>: Groceries",
-                                     ProductType.Housewares, static () => "Switch with Func<T>: Housewares");
+var returnValue = productType.Switch(groceries: static () => "Switch with Func<T>: Groceries",
+                                     housewares: static () => "Switch with Func<T>: Housewares");
 
 // Switch case with parameter returning a value (Func<TParam, TResult>) to prevent closures
 var returnValue = productType.Switch(logger,
-                                     ProductType.Groceries, static l => "Switch with Func<T>: Groceries",
-                                     ProductType.Housewares, static l => "Switch with Func<T>: Housewares");
+                                     groceries: static l => "Switch with Func<T>: Groceries",
+                                     housewares: static l => "Switch with Func<T>: Housewares");
 
 // Map an item to another instance
-returnValue = productType.Map(ProductType.Groceries, "Map: Groceries",
-                              ProductType.Housewares, "Map: Housewares");
+returnValue = productType.Map(groceries: "Map: Groceries",
+                              housewares: "Map: Housewares");
 ------------
 
 // Implements IParsable<T> which is especially helpful with minimal apis.
