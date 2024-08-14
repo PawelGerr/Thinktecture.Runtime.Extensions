@@ -31,7 +31,7 @@ Value objects:
 
 * Version 8:
   * C# 11 (or higher) for generated code
-  * SDK 8.0.300 (or higher) for building projects
+  * SDK 8.0.400 (or higher) for building projects
 * Version 7:
   * C# 11 (or higher) for generated code
   * SDK 7.0.401 (or higher) for building projects
