@@ -22,7 +22,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
                  	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        public sealed class {|#0:InnerTestEnum|} : TestEnum
                  	   {
                        }
@@ -41,7 +41,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
                          	public partial class TestEnum
                          	{
                                public static readonly TestEnum Item1 = default;
-                         
+
                                private sealed class {|#0:InnerTestEnum|} : TestEnum
                          	   {
                                }
@@ -67,7 +67,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
                  	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class {|#0:InnerTestEnum|} : TestEnum
                  	   {
                        }
@@ -92,7 +92,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
                  	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class InnerTestEnum : TestEnum
                  	   {
                           public sealed class {|#0:MostInnerTestEnum|} : TestEnum

@@ -21,7 +21,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
                     namespace TestNamespace
                     {
                        [ValueObject<string>(SkipKeyMember = true)]
-                       public sealed partial class ValueObject
+                       public partial class ValueObject
                     	{
                           private readonly int {|#0:_value|};
                        }
@@ -45,7 +45,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
                     namespace TestNamespace
                     {
                        [ValueObject<string>(SkipKeyMember = true)]
-                       public sealed partial class ValueObject
+                       public partial class ValueObject
                     	{
                           private readonly string? {|#0:_value|};
                        }
@@ -69,7 +69,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
                     namespace TestNamespace
                     {
                        [ValueObject<int>(SkipKeyMember = true)]
-                       public sealed partial class ValueObject
+                       public partial class ValueObject
                     	{
                           private readonly int? {|#0:_value|};
                        }
@@ -91,7 +91,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
                     namespace TestNamespace
                     {
                        [ValueObject<string>(SkipKeyMember = true)]
-                       public sealed partial class {|#0:ValueObject|}
+                       public partial class {|#0:ValueObject|}
                     	{
                           private readonly string _value;
                        }

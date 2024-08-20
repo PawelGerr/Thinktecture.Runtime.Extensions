@@ -3,7 +3,7 @@ namespace Thinktecture.SmartEnums;
 [SmartEnum<int>(IsValidatable = true,
                 ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                 SkipToString = true)]
-public sealed partial class ProductGroup
+public partial class ProductGroup
 {
    public static readonly ProductGroup Apple = new(1, "Apple", ProductCategory.Fruits);
    public static readonly ProductGroup Orange = new(2, "Orange", ProductCategory.Fruits);

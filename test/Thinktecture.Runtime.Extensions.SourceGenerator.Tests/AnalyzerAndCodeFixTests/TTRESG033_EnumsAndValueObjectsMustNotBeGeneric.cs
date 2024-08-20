@@ -23,7 +23,7 @@ public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|}<T>
+                    	public partial class {|#0:TestEnum|}<T>
                     	{
                           public static readonly TestEnum<T> Item1 = default;
                        }
@@ -45,7 +45,7 @@ public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public readonly partial struct {|#0:TestEnum|}<T>
+                    	public partial struct {|#0:TestEnum|}<T>
                     	{
                           public static readonly TestEnum<T> Item1 = default;
                        }
@@ -70,7 +70,7 @@ public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|}<T>
+                    	public partial class {|#0:TestValueObject|}<T>
                     	{
                        }
                     }
@@ -91,7 +91,7 @@ public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public readonly partial struct {|#0:TestValueObject|}<T>
+                    	public partial struct {|#0:TestValueObject|}<T>
                     	{
                        }
                     }
@@ -115,7 +115,7 @@ public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|}<T>
+                    	public partial class {|#0:TestValueObject|}<T>
                     	{
                        }
                     }
@@ -136,7 +136,7 @@ public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public readonly partial struct {|#0:TestValueObject|}<T>
+                    	public partial struct {|#0:TestValueObject|}<T>
                     	{
                        }
                     }

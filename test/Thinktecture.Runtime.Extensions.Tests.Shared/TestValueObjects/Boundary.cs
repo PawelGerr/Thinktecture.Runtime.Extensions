@@ -1,7 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject]
-public sealed partial class Boundary
+public partial class Boundary
 {
    public decimal Lower { get; }
    public decimal Upper { get; }

@@ -27,7 +27,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
                     {
                        [SmartEnum<int>]
                        [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default!;
                        }
@@ -53,7 +53,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
                     {
                        [SmartEnum<int>]
                        [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default!;
                        }
@@ -81,7 +81,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
                     {
                        [ValueObject<int>]
                        [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                        }
                     }
@@ -106,7 +106,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
                     {
                        [ValueObject<int>]
                        [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                        }
                     }

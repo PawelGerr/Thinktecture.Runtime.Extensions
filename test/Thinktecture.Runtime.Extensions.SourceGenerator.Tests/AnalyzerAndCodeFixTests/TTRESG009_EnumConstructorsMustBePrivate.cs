@@ -19,10 +19,10 @@ public class TTRESG009_EnumConstructorsMustBePrivate
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        protected {|#0:TestEnum|}()
                        {
                        }
@@ -45,10 +45,10 @@ public class TTRESG009_EnumConstructorsMustBePrivate
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private protected {|#0:TestEnum|}()
                        {
                        }
@@ -71,10 +71,10 @@ public class TTRESG009_EnumConstructorsMustBePrivate
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private {|#0:TestEnum|}()
                        {
                        }

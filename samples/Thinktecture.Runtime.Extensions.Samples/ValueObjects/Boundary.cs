@@ -2,7 +2,7 @@ namespace Thinktecture.ValueObjects;
 
 [ComplexValueObject]
 [ValueObjectValidationError<BoundaryValidationError>]
-public sealed partial class Boundary
+public partial class Boundary
 {
    public decimal Lower { get; }
    public decimal Upper { get; }

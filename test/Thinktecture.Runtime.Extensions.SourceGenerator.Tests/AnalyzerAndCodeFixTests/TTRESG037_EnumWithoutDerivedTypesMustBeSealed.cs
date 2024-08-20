@@ -9,80 +9,6 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    private const string _DIAGNOSTIC_ID = "TTRESG037";
 
    [Fact]
-   public async Task Should_trigger_on_IValidatableEnum()
-   {
-      var code = """
-
-                 using System;
-                 using Thinktecture;
-
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
-
-      var expectedCode = """
-
-                         using System;
-                         using Thinktecture;
-
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>(IsValidatable = true)]
-                         	public sealed partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-                            }
-                         }
-                         """;
-
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
-   }
-
-   [Fact]
-   public async Task Should_trigger_on_IEnum()
-   {
-      var code = """
-
-                 using System;
-                 using Thinktecture;
-
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
-
-      var expectedCode = """
-
-                         using System;
-                         using Thinktecture;
-
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>]
-                         	public sealed partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-                            }
-                         }
-                         """;
-
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
-   }
-
-   [Fact]
    public async Task Should_trigger_on_inner_type()
    {
       var code = """
@@ -96,18 +22,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private class Type_1 : TestEnum
                        {
                           public class {|#0:Type_3|} : Type_1
                           {
                           }
-                 
+
                           public sealed class Type_4 : Type_2
                           {
                           }
                        }
-                 
+
                        private class Type_2 : Type_1
                        {
                        }
@@ -126,18 +52,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                          	public partial class TestEnum
                          	{
                                public static readonly TestEnum Item1 = default;
-                         
+
                                private class Type_1 : TestEnum
                                {
                                   public sealed class Type_3 : Type_1
                                   {
                                   }
-                         
+
                                   public sealed class Type_4 : Type_2
                                   {
                                   }
                                }
-                         
+
                                private class Type_2 : Type_1
                                {
                                }
@@ -163,18 +89,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private class Type_1 : TestEnum
                        {
                           public sealed class Type_3 : Type_1
                           {
                           }
-                 
+
                           public class {|#0:Type_4|} : Type_2
                           {
                           }
                        }
-                 
+
                        private class Type_2 : Type_1
                        {
                        }
@@ -193,18 +119,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                          	public partial class TestEnum
                          	{
                                public static readonly TestEnum Item1 = default;
-                         
+
                                private class Type_1 : TestEnum
                                {
                                   public sealed class Type_3 : Type_1
                                   {
                                   }
-                         
+
                                   public sealed class Type_4 : Type_2
                                   {
                                   }
                                }
-                         
+
                                private class Type_2 : Type_1
                                {
                                }
@@ -217,7 +143,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    }
 
    [Fact]
-   public async Task Should_not_trigger_on_IValidatableEnum_with_derived_type()
+   public async Task Should_not_trigger_on_ValidatableEnum_with_derived_type()
    {
       var code = """
 
@@ -230,7 +156,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class DerivedType : TestEnum
                        {
                        }
@@ -242,7 +168,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    }
 
    [Fact]
-   public async Task Should_not_trigger_on_IEnum_with_derived_type()
+   public async Task Should_not_trigger_on_Enum_with_derived_type()
    {
       var code = """
 
@@ -255,7 +181,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class DerivedType : TestEnum
                        {
                        }
@@ -280,7 +206,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class DerivedType<T> : TestEnum
                        {
                        }
@@ -292,7 +218,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    }
 
    [Fact]
-   public async Task Should_not_trigger_on_IEnum_with_generic_derived_type()
+   public async Task Should_not_trigger_on_Enum_with_generic_derived_type()
    {
       var code = """
 
@@ -305,7 +231,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class DerivedType<T> : TestEnum
                        {
                        }
@@ -330,18 +256,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private class Type_1 : TestEnum
                        {
                           public sealed class Type_3 : Type_1
                           {
                           }
-                 
+
                           public sealed class Type_4 : Type_2
                           {
                           }
                        }
-                 
+
                        private class Type_2 : Type_1
                        {
                        }
@@ -387,7 +313,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
                  	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private abstract class Type_1 : TestEnum
                        {
                        }

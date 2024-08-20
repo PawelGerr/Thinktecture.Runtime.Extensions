@@ -19,10 +19,10 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        public static TestEnum {|#0:CreateInvalidItem|}(string key)
                        {
                           return null;
@@ -46,10 +46,10 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private TestEnum {|#0:CreateInvalidItem|}(string key)
                        {
                           return null;
@@ -73,10 +73,10 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private static string {|#0:CreateInvalidItem|}(string key)
                        {
                           return null;
@@ -100,10 +100,10 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private static TestEnum {|#0:CreateInvalidItem|}(int key)
                        {
                           return null;
@@ -127,10 +127,10 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private static TestEnum {|#0:CreateInvalidItem|}(string key, string other)
                        {
                           return null;
@@ -154,10 +154,10 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private static TestEnum {|#0:CreateInvalidItem|}(string key)
                        {
                           return null;

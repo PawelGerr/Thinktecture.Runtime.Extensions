@@ -24,7 +24,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
                     namespace TestNamespace
                     {
                        [{|#0:ValueObject<string?>|}]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                        }
                     }
@@ -50,7 +50,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|}
+                    	public partial class {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -70,7 +70,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|}
+                    	public partial class {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -92,7 +92,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
                     namespace TestNamespace
                     {
                        [{|#0:ValueObject<int?>|}]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                        }
                     }
@@ -115,7 +115,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
                     namespace TestNamespace
                     {
                        [{|#0:ValueObject<int?>|}]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                        }
                     }
@@ -138,7 +138,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
                     namespace TestNamespace
                     {
                        [ValueObject<int>]
-                    	public sealed partial class {|#0:TestValueObject|}
+                    	public partial class {|#0:TestValueObject|}
                     	{
                        }
                     }

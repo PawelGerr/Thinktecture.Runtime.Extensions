@@ -22,7 +22,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
                  	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class InnerTestEnum : TestEnum
                  	   {
                           private sealed class {|#0:MostInnerTestEnum|} : TestEnum
@@ -44,7 +44,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
                          	public partial class TestEnum
                          	{
                                public static readonly TestEnum Item1 = default;
-                         
+
                                private sealed class InnerTestEnum : TestEnum
                          	   {
                                   public sealed class {|#0:MostInnerTestEnum|} : TestEnum
@@ -73,7 +73,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
                  	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private sealed class InnerTestEnum : TestEnum
                  	   {
                           public sealed class {|#0:MostInnerTestEnum|} : TestEnum

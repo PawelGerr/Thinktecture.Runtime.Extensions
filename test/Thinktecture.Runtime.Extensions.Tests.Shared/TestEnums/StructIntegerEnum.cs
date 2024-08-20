@@ -1,7 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum<int>(IsValidatable = true)]
-public readonly partial struct StructIntegerEnum
+public partial struct StructIntegerEnum
 {
    public static readonly StructIntegerEnum Item1 = new(1, 42, 100);
    public static readonly StructIntegerEnum Item2 = new(2, 43, 200);

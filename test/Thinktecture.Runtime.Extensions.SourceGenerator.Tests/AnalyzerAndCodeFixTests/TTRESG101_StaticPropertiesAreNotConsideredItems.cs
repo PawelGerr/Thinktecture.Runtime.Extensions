@@ -19,10 +19,10 @@ public class TTRESG101_StaticPropertiesAreNotConsideredItems
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class TestEnum
+                 	public partial class TestEnum
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        public static TestEnum {|#0:Item2|} => default;
                     }
                  }

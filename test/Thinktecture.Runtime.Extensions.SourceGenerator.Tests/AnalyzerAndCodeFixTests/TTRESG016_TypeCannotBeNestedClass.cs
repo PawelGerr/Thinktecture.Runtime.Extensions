@@ -23,7 +23,7 @@ public class TTRESG016_TypeCannotBeNestedClass
                     	public class SomeClass
                     	{
                           [SmartEnum<string>(IsValidatable = true)]
-                          public sealed partial class {|#0:TestEnum|}
+                          public partial class {|#0:TestEnum|}
                     	   {
                              public static readonly TestEnum Item1 = default;
                           }

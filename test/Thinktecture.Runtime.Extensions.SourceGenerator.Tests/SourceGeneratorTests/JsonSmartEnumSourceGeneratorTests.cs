@@ -88,7 +88,7 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                       [SmartEnum<string>]
-                   	public readonly partial struct TestEnum
+                   	public partial struct TestEnum
                    	{
                          public static readonly TestEnum Item1 = new("Item1");
                          public static readonly TestEnum Item2 = new("Item2");

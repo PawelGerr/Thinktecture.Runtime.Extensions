@@ -21,10 +21,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public int {|#0:InstanceProperty|} { get; set; }
                        }
                     }
@@ -38,10 +38,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                             namespace TestNamespace
                             {
                                [SmartEnum<string>(IsValidatable = true)]
-                            	public sealed partial class TestEnum
+                            	public partial class TestEnum
                             	{
                                   public static readonly TestEnum Item1 = default;
-                            
+
                                   public int InstanceProperty { get; }
                                }
                             }
@@ -62,10 +62,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public static int {|#0:InstanceProperty|} { get; set; }
                        }
                     }
@@ -79,10 +79,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                             namespace TestNamespace
                             {
                                [SmartEnum<string>(IsValidatable = true)]
-                            	public sealed partial class TestEnum
+                            	public partial class TestEnum
                             	{
                                   public static readonly TestEnum Item1 = default;
-                            
+
                                   public static int InstanceProperty { get; }
                                }
                             }
@@ -103,10 +103,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              get => 42;
@@ -130,10 +130,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public static int {|#0:InstanceProperty|}
                           {
                              get => 42;
@@ -157,10 +157,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              get { return 42; }
@@ -184,10 +184,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public static int {|#0:InstanceProperty|}
                           {
                              get { return 42; }
@@ -214,12 +214,12 @@ public class TTRESG003_PropertyMustBeReadOnly
                        {
                           public static int Property { get; set; }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              set => Helper.Property = value;
@@ -244,12 +244,12 @@ public class TTRESG003_PropertyMustBeReadOnly
                        {
                           public static int Property { get; set; }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public static int {|#0:InstanceProperty|}
                           {
                              set => Helper.Property = value;
@@ -271,10 +271,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              set { }
@@ -297,10 +297,10 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public static int {|#0:InstanceProperty|}
                           {
                              set { }
@@ -326,7 +326,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public int {|#0:InstanceProperty|} { get; set; }
                        }
@@ -341,7 +341,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public int InstanceProperty { get; }
                                }
@@ -363,7 +363,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public static int {|#0:InstanceProperty|} { get; set; }
                        }
@@ -378,7 +378,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public static int InstanceProperty { get; }
                                }
@@ -403,7 +403,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public int {|#0:InstanceProperty|} { get; set; }
                        }
@@ -418,7 +418,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public int InstanceProperty { get; }
                                }
@@ -440,7 +440,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public static int {|#0:InstanceProperty|} { get; set; }
                        }
@@ -455,7 +455,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public static int InstanceProperty { get; }
                                }

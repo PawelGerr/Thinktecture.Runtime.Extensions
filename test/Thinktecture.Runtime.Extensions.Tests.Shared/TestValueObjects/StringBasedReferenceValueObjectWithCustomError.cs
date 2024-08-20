@@ -6,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                      KeyMemberName = "Property",
                      KeyMemberAccessModifier = ValueObjectAccessModifier.Public)]
 [ValueObjectValidationError<StringBasedReferenceValueObjectValidationError>]
-public sealed partial class StringBasedReferenceValueObjectWithCustomError
+public partial class StringBasedReferenceValueObjectWithCustomError
 {
    static partial void ValidateFactoryArguments(ref StringBasedReferenceValueObjectValidationError? validationError, ref string property)
    {

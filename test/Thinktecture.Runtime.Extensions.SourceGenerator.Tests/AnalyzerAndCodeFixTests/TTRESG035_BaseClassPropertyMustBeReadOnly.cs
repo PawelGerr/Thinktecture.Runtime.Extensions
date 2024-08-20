@@ -26,9 +26,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public int Property { get; set; }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -53,9 +53,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public int Property { get; }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -79,9 +79,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; set; }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -106,9 +106,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -136,9 +136,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set { }
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -166,9 +166,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set { }
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -196,9 +196,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set { }
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -226,9 +226,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set { }
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -252,7 +252,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; set; }
                        }
-                    
+
                        public class BaseClass
                        {
                           public int Property
@@ -260,9 +260,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set => Helper.Property = value;
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -286,7 +286,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; set; }
                        }
-                    
+
                        public class BaseClass
                        {
                           public static int Property
@@ -294,9 +294,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set => Helper.Property = value;
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -323,9 +323,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set { }
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -352,9 +352,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                              set { }
                           }
                        }
-                    
+
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClass
+                    	public partial class {|#0:TestEnum|} : BaseClass
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -379,7 +379,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstanceProperty
+                    	public partial class {|#0:TestEnum|} : BaseClassWithInstanceProperty
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -402,7 +402,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithInstancePropertyWithGetterOnly
+                    	public partial class {|#0:TestEnum|} : BaseClassWithInstancePropertyWithGetterOnly
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -424,7 +424,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticProperty
+                    	public partial class {|#0:TestEnum|} : BaseClassWithStaticProperty
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -447,7 +447,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithStaticPropertyWithGetterOnly
+                    	public partial class {|#0:TestEnum|} : BaseClassWithStaticPropertyWithGetterOnly
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -469,7 +469,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionProperty
+                    	public partial class {|#0:TestEnum|} : BaseClassWithSetExpressionProperty
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -491,7 +491,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetExpressionStaticProperty
+                    	public partial class {|#0:TestEnum|} : BaseClassWithSetExpressionStaticProperty
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -513,7 +513,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyProperty
+                    	public partial class {|#0:TestEnum|} : BaseClassWithSetBodyProperty
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -535,7 +535,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|} : BaseClassWithSetBodyStaticProperty
+                    	public partial class {|#0:TestEnum|} : BaseClassWithSetBodyStaticProperty
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -559,7 +559,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        namespace TestNamespace
                        {
                           [SmartEnum<string>(IsValidatable = true)]
-                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionProperty
+                       	public partial class {|#0:TestEnum|} : BaseClassWithGetExpressionProperty
                        	{
                              public static readonly TestEnum Item1 = default;
                           }
@@ -582,7 +582,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        namespace TestNamespace
                        {
                           [SmartEnum<string>(IsValidatable = true)]
-                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetExpressionStaticProperty
+                       	public partial class {|#0:TestEnum|} : BaseClassWithGetExpressionStaticProperty
                        	{
                              public static readonly TestEnum Item1 = default;
                           }
@@ -605,7 +605,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        namespace TestNamespace
                        {
                           [SmartEnum<string>(IsValidatable = true)]
-                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyProperty
+                       	public partial class {|#0:TestEnum|} : BaseClassWithGetBodyProperty
                        	{
                              public static readonly TestEnum Item1 = default;
                           }
@@ -628,7 +628,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        namespace TestNamespace
                        {
                           [SmartEnum<string>(IsValidatable = true)]
-                       	public sealed partial class {|#0:TestEnum|} : BaseClassWithGetBodyStaticProperty
+                       	public partial class {|#0:TestEnum|} : BaseClassWithGetBodyStaticProperty
                        	{
                              public static readonly TestEnum Item1 = default;
                           }
@@ -657,9 +657,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public int Property { get; set; }
                        }
-                    
+
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -683,9 +683,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public int Property { get; }
                        }
-                    
+
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -708,9 +708,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; set; }
                        }
-                    
+
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -734,9 +734,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; }
                        }
-                    
+
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -762,9 +762,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public int Property { get; set; }
                        }
-                    
+
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -788,9 +788,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public int Property { get; }
                        }
-                    
+
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -813,9 +813,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; set; }
                        }
-                    
+
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -839,9 +839,9 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                        {
                           public static int Property { get; }
                        }
-                    
+
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClass
+                    	public partial class {|#0:TestValueObject|} : BaseClass
                     	{
                        }
                     }
@@ -865,7 +865,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
                     	{
                        }
                     }
@@ -887,7 +887,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
                     	{
                        }
                     }
@@ -908,7 +908,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
                     	{
                        }
                     }
@@ -930,7 +930,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
                     	{
                        }
                     }
@@ -954,7 +954,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
                     	{
                        }
                     }
@@ -976,7 +976,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
                     	{
                        }
                     }
@@ -997,7 +997,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
                     	{
                        }
                     }
@@ -1019,7 +1019,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
+                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
                     	{
                        }
                     }

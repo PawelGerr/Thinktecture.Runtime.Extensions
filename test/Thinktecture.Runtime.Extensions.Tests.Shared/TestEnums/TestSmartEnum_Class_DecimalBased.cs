@@ -2,7 +2,7 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 
 // ReSharper disable once InconsistentNaming
 [SmartEnum<decimal>]
-public sealed partial class TestSmartEnum_Class_DecimalBased
+public partial class TestSmartEnum_Class_DecimalBased
 {
    public static readonly TestSmartEnum_Class_DecimalBased Value1 = new(1);
    public static readonly TestSmartEnum_Class_DecimalBased Value2 = new(2);

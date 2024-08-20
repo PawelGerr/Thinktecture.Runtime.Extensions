@@ -4,7 +4,7 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 [SmartEnum<int>(IsValidatable = true,
                 SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                 MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-public readonly partial struct TestSmartEnum_Struct_IntBased
+public partial struct TestSmartEnum_Struct_IntBased
 {
    public static readonly TestSmartEnum_Struct_IntBased Value1 = new(1);
    public static readonly TestSmartEnum_Struct_IntBased Value2 = new(2);

@@ -19,7 +19,7 @@ public class TTRESG010_NonValidatableEnumsMustBeClass
                  namespace TestNamespace
                  {
                     [SmartEnum<string>]
-                 	public readonly partial struct {|#0:TestEnum|}
+                 	public partial struct {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
                     }
@@ -41,7 +41,7 @@ public class TTRESG010_NonValidatableEnumsMustBeClass
                  namespace TestNamespace
                  {
                     [SmartEnum<string>]
-                 	public sealed partial class {|#0:TestEnum|}
+                 	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
                     }

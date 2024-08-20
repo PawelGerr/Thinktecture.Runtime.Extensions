@@ -3,7 +3,7 @@
 [SmartEnum<string>(IsValidatable = true)]
 [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
 [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-public sealed partial class ValidatableTestEnumCaseSensitive
+public partial class ValidatableTestEnumCaseSensitive
 {
    public static readonly ValidatableTestEnumCaseSensitive LowerCased = new("item");
    public static readonly ValidatableTestEnumCaseSensitive UpperCased = new("ITEM");

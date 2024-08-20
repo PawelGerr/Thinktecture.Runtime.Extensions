@@ -1,7 +1,7 @@
 namespace Thinktecture.ValueObjects;
 
 [ComplexValueObject(SkipToString = true)]
-public sealed partial class ComplexValueObjectWithCustomEqualityComparison
+public partial class ComplexValueObjectWithCustomEqualityComparison
 {
    [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
    public string Identifier { get; }

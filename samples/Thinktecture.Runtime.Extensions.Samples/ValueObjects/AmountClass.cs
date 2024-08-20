@@ -5,7 +5,7 @@ namespace Thinktecture.ValueObjects;
                   SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class AmountClass
+public partial class AmountClass
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref int value)
    {

@@ -53,7 +53,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
 
                    using System;
                    using Thinktecture;
-                   
+
                       [SmartEnum<string>]
                    public partial class TestEnum
                    {
@@ -88,7 +88,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
                    namespace Thinktecture.Tests
                    {
                       [SmartEnum<string>]
-                   	public readonly partial struct TestEnum
+                   	public partial struct TestEnum
                    	{
                          public static readonly TestEnum Item1 = new("Item1");
                          public static readonly TestEnum Item2 = new("Item2");
@@ -131,7 +131,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
                          {
                          }
                       }
-                   
+
                       [SmartEnum<string>]
                       [JsonConverterAttribute(typeof(TestEnum_ValueObjectNewtonsoftJsonConverter))]
                    	public partial class TestEnum

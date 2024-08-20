@@ -4,7 +4,7 @@ namespace Thinktecture.SmartEnums;
                 ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                 SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                 MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-public readonly partial struct ProductGroupStruct
+public partial struct ProductGroupStruct
 {
    public static readonly ProductGroupStruct Apple = new(1);
    public static readonly ProductGroupStruct Orange = new(2);

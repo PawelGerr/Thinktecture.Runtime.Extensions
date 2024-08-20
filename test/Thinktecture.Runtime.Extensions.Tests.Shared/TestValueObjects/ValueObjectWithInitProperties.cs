@@ -1,7 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject]
-public sealed partial class ValueObjectWithInitProperties
+public partial class ValueObjectWithInitProperties
 {
    [ValueObjectMemberIgnore]
    private readonly int _initExpression;

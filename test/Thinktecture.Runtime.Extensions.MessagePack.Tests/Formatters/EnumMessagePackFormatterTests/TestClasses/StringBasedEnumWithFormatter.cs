@@ -5,7 +5,7 @@ namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.Te
 
 [SmartEnum<string>(IsValidatable = true)]
 [MessagePackFormatter(typeof(ValueObjectMessagePackFormatter<StringBasedEnumWithFormatter, string, ValidationError>))]
-public sealed partial class StringBasedEnumWithFormatter
+public partial class StringBasedEnumWithFormatter
 {
    public static readonly StringBasedEnumWithFormatter ValueA = new("A");
    public static readonly StringBasedEnumWithFormatter ValueB = new("B");

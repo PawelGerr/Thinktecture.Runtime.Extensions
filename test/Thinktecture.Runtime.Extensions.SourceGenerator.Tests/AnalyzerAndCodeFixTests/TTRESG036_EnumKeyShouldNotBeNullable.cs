@@ -22,7 +22,7 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
                  {
                  #pragma warning disable CS8632
                     [SmartEnum<int?>(IsValidatable = true)]
-                 	public sealed partial class {|#0:TestEnum|}
+                 	public partial class {|#0:TestEnum|}
                  #pragma warning restore CS8632
                  	{
                        public static readonly TestEnum Item1 = default;
@@ -46,7 +46,7 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
                  {
                  #pragma warning disable CS8632
                     [SmartEnum<int?>]
-                 	public sealed partial class {|#0:TestEnum|}
+                 	public partial class {|#0:TestEnum|}
                  #pragma warning restore CS8632
                  	{
                        public static readonly TestEnum Item1 = default;
@@ -69,7 +69,7 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
                  namespace TestNamespace
                  {
                     [SmartEnum<string>(IsValidatable = true)]
-                 	public sealed partial class {|#0:TestEnum|}
+                 	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
                     }
@@ -90,7 +90,7 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
                  namespace TestNamespace
                  {
                     [SmartEnum<string>]
-                 	public sealed partial class {|#0:TestEnum|}
+                 	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
                     }
@@ -111,7 +111,7 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
                  namespace TestNamespace
                  {
                     [SmartEnum<int?>(IsValidatable = true)]
-                 	public sealed partial class {|#0:TestEnum|}
+                 	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
                     }
@@ -133,7 +133,7 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
                  namespace TestNamespace
                  {
                     [SmartEnum<int>]
-                 	public sealed partial class {|#0:TestEnum|}
+                 	public partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
                     }

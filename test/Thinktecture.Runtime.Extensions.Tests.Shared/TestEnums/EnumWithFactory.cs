@@ -4,7 +4,7 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum<int>]
 [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-public sealed partial class EnumWithFactory
+public partial class EnumWithFactory
 {
    public static readonly EnumWithFactory Item1 = new(1);
    public static readonly EnumWithFactory Item2 = new(2);

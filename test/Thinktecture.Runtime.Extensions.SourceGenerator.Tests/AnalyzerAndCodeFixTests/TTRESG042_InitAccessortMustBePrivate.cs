@@ -21,7 +21,7 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public int {|#0:InstanceProperty|} { get; init; }
                        }
@@ -36,7 +36,7 @@ public class TTRESG042_InitAccessorMustBePrivate
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public int InstanceProperty { get; private init; }
                                }
@@ -58,11 +58,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              get => _instanceProperty;
@@ -80,11 +80,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   [ValueObjectMemberIgnore]
                                   private readonly int _instanceProperty;
-                            
+
                                   public int {|#0:InstanceProperty|}
                                   {
                                      get => _instanceProperty;
@@ -109,11 +109,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              get { return _instanceProperty; }
@@ -131,11 +131,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   [ValueObjectMemberIgnore]
                                   private readonly int _instanceProperty;
-                            
+
                                   public int {|#0:InstanceProperty|}
                                   {
                                      get { return _instanceProperty; }
@@ -160,7 +160,7 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           private int {|#0:InstanceProperty|} { get; init; }
                        }
@@ -181,11 +181,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           private int {|#0:InstanceProperty|}
                           {
                              get => _instanceProperty;
@@ -209,11 +209,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           private int {|#0:InstanceProperty|}
                           {
                              get { return _instanceProperty; }
@@ -240,7 +240,7 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public int {|#0:InstanceProperty|} { get; init; }
                        }
@@ -255,7 +255,7 @@ public class TTRESG042_InitAccessorMustBePrivate
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public int InstanceProperty { get; private init; }
                                }
@@ -277,11 +277,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              get => _instanceProperty;
@@ -299,11 +299,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   [ValueObjectMemberIgnore]
                                   private readonly int _instanceProperty;
-                            
+
                                   public int {|#0:InstanceProperty|}
                                   {
                                      get => _instanceProperty;
@@ -328,11 +328,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           public int {|#0:InstanceProperty|}
                           {
                              get { return _instanceProperty; }
@@ -350,11 +350,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   [ValueObjectMemberIgnore]
                                   private readonly int _instanceProperty;
-                            
+
                                   public int {|#0:InstanceProperty|}
                                   {
                                      get { return _instanceProperty; }
@@ -379,7 +379,7 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           private int {|#0:InstanceProperty|} { get; init; }
                        }
@@ -400,11 +400,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           private int {|#0:InstanceProperty|}
                           {
                              get => _instanceProperty;
@@ -428,11 +428,11 @@ public class TTRESG042_InitAccessorMustBePrivate
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           [ValueObjectMemberIgnore]
                           private readonly int _instanceProperty;
-                    
+
                           private int {|#0:InstanceProperty|}
                           {
                              get { return _instanceProperty; }

@@ -9,7 +9,6 @@ namespace Thinktecture.CodeAnalysis.CodeFixes;
 public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
 {
    private const string _MAKE_PARTIAL = "Make the type partial";
-   private const string _MAKE_STRUCT_READONLY = "Make the type read-only";
    private const string _MAKE_MEMBER_PUBLIC = "Make the member public";
    private const string _MAKE_FIELD_READONLY = "Make the field read-only";
    private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
@@ -21,7 +20,6 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
-                                                                                                DiagnosticsDescriptors.StructMustBeReadOnly.Id,
                                                                                                 DiagnosticsDescriptors.EnumItemMustBePublic.Id,
                                                                                                 DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
                                                                                                 DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
@@ -29,7 +27,6 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
                                                                                                 DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
                                                                                                 DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
                                                                                                 DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
-                                                                                                DiagnosticsDescriptors.ValueObjectMustBeSealed.Id,
                                                                                                 DiagnosticsDescriptors.InitAccessorMustBePrivate.Id);
 
    /// <inheritdoc />
@@ -54,10 +51,6 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          if (diagnostic.Id == DiagnosticsDescriptors.TypeMustBePartial.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_PARTIAL, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PartialKeyword), _MAKE_PARTIAL), diagnostic);
-         }
-         else if (diagnostic.Id == DiagnosticsDescriptors.StructMustBeReadOnly.Id)
-         {
-            context.RegisterCodeFix(CodeAction.Create(_MAKE_STRUCT_READONLY, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_STRUCT_READONLY), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.FieldMustBeReadOnly.Id)
          {
@@ -87,7 +80,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id || diagnostic.Id == DiagnosticsDescriptors.ValueObjectMustBeSealed.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
          }

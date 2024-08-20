@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture.ValueObjects;
 
 [ValueObject<string>(DefaultInstancePropertyName = "None")]
-public readonly partial struct ProductNameStruct
+public partial struct ProductNameStruct
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)
    {

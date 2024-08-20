@@ -6,7 +6,7 @@ namespace Thinktecture.ValueObjects;
                       SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public readonly partial struct Amount
+public partial struct Amount
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref decimal value)
    {

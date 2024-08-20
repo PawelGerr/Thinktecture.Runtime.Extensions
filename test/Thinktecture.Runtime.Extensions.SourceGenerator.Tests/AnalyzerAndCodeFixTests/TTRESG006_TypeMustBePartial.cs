@@ -21,7 +21,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed class {|#0:TestEnum|}
+                    	public class {|#0:TestEnum|}
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -36,7 +36,7 @@ public class TTRESG006_TypeMustBePartial
                             namespace TestNamespace
                             {
                                [SmartEnum<string>(IsValidatable = true)]
-                            	public sealed partial class {|#0:TestEnum|}
+                            	public partial class {|#0:TestEnum|}
                             	{
                                   public static readonly TestEnum Item1 = default;
                                }
@@ -58,7 +58,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public readonly struct {|#0:TestEnum|}
+                    	public struct {|#0:TestEnum|}
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -73,7 +73,7 @@ public class TTRESG006_TypeMustBePartial
                             namespace TestNamespace
                             {
                                [SmartEnum<string>(IsValidatable = true)]
-                            	public readonly partial struct {|#0:TestEnum|}
+                            	public partial struct {|#0:TestEnum|}
                             	{
                                   public static readonly TestEnum Item1 = default;
                                }
@@ -95,7 +95,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class {|#0:TestEnum|}
+                    	public partial class {|#0:TestEnum|}
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -116,7 +116,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public readonly partial struct {|#0:TestEnum|}
+                    	public partial struct {|#0:TestEnum|}
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -140,7 +140,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed class {|#0:TestValueObject|}
+                    	public class {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -154,7 +154,7 @@ public class TTRESG006_TypeMustBePartial
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class {|#0:TestValueObject|}
+                            	public partial class {|#0:TestValueObject|}
                             	{
                                }
                             }
@@ -175,7 +175,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public readonly struct {|#0:TestValueObject|}
+                    	public struct {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -189,7 +189,7 @@ public class TTRESG006_TypeMustBePartial
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public readonly partial struct {|#0:TestValueObject|}
+                            	public partial struct {|#0:TestValueObject|}
                             	{
                                }
                             }
@@ -210,7 +210,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class {|#0:TestValueObject|}
+                    	public partial class {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -230,7 +230,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public readonly partial struct {|#0:TestValueObject|}
+                    	public partial struct {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -253,7 +253,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed class {|#0:TestValueObject|}
+                    	public class {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -267,7 +267,7 @@ public class TTRESG006_TypeMustBePartial
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class {|#0:TestValueObject|}
+                            	public partial class {|#0:TestValueObject|}
                             	{
                                }
                             }
@@ -288,7 +288,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public readonly struct {|#0:TestValueObject|}
+                    	public struct {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -302,7 +302,7 @@ public class TTRESG006_TypeMustBePartial
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public readonly partial struct {|#0:TestValueObject|}
+                            	public partial struct {|#0:TestValueObject|}
                             	{
                                }
                             }
@@ -323,7 +323,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class {|#0:TestValueObject|}
+                    	public partial class {|#0:TestValueObject|}
                     	{
                        }
                     }
@@ -343,7 +343,7 @@ public class TTRESG006_TypeMustBePartial
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public readonly partial struct {|#0:TestValueObject|}
+                    	public partial struct {|#0:TestValueObject|}
                     	{
                        }
                     }

@@ -86,7 +86,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                       [ValueObject<string>]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                       }
                    }
@@ -293,7 +293,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                       [ComplexValueObject]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                          public readonly string ReferenceField;
                          public int StructProperty { get; }
@@ -465,7 +465,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                       [ComplexValueObject]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                          public readonly string ReferenceField;
                          public int StructProperty { get; }
@@ -635,7 +635,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    using Thinktecture;
 
                    [ComplexValueObject]
-                   public readonly partial struct TestValueObject
+                   public partial struct TestValueObject
                    {
                       public readonly string ReferenceField;
                       public int StructProperty { get; }

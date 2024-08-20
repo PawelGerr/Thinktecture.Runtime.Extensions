@@ -6,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                      KeyMemberName = "Property",
                      KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
                      EmptyStringInFactoryMethodsYieldsNull = true)]
-public sealed partial class StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull
+public partial class StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string property)
    {

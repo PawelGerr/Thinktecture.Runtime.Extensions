@@ -21,7 +21,7 @@ public class TTRESG044_CustomKeyMemberImplementationNotFound
                     namespace TestNamespace
                     {
                        [ValueObject<string>(SkipKeyMember = true)]
-                       public sealed partial class {|#0:ValueObject|}
+                       public partial class {|#0:ValueObject|}
                     	{
                        }
                     }
@@ -42,7 +42,7 @@ public class TTRESG044_CustomKeyMemberImplementationNotFound
                     namespace TestNamespace
                     {
                        [ValueObject<string>(SkipKeyMember = true)]
-                       public sealed partial class {|#0:ValueObject|}
+                       public partial class {|#0:ValueObject|}
                     	{
                           private readonly string _value;
                        }

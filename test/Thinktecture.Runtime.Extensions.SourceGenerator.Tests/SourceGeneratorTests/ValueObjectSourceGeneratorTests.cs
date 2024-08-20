@@ -17,7 +17,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                             {
                                                                                [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
                                                                                [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
-                                                                               partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+                                                                               readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                                                   global::Thinktecture.IKeyedValueObject<int>,
                                                                                   global::Thinktecture.IValueObjectConvertable<int>,
                                                                                   global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
@@ -587,7 +587,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                            namespace Thinktecture.Tests
                                                                            {
                                                                               [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
-                                                                              partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                                              sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                                                  global::Thinktecture.IKeyedValueObject<int>,
                                                                                  global::Thinktecture.IValueObjectConvertable<int>,
                                                                                  global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
@@ -1264,7 +1264,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                              namespace Thinktecture.Tests
                                                                              {
-                                                                                partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                                                sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                                                    global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                                                    global::Thinktecture.IComplexValueObject
                                                                                 {
@@ -1405,7 +1405,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                               namespace Thinktecture.Tests
                                                                               {
-                                                                                 partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+                                                                                 readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                                                     global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                                                     global::Thinktecture.IComplexValueObject
                                                                                  {
@@ -1536,7 +1536,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                               namespace Thinktecture.Tests
                                                                               {
                                                                                  [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
-                                                                                 partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                                                 sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                                                     global::Thinktecture.IKeyedValueObject<string>,
                                                                                     global::Thinktecture.IValueObjectConvertable<string>,
                                                                                     global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
@@ -1700,7 +1700,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                {
                                                                                   [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
                                                                                   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
-                                                                                  partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+                                                                                  readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                                                      global::Thinktecture.IKeyedValueObject<string>,
                                                                                      global::Thinktecture.IValueObjectConvertable<string>,
                                                                                      global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
@@ -1919,7 +1919,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                namespace Thinktecture.Tests
                                                {
-                                                  partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                  sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                      global::Thinktecture.IComplexValueObject
                                                   {
@@ -2086,7 +2086,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                namespace Thinktecture.Tests
                                                {
-                                                  partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                  sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                      global::Thinktecture.IComplexValueObject
                                                   {
@@ -2284,7 +2284,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
       AssertOutput(output, _GENERATED_HEADER + """
 
-                                                  partial class TestValueObject : global::System.IEquatable<global::TestValueObject?>,
+                                                  sealed partial class TestValueObject : global::System.IEquatable<global::TestValueObject?>,
                                                      global::System.Numerics.IEqualityOperators<global::TestValueObject, global::TestValueObject, bool>,
                                                      global::Thinktecture.IComplexValueObject
                                                   {
@@ -2477,7 +2477,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConvertable<int>
                                                       {
@@ -2593,7 +2593,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                      [ComplexValueObject]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                      }
                    }
@@ -2615,7 +2615,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                      [ComplexValueObject(DefaultInstancePropertyName = "Null")]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                      }
                    }
@@ -2627,7 +2627,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                namespace Thinktecture.Tests
                                                {
-                                                  partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+                                                  readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                      global::Thinktecture.IComplexValueObject
                                                   {
@@ -2765,7 +2765,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                      [ValueObject<string>]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                      }
                    }
@@ -2798,7 +2798,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                      [ValueObject<int>]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                    	}
                    }
@@ -2841,7 +2841,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                      [ValueObject<int>(SkipKeyMember = true)]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                          public readonly int _value { get; private init; }
                      }
@@ -2878,7 +2878,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
-                                                      partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+                                                      readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
                                                          global::Thinktecture.IKeyedValueObject<int>,
                                                          global::Thinktecture.IValueObjectConvertable<int>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
@@ -3039,7 +3039,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                      [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                      }
                    }
@@ -3072,7 +3072,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                    namespace Thinktecture.Tests
                    {
                      [ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                       }
                    }
@@ -3202,7 +3202,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                    namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>))]
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectConvertable<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
@@ -3573,7 +3573,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                    namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>))]
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectConvertable<global::System.DateOnly>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
@@ -4361,7 +4361,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                    namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
@@ -4557,7 +4557,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                    namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
@@ -4787,7 +4787,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                    namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<string>,
                                                          global::Thinktecture.IValueObjectConvertable<string>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
@@ -4981,7 +4981,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                    namespace Thinktecture.Tests
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>))]
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.Foo>,
                                                          global::Thinktecture.IValueObjectConvertable<global::Thinktecture.Tests.Foo>,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>
@@ -5190,7 +5190,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                namespace Thinktecture.Tests
                                                {
-                                                  partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                  sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                      global::Thinktecture.IComplexValueObject
                                                   {
@@ -5422,7 +5422,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                          global::Thinktecture.IComplexValueObject,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
@@ -5698,7 +5698,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    namespace Thinktecture.Tests
                                                    {
-                                                      partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                      sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                          global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                          global::Thinktecture.IComplexValueObject,
                                                          global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
@@ -5952,7 +5952,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                namespace Thinktecture.Tests
                                                {
-                                                  partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                  sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
                                                      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
                                                      global::Thinktecture.IComplexValueObject
                                                   {

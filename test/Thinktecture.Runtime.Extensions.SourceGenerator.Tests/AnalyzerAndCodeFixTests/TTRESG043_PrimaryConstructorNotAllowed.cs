@@ -21,7 +21,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
                     namespace TestNamespace
                     {
                        [SmartEnum<string>]
-                       public sealed partial class {|#0:TestEnum|}()
+                       public partial class {|#0:TestEnum|}()
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -43,7 +43,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                       public readonly partial struct {|#0:TestEnum|}()
+                       public partial struct {|#0:TestEnum|}()
                     	{
                           public static readonly TestEnum Item1 = default;
                        }
@@ -68,7 +68,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                       public sealed partial class {|#0:ValueObject|}()
+                       public partial class {|#0:ValueObject|}()
                     	{
                        }
                     }
@@ -89,7 +89,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                       public readonly partial struct {|#0:ValueObject|}()
+                       public partial struct {|#0:ValueObject|}()
                     	{
                        }
                     }
@@ -113,7 +113,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                       public sealed partial class {|#0:ValueObject|}()
+                       public partial class {|#0:ValueObject|}()
                     	{
                        }
                     }
@@ -134,7 +134,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                       public readonly partial struct {|#0:ValueObject|}()
+                       public partial struct {|#0:ValueObject|}()
                     	{
                        }
                     }

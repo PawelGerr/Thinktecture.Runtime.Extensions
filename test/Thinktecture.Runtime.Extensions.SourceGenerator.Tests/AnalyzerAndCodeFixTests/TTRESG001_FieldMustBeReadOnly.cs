@@ -21,7 +21,7 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static TestEnum {|#0:Item1|} = default;
                           public static readonly TestEnum Item2 = default;
@@ -37,7 +37,7 @@ public class TTRESG001_FieldMustBeReadOnly
                             namespace TestNamespace
                             {
                                [SmartEnum<string>(IsValidatable = true)]
-                            	public sealed partial class TestEnum
+                            	public partial class TestEnum
                             	{
                                   public static readonly TestEnum Item1 = default;
                                   public static readonly TestEnum Item2 = default;
@@ -60,10 +60,10 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public static object {|#0:SomeStaticField|} = default;
                        }
                     }
@@ -77,10 +77,10 @@ public class TTRESG001_FieldMustBeReadOnly
                             namespace TestNamespace
                             {
                                [SmartEnum<string>(IsValidatable = true)]
-                            	public sealed partial class TestEnum
+                            	public partial class TestEnum
                             	{
                                   public static readonly TestEnum Item1 = default;
-                            
+
                                   public static readonly object {|#0:SomeStaticField|} = default;
                                }
                             }
@@ -101,10 +101,10 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public int {|#0:InstanceField|};
                        }
                     }
@@ -118,10 +118,10 @@ public class TTRESG001_FieldMustBeReadOnly
                             namespace TestNamespace
                             {
                                [SmartEnum<string>(IsValidatable = true)]
-                            	public sealed partial class TestEnum
+                            	public partial class TestEnum
                             	{
                                   public static readonly TestEnum Item1 = default;
-                            
+
                                   public readonly int InstanceField;
                                }
                             }
@@ -142,10 +142,10 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [SmartEnum<string>(IsValidatable = true)]
-                    	public sealed partial class TestEnum
+                    	public partial class TestEnum
                     	{
                           public static readonly TestEnum Item1 = default;
-                    
+
                           public readonly int {|#0:InstanceField|};
                        }
                     }
@@ -168,7 +168,7 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public static object {|#0:Field|} = default;
                        }
@@ -183,7 +183,7 @@ public class TTRESG001_FieldMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public static readonly object {|#0:Field|} = default;
                                }
@@ -205,7 +205,7 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ValueObject<string>]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public object {|#0:Field|} = default;
                        }
@@ -220,7 +220,7 @@ public class TTRESG001_FieldMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ValueObject<string>]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public readonly object {|#0:Field|} = default;
                                }
@@ -245,7 +245,7 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public static object {|#0:Field|} = default;
                        }
@@ -260,7 +260,7 @@ public class TTRESG001_FieldMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public static readonly object {|#0:Field|} = default;
                                }
@@ -282,7 +282,7 @@ public class TTRESG001_FieldMustBeReadOnly
                     namespace TestNamespace
                     {
                        [ComplexValueObject]
-                    	public sealed partial class TestValueObject
+                    	public partial class TestValueObject
                     	{
                           public object {|#0:Field|} = default;
                        }
@@ -297,7 +297,7 @@ public class TTRESG001_FieldMustBeReadOnly
                             namespace TestNamespace
                             {
                                [ComplexValueObject]
-                            	public sealed partial class TestValueObject
+                            	public partial class TestValueObject
                             	{
                                   public readonly object {|#0:Field|} = default;
                                }

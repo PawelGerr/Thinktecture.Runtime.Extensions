@@ -2,7 +2,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject(CreateFactoryMethodName = "Get",
                     TryCreateFactoryMethodName = "TryGet")]
-public sealed partial class BoundaryWithCustomFactoryNames
+public partial class BoundaryWithCustomFactoryNames
 {
    public decimal Lower { get; }
    public decimal Upper { get; }

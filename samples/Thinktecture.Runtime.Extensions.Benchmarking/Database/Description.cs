@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture.Database;
 
 [ValueObject<string>]
-public sealed partial class Description
+public partial class Description
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)
    {

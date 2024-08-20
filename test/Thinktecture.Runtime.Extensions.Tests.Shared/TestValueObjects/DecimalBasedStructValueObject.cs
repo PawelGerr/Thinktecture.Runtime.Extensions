@@ -8,6 +8,6 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                       SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class DecimalBasedClassValueObject
+public partial class DecimalBasedClassValueObject
 {
 }

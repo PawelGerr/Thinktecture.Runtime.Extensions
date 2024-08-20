@@ -15,11 +15,9 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public BaseTypeState? BaseType { get; }
 
    public bool HasCreateInvalidItemImplementation { get; }
+   public bool HasDerivedTypes { get; }
    public bool IsReferenceType { get; }
    public bool IsAbstract { get; }
-
-   private ArgumentName? _argumentName;
-   public ArgumentName ArgumentName => _argumentName ??= Name.MakeArgumentName();
 
    public EnumItems Items { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
@@ -32,11 +30,13 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       ImmutableArray<ISymbol> nonIgnoredMembers,
       EnumSettings settings,
       bool hasCreateInvalidItemImplementation,
+      bool hasDerivedTypes,
       CancellationToken cancellationToken)
    {
       KeyMember = keyMember;
       Settings = settings;
       HasCreateInvalidItemImplementation = hasCreateInvalidItemImplementation;
+      HasDerivedTypes = hasDerivedTypes;
       ValidationError = validationError;
 
       Name = type.Name;
@@ -66,6 +66,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
 
       return TypeFullyQualified == other.TypeFullyQualified
              && HasCreateInvalidItemImplementation == other.HasCreateInvalidItemImplementation
+             && HasDerivedTypes == other.HasDerivedTypes
              && IsReferenceType == other.IsReferenceType
              && IsAbstract == other.IsAbstract
              && Equals(KeyMember, other.KeyMember)
@@ -82,6 +83,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ HasCreateInvalidItemImplementation.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasDerivedTypes.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMember?.GetHashCode() ?? 0);

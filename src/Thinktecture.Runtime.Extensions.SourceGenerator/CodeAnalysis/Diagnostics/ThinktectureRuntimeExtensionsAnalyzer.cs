@@ -15,7 +15,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    /// <inheritdoc />
    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial,
-                                                                                                              DiagnosticsDescriptors.StructMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.TypeMustBeClassOrStruct,
                                                                                                               DiagnosticsDescriptors.NonValidatableEnumsMustBeClass,
                                                                                                               DiagnosticsDescriptors.EnumConstructorsMustBePrivate,
@@ -36,7 +35,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
-                                                                                                              DiagnosticsDescriptors.ValueObjectMustBeSealed,
                                                                                                               DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
                                                                                                               DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                                                                               DiagnosticsDescriptors.InitAccessorMustBePrivate,
@@ -304,7 +302,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       EnsureNoPrimaryConstructor(context, type);
       TypeMustBePartial(context, type);
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
-      StructMustBeReadOnly(context, type, locationOfFirstDeclaration);
 
       var nonIgnoredItems = type.GetNonIgnoredMembers();
       var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredItems, factory, false, true, context.CancellationToken, context)
@@ -319,9 +316,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          baseClass = baseClass.BaseType;
       }
-
-      if (type is { IsSealed: false, IsAbstract: false })
-         ReportDiagnostic(context, DiagnosticsDescriptors.ValueObjectMustBeSealed, locationOfFirstDeclaration, type);
 
       return assignableMembers;
    }
@@ -389,7 +383,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ConstructorsMustBePrivate(context, enumType);
       TypeMustBePartial(context, enumType);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
-      StructMustBeReadOnly(context, enumType, locationOfFirstDeclaration);
 
       var nonIgnoredMembers = enumType.GetNonIgnoredMembers();
       var items = enumType.GetEnumItems(nonIgnoredMembers);
@@ -411,10 +404,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          baseClass = baseClass.BaseType;
       }
 
-      var derivedTypes = ValidateDerivedTypes(context, enumType);
-
-      if (enumType is { IsSealed: false, IsAbstract: false } && derivedTypes.Count == 0)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, locationOfFirstDeclaration, enumType);
+      ValidateDerivedTypes(context, enumType);
 
       EnumKeyMemberNameMustNotBeItem(context, attribute, locationOfFirstDeclaration);
 
@@ -476,7 +466,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static IReadOnlyList<(INamedTypeSymbol Type, int Level)> ValidateDerivedTypes(OperationAnalysisContext context, INamedTypeSymbol enumType)
+   private static void ValidateDerivedTypes(OperationAnalysisContext context, INamedTypeSymbol enumType)
    {
       var derivedTypes = enumType.FindDerivedInnerEnums();
       var typesToLeaveOpen = ImmutableArray.Create<INamedTypeSymbol>();
@@ -506,8 +496,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (!derivedType.Type.IsSealed && !derivedType.Type.IsAbstract && !typesToLeaveOpen.Contains(derivedType.Type, SymbolEqualityComparer.Default))
             ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(context, derivedType.Type), derivedType.Type);
       }
-
-      return derivedTypes;
    }
 
    private static Location GetDerivedTypeLocation(OperationAnalysisContext context, INamedTypeSymbol derivedType)
@@ -578,12 +566,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (!tds.IsPartial())
             ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBePartial, tds.Identifier.GetLocation(), type);
       }
-   }
-
-   private static void StructMustBeReadOnly(OperationAnalysisContext context, INamedTypeSymbol type, Location location)
-   {
-      if (type is { IsValueType: true, IsReadOnly: false })
-         ReportDiagnostic(context, DiagnosticsDescriptors.StructMustBeReadOnly, location, type);
    }
 
    private static void ConstructorsMustBePrivate(OperationAnalysisContext context, INamedTypeSymbol type)

@@ -3,7 +3,7 @@ namespace Thinktecture.SmartEnums;
 [SmartEnum<string>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                    MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
 [ValueObjectValidationError<ProductTypeValidationError>]
-public sealed partial class ProductType
+public partial class ProductType
 {
    public static readonly ProductType Groceries = new("Groceries");
    public static readonly ProductType Housewares = new("Housewares");

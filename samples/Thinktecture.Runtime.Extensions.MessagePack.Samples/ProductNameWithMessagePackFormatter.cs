@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture;
 
 [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
-public sealed partial class ProductNameWithMessagePackFormatter
+public partial class ProductNameWithMessagePackFormatter
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)
    {

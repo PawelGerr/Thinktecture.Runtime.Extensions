@@ -402,8 +402,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          var nonIgnoredMembers = type.GetNonIgnoredMembers();
          var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyMemberType, cancellationToken);
 
-         var enumState = new EnumSourceGeneratorState(factory, type, keyMember, attributeInfo.ValidationError, nonIgnoredMembers, new EnumSettings(settings, attributeInfo), hasCreateInvalidItemImplementation, cancellationToken);
-         var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, FindDerivedTypes(type));
+         var derivedTypeNames = FindDerivedTypes(type);
+         var enumState = new EnumSourceGeneratorState(factory,
+                                                      type,
+                                                      keyMember,
+                                                      attributeInfo.ValidationError,
+                                                      nonIgnoredMembers,
+                                                      new EnumSettings(settings, attributeInfo),
+                                                      hasCreateInvalidItemImplementation,
+                                                      derivedTypeNames.Count > 0,
+                                                      cancellationToken);
+         var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, derivedTypeNames);
 
          Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);
 

@@ -86,7 +86,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       protected override ParseOptions CreateParseOptions()
       {
          var options = (CSharpParseOptions)base.CreateParseOptions();
-         options = options.WithLanguageVersion(LanguageVersion.Preview);
+         options = options.WithLanguageVersion(LanguageVersion.CSharp12);
 
          return options;
       }

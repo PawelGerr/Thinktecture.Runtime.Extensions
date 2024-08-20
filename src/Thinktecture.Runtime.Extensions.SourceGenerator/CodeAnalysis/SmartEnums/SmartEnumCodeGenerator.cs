@@ -55,7 +55,12 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" :");
+   ");
+
+      if (!_state.HasDerivedTypes)
+         _sb.Append(_state.IsReferenceType ? "sealed " : "readonly ");
+
+      _sb.Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" :");
 
       if (_state.KeyMember is not null)
          _sb.Append(" global::Thinktecture.IEnum<").Append(_state.KeyMember.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">,");

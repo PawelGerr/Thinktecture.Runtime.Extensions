@@ -4,7 +4,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectByte
+public partial class TestValueObjectByte
 {
 }
 
@@ -12,7 +12,7 @@ public sealed partial class TestValueObjectByte
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectSByte
+public partial class TestValueObjectSByte
 {
 }
 
@@ -20,7 +20,7 @@ public sealed partial class TestValueObjectSByte
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectShort
+public partial class TestValueObjectShort
 {
 }
 
@@ -28,7 +28,7 @@ public sealed partial class TestValueObjectShort
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectUShort
+public partial class TestValueObjectUShort
 {
 }
 
@@ -36,7 +36,7 @@ public sealed partial class TestValueObjectUShort
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectInt
+public partial class TestValueObjectInt
 {
 }
 
@@ -44,7 +44,7 @@ public sealed partial class TestValueObjectInt
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectUInt
+public partial class TestValueObjectUInt
 {
 }
 
@@ -52,7 +52,7 @@ public sealed partial class TestValueObjectUInt
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectLong
+public partial class TestValueObjectLong
 {
 }
 
@@ -60,7 +60,7 @@ public sealed partial class TestValueObjectLong
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectULong
+public partial class TestValueObjectULong
 {
 }
 
@@ -68,7 +68,7 @@ public sealed partial class TestValueObjectULong
                     SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                     MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                     DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectFloat
+public partial class TestValueObjectFloat
 {
 }
 
@@ -76,7 +76,7 @@ public sealed partial class TestValueObjectFloat
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectDouble
+public partial class TestValueObjectDouble
 {
 }
 
@@ -84,6 +84,6 @@ public sealed partial class TestValueObjectDouble
              SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
              DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public sealed partial class TestValueObjectDecimal
+public partial class TestValueObjectDecimal
 {
 }

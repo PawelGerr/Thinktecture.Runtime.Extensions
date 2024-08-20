@@ -6,7 +6,7 @@ namespace Thinktecture.ValueObjects;
                        KeyMemberName = "Date",                                                         // Source Generator needs to know the name we've chosen
                        DefaultInstancePropertyName = "Infinite",                                       // "EndDate.Infinite" represent an open-ended end date
                        EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)] // for comparison with DateOnly without implicit cast
-public readonly partial struct EndDate
+public partial struct EndDate
 {
    private readonly DateOnly? _date;
 

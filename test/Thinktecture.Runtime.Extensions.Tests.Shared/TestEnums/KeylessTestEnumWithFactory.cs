@@ -4,7 +4,7 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum]
 [ValueObjectFactory<string>]
-public sealed partial class KeylessTestEnumWithFactory
+public partial class KeylessTestEnumWithFactory
 {
    public static readonly KeylessTestEnumWithFactory Item1 = new(1);
    public static readonly KeylessTestEnumWithFactory Item2 = new(2);

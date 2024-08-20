@@ -2,7 +2,7 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 
 // ReSharper disable once InconsistentNaming
 [SmartEnum<int>]
-public sealed partial class TestSmartEnum_Class_IntBased
+public partial class TestSmartEnum_Class_IntBased
 {
    public static readonly TestSmartEnum_Class_IntBased Value1 = new(1);
    public static readonly TestSmartEnum_Class_IntBased Value2 = new(2);

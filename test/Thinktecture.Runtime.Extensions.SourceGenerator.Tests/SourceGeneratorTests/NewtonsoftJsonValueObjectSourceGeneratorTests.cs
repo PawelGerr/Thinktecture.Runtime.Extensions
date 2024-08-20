@@ -86,7 +86,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                    namespace Thinktecture.Tests
                    {
                      [ValueObject<string>]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                      }
                    }
@@ -530,7 +530,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                    namespace Thinktecture.Tests
                    {
                       [ComplexValueObject]
-                   	public readonly partial struct TestValueObject
+                   	public partial struct TestValueObject
                    	{
                          public readonly string ReferenceField;
                          public int StructProperty { get; }

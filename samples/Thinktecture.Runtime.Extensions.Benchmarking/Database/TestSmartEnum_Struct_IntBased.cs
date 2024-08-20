@@ -2,7 +2,7 @@ namespace Thinktecture.Database;
 
 // ReSharper disable InconsistentNaming
 [SmartEnum<int>(IsValidatable = true)]
-public readonly partial struct TestSmartEnum_Struct_IntBased
+public partial struct TestSmartEnum_Struct_IntBased
 {
    public static readonly TestSmartEnum_Struct_IntBased Value1 = new(0);
    public static readonly TestSmartEnum_Struct_IntBased Value2 = new(1);

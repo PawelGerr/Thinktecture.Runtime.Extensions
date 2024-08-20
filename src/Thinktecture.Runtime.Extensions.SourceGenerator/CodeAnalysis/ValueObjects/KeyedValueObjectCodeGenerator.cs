@@ -57,7 +57,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-   partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">,
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">,
       global::Thinktecture.IKeyedValueObject<").Append(_state.KeyMember.TypeFullyQualified).Append(@">,
       global::Thinktecture.IValueObjectConvertable<").Append(_state.KeyMember.TypeFullyQualified).Append(">");
 

@@ -5,7 +5,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
 [ComplexValueObject]
 [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
 [ValueObjectFactory<ValueTuple<int, int>>]
-public sealed partial class BoundaryWithFactories
+public partial class BoundaryWithFactories
 {
    public decimal Lower { get; }
    public decimal Upper { get; }
