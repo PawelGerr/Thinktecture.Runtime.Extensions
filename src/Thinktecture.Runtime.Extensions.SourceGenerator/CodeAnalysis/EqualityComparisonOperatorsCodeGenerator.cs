@@ -50,13 +50,13 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
    public void GenerateBaseTypes(StringBuilder sb, EqualityComparisonOperatorsGeneratorState state)
    {
       sb.Append(@"
-   global::System.Numerics.IEqualityOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(", bool>");
+   global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.Type).Append(", bool>");
 
       if (!_withKeyTypeOverloads || state.KeyMember is null)
          return;
 
       sb.Append(@",
-   global::System.Numerics.IEqualityOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.KeyMember.TypeFullyQualified).Append(", bool>");
+   global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.KeyMember).Append(", bool>");
    }
 
    public void GenerateImplementation(StringBuilder sb, EqualityComparisonOperatorsGeneratorState state)
@@ -76,7 +76,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" other)
+      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" other)
       {");
 
       if (state.Type.IsReferenceType)
@@ -110,7 +110,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" other)
+      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" other)
       {
          return !(obj == other);
       }");
@@ -125,7 +125,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
 
       sb.Append(@"
 
-      private static bool Equals(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(state.KeyMember.TypeFullyQualified).Append(@" value)
+      private static bool Equals(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
       {");
 
       if (state.Type.IsReferenceType)
@@ -175,45 +175,45 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").Append(state.KeyMember.TypeFullyQualified).Append(@"""/>.
+      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(state.KeyMember.TypeFullyQualified).Append(@" value)
+      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
       {
          return Equals(obj, value);
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").Append(state.KeyMember.TypeFullyQualified).Append(@"""/>.
+      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").Append(state.KeyMember.TypeFullyQualified).Append(" value, ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+      public static bool operator ==(").AppendTypeFullyQualified(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return Equals(obj, value);
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").Append(state.KeyMember.TypeFullyQualified).Append(@"""/>.
+      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(state.KeyMember.TypeFullyQualified).Append(@" value)
+      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
       {
          return !(obj == value);
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").Append(state.KeyMember.TypeFullyQualified).Append(@"""/> with <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/>.
+      /// Compares an instance of <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/> with <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/>.
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").Append(state.KeyMember.TypeFullyQualified).Append(" value, ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+      public static bool operator !=(").AppendTypeFullyQualified(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return !(obj == value);
       }");

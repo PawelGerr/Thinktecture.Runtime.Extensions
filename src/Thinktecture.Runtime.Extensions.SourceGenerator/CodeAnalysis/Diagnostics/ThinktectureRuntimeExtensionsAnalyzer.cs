@@ -137,7 +137,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     Location.None,
-                                                    type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), ex.Message));
+                                                    type.ToFullyQualifiedDisplayString(), ex.Message));
       }
    }
 
@@ -173,7 +173,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     Location.None,
-                                                    type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), ex.Message));
+                                                    type.ToFullyQualifiedDisplayString(), ex.Message));
       }
    }
 
@@ -294,7 +294,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     locationOfFirstDeclaration,
-                                                    type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                                                    type.ToFullyQualifiedDisplayString(),
                                                     "Could not fetch type information for analysis of the value object."));
          return null;
       }
@@ -375,7 +375,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     locationOfFirstDeclaration,
-                                                    enumType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                                                    enumType.ToFullyQualifiedDisplayString(),
                                                     "Could not fetch type information for analysis of the smart enum."));
          return;
       }

@@ -18,17 +18,11 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
-   public string TypeFullyQualifiedNullAnnotated => _typedMemberState.TypeFullyQualifiedNullAnnotated;
-   public string TypeFullyQualifiedWithNullability => _typedMemberState.TypeFullyQualifiedWithNullability;
    public string TypeMinimallyQualified => _typedMemberState.TypeMinimallyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsReferenceTypeOrNullableStruct => _typedMemberState.IsReferenceTypeOrNullableStruct;
-   public bool IsFormattable => _typedMemberState.IsFormattable;
-   public bool IsComparable => _typedMemberState.IsComparable;
-   public bool IsParsable => _typedMemberState.IsParsable;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
-   public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,

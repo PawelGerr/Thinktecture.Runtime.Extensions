@@ -20,7 +20,7 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
    {
       sb.Append(@"
    global::System.IComparable,
-   global::System.IComparable<").Append(state.Type.TypeFullyQualified).Append(">");
+   global::System.IComparable<").AppendTypeFullyQualified(state.Type).Append(">");
    }
 
    public void GenerateImplementation(StringBuilder sb, InterfaceCodeGeneratorState state)
@@ -32,14 +32,14 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       if(obj is null)
          return 1;
 
-      if(obj is not ").Append(state.Type.TypeFullyQualified).Append(@" item)
+      if(obj is not ").AppendTypeFullyQualified(state.Type).Append(@" item)
          throw new global::System.ArgumentException(""Argument must be of type \""").Append(state.Type.TypeMinimallyQualified).Append(@"\""."", nameof(obj));
 
       return this.CompareTo(item);
    }
 
    /// <inheritdoc />
-   public int CompareTo(").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+   public int CompareTo(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
    {");
 
       if (state.Type.IsReferenceType)

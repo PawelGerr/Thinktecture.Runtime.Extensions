@@ -37,12 +37,12 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       }
 
       _sb.Append(@"
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").Append(_state.Type.TypeFullyQualified).Append(", ");
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").AppendTypeFullyQualified(_state.Type).Append(", ");
 
       if (!isString)
          _sb.Append(keyType).Append(", ");
 
-      _sb.Append(_state.AttributeInfo.ValidationError.TypeFullyQualified).Append(@">))]
+      _sb.AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
 partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
 {
 }

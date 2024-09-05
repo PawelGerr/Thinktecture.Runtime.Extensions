@@ -47,19 +47,19 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateValueObject(CancellationToken cancellationToken)
    {
       _sb.Append(@"
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@">,
-      global::System.Numerics.IEqualityOperators<").Append(_state.TypeFullyQualified).Append(", ").Append(_state.TypeFullyQualified).Append(@", bool>,
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
+      global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(@", bool>,
       global::Thinktecture.IComplexValueObject");
 
       foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
          _sb.Append(@",
-      global::Thinktecture.IValueObjectFactory<").Append(_state.TypeFullyQualified).Append(", ").Append(desiredFactory.TypeFullyQualified).Append(", ").Append(_state.ValidationError.TypeFullyQualified).Append(">");
+      global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
 
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@",
-      global::Thinktecture.IValueObjectConvertable<").Append(desiredFactory.TypeFullyQualified).Append(">");
+      global::Thinktecture.IValueObjectConvertable<").AppendTypeFullyQualified(desiredFactory).Append(">");
          }
       }
 
@@ -69,13 +69,13 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateModuleInitializerForComplexValueObject();
 
       _sb.Append(@"
-      private static readonly int _typeHashCode = typeof(").Append(_state.TypeFullyQualified).Append(").GetHashCode();");
+      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
 
       if (!_state.IsReferenceType)
       {
          _sb.Append(@"
 
-      public static readonly ").Append(_state.TypeFullyQualified).Append(" ").Append(_state.Settings.DefaultInstancePropertyName).Append(" = default;");
+      public static readonly ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.DefaultInstancePropertyName).Append(" = default;");
       }
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -134,7 +134,7 @@ namespace ").Append(_state.Namespace).Append(@"
             members.Add(((global::System.Linq.Expressions.MemberExpression)arg).Member);
          }
 
-         var type = typeof(").Append(_state.TypeFullyQualified).Append(@");
+         var type = typeof(").AppendTypeFullyQualified(_state).Append(@");
          var metadata = new global::Thinktecture.Internal.ComplexValueObjectMetadata(type, members.AsReadOnly());
 
          global::Thinktecture.Internal.ComplexValueObjectMetadataLookup.AddMetadata(type, metadata);
@@ -148,7 +148,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      public static ").Append(_state.TypeFullyQualified).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(").RenderArgumentsWithType(fieldsAndProperties).Append(@")
+      public static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(").RenderArgumentsWithType(fieldsAndProperties).Append(@")
       {
          var validationError = Validate(");
 
@@ -157,7 +157,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (fieldsAndProperties.Count > 0)
          _sb.Append(", ");
 
-      _sb.Append("out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj);
+      _sb.Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj);
 
          if (validationError is not null)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? ""Validation failed."");
@@ -178,7 +178,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ", ",", trailingComma: true);
 
       _sb.Append(@"
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {
          return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
@@ -198,8 +198,8 @@ namespace ").Append(_state.Namespace).Append(@"
          ", ",", trailingComma: true);
 
       _sb.Append(@"
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj,
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").Append(_state.ValidationError.TypeFullyQualified).Append(@"? validationError)
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj,
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError)
       {
          validationError = Validate(");
 
@@ -220,15 +220,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      public static ").Append(_state.ValidationError.TypeFullyQualified).Append("? Validate(");
+      public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
          ", ",", trailingComma: true);
 
       _sb.Append(@"
-         out ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" obj)
+         out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {
-         ").Append(_state.ValidationError.TypeFullyQualified).Append(@"? validationError = null;
+         ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
          ");
 
       if (_state.FactoryValidationReturnType is not null)
@@ -270,7 +270,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("private ");
 
-      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref ").Append(_state.ValidationError.TypeFullyQualified).Append("? validationError");
+      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? validationError");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true, addAllowNullNotNullCombi: true);
 
@@ -293,7 +293,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-      _sb.Append("new ").Append(_state.TypeFullyQualified).Append("(");
+      _sb.Append("new ").AppendTypeFullyQualified(_state).Append("(");
       _sb.RenderArguments(fieldsAndProperties);
 
       _sb.Append(")");
@@ -309,7 +309,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").Append(_state.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" other)
+      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
       if (_state.IsReferenceType)
@@ -330,7 +330,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").Append(_state.TypeFullyQualifiedNullAnnotated).Append(" obj, ").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" other)
+      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {
          return !(obj == other);
       }");
@@ -393,11 +393,11 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override bool Equals(object? other)
       {
-         return other is ").Append(_state.TypeFullyQualified).Append(@" obj && Equals(obj);
+         return other is ").AppendTypeFullyQualified(_state).Append(@" obj && Equals(obj);
       }
 
       /// <inheritdoc />
-      public bool Equals(").Append(_state.TypeFullyQualifiedNullAnnotated).Append(@" other)
+      public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
       if (_state.IsReferenceType)

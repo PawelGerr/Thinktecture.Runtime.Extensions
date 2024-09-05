@@ -3,9 +3,6 @@ namespace Thinktecture.CodeAnalysis;
 public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 {
    public string TypeFullyQualified { get; }
-   public string TypeFullyQualifiedNullable { get; }
-   public string TypeFullyQualifiedNullAnnotated => IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
-   public string TypeFullyQualifiedWithNullability => IsReferenceType && NullableAnnotation == NullableAnnotation.Annotated ? TypeFullyQualifiedNullAnnotated : TypeFullyQualified;
    public string TypeMinimallyQualified { get; }
 
    public NullableAnnotation NullableAnnotation { get; }
@@ -24,8 +21,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 
    public TypedMemberState(ITypeSymbol type)
    {
-      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
+      TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
       NullableAnnotation = type.NullableAnnotation;
@@ -158,7 +154,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       if (ReferenceEquals(this, other))
          return true;
 
-      return TypeFullyQualifiedWithNullability == other.TypeFullyQualifiedWithNullability
+      return TypeFullyQualified == other.TypeFullyQualified
              && SpecialType == other.SpecialType
              && IsNullableStruct == other.IsNullableStruct
              && IsReferenceType == other.IsReferenceType
@@ -176,7 +172,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    {
       unchecked
       {
-         var hashCode = TypeFullyQualifiedWithNullability.GetHashCode();
+         var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ IsNullableStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();

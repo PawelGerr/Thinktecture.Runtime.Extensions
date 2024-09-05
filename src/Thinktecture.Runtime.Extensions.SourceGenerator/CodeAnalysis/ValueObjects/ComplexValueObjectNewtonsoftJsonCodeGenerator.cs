@@ -39,7 +39,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 {
    public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {
-      private static readonly global::System.Type _type = typeof(").Append(_type.TypeFullyQualified).Append(@");
+      private static readonly global::System.Type _type = typeof(").AppendTypeFullyQualified(_type).Append(@");
 
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type objectType)
@@ -60,7 +60,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             if (objectType.IsClass || global::System.Nullable.GetUnderlyingType(objectType) == _type)
                return null;
 
-            return default(").Append(_type.TypeFullyQualified).Append(@");
+            return default(").AppendTypeFullyQualified(_type).Append(@");
          }
 
          if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
@@ -81,7 +81,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName.Escaped).Append(" = default;");
+         ").AppendTypeFullyQualifiedNullAnnotated(memberInfo).Append(" ").Append(memberInfo.ArgumentName.Escaped).Append(" = default;");
       }
 
       _sb.Append(@"
@@ -139,7 +139,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 
          _sb.Append(@"(comparer.Equals(propName, """).Append(memberInfo.ArgumentName.Escaped).Append(@"""))
             {
-               ").Append(memberInfo.ArgumentName.Escaped).Append(" = serializer.Deserialize<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@">(reader);
+               ").Append(memberInfo.ArgumentName.Escaped).Append(" = serializer.Deserialize<").AppendTypeFullyQualified(memberInfo).Append(@">(reader);
             }");
       }
 
@@ -162,7 +162,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.Append(@"
          }
 
-         var validationError = ").Append(_type.TypeFullyQualified).Append(".Validate(");
+         var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -201,7 +201,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             return;
          }
 
-         var obj = (").Append(_type.TypeFullyQualified).Append(@")value;
+         var obj = (").AppendTypeFullyQualified(_type).Append(@")value;
          var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
 
          writer.WriteStartObject();");

@@ -438,7 +438,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          return Array.Empty<string>();
 
       return derivedTypes
-             .Select(t => t.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
+             .Select(t => t.Type.ToFullyQualifiedDisplayString())
              .Distinct()
              .ToList();
    }

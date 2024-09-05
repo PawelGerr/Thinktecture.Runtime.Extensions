@@ -11,7 +11,7 @@ public abstract class SmartEnumAndValueObjectCodeGeneratorBase : CodeGeneratorBa
       /// <summary>
       /// The identifier of this ").Append(isEnum ? "item" : "object").Append(@".
       /// </summary>
-      ").RenderAccessModifier(keyMember.AccessModifier).Append(" ").Append(keyMember.Kind == ValueObjectMemberKind.Field ? "readonly " : null).Append(keyMember.TypeFullyQualified).Append(" ").Append(keyMember.Name).Append(keyMember.Kind == ValueObjectMemberKind.Property ? " { get; }" : ";");
+      ").RenderAccessModifier(keyMember.AccessModifier).Append(" ").Append(keyMember.Kind == ValueObjectMemberKind.Field ? "readonly " : null).AppendTypeFullyQualified(keyMember).Append(" ").Append(keyMember.Name).Append(keyMember.Kind == ValueObjectMemberKind.Property ? " { get; }" : ";");
    }
 
    protected void GenerateKeyMemberEqualityComparison(StringBuilder sb, KeyMemberState keyMember, string? keyMemberEqualityComparerAccessor)

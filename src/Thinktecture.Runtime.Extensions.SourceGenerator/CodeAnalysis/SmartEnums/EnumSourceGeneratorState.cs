@@ -5,7 +5,6 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public string? Namespace { get; }
    public string Name { get; }
    public string TypeFullyQualified { get; }
-   public string TypeFullyQualifiedNullAnnotated { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
 
@@ -17,6 +16,8 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public bool HasCreateInvalidItemImplementation { get; }
    public bool HasDerivedTypes { get; }
    public bool IsReferenceType { get; }
+   public NullableAnnotation NullableAnnotation { get; }
+   public bool IsNullableStruct { get; }
    public bool IsAbstract { get; }
 
    public EnumItems Items { get; }
@@ -41,10 +42,11 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
-      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeFullyQualifiedNullAnnotated = type.IsReferenceType ? $"{TypeFullyQualified}?" : TypeFullyQualified;
+      TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
+      NullableAnnotation = type.NullableAnnotation;
+      IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
       IsAbstract = type.IsAbstract;
 
       BaseType = type.GetBaseType(factory);
@@ -68,6 +70,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && HasCreateInvalidItemImplementation == other.HasCreateInvalidItemImplementation
              && HasDerivedTypes == other.HasDerivedTypes
              && IsReferenceType == other.IsReferenceType
+             && NullableAnnotation == other.NullableAnnotation
              && IsAbstract == other.IsAbstract
              && Equals(KeyMember, other.KeyMember)
              && ValidationError.Equals(other.ValidationError)
@@ -85,6 +88,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ HasCreateInvalidItemImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ HasDerivedTypes.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMember?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();

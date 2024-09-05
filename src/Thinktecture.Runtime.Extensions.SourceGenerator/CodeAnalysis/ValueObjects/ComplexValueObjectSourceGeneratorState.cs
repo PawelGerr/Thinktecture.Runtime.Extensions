@@ -3,14 +3,14 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, IEquatable<ComplexValueObjectSourceGeneratorState>
 {
    public string TypeFullyQualified { get; }
-   public string TypeFullyQualifiedNullable { get; }
-   public string TypeFullyQualifiedNullAnnotated => IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
 
    public string? Namespace { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
+   public NullableAnnotation NullableAnnotation { get; }
+   public bool IsNullableStruct { get; }
 
    public string? FactoryValidationReturnType { get; }
 
@@ -31,10 +31,11 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
       Settings = settings;
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
-      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
+      TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
+      NullableAnnotation = type.NullableAnnotation;
+      IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
       var nonIgnoredMembers = type.GetNonIgnoredMembers();
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, true, true, cancellationToken).ToList();
@@ -45,12 +46,7 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
                                            : (nonIgnoredMembers.FirstOrDefault(m => m.IsStatic && m.Name == Constants.Methods.VALIDATE_FACTORY_ARGUMENTS && m is IMethodSymbol method && method.ReturnType.SpecialType != SpecialType.System_Void) as IMethodSymbol)?.ReturnType;
 
       if (factoryValidationReturnType is not null)
-      {
-         FactoryValidationReturnType = factoryValidationReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-
-         if (factoryValidationReturnType.NullableAnnotation == NullableAnnotation.Annotated)
-            FactoryValidationReturnType += "?";
-      }
+         FactoryValidationReturnType = factoryValidationReturnType.ToFullyQualifiedDisplayString();
    }
 
    private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()

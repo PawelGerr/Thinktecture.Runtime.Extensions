@@ -9,13 +9,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
-   public string TypeFullyQualifiedNullAnnotated => _typedMemberState.TypeFullyQualifiedNullAnnotated;
-   public string TypeFullyQualifiedWithNullability => _typedMemberState.TypeFullyQualifiedWithNullability;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
-   public bool IsFormattable => _typedMemberState.IsFormattable;
-   public bool IsComparable => _typedMemberState.IsComparable;
-   public bool IsParsable => _typedMemberState.IsParsable;
-   public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
 

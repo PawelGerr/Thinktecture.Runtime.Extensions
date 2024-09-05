@@ -43,7 +43,7 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
          return None;
 
       var equalityComparerGenericTypes = equalityComparerAttr.GetComparerTypes();
-      var equalityComparerAccessorType = equalityComparerGenericTypes?.ComparerType?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      var equalityComparerAccessorType = equalityComparerGenericTypes?.ComparerType?.ToFullyQualifiedDisplayString();
       var hasInvalidEqualityComparerType = equalityComparerGenericTypes is not null && !SymbolEqualityComparer.Default.Equals(equalityComparerGenericTypes.Value.ItemType, type);
 
       return new ValueObjectMemberSettings(true,

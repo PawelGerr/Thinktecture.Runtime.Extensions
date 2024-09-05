@@ -59,13 +59,13 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
          return;
 
       sb.Append(@"
-   global::System.Numerics.IAdditionOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(">");
+   global::System.Numerics.IAdditionOperators<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.Type).Append(">");
 
       if (!_withKeyTypeOverloads)
          return;
 
       sb.Append(@",
-   global::System.Numerics.IAdditionOperators<").Append(state.Type.TypeFullyQualified).Append(", ").Append(state.KeyMember.TypeFullyQualified).Append(", ").Append(state.Type.TypeFullyQualified).Append(">");
+   global::System.Numerics.IAdditionOperators<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.KeyMember).Append(", ").AppendTypeFullyQualified(state.Type).Append(">");
    }
 
    public void GenerateImplementation(StringBuilder sb, InterfaceCodeGeneratorState state)
@@ -78,7 +78,7 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
       {
          sb.Append(@"
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(state.Type.TypeFullyQualified).Append(" operator +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   public static ").AppendTypeFullyQualified(state.Type).Append(" operator +(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
       ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" + right.").Append(state.KeyMember.Name).Append(@"));
    }");
@@ -89,7 +89,7 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
          sb.Append(@"
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked +(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
       ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" + right.").Append(state.KeyMember.Name).Append(@")));
    }");
@@ -114,13 +114,13 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
          sb.Append(@"
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(state.Type.TypeFullyQualified).Append(" operator +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
+   public static ").AppendTypeFullyQualified(state.Type).Append(" operator +(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
       ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(@" + right));
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(state.Type.TypeFullyQualified).Append(" operator +(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   public static ").AppendTypeFullyQualified(state.Type).Append(" operator +(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
       ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left + right.").Append(state.KeyMember.Name).Append(@"));
    }");
@@ -131,13 +131,13 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
          sb.Append(@"
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked +(").Append(state.Type.TypeFullyQualified).Append(" left, ").Append(state.KeyMember.TypeFullyQualified).Append(@" right)
+   public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked +(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
       ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(@" + right)));
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)"" />
-   public static ").Append(state.Type.TypeFullyQualified).Append(" operator checked +(").Append(state.KeyMember.TypeFullyQualified).Append(" left, ").Append(state.Type.TypeFullyQualified).Append(@" right)
+   public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked +(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
       ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left + right.").Append(state.KeyMember.Name).Append(@")));
    }");
