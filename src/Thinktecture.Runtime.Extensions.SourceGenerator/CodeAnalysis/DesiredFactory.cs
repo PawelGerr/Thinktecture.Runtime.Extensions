@@ -11,7 +11,7 @@ public sealed class DesiredFactory : ITypeFullyQualified, IEquatable<DesiredFact
    public DesiredFactory(ITypeSymbol type, SerializationFrameworks useForSerialization)
    {
       SpecialType = type.SpecialType;
-      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+      TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       UseForSerialization = useForSerialization;
    }
 

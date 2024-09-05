@@ -102,7 +102,7 @@ public static class StringBuilderExtensions
       if (addAllowNullNotNullCombi && member.IsReferenceType && member.NullableAnnotation != NullableAnnotation.Annotated)
          sb.Append("[global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ");
 
-      sb.Append(prefix).Append(member.TypeFullyQualifiedWithNullability);
+      sb.Append(prefix).AppendTypeFullyQualified(member);
 
       if (useNullableTypes && !member.IsNullableStruct)
          sb.Append("?");
@@ -117,6 +117,59 @@ public static class StringBuilderExtensions
    {
       if (condition)
          sb.Append("(").Append(type.TypeFullyQualified).Append(")");
+
+      return sb;
+   }
+
+   public static StringBuilder AppendTypeFullyQualified(
+      this StringBuilder sb,
+      ITypeFullyQualified type)
+   {
+      return sb.Append(type.TypeFullyQualified);
+   }
+
+   public static StringBuilder AppendTypeFullyQualified(
+      this StringBuilder sb,
+      ITypeInformationWithNullability type,
+      bool nullable)
+   {
+      return nullable
+                ? sb.AppendTypeFullyQualifiedNullable(type)
+                : sb.AppendTypeFullyQualified(type);
+   }
+
+   public static StringBuilder AppendTypeFullyQualifiedWithoutNullAnnotation(
+      this StringBuilder sb,
+      ITypeInformationWithNullability type)
+   {
+      sb.AppendTypeFullyQualified(type);
+
+      if (type is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.Annotated })
+         sb.Length -= 1;
+
+      return sb;
+   }
+
+   public static StringBuilder AppendTypeFullyQualifiedNullAnnotated(
+      this StringBuilder sb,
+      ITypeInformationWithNullability type)
+   {
+      sb.Append(type.TypeFullyQualified);
+
+      if (type.IsReferenceType && type.NullableAnnotation != NullableAnnotation.Annotated)
+         sb.Append("?");
+
+      return sb;
+   }
+
+   public static StringBuilder AppendTypeFullyQualifiedNullable(
+      this StringBuilder sb,
+      ITypeInformationWithNullability type)
+   {
+      sb.Append(type.TypeFullyQualified);
+
+      if ((type.IsReferenceType && type.NullableAnnotation != NullableAnnotation.Annotated) || type is { IsReferenceType: false, IsNullableStruct: false })
+         sb.Append("?");
 
       return sb;
    }

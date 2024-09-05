@@ -74,15 +74,15 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          }
          else if (attribute.AttributeClass.IsValueObjectValidationErrorAttribute())
          {
-            validationError = new ValidationErrorState(attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+            validationError = new ValidationErrorState(attribute.AttributeClass.TypeArguments[0].ToFullyQualifiedDisplayString());
          }
          else if (attribute.AttributeClass.IsValueObjectKeyMemberComparerAttribute())
          {
-            keyMemberComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            keyMemberComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToFullyQualifiedDisplayString();
          }
          else if (attribute.AttributeClass.IsValueObjectKeyMemberEqualityComparerAttribute())
          {
-            keyMemberEqualityComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            keyMemberEqualityComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToFullyQualifiedDisplayString();
          }
          else if (attribute.AttributeClass.IsSmartEnumAttribute()
                   || attribute.AttributeClass.IsKeyedValueObjectAttribute()

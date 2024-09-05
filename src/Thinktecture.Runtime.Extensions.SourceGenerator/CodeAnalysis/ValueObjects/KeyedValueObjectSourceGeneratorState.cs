@@ -3,14 +3,14 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEquatable<KeyedValueObjectSourceGeneratorState>
 {
    public string TypeFullyQualified { get; }
-   public string TypeFullyQualifiedNullable { get; }
-   public string TypeFullyQualifiedNullAnnotated => IsReferenceType ? TypeFullyQualifiedNullable : TypeFullyQualified;
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
 
    public string? Namespace { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
+   public NullableAnnotation NullableAnnotation { get; }
+   public bool IsNullableStruct { get; }
 
    public string? FactoryValidationReturnType { get; }
 
@@ -29,10 +29,11 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
       Settings = settings;
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
-      TypeFullyQualified = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-      TypeFullyQualifiedNullable = $"{TypeFullyQualified}?";
+      TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
+      NullableAnnotation = type.NullableAnnotation;
+      IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
       var nonIgnoredMembers = type.GetNonIgnoredMembers();
 
@@ -41,12 +42,7 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
          var member = nonIgnoredMembers[i];
 
          if (member.IsValidateFactoryArgumentsImplementation(out var method) && method.ReturnType.SpecialType != SpecialType.System_Void)
-         {
-            FactoryValidationReturnType = method.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-
-            if (method.ReturnType.NullableAnnotation == NullableAnnotation.Annotated)
-               FactoryValidationReturnType += "?";
-         }
+            FactoryValidationReturnType = method.ReturnType.ToFullyQualifiedDisplayString();
       }
    }
 

@@ -37,10 +37,10 @@ namespace ").Append(_type.Namespace).Append(@";
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
 partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
 {
-   public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").Append(_type.TypeFullyQualifiedNullAnnotated).Append(@">
+   public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@">
    {
       /// <inheritdoc />
-      public ").Append(_type.TypeFullyQualifiedNullAnnotated).Append(@" Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+      public ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
       {
          if (reader.TryReadNil())
             return default;
@@ -71,7 +71,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 
       _sb.Append(@"
 
-            var validationError = ").Append(_type.TypeFullyQualified).Append(".Validate(");
+            var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -98,7 +98,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
 
       /// <inheritdoc />
-      public void Serialize(ref global::MessagePack.MessagePackWriter writer, ").Append(_type.TypeFullyQualifiedNullAnnotated).Append(@" value, global::MessagePack.MessagePackSerializerOptions options)
+      public void Serialize(ref global::MessagePack.MessagePackWriter writer, ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" value, global::MessagePack.MessagePackSerializerOptions options)
       {");
 
       if (_type.IsReferenceType)
@@ -164,7 +164,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          return;
       }
 
-      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">(resolver).Serialize(ref writer, value.").Append(memberInfo.Name).Append(", options)");
+      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").AppendTypeFullyQualified(memberInfo).Append(">(resolver).Serialize(ref writer, value.").Append(memberInfo.Name).Append(", options)");
    }
 
    private static void GenerateReadValue(StringBuilder sb, InstanceMemberInfo memberInfo)
@@ -201,6 +201,6 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          return;
       }
 
-      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">(resolver).Deserialize(ref reader, options)");
+      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").AppendTypeFullyQualified(memberInfo).Append(">(resolver).Deserialize(ref reader, options)");
    }
 }

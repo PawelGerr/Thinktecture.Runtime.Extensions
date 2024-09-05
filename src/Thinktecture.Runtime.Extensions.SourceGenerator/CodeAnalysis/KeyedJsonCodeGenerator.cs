@@ -42,7 +42,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       if (!isString)
          _sb.Append(keyType).Append(", ");
 
-      _sb.Append(_state.AttributeInfo.ValidationError.TypeFullyQualified).Append(@">))]
+      _sb.AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
 partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
 {
 }

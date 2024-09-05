@@ -37,7 +37,7 @@ namespace ").Append(_type.Namespace).Append(@";
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
 partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
 {
-   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<").Append(_type.TypeFullyQualified).Append(@">
+   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
    {");
 
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
@@ -45,7 +45,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append("> _").Append(memberInfo.ArgumentName.Raw).Append(@"Converter;
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName.Raw).Append(@"Converter;
       private readonly string _").Append(memberInfo.ArgumentName.Raw).Append("PropertyName;");
       }
 
@@ -66,7 +66,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").Append(memberInfo.TypeFullyQualified).Append(@"));
+         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"));
          this._").Append(memberInfo.ArgumentName.Raw).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
@@ -74,7 +74,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
 
       /// <inheritdoc />
-      public override ").Append(_type.TypeFullyQualifiedNullAnnotated).Append(@" Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      public override ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
       {
          if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
             return default;
@@ -90,7 +90,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         ").Append(memberInfo.TypeFullyQualifiedNullAnnotated).Append(" ").Append(memberInfo.ArgumentName.Escaped).Append(" = default;");
+         ").AppendTypeFullyQualifiedNullAnnotated(memberInfo).Append(" ").Append(memberInfo.ArgumentName.Escaped).Append(" = default;");
       }
 
       _sb.Append(@"
@@ -130,7 +130,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 
          _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyName))
             {
-               ").Append(memberInfo.ArgumentName.Escaped).Append(" = this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").Append(memberInfo.TypeFullyQualified).Append(@"), options);
+               ").Append(memberInfo.ArgumentName.Escaped).Append(" = this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);
             }");
       }
 
@@ -146,7 +146,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.Append(@"
          }
 
-         var validationError = ").Append(_type.TypeFullyQualified).Append(".Validate(");
+         var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -168,7 +168,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
 
       /// <inheritdoc />
-      public override void Write(global::System.Text.Json.Utf8JsonWriter writer, ").Append(_type.TypeFullyQualified).Append(@" value, global::System.Text.Json.JsonSerializerOptions options)
+      public override void Write(global::System.Text.Json.Utf8JsonWriter writer, ").AppendTypeFullyQualified(_type).Append(@" value, global::System.Text.Json.JsonSerializerOptions options)
       {
          writer.WriteStartObject();
 
@@ -196,7 +196,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          else
          {
             _sb.Append(@"
-         if(!ignoreDefaultValues || !").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue.Equals(default(").Append(memberInfo.TypeFullyQualifiedWithNullability).Append(@")))
+         if(!ignoreDefaultValues || !").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue.Equals(default(").AppendTypeFullyQualified(memberInfo).Append(@")))
          {
             ");
          }
@@ -218,7 +218,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type typeToConvert)
       {
-         return typeof(").Append(_type.TypeFullyQualified).Append(@").IsAssignableFrom(typeToConvert);
+         return typeof(").AppendTypeFullyQualified(_type).Append(@").IsAssignableFrom(typeToConvert);
       }
 
       /// <inheritdoc />

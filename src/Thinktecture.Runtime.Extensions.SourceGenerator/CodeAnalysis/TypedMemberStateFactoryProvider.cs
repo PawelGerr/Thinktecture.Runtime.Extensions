@@ -8,8 +8,8 @@ public class TypedMemberStateFactoryProvider
    private static readonly object _lock7 = new();
    private static readonly object _lock8 = new();
 
-   private static Version _version7 = new(7, 0, 0, 0);
-   private static Version _version8 = new(8, 0, 0, 0);
+   private static readonly Version _version7 = new(7, 0, 0, 0);
+   private static readonly Version _version8 = new(8, 0, 0, 0);
 
    private static TypedMemberStateFactory? _dotnet7;
    private static TypedMemberStateFactory? _dotnet8;

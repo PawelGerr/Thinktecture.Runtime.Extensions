@@ -11,9 +11,6 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
-   public string TypeFullyQualifiedNullable => _typedMemberState.TypeFullyQualifiedNullable;
-   public string TypeFullyQualifiedNullAnnotated => _typedMemberState.TypeFullyQualifiedNullAnnotated;
-   public string TypeFullyQualifiedWithNullability => _typedMemberState.TypeFullyQualifiedWithNullability;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;

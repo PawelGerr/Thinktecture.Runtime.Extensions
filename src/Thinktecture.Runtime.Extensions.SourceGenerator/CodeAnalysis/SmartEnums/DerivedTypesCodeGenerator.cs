@@ -34,7 +34,7 @@ partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Appen
    [global::System.Runtime.CompilerServices.ModuleInitializer]
    internal static void DerivedTypesModuleInit()
    {
-      var enumType = typeof(").Append(_state.TypeFullyQualified).Append(");");
+      var enumType = typeof(").AppendTypeFullyQualified(_state).Append(");");
 
       foreach (var derivedType in _state.DerivedTypesFullyQualified)
       {

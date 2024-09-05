@@ -20,7 +20,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    public void GenerateBaseTypes(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
-   global::System.IParsable<").Append(state.Type.TypeFullyQualified).Append(">");
+   global::System.IParsable<").AppendTypeFullyQualified(state.Type).Append(">");
    }
 
    public void GenerateImplementation(StringBuilder sb, ParsableGeneratorState state)
@@ -34,8 +34,8 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    {
       var keyType = state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod ? "string" : state.KeyMember?.TypeFullyQualified;
       sb.Append(@"
-   private static ").Append(state.ValidationError.TypeFullyQualified).Append("? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").Append(state.Type.TypeFullyQualifiedNullAnnotated).Append(@" result)
-      where T : global::Thinktecture.IValueObjectFactory<").Append(state.Type.TypeFullyQualified).Append(", ").Append(keyType).Append(", ").Append(state.ValidationError.TypeFullyQualified).Append(@">
+   private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
+      where T : global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">
    {
       return T.Validate(key, provider, out result);
    }");
@@ -46,19 +46,19 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       sb.Append(@"
 
    /// <inheritdoc />
-   public static ").Append(state.Type.TypeFullyQualified).Append(@" Parse(string s, global::System.IFormatProvider? provider)
+   public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(string s, global::System.IFormatProvider? provider)
    {");
 
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
-      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out var result);");
+      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(s, provider, out var result);");
       }
       else if (state.KeyMember is not null)
       {
          sb.Append(@"
-      var key = ").Append(state.KeyMember.TypeFullyQualified).Append(@".Parse(s, provider);
-      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out var result);");
+      var key = ").AppendTypeFullyQualified(state.KeyMember).Append(@".Parse(s, provider);
+      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out var result);");
       }
 
       if (_isForValidatableEnum)
@@ -87,7 +87,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    public static bool TryParse(
       string? s,
       global::System.IFormatProvider? provider,
-      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").Append(state.Type.TypeFullyQualified).Append(@" result)
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(state.Type).Append(@" result)
    {
       if(s is null)
       {
@@ -99,7 +99,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       {
          sb.Append(@"
 
-      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(s, provider, out result!);");
+      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(s, provider, out result!);");
       }
       else if (state.KeyMember is not null)
       {
@@ -111,7 +111,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          return false;
       }
 
-      var validationError = Validate<").Append(state.Type.TypeFullyQualified).Append(">(key, provider, out result!);");
+      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out result!);");
       }
 
       if (_isForValidatableEnum)

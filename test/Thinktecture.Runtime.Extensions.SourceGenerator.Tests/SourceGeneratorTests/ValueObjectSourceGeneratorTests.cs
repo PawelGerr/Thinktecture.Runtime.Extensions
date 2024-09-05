@@ -1893,6 +1893,191 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public void Should_generate_complex_class_with_nullable_members()
+   {
+      var source = """
+
+                   using System;
+                   using Thinktecture;
+
+                   namespace Thinktecture.Tests
+                   {
+                     [ComplexValueObject]
+                   	public partial class TestValueObject
+                   	{
+                         public string? Prop1 { get; }
+                         public Func<string?, Task<string?>?>? Prop2 { get; }
+
+                         static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string? prop1, ref Func<string?, Task<string?>?>? prop2)
+                         {
+                         }
+                     }
+                   }
+
+                   """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      AssertOutput(output, _GENERATED_HEADER + """
+
+                                               namespace Thinktecture.Tests
+                                               {
+                                                  partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+                                                     global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
+                                                     global::Thinktecture.IComplexValueObject
+                                                  {
+                                                     [global::System.Runtime.CompilerServices.ModuleInitializer]
+                                                     internal static void ModuleInit()
+                                                     {
+                                                        global::System.Linq.Expressions.Expression<global::System.Func<TestValueObject, object>> action = o => new
+                                                                                                                                                           {
+                                                                                                                                                              o.Prop1,
+                                                                                                                                                              o.Prop2
+                                                                                                                                                           };
+
+                                                        var members = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>();
+
+                                                        foreach (var arg in ((global::System.Linq.Expressions.NewExpression)action.Body).Arguments)
+                                                        {
+                                                           members.Add(((global::System.Linq.Expressions.MemberExpression)arg).Member);
+                                                        }
+
+                                                        var type = typeof(global::Thinktecture.Tests.TestValueObject);
+                                                        var metadata = new global::Thinktecture.Internal.ComplexValueObjectMetadata(type, members.AsReadOnly());
+
+                                                        global::Thinktecture.Internal.ComplexValueObjectMetadataLookup.AddMetadata(type, metadata);
+                                                     }
+
+                                                     private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
+
+                                                     public static global::Thinktecture.ValidationError? Validate(
+                                                        string? prop1,
+                                                        global::System.Func<string?, Task<string?>?>? prop2,
+                                                        out global::Thinktecture.Tests.TestValueObject? obj)
+                                                     {
+                                                        global::Thinktecture.ValidationError? validationError = null;
+                                                        ValidateFactoryArguments(ref validationError, ref prop1, ref prop2);
+
+                                                        if (validationError is null)
+                                                        {
+                                                           obj = new global::Thinktecture.Tests.TestValueObject(prop1, prop2);
+                                                           obj.FactoryPostInit();
+                                                        }
+                                                        else
+                                                        {
+                                                           obj = default;
+                                                        }
+
+                                                        return validationError;
+                                                     }
+
+                                                     public static global::Thinktecture.Tests.TestValueObject Create(string? prop1, global::System.Func<string?, Task<string?>?>? prop2)
+                                                     {
+                                                        var validationError = Validate(prop1, prop2, out global::Thinktecture.Tests.TestValueObject? obj);
+
+                                                        if (validationError is not null)
+                                                           throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
+
+                                                        return obj!;
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        string? prop1,
+                                                        global::System.Func<string?, Task<string?>?>? prop2,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
+                                                     {
+                                                        return TryCreate(prop1, prop2, out obj, out _);
+                                                     }
+
+                                                     public static bool TryCreate(
+                                                        string? prop1,
+                                                        global::System.Func<string?, Task<string?>?>? prop2,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
+                                                        [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
+                                                     {
+                                                        validationError = Validate(prop1, prop2, out obj);
+
+                                                        return validationError is null;
+                                                     }
+
+                                                     static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref string? prop1, ref global::System.Func<string?, Task<string?>?>? prop2);
+
+                                                     partial void FactoryPostInit();
+
+                                                     private TestValueObject(string? prop1, global::System.Func<string?, Task<string?>?>? prop2)
+                                                     {
+                                                        ValidateConstructorArguments(ref prop1, ref prop2);
+
+                                                        this.Prop1 = prop1;
+                                                        this.Prop2 = prop2;
+                                                     }
+
+                                                     static partial void ValidateConstructorArguments(ref string? prop1, ref global::System.Func<string?, Task<string?>?>? prop2);
+
+                                                     /// <summary>
+                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// </summary>
+                                                     /// <param name="obj">Instance to compare.</param>
+                                                     /// <param name="other">Another instance to compare.</param>
+                                                     /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+                                                     public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+                                                     {
+                                                        if (obj is null)
+                                                           return other is null;
+
+                                                        return obj.Equals(other);
+                                                     }
+
+                                                     /// <summary>
+                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// </summary>
+                                                     /// <param name="obj">Instance to compare.</param>
+                                                     /// <param name="other">Another instance to compare.</param>
+                                                     /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+                                                     public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
+                                                     {
+                                                        return !(obj == other);
+                                                     }
+
+                                                     /// <inheritdoc />
+                                                     public override bool Equals(object? other)
+                                                     {
+                                                        return other is global::Thinktecture.Tests.TestValueObject obj && Equals(obj);
+                                                     }
+
+                                                     /// <inheritdoc />
+                                                     public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
+                                                     {
+                                                        if (other is null)
+                                                           return false;
+
+                                                        if (global::System.Object.ReferenceEquals(this, other))
+                                                           return true;
+
+                                                        return global::System.StringComparer.OrdinalIgnoreCase.Equals(this.Prop1, other.Prop1)
+                                                            && (this.Prop2 is null ? other.Prop2 is null : this.Prop2.Equals(other.Prop2));
+                                                     }
+
+                                                     /// <inheritdoc />
+                                                     public override int GetHashCode()
+                                                     {
+                                                        return global::System.HashCode.Combine(
+                                                           _typeHashCode,
+                                                           this.Prop1,
+                                                           this.Prop2);
+                                                     }
+
+                                                     /// <inheritdoc />
+                                                     public override string ToString()
+                                                     {
+                                                        return $"{{ Prop1 = {this.Prop1}, Prop2 = {this.Prop2} }}";
+                                                     }
+                                                  }
+                                               }
+
+                                               """);
+   }
+
+   [Fact]
    public void Should_generate_complex_class_with_post_init_method_if_validation_method_returns_struct()
    {
       var source = """

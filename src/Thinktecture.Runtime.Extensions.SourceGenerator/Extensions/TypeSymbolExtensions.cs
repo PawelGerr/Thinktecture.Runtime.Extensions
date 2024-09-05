@@ -8,6 +8,14 @@ namespace Thinktecture;
 
 public static class TypeSymbolExtensions
 {
+   private static readonly SymbolDisplayFormat _fullyQualifiedDisplayFormat = SymbolDisplayFormat.FullyQualifiedFormat
+                                                                                                 .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
+
+   public static string ToFullyQualifiedDisplayString(this ITypeSymbol type)
+   {
+      return type.ToDisplayString(_fullyQualifiedDisplayFormat);
+   }
+
    public static bool IsNullOrObject([NotNullWhen(false)] this ITypeSymbol? type)
    {
       return type is null || type.SpecialType == SpecialType.System_Object;
@@ -567,7 +575,7 @@ public static class TypeSymbolExtensions
          reportDiagnostic?.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
                                                               method.GetIdentifier(cancellationToken).GetLocation(),
                                                               enumType.Name,
-                                                              keyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
+                                                              keyType.ToFullyQualifiedDisplayString()));
 
          return true;
       }

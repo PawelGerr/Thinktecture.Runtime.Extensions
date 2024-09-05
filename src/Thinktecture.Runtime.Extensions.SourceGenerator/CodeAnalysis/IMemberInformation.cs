@@ -1,8 +1,7 @@
 namespace Thinktecture.CodeAnalysis;
 
-public interface IMemberInformation : ITypeFullyQualified
+public interface IMemberInformation : ITypeInformationWithNullability
 {
    string Name { get; }
-   bool IsReferenceType { get; }
    SpecialType SpecialType { get; }
 }
