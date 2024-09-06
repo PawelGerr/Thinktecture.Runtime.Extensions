@@ -70,5 +70,15 @@ public static class Constants
          public const string KEYED_FULL_NAME = "Thinktecture.SmartEnumAttribute`1";
          public const string KEYLESS_FULL_NAME = "Thinktecture.SmartEnumAttribute";
       }
+
+      public static class Union
+      {
+         public const string NAMESPACE = "Thinktecture";
+         public const string NAME = "UnionAttribute";
+         public const string FULL_NAME_2_TYPES = "Thinktecture.UnionAttribute`2";
+         public const string FULL_NAME_3_TYPES = "Thinktecture.UnionAttribute`3";
+         public const string FULL_NAME_4_TYPES = "Thinktecture.UnionAttribute`4";
+         public const string FULL_NAME_5_TYPES = "Thinktecture.UnionAttribute`5";
+      }
    }
 }

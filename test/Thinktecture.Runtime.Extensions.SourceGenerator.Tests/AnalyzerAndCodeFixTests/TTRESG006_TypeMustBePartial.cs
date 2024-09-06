@@ -352,4 +352,54 @@ public class TTRESG006_TypeMustBePartial
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
    }
+
+   public class Union_must_be_partial
+   {
+      [Fact]
+      public async Task Should_trigger_on_non_partial_class()
+      {
+         var code = """
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                        [Union<string, int>]
+                    	   public class {|#0:TestUnion|};
+                    }
+                    """;
+
+         var expectedCode = """
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                                [Union<string, int>]
+                            	   public partial class {|#0:TestUnion|};
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_partial_class()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [Union<string, int>]
+                       public partial class {|#0:TestUnion|};
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+   }
 }

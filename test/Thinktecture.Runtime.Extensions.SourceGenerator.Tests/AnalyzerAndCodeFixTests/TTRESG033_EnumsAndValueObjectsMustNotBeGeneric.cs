@@ -146,4 +146,26 @@ public class TTRESG033_EnumsAndValueObjectsMustNotBeGeneric
          await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
       }
    }
+
+   public class Union_must_not_be_generic
+   {
+      [Fact]
+      public async Task Should_trigger_on_generic_class()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [Union<string, int>]
+                       public partial class {|#0:TestUnion|}<T>;
+                    }
+                    """;
+
+         var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Union", "TestUnion<T>");
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      }
+   }
 }

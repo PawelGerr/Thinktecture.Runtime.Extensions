@@ -10,7 +10,7 @@ public class EqualityOperator
    [Fact]
    public void Should_return_false_if_item_is_null()
    {
-      (TestEnum.Item1 is null).Should().BeFalse();
+      (TestEnum.Item1 == null).Should().BeFalse();
    }
 
    [Fact]

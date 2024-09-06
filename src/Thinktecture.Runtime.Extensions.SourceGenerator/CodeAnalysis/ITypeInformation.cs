@@ -1,7 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public interface ITypeInformation : INamespaceAndName, ITypeInformationWithNullability
+public interface ITypeInformation : INamespaceAndName, ITypeInformationWithNullability, ITypeMinimallyQualified
 {
-   string TypeMinimallyQualified { get; }
    bool IsEqualWithReferenceEquality { get; }
 }

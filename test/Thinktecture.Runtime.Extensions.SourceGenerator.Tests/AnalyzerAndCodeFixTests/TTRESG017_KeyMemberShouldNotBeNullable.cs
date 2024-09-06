@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;

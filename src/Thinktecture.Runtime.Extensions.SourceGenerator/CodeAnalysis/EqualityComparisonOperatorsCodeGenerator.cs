@@ -71,7 +71,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
    {
       sb.Append(@"
       /// <summary>
-      /// Compares two instances of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/>.
+      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -105,7 +105,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares two instances of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/>.
+      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -175,7 +175,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
+      /// Compares an instance of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
@@ -186,7 +186,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
+      /// Compares an instance of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
@@ -197,7 +197,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
+      /// Compares an instance of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
@@ -208,7 +208,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/> with <see cref=""").Append(state.Type.TypeMinimallyQualified).Append(@"""/>.
+      /// Compares an instance of <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/> with <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/>.
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>

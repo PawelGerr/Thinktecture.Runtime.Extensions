@@ -12,7 +12,7 @@ public sealed class TypeInformationComparer : IEqualityComparer<ITypeInformation
       if (y is null)
          return false;
 
-      return x.TypeMinimallyQualified == y.TypeMinimallyQualified
+      return x.TypeFullyQualified == y.TypeFullyQualified
              && x.IsReferenceType == y.IsReferenceType;
    }
 
@@ -20,7 +20,7 @@ public sealed class TypeInformationComparer : IEqualityComparer<ITypeInformation
    {
       unchecked
       {
-         var hashCode = obj.TypeMinimallyQualified.GetHashCode();
+         var hashCode = obj.TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ obj.IsReferenceType.GetHashCode();
 
          return hashCode;

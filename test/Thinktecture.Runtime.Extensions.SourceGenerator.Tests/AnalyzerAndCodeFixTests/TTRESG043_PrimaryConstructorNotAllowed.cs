@@ -144,4 +144,26 @@ public class TTRESG043_PrimaryConstructorNotAllowed
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
       }
    }
+
+   public class Union_cannot_have_a_primary_constructor
+   {
+      [Fact]
+      public async Task Should_trigger_if_union_is_class_and_has_primary_constructor()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [Union<string, int>]
+                       public partial class {|#0:TestUnion|}();
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      }
+   }
 }

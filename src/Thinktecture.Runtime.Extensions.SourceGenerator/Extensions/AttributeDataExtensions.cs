@@ -149,6 +149,26 @@ public static class AttributeDataExtensions
       return frameworks.Value;
    }
 
+   public static StringComparison FindDefaultStringComparison(this AttributeData attributeData)
+   {
+      var frameworks = (StringComparison?)GetIntegerParameterValue(attributeData, "DefaultStringComparison");
+
+      if (frameworks is null || !frameworks.Value.IsValid())
+         return StringComparison.OrdinalIgnoreCase;
+
+      return frameworks.Value;
+   }
+
+   public static bool FindTxIsNullableReferenceType(this AttributeData attributeData, int index)
+   {
+      return GetBooleanParameterValue(attributeData, $"T{index}IsNullableReferenceType") ?? false;
+   }
+
+   public static string? FindTxName(this AttributeData attributeData, int index)
+   {
+      return GetStringParameterValue(attributeData, $"T{index}Name");
+   }
+
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
    {
       if (attributeData.AttributeClass is not { } attributeClass || attributeClass.TypeKind == TypeKind.Error)

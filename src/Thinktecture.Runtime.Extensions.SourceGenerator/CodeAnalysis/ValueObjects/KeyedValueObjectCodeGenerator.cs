@@ -264,7 +264,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Explicit conversion from the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(keyMember.ArgumentName.Raw).Append(@""">Value to covert.</param>
-      /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.</returns>");
+      /// <returns>An instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.</returns>");
 
       if (bothAreReferenceTypes && !emptyStringYieldsNull)
       {

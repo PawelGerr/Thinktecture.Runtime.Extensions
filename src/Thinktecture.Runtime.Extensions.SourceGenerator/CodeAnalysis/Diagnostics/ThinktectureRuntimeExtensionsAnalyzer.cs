@@ -41,7 +41,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.PrimaryConstructorNotAllowed,
                                                                                                               DiagnosticsDescriptors.CustomKeyMemberImplementationNotFound,
                                                                                                               DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch,
-                                                                                                              DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters);
+                                                                                                              DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters,
+                                                                                                              DiagnosticsDescriptors.TypeMustBeClass);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -51,6 +52,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       context.RegisterOperationAction(AnalyzeSmartEnum, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeValueObject, OperationKind.Attribute);
+      context.RegisterOperationAction(AnalyzeUnion, OperationKind.Attribute);
 
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
    }
@@ -175,6 +177,56 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                     Location.None,
                                                     type.ToFullyQualifiedDisplayString(), ex.Message));
       }
+   }
+
+   private static void AnalyzeUnion(OperationAnalysisContext context)
+   {
+      if (context.ContainingSymbol.Kind != SymbolKind.NamedType
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation }
+          || context.ContainingSymbol is not INamedTypeSymbol type
+          || type.TypeKind == TypeKind.Error
+          || type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+      {
+         return;
+      }
+
+      try
+      {
+         if (!attrCreation.Type.IsUnionAttribute())
+            return;
+
+         var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
+
+         ValidateUnion(context, type, attrCreation, locationOfFirstDeclaration);
+      }
+      catch (Exception ex)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                    Location.None,
+                                                    type.ToFullyQualifiedDisplayString(), ex.Message));
+      }
+   }
+
+   private static void ValidateUnion(OperationAnalysisContext context,
+                                     INamedTypeSymbol type,
+                                     IObjectCreationOperation attribute,
+                                     Location locationOfFirstDeclaration)
+   {
+      if (type.IsRecord || type.TypeKind is not TypeKind.Class)
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClass, locationOfFirstDeclaration, type);
+         return;
+      }
+
+      if (type.ContainingType is not null) // is nested class
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, type);
+         return;
+      }
+
+      EnsureNoPrimaryConstructor(context, type);
+      TypeMustBePartial(context, type);
+      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Union");
    }
 
    private static void ValidateKeyedValueObject(OperationAnalysisContext context,

@@ -33,7 +33,7 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
          return 1;
 
       if(obj is not ").AppendTypeFullyQualified(state.Type).Append(@" item)
-         throw new global::System.ArgumentException(""Argument must be of type \""").Append(state.Type.TypeMinimallyQualified).Append(@"\""."", nameof(obj));
+         throw new global::System.ArgumentException(""Argument must be of type \""").AppendTypeMinimallyQualified(state.Type).Append(@"\""."", nameof(obj));
 
       return this.CompareTo(item);
    }

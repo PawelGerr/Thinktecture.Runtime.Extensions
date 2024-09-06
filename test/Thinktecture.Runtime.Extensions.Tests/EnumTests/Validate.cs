@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTests;

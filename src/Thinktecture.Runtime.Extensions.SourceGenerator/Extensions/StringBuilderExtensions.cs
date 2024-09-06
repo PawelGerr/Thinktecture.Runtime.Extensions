@@ -121,6 +121,13 @@ public static class StringBuilderExtensions
       return sb;
    }
 
+   public static StringBuilder AppendTypeMinimallyQualified(
+      this StringBuilder sb,
+      ITypeMinimallyQualified type)
+   {
+      return sb.Append(type.TypeMinimallyQualified);
+   }
+
    public static StringBuilder AppendTypeFullyQualified(
       this StringBuilder sb,
       ITypeFullyQualified type)

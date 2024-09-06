@@ -1343,7 +1343,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                    }
 
                                                                                    /// <summary>
-                                                                                   /// Compares to instances of <see cref="TestValueObject"/>.
+                                                                                   /// Compares two instances of <see cref="TestValueObject"/>.
                                                                                    /// </summary>
                                                                                    /// <param name="obj">Instance to compare.</param>
                                                                                    /// <param name="other">Another instance to compare.</param>
@@ -1357,7 +1357,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                    }
 
                                                                                    /// <summary>
-                                                                                   /// Compares to instances of <see cref="TestValueObject"/>.
+                                                                                   /// Compares two instances of <see cref="TestValueObject"/>.
                                                                                    /// </summary>
                                                                                    /// <param name="obj">Instance to compare.</param>
                                                                                    /// <param name="other">Another instance to compare.</param>
@@ -1482,7 +1482,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     partial void FactoryPostInit();
 
                                                                                     /// <summary>
-                                                                                    /// Compares to instances of <see cref="TestValueObject"/>.
+                                                                                    /// Compares two instances of <see cref="TestValueObject"/>.
                                                                                     /// </summary>
                                                                                     /// <param name="obj">Instance to compare.</param>
                                                                                     /// <param name="other">Another instance to compare.</param>
@@ -1493,7 +1493,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     }
 
                                                                                     /// <summary>
-                                                                                    /// Compares to instances of <see cref="TestValueObject"/>.
+                                                                                    /// Compares two instances of <see cref="TestValueObject"/>.
                                                                                     /// </summary>
                                                                                     /// <param name="obj">Instance to compare.</param>
                                                                                     /// <param name="other">Another instance to compare.</param>
@@ -2014,7 +2014,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      static partial void ValidateConstructorArguments(ref string? prop1, ref global::System.Func<string?, Task<string?>?>? prop2);
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2028,7 +2028,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2183,7 +2183,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2197,7 +2197,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2350,7 +2350,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2364,7 +2364,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2548,7 +2548,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2562,7 +2562,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2889,7 +2889,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      partial void FactoryPostInit();
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -2900,7 +2900,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -5488,7 +5488,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      static partial void ValidateConstructorArguments(ref string stringValue, ref int intValue, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -5502,7 +5502,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -5721,7 +5721,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          static partial void ValidateConstructorArguments(ref string stringValue, ref int intValue, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          /// <summary>
-                                                         /// Compares to instances of <see cref="TestValueObject"/>.
+                                                         /// Compares two instances of <see cref="TestValueObject"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Instance to compare.</param>
                                                          /// <param name="other">Another instance to compare.</param>
@@ -5735,7 +5735,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Compares to instances of <see cref="TestValueObject"/>.
+                                                         /// Compares two instances of <see cref="TestValueObject"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Instance to compare.</param>
                                                          /// <param name="other">Another instance to compare.</param>
@@ -5998,7 +5998,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          static partial void ValidateConstructorArguments(ref string stringValue, ref int intValue, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structProperty, ref int? nullableStructProperty);
 
                                                          /// <summary>
-                                                         /// Compares to instances of <see cref="TestValueObject"/>.
+                                                         /// Compares two instances of <see cref="TestValueObject"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Instance to compare.</param>
                                                          /// <param name="other">Another instance to compare.</param>
@@ -6012,7 +6012,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Compares to instances of <see cref="TestValueObject"/>.
+                                                         /// Compares two instances of <see cref="TestValueObject"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Instance to compare.</param>
                                                          /// <param name="other">Another instance to compare.</param>
@@ -6265,7 +6265,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      static partial void ValidateConstructorArguments(ref string value1, ref string value2, ref string value3, ref string value4, ref string value5, ref string value6, ref string value7, ref string value8, ref string value9);
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>
@@ -6279,7 +6279,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                      }
 
                                                      /// <summary>
-                                                     /// Compares to instances of <see cref="TestValueObject"/>.
+                                                     /// Compares two instances of <see cref="TestValueObject"/>.
                                                      /// </summary>
                                                      /// <param name="obj">Instance to compare.</param>
                                                      /// <param name="other">Another instance to compare.</param>

@@ -89,4 +89,29 @@ public class TTRESG016_TypeCannotBeNestedClass
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
       }
    }
+
+   public class Union_cannot_be_nested_class
+   {
+      [Fact]
+      public async Task Should_trigger_if_enum_is_nested_class()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       public class SomeClass
+                    	  {
+                          [Union<string, int>]
+                          public partial class {|#0:TestUnion|};
+                       }
+                    }
+                    """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      }
+   }
 }

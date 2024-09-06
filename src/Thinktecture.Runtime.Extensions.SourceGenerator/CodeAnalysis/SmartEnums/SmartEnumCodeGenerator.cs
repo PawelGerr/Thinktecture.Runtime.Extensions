@@ -809,7 +809,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets a valid enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append(@"""/> if a valid item exists.
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName.Raw).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <param name=""item"">An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.</param>
+      /// <param name=""item"">An instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append(@"""/> exists; <c>false</c> otherwise.</returns>
       public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").Append(keyProperty.ArgumentName.Escaped).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {");
@@ -855,7 +855,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName.Raw).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
-      /// <param name=""item"">An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.</param>
+      /// <param name=""item"">An instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.</param>
       /// <returns><c>null</c> if a valid item with provided <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append($@"""/> exists; <see cref=""").AppendTypeFullyQualified(_state.ValidationError).Append(@"""/> with an error message otherwise.</returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").Append(keyProperty.ArgumentName.Escaped).Append(", global::System.IFormatProvider? ").Append(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
@@ -882,7 +882,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">($""There is no item of type '").Append(_state.TypeMinimallyQualified).Append("' with the identifier '{").Append(keyProperty.ArgumentName.Escaped).Append(@"}'."");
+            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">($""There is no item of type '").AppendTypeMinimallyQualified(_state).Append("' with the identifier '{").Append(keyProperty.ArgumentName.Escaped).Append(@"}'."");
          }
       }");
    }
@@ -895,7 +895,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Implicit conversion to the type <see cref=""").AppendTypeFullyQualified(keyProperty).Append(@"""/>.
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
-      /// <returns>The <see cref=""").Append(_state.TypeMinimallyQualified).Append(".").Append(keyProperty.Name).Append(@"""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""").AppendTypeMinimallyQualified(_state).Append(".").Append(keyProperty.Name).Append(@"""/> of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
       public static implicit operator ").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append("(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" item)
       {");
@@ -923,7 +923,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Explicit conversion from the type <see cref=""").AppendTypeFullyQualified(keyProperty).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName.Raw).Append(@""">Value to covert.</param>
-      /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/> if the <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append(@"""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum""/>.</returns>
+      /// <returns>An instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/> if the <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append(@"""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum""/>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName.Escaped).Append(@""")]
       public static explicit operator ").AppendTypeFullyQualifiedNullAnnotated(_state).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").Append(keyProperty.ArgumentName.Escaped).Append(@")
       {
@@ -1022,7 +1022,7 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append(@"
             if (item is null)
-               throw new global::System.ArgumentNullException($""The item \""{itemName}\"" of type \""").Append(_state.TypeMinimallyQualified).Append(@"\"" must not be null."");
+               throw new global::System.ArgumentNullException($""The item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
 ");
          }
 
@@ -1030,7 +1030,7 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append(@"
             if (item.").Append(keyMember.Name).Append(@" is null)
-               throw new global::System.ArgumentException($""The \""").Append(keyMember.Name).Append(@"\"" of the item \""{itemName}\"" of type \""").Append(_state.TypeMinimallyQualified).Append(@"\"" must not be null."");
+               throw new global::System.ArgumentException($""The \""").Append(keyMember.Name).Append(@"\"" of the item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
 ");
          }
 
@@ -1038,13 +1038,13 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append(@"
             if (!item.IsValid)
-               throw new global::System.ArgumentException($""All \""public static readonly\"" fields of type \""").Append(_state.TypeMinimallyQualified).Append(@"\"" must be valid but the item \""{itemName}\"" with the identifier \""{item.").Append(keyMember.Name).Append(@"}\"" is not."");
+               throw new global::System.ArgumentException($""All \""public static readonly\"" fields of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must be valid but the item \""{itemName}\"" with the identifier \""{item.").Append(keyMember.Name).Append(@"}\"" is not."");
 ");
          }
 
          _sb.Append(@"
             if (lookup.ContainsKey(item.").Append(keyMember.Name).Append(@"))
-               throw new global::System.ArgumentException($""The type \""").Append(_state.TypeMinimallyQualified).Append(@"\"" has multiple items with the identifier \""{item.").Append(keyMember.Name).Append(@"}\""."");
+               throw new global::System.ArgumentException($""The type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" has multiple items with the identifier \""{item.").Append(keyMember.Name).Append(@"}\""."");
 
             lookup.Add(item.").Append(keyMember.Name).Append(@", item);
          }
@@ -1097,7 +1097,7 @@ namespace ").Append(_state.Namespace).Append(@"
          void AddItem(").AppendTypeFullyQualified(_state).Append(@" item, string itemName)
          {
             if (item is null)
-               throw new global::System.ArgumentNullException($""The item \""{itemName}\"" of type \""").Append(_state.TypeMinimallyQualified).Append(@"\"" must not be null."");
+               throw new global::System.ArgumentNullException($""The item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
 
             list.Add(item);
          }
@@ -1155,7 +1155,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets an enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName.Raw).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@""" /> if <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
+      /// <returns>An instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@""" /> if <paramref name=""").Append(keyProperty.ArgumentName.Raw).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
 
       if (!_state.Settings.IsValidatable)
       {

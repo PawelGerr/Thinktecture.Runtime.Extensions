@@ -80,7 +80,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             return default;
 
          if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
-            throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.StartObject)}\""."");
+            throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.StartObject)}\""."");
 ");
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -103,12 +103,12 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                break;
 
             if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
-               throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.PropertyName)}\""."");
+               throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.PropertyName)}\""."");
 
             var propName = reader.GetString();
 
             if(!reader.Read())
-               throw new global::System.Text.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(_type.TypeMinimallyQualified).Append(@"\""."");
+               throw new global::System.Text.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
 ");
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -139,7 +139,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          _sb.Append(@"
             else
             {
-               throw new global::System.Text.Json.JsonException($""Unknown member \""{propName}\"" encountered when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."");
+               throw new global::System.Text.Json.JsonException($""Unknown member \""{propName}\"" encountered when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
             }");
       }
 

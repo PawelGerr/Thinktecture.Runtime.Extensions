@@ -87,7 +87,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                                        out var obj);
 
             if (validationError is not null)
-               throw new global::MessagePack.MessagePackSerializationException(validationError.ToString() ?? ""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."");
+               throw new global::MessagePack.MessagePackSerializationException(validationError.ToString() ?? ""Unable to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
 
             return obj;
          }

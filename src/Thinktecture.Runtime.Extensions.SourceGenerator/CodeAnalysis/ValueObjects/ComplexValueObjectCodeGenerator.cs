@@ -304,7 +304,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Compares to instances of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.
+      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -325,7 +325,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       /// <summary>
-      /// Compares to instances of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.
+      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -567,7 +567,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
-         return """).Append(_state.TypeMinimallyQualified).Append(@""";");
+         return """).AppendTypeMinimallyQualified(_state).Append(@""";");
       }
 
       _sb.Append(@"

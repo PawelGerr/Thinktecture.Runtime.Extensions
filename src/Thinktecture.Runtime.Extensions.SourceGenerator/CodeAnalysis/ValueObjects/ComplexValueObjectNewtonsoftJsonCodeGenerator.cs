@@ -68,7 +68,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             var (lineNumber, linePosition) = GetLineInfo(reader);
 
             throw new global::Newtonsoft.Json.JsonReaderException(
-               $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."",
+               $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."",
                reader.Path,
                lineNumber,
                linePosition,
@@ -98,7 +98,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                var (lineNumber, linePosition) = GetLineInfo(reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."",
+                  $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."",
                   reader.Path,
                   lineNumber,
                   linePosition,
@@ -112,7 +112,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                var (lineNumber, linePosition) = GetLineInfo(reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").Append(_type.TypeMinimallyQualified).Append(@"\""."",
+                  $""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
                   reader.Path,
                   lineNumber,
                   linePosition,
@@ -151,7 +151,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                var (lineNumber, linePosition) = GetLineInfo(reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $""Unknown member \""{propName}\"" encountered when trying to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."",
+                  $""Unknown member \""{propName}\"" encountered when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
                   reader.Path,
                   lineNumber,
                   linePosition,
@@ -182,7 +182,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             var (lineNumber, linePosition) = GetLineInfo(reader);
 
             throw new global::Newtonsoft.Json.JsonSerializationException(
-               validationError.ToString() ?? ""Unable to deserialize \""").Append(_type.TypeMinimallyQualified).Append(@"\""."",
+               validationError.ToString() ?? ""Unable to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
                reader.Path,
                lineNumber,
                linePosition,

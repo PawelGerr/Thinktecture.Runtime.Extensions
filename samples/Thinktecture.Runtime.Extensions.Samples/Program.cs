@@ -1,4 +1,5 @@
 using Serilog;
+using Thinktecture.DiscriminatedUnions;
 using Thinktecture.EmptyClass;
 using Thinktecture.SmartEnums;
 using Thinktecture.ValueObjects;
@@ -13,6 +14,7 @@ internal class Program
 
       SmartEnumDemos.Demo(logger);
       ValueObjectDemos.Demo(logger);
+      DiscriminatedUnionsDemos.Demo(logger);
       EmptyActionDemos.Demo();
       EmptyCollectionsDemos.Demo();
    }
