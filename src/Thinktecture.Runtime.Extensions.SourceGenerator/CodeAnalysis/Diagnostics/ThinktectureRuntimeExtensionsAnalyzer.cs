@@ -72,32 +72,64 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      if (!operation.Instance.Type.IsEnum(out var attribute))
-         return;
+      if (operation.Instance.Type.IsEnum(out var attribute))
+      {
+         var isValidatable = attribute.FindIsValidatable() ?? false;
+         var nonIgnoredMembers = operation.Instance.Type.GetNonIgnoredMembers();
+         var items = operation.Instance.Type.GetEnumItems(nonIgnoredMembers);
 
-      var isValidatable = attribute.FindIsValidatable() ?? false;
-      var nonIgnoredMembers = operation.Instance.Type.GetNonIgnoredMembers();
-      var items = operation.Instance.Type.GetEnumItems(nonIgnoredMembers);
-      var args = operation.Arguments;
-
-      AnalyzeIndexBasedSwitchMap(context, items, args, operation, isValidatable);
+         AnalyzeEnumSwitchMap(context,
+                              items,
+                              operation.Arguments,
+                              operation,
+                              isValidatable);
+      }
+      else if (operation.Instance.Type.IsUnionAttribute(out attribute)
+               && attribute.AttributeClass is not null)
+      {
+         AnalyzeUnionSwitchMap(context,
+                               attribute.AttributeClass.TypeArguments,
+                               operation.Arguments,
+                               operation);
+      }
    }
 
-   private static void AnalyzeIndexBasedSwitchMap(
+   private static void AnalyzeEnumSwitchMap(
       OperationAnalysisContext context,
       ImmutableArray<IFieldSymbol> items,
       ImmutableArray<IArgumentOperation> args,
       IInvocationOperation operation,
       bool isValidatable)
    {
-      // The enum must have a type
+      var numberOfCallbacks = items.Length
+                              + (isValidatable ? 1 : 0)
+                              + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
+
+      AnalyzeSwitchMap(context, args, operation, numberOfCallbacks);
+   }
+
+   private static void AnalyzeUnionSwitchMap(
+      OperationAnalysisContext context,
+      ImmutableArray<ITypeSymbol> memberTypes,
+      ImmutableArray<IArgumentOperation> args,
+      IInvocationOperation operation)
+   {
+      var numberOfCallbacks = memberTypes.Length
+                              + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
+
+      AnalyzeSwitchMap(context, args, operation, numberOfCallbacks);
+   }
+
+   private static void AnalyzeSwitchMap(
+      OperationAnalysisContext context,
+      ImmutableArray<IArgumentOperation> args,
+      IInvocationOperation operation,
+      int numberOfCallbacks)
+   {
       if (operation.Instance?.Type is null || args.IsDefaultOrEmpty)
          return;
 
       var hasNonNamedParameters = false;
-      var numberOfCallbacks = items.Length
-                              + (isValidatable ? 1 : 0)
-                              + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
       var argsStartIndex = operation.TargetMethod.Parameters.Length == numberOfCallbacks ? 0 : 1;
 
       for (var argIndex = argsStartIndex; argIndex < args.Length; argIndex++)

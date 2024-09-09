@@ -53,6 +53,15 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsUnionAttribute(
+      [NotNullWhen(true)] this ITypeSymbol? unionType,
+      [NotNullWhen(true)] out AttributeData? unionAttribute)
+   {
+      unionAttribute = unionType?.FindAttribute(static attributeClass => attributeClass.IsUnionAttribute());
+
+      return unionAttribute is not null;
+   }
+
    public static bool IsValueObjectMemberEqualityComparerAttribute(this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
