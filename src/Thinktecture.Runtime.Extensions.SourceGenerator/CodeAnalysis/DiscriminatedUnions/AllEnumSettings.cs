@@ -7,6 +7,8 @@ public sealed class AllUnionSettings : IEquatable<AllUnionSettings>
    public SwitchMapMethodsGeneration MapMethods { get; }
    public IReadOnlyList<MemberTypeSetting> MemberTypeSettings { get; }
    public StringComparison DefaultStringComparison { get; }
+   public UnionConstructorAccessModifier ConstructorAccessModifier { get; }
+   public bool SkipImplicitConversionFromValue { get; }
 
    public AllUnionSettings(AttributeData attribute, int numberOfMemberTypes)
    {
@@ -14,6 +16,8 @@ public sealed class AllUnionSettings : IEquatable<AllUnionSettings>
       SwitchMethods = attribute.FindSwitchMethods();
       MapMethods = attribute.FindMapMethods();
       DefaultStringComparison = attribute.FindDefaultStringComparison();
+      ConstructorAccessModifier = attribute.FindUnionConstructorAccessModifier();
+      SkipImplicitConversionFromValue = attribute.FindSkipImplicitConversionFromValue();
 
       var memberTypeSettings = new MemberTypeSetting[numberOfMemberTypes];
       MemberTypeSettings = memberTypeSettings;
@@ -41,6 +45,8 @@ public sealed class AllUnionSettings : IEquatable<AllUnionSettings>
              && SwitchMethods == other.SwitchMethods
              && MapMethods == other.MapMethods
              && DefaultStringComparison == other.DefaultStringComparison
+             && ConstructorAccessModifier == other.ConstructorAccessModifier
+             && SkipImplicitConversionFromValue == other.SkipImplicitConversionFromValue
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
 
@@ -52,6 +58,8 @@ public sealed class AllUnionSettings : IEquatable<AllUnionSettings>
          hashCode = (hashCode * 397) ^ SwitchMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)DefaultStringComparison;
+         hashCode = (hashCode * 397) ^ (int)ConstructorAccessModifier;
+         hashCode = (hashCode * 397) ^ SkipImplicitConversionFromValue.GetHashCode();
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 
          return hashCode;

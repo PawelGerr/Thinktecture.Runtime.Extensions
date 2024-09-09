@@ -169,6 +169,17 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, $"T{index}Name");
    }
 
+   public static UnionConstructorAccessModifier FindUnionConstructorAccessModifier(this AttributeData attributeData)
+   {
+      return (UnionConstructorAccessModifier?)GetIntegerParameterValue(attributeData, "ConstructorAccessModifier")
+             ?? UnionConstructorAccessModifier.Public;
+   }
+
+   public static bool FindSkipImplicitConversionFromValue(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipImplicitConversionFromValue") ?? false;
+   }
+
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
    {
       if (attributeData.AttributeClass is not { } attributeClass || attributeClass.TypeKind == TypeKind.Error)

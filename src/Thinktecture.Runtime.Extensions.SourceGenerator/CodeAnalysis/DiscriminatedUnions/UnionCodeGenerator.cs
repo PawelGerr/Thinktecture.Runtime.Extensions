@@ -97,7 +97,9 @@ namespace ").Append(_state.Namespace).Append(@"
             GenerateMap(true);
       }
 
-      GenerateImplicitConversions();
+      if (!_state.Settings.SkipImplicitConversionFromValue)
+         GenerateImplicitConversions();
+
       GenerateExplicitConversions();
       GenerateEqualityOperators();
       GenerateEquals();
@@ -702,7 +704,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Initializes new instance with <paramref name=""").Append(memberType.ArgumentName.Raw).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">Value to create a new instance for.</param>
-      public ").Append(_state.Name).Append("(").AppendTypeFullyQualified(memberType).Append(" ").Append(memberType.ArgumentName.Escaped).Append(@")
+      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(").AppendTypeFullyQualified(memberType).Append(" ").Append(memberType.ArgumentName.Escaped).Append(@")
       {
          this._").Append(memberType.ArgumentName.Raw).Append(" = ").Append(memberType.ArgumentName.Escaped).Append(@";
          this._valueIndex = ").Append(i + 1).Append(@";

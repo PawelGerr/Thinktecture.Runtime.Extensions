@@ -43,6 +43,26 @@ public static class StringBuilderExtensions
       return sb;
    }
 
+   public static StringBuilder AppendAccessModifier(
+      this StringBuilder sb,
+      UnionConstructorAccessModifier accessModifier)
+   {
+      switch (accessModifier)
+      {
+         case UnionConstructorAccessModifier.Private:
+            sb.Append("private");
+            break;
+         case UnionConstructorAccessModifier.Internal:
+            sb.Append("internal");
+            break;
+         case UnionConstructorAccessModifier.Public:
+            sb.Append("public");
+            break;
+      }
+
+      return sb;
+   }
+
    public static StringBuilder RenderArguments(
       this StringBuilder sb,
       IReadOnlyList<InstanceMemberInfo> members,

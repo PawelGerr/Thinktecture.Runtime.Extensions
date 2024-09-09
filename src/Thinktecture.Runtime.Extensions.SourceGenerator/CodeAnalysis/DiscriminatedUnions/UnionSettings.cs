@@ -9,6 +9,8 @@ public readonly struct UnionSettings : IEquatable<UnionSettings>
    public SwitchMapMethodsGeneration SwitchMethods => _settings.SwitchMethods;
    public SwitchMapMethodsGeneration MapMethods => _settings.MapMethods;
    public StringComparison DefaultStringComparison => _settings.DefaultStringComparison;
+   public UnionConstructorAccessModifier ConstructorAccessModifier => _settings.ConstructorAccessModifier;
+   public bool SkipImplicitConversionFromValue => _settings.SkipImplicitConversionFromValue;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
 
    public UnionSettings(AllUnionSettings settings, AttributeInfo attributeInfo)
@@ -28,6 +30,8 @@ public readonly struct UnionSettings : IEquatable<UnionSettings>
              && SwitchMethods == other.SwitchMethods
              && MapMethods == other.MapMethods
              && DefaultStringComparison == other.DefaultStringComparison
+             && ConstructorAccessModifier == other.ConstructorAccessModifier
+             && SkipImplicitConversionFromValue == other.SkipImplicitConversionFromValue
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute;
    }
 
@@ -39,6 +43,8 @@ public readonly struct UnionSettings : IEquatable<UnionSettings>
          hashCode = (hashCode * 397) ^ SwitchMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)DefaultStringComparison;
+         hashCode = (hashCode * 397) ^ (int)ConstructorAccessModifier;
+         hashCode = (hashCode * 397) ^ SkipImplicitConversionFromValue.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
 
          return hashCode;
