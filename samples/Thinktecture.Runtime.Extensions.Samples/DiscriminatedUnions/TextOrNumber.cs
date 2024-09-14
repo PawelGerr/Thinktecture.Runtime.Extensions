@@ -5,4 +5,4 @@ namespace Thinktecture.DiscriminatedUnions;
                     T2Name = "Number",
                     SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                     MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-public sealed partial class TextOrNumber;
+public partial class TextOrNumber;

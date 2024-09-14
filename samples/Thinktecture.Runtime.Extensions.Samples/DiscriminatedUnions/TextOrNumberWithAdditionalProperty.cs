@@ -4,7 +4,7 @@ namespace Thinktecture.DiscriminatedUnions;
                     T2Name = "Number",
                     SkipImplicitConversionFromValue = true,
                     ConstructorAccessModifier = UnionConstructorAccessModifier.Private)]
-public sealed partial class TextOrNumberExtended
+public partial class TextOrNumberExtended
 {
    public required string AdditionalProperty { get; init; }
 

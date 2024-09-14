@@ -12,7 +12,13 @@
 [![Thinktecture.Runtime.Extensions.MessagePack](https://img.shields.io/nuget/vpre/Thinktecture.Runtime.Extensions.MessagePack.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.MessagePack)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.MessagePack/)  
 [![Thinktecture.Runtime.Extensions.AspNetCore](https://img.shields.io/nuget/vpre/Thinktecture.Runtime.Extensions.AspNetCore.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.AspNetCore)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.AspNetCore/)
 
-This library provides some interfaces, classes, [Roslyn Source Generators](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview), Roslyn Analyzers and Roslyn CodeFixes for implementation of **Smart Enums** and **Value Objects**.
+This library provides some interfaces, classes, [Roslyn Source Generators](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview), Roslyn Analyzers and Roslyn CodeFixes for implementation of **Smart Enums**, **Value Objects** and **Discriminated Unions**.
+
+* [Requirements](#requirements)
+* [Migrations](#migrations)
+* [Smart Enum](#smart-enums)
+* [Value Objects](#value-objects)
+* [Discriminated Unions](#discriminated-unions)
 
 # Documentation
 
@@ -35,12 +41,6 @@ Value objects:
 * Version 7:
   * C# 11 (or higher) for generated code
   * SDK 7.0.401 (or higher) for building projects
-* Version 6:
-  * C# 11 (or higher) for generated code
-  * SDK 7.0.202 (or higher) for building projects
-* Version 5:
-  * C# 9 (or higher) for generated code
-  * SDK 6.0.300 (or higher) for building projects
 
 # Migrations
 * [Migration from v7 to v8](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v7-to-v8)
@@ -461,3 +461,115 @@ int hashCode = boundary.GetHashCode();
 string value = boundary.ToString(); // "{ Lower = 1, Upper = 2 }"
 ```
 
+# Discriminated Unions
+
+Install: `Install-Package Thinktecture.Runtime.Extensions`
+
+Documentation: [Discriminated Unions](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Discriminated-Unions)
+
+Features:
+* Roslyn Analyzers and CodeFixes help the developers to implement the Discriminated Unions correctly
+* Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
+* Switch-Case/Map
+* Renaming of properties
+* Definition of nullable reference types
+
+Definition of a basic union with 2 types:
+
+```csharp
+[Union<string, int>]
+public partial class TextOrNumber;
+
+// Up to 5 types
+[Union<string, int, bool, Guid, char>]
+public partial class MyUnion;
+```
+
+Behind the scenes a Roslyn Source Generator generates additional code. Some of the features that are now available are ...
+
+```csharp
+// Implicit conversion from one of the defined generics.
+TextOrNumber textOrNumberFromString = "text";
+TextOrNumber textOrNumberFromInt = 42;
+
+// Check the type of the value.
+// By default, the properties are named using the name of the type (`String`, `Int32`)
+bool isText = textOrNumberFromString.IsString;
+bool isNumber = textOrNumberFromString.IsInt32;
+
+// Getting the typed value.
+// Throws "InvalidOperationException" if the current value doesn't match the calling property.
+// By default, the properties are named using the name of the type (`String`, `Int32`)
+string text = textOrNumberFromString.AsString;
+int number = textOrNumberFromInt.AsInt32;
+
+// Alternative approach is to use explicit cast.
+// Behavior is identical to methods "As..."
+string text = (string)textOrNumberFromString;
+int number = (int)textOrNumberFromInt;
+
+// Getting the value as object, i.e. untyped.
+object value = textOrNumberFromString.Value;
+
+// Implementation of Equals, GetHashCode and ToString
+// PLEASE NOTE: Strings are compared using "StringComparison.OrdinalIgnoreCase" by default! (configurable)
+bool equals = textOrNumberFromInt.Equals(textOrNumberFromString);
+int hashCode = textOrNumberFromInt.GetHashCode();
+string toString = textOrNumberFromInt.ToString();
+
+// Equality comparison operators
+bool equal = textOrNumberFromInt == textOrNumberFromString;
+bool notEqual = textOrNumberFromInt != textOrNumberFromString;
+```
+
+There are multiple overloads of *switch-cases*: with `Action`, `Func<T>` and concrete values.
+To prevent *closures*, you can pass a value to method `Switch`, which is going to be passed to provided callback (`Action`/`Func<T>`).
+
+By default, the names of the method arguments are named after the type specified by `UnionAttribute<T1, T2>`.
+Reserved C# keywords (like `string`) must string with `@` (like `@string`, `@default`, etc.).
+
+```csharp
+// With "Action"
+textOrNumberFromString.Switch(@string: s => logger.Information("[Switch] String Action: {Text}", s),
+                              int32: i => logger.Information("[Switch] Int Action: {Number}", i));
+
+// With "Action". Logger is passed as additional parameter to prevent closures.
+textOrNumberFromString.Switch(logger,
+                              @string: static (l, s) => l.Information("[Switch] String Action with logger: {Text}", s),
+                              int32: static (l, i) => l.Information("[Switch] Int Action with logger: {Number}", i));
+
+// With "Func<T>"
+var switchResponse = textOrNumberFromInt.Switch(@string: static s => $"[Switch] String Func: {s}",
+                                                int32: static i => $"[Switch] Int Func: {i}");
+
+// With "Func<T>" and additional argument to prevent closures.
+var switchResponseWithContext = textOrNumberFromInt.Switch(123.45,
+                                                           @string: static (value, s) => $"[Switch] String Func with value: {ctx} | {s}",
+                                                           int32: static (value, i) => $"[Switch] Int Func with value: {ctx} | {i}");
+
+// Use `Map` instead of `Switch` to return concrete values directly.
+var mapResponse = textOrNumberFromString.Map(@string: "[Map] Mapped string",
+                                             int32: "[Map] Mapped int");
+```
+
+Use `T1Name`/`T2Name` of the `UnionAttribute` to get more meaningful names.
+
+```csharp
+[Union<string, int>(T1Name = "Text",
+                    T2Name = "Number")]
+public partial class TextOrNumber;
+```
+
+The properties and method arguments are renamed accordingly:
+
+```csharp
+bool isText = textOrNumberFromString.IsText;
+bool isNumber = textOrNumberFromString.IsNumber;
+
+string text = textOrNumberFromString.AsText;
+int number = textOrNumberFromInt.AsNumber;
+
+textOrNumberFromString.Switch(text: s => logger.Information("[Switch] String Action: {Text}", s),
+                              number: i => logger.Information("[Switch] Int Action: {Number}", i));
+```
+    
