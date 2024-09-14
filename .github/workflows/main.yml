@@ -83,12 +83,13 @@ jobs:
       - name: pack
         run: dotnet pack --configuration Release --no-build --output out
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: nuget-packages
           path: |
             out/*.nupkg
             out/*.snupkg
+          if-no-files-found: 'error'
 
       - name: push to nuget.org
         if: startsWith(github.ref, 'refs/tags/')
