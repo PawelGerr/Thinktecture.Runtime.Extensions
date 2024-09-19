@@ -10,6 +10,9 @@ public class ToString
    {
       new TestUnion_class_string_int("text").ToString().Should().Be("text");
       new TestUnion_class_string_int(42).ToString().Should().Be("42");
+
+      new TestUnion_struct_string_int("text").ToString().Should().Be("text");
+      new TestUnion_struct_string_int(42).ToString().Should().Be("42");
    }
 
    [Fact]

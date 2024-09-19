@@ -5,7 +5,7 @@ namespace Thinktecture;
 /// </summary>
 /// <typeparam name="T1">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public class UnionAttribute<T1, T2> : UnionAttributeBase
 {
    /// <summary>

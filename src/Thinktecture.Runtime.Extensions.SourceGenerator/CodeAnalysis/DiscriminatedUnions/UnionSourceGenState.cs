@@ -7,8 +7,9 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsReferenceType { get; }
-   public NullableAnnotation NullableAnnotation { get; set; }
-   public bool IsNullableStruct { get; set; }
+   public NullableAnnotation NullableAnnotation { get; }
+   public bool IsNullableStruct { get; }
+   public bool IsRefStruct { get; }
    public bool IsEqualWithReferenceEquality => false;
 
    public ImmutableArray<MemberTypeState> MemberTypes { get; }
@@ -28,6 +29,7 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
       IsReferenceType = type.IsReferenceType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+      IsRefStruct = type is { IsRefLikeType: true, IsReferenceType: false };
    }
 
    public override bool Equals(object? obj)
@@ -44,6 +46,7 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
+             && IsRefStruct == other.IsRefStruct
              && Settings.Equals(other.Settings)
              && MemberTypes.SequenceEqual(other.MemberTypes);
    }
@@ -54,6 +57,7 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsRefStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ MemberTypes.ComputeHashCode();
 

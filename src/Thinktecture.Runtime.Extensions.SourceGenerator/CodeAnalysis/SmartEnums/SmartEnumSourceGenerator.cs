@@ -6,7 +6,7 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public SmartEnumSourceGenerator()
-      : base(17_000)
+      : base(25_000)
    {
    }
 

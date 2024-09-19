@@ -3,6 +3,7 @@ namespace Thinktecture.CodeAnalysis;
 public class TypedMemberStateFactory
 {
    private const string _SYSTEM_RUNTIME_DLL = "System.Runtime.dll";
+   private const string _SYSTEM_CORELIB_DLL = "System.Private.CoreLib.dll";
 
    private readonly TypedMemberStates _boolean;
    private readonly TypedMemberStates _char;
@@ -46,6 +47,7 @@ public class TypedMemberStateFactory
       CreateAndAddStatesForSystemRuntime(compilation, "System.DateOnly", lookup);
       CreateAndAddStatesForSystemRuntime(compilation, "System.TimeOnly", lookup);
       CreateAndAddStatesForSystemRuntime(compilation, "System.TimeSpan", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.Guid", lookup);
    }
 
    private static TypedMemberStates CreateStates(Compilation compilation, SpecialType specialType)
@@ -67,7 +69,7 @@ public class TypedMemberStateFactory
       {
          type = types[0];
 
-         if (type.ContainingModule.MetadataName != _SYSTEM_RUNTIME_DLL)
+         if (type.ContainingModule.MetadataName is not (_SYSTEM_RUNTIME_DLL or _SYSTEM_CORELIB_DLL))
             return;
       }
       else
@@ -76,7 +78,7 @@ public class TypedMemberStateFactory
          {
             var candidate = types[i];
 
-            if (candidate.ContainingModule.MetadataName != _SYSTEM_RUNTIME_DLL)
+            if (candidate.ContainingModule.MetadataName is not (_SYSTEM_RUNTIME_DLL or _SYSTEM_CORELIB_DLL))
                continue;
 
             // duplicate?
@@ -87,7 +89,7 @@ public class TypedMemberStateFactory
          }
       }
 
-      if (type is null)
+      if (type is null || type.TypeKind == TypeKind.Error)
          return;
 
       lookup.Add((type.ContainingModule.MetadataName, type.MetadataToken), CreateStates(type));

@@ -29,6 +29,10 @@ public class GetHashCode
       ComputeHashCode(new TestUnion_class_string_int_bool_guid_char(true), true);
       ComputeHashCode(new TestUnion_class_string_int_bool_guid_char(new Guid("15A033FD-5887-465C-97E9-72DBE78AD02C")), new Guid("15A033FD-5887-465C-97E9-72DBE78AD02C"));
       ComputeHashCode(new TestUnion_class_string_int_bool_guid_char('A'), 'A');
+
+      ComputeHashCode(new TestUnion_struct_string_int("text"), "text");
+      ComputeHashCode(new TestUnion_struct_string_int("text"), "TEXT");
+      ComputeHashCode(new TestUnion_struct_string_int(42), 42);
    }
 
    private static void ComputeHashCode<T, T2>(T union, T2 value)

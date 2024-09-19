@@ -14,6 +14,10 @@ public class Equals
       Compare(s => new TestUnion_class_string_int(s),
               n => new TestUnion_class_string_int(n),
               s => new TestUnion_class_string_int_case_sensitive(s));
+
+      Compare(s => new TestUnion_struct_string_int(s),
+              n => new TestUnion_struct_string_int(n),
+              s => new TestUnion_struct_string_int_case_sensitive(s));
    }
 
    [Fact]

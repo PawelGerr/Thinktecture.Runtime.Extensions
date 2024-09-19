@@ -330,6 +330,610 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public void Should_generate_struct_with_string_and_int()
+   {
+      var source = """
+                   using System;
+
+                   namespace Thinktecture.Tests
+                   {
+                   	[Union<string, int>]
+                   	public partial struct TestUnion;
+                   }
+                   """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+      outputs.Should().HaveCount(1);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestUnion.g.cs")).Value;
+
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+                                                   namespace Thinktecture.Tests
+                                                   {
+                                                      [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
+                                                      readonly partial struct TestUnion :
+                                                         global::System.IEquatable<global::Thinktecture.Tests.TestUnion>,
+                                                         global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestUnion, global::Thinktecture.Tests.TestUnion, bool>
+                                                      {
+                                                         private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
+
+                                                         private readonly int _valueIndex;
+
+                                                         private readonly string? _string;
+                                                         private readonly int _int32;
+
+                                                         /// <summary>
+                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// </summary>
+                                                         public bool IsString => this._valueIndex == 1;
+
+                                                         /// <summary>
+                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// </summary>
+                                                         public bool IsInt32 => this._valueIndex == 2;
+
+                                                         /// <summary>
+                                                         /// Gets the current value as <c>string</c>.
+                                                         /// </summary>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
+
+                                                         /// <summary>
+                                                         /// Gets the current value as <c>int</c>.
+                                                         /// </summary>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
+
+                                                         /// <summary>
+                                                         /// Gets the current value as <see cref="object"/>.
+                                                         /// </summary>
+                                                         public object Value => this._valueIndex switch
+                                                         {
+                                                            1 => this._string!,
+                                                            2 => this._int32,
+                                                            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                         };
+
+                                                         /// <summary>
+                                                         /// Initializes new instance with <paramref name="string"/>.
+                                                         /// </summary>
+                                                         /// <param name="string">Value to create a new instance for.</param>
+                                                         public TestUnion(string @string)
+                                                         {
+                                                            this._string = @string;
+                                                            this._valueIndex = 1;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Initializes new instance with <paramref name="int32"/>.
+                                                         /// </summary>
+                                                         /// <param name="int32">Value to create a new instance for.</param>
+                                                         public TestUnion(int int32)
+                                                         {
+                                                            this._int32 = int32;
+                                                            this._valueIndex = 2;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         public void Switch(
+                                                            global::System.Action<string> @string,
+                                                            global::System.Action<int> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  @string(this._string!);
+                                                                  return;
+                                                               case 2:
+                                                                  int32(this._int32);
+                                                                  return;
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         public void Switch<TContext>(
+                                                            TContext context,
+                                                            global::System.Action<TContext, string> @string,
+                                                            global::System.Action<TContext, int> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  @string(context, this._string!);
+                                                                  return;
+                                                               case 2:
+                                                                  int32(context, this._int32);
+                                                                  return;
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         public TResult Switch<TResult>(
+                                                            global::System.Func<string, TResult> @string,
+                                                            global::System.Func<int, TResult> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  return @string(this._string!);
+                                                               case 2:
+                                                                  return int32(this._int32);
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         public TResult Switch<TContext, TResult>(
+                                                            TContext context,
+                                                            global::System.Func<TContext, string, TResult> @string,
+                                                            global::System.Func<TContext, int, TResult> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  return @string(context, this._string!);
+                                                               case 2:
+                                                                  return int32(context, this._int32);
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Maps current value to an instance of type <typeparamref name="TResult"/>.
+                                                         /// </summary>
+                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         public TResult Map<TResult>(
+                                                            TResult @string,
+                                                            TResult int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  return @string;
+                                                               case 2:
+                                                                  return int32;
+                                                               default:
+                                                                  throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// </summary>
+                                                         /// <param name="value">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         {
+                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// </summary>
+                                                         /// <param name="value">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         {
+                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Object to covert.</param>
+                                                         /// <returns>Inner value of type <c>string</c>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
+                                                         {
+                                                            return obj.AsString;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Object to covert.</param>
+                                                         /// <returns>Inner value of type <c>int</c>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
+                                                         {
+                                                            return obj.AsInt32;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Compares two instances of <see cref="TestUnion"/>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Instance to compare.</param>
+                                                         /// <param name="other">Another instance to compare.</param>
+                                                         /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+                                                         public static bool operator ==(global::Thinktecture.Tests.TestUnion obj, global::Thinktecture.Tests.TestUnion other)
+                                                         {
+                                                            return obj.Equals(other);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Compares two instances of <see cref="TestUnion"/>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Instance to compare.</param>
+                                                         /// <param name="other">Another instance to compare.</param>
+                                                         /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+                                                         public static bool operator !=(global::Thinktecture.Tests.TestUnion obj, global::Thinktecture.Tests.TestUnion other)
+                                                         {
+                                                            return !(obj == other);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override bool Equals(object? other)
+                                                         {
+                                                            return other is global::Thinktecture.Tests.TestUnion obj && Equals(obj);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public bool Equals(global::Thinktecture.Tests.TestUnion other)
+                                                         {
+                                                            if (this._valueIndex != other._valueIndex)
+                                                               return false;
+
+                                                            return this._valueIndex switch
+                                                            {
+                                                               1 => this._string is null ? other._string is null : this._string.Equals(other._string, global::System.StringComparison.OrdinalIgnoreCase),
+                                                               2 => this._int32.Equals(other._int32),
+                                                               _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                            };
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override int GetHashCode()
+                                                         {
+                                                            return this._valueIndex switch
+                                                            {
+                                                               1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
+                                                               2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
+                                                               _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                            };
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override string? ToString()
+                                                         {
+                                                            return this._valueIndex switch
+                                                            {
+                                                               1 => this._string,
+                                                               2 => this._int32.ToString(),
+                                                               _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                            };
+                                                         }
+                                                      }
+                                                   }
+
+                                                   """);
+   }
+
+   [Fact]
+   public void Should_generate_ref_struct_with_string_and_int()
+   {
+      var source = """
+                   using System;
+
+                   namespace Thinktecture.Tests
+                   {
+                   	[Union<string, int>]
+                   	public ref partial struct TestUnion;
+                   }
+                   """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+      outputs.Should().HaveCount(1);
+
+      var mainOutput = outputs.Single(kvp => kvp.Key.Contains("Thinktecture.Tests.TestUnion.g.cs")).Value;
+
+      AssertOutput(mainOutput, _GENERATED_HEADER + """
+                                                   namespace Thinktecture.Tests
+                                                   {
+                                                      [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
+                                                      readonly partial struct TestUnion
+                                                      {
+                                                         private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
+
+                                                         private readonly int _valueIndex;
+
+                                                         private readonly string? _string;
+                                                         private readonly int _int32;
+
+                                                         /// <summary>
+                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// </summary>
+                                                         public bool IsString => this._valueIndex == 1;
+
+                                                         /// <summary>
+                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// </summary>
+                                                         public bool IsInt32 => this._valueIndex == 2;
+
+                                                         /// <summary>
+                                                         /// Gets the current value as <c>string</c>.
+                                                         /// </summary>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
+
+                                                         /// <summary>
+                                                         /// Gets the current value as <c>int</c>.
+                                                         /// </summary>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
+
+                                                         /// <summary>
+                                                         /// Gets the current value as <see cref="object"/>.
+                                                         /// </summary>
+                                                         public object Value => this._valueIndex switch
+                                                         {
+                                                            1 => this._string!,
+                                                            2 => this._int32,
+                                                            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                         };
+
+                                                         /// <summary>
+                                                         /// Initializes new instance with <paramref name="string"/>.
+                                                         /// </summary>
+                                                         /// <param name="string">Value to create a new instance for.</param>
+                                                         public TestUnion(string @string)
+                                                         {
+                                                            this._string = @string;
+                                                            this._valueIndex = 1;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Initializes new instance with <paramref name="int32"/>.
+                                                         /// </summary>
+                                                         /// <param name="int32">Value to create a new instance for.</param>
+                                                         public TestUnion(int int32)
+                                                         {
+                                                            this._int32 = int32;
+                                                            this._valueIndex = 2;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         public void Switch(
+                                                            global::System.Action<string> @string,
+                                                            global::System.Action<int> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  @string(this._string!);
+                                                                  return;
+                                                               case 2:
+                                                                  int32(this._int32);
+                                                                  return;
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes an action depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         public void Switch<TContext>(
+                                                            TContext context,
+                                                            global::System.Action<TContext, string> @string,
+                                                            global::System.Action<TContext, int> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  @string(context, this._string!);
+                                                                  return;
+                                                               case 2:
+                                                                  int32(context, this._int32);
+                                                                  return;
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         public TResult Switch<TResult>(
+                                                            global::System.Func<string, TResult> @string,
+                                                            global::System.Func<int, TResult> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  return @string(this._string!);
+                                                               case 2:
+                                                                  return int32(this._int32);
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Executes a function depending on the current value.
+                                                         /// </summary>
+                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         public TResult Switch<TContext, TResult>(
+                                                            TContext context,
+                                                            global::System.Func<TContext, string, TResult> @string,
+                                                            global::System.Func<TContext, int, TResult> int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  return @string(context, this._string!);
+                                                               case 2:
+                                                                  return int32(context, this._int32);
+                                                               default:
+                                                                  throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Maps current value to an instance of type <typeparamref name="TResult"/>.
+                                                         /// </summary>
+                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         public TResult Map<TResult>(
+                                                            TResult @string,
+                                                            TResult int32)
+                                                         {
+                                                            switch (this._valueIndex)
+                                                            {
+                                                               case 1:
+                                                                  return @string;
+                                                               case 2:
+                                                                  return int32;
+                                                               default:
+                                                                  throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+                                                            }
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// </summary>
+                                                         /// <param name="value">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         {
+                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// </summary>
+                                                         /// <param name="value">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         {
+                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Object to covert.</param>
+                                                         /// <returns>Inner value of type <c>string</c>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
+                                                         {
+                                                            return obj.AsString;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Object to covert.</param>
+                                                         /// <returns>Inner value of type <c>int</c>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
+                                                         {
+                                                            return obj.AsInt32;
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Compares two instances of <see cref="TestUnion"/>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Instance to compare.</param>
+                                                         /// <param name="other">Another instance to compare.</param>
+                                                         /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+                                                         public static bool operator ==(global::Thinktecture.Tests.TestUnion obj, global::Thinktecture.Tests.TestUnion other)
+                                                         {
+                                                            return obj.Equals(other);
+                                                         }
+
+                                                         /// <summary>
+                                                         /// Compares two instances of <see cref="TestUnion"/>.
+                                                         /// </summary>
+                                                         /// <param name="obj">Instance to compare.</param>
+                                                         /// <param name="other">Another instance to compare.</param>
+                                                         /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+                                                         public static bool operator !=(global::Thinktecture.Tests.TestUnion obj, global::Thinktecture.Tests.TestUnion other)
+                                                         {
+                                                            return !(obj == other);
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override bool Equals(object? other)
+                                                         {
+                                                            return false;
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public bool Equals(global::Thinktecture.Tests.TestUnion other)
+                                                         {
+                                                            if (this._valueIndex != other._valueIndex)
+                                                               return false;
+
+                                                            return this._valueIndex switch
+                                                            {
+                                                               1 => this._string is null ? other._string is null : this._string.Equals(other._string, global::System.StringComparison.OrdinalIgnoreCase),
+                                                               2 => this._int32.Equals(other._int32),
+                                                               _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                            };
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override int GetHashCode()
+                                                         {
+                                                            return this._valueIndex switch
+                                                            {
+                                                               1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
+                                                               2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
+                                                               _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                            };
+                                                         }
+
+                                                         /// <inheritdoc />
+                                                         public override string? ToString()
+                                                         {
+                                                            return this._valueIndex switch
+                                                            {
+                                                               1 => this._string,
+                                                               2 => this._int32.ToString(),
+                                                               _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+                                                            };
+                                                         }
+                                                      }
+                                                   }
+
+                                                   """);
+   }
+
+   [Fact]
    public void Should_generate_class_with_string_and_int_without_implicit_conversion()
    {
       var source = """
@@ -3975,4 +4579,5 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                    """);
    }
+
 }

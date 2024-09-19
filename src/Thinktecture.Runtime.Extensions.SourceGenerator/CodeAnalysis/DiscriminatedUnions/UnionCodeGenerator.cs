@@ -50,10 +50,16 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
    ");
 
-      _sb.Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" :")
-         .Append(@"
+      _sb.Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name);
+
+      if (!_state.IsRefStruct)
+      {
+         _sb.Append(@" :
       global::System.IEquatable<").AppendTypeFullyQualified(_state).Append(@">,
-      global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(@", ").AppendTypeFullyQualified(_state).Append(@", bool>
+      global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(@", ").AppendTypeFullyQualified(_state).Append(", bool>");
+      }
+
+      _sb.Append(@"
    {
       private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(@").GetHashCode();
 
@@ -267,8 +273,20 @@ namespace ").Append(_state.Namespace).Append(@"
 
       /// <inheritdoc />
       public override bool Equals(object? other)
+      {");
+
+      if (_state.IsRefStruct)
       {
-         return other is ").AppendTypeFullyQualified(_state).Append(@" obj && Equals(obj);
+         _sb.Append(@"
+         return false;");
+      }
+      else
+      {
+         _sb.Append(@"
+         return other is ").AppendTypeFullyQualified(_state).Append(" obj && Equals(obj);");
+      }
+
+      _sb.Append(@"
       }
 
       /// <inheritdoc />

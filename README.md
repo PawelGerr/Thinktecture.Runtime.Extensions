@@ -474,11 +474,20 @@ Features:
 * Renaming of properties
 * Definition of nullable reference types
 
-Definition of a basic union with 2 types:
+Definition of a basic union with 2 types using a `class`, a `struct` or `ref struct`:
 
 ```csharp
+// class
 [Union<string, int>]
 public partial class TextOrNumber;
+
+// struct
+[Union<string, int>]
+public partial struct TextOrNumber;
+
+// ref struct
+[Union<string, int>]
+public ref partial struct TextOrNumber;
 
 // Up to 5 types
 [Union<string, int, bool, Guid, char>]

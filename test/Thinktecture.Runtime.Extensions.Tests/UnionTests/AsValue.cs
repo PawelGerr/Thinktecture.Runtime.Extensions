@@ -29,6 +29,11 @@ public class AsValue
       new TestUnion_class_nullable_string_nullable_int(1).AsNullableInt32.Should().Be(1);
       new TestUnion_class_nullable_string_nullable_int(nullableInt32: null).Invoking(u => u.AsString.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_nullable_string_nullable_int' is not of type 'string?'.");
       new TestUnion_class_nullable_string_nullable_int(nullableInt32: null).AsNullableInt32.Should().BeNull();
+
+      new TestUnion_struct_string_int("text").AsString.Should().Be("text");
+      new TestUnion_struct_string_int("text").Invoking(u => u.AsInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_struct_string_int' is not of type 'int'.");
+      new TestUnion_struct_string_int(1).Invoking(u => u.AsString.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_struct_string_int' is not of type 'string'.");
+      new TestUnion_struct_string_int(1).AsInt32.Should().Be(1);
    }
 
    [Fact]

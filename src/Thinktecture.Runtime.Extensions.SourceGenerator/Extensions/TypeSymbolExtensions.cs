@@ -53,11 +53,17 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsUnionAttribute(
+   public static bool IsUnionType(
       [NotNullWhen(true)] this ITypeSymbol? unionType,
       [NotNullWhen(true)] out AttributeData? unionAttribute)
    {
-      unionAttribute = unionType?.FindAttribute(static attributeClass => attributeClass.IsUnionAttribute());
+      if (unionType is null || unionType.SpecialType != SpecialType.None)
+      {
+         unionAttribute = null;
+         return false;
+      }
+
+      unionAttribute = unionType.FindAttribute(static attributeClass => attributeClass.IsUnionAttribute());
 
       return unionAttribute is not null;
    }
@@ -88,7 +94,13 @@ public static class TypeSymbolExtensions
       [NotNullWhen(true)] this ITypeSymbol? enumType,
       [NotNullWhen(true)] out AttributeData? smartEnumAttribute)
    {
-      smartEnumAttribute = enumType?.FindAttribute(static attributeClass => attributeClass.IsSmartEnumAttribute());
+      if (enumType is null || enumType.SpecialType != SpecialType.None)
+      {
+         smartEnumAttribute = null;
+         return false;
+      }
+
+      smartEnumAttribute = enumType.FindAttribute(static attributeClass => attributeClass.IsSmartEnumAttribute());
 
       return smartEnumAttribute is not null;
    }

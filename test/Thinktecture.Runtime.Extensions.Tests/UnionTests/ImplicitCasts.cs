@@ -13,6 +13,12 @@ public class ImplicitCasts
 
       TestUnion_class_string_int intUnion = 42;
       intUnion.Value.Should().Be(42);
+
+      TestUnion_struct_string_int stringStructUnion = "text";
+      stringStructUnion.Value.Should().Be("text");
+
+      TestUnion_struct_string_int intStructUnion = 42;
+      intStructUnion.Value.Should().Be(42);
    }
 
    [Fact]

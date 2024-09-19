@@ -13,6 +13,12 @@ public class ExplicitCasts
 
       ((int)new TestUnion_class_string_int(1)).Should().Be(1);
       FluentActions.Invoking(() => (string)new TestUnion_class_string_int(1)).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_string_int' is not of type 'string'.");
+
+      ((string)new TestUnion_struct_string_int("text")).Should().Be("text");
+      FluentActions.Invoking(() => (int)new TestUnion_struct_string_int("text")).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_struct_string_int' is not of type 'int'.");
+
+      ((int)new TestUnion_struct_string_int(1)).Should().Be(1);
+      FluentActions.Invoking(() => (string)new TestUnion_struct_string_int(1)).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_struct_string_int' is not of type 'string'.");
    }
 
    [Fact]

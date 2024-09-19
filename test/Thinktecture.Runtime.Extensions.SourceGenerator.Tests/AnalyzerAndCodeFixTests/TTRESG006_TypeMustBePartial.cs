@@ -401,5 +401,99 @@ public class TTRESG006_TypeMustBePartial
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
+
+      [Fact]
+      public async Task Should_trigger_on_non_partial_struct()
+      {
+         var code = """
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                        [Union<string, int>]
+                    	   public struct {|#0:TestUnion|};
+                    }
+                    """;
+
+         var expectedCode = """
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                                [Union<string, int>]
+                            	   public partial struct {|#0:TestUnion|};
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_partial_struct()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [Union<string, int>]
+                       public partial struct {|#0:TestUnion|};
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_non_partial_ref_struct()
+      {
+         var code = """
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                        [Union<string, int>]
+                    	   public ref struct {|#0:TestUnion|};
+                    }
+                    """;
+
+         var expectedCode = """
+                            using System;
+                            using Thinktecture;
+
+                            namespace TestNamespace
+                            {
+                                [Union<string, int>]
+                            	   public ref partial struct {|#0:TestUnion|};
+                            }
+                            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_partial_ref_struct()
+      {
+         var code = """
+
+                    using System;
+                    using Thinktecture;
+
+                    namespace TestNamespace
+                    {
+                       [Union<string, int>]
+                       public ref partial struct {|#0:TestUnion|};
+                    }
+                    """;
+
+         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+      }
    }
 }

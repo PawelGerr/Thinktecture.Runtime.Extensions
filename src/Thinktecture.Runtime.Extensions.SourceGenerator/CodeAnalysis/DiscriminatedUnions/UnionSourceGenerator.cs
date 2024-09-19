@@ -6,7 +6,7 @@ namespace Thinktecture.CodeAnalysis.DiscriminatedUnions;
 public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public UnionSourceGenerator()
-      : base(10_000)
+      : base(15_000)
    {
    }
 
@@ -59,6 +59,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
          return syntaxNode switch
          {
             ClassDeclarationSyntax classDeclaration when IsUnionCandidate(classDeclaration) => true,
+            StructDeclarationSyntax structDeclaration when IsUnionCandidate(structDeclaration) => true,
             _ => false
          };
       }

@@ -30,7 +30,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-                                                                                                              DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric,
+                                                                                                              DiagnosticsDescriptors.EnumsValueObjectsAndUnionsMustNotBeGeneric,
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
@@ -42,7 +42,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.CustomKeyMemberImplementationNotFound,
                                                                                                               DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch,
                                                                                                               DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters,
-                                                                                                              DiagnosticsDescriptors.TypeMustBeClass);
+                                                                                                              DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue);
 
    /// <inheritdoc />
    public override void Initialize(AnalysisContext context)
@@ -55,6 +55,37 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.RegisterOperationAction(AnalyzeUnion, OperationKind.Attribute);
 
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
+      context.RegisterOperationAction(AnalyzeDefaultValueAssignment, OperationKind.DefaultValue);
+      context.RegisterOperationAction(AnalyzeObjectCreation, OperationKind.ObjectCreation);
+   }
+
+   private void AnalyzeObjectCreation(OperationAnalysisContext context)
+   {
+      var operation = (IObjectCreationOperation)context.Operation;
+
+      if (operation.Type is null)
+         return;
+
+      if (!operation.Type.IsReferenceType
+          && operation.Arguments.Length == 0
+          && operation.Type.IsUnionType(out _))
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
+      }
+   }
+
+   private void AnalyzeDefaultValueAssignment(OperationAnalysisContext context)
+   {
+      var operation = (IDefaultValueOperation)context.Operation;
+
+      if (operation.Type is null)
+         return;
+
+      if (!operation.Type.IsReferenceType
+          && operation.Type.IsUnionType(out _))
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
+      }
    }
 
    private static void AnalyzeMethodCall(OperationAnalysisContext context)
@@ -84,7 +115,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                               operation,
                               isValidatable);
       }
-      else if (operation.Instance.Type.IsUnionAttribute(out attribute)
+      else if (operation.Instance.Type.IsUnionType(out attribute)
                && attribute.AttributeClass is not null)
       {
          AnalyzeUnionSwitchMap(context,
@@ -244,9 +275,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                      IObjectCreationOperation attribute,
                                      Location locationOfFirstDeclaration)
    {
-      if (type.IsRecord || type.TypeKind is not TypeKind.Class)
+      if (type.IsRecord || type.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {
-         ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClass, locationOfFirstDeclaration, type);
+         ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, type);
          return;
       }
 
@@ -533,7 +564,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
    {
       if (!type.TypeParameters.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsAndValueObjectsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsValueObjectsAndUnionsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
    }
 
    private static void Check_ItemLike_StaticProperties(

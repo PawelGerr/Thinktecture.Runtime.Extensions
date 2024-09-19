@@ -29,6 +29,11 @@ public class IsValue
       new TestUnion_class_nullable_string_nullable_int(1).IsNullableInt32.Should().BeTrue();
       new TestUnion_class_nullable_string_nullable_int(nullableInt32: null).IsString.Should().BeFalse();
       new TestUnion_class_nullable_string_nullable_int(nullableInt32: null).IsNullableInt32.Should().BeTrue();
+
+      new TestUnion_struct_string_int("text").IsString.Should().BeTrue();
+      new TestUnion_struct_string_int("text").IsInt32.Should().BeFalse();
+      new TestUnion_struct_string_int(1).IsString.Should().BeFalse();
+      new TestUnion_struct_string_int(1).IsInt32.Should().BeTrue();
    }
 
    [Fact]
