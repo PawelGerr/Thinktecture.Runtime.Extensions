@@ -238,7 +238,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     Location.None,
-                                                    type.ToFullyQualifiedDisplayString(), ex.Message));
+                                                    type.ToFullyQualifiedDisplayString(), ex.ToString()));
       }
    }
 
@@ -274,7 +274,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     Location.None,
-                                                    type.ToFullyQualifiedDisplayString(), ex.Message));
+                                                    type.ToFullyQualifiedDisplayString(), ex.ToString()));
       }
    }
 
@@ -302,7 +302,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     Location.None,
-                                                    type.ToFullyQualifiedDisplayString(), ex.Message));
+                                                    type.ToFullyQualifiedDisplayString(), ex.ToString()));
       }
    }
 

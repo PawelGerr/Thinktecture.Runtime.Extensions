@@ -124,7 +124,8 @@ public class TypedMemberStateFactory
          SpecialType.System_Double => _double,
          SpecialType.System_String => _string,
          SpecialType.System_DateTime => _dateTime,
-         _ => _statesByTokens.TryGetValue((type.ContainingModule.MetadataName, type.MetadataToken), out var states) ? states : default
+         // Array types have no ContainingModule
+         _ => _statesByTokens.TryGetValue((type.ContainingModule?.MetadataName ?? "<<no module>>", type.MetadataToken), out var states) ? states : default
       };
 
       if (cachedStates == default)
