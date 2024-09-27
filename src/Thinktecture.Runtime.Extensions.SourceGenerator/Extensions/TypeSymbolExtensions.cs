@@ -21,6 +21,25 @@ public static class TypeSymbolExtensions
       return type is null || type.SpecialType == SpecialType.System_Object;
    }
 
+   /// <summary>
+   /// Keyed or complex value object.
+   /// </summary>
+   public static bool IsValueObjectType(
+      [NotNullWhen(true)] this ITypeSymbol? valueObjectType,
+      [NotNullWhen(true)] out AttributeData? valueObjectAttributeBase)
+   {
+      if (valueObjectType is null || valueObjectType.SpecialType != SpecialType.None)
+      {
+         valueObjectAttributeBase = null;
+         return false;
+      }
+
+      valueObjectAttributeBase = valueObjectType.FindAttribute(static attributeClass => attributeClass.IsKeyedValueObjectAttribute()
+                                                                                        || attributeClass.IsComplexValueObjectAttribute());
+
+      return valueObjectAttributeBase is not null;
+   }
+
    public static bool IsKeyedValueObjectAttribute(this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)

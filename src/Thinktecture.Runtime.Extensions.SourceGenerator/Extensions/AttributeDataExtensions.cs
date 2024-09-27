@@ -180,6 +180,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipImplicitConversionFromValue") ?? false;
    }
 
+   public static bool FindAllowDefaultStructs(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "AllowDefaultStructs") ?? false;
+   }
+
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
    {
       if (attributeData.AttributeClass is not { } attributeClass || attributeClass.TypeKind == TypeKind.Error)

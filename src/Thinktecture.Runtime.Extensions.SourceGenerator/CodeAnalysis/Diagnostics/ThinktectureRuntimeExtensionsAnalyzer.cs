@@ -63,12 +63,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       var operation = (IObjectCreationOperation)context.Operation;
 
-      if (operation.Type is null)
+      if (operation.Type is null
+          || operation.Type.IsReferenceType
+          || operation.Arguments.Length > 0)
          return;
 
-      if (!operation.Type.IsReferenceType
-          && operation.Arguments.Length == 0
-          && operation.Type.IsUnionType(out _))
+      if (operation.Type.IsUnionType(out _)
+          || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
       }
@@ -78,14 +79,49 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       var operation = (IDefaultValueOperation)context.Operation;
 
-      if (operation.Type is null)
+      if (operation.Type is null
+          || operation.Type.IsReferenceType
+          || !IsAssignmentOrInitialization(operation.Parent))
+      {
          return;
+      }
 
-      if (!operation.Type.IsReferenceType
-          && operation.Type.IsUnionType(out _))
+      if (operation.Type.IsUnionType(out _)
+          || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
       }
+   }
+
+   private static bool IsAssignmentOrInitialization(IOperation? operation)
+   {
+      while (operation is not null)
+      {
+         switch (operation.Kind)
+         {
+            case OperationKind.Binary:
+               return false;
+
+            case OperationKind.Conversion:
+               operation = operation.Parent;
+               break;
+
+            case OperationKind.VariableInitializer:
+            case OperationKind.ParameterInitializer: // void MyMethod(MyUnion u = default)
+            case OperationKind.SimpleAssignment:
+            case OperationKind.CoalesceAssignment:
+            case OperationKind.CompoundAssignment:
+            case OperationKind.DeconstructionAssignment:
+            case OperationKind.Argument:
+            case OperationKind.Tuple: // (42, default(MyUnion))
+               return true;
+
+            default:
+               return false;
+         }
+      }
+
+      return false;
    }
 
    private static void AnalyzeMethodCall(OperationAnalysisContext context)

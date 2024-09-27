@@ -2,10 +2,11 @@ using System;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject<DateOnly>(SkipKeyMember = true,                                                           // We implement the key member "Date" ourselves
-                       KeyMemberName = "Date",                                                         // Source Generator needs to know the name we've chosen
-                       DefaultInstancePropertyName = "Infinite",                                       // "EndDate.Infinite" represent an open-ended end date
-                       EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)] // for comparison with DateOnly without implicit cast
+[ValueObject<DateOnly>(SkipKeyMember = true,                                                          // We implement the key member "Date" ourselves
+                       KeyMemberName = "Date",                                                        // Source Generator needs to know the name we've chosen
+                       DefaultInstancePropertyName = "Infinite",                                      // "EndDate.Infinite" represent an open-ended end date
+                       EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads, // for comparison with DateOnly without implicit cast
+                       AllowDefaultStructs = true)]
 public partial struct EndDate
 {
    private readonly DateOnly? _date;
