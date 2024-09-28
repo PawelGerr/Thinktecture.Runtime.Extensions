@@ -23,6 +23,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public OperatorsGeneration ComparisonOperators { get; }
    public OperatorsGeneration EqualityComparisonOperators { get; }
    public string DefaultInstancePropertyName { get; }
+   public bool AllowDefaultStructs { get; }
 
    public AllValueObjectSettings(AttributeData valueObjectAttribute)
    {
@@ -47,6 +48,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       EqualityComparisonOperators = valueObjectAttribute.FindEqualityComparisonOperators();
       ComparisonOperators = valueObjectAttribute.FindComparisonOperators();
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
+      AllowDefaultStructs = valueObjectAttribute.FindAllowDefaultStructs();
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -85,7 +87,8 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
              && DivisionOperators == other.DivisionOperators
              && ComparisonOperators == other.ComparisonOperators
              && EqualityComparisonOperators == other.EqualityComparisonOperators
-             && DefaultInstancePropertyName == other.DefaultInstancePropertyName;
+             && DefaultInstancePropertyName == other.DefaultInstancePropertyName
+             && AllowDefaultStructs == other.AllowDefaultStructs;
    }
 
    public override int GetHashCode()
@@ -113,6 +116,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
          hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
          hashCode = (hashCode * 397) ^ (int)EqualityComparisonOperators;
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
+         hashCode = (hashCode * 397) ^ AllowDefaultStructs.GetHashCode();
 
          return hashCode;
       }

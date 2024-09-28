@@ -14,6 +14,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool EmptyStringInFactoryMethodsYieldsNull => _allSettings.EmptyStringInFactoryMethodsYieldsNull;
    public bool NullInFactoryMethodsYieldsNull => _allSettings.NullInFactoryMethodsYieldsNull;
    public string DefaultInstancePropertyName => _allSettings.DefaultInstancePropertyName;
+   public bool AllowDefaultStructs => _allSettings.AllowDefaultStructs;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
    public string? KeyMemberEqualityComparerAccessor => _attributeInfo.KeyMemberEqualityComparerAccessor;
    public ImmutableArray<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
@@ -37,6 +38,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
              && EmptyStringInFactoryMethodsYieldsNull == other.EmptyStringInFactoryMethodsYieldsNull
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName
+             && AllowDefaultStructs == other.AllowDefaultStructs
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor
              && DesiredFactories.SequenceEqual(other.DesiredFactories);
@@ -60,6 +62,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ EmptyStringInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
+         hashCode = (hashCode * 397) ^ AllowDefaultStructs.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();

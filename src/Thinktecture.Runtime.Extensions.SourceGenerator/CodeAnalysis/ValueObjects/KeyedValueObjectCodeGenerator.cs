@@ -90,7 +90,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
 
-      if (!_state.IsReferenceType)
+      if (_state is { IsReferenceType: false, Settings.AllowDefaultStructs: true })
       {
          _sb.Append(@"
 
