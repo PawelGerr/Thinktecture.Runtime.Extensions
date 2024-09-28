@@ -202,6 +202,12 @@ namespace ").Append(_state.Namespace).Append(@"
          return this._valueIndex switch
          {");
 
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append($@"
+            0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
+      }
+
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
@@ -235,6 +241,12 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          return this._valueIndex switch
          {");
+
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append($@"
+            0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
+      }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
@@ -311,6 +323,12 @@ namespace ").Append(_state.Namespace).Append(@"
          return this._valueIndex switch
          {");
 
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append($@"
+            0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
+      }
+
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
@@ -361,6 +379,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@"
       /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">The action to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
+      }
+
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append(@"
+      /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
       }
 
       var methodName = isPartially ? "SwitchPartially" : "Switch";
@@ -426,6 +450,13 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          switch (this._valueIndex)
          {");
+
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append($@"
+            case 0:
+               throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
+      }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
@@ -498,6 +529,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">The function to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
       }
 
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append(@"
+      /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
+      }
+
       var methodName = isPartially ? "SwitchPartially" : "Switch";
 
       if (withContext)
@@ -564,6 +601,13 @@ namespace ").Append(_state.Namespace).Append(@"
          switch (this._valueIndex)
          {");
 
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append($@"
+            case 0:
+               throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
+      }
+
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
@@ -628,6 +672,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">The instance to return if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
       }
 
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append(@"
+      /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
+      }
+
       var methodName = isPartially ? "MapPartially" : "Map";
 
       _sb.Append(@"
@@ -675,6 +725,13 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          switch (this._valueIndex)
          {");
+
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append($@"
+            case 0:
+               throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
+      }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
@@ -773,9 +830,23 @@ namespace ").Append(_state.Namespace).Append(@"
 
       /// <summary>
       /// Gets the current value as <see cref=""object""/>.
-      /// </summary>
+      /// </summary>");
+
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append(@"
+      /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
+      }
+
+      _sb.Append(@"
       public object").Append(hasNullableTypes ? "?" : null).Append(@" Value => this._valueIndex switch
       {");
+
+      if (!_state.IsReferenceType)
+      {
+         _sb.Append($@"
+         0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
+      }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {

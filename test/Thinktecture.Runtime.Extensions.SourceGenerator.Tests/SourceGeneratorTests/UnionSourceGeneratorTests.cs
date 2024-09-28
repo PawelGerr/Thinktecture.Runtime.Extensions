@@ -386,8 +386,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Gets the current value as <see cref="object"/>.
                                                          /// </summary>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public object Value => this._valueIndex switch
                                                          {
+                                                            0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                             1 => this._string!,
                                                             2 => this._int32,
                                                             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
@@ -418,12 +420,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   @string(this._string!);
                                                                   return;
@@ -441,6 +446,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -448,6 +454,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   @string(context, this._string!);
                                                                   return;
@@ -464,12 +472,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
@@ -485,6 +496,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -492,6 +504,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
@@ -506,12 +520,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   return @string;
                                                                case 2:
@@ -599,6 +616,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                             return this._valueIndex switch
                                                             {
+                                                               0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                                1 => this._string is null ? other._string is null : this._string.Equals(other._string, global::System.StringComparison.OrdinalIgnoreCase),
                                                                2 => this._int32.Equals(other._int32),
                                                                _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
@@ -610,6 +628,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             return this._valueIndex switch
                                                             {
+                                                               0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                                1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
                                                                2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
                                                                _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
@@ -621,6 +640,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             return this._valueIndex switch
                                                             {
+                                                               0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                                1 => this._string,
                                                                2 => this._int32.ToString(),
                                                                _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
@@ -687,8 +707,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Gets the current value as <see cref="object"/>.
                                                          /// </summary>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public object Value => this._valueIndex switch
                                                          {
+                                                            0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                             1 => this._string!,
                                                             2 => this._int32,
                                                             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
@@ -719,12 +741,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   @string(this._string!);
                                                                   return;
@@ -742,6 +767,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -749,6 +775,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   @string(context, this._string!);
                                                                   return;
@@ -765,12 +793,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
@@ -786,6 +817,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -793,6 +825,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
@@ -807,12 +841,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
+                                                               case 0:
+                                                                  throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
                                                                   return @string;
                                                                case 2:
@@ -900,6 +937,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                             return this._valueIndex switch
                                                             {
+                                                               0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                                1 => this._string is null ? other._string is null : this._string.Equals(other._string, global::System.StringComparison.OrdinalIgnoreCase),
                                                                2 => this._int32.Equals(other._int32),
                                                                _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
@@ -911,6 +949,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             return this._valueIndex switch
                                                             {
+                                                               0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                                1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
                                                                2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
                                                                _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
@@ -922,6 +961,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          {
                                                             return this._valueIndex switch
                                                             {
+                                                               0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
                                                                1 => this._string,
                                                                2 => this._int32.ToString(),
                                                                _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
