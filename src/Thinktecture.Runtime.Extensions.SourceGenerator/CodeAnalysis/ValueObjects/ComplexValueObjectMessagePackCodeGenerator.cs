@@ -62,7 +62,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-            var ").Append(memberInfo.ArgumentName.Escaped).Append(" = ");
+            var ").AppendEscaped(memberInfo.ArgumentName).Append(" = ");
 
          GenerateReadValue(_sb, memberInfo);
 
@@ -80,7 +80,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-                                       ").Append(memberInfo.ArgumentName.Escaped).Append(",");
+                                       ").AppendEscaped(memberInfo.ArgumentName).Append(",");
       }
 
       _sb.Append(@"

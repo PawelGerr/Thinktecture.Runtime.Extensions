@@ -176,9 +176,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
                                        throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
-                                    string? referenceField = default;
-                                    int structProperty = default;
-                                    decimal? nullableStructProperty = default;
+                                    string? @referenceField = default;
+                                    int @structProperty = default;
+                                    decimal? @nullableStructProperty = default;
 
                                     var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
@@ -197,15 +197,15 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
+                                          @referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
-                                          structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
+                                          @structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
                                        }
                                        else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
                                        {
-                                          nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
+                                          @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
                                        }
                                        else
                                        {
@@ -214,9 +214,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     }
 
                                     var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                                               referenceField!,
-                                                               structProperty!,
-                                                               nullableStructProperty!,
+                                                               @referenceField!,
+                                                               @structProperty!,
+                                                               @nullableStructProperty!,
                                                                out var obj);
 
                                     if (validationError is not null)
@@ -233,26 +233,26 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     var ignoreNullValues = options.DefaultIgnoreCondition is global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull or global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
                                     var ignoreDefaultValues = options.DefaultIgnoreCondition == global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
 
-                                    var referenceFieldPropertyValue = value.ReferenceField;
+                                    var @referenceFieldPropertyValue = value.ReferenceField;
 
-                                    if(!ignoreNullValues || referenceFieldPropertyValue is not null)
+                                    if(!ignoreNullValues || @referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
+                                       this._referenceFieldConverter.Write(writer, @referenceFieldPropertyValue, options);
                                     }
-                                    var structPropertyPropertyValue = value.StructProperty;
+                                    var @structPropertyPropertyValue = value.StructProperty;
 
-                                    if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
+                                    if(!ignoreDefaultValues || !@structPropertyPropertyValue.Equals(default(int)))
                                     {
                                        writer.WritePropertyName(this._structPropertyPropertyName);
-                                       this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
+                                       this._structPropertyConverter.Write(writer, @structPropertyPropertyValue, options);
                                     }
-                                    var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+                                    var @nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
-                                    if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
+                                    if(!ignoreNullValues || @nullableStructPropertyPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._nullableStructPropertyPropertyName);
-                                       this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
+                                       this._nullableStructPropertyConverter.Write(writer, @nullableStructPropertyPropertyValue, options);
                                     }
                                     writer.WriteEndObject();
                                  }
@@ -348,9 +348,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
                                        throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
-                                    string? referenceField = default;
-                                    int structProperty = default;
-                                    decimal? nullableStructProperty = default;
+                                    string? @referenceField = default;
+                                    int @structProperty = default;
+                                    decimal? @nullableStructProperty = default;
 
                                     var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
@@ -369,15 +369,15 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
+                                          @referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
-                                          structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
+                                          @structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
                                        }
                                        else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
                                        {
-                                          nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
+                                          @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
                                        }
                                        else
                                        {
@@ -386,9 +386,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     }
 
                                     var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                                               referenceField!,
-                                                               structProperty!,
-                                                               nullableStructProperty!,
+                                                               @referenceField!,
+                                                               @structProperty!,
+                                                               @nullableStructProperty!,
                                                                out var obj);
 
                                     if (validationError is not null)
@@ -405,26 +405,26 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     var ignoreNullValues = options.DefaultIgnoreCondition is global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull or global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
                                     var ignoreDefaultValues = options.DefaultIgnoreCondition == global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
 
-                                    var referenceFieldPropertyValue = value.ReferenceField;
+                                    var @referenceFieldPropertyValue = value.ReferenceField;
 
-                                    if(!ignoreNullValues || referenceFieldPropertyValue is not null)
+                                    if(!ignoreNullValues || @referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
+                                       this._referenceFieldConverter.Write(writer, @referenceFieldPropertyValue, options);
                                     }
-                                    var structPropertyPropertyValue = value.StructProperty;
+                                    var @structPropertyPropertyValue = value.StructProperty;
 
-                                    if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
+                                    if(!ignoreDefaultValues || !@structPropertyPropertyValue.Equals(default(int)))
                                     {
                                        writer.WritePropertyName(this._structPropertyPropertyName);
-                                       this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
+                                       this._structPropertyConverter.Write(writer, @structPropertyPropertyValue, options);
                                     }
-                                    var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+                                    var @nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
-                                    if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
+                                    if(!ignoreNullValues || @nullableStructPropertyPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._nullableStructPropertyPropertyName);
-                                       this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
+                                       this._nullableStructPropertyConverter.Write(writer, @nullableStructPropertyPropertyValue, options);
                                     }
                                     writer.WriteEndObject();
                                  }
@@ -520,9 +520,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
                                        throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
-                                    string? referenceField = default;
-                                    int structProperty = default;
-                                    decimal? nullableStructProperty = default;
+                                    string? @referenceField = default;
+                                    int @structProperty = default;
+                                    decimal? @nullableStructProperty = default;
 
                                     var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
@@ -541,15 +541,15 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
+                                          @referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
-                                          structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
+                                          @structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
                                        }
                                        else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
                                        {
-                                          nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
+                                          @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
                                        }
                                        else
                                        {
@@ -558,9 +558,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     }
 
                                     var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                                               referenceField!,
-                                                               structProperty!,
-                                                               nullableStructProperty!,
+                                                               @referenceField!,
+                                                               @structProperty!,
+                                                               @nullableStructProperty!,
                                                                out var obj);
 
                                     if (validationError is not null)
@@ -577,26 +577,26 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     var ignoreNullValues = options.DefaultIgnoreCondition is global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull or global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
                                     var ignoreDefaultValues = options.DefaultIgnoreCondition == global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
 
-                                    var referenceFieldPropertyValue = value.ReferenceField;
+                                    var @referenceFieldPropertyValue = value.ReferenceField;
 
-                                    if(!ignoreNullValues || referenceFieldPropertyValue is not null)
+                                    if(!ignoreNullValues || @referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
+                                       this._referenceFieldConverter.Write(writer, @referenceFieldPropertyValue, options);
                                     }
-                                    var structPropertyPropertyValue = value.StructProperty;
+                                    var @structPropertyPropertyValue = value.StructProperty;
 
-                                    if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
+                                    if(!ignoreDefaultValues || !@structPropertyPropertyValue.Equals(default(int)))
                                     {
                                        writer.WritePropertyName(this._structPropertyPropertyName);
-                                       this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
+                                       this._structPropertyConverter.Write(writer, @structPropertyPropertyValue, options);
                                     }
-                                    var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+                                    var @nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
-                                    if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
+                                    if(!ignoreNullValues || @nullableStructPropertyPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._nullableStructPropertyPropertyName);
-                                       this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
+                                       this._nullableStructPropertyConverter.Write(writer, @nullableStructPropertyPropertyValue, options);
                                     }
                                     writer.WriteEndObject();
                                  }
@@ -687,9 +687,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
                                        throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
-                                    string? referenceField = default;
-                                    int structProperty = default;
-                                    decimal? nullableStructProperty = default;
+                                    string? @referenceField = default;
+                                    int @structProperty = default;
+                                    decimal? @nullableStructProperty = default;
 
                                     var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
@@ -708,15 +708,15 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
                                        if (comparer.Equals(propName, this._referenceFieldPropertyName))
                                        {
-                                          referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
+                                          @referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
                                        }
                                        else if (comparer.Equals(propName, this._structPropertyPropertyName))
                                        {
-                                          structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
+                                          @structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
                                        }
                                        else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
                                        {
-                                          nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
+                                          @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
                                        }
                                        else
                                        {
@@ -725,9 +725,9 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     }
 
                                     var validationError = global::TestValueObject.Validate(
-                                                               referenceField!,
-                                                               structProperty!,
-                                                               nullableStructProperty!,
+                                                               @referenceField!,
+                                                               @structProperty!,
+                                                               @nullableStructProperty!,
                                                                out var obj);
 
                                     if (validationError is not null)
@@ -744,26 +744,26 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                     var ignoreNullValues = options.DefaultIgnoreCondition is global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull or global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
                                     var ignoreDefaultValues = options.DefaultIgnoreCondition == global::System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
 
-                                    var referenceFieldPropertyValue = value.ReferenceField;
+                                    var @referenceFieldPropertyValue = value.ReferenceField;
 
-                                    if(!ignoreNullValues || referenceFieldPropertyValue is not null)
+                                    if(!ignoreNullValues || @referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._referenceFieldPropertyName);
-                                       this._referenceFieldConverter.Write(writer, referenceFieldPropertyValue, options);
+                                       this._referenceFieldConverter.Write(writer, @referenceFieldPropertyValue, options);
                                     }
-                                    var structPropertyPropertyValue = value.StructProperty;
+                                    var @structPropertyPropertyValue = value.StructProperty;
 
-                                    if(!ignoreDefaultValues || !structPropertyPropertyValue.Equals(default(int)))
+                                    if(!ignoreDefaultValues || !@structPropertyPropertyValue.Equals(default(int)))
                                     {
                                        writer.WritePropertyName(this._structPropertyPropertyName);
-                                       this._structPropertyConverter.Write(writer, structPropertyPropertyValue, options);
+                                       this._structPropertyConverter.Write(writer, @structPropertyPropertyValue, options);
                                     }
-                                    var nullableStructPropertyPropertyValue = value.NullableStructProperty;
+                                    var @nullableStructPropertyPropertyValue = value.NullableStructProperty;
 
-                                    if(!ignoreNullValues || nullableStructPropertyPropertyValue is not null)
+                                    if(!ignoreNullValues || @nullableStructPropertyPropertyValue is not null)
                                     {
                                        writer.WritePropertyName(this._nullableStructPropertyPropertyName);
-                                       this._nullableStructPropertyConverter.Write(writer, nullableStructPropertyPropertyValue, options);
+                                       this._nullableStructPropertyConverter.Write(writer, @nullableStructPropertyPropertyValue, options);
                                     }
                                     writer.WriteEndObject();
                                  }

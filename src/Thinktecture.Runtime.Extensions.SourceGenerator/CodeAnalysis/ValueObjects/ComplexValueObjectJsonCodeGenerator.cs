@@ -45,8 +45,8 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName.Raw).Append(@"Converter;
-      private readonly string _").Append(memberInfo.ArgumentName.Raw).Append("PropertyName;");
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName).Append(@"Converter;
+      private readonly string _").Append(memberInfo.ArgumentName).Append("PropertyName;");
       }
 
       _sb.Append(@"
@@ -66,8 +66,8 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName.Raw).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"));
-         this._").Append(memberInfo.ArgumentName.Raw).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
+         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"));
+         this._").Append(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
       _sb.Append(@"
@@ -90,7 +90,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         ").AppendTypeFullyQualifiedNullAnnotated(memberInfo).Append(" ").Append(memberInfo.ArgumentName.Escaped).Append(" = default;");
+         ").AppendTypeFullyQualifiedNullAnnotated(memberInfo).Append(" ").AppendEscaped(memberInfo.ArgumentName).Append(" = default;");
       }
 
       _sb.Append(@"
@@ -128,9 +128,9 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             else if ");
          }
 
-         _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyName))
+         _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName).Append(@"PropertyName))
             {
-               ").Append(memberInfo.ArgumentName.Escaped).Append(" = this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);
+               ").AppendEscaped(memberInfo.ArgumentName).Append(" = this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);
             }");
       }
 
@@ -155,7 +155,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-                                    ").Append(memberInfo.ArgumentName.Escaped).Append("!,");
+                                    ").AppendEscaped(memberInfo.ArgumentName).Append("!,");
       }
 
       _sb.Append(@"
@@ -183,28 +183,28 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         var ").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue = value.").Append(memberInfo.Name).Append(@";
+         var ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue = value.").Append(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)
          {
             _sb.Append(@"
-         if(!ignoreNullValues || ").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyValue is not null)
+         if(!ignoreNullValues || ").AppendEscaped(memberInfo.ArgumentName).Append(@"PropertyValue is not null)
          {
             ");
          }
          else
          {
             _sb.Append(@"
-         if(!ignoreDefaultValues || !").Append(memberInfo.ArgumentName.Raw).Append("PropertyValue.Equals(default(").AppendTypeFullyQualified(memberInfo).Append(@")))
+         if(!ignoreDefaultValues || !").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue.Equals(default(").AppendTypeFullyQualified(memberInfo).Append(@")))
          {
             ");
          }
 
-         _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyName);
+         _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append(@"PropertyName);
          ");
 
-         _sb.Append("   this._").Append(memberInfo.ArgumentName.Raw).Append("Converter.Write(writer, ").Append(memberInfo.ArgumentName.Raw).Append(@"PropertyValue, options);
+         _sb.Append("   this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").AppendEscaped(memberInfo.ArgumentName).Append(@"PropertyValue, options);
          }");
       }
 

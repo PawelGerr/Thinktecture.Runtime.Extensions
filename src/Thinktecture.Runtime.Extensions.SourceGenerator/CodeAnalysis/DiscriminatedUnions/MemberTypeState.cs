@@ -10,7 +10,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
    public bool IsNullableStruct { get; }
    public SpecialType SpecialType { get; }
 
-   public ArgumentName ArgumentName { get; }
+   public string ArgumentName { get; }
    public MemberTypeSetting Setting { get; }
 
    public MemberTypeState(

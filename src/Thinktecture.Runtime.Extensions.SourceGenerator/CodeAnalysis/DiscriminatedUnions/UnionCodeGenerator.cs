@@ -127,11 +127,11 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Implicit conversion from type <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.
       /// </summary>
-      /// <param name=""value"">Value to covert from.</param>
-      /// <returns>A new instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/> converted from <paramref name=""value""/>.</returns>
-      public static implicit operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(@" value)
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to covert from.</param>
+      /// <returns>A new instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/> converted from <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.</returns>
+      public static implicit operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
-         return new ").AppendTypeFullyQualified(_state).Append(@"(value);
+         return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
       }");
       }
    }
@@ -213,7 +213,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => this._").Append(memberType.ArgumentName.Raw);
+            ").Append(i + 1).Append(" => this._").Append(memberType.ArgumentName);
 
          if (memberType.SpecialType != SpecialType.System_String)
          {
@@ -255,7 +255,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, this._").Append(memberType.ArgumentName.Raw);
+         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, this._").Append(memberType.ArgumentName);
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -337,9 +337,9 @@ namespace ").Append(_state.Namespace).Append(@"
             ").Append(i + 1).Append(" => ");
 
          if (memberType.IsReferenceType)
-            _sb.Append("this._").Append(memberType.ArgumentName.Raw).Append(" is null ? other._").Append(memberType.ArgumentName.Raw).Append(" is null : ");
+            _sb.Append("this._").Append(memberType.ArgumentName).Append(" is null ? other._").Append(memberType.ArgumentName).Append(" is null : ");
 
-         _sb.Append("this._").Append(memberType.ArgumentName.Raw).Append(".Equals(other._").Append(memberType.ArgumentName.Raw);
+         _sb.Append("this._").Append(memberType.ArgumentName).Append(".Equals(other._").Append(memberType.ArgumentName);
 
          if (memberType.SpecialType == SpecialType.System_String)
             _sb.Append(", global::System.StringComparison.").Append(Enum.GetName(typeof(StringComparison), _state.Settings.DefaultStringComparison));
@@ -378,7 +378,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">The action to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -430,7 +430,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (isPartially)
             _sb.Append('?');
 
-         _sb.Append(' ').Append(memberType.ArgumentName.Escaped);
+         _sb.Append(' ').AppendEscaped(memberType.ArgumentName);
 
          if (isPartially)
             _sb.Append(" = null");
@@ -468,18 +468,18 @@ namespace ").Append(_state.Namespace).Append(@"
          if (isPartially)
          {
             _sb.Append(@"
-               if (").Append(memberType.ArgumentName.Escaped).Append(@" is null)
+               if (").AppendEscaped(memberType.ArgumentName).Append(@" is null)
                   break;
 ");
          }
 
          _sb.Append(@"
-               ").Append(memberType.ArgumentName.Escaped).Append("(");
+               ").AppendEscaped(memberType.ArgumentName).Append("(");
 
          if (withContext)
             _sb.Append("context, ");
 
-         _sb.Append("this._").Append(memberType.ArgumentName.Raw).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
+         _sb.Append("this._").Append(memberType.ArgumentName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
                return;");
       }
 
@@ -526,7 +526,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">The function to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -580,7 +580,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (isPartially)
             _sb.Append('?');
 
-         _sb.Append(' ').Append(memberType.ArgumentName.Escaped);
+         _sb.Append(' ').AppendEscaped(memberType.ArgumentName);
 
          if (isPartially)
             _sb.Append(" = null");
@@ -618,18 +618,18 @@ namespace ").Append(_state.Namespace).Append(@"
          if (isPartially)
          {
             _sb.Append(@"
-               if (").Append(memberType.ArgumentName.Escaped).Append(@" is null)
+               if (").AppendEscaped(memberType.ArgumentName).Append(@" is null)
                   break;
 ");
          }
 
          _sb.Append(@"
-               return ").Append(memberType.ArgumentName.Escaped).Append("(");
+               return ").AppendEscaped(memberType.ArgumentName).Append("(");
 
          if (withContext)
             _sb.Append("context, ");
 
-         _sb.Append("this._").Append(memberType.ArgumentName.Raw).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
+         _sb.Append("this._").Append(memberType.ArgumentName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
       }
 
       _sb.Append(@"
@@ -669,7 +669,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">The instance to return if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -705,7 +705,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (isPartially)
             _sb.Append(">");
 
-         _sb.Append(" ").Append(_state.MemberTypes[i].ArgumentName.Escaped);
+         _sb.Append(" ").AppendEscaped(_state.MemberTypes[i].ArgumentName);
 
          if (isPartially)
             _sb.Append(" = default");
@@ -741,13 +741,13 @@ namespace ").Append(_state.Namespace).Append(@"
          if (isPartially)
          {
             _sb.Append(@"
-               if (!").Append(_state.MemberTypes[i].ArgumentName.Escaped).Append(@".IsSet)
+               if (!").AppendEscaped(_state.MemberTypes[i].ArgumentName).Append(@".IsSet)
                   break;
 ");
          }
 
          _sb.Append(@"
-               return ").Append(_state.MemberTypes[i].ArgumentName.Escaped);
+               return ").AppendEscaped(_state.MemberTypes[i].ArgumentName);
 
          if (isPartially)
             _sb.Append(".Value");
@@ -776,12 +776,12 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Initializes new instance with <paramref name=""").Append(memberType.ArgumentName.Raw).Append(@"""/>.
+      /// Initializes new instance with <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.
       /// </summary>
-      /// <param name=""").Append(memberType.ArgumentName.Raw).Append(@""">Value to create a new instance for.</param>
-      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(").AppendTypeFullyQualified(memberType).Append(" ").Append(memberType.ArgumentName.Escaped).Append(@")
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>
+      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
-         this._").Append(memberType.ArgumentName.Raw).Append(" = ").Append(memberType.ArgumentName.Escaped).Append(@";
+         this._").Append(memberType.ArgumentName).Append(" = ").AppendEscaped(memberType.ArgumentName).Append(@";
          this._valueIndex = ").Append(i + 1).Append(@";
       }");
       }
@@ -793,7 +793,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var memberType = _state.MemberTypes[i];
          _sb.Append(@"
-      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" _").Append(memberType.ArgumentName.Raw).Append(";");
+      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" _").Append(memberType.ArgumentName).Append(";");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -817,7 +817,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
-            .Append(" ? this._").Append(memberType.ArgumentName.Raw).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
+            .Append(" ? this._").Append(memberType.ArgumentName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
             .Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
       }
    }
@@ -853,7 +853,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-         ").Append(i + 1).Append(" => this._").Append(memberType.ArgumentName.Raw).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
+         ").Append(i + 1).Append(" => this._").Append(memberType.ArgumentName).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
       }
 
       _sb.Append(@"

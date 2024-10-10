@@ -164,14 +164,14 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
                                     try
                                     {
 
-                                       var referenceField = reader.ReadString()!;
-                                       var structProperty = reader.ReadInt32()!;
-                                       var nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
+                                       var @referenceField = reader.ReadString()!;
+                                       var @structProperty = reader.ReadInt32()!;
+                                       var @nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
 
                                        var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                                                  referenceField,
-                                                                  structProperty,
-                                                                  nullableStructProperty,
+                                                                  @referenceField,
+                                                                  @structProperty,
+                                                                  @nullableStructProperty,
                                                                   out var obj);
 
                                        if (validationError is not null)
@@ -254,14 +254,14 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
                                     try
                                     {
 
-                                       var referenceField = reader.ReadString()!;
-                                       var structProperty = reader.ReadInt32()!;
-                                       var nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
+                                       var @referenceField = reader.ReadString()!;
+                                       var @structProperty = reader.ReadInt32()!;
+                                       var @nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
 
                                        var validationError = global::TestValueObject.Validate(
-                                                                  referenceField,
-                                                                  structProperty,
-                                                                  nullableStructProperty,
+                                                                  @referenceField,
+                                                                  @structProperty,
+                                                                  @nullableStructProperty,
                                                                   out var obj);
 
                                        if (validationError is not null)
@@ -349,14 +349,14 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
                                     try
                                     {
 
-                                       var referenceField = reader.ReadString()!;
-                                       var structProperty = reader.ReadInt32()!;
-                                       var nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
+                                       var @referenceField = reader.ReadString()!;
+                                       var @structProperty = reader.ReadInt32()!;
+                                       var @nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
 
                                        var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                                                  referenceField,
-                                                                  structProperty,
-                                                                  nullableStructProperty,
+                                                                  @referenceField,
+                                                                  @structProperty,
+                                                                  @nullableStructProperty,
                                                                   out var obj);
 
                                        if (validationError is not null)

@@ -176,11 +176,11 @@ namespace ").Append(_state.Namespace).Append(@"
       }
       else
       {
-         _sb.Append("static ").Append(keyMember.ArgumentName.Escaped).Append(" => ").AppendTypeFullyQualified(_state).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append("(").Append(keyMember.ArgumentName.Escaped).Append(")");
+         _sb.Append("static ").AppendEscaped(keyMember.ArgumentName).Append(" => ").AppendTypeFullyQualified(_state).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append("(").AppendEscaped(keyMember.ArgumentName).Append(")");
       }
 
       _sb.Append(@";
-         global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state).Append(">> convertFromKeyExpressionViaCtor = static ").Append(keyMember.ArgumentName.Escaped).Append(" => new ").AppendTypeFullyQualified(_state).Append("(").Append(keyMember.ArgumentName.Escaped).Append(@");
+         global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state).Append(">> convertFromKeyExpressionViaCtor = static ").AppendEscaped(keyMember.ArgumentName).Append(" => new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(keyMember.ArgumentName).Append(@");
 
          var convertToKey = new global::System.Func<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(keyMember).Append(">(static item => item.").Append(keyMember.Name).Append(@");
          global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(keyMember).Append(">> convertToKeyExpression = static obj => obj.").Append(keyMember.Name).Append(@";
@@ -263,29 +263,29 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Explicit conversion from the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
       /// </summary>
-      /// <param name=""").Append(keyMember.ArgumentName.Raw).Append(@""">Value to covert.</param>
+      /// <param name=""").Append(keyMember.ArgumentName).Append(@""">Value to covert.</param>
       /// <returns>An instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.</returns>");
 
       if (bothAreReferenceTypes && !emptyStringYieldsNull)
       {
          _sb.Append(@"
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyMember.ArgumentName.Escaped).Append(@""")]");
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyMember.ArgumentName).Append(@""")]");
       }
 
       _sb.Append(@"
-      public static explicit operator ").AppendTypeFullyQualified(_state).Append(nullableQuestionMark).Append("(").AppendTypeFullyQualified(keyMember).Append(nullableQuestionMark).Append(" ").Append(keyMember.ArgumentName.Escaped).Append(@")
+      public static explicit operator ").AppendTypeFullyQualified(_state).Append(nullableQuestionMark).Append("(").AppendTypeFullyQualified(keyMember).Append(nullableQuestionMark).Append(" ").AppendEscaped(keyMember.ArgumentName).Append(@")
       {");
 
       if (bothAreReferenceTypes)
       {
          _sb.Append(@"
-         if(").Append(keyMember.ArgumentName.Escaped).Append(@" is null)
+         if(").AppendEscaped(keyMember.ArgumentName).Append(@" is null)
             return null;
 ");
       }
 
       _sb.Append(@"
-         return ").AppendTypeFullyQualified(_state).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append("(").Append(keyMember.ArgumentName.Escaped).Append(@");
+         return ").AppendTypeFullyQualified(_state).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append("(").AppendEscaped(keyMember.ArgumentName).Append(@");
       }");
    }
 
@@ -299,7 +299,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (allowNullOutput && !emptyStringYieldsNull)
       {
          _sb.Append(@"
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(_state.KeyMember.ArgumentName.Escaped).Append(@""")]");
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(_state.KeyMember.ArgumentName).Append(@""")]");
       }
 
       _sb.Append(@"
@@ -338,17 +338,17 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValidateMethod(bool allowNullKeyMemberInput, bool allowNullOutput, bool emptyStringYieldsNull)
    {
-      var providerArgumentName = _state.KeyMember.ArgumentName.Escaped == "provider" ? "formatProvider" : "provider";
+      var providerArgumentName = _state.KeyMember.ArgumentName == "provider" ? "formatProvider" : "provider";
 
       _sb.Append(@"
 
-      public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullKeyMemberInput).Append(", global::System.IFormatProvider? ").Append(providerArgumentName).Append(", out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+      public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullKeyMemberInput).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {");
 
       if (emptyStringYieldsNull)
       {
          _sb.Append(@"
-         if(global::System.String.IsNullOrWhiteSpace(").Append(_state.KeyMember.ArgumentName.Escaped).Append(@"))
+         if(global::System.String.IsNullOrWhiteSpace(").AppendEscaped(_state.KeyMember.ArgumentName).Append(@"))
          {
             obj = default;
             return null;
@@ -358,7 +358,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else if (allowNullOutput)
       {
          _sb.Append(@"
-         if(").Append(_state.KeyMember.ArgumentName.Escaped).Append(@" is null)
+         if(").AppendEscaped(_state.KeyMember.ArgumentName).Append(@" is null)
          {
             obj = default;
             return null;
@@ -368,10 +368,10 @@ namespace ").Append(_state.Namespace).Append(@"
       else if (_state.KeyMember.IsReferenceType)
       {
          _sb.Append(@"
-         if(").Append(_state.KeyMember.ArgumentName.Escaped).Append(@" is null)
+         if(").AppendEscaped(_state.KeyMember.ArgumentName).Append(@" is null)
          {
             obj = default;
-            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">(""The argument '").Append(_state.KeyMember.ArgumentName.Escaped).Append(@"' must not be null."");
+            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">(""The argument '").AppendEscaped(_state.KeyMember.ArgumentName).Append(@"' must not be null."");
          }
 ");
       }
@@ -445,7 +445,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          ValidateConstructorArguments(").RenderArgument(_state.KeyMember, "ref ").Append(@");
 
-         this.").Append(_state.KeyMember.Name).Append(" = ").Append(_state.KeyMember.ArgumentName.Escaped).Append(@";
+         this.").Append(_state.KeyMember.Name).Append(" = ").AppendEscaped(_state.KeyMember.ArgumentName).Append(@";
       }
 
       static partial void ValidateConstructorArguments(").RenderArgumentWithType(_state.KeyMember, "ref ").Append(");");

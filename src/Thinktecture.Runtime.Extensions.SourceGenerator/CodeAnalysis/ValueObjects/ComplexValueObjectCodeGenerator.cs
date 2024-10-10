@@ -148,16 +148,19 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      public static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(").RenderArgumentsWithType(fieldsAndProperties).Append(@")
+      public static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(").RenderArgumentsWithType(fieldsAndProperties, prefix: @"
+         ", comma: ",").Append(@")
       {
          var validationError = Validate(");
 
-      _sb.RenderArguments(fieldsAndProperties);
+      _sb.RenderArguments(fieldsAndProperties, prefix: @"
+            ", comma: ",");
 
       if (fieldsAndProperties.Count > 0)
-         _sb.Append(", ");
+         _sb.Append(",");
 
-      _sb.Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj);
+      _sb.Append(@"
+            out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj);
 
          if (validationError is not null)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? ""Validation failed."");
@@ -182,12 +185,15 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
-      _sb.RenderArguments(fieldsAndProperties);
+      _sb.RenderArguments(fieldsAndProperties, prefix: @"
+            ", comma: ",");
 
       if (fieldsAndProperties.Count > 0)
-         _sb.Append(", ");
+         _sb.Append(",");
 
-      _sb.Append(@"out obj, out _);
+      _sb.Append(@"
+            out obj,
+            out _);
       }");
 
       _sb.Append(@"
@@ -203,12 +209,14 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          validationError = Validate(");
 
-      _sb.RenderArguments(fieldsAndProperties);
+      _sb.RenderArguments(fieldsAndProperties, prefix: @"
+            ", comma: ",");
 
       if (fieldsAndProperties.Count > 0)
-         _sb.Append(", ");
+         _sb.Append(",");
 
-      _sb.Append(@"out obj);
+      _sb.Append(@"
+            out obj);
 
          return validationError is null;
       }");
@@ -234,7 +242,9 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
 
-      _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref validationError").RenderArguments(fieldsAndProperties, "ref ", true).Append(@");
+      _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append(@"(
+            ref validationError").RenderArguments(fieldsAndProperties, @"
+            ref ", comma: ",", leadingComma: true).Append(@");
 
          if (validationError is null)
          {
@@ -270,9 +280,11 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("private ");
 
-      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? validationError");
+      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append(@"(
+         ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? validationError");
 
-      _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", leadingComma: true, addAllowNullNotNullCombi: true);
+      _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", comma: @",
+         ", leadingComma: true, addAllowNullNotNullCombi: true);
 
       _sb.Append(");");
    }
@@ -294,7 +306,8 @@ namespace ").Append(_state.Namespace).Append(@"
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
       _sb.Append("new ").AppendTypeFullyQualified(_state).Append("(");
-      _sb.RenderArguments(fieldsAndProperties);
+      _sb.RenderArguments(fieldsAndProperties, prefix: @"
+               ", comma: ",");
 
       _sb.Append(")");
    }
@@ -349,7 +362,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       ").RenderAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(");
 
-      _sb.RenderArgumentsWithType(fieldsAndProperties);
+      _sb.RenderArgumentsWithType(fieldsAndProperties, prefix: @"
+         ", comma: ",");
 
       _sb.Append(@")
       {");
@@ -359,7 +373,8 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
          ValidateConstructorArguments(");
 
-         _sb.RenderArguments(fieldsAndProperties, "ref ");
+         _sb.RenderArguments(fieldsAndProperties, @"
+            ref ", comma: ",");
 
          _sb.Append(@");
 ");
@@ -367,7 +382,7 @@ namespace ").Append(_state.Namespace).Append(@"
          foreach (var memberInfo in fieldsAndProperties)
          {
             _sb.Append(@"
-         this.").Append(memberInfo.Name).Append(" = ").Append(memberInfo.ArgumentName.Escaped).Append(";");
+         this.").Append(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
          }
       }
 
@@ -380,7 +395,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       static partial void ValidateConstructorArguments(");
 
-         _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ");
+         _sb.RenderArgumentsWithType(fieldsAndProperties, @"
+         ref ", comma: ",");
 
          _sb.Append(");");
       }

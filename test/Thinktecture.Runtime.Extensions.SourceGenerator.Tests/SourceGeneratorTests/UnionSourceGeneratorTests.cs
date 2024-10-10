@@ -95,9 +95,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -108,7 +108,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -116,7 +116,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -132,7 +132,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -140,7 +140,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -154,14 +154,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -176,14 +176,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -196,14 +196,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -212,21 +212,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -409,9 +409,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -423,7 +423,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -433,7 +433,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -450,7 +450,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -460,7 +460,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -475,7 +475,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -484,7 +484,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -500,7 +500,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -509,7 +509,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -523,7 +523,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -532,7 +532,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -541,21 +541,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -730,9 +730,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -744,7 +744,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -754,7 +754,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -771,7 +771,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -781,7 +781,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -796,7 +796,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -805,7 +805,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -821,7 +821,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -830,7 +830,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -844,7 +844,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -853,7 +853,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -862,21 +862,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -1050,9 +1050,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -1063,7 +1063,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1071,7 +1071,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1087,7 +1087,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1095,7 +1095,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1109,14 +1109,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1131,14 +1131,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1151,14 +1151,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1341,9 +1341,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         private TestUnion(int int32)
+                                                         private TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -1354,7 +1354,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1362,7 +1362,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1378,7 +1378,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1386,7 +1386,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1400,14 +1400,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1422,14 +1422,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1442,14 +1442,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1458,21 +1458,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -1652,9 +1652,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -1665,7 +1665,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1673,7 +1673,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1689,7 +1689,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially(
                                                             global::System.Action<object?>? @default = null,
                                                             global::System.Action<string>? @string = null,
-                                                            global::System.Action<int>? int32 = null)
+                                                            global::System.Action<int>? @int32 = null)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1700,10 +1700,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  if (int32 is null)
+                                                                  if (@int32 is null)
                                                                      break;
 
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1721,7 +1721,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1729,7 +1729,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1747,7 +1747,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Action<TContext, object?>? @default = null,
                                                             global::System.Action<TContext, string>? @string = null,
-                                                            global::System.Action<TContext, int>? int32 = null)
+                                                            global::System.Action<TContext, int>? @int32 = null)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1758,10 +1758,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  if (int32 is null)
+                                                                  if (@int32 is null)
                                                                      break;
 
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1777,14 +1777,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1799,7 +1799,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<object?, TResult> @default,
                                                             global::System.Func<string, TResult>? @string = null,
-                                                            global::System.Func<int, TResult>? int32 = null)
+                                                            global::System.Func<int, TResult>? @int32 = null)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1809,10 +1809,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  if (int32 is null)
+                                                                  if (@int32 is null)
                                                                      break;
 
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1829,14 +1829,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1853,7 +1853,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Func<TContext, object?, TResult> @default,
                                                             global::System.Func<TContext, string, TResult>? @string = null,
-                                                            global::System.Func<TContext, int, TResult>? int32 = null)
+                                                            global::System.Func<TContext, int, TResult>? @int32 = null)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1863,10 +1863,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  if (int32 is null)
+                                                                  if (@int32 is null)
                                                                      break;
 
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1881,14 +1881,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1897,21 +1897,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -2091,9 +2091,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -2104,7 +2104,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2112,7 +2112,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -2128,7 +2128,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2136,7 +2136,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -2150,14 +2150,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2172,14 +2172,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2192,14 +2192,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2214,7 +2214,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @string = default,
-                                                            global::Thinktecture.Argument<TResult> int32 = default)
+                                                            global::Thinktecture.Argument<TResult> @int32 = default)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2224,10 +2224,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                   return @string.Value;
                                                                case 2:
-                                                                  if (!int32.IsSet)
+                                                                  if (!@int32.IsSet)
                                                                      break;
 
-                                                                  return int32.Value;
+                                                                  return @int32.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2238,21 +2238,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -2432,9 +2432,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -2445,7 +2445,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2453,7 +2453,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -2469,7 +2469,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2477,7 +2477,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -2491,14 +2491,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2513,14 +2513,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2529,21 +2529,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -2723,9 +2723,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -2736,14 +2736,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2752,21 +2752,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -2946,9 +2946,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -2959,7 +2959,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2967,7 +2967,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -2983,7 +2983,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2991,7 +2991,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3005,14 +3005,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3027,14 +3027,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3047,14 +3047,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3063,21 +3063,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -3246,9 +3246,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -3259,7 +3259,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32)
+                                                            global::System.Action<int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3267,7 +3267,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3283,7 +3283,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32)
+                                                            global::System.Action<TContext, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3291,7 +3291,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3305,14 +3305,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32)
+                                                            global::System.Func<int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3327,14 +3327,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32)
+                                                            global::System.Func<TContext, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3347,14 +3347,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32)
+                                                            TResult @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3363,21 +3363,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
@@ -3557,9 +3557,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="nullableInt32"/>.
                                                          /// </summary>
                                                          /// <param name="nullableInt32">Value to create a new instance for.</param>
-                                                         public TestUnion(int? nullableInt32)
+                                                         public TestUnion(int? @nullableInt32)
                                                          {
-                                                            this._nullableInt32 = nullableInt32;
+                                                            this._nullableInt32 = @nullableInt32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -3570,7 +3570,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="nullableInt32">The action to execute if the current value is of type <c>int?</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string?> @string,
-                                                            global::System.Action<int?> nullableInt32)
+                                                            global::System.Action<int?> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3578,7 +3578,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string);
                                                                   return;
                                                                case 2:
-                                                                  nullableInt32(this._nullableInt32);
+                                                                  @nullableInt32(this._nullableInt32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3594,7 +3594,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string?> @string,
-                                                            global::System.Action<TContext, int?> nullableInt32)
+                                                            global::System.Action<TContext, int?> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3602,7 +3602,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string);
                                                                   return;
                                                                case 2:
-                                                                  nullableInt32(context, this._nullableInt32);
+                                                                  @nullableInt32(context, this._nullableInt32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3616,14 +3616,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="nullableInt32">The function to execute if the current value is of type <c>int?</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string?, TResult> @string,
-                                                            global::System.Func<int?, TResult> nullableInt32)
+                                                            global::System.Func<int?, TResult> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(this._string);
                                                                case 2:
-                                                                  return nullableInt32(this._nullableInt32);
+                                                                  return @nullableInt32(this._nullableInt32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3638,14 +3638,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string?, TResult> @string,
-                                                            global::System.Func<TContext, int?, TResult> nullableInt32)
+                                                            global::System.Func<TContext, int?, TResult> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string(context, this._string);
                                                                case 2:
-                                                                  return nullableInt32(context, this._nullableInt32);
+                                                                  return @nullableInt32(context, this._nullableInt32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3658,14 +3658,14 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="nullableInt32">The instance to return if the current value is of type <c>int?</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult nullableInt32)
+                                                            TResult @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return nullableInt32;
+                                                                  return @nullableInt32;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3674,21 +3674,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string?</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string? value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string? @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int?</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int? value)
+                                                         /// <param name="nullableInt32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="nullableInt32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int? @nullableInt32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@nullableInt32);
                                                          }
 
                                                          /// <summary>
@@ -3858,9 +3858,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="text"/>.
                                                          /// </summary>
                                                          /// <param name="text">Value to create a new instance for.</param>
-                                                         public TestUnion(string text)
+                                                         public TestUnion(string @text)
                                                          {
-                                                            this._text = text;
+                                                            this._text = @text;
                                                             this._valueIndex = 1;
                                                          }
 
@@ -3868,9 +3868,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="number"/>.
                                                          /// </summary>
                                                          /// <param name="number">Value to create a new instance for.</param>
-                                                         public TestUnion(int number)
+                                                         public TestUnion(int @number)
                                                          {
-                                                            this._number = number;
+                                                            this._number = @number;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -3880,16 +3880,16 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="text">The action to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="number">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch(
-                                                            global::System.Action<string> text,
-                                                            global::System.Action<int> number)
+                                                            global::System.Action<string> @text,
+                                                            global::System.Action<int> @number)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  text(this._text!);
+                                                                  @text(this._text!);
                                                                   return;
                                                                case 2:
-                                                                  number(this._number);
+                                                                  @number(this._number);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3904,16 +3904,16 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="number">The action to execute if the current value is of type <c>int</c>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext, string> text,
-                                                            global::System.Action<TContext, int> number)
+                                                            global::System.Action<TContext, string> @text,
+                                                            global::System.Action<TContext, int> @number)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  text(context, this._text!);
+                                                                  @text(context, this._text!);
                                                                   return;
                                                                case 2:
-                                                                  number(context, this._number);
+                                                                  @number(context, this._number);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3926,15 +3926,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="text">The function to execute if the current value is of type <c>string</c>.</param>
                                                          /// <param name="number">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<string, TResult> text,
-                                                            global::System.Func<int, TResult> number)
+                                                            global::System.Func<string, TResult> @text,
+                                                            global::System.Func<int, TResult> @number)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return text(this._text!);
+                                                                  return @text(this._text!);
                                                                case 2:
-                                                                  return number(this._number);
+                                                                  return @number(this._number);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3948,15 +3948,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="number">The function to execute if the current value is of type <c>int</c>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, string, TResult> text,
-                                                            global::System.Func<TContext, int, TResult> number)
+                                                            global::System.Func<TContext, string, TResult> @text,
+                                                            global::System.Func<TContext, int, TResult> @number)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return text(context, this._text!);
+                                                                  return @text(context, this._text!);
                                                                case 2:
-                                                                  return number(context, this._number);
+                                                                  return @number(context, this._number);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3968,15 +3968,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="text">The instance to return if the current value is of type <c>string</c>.</param>
                                                          /// <param name="number">The instance to return if the current value is of type <c>int</c>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult text,
-                                                            TResult number)
+                                                            TResult @text,
+                                                            TResult @number)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return text;
+                                                                  return @text;
                                                                case 2:
-                                                                  return number;
+                                                                  return @number;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3985,21 +3985,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="text">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="text"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @text)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@text);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="number">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="number"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @number)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@number);
                                                          }
 
                                                          /// <summary>
@@ -4218,9 +4218,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="int32"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to create a new instance for.</param>
-                                                         public TestUnion(int int32)
+                                                         public TestUnion(int @int32)
                                                          {
-                                                            this._int32 = int32;
+                                                            this._int32 = @int32;
                                                             this._valueIndex = 2;
                                                          }
 
@@ -4228,9 +4228,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="boolean"/>.
                                                          /// </summary>
                                                          /// <param name="boolean">Value to create a new instance for.</param>
-                                                         public TestUnion(bool boolean)
+                                                         public TestUnion(bool @boolean)
                                                          {
-                                                            this._boolean = boolean;
+                                                            this._boolean = @boolean;
                                                             this._valueIndex = 3;
                                                          }
 
@@ -4238,9 +4238,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Initializes new instance with <paramref name="guid"/>.
                                                          /// </summary>
                                                          /// <param name="guid">Value to create a new instance for.</param>
-                                                         public TestUnion(global::System.Guid guid)
+                                                         public TestUnion(global::System.Guid @guid)
                                                          {
-                                                            this._guid = guid;
+                                                            this._guid = @guid;
                                                             this._valueIndex = 4;
                                                          }
 
@@ -4264,9 +4264,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="char">The action to execute if the current value is of type <c>char</c>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
-                                                            global::System.Action<int> int32,
-                                                            global::System.Action<bool> boolean,
-                                                            global::System.Action<global::System.Guid> guid,
+                                                            global::System.Action<int> @int32,
+                                                            global::System.Action<bool> @boolean,
+                                                            global::System.Action<global::System.Guid> @guid,
                                                             global::System.Action<char> @char)
                                                          {
                                                             switch (this._valueIndex)
@@ -4275,13 +4275,13 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(this._int32);
+                                                                  @int32(this._int32);
                                                                   return;
                                                                case 3:
-                                                                  boolean(this._boolean);
+                                                                  @boolean(this._boolean);
                                                                   return;
                                                                case 4:
-                                                                  guid(this._guid);
+                                                                  @guid(this._guid);
                                                                   return;
                                                                case 5:
                                                                   @char(this._char);
@@ -4303,9 +4303,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> int32,
-                                                            global::System.Action<TContext, bool> boolean,
-                                                            global::System.Action<TContext, global::System.Guid> guid,
+                                                            global::System.Action<TContext, int> @int32,
+                                                            global::System.Action<TContext, bool> @boolean,
+                                                            global::System.Action<TContext, global::System.Guid> @guid,
                                                             global::System.Action<TContext, char> @char)
                                                          {
                                                             switch (this._valueIndex)
@@ -4314,13 +4314,13 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   @string(context, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  int32(context, this._int32);
+                                                                  @int32(context, this._int32);
                                                                   return;
                                                                case 3:
-                                                                  boolean(context, this._boolean);
+                                                                  @boolean(context, this._boolean);
                                                                   return;
                                                                case 4:
-                                                                  guid(context, this._guid);
+                                                                  @guid(context, this._guid);
                                                                   return;
                                                                case 5:
                                                                   @char(context, this._char);
@@ -4340,9 +4340,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="char">The function to execute if the current value is of type <c>char</c>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
-                                                            global::System.Func<int, TResult> int32,
-                                                            global::System.Func<bool, TResult> boolean,
-                                                            global::System.Func<global::System.Guid, TResult> guid,
+                                                            global::System.Func<int, TResult> @int32,
+                                                            global::System.Func<bool, TResult> @boolean,
+                                                            global::System.Func<global::System.Guid, TResult> @guid,
                                                             global::System.Func<char, TResult> @char)
                                                          {
                                                             switch (this._valueIndex)
@@ -4350,11 +4350,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string(this._string!);
                                                                case 2:
-                                                                  return int32(this._int32);
+                                                                  return @int32(this._int32);
                                                                case 3:
-                                                                  return boolean(this._boolean);
+                                                                  return @boolean(this._boolean);
                                                                case 4:
-                                                                  return guid(this._guid);
+                                                                  return @guid(this._guid);
                                                                case 5:
                                                                   return @char(this._char);
                                                                default:
@@ -4374,9 +4374,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> int32,
-                                                            global::System.Func<TContext, bool, TResult> boolean,
-                                                            global::System.Func<TContext, global::System.Guid, TResult> guid,
+                                                            global::System.Func<TContext, int, TResult> @int32,
+                                                            global::System.Func<TContext, bool, TResult> @boolean,
+                                                            global::System.Func<TContext, global::System.Guid, TResult> @guid,
                                                             global::System.Func<TContext, char, TResult> @char)
                                                          {
                                                             switch (this._valueIndex)
@@ -4384,11 +4384,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string(context, this._string!);
                                                                case 2:
-                                                                  return int32(context, this._int32);
+                                                                  return @int32(context, this._int32);
                                                                case 3:
-                                                                  return boolean(context, this._boolean);
+                                                                  return @boolean(context, this._boolean);
                                                                case 4:
-                                                                  return guid(context, this._guid);
+                                                                  return @guid(context, this._guid);
                                                                case 5:
                                                                   return @char(context, this._char);
                                                                default:
@@ -4406,9 +4406,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="char">The instance to return if the current value is of type <c>char</c>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
-                                                            TResult int32,
-                                                            TResult boolean,
-                                                            TResult guid,
+                                                            TResult @int32,
+                                                            TResult @boolean,
+                                                            TResult @guid,
                                                             TResult @char)
                                                          {
                                                             switch (this._valueIndex)
@@ -4416,11 +4416,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                case 1:
                                                                   return @string;
                                                                case 2:
-                                                                  return int32;
+                                                                  return @int32;
                                                                case 3:
-                                                                  return boolean;
+                                                                  return @boolean;
                                                                case 4:
-                                                                  return guid;
+                                                                  return @guid;
                                                                case 5:
                                                                   return @char;
                                                                default:
@@ -4431,51 +4431,51 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>string</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string value)
+                                                         /// <param name="string">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@string);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>int</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int value)
+                                                         /// <param name="int32">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@int32);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>bool</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(bool value)
+                                                         /// <param name="boolean">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="boolean"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(bool @boolean)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@boolean);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>Guid</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(global::System.Guid value)
+                                                         /// <param name="guid">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="guid"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(global::System.Guid @guid)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@guid);
                                                          }
 
                                                          /// <summary>
                                                          /// Implicit conversion from type <c>char</c>.
                                                          /// </summary>
-                                                         /// <param name="value">Value to covert from.</param>
-                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="value"/>.</returns>
-                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(char value)
+                                                         /// <param name="char">Value to covert from.</param>
+                                                         /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="char"/>.</returns>
+                                                         public static implicit operator global::Thinktecture.Tests.TestUnion(char @char)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestUnion(value);
+                                                            return new global::Thinktecture.Tests.TestUnion(@char);
                                                          }
 
                                                          /// <summary>

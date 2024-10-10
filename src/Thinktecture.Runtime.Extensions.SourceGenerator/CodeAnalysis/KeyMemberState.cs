@@ -7,7 +7,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public ValueObjectAccessModifier AccessModifier { get; }
    public ValueObjectMemberKind Kind { get; }
    public string Name { get; }
-   public ArgumentName ArgumentName { get; }
+   public string ArgumentName { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
@@ -28,7 +28,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
       ValueObjectAccessModifier accessModifier,
       ValueObjectMemberKind kind,
       string name,
-      ArgumentName argumentName)
+      string argumentName)
    {
       _typedMemberState = typedMemberState;
       AccessModifier = accessModifier;

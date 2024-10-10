@@ -71,7 +71,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     internal static void ModuleInit()
                                                                                     {
                                                                                        var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                                                       global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                                                       global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                                                        var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                                                        global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -101,15 +101,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     private readonly int _hashCode;
                                                                                     private readonly global::System.Lazy<int> _itemIndex;
 
-                                                                                    private TestEnum(string key)
+                                                                                    private TestEnum(
+                                                                                       string @key)
                                                                                     {
-                                                                                       ValidateConstructorArguments(ref key);
+                                                                                       ValidateConstructorArguments(
+                                                                                          ref @key);
 
-                                                                                       if (key is null)
-                                                                                          throw new global::System.ArgumentNullException(nameof(key));
+                                                                                       if (@key is null)
+                                                                                          throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                                                       this.Key = key;
-                                                                                       this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                                                       this.Key = @key;
+                                                                                       this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                                                        this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                                                       {
                                                                                                                                          for (var i = 0; i < Items.Count; i++)
@@ -118,11 +120,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                                                return i;
                                                                                                                                          }
 
-                                                                                                                                         throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                                                         throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                                                       }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                                                     }
 
-                                                                                    static partial void ValidateConstructorArguments(ref string key);
+                                                                                    static partial void ValidateConstructorArguments(
+                                                                                       ref string @key);
 
                                                                                     /// <summary>
                                                                                     /// Gets the identifier of the item.
@@ -140,14 +143,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                                                     /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                                                     [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                                                    public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                                                    public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                                                     {
-                                                                                       if (key is null)
+                                                                                       if (@key is null)
                                                                                           return default;
 
-                                                                                       if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                                                       if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                                                        {
-                                                                                          throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                                                          throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                                                        }
 
                                                                                        return item;
@@ -159,15 +162,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="key">The identifier to return an enumeration item for.</param>
                                                                                     /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                                                     /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                                                    public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                                                    public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                                                     {
-                                                                                       if (key is null)
+                                                                                       if (@key is null)
                                                                                        {
                                                                                           item = default;
                                                                                           return false;
                                                                                        }
 
-                                                                                       return _itemsLookup.Value.TryGetValue(key, out item);
+                                                                                       return _itemsLookup.Value.TryGetValue(@key, out item);
                                                                                     }
 
                                                                                     /// <summary>
@@ -177,15 +180,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                                                     /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                                                     /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                                                    public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                                    public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                                                     {
-                                                                                       if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                                                       if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                                                        {
                                                                                           return null;
                                                                                        }
                                                                                        else
                                                                                        {
-                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                                                        }
                                                                                     }
 
@@ -206,9 +209,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="key">Value to covert.</param>
                                                                                     /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                                                     [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                                                    public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                                                    public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                                                     {
-                                                                                       return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                                                       return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                                                     }
 
                                                                                     /// <inheritdoc />
@@ -241,16 +244,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public void Switch(
-                                                                                       global::System.Action item1,
-                                                                                       global::System.Action item2)
+                                                                                       global::System.Action @item1,
+                                                                                       global::System.Action @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             item1();
+                                                                                             @item1();
                                                                                              return;
                                                                                           case 1:
-                                                                                             item2();
+                                                                                             @item2();
                                                                                              return;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -265,16 +268,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public void Switch<TContext>(
                                                                                        TContext context,
-                                                                                       global::System.Action<TContext> item1,
-                                                                                       global::System.Action<TContext> item2)
+                                                                                       global::System.Action<TContext> @item1,
+                                                                                       global::System.Action<TContext> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             item1(context);
+                                                                                             @item1(context);
                                                                                              return;
                                                                                           case 1:
-                                                                                             item2(context);
+                                                                                             @item2(context);
                                                                                              return;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -287,15 +290,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public TResult Switch<TResult>(
-                                                                                       global::System.Func<TResult> item1,
-                                                                                       global::System.Func<TResult> item2)
+                                                                                       global::System.Func<TResult> @item1,
+                                                                                       global::System.Func<TResult> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return item1();
+                                                                                             return @item1();
                                                                                           case 1:
-                                                                                             return item2();
+                                                                                             return @item2();
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -309,15 +312,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public TResult Switch<TContext, TResult>(
                                                                                        TContext context,
-                                                                                       global::System.Func<TContext, TResult> item1,
-                                                                                       global::System.Func<TContext, TResult> item2)
+                                                                                       global::System.Func<TContext, TResult> @item1,
+                                                                                       global::System.Func<TContext, TResult> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return item1(context);
+                                                                                             return @item1(context);
                                                                                           case 1:
-                                                                                             return item2(context);
+                                                                                             return @item2(context);
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -329,15 +332,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public TResult Map<TResult>(
-                                                                                       TResult item1,
-                                                                                       TResult item2)
+                                                                                       TResult @item1,
+                                                                                       TResult @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return item1;
+                                                                                             return @item1;
                                                                                           case 1:
-                                                                                             return item2;
+                                                                                             return @item2;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -387,7 +390,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     internal static void ModuleInit()
                                                                                     {
                                                                                        var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                                                       global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                                                       global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                                                        var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                                                        global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -417,15 +420,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     private readonly int _hashCode;
                                                                                     private readonly global::System.Lazy<int> _itemIndex;
 
-                                                                                    private TestEnum(string key)
+                                                                                    private TestEnum(
+                                                                                       string @key)
                                                                                     {
-                                                                                       ValidateConstructorArguments(ref key);
+                                                                                       ValidateConstructorArguments(
+                                                                                          ref @key);
 
-                                                                                       if (key is null)
-                                                                                          throw new global::System.ArgumentNullException(nameof(key));
+                                                                                       if (@key is null)
+                                                                                          throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                                                       this.Key = key;
-                                                                                       this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                                                       this.Key = @key;
+                                                                                       this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                                                        this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                                                       {
                                                                                                                                          for (var i = 0; i < Items.Count; i++)
@@ -434,11 +439,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                                                return i;
                                                                                                                                          }
 
-                                                                                                                                         throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                                                         throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                                                       }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                                                     }
 
-                                                                                    static partial void ValidateConstructorArguments(ref string key);
+                                                                                    static partial void ValidateConstructorArguments(
+                                                                                       ref string @key);
 
                                                                                     /// <summary>
                                                                                     /// Gets the identifier of the item.
@@ -456,14 +462,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                                                     /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                                                     [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                                                    public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                                                    public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                                                     {
-                                                                                       if (key is null)
+                                                                                       if (@key is null)
                                                                                           return default;
 
-                                                                                       if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                                                       if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                                                        {
-                                                                                          throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                                                          throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                                                        }
 
                                                                                        return item;
@@ -475,15 +481,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="key">The identifier to return an enumeration item for.</param>
                                                                                     /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                                                     /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                                                    public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                                                    public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                                                     {
-                                                                                       if (key is null)
+                                                                                       if (@key is null)
                                                                                        {
                                                                                           item = default;
                                                                                           return false;
                                                                                        }
 
-                                                                                       return _itemsLookup.Value.TryGetValue(key, out item);
+                                                                                       return _itemsLookup.Value.TryGetValue(@key, out item);
                                                                                     }
 
                                                                                     /// <summary>
@@ -493,15 +499,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                                                     /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                                                     /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                                                    public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                                    public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                                                     {
-                                                                                       if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                                                       if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                                                        {
                                                                                           return null;
                                                                                        }
                                                                                        else
                                                                                        {
-                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                                                        }
                                                                                     }
 
@@ -522,9 +528,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="key">Value to covert.</param>
                                                                                     /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                                                     [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                                                    public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                                                    public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                                                     {
-                                                                                       return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                                                       return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                                                     }
 
                                                                                     /// <inheritdoc />
@@ -557,16 +563,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public void Switch(
-                                                                                       global::System.Action item1,
-                                                                                       global::System.Action item2)
+                                                                                       global::System.Action @item1,
+                                                                                       global::System.Action @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             item1();
+                                                                                             @item1();
                                                                                              return;
                                                                                           case 1:
-                                                                                             item2();
+                                                                                             @item2();
                                                                                              return;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -581,16 +587,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public void Switch<TContext>(
                                                                                        TContext context,
-                                                                                       global::System.Action<TContext> item1,
-                                                                                       global::System.Action<TContext> item2)
+                                                                                       global::System.Action<TContext> @item1,
+                                                                                       global::System.Action<TContext> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             item1(context);
+                                                                                             @item1(context);
                                                                                              return;
                                                                                           case 1:
-                                                                                             item2(context);
+                                                                                             @item2(context);
                                                                                              return;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -603,15 +609,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public TResult Switch<TResult>(
-                                                                                       global::System.Func<TResult> item1,
-                                                                                       global::System.Func<TResult> item2)
+                                                                                       global::System.Func<TResult> @item1,
+                                                                                       global::System.Func<TResult> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return item1();
+                                                                                             return @item1();
                                                                                           case 1:
-                                                                                             return item2();
+                                                                                             return @item2();
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -625,15 +631,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public TResult Switch<TContext, TResult>(
                                                                                        TContext context,
-                                                                                       global::System.Func<TContext, TResult> item1,
-                                                                                       global::System.Func<TContext, TResult> item2)
+                                                                                       global::System.Func<TContext, TResult> @item1,
+                                                                                       global::System.Func<TContext, TResult> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return item1(context);
+                                                                                             return @item1(context);
                                                                                           case 1:
-                                                                                             return item2(context);
+                                                                                             return @item2(context);
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -645,15 +651,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                                                     public TResult Map<TResult>(
-                                                                                       TResult item1,
-                                                                                       TResult item2)
+                                                                                       TResult @item1,
+                                                                                       TResult @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return item1;
+                                                                                             return @item1;
                                                                                           case 1:
-                                                                                             return item2;
+                                                                                             return @item2;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -703,7 +709,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  internal static void ModuleInit()
                                                                                  {
                                                                                     var convertFromKey = new global::System.Func<int, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                                                    global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                                                    global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                                                     var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, int>(static item => item.Key);
                                                                                     global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, int>> convertToKeyExpression = static item => item.Key;
@@ -733,12 +739,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  private readonly int _hashCode;
                                                                                  private readonly global::System.Lazy<int> _itemIndex;
 
-                                                                                 private TestEnum(int key)
+                                                                                 private TestEnum(
+                                                                                    int @key)
                                                                                  {
-                                                                                    ValidateConstructorArguments(ref key);
+                                                                                    ValidateConstructorArguments(
+                                                                                       ref @key);
 
-                                                                                    this.Key = key;
-                                                                                    this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), key.GetHashCode());
+                                                                                    this.Key = @key;
+                                                                                    this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), @key.GetHashCode());
                                                                                     this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                                                    {
                                                                                                                                       for (var i = 0; i < Items.Count; i++)
@@ -747,11 +755,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                                             return i;
                                                                                                                                       }
 
-                                                                                                                                      throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                                                      throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                                                    }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                                                  }
 
-                                                                                 static partial void ValidateConstructorArguments(ref int key);
+                                                                                 static partial void ValidateConstructorArguments(
+                                                                                    ref int @key);
 
                                                                                  /// <summary>
                                                                                  /// Gets the identifier of the item.
@@ -768,11 +777,11 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="key">The identifier to return an enumeration item for.</param>
                                                                                  /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                                                  /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
-                                                                                 public static global::Thinktecture.Tests.TestEnum Get(int key)
+                                                                                 public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                                                  {
-                                                                                    if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                                                    if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                                                     {
-                                                                                       throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                                                       throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                                                     }
 
                                                                                     return item;
@@ -784,9 +793,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="key">The identifier to return an enumeration item for.</param>
                                                                                  /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                                                  /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                                                 public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                                                 public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                                                  {
-                                                                                    return _itemsLookup.Value.TryGetValue(key, out item);
+                                                                                    return _itemsLookup.Value.TryGetValue(@key, out item);
                                                                                  }
 
                                                                                  /// <summary>
@@ -796,15 +805,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                                                  /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                                                  /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                                                 public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                                 public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                                                  {
-                                                                                    if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                                                    if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                                                     {
                                                                                        return null;
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                       return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                                                       return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                                                     }
                                                                                  }
 
@@ -825,9 +834,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="key">Value to covert.</param>
                                                                                  /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                                                  [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                                                 public static explicit operator global::Thinktecture.Tests.TestEnum?(int key)
+                                                                                 public static explicit operator global::Thinktecture.Tests.TestEnum?(int @key)
                                                                                  {
-                                                                                    return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                                                    return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                                                  }
 
                                                                                  /// <inheritdoc />
@@ -860,16 +869,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                  /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                  public void Switch(
-                                                                                    global::System.Action item1,
-                                                                                    global::System.Action item2)
+                                                                                    global::System.Action @item1,
+                                                                                    global::System.Action @item2)
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
                                                                                        case 0:
-                                                                                          item1();
+                                                                                          @item1();
                                                                                           return;
                                                                                        case 1:
-                                                                                          item2();
+                                                                                          @item2();
                                                                                           return;
                                                                                        default:
                                                                                           throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -884,16 +893,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                  public void Switch<TContext>(
                                                                                     TContext context,
-                                                                                    global::System.Action<TContext> item1,
-                                                                                    global::System.Action<TContext> item2)
+                                                                                    global::System.Action<TContext> @item1,
+                                                                                    global::System.Action<TContext> @item2)
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
                                                                                        case 0:
-                                                                                          item1(context);
+                                                                                          @item1(context);
                                                                                           return;
                                                                                        case 1:
-                                                                                          item2(context);
+                                                                                          @item2(context);
                                                                                           return;
                                                                                        default:
                                                                                           throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -906,15 +915,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                  /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                  public TResult Switch<TResult>(
-                                                                                    global::System.Func<TResult> item1,
-                                                                                    global::System.Func<TResult> item2)
+                                                                                    global::System.Func<TResult> @item1,
+                                                                                    global::System.Func<TResult> @item2)
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
                                                                                        case 0:
-                                                                                          return item1();
+                                                                                          return @item1();
                                                                                        case 1:
-                                                                                          return item2();
+                                                                                          return @item2();
                                                                                        default:
                                                                                           throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                     }
@@ -928,15 +937,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                                                  public TResult Switch<TContext, TResult>(
                                                                                     TContext context,
-                                                                                    global::System.Func<TContext, TResult> item1,
-                                                                                    global::System.Func<TContext, TResult> item2)
+                                                                                    global::System.Func<TContext, TResult> @item1,
+                                                                                    global::System.Func<TContext, TResult> @item2)
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
                                                                                        case 0:
-                                                                                          return item1(context);
+                                                                                          return @item1(context);
                                                                                        case 1:
-                                                                                          return item2(context);
+                                                                                          return @item2(context);
                                                                                        default:
                                                                                           throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                     }
@@ -948,15 +957,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                                                  /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                                                  public TResult Map<TResult>(
-                                                                                    TResult item1,
-                                                                                    TResult item2)
+                                                                                    TResult @item1,
+                                                                                    TResult @item2)
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
                                                                                        case 0:
-                                                                                          return item1;
+                                                                                          return @item1;
                                                                                        case 1:
-                                                                                          return item2;
+                                                                                          return @item2;
                                                                                        default:
                                                                                           throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                     }
@@ -1608,16 +1617,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -1632,22 +1641,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -1664,16 +1673,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -1690,22 +1699,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -1720,15 +1729,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -1742,21 +1751,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -1772,15 +1781,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -1796,21 +1805,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -1824,15 +1833,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -1846,21 +1855,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -1977,16 +1986,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2001,16 +2010,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2023,15 +2032,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2045,15 +2054,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2065,15 +2074,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2166,7 +2175,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -2196,15 +2205,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key)
+                                                         private TestEnum(
+                                                            string @key)
                                                          {
-                                                            ValidateConstructorArguments(ref key);
+                                                            ValidateConstructorArguments(
+                                                               ref @key);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -2213,11 +2224,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -2235,14 +2247,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -2254,15 +2266,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -2272,15 +2284,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.Tests.TestEnumValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.Tests.TestEnumValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.Tests.TestEnumValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.Tests.TestEnumValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.Tests.TestEnumValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -2301,9 +2313,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -2336,16 +2348,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2360,22 +2372,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2392,16 +2404,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2418,22 +2430,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2448,15 +2460,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2470,21 +2482,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2500,15 +2512,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2524,21 +2536,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2552,15 +2564,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2574,21 +2586,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2716,7 +2728,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -2746,15 +2758,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key)
+                                                         private TestEnum(
+                                                            string @key)
                                                          {
-                                                            ValidateConstructorArguments(ref key);
+                                                            ValidateConstructorArguments(
+                                                               ref @key);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -2763,11 +2777,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -2785,14 +2800,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -2804,15 +2819,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -2822,15 +2837,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -2851,9 +2866,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -2886,15 +2901,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2908,21 +2923,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3007,7 +3022,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -3037,15 +3052,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key)
+                                                         private TestEnum(
+                                                            string @key)
                                                          {
-                                                            ValidateConstructorArguments(ref key);
+                                                            ValidateConstructorArguments(
+                                                               ref @key);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -3054,11 +3071,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -3076,14 +3094,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -3095,15 +3113,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -3113,15 +3131,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -3142,9 +3160,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -3177,16 +3195,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3201,22 +3219,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3233,16 +3251,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3259,22 +3277,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3289,15 +3307,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3311,21 +3329,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3341,15 +3359,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3365,21 +3383,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3474,7 +3492,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -3504,16 +3522,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key, int value)
-                                                            : base(value)
+                                                         private TestEnum(
+                                                            string @key,
+                                                            int @value)
+                                                            : base(@value)
                                                          {
-                                                            ValidateConstructorArguments(ref key, ref value);
+                                                            ValidateConstructorArguments(
+                                                               ref @key,
+                                                               ref @value);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -3522,22 +3544,28 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key, ref int value);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key,
+                                                            ref int @value);
 
-                                                         private TestEnum(string key, string key1)
-                                                            : base(key1)
+                                                         private TestEnum(
+                                                            string @key,
+                                                            string @key1)
+                                                            : base(@key1)
                                                          {
-                                                            ValidateConstructorArguments(ref key, ref key1);
+                                                            ValidateConstructorArguments(
+                                                               ref @key,
+                                                               ref @key1);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -3546,11 +3574,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key, ref string key1);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key,
+                                                            ref string @key1);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -3568,14 +3598,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -3587,15 +3617,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -3605,15 +3635,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -3634,9 +3664,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -3669,16 +3699,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3693,22 +3723,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3725,16 +3755,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3751,22 +3781,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3781,15 +3811,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3803,21 +3833,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3833,15 +3863,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3857,21 +3887,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3885,15 +3915,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3907,21 +3937,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3996,7 +4026,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::TestEnum?>(global::TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::TestEnum?>> convertFromKeyExpression = static key => global::TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::TestEnum?>> convertFromKeyExpression = static @key => global::TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -4026,15 +4056,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key)
+                                                         private TestEnum(
+                                                            string @key)
                                                          {
-                                                            ValidateConstructorArguments(ref key);
+                                                            ValidateConstructorArguments(
+                                                               ref @key);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -4043,11 +4075,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -4065,14 +4098,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::TestEnum? Get(string? key)
+                                                         public static global::TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -4084,15 +4117,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -4102,15 +4135,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
                                                          {
-                                                            if(global::TestEnum.TryGet(key, out item))
+                                                            if(global::TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -4131,9 +4164,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::TestEnum?(string? key)
+                                                         public static explicit operator global::TestEnum?(string? @key)
                                                          {
-                                                            return global::TestEnum.Get(key);
+                                                            return global::TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -4166,16 +4199,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -4190,22 +4223,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::TestEnum>? @default = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -4222,16 +4255,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -4248,22 +4281,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -4278,15 +4311,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -4300,21 +4333,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -4330,15 +4363,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -4354,21 +4387,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -4382,15 +4415,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -4404,21 +4437,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -4684,7 +4717,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -4714,15 +4747,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key)
+                                                         private TestEnum(
+                                                            string @key)
                                                          {
-                                                            ValidateConstructorArguments(ref key);
+                                                            ValidateConstructorArguments(
+                                                               ref @key);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -4731,11 +4766,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -4753,14 +4789,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -4772,15 +4808,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -4790,15 +4826,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -4819,9 +4855,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -4859,36 +4895,36 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_1">The action to execute if the current item is equal to <see cref="Item_derived_1"/>.</param>
                                                          /// <param name="item_derived_2">The action to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item_1,
-                                                            global::System.Action item_2,
-                                                            global::System.Action item_int_1,
-                                                            global::System.Action item_decimal_1,
-                                                            global::System.Action item_decimal_2,
-                                                            global::System.Action item_derived_1,
-                                                            global::System.Action item_derived_2)
+                                                            global::System.Action @item_1,
+                                                            global::System.Action @item_2,
+                                                            global::System.Action @item_int_1,
+                                                            global::System.Action @item_decimal_1,
+                                                            global::System.Action @item_decimal_2,
+                                                            global::System.Action @item_derived_1,
+                                                            global::System.Action @item_derived_2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item_1();
+                                                                  @item_1();
                                                                   return;
                                                                case 1:
-                                                                  item_2();
+                                                                  @item_2();
                                                                   return;
                                                                case 2:
-                                                                  item_int_1();
+                                                                  @item_int_1();
                                                                   return;
                                                                case 3:
-                                                                  item_decimal_1();
+                                                                  @item_decimal_1();
                                                                   return;
                                                                case 4:
-                                                                  item_decimal_2();
+                                                                  @item_decimal_2();
                                                                   return;
                                                                case 5:
-                                                                  item_derived_1();
+                                                                  @item_derived_1();
                                                                   return;
                                                                case 6:
-                                                                  item_derived_2();
+                                                                  @item_derived_2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -4908,57 +4944,57 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_2">The action to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action? item_1 = null,
-                                                            global::System.Action? item_2 = null,
-                                                            global::System.Action? item_int_1 = null,
-                                                            global::System.Action? item_decimal_1 = null,
-                                                            global::System.Action? item_decimal_2 = null,
-                                                            global::System.Action? item_derived_1 = null,
-                                                            global::System.Action? item_derived_2 = null)
+                                                            global::System.Action? @item_1 = null,
+                                                            global::System.Action? @item_2 = null,
+                                                            global::System.Action? @item_int_1 = null,
+                                                            global::System.Action? @item_decimal_1 = null,
+                                                            global::System.Action? @item_decimal_2 = null,
+                                                            global::System.Action? @item_derived_1 = null,
+                                                            global::System.Action? @item_derived_2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item_1 is null)
+                                                                  if (@item_1 is null)
                                                                      break;
 
-                                                                  item_1();
+                                                                  @item_1();
                                                                   return;
                                                                case 1:
-                                                                  if (item_2 is null)
+                                                                  if (@item_2 is null)
                                                                      break;
 
-                                                                  item_2();
+                                                                  @item_2();
                                                                   return;
                                                                case 2:
-                                                                  if (item_int_1 is null)
+                                                                  if (@item_int_1 is null)
                                                                      break;
 
-                                                                  item_int_1();
+                                                                  @item_int_1();
                                                                   return;
                                                                case 3:
-                                                                  if (item_decimal_1 is null)
+                                                                  if (@item_decimal_1 is null)
                                                                      break;
 
-                                                                  item_decimal_1();
+                                                                  @item_decimal_1();
                                                                   return;
                                                                case 4:
-                                                                  if (item_decimal_2 is null)
+                                                                  if (@item_decimal_2 is null)
                                                                      break;
 
-                                                                  item_decimal_2();
+                                                                  @item_decimal_2();
                                                                   return;
                                                                case 5:
-                                                                  if (item_derived_1 is null)
+                                                                  if (@item_derived_1 is null)
                                                                      break;
 
-                                                                  item_derived_1();
+                                                                  @item_derived_1();
                                                                   return;
                                                                case 6:
-                                                                  if (item_derived_2 is null)
+                                                                  if (@item_derived_2 is null)
                                                                      break;
 
-                                                                  item_derived_2();
+                                                                  @item_derived_2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -4980,36 +5016,36 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_2">The action to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item_1,
-                                                            global::System.Action<TContext> item_2,
-                                                            global::System.Action<TContext> item_int_1,
-                                                            global::System.Action<TContext> item_decimal_1,
-                                                            global::System.Action<TContext> item_decimal_2,
-                                                            global::System.Action<TContext> item_derived_1,
-                                                            global::System.Action<TContext> item_derived_2)
+                                                            global::System.Action<TContext> @item_1,
+                                                            global::System.Action<TContext> @item_2,
+                                                            global::System.Action<TContext> @item_int_1,
+                                                            global::System.Action<TContext> @item_decimal_1,
+                                                            global::System.Action<TContext> @item_decimal_2,
+                                                            global::System.Action<TContext> @item_derived_1,
+                                                            global::System.Action<TContext> @item_derived_2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item_1(context);
+                                                                  @item_1(context);
                                                                   return;
                                                                case 1:
-                                                                  item_2(context);
+                                                                  @item_2(context);
                                                                   return;
                                                                case 2:
-                                                                  item_int_1(context);
+                                                                  @item_int_1(context);
                                                                   return;
                                                                case 3:
-                                                                  item_decimal_1(context);
+                                                                  @item_decimal_1(context);
                                                                   return;
                                                                case 4:
-                                                                  item_decimal_2(context);
+                                                                  @item_decimal_2(context);
                                                                   return;
                                                                case 5:
-                                                                  item_derived_1(context);
+                                                                  @item_derived_1(context);
                                                                   return;
                                                                case 6:
-                                                                  item_derived_2(context);
+                                                                  @item_derived_2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5031,57 +5067,57 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item_1 = null,
-                                                            global::System.Action<TContext>? item_2 = null,
-                                                            global::System.Action<TContext>? item_int_1 = null,
-                                                            global::System.Action<TContext>? item_decimal_1 = null,
-                                                            global::System.Action<TContext>? item_decimal_2 = null,
-                                                            global::System.Action<TContext>? item_derived_1 = null,
-                                                            global::System.Action<TContext>? item_derived_2 = null)
+                                                            global::System.Action<TContext>? @item_1 = null,
+                                                            global::System.Action<TContext>? @item_2 = null,
+                                                            global::System.Action<TContext>? @item_int_1 = null,
+                                                            global::System.Action<TContext>? @item_decimal_1 = null,
+                                                            global::System.Action<TContext>? @item_decimal_2 = null,
+                                                            global::System.Action<TContext>? @item_derived_1 = null,
+                                                            global::System.Action<TContext>? @item_derived_2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item_1 is null)
+                                                                  if (@item_1 is null)
                                                                      break;
 
-                                                                  item_1(context);
+                                                                  @item_1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item_2 is null)
+                                                                  if (@item_2 is null)
                                                                      break;
 
-                                                                  item_2(context);
+                                                                  @item_2(context);
                                                                   return;
                                                                case 2:
-                                                                  if (item_int_1 is null)
+                                                                  if (@item_int_1 is null)
                                                                      break;
 
-                                                                  item_int_1(context);
+                                                                  @item_int_1(context);
                                                                   return;
                                                                case 3:
-                                                                  if (item_decimal_1 is null)
+                                                                  if (@item_decimal_1 is null)
                                                                      break;
 
-                                                                  item_decimal_1(context);
+                                                                  @item_decimal_1(context);
                                                                   return;
                                                                case 4:
-                                                                  if (item_decimal_2 is null)
+                                                                  if (@item_decimal_2 is null)
                                                                      break;
 
-                                                                  item_decimal_2(context);
+                                                                  @item_decimal_2(context);
                                                                   return;
                                                                case 5:
-                                                                  if (item_derived_1 is null)
+                                                                  if (@item_derived_1 is null)
                                                                      break;
 
-                                                                  item_derived_1(context);
+                                                                  @item_derived_1(context);
                                                                   return;
                                                                case 6:
-                                                                  if (item_derived_2 is null)
+                                                                  if (@item_derived_2 is null)
                                                                      break;
 
-                                                                  item_derived_2(context);
+                                                                  @item_derived_2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5101,30 +5137,30 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_1">The function to execute if the current item is equal to <see cref="Item_derived_1"/>.</param>
                                                          /// <param name="item_derived_2">The function to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item_1,
-                                                            global::System.Func<TResult> item_2,
-                                                            global::System.Func<TResult> item_int_1,
-                                                            global::System.Func<TResult> item_decimal_1,
-                                                            global::System.Func<TResult> item_decimal_2,
-                                                            global::System.Func<TResult> item_derived_1,
-                                                            global::System.Func<TResult> item_derived_2)
+                                                            global::System.Func<TResult> @item_1,
+                                                            global::System.Func<TResult> @item_2,
+                                                            global::System.Func<TResult> @item_int_1,
+                                                            global::System.Func<TResult> @item_decimal_1,
+                                                            global::System.Func<TResult> @item_decimal_2,
+                                                            global::System.Func<TResult> @item_derived_1,
+                                                            global::System.Func<TResult> @item_derived_2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item_1();
+                                                                  return @item_1();
                                                                case 1:
-                                                                  return item_2();
+                                                                  return @item_2();
                                                                case 2:
-                                                                  return item_int_1();
+                                                                  return @item_int_1();
                                                                case 3:
-                                                                  return item_decimal_1();
+                                                                  return @item_decimal_1();
                                                                case 4:
-                                                                  return item_decimal_2();
+                                                                  return @item_decimal_2();
                                                                case 5:
-                                                                  return item_derived_1();
+                                                                  return @item_derived_1();
                                                                case 6:
-                                                                  return item_derived_2();
+                                                                  return @item_derived_2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5143,51 +5179,51 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_2">The function to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item_1 = null,
-                                                            global::System.Func<TResult>? item_2 = null,
-                                                            global::System.Func<TResult>? item_int_1 = null,
-                                                            global::System.Func<TResult>? item_decimal_1 = null,
-                                                            global::System.Func<TResult>? item_decimal_2 = null,
-                                                            global::System.Func<TResult>? item_derived_1 = null,
-                                                            global::System.Func<TResult>? item_derived_2 = null)
+                                                            global::System.Func<TResult>? @item_1 = null,
+                                                            global::System.Func<TResult>? @item_2 = null,
+                                                            global::System.Func<TResult>? @item_int_1 = null,
+                                                            global::System.Func<TResult>? @item_decimal_1 = null,
+                                                            global::System.Func<TResult>? @item_decimal_2 = null,
+                                                            global::System.Func<TResult>? @item_derived_1 = null,
+                                                            global::System.Func<TResult>? @item_derived_2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item_1 is null)
+                                                                  if (@item_1 is null)
                                                                      break;
 
-                                                                  return item_1();
+                                                                  return @item_1();
                                                                case 1:
-                                                                  if (item_2 is null)
+                                                                  if (@item_2 is null)
                                                                      break;
 
-                                                                  return item_2();
+                                                                  return @item_2();
                                                                case 2:
-                                                                  if (item_int_1 is null)
+                                                                  if (@item_int_1 is null)
                                                                      break;
 
-                                                                  return item_int_1();
+                                                                  return @item_int_1();
                                                                case 3:
-                                                                  if (item_decimal_1 is null)
+                                                                  if (@item_decimal_1 is null)
                                                                      break;
 
-                                                                  return item_decimal_1();
+                                                                  return @item_decimal_1();
                                                                case 4:
-                                                                  if (item_decimal_2 is null)
+                                                                  if (@item_decimal_2 is null)
                                                                      break;
 
-                                                                  return item_decimal_2();
+                                                                  return @item_decimal_2();
                                                                case 5:
-                                                                  if (item_derived_1 is null)
+                                                                  if (@item_derived_1 is null)
                                                                      break;
 
-                                                                  return item_derived_1();
+                                                                  return @item_derived_1();
                                                                case 6:
-                                                                  if (item_derived_2 is null)
+                                                                  if (@item_derived_2 is null)
                                                                      break;
 
-                                                                  return item_derived_2();
+                                                                  return @item_derived_2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5208,30 +5244,30 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_2">The function to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item_1,
-                                                            global::System.Func<TContext, TResult> item_2,
-                                                            global::System.Func<TContext, TResult> item_int_1,
-                                                            global::System.Func<TContext, TResult> item_decimal_1,
-                                                            global::System.Func<TContext, TResult> item_decimal_2,
-                                                            global::System.Func<TContext, TResult> item_derived_1,
-                                                            global::System.Func<TContext, TResult> item_derived_2)
+                                                            global::System.Func<TContext, TResult> @item_1,
+                                                            global::System.Func<TContext, TResult> @item_2,
+                                                            global::System.Func<TContext, TResult> @item_int_1,
+                                                            global::System.Func<TContext, TResult> @item_decimal_1,
+                                                            global::System.Func<TContext, TResult> @item_decimal_2,
+                                                            global::System.Func<TContext, TResult> @item_derived_1,
+                                                            global::System.Func<TContext, TResult> @item_derived_2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item_1(context);
+                                                                  return @item_1(context);
                                                                case 1:
-                                                                  return item_2(context);
+                                                                  return @item_2(context);
                                                                case 2:
-                                                                  return item_int_1(context);
+                                                                  return @item_int_1(context);
                                                                case 3:
-                                                                  return item_decimal_1(context);
+                                                                  return @item_decimal_1(context);
                                                                case 4:
-                                                                  return item_decimal_2(context);
+                                                                  return @item_decimal_2(context);
                                                                case 5:
-                                                                  return item_derived_1(context);
+                                                                  return @item_derived_1(context);
                                                                case 6:
-                                                                  return item_derived_2(context);
+                                                                  return @item_derived_2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5252,51 +5288,51 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item_1 = null,
-                                                            global::System.Func<TContext, TResult>? item_2 = null,
-                                                            global::System.Func<TContext, TResult>? item_int_1 = null,
-                                                            global::System.Func<TContext, TResult>? item_decimal_1 = null,
-                                                            global::System.Func<TContext, TResult>? item_decimal_2 = null,
-                                                            global::System.Func<TContext, TResult>? item_derived_1 = null,
-                                                            global::System.Func<TContext, TResult>? item_derived_2 = null)
+                                                            global::System.Func<TContext, TResult>? @item_1 = null,
+                                                            global::System.Func<TContext, TResult>? @item_2 = null,
+                                                            global::System.Func<TContext, TResult>? @item_int_1 = null,
+                                                            global::System.Func<TContext, TResult>? @item_decimal_1 = null,
+                                                            global::System.Func<TContext, TResult>? @item_decimal_2 = null,
+                                                            global::System.Func<TContext, TResult>? @item_derived_1 = null,
+                                                            global::System.Func<TContext, TResult>? @item_derived_2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item_1 is null)
+                                                                  if (@item_1 is null)
                                                                      break;
 
-                                                                  return item_1(context);
+                                                                  return @item_1(context);
                                                                case 1:
-                                                                  if (item_2 is null)
+                                                                  if (@item_2 is null)
                                                                      break;
 
-                                                                  return item_2(context);
+                                                                  return @item_2(context);
                                                                case 2:
-                                                                  if (item_int_1 is null)
+                                                                  if (@item_int_1 is null)
                                                                      break;
 
-                                                                  return item_int_1(context);
+                                                                  return @item_int_1(context);
                                                                case 3:
-                                                                  if (item_decimal_1 is null)
+                                                                  if (@item_decimal_1 is null)
                                                                      break;
 
-                                                                  return item_decimal_1(context);
+                                                                  return @item_decimal_1(context);
                                                                case 4:
-                                                                  if (item_decimal_2 is null)
+                                                                  if (@item_decimal_2 is null)
                                                                      break;
 
-                                                                  return item_decimal_2(context);
+                                                                  return @item_decimal_2(context);
                                                                case 5:
-                                                                  if (item_derived_1 is null)
+                                                                  if (@item_derived_1 is null)
                                                                      break;
 
-                                                                  return item_derived_1(context);
+                                                                  return @item_derived_1(context);
                                                                case 6:
-                                                                  if (item_derived_2 is null)
+                                                                  if (@item_derived_2 is null)
                                                                      break;
 
-                                                                  return item_derived_2(context);
+                                                                  return @item_derived_2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5315,30 +5351,30 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_1">The instance to return if the current item is equal to <see cref="Item_derived_1"/>.</param>
                                                          /// <param name="item_derived_2">The instance to return if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item_1,
-                                                            TResult item_2,
-                                                            TResult item_int_1,
-                                                            TResult item_decimal_1,
-                                                            TResult item_decimal_2,
-                                                            TResult item_derived_1,
-                                                            TResult item_derived_2)
+                                                            TResult @item_1,
+                                                            TResult @item_2,
+                                                            TResult @item_int_1,
+                                                            TResult @item_decimal_1,
+                                                            TResult @item_decimal_2,
+                                                            TResult @item_derived_1,
+                                                            TResult @item_derived_2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item_1;
+                                                                  return @item_1;
                                                                case 1:
-                                                                  return item_2;
+                                                                  return @item_2;
                                                                case 2:
-                                                                  return item_int_1;
+                                                                  return @item_int_1;
                                                                case 3:
-                                                                  return item_decimal_1;
+                                                                  return @item_decimal_1;
                                                                case 4:
-                                                                  return item_decimal_2;
+                                                                  return @item_decimal_2;
                                                                case 5:
-                                                                  return item_derived_1;
+                                                                  return @item_derived_1;
                                                                case 6:
-                                                                  return item_derived_2;
+                                                                  return @item_derived_2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5357,51 +5393,51 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_derived_2">The instance to return if the current item is equal to <see cref="Item_derived_2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item_1 = default,
-                                                            global::Thinktecture.Argument<TResult> item_2 = default,
-                                                            global::Thinktecture.Argument<TResult> item_int_1 = default,
-                                                            global::Thinktecture.Argument<TResult> item_decimal_1 = default,
-                                                            global::Thinktecture.Argument<TResult> item_decimal_2 = default,
-                                                            global::Thinktecture.Argument<TResult> item_derived_1 = default,
-                                                            global::Thinktecture.Argument<TResult> item_derived_2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item_1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item_2 = default,
+                                                            global::Thinktecture.Argument<TResult> @item_int_1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item_decimal_1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item_decimal_2 = default,
+                                                            global::Thinktecture.Argument<TResult> @item_derived_1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item_derived_2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item_1.IsSet)
+                                                                  if (!@item_1.IsSet)
                                                                      break;
 
-                                                                  return item_1.Value;
+                                                                  return @item_1.Value;
                                                                case 1:
-                                                                  if (!item_2.IsSet)
+                                                                  if (!@item_2.IsSet)
                                                                      break;
 
-                                                                  return item_2.Value;
+                                                                  return @item_2.Value;
                                                                case 2:
-                                                                  if (!item_int_1.IsSet)
+                                                                  if (!@item_int_1.IsSet)
                                                                      break;
 
-                                                                  return item_int_1.Value;
+                                                                  return @item_int_1.Value;
                                                                case 3:
-                                                                  if (!item_decimal_1.IsSet)
+                                                                  if (!@item_decimal_1.IsSet)
                                                                      break;
 
-                                                                  return item_decimal_1.Value;
+                                                                  return @item_decimal_1.Value;
                                                                case 4:
-                                                                  if (!item_decimal_2.IsSet)
+                                                                  if (!@item_decimal_2.IsSet)
                                                                      break;
 
-                                                                  return item_decimal_2.Value;
+                                                                  return @item_decimal_2.Value;
                                                                case 5:
-                                                                  if (!item_derived_1.IsSet)
+                                                                  if (!@item_derived_1.IsSet)
                                                                      break;
 
-                                                                  return item_derived_1.Value;
+                                                                  return @item_derived_1.Value;
                                                                case 6:
-                                                                  if (!item_derived_2.IsSet)
+                                                                  if (!@item_derived_2.IsSet)
                                                                      break;
 
-                                                                  return item_derived_2.Value;
+                                                                  return @item_derived_2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5511,7 +5547,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -5554,21 +5590,26 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key)
-                                                            : this(key, true)
+                                                         private TestEnum(
+                                                            string @key)
+                                                            : this(@key, true)
                                                          {
                                                          }
 
-                                                         private TestEnum(string key, bool isValid)
+                                                         private TestEnum(
+                                                            string @key,
+                                                            bool isValid)
                                                          {
-                                                            ValidateConstructorArguments(ref key, isValid);
+                                                            ValidateConstructorArguments(
+                                                               ref @key,
+                                                               isValid);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
+                                                            this.Key = @key;
                                                             this.IsValid = isValid;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -5577,11 +5618,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key, bool isValid);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key,
+                                                            bool isValid);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -5598,22 +5641,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               item = CreateAndCheckInvalidItem(key);
+                                                               item = CreateAndCheckInvalidItem(@key);
                                                             }
 
                                                             return item;
                                                          }
 
-                                                         private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string key)
+                                                         private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string @key)
                                                          {
-                                                            var item = CreateInvalidItem(key);
+                                                            var item = CreateInvalidItem(@key);
 
                                                             if (item is null)
                                                                throw new global::System.Exception("The implementation of method 'CreateInvalidItem' must not return 'null'.");
@@ -5624,9 +5667,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return item;
                                                          }
 
-                                                         private static global::Thinktecture.Tests.TestEnum CreateInvalidItem(string key)
+                                                         private static global::Thinktecture.Tests.TestEnum CreateInvalidItem(string @key)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestEnum(key, false);
+                                                            return new global::Thinktecture.Tests.TestEnum(@key, false);
                                                          }
 
                                                          /// <summary>
@@ -5635,18 +5678,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            if(_itemsLookup.Value.TryGetValue(key, out item))
+                                                            if(_itemsLookup.Value.TryGetValue(@key, out item))
                                                                return true;
 
-                                                            item = CreateAndCheckInvalidItem(key);
+                                                            item = CreateAndCheckInvalidItem(@key);
                                                             return false;
                                                          }
 
@@ -5657,17 +5700,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               if(key is not null)
-                                                                  item = CreateAndCheckInvalidItem(key);
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               if(@key is not null)
+                                                                  item = CreateAndCheckInvalidItem(@key);
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -5688,9 +5731,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -5737,8 +5780,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5749,10 +5792,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5769,8 +5812,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5787,16 +5830,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5815,8 +5858,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5827,10 +5870,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5849,8 +5892,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5867,16 +5910,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5893,8 +5936,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5904,9 +5947,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5922,8 +5965,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5936,15 +5979,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5962,8 +6005,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5973,9 +6016,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5993,8 +6036,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6007,15 +6050,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6031,8 +6074,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult invalid,
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid;
@@ -6040,9 +6083,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6058,8 +6101,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> invalid = default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid.IsSet ? invalid.Value : @default;
@@ -6067,15 +6110,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6162,7 +6205,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -6205,34 +6248,41 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key)
-                                                            : this(key, true)
+                                                         private TestEnum(
+                                                            string @key)
+                                                            : this(@key, true)
                                                          {
                                                          }
 
-                                                         private TestEnum(string key, bool isValid)
+                                                         private TestEnum(
+                                                            string @key,
+                                                            bool isValid)
                                                          {
-                                                            ValidateConstructorArguments(ref key, isValid);
+                                                            ValidateConstructorArguments(
+                                                               ref @key,
+                                                               isValid);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
+                                                            this.Key = @key;
                                                             this.IsValid = isValid;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
                                                                                                               {
-                                                                                                                 if (global::System.StringComparer.OrdinalIgnoreCase.Equals(key, Items[i].Key))
+                                                                                                                 if (global::System.StringComparer.OrdinalIgnoreCase.Equals(@key, Items[i].Key))
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key, bool isValid);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key,
+                                                            bool isValid);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -6248,22 +6298,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-                                                         public static global::Thinktecture.Tests.TestEnum Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               item = CreateAndCheckInvalidItem(key);
+                                                               item = CreateAndCheckInvalidItem(@key);
                                                             }
 
                                                             return item;
                                                          }
 
-                                                         private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string key)
+                                                         private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string @key)
                                                          {
-                                                            var item = CreateInvalidItem(key);
+                                                            var item = CreateInvalidItem(@key);
 
                                                             if (item.IsValid)
                                                                throw new global::System.Exception("The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'.");
@@ -6271,9 +6321,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return item;
                                                          }
 
-                                                         private static global::Thinktecture.Tests.TestEnum CreateInvalidItem(string key)
+                                                         private static global::Thinktecture.Tests.TestEnum CreateInvalidItem(string @key)
                                                          {
-                                                            return new global::Thinktecture.Tests.TestEnum(key, false);
+                                                            return new global::Thinktecture.Tests.TestEnum(@key, false);
                                                          }
 
                                                          /// <summary>
@@ -6282,18 +6332,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            if(_itemsLookup.Value.TryGetValue(key, out item))
+                                                            if(_itemsLookup.Value.TryGetValue(@key, out item))
                                                                return true;
 
-                                                            item = CreateAndCheckInvalidItem(key);
+                                                            item = CreateAndCheckInvalidItem(@key);
                                                             return false;
                                                          }
 
@@ -6304,17 +6354,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               if(key is not null)
-                                                                  item = CreateAndCheckInvalidItem(key);
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               if(@key is not null)
+                                                                  item = CreateAndCheckInvalidItem(@key);
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -6335,9 +6385,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -6375,8 +6425,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6387,10 +6437,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -6407,8 +6457,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6425,16 +6475,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -6453,8 +6503,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6465,10 +6515,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -6487,8 +6537,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6505,16 +6555,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -6531,8 +6581,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6542,9 +6592,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6560,8 +6610,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6574,15 +6624,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6600,8 +6650,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6611,9 +6661,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6631,8 +6681,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6645,15 +6695,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6669,8 +6719,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult invalid,
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid;
@@ -6678,9 +6728,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6696,8 +6746,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> invalid = default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid.IsSet ? invalid.Value : @default;
@@ -6705,15 +6755,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6936,7 +6986,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static name => global::Thinktecture.Tests.TestEnum.Get(name);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @name => global::Thinktecture.Tests.TestEnum.Get(@name);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Name);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Name;
@@ -6979,27 +7029,50 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string name, int structProperty, int? nullableStructProperty, string referenceProperty, string? nullableReferenceProperty, int structField, string referenceField)
-                                                            : this(name, true, structProperty, nullableStructProperty, referenceProperty, nullableReferenceProperty, structField, referenceField)
+                                                         private TestEnum(
+                                                            string @name,
+                                                            int @structProperty,
+                                                            int? @nullableStructProperty,
+                                                            string @referenceProperty,
+                                                            string? @nullableReferenceProperty,
+                                                            int @structField,
+                                                            string @referenceField)
+                                                            : this(@name, true, @structProperty, @nullableStructProperty, @referenceProperty, @nullableReferenceProperty, @structField, @referenceField)
                                                          {
                                                          }
 
-                                                         private TestEnum(string name, bool isValid, int structProperty, int? nullableStructProperty, string referenceProperty, string? nullableReferenceProperty, int structField, string referenceField)
+                                                         private TestEnum(
+                                                            string @name,
+                                                            bool isValid,
+                                                            int @structProperty,
+                                                            int? @nullableStructProperty,
+                                                            string @referenceProperty,
+                                                            string? @nullableReferenceProperty,
+                                                            int @structField,
+                                                            string @referenceField)
                                                          {
-                                                            ValidateConstructorArguments(ref name, isValid, ref structProperty, ref nullableStructProperty, ref referenceProperty, ref nullableReferenceProperty, ref structField, ref referenceField);
+                                                            ValidateConstructorArguments(
+                                                               ref @name,
+                                                               isValid,
+                                                               ref @structProperty,
+                                                               ref @nullableStructProperty,
+                                                               ref @referenceProperty,
+                                                               ref @nullableReferenceProperty,
+                                                               ref @structField,
+                                                               ref @referenceField);
 
-                                                            if (name is null)
-                                                               throw new global::System.ArgumentNullException(nameof(name));
+                                                            if (@name is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@name));
 
-                                                            this.Name = name;
+                                                            this.Name = @name;
                                                             this.IsValid = isValid;
-                                                            this.StructProperty = structProperty;
-                                                            this.NullableStructProperty = nullableStructProperty;
-                                                            this.ReferenceProperty = referenceProperty;
-                                                            this.NullableReferenceProperty = nullableReferenceProperty;
-                                                            this.StructField = structField;
-                                                            this.ReferenceField = referenceField;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.GetHashCode(name));
+                                                            this.StructProperty = @structProperty;
+                                                            this.NullableStructProperty = @nullableStructProperty;
+                                                            this.ReferenceProperty = @referenceProperty;
+                                                            this.NullableReferenceProperty = @nullableReferenceProperty;
+                                                            this.StructField = @structField;
+                                                            this.ReferenceField = @referenceField;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.GetHashCode(@name));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -7008,11 +7081,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{name}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@name}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string name, bool isValid, ref int structProperty, ref int? nullableStructProperty, ref string referenceProperty, ref string? nullableReferenceProperty, ref int structField, ref string referenceField);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @name,
+                                                            bool isValid,
+                                                            ref int @structProperty,
+                                                            ref int? @nullableStructProperty,
+                                                            ref string @referenceProperty,
+                                                            ref string? @nullableReferenceProperty,
+                                                            ref int @structField,
+                                                            ref string @referenceField);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -7029,22 +7110,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="name">The identifier to return an enumeration item for.</param>
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="name"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("name")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? name)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @name)
                                                          {
-                                                            if (name is null)
+                                                            if (@name is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(name, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@name, out var item))
                                                             {
-                                                               item = CreateAndCheckInvalidItem(name);
+                                                               item = CreateAndCheckInvalidItem(@name);
                                                             }
 
                                                             return item;
                                                          }
 
-                                                         private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string name)
+                                                         private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string @name)
                                                          {
-                                                            var item = CreateInvalidItem(name);
+                                                            var item = CreateInvalidItem(@name);
 
                                                             if (item is null)
                                                                throw new global::System.Exception("The implementation of method 'CreateInvalidItem' must not return 'null'.");
@@ -7064,18 +7145,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="name">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="name"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @name, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (name is null)
+                                                            if (@name is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            if(_itemsLookup.Value.TryGetValue(name, out item))
+                                                            if(_itemsLookup.Value.TryGetValue(@name, out item))
                                                                return true;
 
-                                                            item = CreateAndCheckInvalidItem(name);
+                                                            item = CreateAndCheckInvalidItem(@name);
                                                             return false;
                                                          }
 
@@ -7086,17 +7167,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="name"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string name, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @name, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(name, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@name, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               if(name is not null)
-                                                                  item = CreateAndCheckInvalidItem(name);
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{name}'.");
+                                                               if(@name is not null)
+                                                                  item = CreateAndCheckInvalidItem(@name);
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@name}'.");
                                                             }
                                                          }
 
@@ -7117,9 +7198,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="name">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="name"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("name")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? name)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @name)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(name);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@name);
                                                          }
 
                                                          /// <inheritdoc />
@@ -7166,8 +7247,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7178,10 +7259,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -7198,8 +7279,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7216,16 +7297,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -7244,8 +7325,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7256,10 +7337,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -7278,8 +7359,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7296,16 +7377,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -7322,8 +7403,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7333,9 +7414,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -7351,8 +7432,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7365,15 +7446,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -7391,8 +7472,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7402,9 +7483,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -7422,8 +7503,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7436,15 +7517,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -7460,8 +7541,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult invalid,
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid;
@@ -7469,9 +7550,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -7487,8 +7568,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> invalid = default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid.IsSet ? invalid.Value : @default;
@@ -7496,15 +7577,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -7838,7 +7919,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<int, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, int>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, int>> convertToKeyExpression = static item => item.Key;
@@ -7868,12 +7949,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(int key)
+                                                         private TestEnum(
+                                                            int @key)
                                                          {
-                                                            ValidateConstructorArguments(ref key);
+                                                            ValidateConstructorArguments(
+                                                               ref @key);
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), key.GetHashCode());
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), @key.GetHashCode());
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -7882,11 +7965,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref int key);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref int @key);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -7903,11 +7987,11 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
-                                                         public static global::Thinktecture.Tests.TestEnum Get(int key)
+                                                         public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                          {
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -7919,9 +8003,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -7931,15 +8015,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -7960,9 +8044,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(int key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(int @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -7995,16 +8079,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8019,22 +8103,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8051,16 +8135,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8077,22 +8161,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8107,15 +8191,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8129,21 +8213,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8159,15 +8243,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8183,21 +8267,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8211,15 +8295,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8233,21 +8317,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8335,7 +8419,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<int, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, int>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, int>> convertToKeyExpression = static item => item.Key;
@@ -8365,12 +8449,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(int key)
+                                                         private TestEnum(
+                                                            int @key)
                                                          {
-                                                            ValidateConstructorArguments(ref key);
+                                                            ValidateConstructorArguments(
+                                                               ref @key);
 
-                                                            this.Key = key;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), key.GetHashCode());
+                                                            this.Key = @key;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), @key.GetHashCode());
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -8379,11 +8465,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref int key);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref int @key);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -8400,11 +8487,11 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
-                                                         public static global::Thinktecture.Tests.TestEnum Get(int key)
+                                                         public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                          {
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -8416,9 +8503,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -8428,15 +8515,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -8457,9 +8544,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(int key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(int @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -8492,16 +8579,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8516,22 +8603,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action? item1 = null,
-                                                            global::System.Action? item2 = null)
+                                                            global::System.Action? @item1 = null,
+                                                            global::System.Action? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8548,16 +8635,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8574,22 +8661,22 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? item1 = null,
-                                                            global::System.Action<TContext>? item2 = null)
+                                                            global::System.Action<TContext>? @item1 = null,
+                                                            global::System.Action<TContext>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8604,15 +8691,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8626,21 +8713,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TResult>? item1 = null,
-                                                            global::System.Func<TResult>? item2 = null)
+                                                            global::System.Func<TResult>? @item1 = null,
+                                                            global::System.Func<TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8656,15 +8743,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8680,21 +8767,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? item1 = null,
-                                                            global::System.Func<TContext, TResult>? item2 = null)
+                                                            global::System.Func<TContext, TResult>? @item1 = null,
+                                                            global::System.Func<TContext, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (item1 is null)
+                                                                  if (@item1 is null)
                                                                      break;
 
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  if (item2 is null)
+                                                                  if (@item2 is null)
                                                                      break;
 
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8708,15 +8795,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8730,21 +8817,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
-                                                            global::Thinktecture.Argument<TResult> item1 = default,
-                                                            global::Thinktecture.Argument<TResult> item2 = default)
+                                                            global::Thinktecture.Argument<TResult> @item1 = default,
+                                                            global::Thinktecture.Argument<TResult> @item2 = default)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  if (!item1.IsSet)
+                                                                  if (!@item1.IsSet)
                                                                      break;
 
-                                                                  return item1.Value;
+                                                                  return @item1.Value;
                                                                case 1:
-                                                                  if (!item2.IsSet)
+                                                                  if (!@item2.IsSet)
                                                                      break;
 
-                                                                  return item2.Value;
+                                                                  return @item2.Value;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8881,7 +8968,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          internal static void ModuleInit()
                                                          {
                                                             var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static key => global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
 
                                                             var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
                                                             global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
@@ -8911,16 +8998,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _hashCode;
                                                          private readonly global::System.Lazy<int> _itemIndex;
 
-                                                         private TestEnum(string key, global::System.Func<string?, Task<string?>?>? prop1)
+                                                         private TestEnum(
+                                                            string @key,
+                                                            global::System.Func<string?, Task<string?>?>? @prop1)
                                                          {
-                                                            ValidateConstructorArguments(ref key, ref prop1);
+                                                            ValidateConstructorArguments(
+                                                               ref @key,
+                                                               ref @prop1);
 
-                                                            if (key is null)
-                                                               throw new global::System.ArgumentNullException(nameof(key));
+                                                            if (@key is null)
+                                                               throw new global::System.ArgumentNullException(nameof(@key));
 
-                                                            this.Key = key;
-                                                            this.Prop1 = prop1;
-                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(key));
+                                                            this.Key = @key;
+                                                            this.Prop1 = @prop1;
+                                                            this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
                                                             this._itemIndex = new global::System.Lazy<int>(() =>
                                                                                                            {
                                                                                                               for (var i = 0; i < Items.Count; i++)
@@ -8929,11 +9020,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                                     return i;
                                                                                                               }
 
-                                                                                                              throw new global::System.Exception($"Current item '{key}' not found in 'Items'.");
+                                                                                                              throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
                                                                                                            }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
                                                          }
 
-                                                         static partial void ValidateConstructorArguments(ref string key, ref global::System.Func<string?, Task<string?>?>? prop1);
+                                                         static partial void ValidateConstructorArguments(
+                                                            ref string @key,
+                                                            ref global::System.Func<string?, Task<string?>?>? @prop1);
 
                                                          /// <summary>
                                                          /// Gets the identifier of the item.
@@ -8951,14 +9044,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? key)
+                                                         public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(key, out var item))
+                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
                                                             {
-                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), key);
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
@@ -8970,15 +9063,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if (key is null)
+                                                            if (@key is null)
                                                             {
                                                                item = default;
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(key, out item);
+                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -8988,15 +9081,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="provider">An object that provides culture-specific formatting information.</param>
                                                          /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
                                                          /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string key, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(key, out item))
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
                                                             {
                                                                return null;
                                                             }
                                                             else
                                                             {
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{key}'.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
 
@@ -9017,9 +9110,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="key">Value to covert.</param>
                                                          /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? key)
+                                                         public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
                                                          {
-                                                            return global::Thinktecture.Tests.TestEnum.Get(key);
+                                                            return global::Thinktecture.Tests.TestEnum.Get(@key);
                                                          }
 
                                                          /// <inheritdoc />
@@ -9052,16 +9145,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch(
-                                                            global::System.Action item1,
-                                                            global::System.Action item2)
+                                                            global::System.Action @item1,
+                                                            global::System.Action @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1();
+                                                                  @item1();
                                                                   return;
                                                                case 1:
-                                                                  item2();
+                                                                  @item2();
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -9076,16 +9169,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
-                                                            global::System.Action<TContext> item1,
-                                                            global::System.Action<TContext> item2)
+                                                            global::System.Action<TContext> @item1,
+                                                            global::System.Action<TContext> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  item1(context);
+                                                                  @item1(context);
                                                                   return;
                                                                case 1:
-                                                                  item2(context);
+                                                                  @item2(context);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -9098,15 +9191,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TResult>(
-                                                            global::System.Func<TResult> item1,
-                                                            global::System.Func<TResult> item2)
+                                                            global::System.Func<TResult> @item1,
+                                                            global::System.Func<TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1();
+                                                                  return @item1();
                                                                case 1:
-                                                                  return item2();
+                                                                  return @item2();
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -9120,15 +9213,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
-                                                            global::System.Func<TContext, TResult> item1,
-                                                            global::System.Func<TContext, TResult> item2)
+                                                            global::System.Func<TContext, TResult> @item1,
+                                                            global::System.Func<TContext, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1(context);
+                                                                  return @item1(context);
                                                                case 1:
-                                                                  return item2(context);
+                                                                  return @item2(context);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -9140,15 +9233,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
                                                          public TResult Map<TResult>(
-                                                            TResult item1,
-                                                            TResult item2)
+                                                            TResult @item1,
+                                                            TResult @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return item1;
+                                                                  return @item1;
                                                                case 1:
-                                                                  return item2;
+                                                                  return @item2;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }

@@ -3,7 +3,7 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 public readonly struct EnumItem : IEquatable<EnumItem>, IHashCodeComputable
 {
    public string Name { get; }
-   public ArgumentName ArgumentName { get; }
+   public string ArgumentName { get; }
 
    public EnumItem(IFieldSymbol field)
    {

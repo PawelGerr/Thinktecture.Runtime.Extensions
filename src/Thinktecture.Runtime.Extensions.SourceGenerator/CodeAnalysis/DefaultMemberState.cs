@@ -5,7 +5,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    private readonly ITypedMemberState _typedMemberState;
 
    public string Name { get; }
-   public ArgumentName ArgumentName { get; }
+   public string ArgumentName { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
@@ -13,7 +13,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
 
-   public DefaultMemberState(ITypedMemberState typedMemberState, string name, ArgumentName argumentName)
+   public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName)
    {
       _typedMemberState = typedMemberState;
       Name = name;

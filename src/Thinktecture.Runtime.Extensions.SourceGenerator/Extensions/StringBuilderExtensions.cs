@@ -67,12 +67,13 @@ public static class StringBuilderExtensions
       this StringBuilder sb,
       IReadOnlyList<InstanceMemberInfo> members,
       string? prefix = null,
+      string? comma = ", ",
       bool leadingComma = false)
    {
       for (var i = 0; i < members.Count; i++)
       {
          if (leadingComma || i > 0)
-            sb.Append(", ");
+            sb.Append(comma);
 
          sb.RenderArgument(members[i], prefix);
       }
@@ -85,7 +86,7 @@ public static class StringBuilderExtensions
       IMemberState member,
       string? prefix = null)
    {
-      return sb.Append(prefix).Append(member.ArgumentName.Escaped);
+      return sb.Append(prefix).AppendEscaped(member.ArgumentName);
    }
 
    public static StringBuilder RenderArgumentsWithType(
@@ -127,7 +128,14 @@ public static class StringBuilderExtensions
       if (useNullableTypes && !member.IsNullableStruct)
          sb.Append("?");
 
-      return sb.Append(' ').Append(member.ArgumentName.Escaped);
+      return sb.Append(' ').AppendEscaped(member.ArgumentName);
+   }
+
+   public static StringBuilder AppendEscaped(
+      this StringBuilder sb,
+      string argName)
+   {
+      return sb.Append("@").Append(argName);
    }
 
    public static StringBuilder AppendCast(

@@ -181,9 +181,9 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                           null);
                                     }
 
-                                    string? referenceField = default;
-                                    int structProperty = default;
-                                    decimal? nullableStructProperty = default;
+                                    string? @referenceField = default;
+                                    int @structProperty = default;
+                                    decimal? @nullableStructProperty = default;
 
                                     var comparer = global::System.StringComparer.OrdinalIgnoreCase;
 
@@ -220,15 +220,15 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
 
                                        if (comparer.Equals(propName, "referenceField"))
                                        {
-                                          referenceField = serializer.Deserialize<string>(reader);
+                                          @referenceField = serializer.Deserialize<string>(reader);
                                        }
                                        else if (comparer.Equals(propName, "structProperty"))
                                        {
-                                          structProperty = serializer.Deserialize<int>(reader);
+                                          @structProperty = serializer.Deserialize<int>(reader);
                                        }
                                        else if (comparer.Equals(propName, "nullableStructProperty"))
                                        {
-                                          nullableStructProperty = serializer.Deserialize<decimal?>(reader);
+                                          @nullableStructProperty = serializer.Deserialize<decimal?>(reader);
                                        }
                                        else
                                        {
@@ -244,9 +244,9 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                     }
 
                                     var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                                               referenceField!,
-                                                               structProperty!,
-                                                               nullableStructProperty!,
+                                                               @referenceField!,
+                                                               @structProperty!,
+                                                               @nullableStructProperty!,
                                                                out var obj);
 
                                     if (validationError is not null)
@@ -277,23 +277,23 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                     var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
 
                                     writer.WriteStartObject();
-                                    var referenceFieldPropertyValue = obj.ReferenceField;
+                                    var @referenceFieldPropertyValue = obj.ReferenceField;
 
-                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || referenceFieldPropertyValue is not null)
+                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || @referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("ReferenceField") : "ReferenceField");
-                                       writer.WriteValue(referenceFieldPropertyValue);
+                                       writer.WriteValue(@referenceFieldPropertyValue);
                                     }
-                                    var structPropertyPropertyValue = obj.StructProperty;
+                                    var @structPropertyPropertyValue = obj.StructProperty;
 
                                     writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("StructProperty") : "StructProperty");
-                                    writer.WriteValue(structPropertyPropertyValue);
-                                    var nullableStructPropertyPropertyValue = obj.NullableStructProperty;
+                                    writer.WriteValue(@structPropertyPropertyValue);
+                                    var @nullableStructPropertyPropertyValue = obj.NullableStructProperty;
 
-                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || nullableStructPropertyPropertyValue is not null)
+                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || @nullableStructPropertyPropertyValue is not null)
                                     {
                                        writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("NullableStructProperty") : "NullableStructProperty");
-                                       serializer.Serialize(writer, nullableStructPropertyPropertyValue);
+                                       serializer.Serialize(writer, @nullableStructPropertyPropertyValue);
                                     }
                                     writer.WriteEndObject();
                                  }
@@ -383,9 +383,9 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                           null);
                                     }
 
-                                    string? referenceField = default;
-                                    int structProperty = default;
-                                    decimal? nullableStructProperty = default;
+                                    string? @referenceField = default;
+                                    int @structProperty = default;
+                                    decimal? @nullableStructProperty = default;
 
                                     var comparer = global::System.StringComparer.OrdinalIgnoreCase;
 
@@ -422,15 +422,15 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
 
                                        if (comparer.Equals(propName, "referenceField"))
                                        {
-                                          referenceField = serializer.Deserialize<string>(reader);
+                                          @referenceField = serializer.Deserialize<string>(reader);
                                        }
                                        else if (comparer.Equals(propName, "structProperty"))
                                        {
-                                          structProperty = serializer.Deserialize<int>(reader);
+                                          @structProperty = serializer.Deserialize<int>(reader);
                                        }
                                        else if (comparer.Equals(propName, "nullableStructProperty"))
                                        {
-                                          nullableStructProperty = serializer.Deserialize<decimal?>(reader);
+                                          @nullableStructProperty = serializer.Deserialize<decimal?>(reader);
                                        }
                                        else
                                        {
@@ -446,9 +446,9 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                     }
 
                                     var validationError = global::TestValueObject.Validate(
-                                                               referenceField!,
-                                                               structProperty!,
-                                                               nullableStructProperty!,
+                                                               @referenceField!,
+                                                               @structProperty!,
+                                                               @nullableStructProperty!,
                                                                out var obj);
 
                                     if (validationError is not null)
@@ -479,23 +479,23 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                     var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
 
                                     writer.WriteStartObject();
-                                    var referenceFieldPropertyValue = obj.ReferenceField;
+                                    var @referenceFieldPropertyValue = obj.ReferenceField;
 
-                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || referenceFieldPropertyValue is not null)
+                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || @referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("ReferenceField") : "ReferenceField");
-                                       writer.WriteValue(referenceFieldPropertyValue);
+                                       writer.WriteValue(@referenceFieldPropertyValue);
                                     }
-                                    var structPropertyPropertyValue = obj.StructProperty;
+                                    var @structPropertyPropertyValue = obj.StructProperty;
 
                                     writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("StructProperty") : "StructProperty");
-                                    writer.WriteValue(structPropertyPropertyValue);
-                                    var nullableStructPropertyPropertyValue = obj.NullableStructProperty;
+                                    writer.WriteValue(@structPropertyPropertyValue);
+                                    var @nullableStructPropertyPropertyValue = obj.NullableStructProperty;
 
-                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || nullableStructPropertyPropertyValue is not null)
+                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || @nullableStructPropertyPropertyValue is not null)
                                     {
                                        writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("NullableStructProperty") : "NullableStructProperty");
-                                       serializer.Serialize(writer, nullableStructPropertyPropertyValue);
+                                       serializer.Serialize(writer, @nullableStructPropertyPropertyValue);
                                     }
                                     writer.WriteEndObject();
                                  }
@@ -590,9 +590,9 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                           null);
                                     }
 
-                                    string? referenceField = default;
-                                    int structProperty = default;
-                                    decimal? nullableStructProperty = default;
+                                    string? @referenceField = default;
+                                    int @structProperty = default;
+                                    decimal? @nullableStructProperty = default;
 
                                     var comparer = global::System.StringComparer.OrdinalIgnoreCase;
 
@@ -629,15 +629,15 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
 
                                        if (comparer.Equals(propName, "referenceField"))
                                        {
-                                          referenceField = serializer.Deserialize<string>(reader);
+                                          @referenceField = serializer.Deserialize<string>(reader);
                                        }
                                        else if (comparer.Equals(propName, "structProperty"))
                                        {
-                                          structProperty = serializer.Deserialize<int>(reader);
+                                          @structProperty = serializer.Deserialize<int>(reader);
                                        }
                                        else if (comparer.Equals(propName, "nullableStructProperty"))
                                        {
-                                          nullableStructProperty = serializer.Deserialize<decimal?>(reader);
+                                          @nullableStructProperty = serializer.Deserialize<decimal?>(reader);
                                        }
                                        else
                                        {
@@ -653,9 +653,9 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                     }
 
                                     var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                                               referenceField!,
-                                                               structProperty!,
-                                                               nullableStructProperty!,
+                                                               @referenceField!,
+                                                               @structProperty!,
+                                                               @nullableStructProperty!,
                                                                out var obj);
 
                                     if (validationError is not null)
@@ -686,23 +686,23 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
                                     var resolver = serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
 
                                     writer.WriteStartObject();
-                                    var referenceFieldPropertyValue = obj.ReferenceField;
+                                    var @referenceFieldPropertyValue = obj.ReferenceField;
 
-                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || referenceFieldPropertyValue is not null)
+                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || @referenceFieldPropertyValue is not null)
                                     {
                                        writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("ReferenceField") : "ReferenceField");
-                                       writer.WriteValue(referenceFieldPropertyValue);
+                                       writer.WriteValue(@referenceFieldPropertyValue);
                                     }
-                                    var structPropertyPropertyValue = obj.StructProperty;
+                                    var @structPropertyPropertyValue = obj.StructProperty;
 
                                     writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("StructProperty") : "StructProperty");
-                                    writer.WriteValue(structPropertyPropertyValue);
-                                    var nullableStructPropertyPropertyValue = obj.NullableStructProperty;
+                                    writer.WriteValue(@structPropertyPropertyValue);
+                                    var @nullableStructPropertyPropertyValue = obj.NullableStructProperty;
 
-                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || nullableStructPropertyPropertyValue is not null)
+                                    if(serializer.NullValueHandling != global::Newtonsoft.Json.NullValueHandling.Ignore || @nullableStructPropertyPropertyValue is not null)
                                     {
                                        writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName("NullableStructProperty") : "NullableStructProperty");
-                                       serializer.Serialize(writer, nullableStructPropertyPropertyValue);
+                                       serializer.Serialize(writer, @nullableStructPropertyPropertyValue);
                                     }
                                     writer.WriteEndObject();
                                  }
