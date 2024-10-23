@@ -1,7 +1,9 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 // ReSharper disable once InconsistentNaming
-[SmartEnum<int>(IsValidatable = true)]
+[SmartEnum<int>(IsValidatable = true,
+                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
 public readonly partial struct TestSmartEnum_Struct_IntBased
 {
    public static readonly TestSmartEnum_Struct_IntBased Value1 = new(1);
