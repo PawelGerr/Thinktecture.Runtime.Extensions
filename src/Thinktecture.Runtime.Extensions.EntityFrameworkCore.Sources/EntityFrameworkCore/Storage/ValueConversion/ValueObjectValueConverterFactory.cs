@@ -100,9 +100,18 @@ public sealed class ValueObjectValueConverterFactory
       where T : IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
    {
+      /// <inheritdoc />
+      public override Func<object?, object?> ConvertToProvider { get; }
+
       public ValueObjectValueConverter(bool useConstructor)
          : base(static o => o.ToValue(), GetConverterFromKey<T, TKey>(useConstructor))
       {
+         ConvertToProvider = o => o switch
+         {
+            null => null,
+            TKey key => key, // useful for comparisons of value objects with its key types
+            _ => ((T)o).ToValue()
+         };
       }
    }
 
@@ -110,9 +119,25 @@ public sealed class ValueObjectValueConverterFactory
       where TEnum : IValidatableEnum, IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
    {
+      /// <inheritdoc />
+      public override Func<object?, object?> ConvertToProvider { get; }
+
       public ValidatableEnumValueConverter(bool validateOnWrite)
          : base(GetKeyProvider(validateOnWrite), GetConverterFromKey<TEnum, TKey>(false))
       {
+         ConvertToProvider = validateOnWrite
+                                ? o => o switch
+                                {
+                                   null => null,
+                                   TKey key => key, // useful for comparisons of value objects with its key types
+                                   _ => GetKeyIfValid((TEnum)o)
+                                }
+                                : o => o switch
+                                {
+                                   null => null,
+                                   TKey key => key, // useful for comparisons of value objects with its key types
+                                   _ => ((TEnum)o).ToValue()
+                                };
       }
 
       private static Expression<Func<TEnum, TKey>> GetKeyProvider(bool validateOnWrite)

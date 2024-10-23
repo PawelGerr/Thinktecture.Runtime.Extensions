@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Thinktecture.Runtime.Tests.TestEntities;
@@ -77,6 +78,15 @@ SET
       loadedEntity.StringBasedStructValueObject.Property.Should().Be(String.Empty);
       loadedEntity.Boundary.Lower.Should().Be(30);
       loadedEntity.Boundary.Upper.Should().Be(20);
+   }
+
+   [Fact]
+   public async Task Should_not_roundtrip_convert_underlying_type_to_value_object_and_back_to_underlying_type()
+   {
+      await _ctx.TestEntities_with_Enum_and_ValueObjects
+                .Where(e => e.IntBasedStructValueObject == 42
+                            && e.TestSmartEnum_Struct_IntBased == 42)
+                .ToListAsync();
    }
 
    public void Dispose()
