@@ -371,7 +371,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if(").AppendEscaped(_state.KeyMember.ArgumentName).Append(@" is null)
          {
             obj = default;
-            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">(""The argument '").AppendEscaped(_state.KeyMember.ArgumentName).Append(@"' must not be null."");
+            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">(""The argument '").Append(_state.KeyMember.ArgumentName).Append(@"' must not be null."");
          }
 ");
       }

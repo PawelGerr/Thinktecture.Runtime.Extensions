@@ -1577,7 +1577,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        if(@value is null)
                                                                                        {
                                                                                           obj = default;
-                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument '@value' must not be null.");
+                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument 'value' must not be null.");
                                                                                        }
 
                                                                                        global::Thinktecture.ValidationError? validationError = null;
@@ -1741,7 +1741,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                         if(@value is null)
                                                                                         {
                                                                                            obj = default;
-                                                                                           return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument '@value' must not be null.");
+                                                                                           return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument 'value' must not be null.");
                                                                                         }
 
                                                                                         global::Thinktecture.ValidationError? validationError = null;
@@ -5262,7 +5262,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if(@value is null)
                                                             {
                                                                obj = default;
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument '@value' must not be null.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument 'value' must not be null.");
                                                             }
 
                                                             global::Thinktecture.ValidationError? validationError = null;
@@ -5456,7 +5456,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if(@value is null)
                                                             {
                                                                obj = default;
-                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument '@value' must not be null.");
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>("The argument 'value' must not be null.");
                                                             }
 
                                                             global::Thinktecture.ValidationError? validationError = null;
