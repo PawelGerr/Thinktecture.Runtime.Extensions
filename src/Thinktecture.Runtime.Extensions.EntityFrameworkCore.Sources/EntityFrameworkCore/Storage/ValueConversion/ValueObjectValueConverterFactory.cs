@@ -96,6 +96,11 @@ public sealed class ValueObjectValueConverterFactory
       return (Expression<Func<TKey, T>>)(factoryMethod ?? throw new InvalidOperationException($"A value converter cannot be created for the type '{typeof(T).Name}' because it has no factory methods."));
    }
 
+   private static T Convert<T>(object value)
+   {
+      return (T)System.Convert.ChangeType(value, typeof(T));
+   }
+
    private sealed class ValueObjectValueConverter<T, TKey> : ValueConverter<T, TKey>
       where T : IValueObjectFactory<TKey>, IValueObjectConvertable<TKey>
       where TKey : notnull
@@ -110,7 +115,8 @@ public sealed class ValueObjectValueConverterFactory
          {
             null => null,
             TKey key => key, // useful for comparisons of value objects with its key types
-            _ => ((T)o).ToValue()
+            T obj => obj.ToValue(),
+            _ => Convert<TKey>(o)
          };
       }
    }
@@ -130,13 +136,15 @@ public sealed class ValueObjectValueConverterFactory
                                 {
                                    null => null,
                                    TKey key => key, // useful for comparisons of value objects with its key types
-                                   _ => GetKeyIfValid((TEnum)o)
+                                   TEnum obj => GetKeyIfValid(obj),
+                                   _ => Convert<TKey>(o)
                                 }
                                 : o => o switch
                                 {
                                    null => null,
                                    TKey key => key, // useful for comparisons of value objects with its key types
-                                   _ => ((TEnum)o).ToValue()
+                                   TEnum obj => obj.ToValue(),
+                                   _ => Convert<TKey>(o)
                                 };
       }
 
