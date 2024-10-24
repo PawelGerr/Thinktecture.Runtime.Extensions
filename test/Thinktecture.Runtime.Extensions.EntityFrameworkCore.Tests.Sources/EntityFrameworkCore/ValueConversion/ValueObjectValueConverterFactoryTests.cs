@@ -83,9 +83,43 @@ SET
    [Fact]
    public async Task Should_not_roundtrip_convert_underlying_type_to_value_object_and_back_to_underlying_type()
    {
+      var item = TestSmartEnum_Struct_IntBased.Value1;
+      TestSmartEnum_Struct_IntBased? nullableItem = item;
+
+      var valueObj = IntBasedStructValueObject.Create(42);
+      IntBasedStructValueObject? nullableValueObj = valueObj;
+
+      long int64 = 42;
+      long? nullableInt64 = int64;
+      int int32 = 42;
+      int? nullableInt32 = int32;
+      short int16 = 42;
+      short? nullableInt16 = int16;
+      decimal deci = 42;
+      decimal? nullableDecimal = deci;
+
       await _ctx.TestEntities_with_Enum_and_ValueObjects
-                .Where(e => e.IntBasedStructValueObject == 42
-                            && e.TestSmartEnum_Struct_IntBased == 42)
+                .Where(e => e.TestSmartEnum_Struct_IntBased == item
+                            && e.TestSmartEnum_Struct_IntBased == nullableItem
+                            && e.IntBasedStructValueObject == valueObj
+                            && e.IntBasedStructValueObject == nullableValueObj
+                            && e.IntBasedStructValueObject == int64
+                            && e.TestSmartEnum_Struct_IntBased == int64
+                            && e.IntBasedStructValueObject == nullableInt64
+                            && e.TestSmartEnum_Struct_IntBased == nullableInt64
+                            && e.IntBasedStructValueObject == int32
+                            && e.TestSmartEnum_Struct_IntBased == int32
+                            && e.IntBasedStructValueObject == nullableInt32
+                            && e.TestSmartEnum_Struct_IntBased == nullableInt32
+                            && e.IntBasedStructValueObject == int16
+                            && e.TestSmartEnum_Struct_IntBased == int16
+                            && e.IntBasedStructValueObject == nullableInt16
+                            && e.TestSmartEnum_Struct_IntBased == nullableInt16
+                            && e.IntBasedStructValueObject == deci
+                            && e.TestSmartEnum_Struct_IntBased == deci
+                            && e.IntBasedStructValueObject == nullableDecimal
+                            && e.TestSmartEnum_Struct_IntBased == nullableDecimal
+                      )
                 .ToListAsync();
    }
 
