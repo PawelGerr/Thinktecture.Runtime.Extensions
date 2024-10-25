@@ -132,10 +132,10 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion from type <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.
+      /// Implicit conversion from type ").AppendTypeForXmlComment(memberType).Append(@".
       /// </summary>
       /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to covert from.</param>
-      /// <returns>A new instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/> converted from <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.</returns>
+      /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@" converted from <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.</returns>
       public static implicit operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
          return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
@@ -153,11 +153,11 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to type <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.
+      /// Implicit conversion to type ").AppendTypeForXmlComment(memberType).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
-      /// <returns>Inner value of type <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.</returns>
-      /// <exception cref=""System.InvalidOperationException"">If the inner value is not a <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.</exception>
+      /// <returns>Inner value of type ").AppendTypeForXmlComment(memberType).Append(@".</returns>
+      /// <exception cref=""System.InvalidOperationException"">If the inner value is not a ").AppendTypeForXmlComment(memberType).Append(@".</exception>
       public static explicit operator ").AppendTypeFullyQualified(memberType).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          return obj.As").Append(memberType.Name).Append(@";
@@ -170,7 +170,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.
+      /// Compares two instances of ").AppendTypeForXmlComment(_state).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -191,7 +191,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       /// <summary>
-      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.
+      /// Compares two instances of ").AppendTypeForXmlComment(_state).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -388,7 +388,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -536,7 +536,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -679,7 +679,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append("</c>.</param>");
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -812,7 +812,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Indication whether the current value is of type <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.
+      /// Indication whether the current value is of type ").AppendTypeForXmlComment(memberType).Append(@".
       /// </summary>
       public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(i + 1).Append(";");
       }
@@ -823,9 +823,9 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Gets the current value as <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.
+      /// Gets the current value as ").AppendTypeForXmlComment(memberType).Append(@".
       /// </summary>
-      /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type <c>").AppendTypeMinimallyQualified(memberType).Append(@"</c>.</exception>
+      /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeForXmlComment(memberType).Append(@".</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
             .Append(" ? this._").Append(memberType.ArgumentName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
             .Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");

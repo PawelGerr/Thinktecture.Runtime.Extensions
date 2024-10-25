@@ -50,25 +50,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -104,8 +104,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -127,8 +127,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -150,8 +150,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -171,8 +171,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -192,8 +192,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -210,7 +210,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -220,7 +220,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -230,22 +230,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -362,25 +362,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -418,8 +418,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
@@ -444,8 +444,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch<TContext>(
                                                             TContext context,
@@ -470,8 +470,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
@@ -494,8 +494,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
@@ -518,8 +518,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
@@ -539,7 +539,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -549,7 +549,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -559,22 +559,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -683,25 +683,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -739,8 +739,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
@@ -765,8 +765,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public void Switch<TContext>(
                                                             TContext context,
@@ -791,8 +791,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
@@ -815,8 +815,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
@@ -839,8 +839,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
@@ -860,7 +860,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -870,7 +870,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -880,22 +880,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -1005,25 +1005,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -1059,8 +1059,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -1082,8 +1082,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -1105,8 +1105,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -1126,8 +1126,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -1147,8 +1147,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -1165,22 +1165,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -1296,25 +1296,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -1350,8 +1350,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -1373,8 +1373,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -1396,8 +1396,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -1417,8 +1417,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -1438,8 +1438,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -1456,7 +1456,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -1466,7 +1466,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -1476,22 +1476,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -1607,25 +1607,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -1661,8 +1661,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -1684,8 +1684,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="default">The action to execute if no value-specific action is provided.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void SwitchPartially(
                                                             global::System.Action<object?>? @default = null,
                                                             global::System.Action<string>? @string = null,
@@ -1716,8 +1716,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -1741,8 +1741,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no value-specific action is provided.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void SwitchPartially<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, object?>? @default = null,
@@ -1773,8 +1773,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -1794,8 +1794,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="default">The function to execute if no value-specific action is provided.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult SwitchPartially<TResult>(
                                                             global::System.Func<object?, TResult> @default,
                                                             global::System.Func<string, TResult>? @string = null,
@@ -1824,8 +1824,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -1847,8 +1847,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no value-specific action is provided.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult SwitchPartially<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, object?, TResult> @default,
@@ -1877,8 +1877,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -1895,7 +1895,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -1905,7 +1905,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -1915,22 +1915,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -2046,25 +2046,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -2100,8 +2100,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -2123,8 +2123,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -2146,8 +2146,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -2167,8 +2167,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -2188,8 +2188,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -2209,8 +2209,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="default">The instance to return if no value is provided for the current value.</param>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult MapPartially<TResult>(
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @string = default,
@@ -2236,7 +2236,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -2246,7 +2246,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -2256,22 +2256,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -2387,25 +2387,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -2441,8 +2441,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -2464,8 +2464,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -2487,8 +2487,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -2508,8 +2508,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -2527,7 +2527,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -2537,7 +2537,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -2547,22 +2547,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -2678,25 +2678,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -2732,8 +2732,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -2750,7 +2750,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -2760,7 +2760,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -2770,22 +2770,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -2901,25 +2901,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -2955,8 +2955,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -2978,8 +2978,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -3001,8 +3001,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -3022,8 +3022,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -3043,8 +3043,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -3061,7 +3061,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -3071,7 +3071,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -3081,22 +3081,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -3201,25 +3201,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _int32;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -3255,8 +3255,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32)
@@ -3278,8 +3278,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -3301,8 +3301,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
@@ -3322,8 +3322,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -3343,8 +3343,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
@@ -3361,7 +3361,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -3371,7 +3371,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -3381,22 +3381,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
@@ -3823,25 +3823,25 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly int _number;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsText => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsNumber => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsText => IsText ? this._text! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsNumber => IsNumber ? this._number : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -3877,8 +3877,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="text">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="number">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="text">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="number">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @text,
                                                             global::System.Action<int> @number)
@@ -3900,8 +3900,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="text">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="number">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="text">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="number">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @text,
@@ -3923,8 +3923,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="text">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="number">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="text">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="number">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @text,
                                                             global::System.Func<int, TResult> @number)
@@ -3944,8 +3944,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="text">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="number">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="text">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="number">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @text,
@@ -3965,8 +3965,8 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="text">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="number">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="text">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="number">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @text,
                                                             TResult @number)
@@ -3983,7 +3983,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="text">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="text"/>.</returns>
@@ -3993,7 +3993,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="number">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="number"/>.</returns>
@@ -4003,22 +4003,22 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsText;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsNumber;
@@ -4137,58 +4137,58 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          private readonly char _char;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>string</c>.
+                                                         /// Indication whether the current value is of type <see cref="string"/>.
                                                          /// </summary>
                                                          public bool IsString => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>bool</c>.
+                                                         /// Indication whether the current value is of type <see cref="bool"/>.
                                                          /// </summary>
                                                          public bool IsBoolean => this._valueIndex == 3;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>Guid</c>.
+                                                         /// Indication whether the current value is of type <see cref="global::System.Guid"/>.
                                                          /// </summary>
                                                          public bool IsGuid => this._valueIndex == 4;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>char</c>.
+                                                         /// Indication whether the current value is of type <see cref="char"/>.
                                                          /// </summary>
                                                          public bool IsChar => this._valueIndex == 5;
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>string</c>.
+                                                         /// Gets the current value as <see cref="string"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
                                                          public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>bool</c>.
+                                                         /// Gets the current value as <see cref="bool"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>bool</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="bool"/>.</exception>
                                                          public bool AsBoolean => IsBoolean ? this._boolean : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'bool'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>Guid</c>.
+                                                         /// Gets the current value as <see cref="global::System.Guid"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>Guid</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::System.Guid"/>.</exception>
                                                          public global::System.Guid AsGuid => IsGuid ? this._guid : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'Guid'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>char</c>.
+                                                         /// Gets the current value as <see cref="char"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>char</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="char"/>.</exception>
                                                          public char AsChar => IsChar ? this._char : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'char'.");
 
                                                          /// <summary>
@@ -4257,11 +4257,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
-                                                         /// <param name="boolean">The action to execute if the current value is of type <c>bool</c>.</param>
-                                                         /// <param name="guid">The action to execute if the current value is of type <c>Guid</c>.</param>
-                                                         /// <param name="char">The action to execute if the current value is of type <c>char</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+                                                         /// <param name="boolean">The action to execute if the current value is of type <see cref="bool"/>.</param>
+                                                         /// <param name="guid">The action to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
+                                                         /// <param name="char">The action to execute if the current value is of type <see cref="char"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string> @string,
                                                             global::System.Action<int> @int32,
@@ -4295,11 +4295,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The action to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
-                                                         /// <param name="boolean">The action to execute if the current value is of type <c>bool</c>.</param>
-                                                         /// <param name="guid">The action to execute if the current value is of type <c>Guid</c>.</param>
-                                                         /// <param name="char">The action to execute if the current value is of type <c>char</c>.</param>
+                                                         /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+                                                         /// <param name="boolean">The action to execute if the current value is of type <see cref="bool"/>.</param>
+                                                         /// <param name="guid">The action to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
+                                                         /// <param name="char">The action to execute if the current value is of type <see cref="char"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string> @string,
@@ -4333,11 +4333,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
-                                                         /// <param name="boolean">The function to execute if the current value is of type <c>bool</c>.</param>
-                                                         /// <param name="guid">The function to execute if the current value is of type <c>Guid</c>.</param>
-                                                         /// <param name="char">The function to execute if the current value is of type <c>char</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+                                                         /// <param name="boolean">The function to execute if the current value is of type <see cref="bool"/>.</param>
+                                                         /// <param name="guid">The function to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
+                                                         /// <param name="char">The function to execute if the current value is of type <see cref="char"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32,
@@ -4366,11 +4366,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
-                                                         /// <param name="string">The function to execute if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
-                                                         /// <param name="boolean">The function to execute if the current value is of type <c>bool</c>.</param>
-                                                         /// <param name="guid">The function to execute if the current value is of type <c>Guid</c>.</param>
-                                                         /// <param name="char">The function to execute if the current value is of type <c>char</c>.</param>
+                                                         /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+                                                         /// <param name="boolean">The function to execute if the current value is of type <see cref="bool"/>.</param>
+                                                         /// <param name="guid">The function to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
+                                                         /// <param name="char">The function to execute if the current value is of type <see cref="char"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string, TResult> @string,
@@ -4399,11 +4399,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
-                                                         /// <param name="string">The instance to return if the current value is of type <c>string</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
-                                                         /// <param name="boolean">The instance to return if the current value is of type <c>bool</c>.</param>
-                                                         /// <param name="guid">The instance to return if the current value is of type <c>Guid</c>.</param>
-                                                         /// <param name="char">The instance to return if the current value is of type <c>char</c>.</param>
+                                                         /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
+                                                         /// <param name="boolean">The instance to return if the current value is of type <see cref="bool"/>.</param>
+                                                         /// <param name="guid">The instance to return if the current value is of type <see cref="global::System.Guid"/>.</param>
+                                                         /// <param name="char">The instance to return if the current value is of type <see cref="char"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32,
@@ -4429,7 +4429,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>string</c>.
+                                                         /// Implicit conversion from type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="string">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
@@ -4439,7 +4439,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -4449,7 +4449,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>bool</c>.
+                                                         /// Implicit conversion from type <see cref="bool"/>.
                                                          /// </summary>
                                                          /// <param name="boolean">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="boolean"/>.</returns>
@@ -4459,7 +4459,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>Guid</c>.
+                                                         /// Implicit conversion from type <see cref="global::System.Guid"/>.
                                                          /// </summary>
                                                          /// <param name="guid">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="guid"/>.</returns>
@@ -4469,7 +4469,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>char</c>.
+                                                         /// Implicit conversion from type <see cref="char"/>.
                                                          /// </summary>
                                                          /// <param name="char">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="char"/>.</returns>
@@ -4479,55 +4479,55 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>string</c>.
+                                                         /// Implicit conversion to type <see cref="string"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>string</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>string</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="string"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
                                                          public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsString;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>bool</c>.
+                                                         /// Implicit conversion to type <see cref="bool"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>bool</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>bool</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="bool"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="bool"/>.</exception>
                                                          public static explicit operator bool(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsBoolean;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>Guid</c>.
+                                                         /// Implicit conversion to type <see cref="global::System.Guid"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>Guid</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>Guid</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="global::System.Guid"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="global::System.Guid"/>.</exception>
                                                          public static explicit operator global::System.Guid(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsGuid;
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>char</c>.
+                                                         /// Implicit conversion to type <see cref="char"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>char</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>char</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="char"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="char"/>.</exception>
                                                          public static explicit operator char(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsChar;
@@ -4657,7 +4657,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public bool IsStringArray => this._valueIndex == 1;
 
                                                          /// <summary>
-                                                         /// Indication whether the current value is of type <c>int</c>.
+                                                         /// Indication whether the current value is of type <see cref="int"/>.
                                                          /// </summary>
                                                          public bool IsInt32 => this._valueIndex == 2;
 
@@ -4668,9 +4668,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public string[] AsStringArray => IsStringArray ? this._stringArray! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string[]'.");
 
                                                          /// <summary>
-                                                         /// Gets the current value as <c>int</c>.
+                                                         /// Gets the current value as <see cref="int"/>.
                                                          /// </summary>
-                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int</c>.</exception>
+                                                         /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
                                                          public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
 
                                                          /// <summary>
@@ -4707,7 +4707,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
                                                          /// <param name="stringArray">The action to execute if the current value is of type <c>string[]</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch(
                                                             global::System.Action<string[]> @stringArray,
                                                             global::System.Action<int> @int32)
@@ -4730,7 +4730,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="stringArray">The action to execute if the current value is of type <c>string[]</c>.</param>
-                                                         /// <param name="int32">The action to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          public void Switch<TContext>(
                                                             TContext context,
                                                             global::System.Action<TContext, string[]> @stringArray,
@@ -4753,7 +4753,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
                                                          /// <param name="stringArray">The function to execute if the current value is of type <c>string[]</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string[], TResult> @stringArray,
                                                             global::System.Func<int, TResult> @int32)
@@ -4774,7 +4774,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// </summary>
                                                          /// <param name="context">Context to be passed to the callbacks.</param>
                                                          /// <param name="stringArray">The function to execute if the current value is of type <c>string[]</c>.</param>
-                                                         /// <param name="int32">The function to execute if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Switch<TContext, TResult>(
                                                             TContext context,
                                                             global::System.Func<TContext, string[], TResult> @stringArray,
@@ -4795,7 +4795,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Maps current value to an instance of type <typeparamref name="TResult"/>.
                                                          /// </summary>
                                                          /// <param name="stringArray">The instance to return if the current value is of type <c>string[]</c>.</param>
-                                                         /// <param name="int32">The instance to return if the current value is of type <c>int</c>.</param>
+                                                         /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
                                                          public TResult Map<TResult>(
                                                             TResult @stringArray,
                                                             TResult @int32)
@@ -4822,7 +4822,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion from type <c>int</c>.
+                                                         /// Implicit conversion from type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="int32">Value to covert from.</param>
                                                          /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
@@ -4843,11 +4843,11 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <summary>
-                                                         /// Implicit conversion to type <c>int</c>.
+                                                         /// Implicit conversion to type <see cref="int"/>.
                                                          /// </summary>
                                                          /// <param name="obj">Object to covert.</param>
-                                                         /// <returns>Inner value of type <c>int</c>.</returns>
-                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int</c>.</exception>
+                                                         /// <returns>Inner value of type <see cref="int"/>.</returns>
+                                                         /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
                                                          public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
                                                          {
                                                             return obj.AsInt32;
