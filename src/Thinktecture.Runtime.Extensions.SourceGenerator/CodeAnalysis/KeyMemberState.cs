@@ -10,6 +10,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public ArgumentName ArgumentName { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
+   public bool IsInterface => _typedMemberState.TypeKind == TypeKind.Interface;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsFormattable => _typedMemberState.IsFormattable;

@@ -7,6 +7,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 
    public NullableAnnotation NullableAnnotation { get; }
    public SpecialType SpecialType { get; }
+   public TypeKind TypeKind { get; }
    public bool IsReferenceType { get; }
    public bool IsNullableStruct { get; }
    public bool IsReferenceTypeOrNullableStruct => IsReferenceType || IsNullableStruct;
@@ -26,6 +27,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       IsReferenceType = type.IsReferenceType;
       NullableAnnotation = type.NullableAnnotation;
       SpecialType = type.SpecialType;
+      TypeKind = type.TypeKind;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
       // Check for implemented interfaces
@@ -156,6 +158,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 
       return TypeFullyQualified == other.TypeFullyQualified
              && SpecialType == other.SpecialType
+             && TypeKind == other.TypeKind
              && IsNullableStruct == other.IsNullableStruct
              && IsReferenceType == other.IsReferenceType
              && IsFormattable == other.IsFormattable
@@ -174,6 +177,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
+         hashCode = (hashCode * 397) ^ (int)TypeKind;
          hashCode = (hashCode * 397) ^ IsNullableStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();

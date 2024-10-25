@@ -201,6 +201,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var keyMember = _state.KeyMember;
 
+      if (keyMember.IsInterface)
+         return;
+
       _sb.Append(@"
 
       /// <summary>
@@ -236,7 +239,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var keyMember = _state.KeyMember;
 
-      if (keyMember.IsReferenceType || !_state.IsReferenceType)
+      if (keyMember.IsInterface || keyMember.IsReferenceType || !_state.IsReferenceType)
          return;
 
       _sb.Append(@"
@@ -259,6 +262,10 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateExplicitConversion(bool emptyStringYieldsNull)
    {
       var keyMember = _state.KeyMember;
+
+      if (keyMember.IsInterface)
+         return;
+
       var bothAreReferenceTypes = _state.IsReferenceType && keyMember.IsReferenceType;
       var nullableQuestionMark = bothAreReferenceTypes ? "?" : null;
 

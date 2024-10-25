@@ -541,8 +541,11 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateImplicitConversion(IMemberState keyProperty)
+   private void GenerateImplicitConversion(KeyMemberState keyProperty)
    {
+      if (keyProperty.IsInterface)
+         return;
+
       _sb.Append(@"
 
       /// <summary>
@@ -569,8 +572,11 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateExplicitConversion(IMemberState keyProperty)
+   private void GenerateExplicitConversion(KeyMemberState keyProperty)
    {
+      if (keyProperty.IsInterface)
+         return;
+
       _sb.Append(@"
 
       /// <summary>
