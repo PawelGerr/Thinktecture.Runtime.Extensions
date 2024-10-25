@@ -23,6 +23,9 @@ public class Value
 
       new TestUnion_struct_string_int("text").Value.Should().Be("text");
       new TestUnion_struct_string_int(1).Value.Should().Be(1);
+
+      new TestUnion_class_with_array(["text"]).Value.Should().BeEquivalentTo(new[] { "text" });
+      new TestUnion_class_with_array(1).Value.Should().Be(1);
    }
 
    [Fact]

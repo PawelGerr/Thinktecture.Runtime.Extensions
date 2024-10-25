@@ -19,6 +19,9 @@ public class ExplicitCasts
 
       ((int)new TestUnion_struct_string_int(1)).Should().Be(1);
       FluentActions.Invoking(() => (string)new TestUnion_struct_string_int(1)).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_struct_string_int' is not of type 'string'.");
+
+      ((string[])new TestUnion_class_with_array(["text"])).Should().BeEquivalentTo(["text"]);
+      FluentActions.Invoking(() => (int)new TestUnion_class_with_array(["text"])).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_array' is not of type 'int'.");
    }
 
    [Fact]

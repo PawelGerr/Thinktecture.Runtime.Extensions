@@ -34,6 +34,11 @@ public class IsValue
       new TestUnion_struct_string_int("text").IsInt32.Should().BeFalse();
       new TestUnion_struct_string_int(1).IsString.Should().BeFalse();
       new TestUnion_struct_string_int(1).IsInt32.Should().BeTrue();
+
+      new TestUnion_class_with_array(["text"]).IsStringArray.Should().BeTrue();
+      new TestUnion_class_with_array(["text"]).IsInt32.Should().BeFalse();
+      new TestUnion_class_with_array(1).IsStringArray.Should().BeFalse();
+      new TestUnion_class_with_array(1).IsInt32.Should().BeTrue();
    }
 
    [Fact]

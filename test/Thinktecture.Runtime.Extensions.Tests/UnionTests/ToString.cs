@@ -13,6 +13,9 @@ public class ToString
 
       new TestUnion_struct_string_int("text").ToString().Should().Be("text");
       new TestUnion_struct_string_int(42).ToString().Should().Be("42");
+
+      new TestUnion_class_with_array(["text"]).ToString().Should().Be("System.String[]");
+      new TestUnion_class_with_array(42).ToString().Should().Be("42");
    }
 
    [Fact]

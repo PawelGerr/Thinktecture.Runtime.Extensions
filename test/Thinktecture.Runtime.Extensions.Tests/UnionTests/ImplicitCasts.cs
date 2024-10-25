@@ -19,6 +19,9 @@ public class ImplicitCasts
 
       TestUnion_struct_string_int intStructUnion = 42;
       intStructUnion.Value.Should().Be(42);
+
+      TestUnion_class_with_array arrayClassUnion = new[] { "text" };
+      arrayClassUnion.Value.Should().BeEquivalentTo(new[] { "text" });
    }
 
    [Fact]

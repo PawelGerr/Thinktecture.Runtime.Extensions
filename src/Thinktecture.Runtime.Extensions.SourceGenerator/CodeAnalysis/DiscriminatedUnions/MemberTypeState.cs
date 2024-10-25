@@ -14,11 +14,11 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
    public MemberTypeSetting Setting { get; }
 
    public MemberTypeState(
-      INamedTypeSymbol type,
+      string typeName,
       ITypedMemberState typeState,
       MemberTypeSetting setting)
    {
-      Name = setting.Name ?? (typeState.IsNullableStruct ? $"Nullable{type.TypeArguments[0].Name}" : type.Name);
+      Name = setting.Name ?? typeName;
       TypeFullyQualified = typeState.TypeFullyQualified;
       TypeMinimallyQualified = typeState.TypeMinimallyQualified;
       IsReferenceType = typeState.IsReferenceType;
@@ -28,6 +28,16 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
 
       ArgumentName = Name.MakeArgumentName();
       Setting = setting;
+   }
+
+   public static string GetMemberTypeName(INamedTypeSymbol type, ITypedMemberState typeState)
+   {
+      return typeState.IsNullableStruct ? $"Nullable{type.TypeArguments[0].Name}" : type.Name;
+   }
+
+   public static string GetMemberTypeName(IArrayTypeSymbol type)
+   {
+      return type.ElementType.Name + "Array";
    }
 
    public override bool Equals(object? obj)

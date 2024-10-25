@@ -29,6 +29,24 @@ public class Map
       [Theory]
       [InlineData(1, "text")]
       [InlineData(2, 42)]
+      public void Should_use_correct_arg_having_2_values_with_array(int index, object expected)
+      {
+         var value = index switch
+         {
+            1 => new TestUnion_class_with_array(["text"]),
+            2 => new TestUnion_class_with_array(42),
+            _ => throw new Exception()
+         };
+
+         var calledActionOn = value.Map(stringArray: (object)"text",
+                                        int32: 42);
+
+         calledActionOn.Should().Be(expected);
+      }
+
+      [Theory]
+      [InlineData(1, "text")]
+      [InlineData(2, 42)]
       [InlineData(3, true)]
       public void Should_use_correct_arg_having_3_values(int index, object expected)
       {

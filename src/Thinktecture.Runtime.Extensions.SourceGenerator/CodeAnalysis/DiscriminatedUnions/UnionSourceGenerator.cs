@@ -159,17 +159,26 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
                return null;
             }
 
-            if (memberType is not INamedTypeSymbol namedMemberType)
-            {
-               Logger.LogDebug("Type of the member must be a named type", tds);
-               return null;
-            }
-
             var memberTypeSettings = settings.MemberTypeSettings[i];
             memberType = memberType.IsReferenceType && memberTypeSettings.IsNullableReferenceType ? memberType.WithNullableAnnotation(NullableAnnotation.Annotated) : memberType;
             var typeState = factory.Create(memberType);
 
-            var memberTypeState = new MemberTypeState(namedMemberType, typeState, memberTypeSettings);
+            string memberTypeName;
+
+            switch (memberType)
+            {
+               case INamedTypeSymbol namedTypeSymbol:
+                  memberTypeName = MemberTypeState.GetMemberTypeName(namedTypeSymbol, typeState);
+                  break;
+               case IArrayTypeSymbol arrayTypeSymbol:
+                  memberTypeName = MemberTypeState.GetMemberTypeName(arrayTypeSymbol);
+                  break;
+               default:
+                  Logger.LogError("Type of the member must be a named type or array type", tds);
+                  return null;
+            }
+
+            var memberTypeState = new MemberTypeState(memberTypeName, typeState, memberTypeSettings);
             memberTypeStates = memberTypeStates.Add(memberTypeState);
          }
 
