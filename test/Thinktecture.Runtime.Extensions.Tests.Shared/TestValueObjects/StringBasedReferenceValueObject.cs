@@ -4,7 +4,9 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ValueObject<string>(KeyMemberKind = ValueObjectMemberKind.Property,
                      KeyMemberName = "Property",
-                     KeyMemberAccessModifier = ValueObjectAccessModifier.Public)]
+                     KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
+                     EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                     ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
 public sealed partial class StringBasedReferenceValueObject
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string property)

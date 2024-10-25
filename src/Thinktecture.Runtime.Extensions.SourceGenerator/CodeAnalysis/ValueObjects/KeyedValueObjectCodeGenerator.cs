@@ -207,7 +207,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Implicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -225,7 +225,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Implicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
@@ -245,7 +245,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion to the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Explicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -272,10 +272,10 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion from the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Explicit conversion from the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""").Append(keyMember.ArgumentName.Raw).Append(@""">Value to covert.</param>
-      /// <returns>An instance of <see cref=""").Append(_state.TypeMinimallyQualified).Append(@"""/>.</returns>");
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@".</returns>");
 
       if (bothAreReferenceTypes && !emptyStringYieldsNull)
       {
