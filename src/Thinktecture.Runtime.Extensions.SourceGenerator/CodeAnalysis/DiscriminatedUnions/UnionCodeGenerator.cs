@@ -126,6 +126,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       foreach (var memberType in _state.MemberTypes)
       {
+         if (memberType.IsInterface)
+            continue;
+
          _sb.Append(@"
 
       /// <summary>
@@ -144,6 +147,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       foreach (var memberType in _state.MemberTypes)
       {
+         if (memberType.IsInterface)
+            continue;
+
          _sb.Append(@"
 
       /// <summary>

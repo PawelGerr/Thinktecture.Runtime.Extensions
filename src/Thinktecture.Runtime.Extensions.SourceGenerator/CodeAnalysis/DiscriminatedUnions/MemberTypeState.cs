@@ -9,6 +9,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
    public SpecialType SpecialType { get; }
+   public bool IsInterface { get; }
 
    public string ArgumentName { get; }
    public MemberTypeSetting Setting { get; }
@@ -25,6 +26,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
       NullableAnnotation = typeState.NullableAnnotation;
       IsNullableStruct = typeState.IsNullableStruct;
       SpecialType = typeState.SpecialType;
+      IsInterface = typeState.TypeKind == TypeKind.Interface;
 
       ArgumentName = Name.MakeArgumentName();
       Setting = setting;
@@ -55,6 +57,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
              && SpecialType == other.SpecialType
+             && IsInterface == other.IsInterface
              && Setting.Equals(other.Setting);
    }
 
@@ -65,6 +68,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
+         hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
          hashCode = (hashCode * 397) ^ Setting.GetHashCode();
 
          return hashCode;
