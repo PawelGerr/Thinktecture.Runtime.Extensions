@@ -7,6 +7,7 @@ public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSeria
    public AttributeInfo AttributeInfo { get; }
 
    public string? Namespace => Type.Namespace;
+   public IReadOnlyList<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
    public string Name => Type.Name;
 
    public ComplexSerializerGeneratorState(
@@ -23,6 +24,7 @@ public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSeria
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
+             && ContainingTypes.SequenceEqual(other.ContainingTypes)
              && AttributeInfo.Equals(other.AttributeInfo);
    }
 
@@ -37,6 +39,7 @@ public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSeria
       {
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          return hashCode;
       }

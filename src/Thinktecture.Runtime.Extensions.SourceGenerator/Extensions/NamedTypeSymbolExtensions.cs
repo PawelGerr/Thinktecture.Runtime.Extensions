@@ -52,4 +52,24 @@ public static class NamedTypeSymbolExtensions
 
       return ctorStates ?? (IReadOnlyList<ConstructorState>)Array.Empty<ConstructorState>();
    }
+
+   public static IReadOnlyList<ContainingTypeState> GetContainingTypes(
+      this INamedTypeSymbol type)
+   {
+      if (type.ContainingType is null)
+         return Array.Empty<ContainingTypeState>();
+
+      var types = new List<ContainingTypeState>();
+      var containingType = type.ContainingType;
+
+      while (containingType != null)
+      {
+         types.Add(new ContainingTypeState(containingType.Name, containingType.IsReferenceType));
+         containingType = containingType.ContainingType;
+      }
+
+      types.Reverse();
+
+      return types;
+   }
 }

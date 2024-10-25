@@ -173,4 +173,33 @@ public static class StringBuilderExtensions
 
       return sb;
    }
+
+   public static StringBuilder RenderContainingTypesStart(
+      this StringBuilder sb,
+      IReadOnlyList<ContainingTypeState> containingTypes)
+   {
+      for (var i = 0; i < containingTypes.Count; i++)
+      {
+         var containingType = containingTypes[i];
+
+         sb.Append(@"
+partial ").Append(containingType.IsReferenceType ? "class " : "struct ").Append(containingType.Name).Append(@"
+{");
+      }
+
+      return sb;
+   }
+
+   public static StringBuilder RenderContainingTypesEnd(
+      this StringBuilder sb,
+      IReadOnlyList<ContainingTypeState> containingTypes)
+   {
+      for (var i = 0; i < containingTypes.Count; i++)
+      {
+         sb.Append(@"
+}");
+      }
+
+      return sb;
+   }
 }

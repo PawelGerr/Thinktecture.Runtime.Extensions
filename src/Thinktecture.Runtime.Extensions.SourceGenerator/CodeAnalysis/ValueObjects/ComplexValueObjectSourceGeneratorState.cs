@@ -5,6 +5,7 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
+   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
 
    public string? Namespace { get; }
    public string Name { get; }
@@ -33,6 +34,7 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      ContainingTypes = type.GetContainingTypes();
       IsReferenceType = type.IsReferenceType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
@@ -106,7 +108,8 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
-             && EqualityMembers.SequenceEqual(other.EqualityMembers);
+             && EqualityMembers.SequenceEqual(other.EqualityMembers)
+             && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
 
    public override int GetHashCode()
@@ -120,6 +123,7 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;
       }

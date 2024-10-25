@@ -33,6 +33,8 @@ namespace ").Append(_type.Namespace).Append(@";
 ");
       }
 
+      _sb.RenderContainingTypesStart(_type.ContainingTypes);
+
       _sb.Append(@"
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
 partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
@@ -260,7 +262,10 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          }
       }
    }
-}
+}");
+
+      _sb.RenderContainingTypesEnd(_type.ContainingTypes)
+         .Append(@"
 ");
    }
 

@@ -4,12 +4,19 @@ namespace Thinktecture;
 
 public static class SourceProductionContextExtensions
 {
-   public static void EmitFile(this SourceProductionContext context, string? typeNamespace, string typeName, string? generatedCode, string? fileNameSuffix)
+   public static void EmitFile(
+      this SourceProductionContext context,
+      string? typeNamespace,
+      IReadOnlyList<ContainingTypeState> containingTypes,
+      string typeName,
+      string? generatedCode,
+      string? fileNameSuffix)
    {
       if (String.IsNullOrWhiteSpace(generatedCode))
          return;
 
-      var hintName = $"{(typeNamespace is null ? null : $"{typeNamespace}.")}{typeName}{fileNameSuffix}.g.cs";
+      var containingTypeNames = containingTypes.Count == 0 ? null : String.Join(".", containingTypes.Select(t => t.Name)) + ".";
+      var hintName = $"{(typeNamespace is null ? null : $"{typeNamespace}.")}{containingTypeNames}{typeName}{fileNameSuffix}.g.cs";
       context.AddSource(hintName, generatedCode!);
    }
 

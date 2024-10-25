@@ -545,12 +545,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          return false;
       }
 
-      if (type.ContainingType is not null)
-      {
-         Logger.LogDebug("Nested types are not supported", tds);
-         return false;
-      }
-
       return true;
    }
 

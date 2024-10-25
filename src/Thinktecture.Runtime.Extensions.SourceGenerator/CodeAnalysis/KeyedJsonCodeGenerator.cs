@@ -36,6 +36,8 @@ namespace ").Append(_state.Type.Namespace).Append(@";
 ");
       }
 
+      _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
+
       _sb.Append(@"
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").Append(_state.Type.TypeFullyQualified).Append(", ");
 
@@ -43,9 +45,12 @@ namespace ").Append(_state.Type.Namespace).Append(@";
          _sb.Append(keyType).Append(", ");
 
       _sb.AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
-partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
+partial ").Append(_state.Type.IsReferenceType ? "class " : "struct ").Append(_state.Type.Name).Append(@"
 {
-}
+}");
+
+      _sb.RenderContainingTypesEnd(_state.Type.ContainingTypes)
+         .Append(@"
 ");
    }
 }

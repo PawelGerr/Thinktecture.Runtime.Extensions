@@ -153,7 +153,13 @@ public abstract class ThinktectureSourceGeneratorBase
                      .WithComparer(new SetComparer<FormattableGeneratorState>())
                      .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(formattables.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left.Type.Namespace, state.Left.Type.Name, new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName), state.Right, InterfaceCodeGeneratorFactory.Formattable));
+      context.RegisterSourceOutput(formattables.Combine(options), (ctx, state) => GenerateCode(ctx,
+                                                                                               state.Left.Type.Namespace,
+                                                                                               state.Left.Type.ContainingTypes,
+                                                                                               state.Left.Type.Name,
+                                                                                               new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName),
+                                                                                               state.Right,
+                                                                                               InterfaceCodeGeneratorFactory.Formattable));
    }
 
    protected void InitializeComparableCodeGenerator(
@@ -170,7 +176,13 @@ public abstract class ThinktectureSourceGeneratorBase
                     .WithComparer(new SetComparer<ComparableGeneratorState>())
                     .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(comparables.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left.Type.Namespace, state.Left.Type.Name, new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName), state.Right, InterfaceCodeGeneratorFactory.Comparable(state.Left.ComparerAccessor)));
+      context.RegisterSourceOutput(comparables.Combine(options), (ctx, state) => GenerateCode(ctx,
+                                                                                              state.Left.Type.Namespace,
+                                                                                              state.Left.Type.ContainingTypes,
+                                                                                              state.Left.Type.Name,
+                                                                                              new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName),
+                                                                                              state.Right,
+                                                                                              InterfaceCodeGeneratorFactory.Comparable(state.Left.ComparerAccessor)));
    }
 
    protected void InitializeParsableCodeGenerator(
@@ -187,7 +199,13 @@ public abstract class ThinktectureSourceGeneratorBase
                   .WithComparer(new SetComparer<ParsableGeneratorState>())
                   .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(parsables.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left.Type.Namespace, state.Left.Type.Name, state.Left, state.Right, InterfaceCodeGeneratorFactory.Parsable(state.Left.IsValidatableEnum)));
+      context.RegisterSourceOutput(parsables.Combine(options), (ctx, state) => GenerateCode(ctx,
+                                                                                            state.Left.Type.Namespace,
+                                                                                            state.Left.Type.ContainingTypes,
+                                                                                            state.Left.Type.Name,
+                                                                                            state.Left,
+                                                                                            state.Right,
+                                                                                            InterfaceCodeGeneratorFactory.Parsable(state.Left.IsValidatableEnum)));
    }
 
    protected void InitializeComparisonOperatorsCodeGenerator(
@@ -217,7 +235,13 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                   var state = tuple.Left.State;
                                                                   var generator = tuple.Left.CodeGenerator;
 
-                                                                  GenerateCode(ctx, state.Type.Namespace, state.Type.Name, new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName), tuple.Right, InterfaceCodeGeneratorFactory.Create(generator));
+                                                                  GenerateCode(ctx,
+                                                                               state.Type.Namespace,
+                                                                               state.Type.ContainingTypes,
+                                                                               state.Type.Name,
+                                                                               new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
+                                                                               tuple.Right,
+                                                                               InterfaceCodeGeneratorFactory.Create(generator));
                                                                });
    }
 
@@ -238,7 +262,13 @@ public abstract class ThinktectureSourceGeneratorBase
       context.RegisterSourceOutput(operators.Combine(options), (ctx, tuple) =>
                                                                {
                                                                   if (InterfaceCodeGeneratorFactory.EqualityComparison(tuple.Left.OperatorsGeneration, tuple.Left.EqualityComparer, out var generator))
-                                                                     GenerateCode(ctx, tuple.Left.Type.Namespace, tuple.Left.Type.Name, tuple.Left, tuple.Right, generator);
+                                                                     GenerateCode(ctx,
+                                                                                  tuple.Left.Type.Namespace,
+                                                                                  tuple.Left.Type.ContainingTypes,
+                                                                                  tuple.Left.Type.Name,
+                                                                                  tuple.Left,
+                                                                                  tuple.Right,
+                                                                                  generator);
                                                                });
    }
 
@@ -269,7 +299,13 @@ public abstract class ThinktectureSourceGeneratorBase
                                       var state = tuple.Left.State;
                                       var generator = tuple.Left.CodeGenerator;
 
-                                      GenerateCode(ctx, state.Type.Namespace, state.Type.Name, new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName), tuple.Right, InterfaceCodeGeneratorFactory.Create(generator));
+                                      GenerateCode(ctx,
+                                                   state.Type.Namespace,
+                                                   state.Type.ContainingTypes,
+                                                   state.Type.Name,
+                                                   new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
+                                                   tuple.Right,
+                                                   InterfaceCodeGeneratorFactory.Create(generator));
                                    });
    }
 
@@ -300,12 +336,13 @@ public abstract class ThinktectureSourceGeneratorBase
       StringBuilder stringBuilder)
       where TState : INamespaceAndName, IEquatable<TState>
    {
-      GenerateCode(context, state.Namespace, state.Name, state, options, generatorFactory, stringBuilder);
+      GenerateCode(context, state.Namespace, state.ContainingTypes, state.Name, state, options, generatorFactory, stringBuilder);
    }
 
    private void GenerateCode<TState>(
       SourceProductionContext context,
       string? ns,
+      IReadOnlyList<ContainingTypeState> containingTypes,
       string name,
       TState state,
       GeneratorOptions options,
@@ -316,7 +353,7 @@ public abstract class ThinktectureSourceGeneratorBase
 
       try
       {
-         GenerateCode(context, ns, name, state, options, generatorFactory, stringBuilder);
+         GenerateCode(context, ns, containingTypes, name, state, options, generatorFactory, stringBuilder);
       }
       finally
       {
@@ -327,6 +364,7 @@ public abstract class ThinktectureSourceGeneratorBase
    private void GenerateCode<TState>(
       SourceProductionContext context,
       string? ns,
+      IReadOnlyList<ContainingTypeState> containingTypes,
       string name,
       TState state,
       GeneratorOptions options,
@@ -358,7 +396,7 @@ public abstract class ThinktectureSourceGeneratorBase
 
          var generatedCode = stringBuilder.ToString();
 
-         context.EmitFile(ns, name, generatedCode, generator.FileNameSuffix);
+         context.EmitFile(ns, containingTypes, name, generatedCode, generator.FileNameSuffix);
 
          if (Logger.IsEnabled(LogLevel.Information))
             Logger.Log(LogLevel.Information, $"Code generator '{generator.CodeGeneratorName}' emitted code for '{ns}.{name}'.");

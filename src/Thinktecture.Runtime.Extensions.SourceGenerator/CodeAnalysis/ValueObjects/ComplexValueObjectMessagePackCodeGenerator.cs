@@ -33,6 +33,8 @@ namespace ").Append(_type.Namespace).Append(@";
 ");
       }
 
+      _sb.RenderContainingTypesStart(_type.ContainingTypes);
+
       _sb.Append(@"
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
 partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
@@ -133,7 +135,10 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.Append(@"
       }
    }
-}
+}");
+
+      _sb.RenderContainingTypesEnd(_type.ContainingTypes)
+         .Append(@"
 ");
    }
 
