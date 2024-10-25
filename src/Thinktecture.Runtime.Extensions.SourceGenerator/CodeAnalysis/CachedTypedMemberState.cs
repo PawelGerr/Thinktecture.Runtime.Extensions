@@ -7,6 +7,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public SpecialType SpecialType { get; }
+   public TypeKind TypeKind { get; }
    public bool IsReferenceType { get; }
    public bool IsReferenceTypeOrNullableStruct { get; }
    public bool IsNullableStruct { get; }
@@ -14,6 +15,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
+   public bool IsToStringReturnTypeNullable { get; }
    public ImplementedComparisonOperators ComparisonOperators { get; }
    public ImplementedOperators AdditionOperators { get; }
    public ImplementedOperators SubtractionOperators { get; }
@@ -27,6 +29,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
       TypeFullyQualified = typedMemberState.TypeFullyQualified;
       TypeMinimallyQualified = typedMemberState.TypeMinimallyQualified;
       SpecialType = typedMemberState.SpecialType;
+      TypeKind = typedMemberState.TypeKind;
       IsReferenceType = typedMemberState.IsReferenceType;
       IsReferenceTypeOrNullableStruct = typedMemberState.IsReferenceTypeOrNullableStruct;
       IsNullableStruct = typedMemberState.IsNullableStruct;
@@ -34,6 +37,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
       IsFormattable = typedMemberState.IsFormattable;
       IsComparable = typedMemberState.IsComparable;
       IsParsable = typedMemberState.IsParsable;
+      IsToStringReturnTypeNullable = typedMemberState.IsToStringReturnTypeNullable;
       ComparisonOperators = typedMemberState.ComparisonOperators;
       AdditionOperators = typedMemberState.AdditionOperators;
       SubtractionOperators = typedMemberState.SubtractionOperators;

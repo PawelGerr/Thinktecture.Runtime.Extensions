@@ -5572,7 +5572,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                          }
 
                                                          /// <inheritdoc />
-                                                         public override string ToString()
+                                                         public override string? ToString()
                                                          {
                                                             return this._value.ToString();
                                                          }

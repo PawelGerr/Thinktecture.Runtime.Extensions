@@ -5,6 +5,7 @@ public interface ITypedMemberState : IEquatable<ITypedMemberState>
    string TypeFullyQualified { get; }
    string TypeMinimallyQualified { get; }
    SpecialType SpecialType { get; }
+   TypeKind TypeKind { get; }
    bool IsReferenceType { get; }
    bool IsReferenceTypeOrNullableStruct { get; }
    bool IsNullableStruct { get; }
@@ -12,6 +13,7 @@ public interface ITypedMemberState : IEquatable<ITypedMemberState>
    bool IsFormattable { get; }
    bool IsComparable { get; }
    bool IsParsable { get; }
+   bool IsToStringReturnTypeNullable { get; }
    ImplementedComparisonOperators ComparisonOperators { get; }
    ImplementedOperators AdditionOperators { get; }
    ImplementedOperators SubtractionOperators { get; }

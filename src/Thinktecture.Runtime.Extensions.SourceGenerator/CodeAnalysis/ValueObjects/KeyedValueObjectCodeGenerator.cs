@@ -201,10 +201,13 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var keyMember = _state.KeyMember;
 
+      if (keyMember.IsInterface)
+         return;
+
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Implicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -222,7 +225,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Implicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
@@ -236,13 +239,13 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var keyMember = _state.KeyMember;
 
-      if (keyMember.IsReferenceType || !_state.IsReferenceType)
+      if (keyMember.IsInterface || keyMember.IsReferenceType || !_state.IsReferenceType)
          return;
 
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion to the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Explicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
@@ -259,16 +262,20 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateExplicitConversion(bool emptyStringYieldsNull)
    {
       var keyMember = _state.KeyMember;
+
+      if (keyMember.IsInterface)
+         return;
+
       var bothAreReferenceTypes = _state.IsReferenceType && keyMember.IsReferenceType;
       var nullableQuestionMark = bothAreReferenceTypes ? "?" : null;
 
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion from the type <see cref=""").AppendTypeFullyQualified(keyMember).Append(@"""/>.
+      /// Explicit conversion from the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""").Append(keyMember.ArgumentName).Append(@""">Value to covert.</param>
-      /// <returns>An instance of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.</returns>");
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@".</returns>");
 
       if (bothAreReferenceTypes && !emptyStringYieldsNull)
       {
@@ -517,7 +524,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
-      public override string ToString()
+      public override string").Append(_state.KeyMember.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
          return this.").Append(_state.KeyMember.Name).Append(@".ToString();
       }");

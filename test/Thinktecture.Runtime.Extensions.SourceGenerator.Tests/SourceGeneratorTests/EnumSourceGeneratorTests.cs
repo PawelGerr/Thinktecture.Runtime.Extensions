@@ -140,7 +140,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// Gets an enumeration item for provided <paramref name="key"/>.
                                                                                     /// </summary>
                                                                                     /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                                                    /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                                                    /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                                                     /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                                                     [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                                                     public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
@@ -459,7 +459,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// Gets an enumeration item for provided <paramref name="key"/>.
                                                                                     /// </summary>
                                                                                     /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                                                    /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                                                    /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                                                     /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                                                     [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                                                     public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
@@ -775,7 +775,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// Gets an enumeration item for provided <paramref name="key"/>.
                                                                                  /// </summary>
                                                                                  /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                                                 /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                                                 /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                                                  /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                                                  public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                                                  {
@@ -2244,7 +2244,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
@@ -2797,7 +2797,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
@@ -3091,7 +3091,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
@@ -3595,7 +3595,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
@@ -4095,7 +4095,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::TestEnum? Get(string? @key)
@@ -4786,7 +4786,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
@@ -5639,7 +5639,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
                                                          {
@@ -6297,7 +6297,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          public static global::Thinktecture.Tests.TestEnum Get(string? @key)
                                                          {
                                                             if (@key is null)
@@ -7108,7 +7108,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="name"/>.
                                                          /// </summary>
                                                          /// <param name="name">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="name"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="name"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("name")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @name)
                                                          {
@@ -7985,7 +7985,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                          {
@@ -8485,7 +8485,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                          {
@@ -9041,7 +9041,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// Gets an enumeration item for provided <paramref name="key"/>.
                                                          /// </summary>
                                                          /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                         /// <returns>An instance of <see cref="TestEnum" /> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
                                                          public static global::Thinktecture.Tests.TestEnum? Get(string? @key)

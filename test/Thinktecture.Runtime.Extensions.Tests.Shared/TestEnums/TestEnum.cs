@@ -4,7 +4,9 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum<string>(IsValidatable = true,
                    SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
-                   MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
+                   MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+                   ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                   EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
 public partial class TestEnum
 {
    public static readonly TestEnum Item1 = new("item1");

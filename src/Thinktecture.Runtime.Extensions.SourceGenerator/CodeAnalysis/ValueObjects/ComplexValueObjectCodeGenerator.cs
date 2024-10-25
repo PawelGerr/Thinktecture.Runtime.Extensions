@@ -321,7 +321,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.
+      /// Compares two instances of ").AppendTypeForXmlComment(_state).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -342,7 +342,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       /// <summary>
-      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(_state).Append(@"""/>.
+      /// Compares two instances of ").AppendTypeForXmlComment(_state).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>

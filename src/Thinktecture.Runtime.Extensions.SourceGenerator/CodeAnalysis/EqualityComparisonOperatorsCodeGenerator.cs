@@ -71,7 +71,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
    {
       sb.Append(@"
       /// <summary>
-      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/>.
+      /// Compares two instances of ").AppendTypeForXmlComment(state.Type).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -105,7 +105,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares two instances of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/>.
+      /// Compares two instances of ").AppendTypeForXmlComment(state.Type).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
@@ -125,7 +125,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
 
       sb.Append(@"
 
-      private static bool Equals(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
+      private static bool Equals(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {");
 
       if (state.Type.IsReferenceType)
@@ -135,6 +135,9 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
             sb.Append(@"
          if (obj is null)
             return value is null;
+
+         if(value is null)
+            return false;
 ");
          }
          else
@@ -175,45 +178,45 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
+      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeForXmlComment(state.KeyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
+      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {
          return Equals(obj, value);
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
+      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeForXmlComment(state.KeyMember).Append(@".
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").AppendTypeFullyQualified(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
+      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return Equals(obj, value);
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/> with <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/>.
+      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeForXmlComment(state.KeyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
+      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {
          return !(obj == value);
       }
 
       /// <summary>
-      /// Compares an instance of <see cref=""").AppendTypeFullyQualified(state.KeyMember).Append(@"""/> with <see cref=""").AppendTypeMinimallyQualified(state.Type).Append(@"""/>.
+      /// Compares an instance of ").AppendTypeForXmlComment(state.KeyMember).Append(" with ").AppendTypeForXmlComment(state.Type).Append(@".
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").AppendTypeFullyQualified(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
+      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return !(obj == value);
       }");
