@@ -33,11 +33,16 @@ namespace ").Append(_state.Type.Namespace).Append(@";
 ");
       }
 
+      _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
+
       _sb.Append(@"
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<").AppendTypeFullyQualified(_state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
 partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
 {
-}
+}");
+
+      _sb.RenderContainingTypesEnd(_state.Type.ContainingTypes)
+         .Append(@"
 ");
    }
 }

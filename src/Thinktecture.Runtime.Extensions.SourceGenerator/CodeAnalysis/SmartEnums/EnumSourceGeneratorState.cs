@@ -7,6 +7,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
+   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
 
    public KeyMemberState? KeyMember { get; }
    public ValidationErrorState ValidationError { get; }
@@ -42,6 +43,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
+      ContainingTypes = type.GetContainingTypes();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
@@ -77,7 +79,8 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && Settings.Equals(other.Settings)
              && Equals(BaseType, other.BaseType)
              && Items.Equals(other.Items)
-             && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties);
+             && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
+             && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
 
    public override int GetHashCode()
@@ -96,6 +99,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ (BaseType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ Items.GetHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;
       }

@@ -27,7 +27,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.EnumKeyMemberNameNotAllowed,
                                                                                                               DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
                                                                                                               DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
-                                                                                                              DiagnosticsDescriptors.TypeCannotBeNestedClass,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
                                                                                                               DiagnosticsDescriptors.EnumsValueObjectsAndUnionsMustNotBeGeneric,
@@ -296,7 +295,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
 
-         ValidateUnion(context, type, attrCreation, locationOfFirstDeclaration);
+         ValidateUnion(context, type, locationOfFirstDeclaration);
       }
       catch (Exception ex)
       {
@@ -306,20 +305,14 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ValidateUnion(OperationAnalysisContext context,
-                                     INamedTypeSymbol type,
-                                     IObjectCreationOperation attribute,
-                                     Location locationOfFirstDeclaration)
+   private static void ValidateUnion(
+      OperationAnalysisContext context,
+      INamedTypeSymbol type,
+      Location locationOfFirstDeclaration)
    {
       if (type.IsRecord || type.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, type);
-         return;
-      }
-
-      if (type.ContainingType is not null) // is nested class
-      {
-         ReportDiagnostic(context, DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, type);
          return;
       }
 
@@ -328,11 +321,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Union");
    }
 
-   private static void ValidateKeyedValueObject(OperationAnalysisContext context,
-                                                IReadOnlyList<InstanceMemberInfo>? assignableMembers,
-                                                INamedTypeSymbol type,
-                                                IObjectCreationOperation attribute,
-                                                Location locationOfFirstDeclaration)
+   private static void ValidateKeyedValueObject(
+      OperationAnalysisContext context,
+      IReadOnlyList<InstanceMemberInfo>? assignableMembers,
+      INamedTypeSymbol type,
+      IObjectCreationOperation attribute,
+      Location locationOfFirstDeclaration)
    {
       var keyType = (attribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
 
@@ -433,12 +427,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return null;
       }
 
-      if (type.ContainingType is not null) // is nested class
-      {
-         ReportDiagnostic(context, DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, type);
-         return null;
-      }
-
       var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
 
       if (factory is null)
@@ -511,12 +499,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (enumType.IsRecord || enumType.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, enumType);
-         return;
-      }
-
-      if (enumType.ContainingType is not null) // is nested class
-      {
-         ReportDiagnostic(context, DiagnosticsDescriptors.TypeCannotBeNestedClass, locationOfFirstDeclaration, enumType);
          return;
       }
 

@@ -326,12 +326,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             return null;
          }
 
-         if (type.ContainingType is not null)
-         {
-            Logger.LogDebug("Nested types are not supported", tds);
-            return null;
-         }
-
          if (context.Attributes.Length > 1)
          {
             Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds);
@@ -412,7 +406,12 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                       hasCreateInvalidItemImplementation,
                                                       derivedTypeNames.Count > 0,
                                                       cancellationToken);
-         var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace, enumState.Name, enumState.TypeFullyQualified, enumState.IsReferenceType, derivedTypeNames);
+         var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace,
+                                                      enumState.Name,
+                                                      enumState.TypeFullyQualified,
+                                                      enumState.IsReferenceType,
+                                                      enumState.ContainingTypes,
+                                                      derivedTypeNames);
 
          Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);
 

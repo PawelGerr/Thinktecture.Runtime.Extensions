@@ -5,21 +5,24 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
    public string? Namespace { get; }
    public string Name { get; }
    public string TypeFullyQualified { get; }
-   public IReadOnlyList<string> DerivedTypesFullyQualified { get; }
    public bool IsReferenceType { get; }
+   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
+   public IReadOnlyList<string> DerivedTypesFullyQualified { get; }
 
    public SmartEnumDerivedTypes(
       string? ns,
       string name,
       string typeFullyQualified,
       bool isReferenceType,
+      IReadOnlyList<ContainingTypeState> containingTypes,
       IReadOnlyList<string> derivedTypesFullyQualified)
    {
       Namespace = ns;
       Name = name;
       TypeFullyQualified = typeFullyQualified;
-      DerivedTypesFullyQualified = derivedTypesFullyQualified;
       IsReferenceType = isReferenceType;
+      ContainingTypes = containingTypes;
+      DerivedTypesFullyQualified = derivedTypesFullyQualified;
    }
 
    public bool Equals(SmartEnumDerivedTypes? other)
@@ -34,7 +37,8 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
              && Name == other.Name
              && TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
-             && DerivedTypesFullyQualified.SequenceEqual(other.DerivedTypesFullyQualified);
+             && DerivedTypesFullyQualified.SequenceEqual(other.DerivedTypesFullyQualified)
+             && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
 
    public override bool Equals(object? obj)
@@ -51,6 +55,7 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
          hashCode = (hashCode * 397) ^ TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ DerivedTypesFullyQualified.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;
       }

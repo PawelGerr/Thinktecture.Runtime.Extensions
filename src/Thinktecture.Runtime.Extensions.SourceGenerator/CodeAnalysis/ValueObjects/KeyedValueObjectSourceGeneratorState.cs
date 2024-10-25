@@ -5,6 +5,7 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
+   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
 
    public string? Namespace { get; }
    public string Name { get; }
@@ -31,6 +32,7 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      ContainingTypes = type.GetContainingTypes();
       IsReferenceType = type.IsReferenceType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
@@ -63,7 +65,8 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
              && FactoryValidationReturnType == other.FactoryValidationReturnType
              && KeyMember.Equals(other.KeyMember)
              && ValidationError.Equals(other.ValidationError)
-             && Settings.Equals(other.Settings);
+             && Settings.Equals(other.Settings)
+             && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
 
    public override int GetHashCode()
@@ -76,6 +79,7 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
          hashCode = (hashCode * 397) ^ KeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
+         hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;
       }

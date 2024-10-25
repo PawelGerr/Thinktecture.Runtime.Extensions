@@ -34,6 +34,8 @@ namespace ").Append(_state.Type.Namespace).Append(@";
 ");
       }
 
+      _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
+
       _sb.Append(@"
 partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(" :");
 
@@ -45,7 +47,10 @@ partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").
       _codeGenerator.GenerateImplementation(_sb, _state);
 
       _sb.Append(@"
-}
+}");
+
+      _sb.RenderContainingTypesEnd(_state.Type.ContainingTypes)
+         .Append(@"
 ");
    }
 }

@@ -4,6 +4,7 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
 {
    public string? Namespace { get; }
    public string Name { get; }
+   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsReferenceType { get; }
@@ -24,6 +25,7 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
       Settings = settings;
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
+      ContainingTypes = type.GetContainingTypes();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
@@ -48,7 +50,8 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
              && IsReferenceType == other.IsReferenceType
              && IsRefStruct == other.IsRefStruct
              && Settings.Equals(other.Settings)
-             && MemberTypes.SequenceEqual(other.MemberTypes);
+             && MemberTypes.SequenceEqual(other.MemberTypes)
+             && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
 
    public override int GetHashCode()
@@ -60,6 +63,7 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
          hashCode = (hashCode * 397) ^ IsRefStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ MemberTypes.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;
       }
