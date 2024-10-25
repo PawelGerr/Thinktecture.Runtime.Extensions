@@ -101,12 +101,6 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             return null;
          }
 
-         if (type.ContainingType is not null)
-         {
-            Logger.LogDebug("Nested types are not supported", tds);
-            return null;
-         }
-
          if (context.Attributes.Length > 1)
          {
             Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.Union.NAME}'", tds);

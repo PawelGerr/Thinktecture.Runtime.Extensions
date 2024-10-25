@@ -31,7 +31,11 @@ namespace ").Append(_state.Namespace).Append(@"
 {");
       }
 
+      _sb.RenderContainingTypesStart(_state.ContainingTypes);
+
       GenerateUnion(cancellationToken);
+
+      _sb.RenderContainingTypesEnd(_state.ContainingTypes);
 
       if (hasNamespace)
       {
