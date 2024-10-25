@@ -2,7 +2,9 @@ using System;
 
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-[SmartEnum<string>(IsValidatable = true)]
+[SmartEnum<string>(IsValidatable = true,
+                   ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                   EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
 public sealed partial class TestEnum
 {
    public static readonly TestEnum Item1 = new("item1");

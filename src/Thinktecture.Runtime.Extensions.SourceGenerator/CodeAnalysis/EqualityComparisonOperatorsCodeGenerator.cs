@@ -125,7 +125,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
 
       sb.Append(@"
 
-      private static bool Equals(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
+      private static bool Equals(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {");
 
       if (state.Type.IsReferenceType)
@@ -135,6 +135,9 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
             sb.Append(@"
          if (obj is null)
             return value is null;
+
+         if(value is null)
+            return false;
 ");
          }
          else
@@ -180,7 +183,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
+      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {
          return Equals(obj, value);
       }
@@ -191,7 +194,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(").AppendTypeFullyQualified(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
+      public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return Equals(obj, value);
       }
@@ -202,7 +205,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualified(state.KeyMember).Append(@" value)
+      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {
          return !(obj == value);
       }
@@ -213,7 +216,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(").AppendTypeFullyQualified(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
+      public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return !(obj == value);
       }");
