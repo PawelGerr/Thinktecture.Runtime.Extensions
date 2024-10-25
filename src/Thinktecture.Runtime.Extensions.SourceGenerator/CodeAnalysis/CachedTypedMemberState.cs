@@ -15,6 +15,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
+   public bool IsToStringReturnTypeNullable { get; }
    public ImplementedComparisonOperators ComparisonOperators { get; }
    public ImplementedOperators AdditionOperators { get; }
    public ImplementedOperators SubtractionOperators { get; }
@@ -36,6 +37,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
       IsFormattable = typedMemberState.IsFormattable;
       IsComparable = typedMemberState.IsComparable;
       IsParsable = typedMemberState.IsParsable;
+      IsToStringReturnTypeNullable = typedMemberState.IsToStringReturnTypeNullable;
       ComparisonOperators = typedMemberState.ComparisonOperators;
       AdditionOperators = typedMemberState.AdditionOperators;
       SubtractionOperators = typedMemberState.SubtractionOperators;

@@ -16,6 +16,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;
    public bool IsParsable => _typedMemberState.IsParsable;
+   public bool IsToStringReturnTypeNullable => _typedMemberState.IsToStringReturnTypeNullable;
    public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
    public ImplementedOperators AdditionOperators => _typedMemberState.AdditionOperators;
    public ImplementedOperators SubtractionOperators => _typedMemberState.SubtractionOperators;

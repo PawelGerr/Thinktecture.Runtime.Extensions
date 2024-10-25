@@ -13,6 +13,7 @@ public interface ITypedMemberState : IEquatable<ITypedMemberState>
    bool IsFormattable { get; }
    bool IsComparable { get; }
    bool IsParsable { get; }
+   bool IsToStringReturnTypeNullable { get; }
    ImplementedComparisonOperators ComparisonOperators { get; }
    ImplementedOperators AdditionOperators { get; }
    ImplementedOperators SubtractionOperators { get; }

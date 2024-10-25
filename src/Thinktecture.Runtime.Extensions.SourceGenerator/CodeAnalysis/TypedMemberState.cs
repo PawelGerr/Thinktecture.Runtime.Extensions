@@ -14,6 +14,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
+   public bool IsToStringReturnTypeNullable { get; }
    public ImplementedComparisonOperators ComparisonOperators { get; }
    public ImplementedOperators AdditionOperators { get; }
    public ImplementedOperators SubtractionOperators { get; }
@@ -29,6 +30,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       SpecialType = type.SpecialType;
       TypeKind = type.TypeKind;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+      IsToStringReturnTypeNullable = IsToStringNullable(type);
 
       // Check for implemented interfaces
       foreach (var @interface in type.AllInterfaces)
@@ -139,6 +141,23 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       }
    }
 
+   private static bool IsToStringNullable(ITypeSymbol type)
+   {
+      var array = type.GetMembers();
+
+      for (var i = 0; i < array.Length; i++)
+      {
+         var member = array[i];
+
+         if (member is not IMethodSymbol { Name: "ToString" } toString)
+            continue;
+
+         return toString.ReturnNullableAnnotation == NullableAnnotation.Annotated;
+      }
+
+      return true;
+   }
+
    public override bool Equals(object? obj)
    {
       return obj is TypedMemberState other && Equals(other);
@@ -164,6 +183,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
              && IsParsable == other.IsParsable
+             && IsToStringReturnTypeNullable == other.IsToStringReturnTypeNullable
              && ComparisonOperators == other.ComparisonOperators
              && AdditionOperators == other.AdditionOperators
              && SubtractionOperators == other.SubtractionOperators
@@ -183,6 +203,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsToStringReturnTypeNullable.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
          hashCode = (hashCode * 397) ^ (int)AdditionOperators;
          hashCode = (hashCode * 397) ^ (int)SubtractionOperators;

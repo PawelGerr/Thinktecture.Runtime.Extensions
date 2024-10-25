@@ -204,12 +204,12 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
-   private void GenerateToString(IMemberState keyProperty)
+   private void GenerateToString(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
       /// <inheritdoc />
-      public override string ToString()
+      public override string").Append(keyProperty.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
          return this.").Append(keyProperty.Name).Append(@".ToString();
       }");

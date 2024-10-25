@@ -524,7 +524,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
-      public override string ToString()
+      public override string").Append(_state.KeyMember.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
          return this.").Append(_state.KeyMember.Name).Append(@".ToString();
       }");
