@@ -72,8 +72,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
 
    private bool IsUnionCandidate(TypeDeclarationSyntax typeDeclaration)
    {
-      var isCandidate = typeDeclaration.IsPartial()
-                        && !typeDeclaration.IsGeneric();
+      var isCandidate = !typeDeclaration.IsGeneric();
 
       if (isCandidate)
       {

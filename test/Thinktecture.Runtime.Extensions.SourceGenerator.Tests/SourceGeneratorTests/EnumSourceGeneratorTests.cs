@@ -1440,26 +1440,6 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                               """;
 
    [Fact]
-   public void Should_not_generate_if_class_is_not_partial()
-   {
-      var source = """
-                   using System;
-
-                   namespace Thinktecture.Tests
-                   {
-                     [SmartEnum<string>]
-                   	public class TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
-                   """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
-      AssertOutput(output, null);
-   }
-
-   [Fact]
    public void Should_not_generate_if_generic()
    {
       var source = """

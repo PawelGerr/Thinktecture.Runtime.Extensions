@@ -399,8 +399,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
    private bool IsValueObjectCandidate(TypeDeclarationSyntax typeDeclaration)
    {
-      var isCandidate = typeDeclaration.IsPartial()
-                        && !typeDeclaration.IsGeneric();
+      var isCandidate = !typeDeclaration.IsGeneric();
 
       if (isCandidate)
       {

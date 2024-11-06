@@ -297,8 +297,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private bool IsEnumCandidate(TypeDeclarationSyntax typeDeclaration)
    {
-      var isCandidate = typeDeclaration.IsPartial()
-                        && !typeDeclaration.IsGeneric();
+      var isCandidate = !typeDeclaration.IsGeneric();
 
       if (isCandidate)
       {

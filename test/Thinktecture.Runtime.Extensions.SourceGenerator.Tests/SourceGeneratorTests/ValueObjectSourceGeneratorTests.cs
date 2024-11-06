@@ -1857,48 +1857,6 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                """;
 
    [Fact]
-   public void Should_not_generate_code_for_keyed_class_if_not_partial()
-   {
-      var source = """
-
-                   using System;
-                   using Thinktecture;
-
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>]
-                   	public class TestValueObject
-                   	{
-                     }
-                   }
-
-                   """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
-      AssertOutput(output, null);
-   }
-
-   [Fact]
-   public void Should_not_generate_code_for_complex_class_if_not_partial()
-   {
-      var source = """
-
-                   using System;
-                   using Thinktecture;
-
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public class TestValueObject
-                   	{
-                     }
-                   }
-
-                   """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
-      AssertOutput(output, null);
-   }
-
-   [Fact]
    public void Should_generate_complex_class_with_nullable_members()
    {
       var source = """
