@@ -4,13 +4,16 @@ public sealed class ContainingTypeState : IEquatable<ContainingTypeState>, IHash
 {
    public string Name { get; }
    public bool IsReferenceType { get; }
+   public bool IsRecord { get; }
 
    public ContainingTypeState(
       string name,
-      bool isReferenceType)
+      bool isReferenceType,
+      bool isRecord)
    {
       Name = name;
       IsReferenceType = isReferenceType;
+      IsRecord = isRecord;
    }
 
    public bool Equals(ContainingTypeState? other)
@@ -22,7 +25,8 @@ public sealed class ContainingTypeState : IEquatable<ContainingTypeState>, IHash
          return true;
 
       return Name == other.Name
-             && IsReferenceType == other.IsReferenceType;
+             && IsReferenceType == other.IsReferenceType
+             && IsRecord == other.IsRecord;
    }
 
    public override bool Equals(object? obj)

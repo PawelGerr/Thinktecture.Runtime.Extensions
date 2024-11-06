@@ -64,7 +64,7 @@ public static class NamedTypeSymbolExtensions
 
       while (containingType != null)
       {
-         types.Add(new ContainingTypeState(containingType.Name, containingType.IsReferenceType));
+         types.Add(new ContainingTypeState(containingType.Name, containingType.IsReferenceType, containingType.IsRecord));
          containingType = containingType.ContainingType;
       }
 

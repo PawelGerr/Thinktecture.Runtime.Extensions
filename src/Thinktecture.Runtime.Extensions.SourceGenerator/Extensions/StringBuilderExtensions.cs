@@ -255,9 +255,12 @@ public static class StringBuilderExtensions
       for (var i = 0; i < containingTypes.Count; i++)
       {
          var containingType = containingTypes[i];
+         var typeKind = containingType.IsRecord
+                           ? containingType.IsReferenceType ? "record " : "record struct "
+                           : containingType.IsReferenceType ? "class " : "struct ";
 
          sb.Append(@"
-partial ").Append(containingType.IsReferenceType ? "class " : "struct ").Append(containingType.Name).Append(@"
+partial ").Append(typeKind).Append(containingType.Name).Append(@"
 {");
       }
 
