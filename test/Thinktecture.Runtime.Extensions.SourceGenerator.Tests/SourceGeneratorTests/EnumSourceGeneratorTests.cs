@@ -263,21 +263,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <summary>
                                                                                     /// Executes an action depending on the current item.
                                                                                     /// </summary>
-                                                                                    /// <param name="context">Context to be passed to the callbacks.</param>
+                                                                                    /// <param name="state">State to be passed to the callbacks.</param>
                                                                                     /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public void Switch<TContext>(
-                                                                                       TContext context,
-                                                                                       global::System.Action<TContext> @item1,
-                                                                                       global::System.Action<TContext> @item2)
+                                                                                    public void Switch<TState>(
+                                                                                       TState state,
+                                                                                       global::System.Action<TState> @item1,
+                                                                                       global::System.Action<TState> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             @item1(context);
+                                                                                             @item1(state);
                                                                                              return;
                                                                                           case 1:
-                                                                                             @item2(context);
+                                                                                             @item2(state);
                                                                                              return;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -307,20 +307,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <summary>
                                                                                     /// Executes a function depending on the current item.
                                                                                     /// </summary>
-                                                                                    /// <param name="context">Context to be passed to the callbacks.</param>
+                                                                                    /// <param name="state">State to be passed to the callbacks.</param>
                                                                                     /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public TResult Switch<TContext, TResult>(
-                                                                                       TContext context,
-                                                                                       global::System.Func<TContext, TResult> @item1,
-                                                                                       global::System.Func<TContext, TResult> @item2)
+                                                                                    public TResult Switch<TState, TResult>(
+                                                                                       TState state,
+                                                                                       global::System.Func<TState, TResult> @item1,
+                                                                                       global::System.Func<TState, TResult> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return @item1(context);
+                                                                                             return @item1(state);
                                                                                           case 1:
-                                                                                             return @item2(context);
+                                                                                             return @item2(state);
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -582,21 +582,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <summary>
                                                                                     /// Executes an action depending on the current item.
                                                                                     /// </summary>
-                                                                                    /// <param name="context">Context to be passed to the callbacks.</param>
+                                                                                    /// <param name="state">State to be passed to the callbacks.</param>
                                                                                     /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public void Switch<TContext>(
-                                                                                       TContext context,
-                                                                                       global::System.Action<TContext> @item1,
-                                                                                       global::System.Action<TContext> @item2)
+                                                                                    public void Switch<TState>(
+                                                                                       TState state,
+                                                                                       global::System.Action<TState> @item1,
+                                                                                       global::System.Action<TState> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             @item1(context);
+                                                                                             @item1(state);
                                                                                              return;
                                                                                           case 1:
-                                                                                             @item2(context);
+                                                                                             @item2(state);
                                                                                              return;
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -626,20 +626,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     /// <summary>
                                                                                     /// Executes a function depending on the current item.
                                                                                     /// </summary>
-                                                                                    /// <param name="context">Context to be passed to the callbacks.</param>
+                                                                                    /// <param name="state">State to be passed to the callbacks.</param>
                                                                                     /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                     /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public TResult Switch<TContext, TResult>(
-                                                                                       TContext context,
-                                                                                       global::System.Func<TContext, TResult> @item1,
-                                                                                       global::System.Func<TContext, TResult> @item2)
+                                                                                    public TResult Switch<TState, TResult>(
+                                                                                       TState state,
+                                                                                       global::System.Func<TState, TResult> @item1,
+                                                                                       global::System.Func<TState, TResult> @item2)
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
                                                                                           case 0:
-                                                                                             return @item1(context);
+                                                                                             return @item1(state);
                                                                                           case 1:
-                                                                                             return @item2(context);
+                                                                                             return @item2(state);
                                                                                           default:
                                                                                              throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                        }
@@ -888,21 +888,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <summary>
                                                                                  /// Executes an action depending on the current item.
                                                                                  /// </summary>
-                                                                                 /// <param name="context">Context to be passed to the callbacks.</param>
+                                                                                 /// <param name="state">State to be passed to the callbacks.</param>
                                                                                  /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                  /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                 public void Switch<TContext>(
-                                                                                    TContext context,
-                                                                                    global::System.Action<TContext> @item1,
-                                                                                    global::System.Action<TContext> @item2)
+                                                                                 public void Switch<TState>(
+                                                                                    TState state,
+                                                                                    global::System.Action<TState> @item1,
+                                                                                    global::System.Action<TState> @item2)
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
                                                                                        case 0:
-                                                                                          @item1(context);
+                                                                                          @item1(state);
                                                                                           return;
                                                                                        case 1:
-                                                                                          @item2(context);
+                                                                                          @item2(state);
                                                                                           return;
                                                                                        default:
                                                                                           throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -932,20 +932,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <summary>
                                                                                  /// Executes a function depending on the current item.
                                                                                  /// </summary>
-                                                                                 /// <param name="context">Context to be passed to the callbacks.</param>
+                                                                                 /// <param name="state">State to be passed to the callbacks.</param>
                                                                                  /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                                                  /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                 public TResult Switch<TContext, TResult>(
-                                                                                    TContext context,
-                                                                                    global::System.Func<TContext, TResult> @item1,
-                                                                                    global::System.Func<TContext, TResult> @item2)
+                                                                                 public TResult Switch<TState, TResult>(
+                                                                                    TState state,
+                                                                                    global::System.Func<TState, TResult> @item1,
+                                                                                    global::System.Func<TState, TResult> @item2)
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
                                                                                        case 0:
-                                                                                          return @item1(context);
+                                                                                          return @item1(state);
                                                                                        case 1:
-                                                                                          return @item2(context);
+                                                                                          return @item2(state);
                                                                                        default:
                                                                                           throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                                                     }
@@ -1668,21 +1668,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -1692,15 +1692,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1708,19 +1708,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -1776,20 +1776,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -1798,15 +1798,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1814,17 +1814,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -2005,21 +2005,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2049,20 +2049,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2399,21 +2399,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -2423,15 +2423,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2439,19 +2439,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -2507,20 +2507,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -2529,15 +2529,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2545,17 +2545,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -3246,21 +3246,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3270,15 +3270,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3286,19 +3286,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -3354,20 +3354,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3376,15 +3376,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3392,17 +3392,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
@@ -3750,21 +3750,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -3774,15 +3774,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3790,19 +3790,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -3858,20 +3858,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -3880,15 +3880,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3896,17 +3896,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -4250,21 +4250,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -4274,15 +4274,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4290,19 +4290,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -4358,20 +4358,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -4380,15 +4380,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4396,17 +4396,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -5006,7 +5006,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item_1">The action to execute if the current item is equal to <see cref="Item_1"/>.</param>
                                                          /// <param name="item_2">The action to execute if the current item is equal to <see cref="Item_2"/>.</param>
                                                          /// <param name="item_int_1">The action to execute if the current item is equal to <see cref="Item_int_1"/>.</param>
@@ -5014,38 +5014,38 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_decimal_2">The action to execute if the current item is equal to <see cref="Item_decimal_2"/>.</param>
                                                          /// <param name="item_derived_1">The action to execute if the current item is equal to <see cref="Item_derived_1"/>.</param>
                                                          /// <param name="item_derived_2">The action to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item_1,
-                                                            global::System.Action<TContext> @item_2,
-                                                            global::System.Action<TContext> @item_int_1,
-                                                            global::System.Action<TContext> @item_decimal_1,
-                                                            global::System.Action<TContext> @item_decimal_2,
-                                                            global::System.Action<TContext> @item_derived_1,
-                                                            global::System.Action<TContext> @item_derived_2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item_1,
+                                                            global::System.Action<TState> @item_2,
+                                                            global::System.Action<TState> @item_int_1,
+                                                            global::System.Action<TState> @item_decimal_1,
+                                                            global::System.Action<TState> @item_decimal_2,
+                                                            global::System.Action<TState> @item_derived_1,
+                                                            global::System.Action<TState> @item_derived_2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item_1(context);
+                                                                  @item_1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item_2(context);
+                                                                  @item_2(state);
                                                                   return;
                                                                case 2:
-                                                                  @item_int_1(context);
+                                                                  @item_int_1(state);
                                                                   return;
                                                                case 3:
-                                                                  @item_decimal_1(context);
+                                                                  @item_decimal_1(state);
                                                                   return;
                                                                case 4:
-                                                                  @item_decimal_2(context);
+                                                                  @item_decimal_2(state);
                                                                   return;
                                                                case 5:
-                                                                  @item_derived_1(context);
+                                                                  @item_derived_1(state);
                                                                   return;
                                                                case 6:
-                                                                  @item_derived_2(context);
+                                                                  @item_derived_2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5055,7 +5055,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item_1">The action to execute if the current item is equal to <see cref="Item_1"/>.</param>
                                                          /// <param name="item_2">The action to execute if the current item is equal to <see cref="Item_2"/>.</param>
@@ -5064,16 +5064,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_decimal_2">The action to execute if the current item is equal to <see cref="Item_decimal_2"/>.</param>
                                                          /// <param name="item_derived_1">The action to execute if the current item is equal to <see cref="Item_derived_1"/>.</param>
                                                          /// <param name="item_derived_2">The action to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item_1 = null,
-                                                            global::System.Action<TContext>? @item_2 = null,
-                                                            global::System.Action<TContext>? @item_int_1 = null,
-                                                            global::System.Action<TContext>? @item_decimal_1 = null,
-                                                            global::System.Action<TContext>? @item_decimal_2 = null,
-                                                            global::System.Action<TContext>? @item_derived_1 = null,
-                                                            global::System.Action<TContext>? @item_derived_2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item_1 = null,
+                                                            global::System.Action<TState>? @item_2 = null,
+                                                            global::System.Action<TState>? @item_int_1 = null,
+                                                            global::System.Action<TState>? @item_decimal_1 = null,
+                                                            global::System.Action<TState>? @item_decimal_2 = null,
+                                                            global::System.Action<TState>? @item_derived_1 = null,
+                                                            global::System.Action<TState>? @item_derived_2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5081,49 +5081,49 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item_1 is null)
                                                                      break;
 
-                                                                  @item_1(context);
+                                                                  @item_1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item_2 is null)
                                                                      break;
 
-                                                                  @item_2(context);
+                                                                  @item_2(state);
                                                                   return;
                                                                case 2:
                                                                   if (@item_int_1 is null)
                                                                      break;
 
-                                                                  @item_int_1(context);
+                                                                  @item_int_1(state);
                                                                   return;
                                                                case 3:
                                                                   if (@item_decimal_1 is null)
                                                                      break;
 
-                                                                  @item_decimal_1(context);
+                                                                  @item_decimal_1(state);
                                                                   return;
                                                                case 4:
                                                                   if (@item_decimal_2 is null)
                                                                      break;
 
-                                                                  @item_decimal_2(context);
+                                                                  @item_decimal_2(state);
                                                                   return;
                                                                case 5:
                                                                   if (@item_derived_1 is null)
                                                                      break;
 
-                                                                  @item_derived_1(context);
+                                                                  @item_derived_1(state);
                                                                   return;
                                                                case 6:
                                                                   if (@item_derived_2 is null)
                                                                      break;
 
-                                                                  @item_derived_2(context);
+                                                                  @item_derived_2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -5234,7 +5234,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item_1">The function to execute if the current item is equal to <see cref="Item_1"/>.</param>
                                                          /// <param name="item_2">The function to execute if the current item is equal to <see cref="Item_2"/>.</param>
                                                          /// <param name="item_int_1">The function to execute if the current item is equal to <see cref="Item_int_1"/>.</param>
@@ -5242,32 +5242,32 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_decimal_2">The function to execute if the current item is equal to <see cref="Item_decimal_2"/>.</param>
                                                          /// <param name="item_derived_1">The function to execute if the current item is equal to <see cref="Item_derived_1"/>.</param>
                                                          /// <param name="item_derived_2">The function to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item_1,
-                                                            global::System.Func<TContext, TResult> @item_2,
-                                                            global::System.Func<TContext, TResult> @item_int_1,
-                                                            global::System.Func<TContext, TResult> @item_decimal_1,
-                                                            global::System.Func<TContext, TResult> @item_decimal_2,
-                                                            global::System.Func<TContext, TResult> @item_derived_1,
-                                                            global::System.Func<TContext, TResult> @item_derived_2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item_1,
+                                                            global::System.Func<TState, TResult> @item_2,
+                                                            global::System.Func<TState, TResult> @item_int_1,
+                                                            global::System.Func<TState, TResult> @item_decimal_1,
+                                                            global::System.Func<TState, TResult> @item_decimal_2,
+                                                            global::System.Func<TState, TResult> @item_derived_1,
+                                                            global::System.Func<TState, TResult> @item_derived_2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item_1(context);
+                                                                  return @item_1(state);
                                                                case 1:
-                                                                  return @item_2(context);
+                                                                  return @item_2(state);
                                                                case 2:
-                                                                  return @item_int_1(context);
+                                                                  return @item_int_1(state);
                                                                case 3:
-                                                                  return @item_decimal_1(context);
+                                                                  return @item_decimal_1(state);
                                                                case 4:
-                                                                  return @item_decimal_2(context);
+                                                                  return @item_decimal_2(state);
                                                                case 5:
-                                                                  return @item_derived_1(context);
+                                                                  return @item_derived_1(state);
                                                                case 6:
-                                                                  return @item_derived_2(context);
+                                                                  return @item_derived_2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -5276,7 +5276,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item_1">The function to execute if the current item is equal to <see cref="Item_1"/>.</param>
                                                          /// <param name="item_2">The function to execute if the current item is equal to <see cref="Item_2"/>.</param>
@@ -5285,16 +5285,16 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <param name="item_decimal_2">The function to execute if the current item is equal to <see cref="Item_decimal_2"/>.</param>
                                                          /// <param name="item_derived_1">The function to execute if the current item is equal to <see cref="Item_derived_1"/>.</param>
                                                          /// <param name="item_derived_2">The function to execute if the current item is equal to <see cref="Item_derived_2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item_1 = null,
-                                                            global::System.Func<TContext, TResult>? @item_2 = null,
-                                                            global::System.Func<TContext, TResult>? @item_int_1 = null,
-                                                            global::System.Func<TContext, TResult>? @item_decimal_1 = null,
-                                                            global::System.Func<TContext, TResult>? @item_decimal_2 = null,
-                                                            global::System.Func<TContext, TResult>? @item_derived_1 = null,
-                                                            global::System.Func<TContext, TResult>? @item_derived_2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item_1 = null,
+                                                            global::System.Func<TState, TResult>? @item_2 = null,
+                                                            global::System.Func<TState, TResult>? @item_int_1 = null,
+                                                            global::System.Func<TState, TResult>? @item_decimal_1 = null,
+                                                            global::System.Func<TState, TResult>? @item_decimal_2 = null,
+                                                            global::System.Func<TState, TResult>? @item_derived_1 = null,
+                                                            global::System.Func<TState, TResult>? @item_derived_2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5302,42 +5302,42 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item_1 is null)
                                                                      break;
 
-                                                                  return @item_1(context);
+                                                                  return @item_1(state);
                                                                case 1:
                                                                   if (@item_2 is null)
                                                                      break;
 
-                                                                  return @item_2(context);
+                                                                  return @item_2(state);
                                                                case 2:
                                                                   if (@item_int_1 is null)
                                                                      break;
 
-                                                                  return @item_int_1(context);
+                                                                  return @item_int_1(state);
                                                                case 3:
                                                                   if (@item_decimal_1 is null)
                                                                      break;
 
-                                                                  return @item_decimal_1(context);
+                                                                  return @item_decimal_1(state);
                                                                case 4:
                                                                   if (@item_decimal_2 is null)
                                                                      break;
 
-                                                                  return @item_decimal_2(context);
+                                                                  return @item_decimal_2(state);
                                                                case 5:
                                                                   if (@item_derived_1 is null)
                                                                      break;
 
-                                                                  return @item_derived_1(context);
+                                                                  return @item_derived_1(state);
                                                                case 6:
                                                                   if (@item_derived_2 is null)
                                                                      break;
 
-                                                                  return @item_derived_2(context);
+                                                                  return @item_derived_2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -5851,29 +5851,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum> invalid,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
-                                                               invalid(context, this);
+                                                               invalid(state, this);
                                                                return;
                                                             }
 
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -5883,27 +5883,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? invalid = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
                                                                if(invalid is null)
                                                                {
-                                                                  @default?.Invoke(context, this);
+                                                                  @default?.Invoke(state, this);
                                                                   return;
                                                                }
 
-                                                               invalid(context, this);
+                                                               invalid(state, this);
                                                                return;
                                                             }
 
@@ -5913,19 +5913,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -5998,27 +5998,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> invalid,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
-                                                               return invalid(context, this);
+                                                               return invalid(state, this);
                                                             }
 
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6027,24 +6027,24 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
                                                                if(invalid is null)
-                                                                  return @default(context, this);
+                                                                  return @default(state, this);
 
-                                                               return invalid(context, this);
+                                                               return invalid(state, this);
                                                             }
 
                                                             switch (_itemIndex.Value)
@@ -6053,17 +6053,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -6496,29 +6496,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum> invalid,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
-                                                               invalid(context, this);
+                                                               invalid(state, this);
                                                                return;
                                                             }
 
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -6528,27 +6528,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? invalid = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
                                                                if(invalid is null)
                                                                {
-                                                                  @default?.Invoke(context, this);
+                                                                  @default?.Invoke(state, this);
                                                                   return;
                                                                }
 
-                                                               invalid(context, this);
+                                                               invalid(state, this);
                                                                return;
                                                             }
 
@@ -6558,19 +6558,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -6643,27 +6643,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> invalid,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
-                                                               return invalid(context, this);
+                                                               return invalid(state, this);
                                                             }
 
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -6672,24 +6672,24 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
                                                                if(invalid is null)
-                                                                  return @default(context, this);
+                                                                  return @default(state, this);
 
-                                                               return invalid(context, this);
+                                                               return invalid(state, this);
                                                             }
 
                                                             switch (_itemIndex.Value)
@@ -6698,17 +6698,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -7318,29 +7318,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum> invalid,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum> invalid,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
-                                                               invalid(context, this);
+                                                               invalid(state, this);
                                                                return;
                                                             }
 
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -7350,27 +7350,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? invalid = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? invalid = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
                                                                if(invalid is null)
                                                                {
-                                                                  @default?.Invoke(context, this);
+                                                                  @default?.Invoke(state, this);
                                                                   return;
                                                                }
 
-                                                               invalid(context, this);
+                                                               invalid(state, this);
                                                                return;
                                                             }
 
@@ -7380,19 +7380,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -7465,27 +7465,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> invalid,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> invalid,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             if (!this.IsValid)
                                                             {
-                                                               return invalid(context, this);
+                                                               return invalid(state, this);
                                                             }
 
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -7494,24 +7494,24 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             if (!this.IsValid)
                                                             {
                                                                if(invalid is null)
-                                                                  return @default(context, this);
+                                                                  return @default(state, this);
 
-                                                               return invalid(context, this);
+                                                               return invalid(state, this);
                                                             }
 
                                                             switch (_itemIndex.Value)
@@ -7520,17 +7520,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -8130,21 +8130,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8154,15 +8154,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8170,19 +8170,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -8238,20 +8238,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8260,15 +8260,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8276,17 +8276,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -8630,21 +8630,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -8654,15 +8654,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, global::Thinktecture.Tests.TestEnum>? @default = null,
-                                                            global::System.Action<TContext>? @item1 = null,
-                                                            global::System.Action<TContext>? @item2 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+                                                            global::System.Action<TState>? @item1 = null,
+                                                            global::System.Action<TState>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8670,19 +8670,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this);
+                                                            @default?.Invoke(state, this);
                                                          }
 
                                                          /// <summary>
@@ -8738,20 +8738,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
@@ -8760,15 +8760,15 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no item-specific action is provided.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, global::Thinktecture.Tests.TestEnum, TResult> @default,
-                                                            global::System.Func<TContext, TResult>? @item1 = null,
-                                                            global::System.Func<TContext, TResult>? @item2 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+                                                            global::System.Func<TState, TResult>? @item1 = null,
+                                                            global::System.Func<TState, TResult>? @item2 = null)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8776,17 +8776,17 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@item1 is null)
                                                                      break;
 
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
                                                                   if (@item2 is null)
                                                                      break;
 
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }
 
-                                                            return @default(context, this);
+                                                            return @default(state, this);
                                                          }
 
                                                          /// <summary>
@@ -9164,21 +9164,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext> @item1,
-                                                            global::System.Action<TContext> @item2)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState> @item1,
+                                                            global::System.Action<TState> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  @item1(context);
+                                                                  @item1(state);
                                                                   return;
                                                                case 1:
-                                                                  @item2(context);
+                                                                  @item2(state);
                                                                   return;
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -9208,20 +9208,20 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current item.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
                                                          /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, TResult> @item1,
-                                                            global::System.Func<TContext, TResult> @item2)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, TResult> @item1,
+                                                            global::System.Func<TState, TResult> @item2)
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
                                                                case 0:
-                                                                  return @item1(context);
+                                                                  return @item1(state);
                                                                case 1:
-                                                                  return @item2(context);
+                                                                  return @item2(state);
                                                                default:
                                                                   throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
                                                             }

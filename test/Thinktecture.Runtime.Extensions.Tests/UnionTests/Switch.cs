@@ -190,7 +190,7 @@ public class Switch
          }
       }
 
-      public class WithActionAndContext
+      public class WithActionAndState
       {
          [Theory]
          [InlineData(1, "text")]
@@ -204,19 +204,19 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
             object calledActionOn = null;
 
-            value.Switch(context,
-                         @string: (ctx, v) =>
+            value.Switch(state,
+                         @string: (s, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     s.Should().Be(s);
                                      calledActionOn = v;
                                   },
-                         int32: (ctx, v) =>
+                         int32: (s, v) =>
                                 {
-                                   ctx.Should().Be(context);
+                                   s.Should().Be(state);
                                    calledActionOn = v;
                                 });
 
@@ -237,24 +237,24 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
             object calledActionOn = null;
 
-            value.Switch(context,
-                         @string: (ctx, v) =>
+            value.Switch(state,
+                         @string: (s, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     s.Should().Be(state);
                                      calledActionOn = v;
                                   },
-                         int32: (ctx, v) =>
+                         int32: (s, v) =>
                                 {
-                                   ctx.Should().Be(context);
+                                   s.Should().Be(state);
                                    calledActionOn = v;
                                 },
-                         boolean: (ctx, v) =>
+                         boolean: (s, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     s.Should().Be(state);
                                      calledActionOn = v;
                                   });
 
@@ -277,29 +277,29 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
             object calledActionOn = null;
 
-            value.Switch(context,
-                         @string: (ctx, v) =>
+            value.Switch(state,
+                         @string: (s, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     s.Should().Be(state);
                                      calledActionOn = v;
                                   },
-                         int32: (ctx, v) =>
+                         int32: (s, v) =>
                                 {
-                                   ctx.Should().Be(context);
+                                   s.Should().Be(state);
                                    calledActionOn = v;
                                 },
-                         boolean: (ctx, v) =>
+                         boolean: (s, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     s.Should().Be(state);
                                      calledActionOn = v;
                                   },
-                         guid: (ctx, v) =>
+                         guid: (s, v) =>
                                {
-                                  ctx.Should().Be(context);
+                                  s.Should().Be(state);
                                   calledActionOn = v;
                                });
 
@@ -324,34 +324,34 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
             object calledActionOn = null;
 
-            value.Switch(context,
+            value.Switch(state,
                          @string: (ctx, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     ctx.Should().Be(state);
                                      calledActionOn = v;
                                   },
                          int32: (ctx, v) =>
                                 {
-                                   ctx.Should().Be(context);
+                                   ctx.Should().Be(state);
                                    calledActionOn = v;
                                 },
                          boolean: (ctx, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     ctx.Should().Be(state);
                                      calledActionOn = v;
                                   },
                          guid: (ctx, v) =>
                                {
-                                  ctx.Should().Be(context);
+                                  ctx.Should().Be(state);
                                   calledActionOn = v;
                                },
                          @char: (ctx, v) =>
                                 {
-                                   ctx.Should().Be(context);
+                                   ctx.Should().Be(state);
                                    calledActionOn = v;
                                 });
 
@@ -466,16 +466,16 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
-            var calledActionOn = value.Switch(context,
+            var state = new object();
+            var calledActionOn = value.Switch(state,
                                               @string: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return (object)v;
                                                        },
                                               int32: (ctx, v) =>
                                                      {
-                                                        ctx.Should().Be(context);
+                                                        ctx.Should().Be(state);
                                                         return v;
                                                      });
 
@@ -496,21 +496,21 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
-            var calledActionOn = value.Switch(context,
+            var state = new object();
+            var calledActionOn = value.Switch(state,
                                               @string: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return (object)v;
                                                        },
                                               int32: (ctx, v) =>
                                                      {
-                                                        ctx.Should().Be(context);
+                                                        ctx.Should().Be(state);
                                                         return v;
                                                      },
                                               boolean: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return v;
                                                        });
 
@@ -533,26 +533,26 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
-            var calledActionOn = value.Switch(context,
+            var state = new object();
+            var calledActionOn = value.Switch(state,
                                               @string: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return (object)v;
                                                        },
                                               int32: (ctx, v) =>
                                                      {
-                                                        ctx.Should().Be(context);
+                                                        ctx.Should().Be(state);
                                                         return v;
                                                      },
                                               boolean: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return v;
                                                        },
                                               guid: (ctx, v) =>
                                                     {
-                                                       ctx.Should().Be(context);
+                                                       ctx.Should().Be(state);
                                                        return v;
                                                     });
 
@@ -577,31 +577,31 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
-            var calledActionOn = value.Switch(context,
+            var state = new object();
+            var calledActionOn = value.Switch(state,
                                               @string: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return (object)v;
                                                        },
                                               int32: (ctx, v) =>
                                                      {
-                                                        ctx.Should().Be(context);
+                                                        ctx.Should().Be(state);
                                                         return v;
                                                      },
                                               boolean: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return v;
                                                        },
                                               guid: (ctx, v) =>
                                                     {
-                                                       ctx.Should().Be(context);
+                                                       ctx.Should().Be(state);
                                                        return v;
                                                     },
                                               @char: (ctx, v) =>
                                                      {
-                                                        ctx.Should().Be(context);
+                                                        ctx.Should().Be(state);
                                                         return v;
                                                      });
 
@@ -640,7 +640,7 @@ public class Switch
          }
       }
 
-      public class WithActionAndContext
+      public class WithActionAndState
       {
          [Theory]
          [InlineData(1, "text")]
@@ -654,19 +654,19 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
             object calledActionOn = null;
 
-            value.Switch(context,
+            value.Switch(state,
                          @string: (ctx, v) =>
                                   {
-                                     ctx.Should().Be(context);
+                                     ctx.Should().Be(state);
                                      calledActionOn = v;
                                   },
                          int32: (ctx, v) =>
                                 {
-                                   ctx.Should().Be(context);
+                                   ctx.Should().Be(state);
                                    calledActionOn = v;
                                 });
 
@@ -709,16 +709,16 @@ public class Switch
                _ => throw new Exception()
             };
 
-            var context = new object();
-            var calledActionOn = value.Switch(context,
+            var state = new object();
+            var calledActionOn = value.Switch(state,
                                               @string: (ctx, v) =>
                                                        {
-                                                          ctx.Should().Be(context);
+                                                          ctx.Should().Be(state);
                                                           return (object)v;
                                                        },
                                               int32: (ctx, v) =>
                                                      {
-                                                        ctx.Should().Be(context);
+                                                        ctx.Should().Be(state);
                                                         return v;
                                                      });
 

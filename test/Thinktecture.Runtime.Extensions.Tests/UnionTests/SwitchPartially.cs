@@ -369,7 +369,7 @@ public class SwitchPartially
          }
       }
 
-      public class WithActionAndContext
+      public class WithActionAndState
       {
          [Theory]
          [InlineData(1, "text")]
@@ -383,18 +383,18 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
-                                  @string: (ctx, v) =>
+            value.SwitchPartially(state,
+                                  @string: (s, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -415,23 +415,23 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @string: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          },
                                   boolean: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            });
 
@@ -454,28 +454,28 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @string: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          },
                                   boolean: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            },
                                   guid: (ctx, v) =>
                                         {
-                                           ctx.Should().Be(context);
+                                           ctx.Should().Be(state);
                                            calledActionOn = v;
                                         });
 
@@ -494,18 +494,18 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @default: (ctx, v) =>
                                             {
-                                               ctx.Should().Be(context);
+                                               ctx.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -526,23 +526,23 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @default: (ctx, v) =>
                                             {
-                                               ctx.Should().Be(context);
+                                               ctx.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          },
                                   boolean: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            });
 
@@ -565,28 +565,28 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @default: (ctx, v) =>
                                             {
-                                               ctx.Should().Be(context);
+                                               ctx.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          },
                                   boolean: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            },
                                   guid: (ctx, v) =>
                                         {
-                                           ctx.Should().Be(context);
+                                           ctx.Should().Be(state);
                                            calledActionOn = v;
                                         });
 
@@ -611,33 +611,33 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @default: (ctx, v) =>
                                             {
-                                               ctx.Should().Be(context);
+                                               ctx.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          },
                                   boolean: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            },
                                   guid: (ctx, v) =>
                                         {
-                                           ctx.Should().Be(context);
+                                           ctx.Should().Be(state);
                                            calledActionOn = v;
                                         },
                                   @char: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -846,22 +846,22 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        @string: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -882,27 +882,27 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        @string: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               },
                                                        boolean: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 });
 
@@ -925,32 +925,32 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        @string: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               },
                                                        boolean: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        guid: (ctx, v) =>
                                                              {
-                                                                ctx.Should().Be(context);
+                                                                ctx.Should().Be(state);
                                                                 return v;
                                                              });
 
@@ -975,37 +975,37 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        @string: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               },
                                                        boolean: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        guid: (ctx, v) =>
                                                              {
-                                                                ctx.Should().Be(context);
+                                                                ctx.Should().Be(state);
                                                                 return v;
                                                              },
                                                        @char: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1024,17 +1024,17 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1055,22 +1055,22 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               },
                                                        boolean: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 });
 
@@ -1093,27 +1093,27 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               },
                                                        boolean: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        guid: (ctx, v) =>
                                                              {
-                                                                ctx.Should().Be(context);
+                                                                ctx.Should().Be(state);
                                                                 return v;
                                                              });
 
@@ -1138,32 +1138,32 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               },
                                                        boolean: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        guid: (ctx, v) =>
                                                              {
-                                                                ctx.Should().Be(context);
+                                                                ctx.Should().Be(state);
                                                                 return v;
                                                              },
                                                        @char: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1227,7 +1227,7 @@ public class SwitchPartially
          }
       }
 
-      public class WithActionAndContext
+      public class WithActionAndState
       {
          [Theory]
          [InlineData(1, "text")]
@@ -1241,18 +1241,18 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @string: (ctx, v) =>
                                            {
-                                              ctx.Should().Be(context);
+                                              ctx.Should().Be(state);
                                               calledActionOn = v;
                                            },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -1271,18 +1271,18 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
             object calledActionOn = null;
 
-            value.SwitchPartially(context,
+            value.SwitchPartially(state,
                                   @default: (ctx, v) =>
                                             {
-                                               ctx.Should().Be(context);
+                                               ctx.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
                                   int32: (ctx, v) =>
                                          {
-                                            ctx.Should().Be(context);
+                                            ctx.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -1344,22 +1344,22 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        @string: (ctx, v) =>
                                                                 {
-                                                                   ctx.Should().Be(context);
+                                                                   ctx.Should().Be(state);
                                                                    return v;
                                                                 },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1378,17 +1378,17 @@ public class SwitchPartially
                _ => throw new Exception()
             };
 
-            var context = new object();
+            var state = new object();
 
-            var calledActionOn = value.SwitchPartially(context,
+            var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
                                                                  {
-                                                                    ctx.Should().Be(context);
+                                                                    ctx.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
                                                        int32: (ctx, v) =>
                                                               {
-                                                                 ctx.Should().Be(context);
+                                                                 ctx.Should().Be(state);
                                                                  return v;
                                                               });
 

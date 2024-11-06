@@ -363,7 +363,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
          }
       }
 
-      public class SwitchWithActionAndContext
+      public class SwitchWithActionAndState
       {
          [Fact]
          public async Task Should_trigger_without_named_arg()
@@ -512,7 +512,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
          }
       }
 
-      public class SwitchPartiallyWithActionAndContext
+      public class SwitchPartiallyWithActionAndState
       {
          [Fact]
          public async Task Should_trigger_without_named_arg()
@@ -532,7 +532,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                                 var testEnum = ValidTestEnum.Item1;
 
                                 {|#0:testEnum.SwitchPartially(42,
-                                                   @default: (ctx, value) => {},
+                                                   @default: (state, value) => {},
                                                    item1: value => {},
                                                    value => {})|};
                              }
@@ -562,7 +562,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                                 var testEnum = ValidTestEnum.Item1;
 
                                 {|#0:testEnum.SwitchPartially(42,
-                                                   (ctx, value) => {}, // default
+                                                   (state, value) => {}, // default
                                                    item1: value => {},
                                                    item2: value => {})|};
                              }
@@ -1945,7 +1945,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
          }
       }
 
-      public class SwitchWithActionAndContext
+      public class SwitchWithActionAndState
       {
          [Fact]
          public async Task Should_trigger_without_named_arg()
@@ -1965,8 +1965,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                                 var testUnion = new TestUnion_class_string_int("text");
 
                                 {|#0:testUnion.Switch(42,
-                                                   @string: (ctx, s) => {},
-                                                   (ctx, i) => {})|};
+                                                   @string: (state, s) => {},
+                                                   (state, i) => {})|};
                              }
                           }
                        }
@@ -2005,7 +2005,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
          }
       }
 
-      public class SwitchPartiallyWithActionAndContext
+      public class SwitchPartiallyWithActionAndState
       {
          [Fact]
          public async Task Should_trigger_without_named_arg()

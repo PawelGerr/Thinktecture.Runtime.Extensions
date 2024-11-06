@@ -190,7 +190,7 @@ public class SwitchPartially
       }
    }
 
-   public class WithActionAndContext
+   public class WithActionAndState
    {
       [Fact]
       public void Should_pass_context()

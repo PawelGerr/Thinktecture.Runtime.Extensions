@@ -126,21 +126,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -170,20 +170,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -443,24 +443,24 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 0:
                                                                   throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -493,23 +493,23 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 0:
                                                                   throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -764,24 +764,24 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 0:
                                                                   throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -814,23 +814,23 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 0:
                                                                   throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1081,21 +1081,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1125,20 +1125,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1372,21 +1372,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1416,20 +1416,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1715,21 +1715,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -1739,15 +1739,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The action to execute if no value-specific action is provided.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void SwitchPartially<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, object?>? @default = null,
-                                                            global::System.Action<TContext, string>? @string = null,
-                                                            global::System.Action<TContext, int>? @int32 = null)
+                                                         public void SwitchPartially<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, object?>? @default = null,
+                                                            global::System.Action<TState, string>? @string = null,
+                                                            global::System.Action<TState, int>? @int32 = null)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1755,19 +1755,19 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@string is null)
                                                                      break;
 
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
                                                                   if (@int32 is null)
                                                                      break;
 
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
 
-                                                            @default?.Invoke(context, this.Value);
+                                                            @default?.Invoke(state, this.Value);
                                                          }
 
                                                          /// <summary>
@@ -1823,20 +1823,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -1845,15 +1845,15 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="default">The function to execute if no value-specific action is provided.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult SwitchPartially<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, object?, TResult> @default,
-                                                            global::System.Func<TContext, string, TResult>? @string = null,
-                                                            global::System.Func<TContext, int, TResult>? @int32 = null)
+                                                         public TResult SwitchPartially<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, object?, TResult> @default,
+                                                            global::System.Func<TState, string, TResult>? @string = null,
+                                                            global::System.Func<TState, int, TResult>? @int32 = null)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1861,17 +1861,17 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   if (@string is null)
                                                                      break;
 
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
                                                                   if (@int32 is null)
                                                                      break;
 
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
 
-                                                            return @default(context, this.Value);
+                                                            return @default(state, this.Value);
                                                          }
 
                                                          /// <summary>
@@ -2122,21 +2122,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -2166,20 +2166,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2463,21 +2463,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -2507,20 +2507,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -2977,21 +2977,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3021,20 +3021,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3277,21 +3277,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3321,20 +3321,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3588,21 +3588,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <c>string?</c>.</param>
                                                          /// <param name="nullableInt32">The action to execute if the current value is of type <c>int?</c>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string?> @string,
-                                                            global::System.Action<TContext, int?> @nullableInt32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string?> @string,
+                                                            global::System.Action<TState, int?> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string);
+                                                                  @string(state, this._string);
                                                                   return;
                                                                case 2:
-                                                                  @nullableInt32(context, this._nullableInt32);
+                                                                  @nullableInt32(state, this._nullableInt32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3632,20 +3632,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <c>string?</c>.</param>
                                                          /// <param name="nullableInt32">The function to execute if the current value is of type <c>int?</c>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string?, TResult> @string,
-                                                            global::System.Func<TContext, int?, TResult> @nullableInt32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string?, TResult> @string,
+                                                            global::System.Func<TState, int?, TResult> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string);
+                                                                  return @string(state, this._string);
                                                                case 2:
-                                                                  return @nullableInt32(context, this._nullableInt32);
+                                                                  return @nullableInt32(state, this._nullableInt32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -3899,21 +3899,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="text">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="number">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @text,
-                                                            global::System.Action<TContext, int> @number)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @text,
+                                                            global::System.Action<TState, int> @number)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @text(context, this._text!);
+                                                                  @text(state, this._text!);
                                                                   return;
                                                                case 2:
-                                                                  @number(context, this._number);
+                                                                  @number(state, this._number);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -3943,20 +3943,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="text">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="number">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @text,
-                                                            global::System.Func<TContext, int, TResult> @number)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @text,
+                                                            global::System.Func<TState, int, TResult> @number)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @text(context, this._text!);
+                                                                  return @text(state, this._text!);
                                                                case 2:
-                                                                  return @number(context, this._number);
+                                                                  return @number(state, this._number);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -4294,36 +4294,36 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <param name="boolean">The action to execute if the current value is of type <see cref="bool"/>.</param>
                                                          /// <param name="guid">The action to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
                                                          /// <param name="char">The action to execute if the current value is of type <see cref="char"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @string,
-                                                            global::System.Action<TContext, int> @int32,
-                                                            global::System.Action<TContext, bool> @boolean,
-                                                            global::System.Action<TContext, global::System.Guid> @guid,
-                                                            global::System.Action<TContext, char> @char)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @string,
+                                                            global::System.Action<TState, int> @int32,
+                                                            global::System.Action<TState, bool> @boolean,
+                                                            global::System.Action<TState, global::System.Guid> @guid,
+                                                            global::System.Action<TState, char> @char)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @string(context, this._string!);
+                                                                  @string(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                case 3:
-                                                                  @boolean(context, this._boolean);
+                                                                  @boolean(state, this._boolean);
                                                                   return;
                                                                case 4:
-                                                                  @guid(context, this._guid);
+                                                                  @guid(state, this._guid);
                                                                   return;
                                                                case 5:
-                                                                  @char(context, this._char);
+                                                                  @char(state, this._char);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -4365,32 +4365,32 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <param name="boolean">The function to execute if the current value is of type <see cref="bool"/>.</param>
                                                          /// <param name="guid">The function to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
                                                          /// <param name="char">The function to execute if the current value is of type <see cref="char"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @string,
-                                                            global::System.Func<TContext, int, TResult> @int32,
-                                                            global::System.Func<TContext, bool, TResult> @boolean,
-                                                            global::System.Func<TContext, global::System.Guid, TResult> @guid,
-                                                            global::System.Func<TContext, char, TResult> @char)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @string,
+                                                            global::System.Func<TState, int, TResult> @int32,
+                                                            global::System.Func<TState, bool, TResult> @boolean,
+                                                            global::System.Func<TState, global::System.Guid, TResult> @guid,
+                                                            global::System.Func<TState, char, TResult> @char)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @string(context, this._string!);
+                                                                  return @string(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                case 3:
-                                                                  return @boolean(context, this._boolean);
+                                                                  return @boolean(state, this._boolean);
                                                                case 4:
-                                                                  return @guid(context, this._guid);
+                                                                  return @guid(state, this._guid);
                                                                case 5:
-                                                                  return @char(context, this._char);
+                                                                  return @char(state, this._char);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -4728,21 +4728,21 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="stringArray">The action to execute if the current value is of type <c>string[]</c>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string[]> @stringArray,
-                                                            global::System.Action<TContext, int> @int32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string[]> @stringArray,
+                                                            global::System.Action<TState, int> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @stringArray(context, this._stringArray!);
+                                                                  @stringArray(state, this._stringArray!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -4772,20 +4772,20 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="stringArray">The function to execute if the current value is of type <c>string[]</c>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string[], TResult> @stringArray,
-                                                            global::System.Func<TContext, int, TResult> @int32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string[], TResult> @stringArray,
+                                                            global::System.Func<TState, int, TResult> @int32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @stringArray(context, this._stringArray!);
+                                                                  return @stringArray(state, this._stringArray!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }
@@ -5126,36 +5126,36 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes an action depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="text">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <param name="string2">The action to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="string3">The action to execute if the current value is of type <c>string?</c>.</param>
                                                          /// <param name="nullableInt32">The action to execute if the current value is of type <c>int?</c>.</param>
-                                                         public void Switch<TContext>(
-                                                            TContext context,
-                                                            global::System.Action<TContext, string> @text,
-                                                            global::System.Action<TContext, int> @int32,
-                                                            global::System.Action<TContext, string> @string2,
-                                                            global::System.Action<TContext, string?> @string3,
-                                                            global::System.Action<TContext, int?> @nullableInt32)
+                                                         public void Switch<TState>(
+                                                            TState state,
+                                                            global::System.Action<TState, string> @text,
+                                                            global::System.Action<TState, int> @int32,
+                                                            global::System.Action<TState, string> @string2,
+                                                            global::System.Action<TState, string?> @string3,
+                                                            global::System.Action<TState, int?> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  @text(context, this._string!);
+                                                                  @text(state, this._string!);
                                                                   return;
                                                                case 2:
-                                                                  @int32(context, this._int32);
+                                                                  @int32(state, this._int32);
                                                                   return;
                                                                case 3:
-                                                                  @string2(context, this._string!);
+                                                                  @string2(state, this._string!);
                                                                   return;
                                                                case 4:
-                                                                  @string3(context, this._string);
+                                                                  @string3(state, this._string);
                                                                   return;
                                                                case 5:
-                                                                  @nullableInt32(context, this._nullableInt32);
+                                                                  @nullableInt32(state, this._nullableInt32);
                                                                   return;
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -5197,32 +5197,32 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <summary>
                                                          /// Executes a function depending on the current value.
                                                          /// </summary>
-                                                         /// <param name="context">Context to be passed to the callbacks.</param>
+                                                         /// <param name="state">State to be passed to the callbacks.</param>
                                                          /// <param name="text">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
                                                          /// <param name="string2">The function to execute if the current value is of type <see cref="string"/>.</param>
                                                          /// <param name="string3">The function to execute if the current value is of type <c>string?</c>.</param>
                                                          /// <param name="nullableInt32">The function to execute if the current value is of type <c>int?</c>.</param>
-                                                         public TResult Switch<TContext, TResult>(
-                                                            TContext context,
-                                                            global::System.Func<TContext, string, TResult> @text,
-                                                            global::System.Func<TContext, int, TResult> @int32,
-                                                            global::System.Func<TContext, string, TResult> @string2,
-                                                            global::System.Func<TContext, string?, TResult> @string3,
-                                                            global::System.Func<TContext, int?, TResult> @nullableInt32)
+                                                         public TResult Switch<TState, TResult>(
+                                                            TState state,
+                                                            global::System.Func<TState, string, TResult> @text,
+                                                            global::System.Func<TState, int, TResult> @int32,
+                                                            global::System.Func<TState, string, TResult> @string2,
+                                                            global::System.Func<TState, string?, TResult> @string3,
+                                                            global::System.Func<TState, int?, TResult> @nullableInt32)
                                                          {
                                                             switch (this._valueIndex)
                                                             {
                                                                case 1:
-                                                                  return @text(context, this._string!);
+                                                                  return @text(state, this._string!);
                                                                case 2:
-                                                                  return @int32(context, this._int32);
+                                                                  return @int32(state, this._int32);
                                                                case 3:
-                                                                  return @string2(context, this._string!);
+                                                                  return @string2(state, this._string!);
                                                                case 4:
-                                                                  return @string3(context, this._string);
+                                                                  return @string3(state, this._string);
                                                                case 5:
-                                                                  return @nullableInt32(context, this._nullableInt32);
+                                                                  return @nullableInt32(state, this._nullableInt32);
                                                                default:
                                                                   throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
                                                             }

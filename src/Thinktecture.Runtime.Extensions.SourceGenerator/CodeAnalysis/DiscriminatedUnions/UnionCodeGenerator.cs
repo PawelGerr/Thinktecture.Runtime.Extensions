@@ -364,7 +364,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateSwitchForAction(bool withContext, bool isPartially)
+   private void GenerateSwitchForAction(bool withState, bool isPartially)
    {
       _sb.Append(@"
 
@@ -372,10 +372,10 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Executes an action depending on the current value.
       /// </summary>");
 
-      if (withContext)
+      if (withState)
       {
          _sb.Append(@"
-      /// <param name=""context"">Context to be passed to the callbacks.</param>");
+      /// <param name=""state"">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
@@ -400,11 +400,11 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var methodName = isPartially ? "SwitchPartially" : "Switch";
 
-      if (withContext)
+      if (withState)
       {
          _sb.Append(@"
-      public void ").Append(methodName).Append(@"<TContext>(
-         TContext context,");
+      public void ").Append(methodName).Append(@"<TState>(
+         TState state,");
       }
       else
       {
@@ -417,8 +417,8 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
          global::System.Action<");
 
-         if (withContext)
-            _sb.Append("TContext, ");
+         if (withState)
+            _sb.Append("TState, ");
 
          _sb.Append("object?>? @default = null,");
       }
@@ -433,8 +433,8 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
          global::System.Action<");
 
-         if (withContext)
-            _sb.Append("TContext, ");
+         if (withState)
+            _sb.Append("TState, ");
 
          _sb.AppendTypeFullyQualified(memberType).Append(">");
 
@@ -450,13 +450,13 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@")
       {");
 
-      GenerateIndexBasedActionSwitchBody(withContext, isPartially);
+      GenerateIndexBasedActionSwitchBody(withState, isPartially);
 
       _sb.Append(@"
       }");
    }
 
-   private void GenerateIndexBasedActionSwitchBody(bool withContext, bool isPartially)
+   private void GenerateIndexBasedActionSwitchBody(bool withState, bool isPartially)
    {
       _sb.Append(@"
          switch (this._valueIndex)
@@ -487,8 +487,8 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
                ").AppendEscaped(memberType.ArgumentName).Append("(");
 
-         if (withContext)
-            _sb.Append("context, ");
+         if (withState)
+            _sb.Append("state, ");
 
          _sb.Append("this._").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
                return;");
@@ -505,14 +505,14 @@ namespace ").Append(_state.Namespace).Append(@"
 
          @default?.Invoke(");
 
-         if (withContext)
-            _sb.Append("context, ");
+         if (withState)
+            _sb.Append("state, ");
 
          _sb.Append("this.Value);");
       }
    }
 
-   private void GenerateSwitchForFunc(bool withContext, bool isPartially)
+   private void GenerateSwitchForFunc(bool withState, bool isPartially)
    {
       _sb.Append(@"
 
@@ -520,10 +520,10 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Executes a function depending on the current value.
       /// </summary>");
 
-      if (withContext)
+      if (withState)
       {
          _sb.Append(@"
-      /// <param name=""context"">Context to be passed to the callbacks.</param>");
+      /// <param name=""state"">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
@@ -548,11 +548,11 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var methodName = isPartially ? "SwitchPartially" : "Switch";
 
-      if (withContext)
+      if (withState)
       {
          _sb.Append(@"
-      public TResult ").Append(methodName).Append(@"<TContext, TResult>(
-         TContext context,");
+      public TResult ").Append(methodName).Append(@"<TState, TResult>(
+         TState state,");
       }
       else
       {
@@ -565,8 +565,8 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
          global::System.Func<");
 
-         if (withContext)
-            _sb.Append("TContext, ");
+         if (withState)
+            _sb.Append("TState, ");
 
          _sb.Append("object?, TResult> @default,");
       }
@@ -583,8 +583,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append("global::System.Func<");
 
-         if (withContext)
-            _sb.Append("TContext, ");
+         if (withState)
+            _sb.Append("TState, ");
 
          _sb.AppendTypeFullyQualified(memberType).Append(", TResult>");
 
@@ -600,13 +600,13 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@")
       {");
 
-      GenerateIndexBasedFuncSwitchBody(withContext, isPartially);
+      GenerateIndexBasedFuncSwitchBody(withState, isPartially);
 
       _sb.Append(@"
       }");
    }
 
-   private void GenerateIndexBasedFuncSwitchBody(bool withContext, bool isPartially)
+   private void GenerateIndexBasedFuncSwitchBody(bool withState, bool isPartially)
    {
       _sb.Append(@"
          switch (this._valueIndex)
@@ -637,8 +637,8 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
                return ").AppendEscaped(memberType.ArgumentName).Append("(");
 
-         if (withContext)
-            _sb.Append("context, ");
+         if (withState)
+            _sb.Append("state, ");
 
          _sb.Append("this._").Append(memberType.BackingFieldName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
       }
@@ -654,8 +654,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
          return @default(");
 
-         if (withContext)
-            _sb.Append("context, ");
+         if (withState)
+            _sb.Append("state, ");
 
          _sb.Append("this.Value);");
       }

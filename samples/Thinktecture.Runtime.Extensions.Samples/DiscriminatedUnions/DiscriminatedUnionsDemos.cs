@@ -37,12 +37,12 @@ public class DiscriminatedUnionsDemos
                                              text: s => logger.Information("[SwitchPartially] String Action: {Text}", s));
 
       textOrNumberFromString.Switch(logger,
-                                    text: static (l, s) => l.Information("[Switch] String Action with context: {Text}", s),
-                                    number: static (l, i) => l.Information("[Switch] Int Action with context: {Number}", i));
+                                    text: static (l, s) => l.Information("[Switch] String Action with state: {Text}", s),
+                                    number: static (l, i) => l.Information("[Switch] Int Action with state: {Number}", i));
 
       textOrNumberFromString.SwitchPartially(logger,
-                                             @default: static (l, i) => l.Information("[SwitchPartially] Default Action with context: {Number}", i),
-                                             text: static (l, s) => l.Information("[SwitchPartially] String Action with context: {Text}", s));
+                                             @default: static (l, i) => l.Information("[SwitchPartially] Default Action with state: {Number}", i),
+                                             text: static (l, s) => l.Information("[SwitchPartially] String Action with state: {Text}", s));
 
       var switchResponse = textOrNumberFromInt.Switch(text: static s => $"[Switch] String Func: {s}",
                                                       number: static i => $"[Switch] Int Func: {i}");
@@ -53,13 +53,13 @@ public class DiscriminatedUnionsDemos
       logger.Information("{Response}", switchPartiallyResponse);
 
       var switchResponseWithContext = textOrNumberFromInt.Switch(123.45,
-                                                                 text: static (ctx, s) => $"[Switch] String Func with context: {ctx} | {s}",
-                                                                 number: static (ctx, i) => $"[Switch] Int Func with context: {ctx} | {i}");
+                                                                 text: static (state, s) => $"[Switch] String Func with state: {state} | {s}",
+                                                                 number: static (state, i) => $"[Switch] Int Func with state: {state} | {i}");
       logger.Information("{Response}", switchResponseWithContext);
 
       var switchPartiallyResponseWithContext = textOrNumberFromInt.SwitchPartially(123.45,
-                                                                                   text: static (ctx, s) => $"[SwitchPartially] String Func with context: {ctx} | {s}",
-                                                                                   @default: static (ctx, i) => $"[SwitchPartially] Default Func with context: {ctx} | {i}");
+                                                                                   text: static (state, s) => $"[SwitchPartially] String Func with state: {state} | {s}",
+                                                                                   @default: static (state, i) => $"[SwitchPartially] Default Func with state: {state} | {i}");
       logger.Information("{Response}", switchPartiallyResponseWithContext);
 
       var mapResponse = textOrNumberFromString.Map(text: "[Map] Mapped string",

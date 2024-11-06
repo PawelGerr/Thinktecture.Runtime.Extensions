@@ -121,10 +121,10 @@ public class SmartEnumDemos
                                            housewares: static () => "Switch with Func<TResult>: Housewares");
       logger.Information("{ReturnValue}", returnValue);
 
-      // Switch with Func<TContext, TResult>
+      // Switch with Func<TState, TResult>
       returnValue = productType.Switch(logger,
-                                       groceries: static _ => "Switch with Func<TContext, TResult>: Groceries",
-                                       housewares: static _ => "Switch with Func<TContext, TResult>: Housewares");
+                                       groceries: static _ => "Switch with Func<TState, TResult>: Groceries",
+                                       housewares: static _ => "Switch with Func<TState, TResult>: Housewares");
       logger.Information("{ReturnValue}", returnValue);
 
       // SwitchPartially with Func<TResult>
@@ -139,19 +139,19 @@ public class SmartEnumDemos
                                                            groceries: () => "SwitchPartially with Func<TResult>: Groceries");
       logger.Information("{ReturnValue}", returnValue);
 
-      // SwitchPartially with Func<TContext, TResult>
+      // SwitchPartially with Func<TState, TResult>
       returnValue = productType.SwitchPartially(logger,
-                                                @default: static (_, item) => $"SwitchPartially with Func<TContext, TResult>: default ('{item}')",
-                                                groceries: static _ => "SwitchPartially with Func<TContext, TResult>: Groceries");
+                                                @default: static (_, item) => $"SwitchPartially with Func<TState, TResult>: default ('{item}')",
+                                                groceries: static _ => "SwitchPartially with Func<TState, TResult>: Groceries");
       logger.Information("{ReturnValue}", returnValue);
 
       returnValue = productType.SwitchPartially(logger,
-                                                @default: static (_, item) => $"SwitchPartially with Func<TContext, TResult>: {item} (default only)");
+                                                @default: static (_, item) => $"SwitchPartially with Func<TState, TResult>: {item} (default only)");
       logger.Information("{ReturnValue}", returnValue);
 
       returnValue = ProductType.Housewares.SwitchPartially(logger,
-                                                           @default: static (_, item) => $"SwitchPartially with Func<TContext, TResult>: default ('{item}')",
-                                                           groceries: static _ => "SwitchPartially with Func<TContext, TResult>: Groceries");
+                                                           @default: static (_, item) => $"SwitchPartially with Func<TState, TResult>: default ('{item}')",
+                                                           groceries: static _ => "SwitchPartially with Func<TState, TResult>: Groceries");
       logger.Information("{ReturnValue}", returnValue);
    }
 
@@ -163,7 +163,7 @@ public class SmartEnumDemos
       productType.Switch(groceries: () => logger.Information("Switch with Action: Groceries"),
                          housewares: () => logger.Information("Switch with Action: Housewares"));
 
-      // Switch with Action<TContext>
+      // Switch with Action<TState>
       productType.Switch(logger,
                          groceries: static l => l.Information("Switch with Action: Groceries"),
                          housewares: static l => l.Information("Switch with Action: Housewares"));
@@ -188,20 +188,20 @@ public class SmartEnumDemos
                                                  apple: () => Console.WriteLine("SwitchPartially with Action: apple"),
                                                  orange: () => Console.WriteLine("SwitchPartially with Action: orange"));
 
-      // SwitchPartially with Action<TContext>
+      // SwitchPartially with Action<TState>
       productType.SwitchPartially(logger,
-                                  @default: static (l, item) => l.Information("SwitchPartially with Action<TContext>: default ('{Item}')", item),
-                                  groceries: static l => l.Information("SwitchPartially with Action<TContext>: Groceries"));
+                                  @default: static (l, item) => l.Information("SwitchPartially with Action<TState>: default ('{Item}')", item),
+                                  groceries: static l => l.Information("SwitchPartially with Action<TState>: Groceries"));
 
       productType.SwitchPartially(logger,
-                                  groceries: static l => l.Information("SwitchPartially with Action<TContext>: Groceries (no default)"));
+                                  groceries: static l => l.Information("SwitchPartially with Action<TState>: Groceries (no default)"));
 
       productType.SwitchPartially(logger,
-                                  @default: static (l, item) => l.Information("SwitchPartially with Action<TContext>: {Item} (default only)", item));
+                                  @default: static (l, item) => l.Information("SwitchPartially with Action<TState>: {Item} (default only)", item));
 
       ProductType.Housewares.SwitchPartially(logger,
-                                             @default: static (l, item) => l.Information("SwitchPartially with Action<TContext>: default ('{Item}')", item),
-                                             groceries: static l => l.Information("SwitchPartially with Action<TContext>: Groceries"));
+                                             @default: static (l, item) => l.Information("SwitchPartially with Action<TState>: default ('{Item}')", item),
+                                             groceries: static l => l.Information("SwitchPartially with Action<TState>: Groceries"));
    }
 
    private static void DemoForSmartEnumWithCustomComparer(ILogger logger)
