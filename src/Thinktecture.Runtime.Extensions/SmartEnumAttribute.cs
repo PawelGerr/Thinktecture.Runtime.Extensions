@@ -5,7 +5,7 @@ namespace Thinktecture;
 /// <summary>
 /// Marks the type as a Smart Enum that has no identifier (i.e. no key-member).
 /// </summary>
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class SmartEnumAttribute : Attribute
 {
    /// <summary>
@@ -29,7 +29,7 @@ public sealed class SmartEnumAttribute : Attribute
 /// <summary>
 /// Marks the type as a Smart Enum with an identifier of type <typeparamref name="TKey"/>.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
 public sealed class SmartEnumAttribute<TKey> : Attribute
    where TKey : notnull
 {

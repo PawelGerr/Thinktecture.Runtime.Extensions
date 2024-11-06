@@ -5,7 +5,7 @@ namespace Thinktecture;
 /// </summary>
 /// <typeparam name="T1">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
 public class UnionAttribute<T1, T2> : UnionAttributeBase
 {
    /// <summary>
@@ -39,7 +39,7 @@ public class UnionAttribute<T1, T2> : UnionAttributeBase
 /// <typeparam name="T1">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T3">One of the types of the discriminated union.</typeparam>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
 public class UnionAttribute<T1, T2, T3> : UnionAttributeBase
 {
    /// <summary>
@@ -86,7 +86,7 @@ public class UnionAttribute<T1, T2, T3> : UnionAttributeBase
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T3">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T4">One of the types of the discriminated union.</typeparam>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
 public class UnionAttribute<T1, T2, T3, T4> : UnionAttributeBase
 {
    /// <summary>
@@ -146,7 +146,7 @@ public class UnionAttribute<T1, T2, T3, T4> : UnionAttributeBase
 /// <typeparam name="T3">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T4">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T5">One of the types of the discriminated union.</typeparam>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
 public class UnionAttribute<T1, T2, T3, T4, T5> : UnionAttributeBase
 {
    /// <summary>
