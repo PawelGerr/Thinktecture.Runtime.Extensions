@@ -141,7 +141,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
 
          var settings = new AllUnionSettings(context.Attributes[0], attributetype.TypeArguments.Length);
-         var memberTypeStates = ImmutableArray<MemberTypeState>.Empty;
+         var memberTypeStates = new MemberTypeState[attributetype.TypeArguments.Length];
 
          for (var i = 0; i < attributetype.TypeArguments.Length; i++)
          {
@@ -157,23 +157,53 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             memberType = memberType.IsReferenceType && memberTypeSettings.IsNullableReferenceType ? memberType.WithNullableAnnotation(NullableAnnotation.Annotated) : memberType;
             var typeState = factory.Create(memberType);
 
-            string memberTypeName;
+            var typeDuplicateIndex = 0;
+
+            for (var j = 0; j < attributetype.TypeArguments.Length; j++)
+            {
+               if (j == i)
+               {
+                  if (typeDuplicateIndex != 0)
+                     ++typeDuplicateIndex;
+
+                  continue;
+               }
+
+               if (!SymbolEqualityComparer.Default.Equals(memberType, attributetype.TypeArguments[j]))
+                  continue;
+
+               if (j > i && typeDuplicateIndex != 0)
+                  break;
+
+               ++typeDuplicateIndex;
+            }
+
+            (string Name, string DefaultName) memberTypeName;
+            var duplicateIndex = typeDuplicateIndex == 0 ? (int?)null : typeDuplicateIndex;
 
             switch (memberType)
             {
                case INamedTypeSymbol namedTypeSymbol:
-                  memberTypeName = MemberTypeState.GetMemberTypeName(namedTypeSymbol, typeState);
+                  memberTypeName = MemberTypeState.GetMemberName(memberTypeSettings,
+                                                                 duplicateIndex,
+                                                                 namedTypeSymbol,
+                                                                 typeState);
                   break;
                case IArrayTypeSymbol arrayTypeSymbol:
-                  memberTypeName = MemberTypeState.GetMemberTypeName(arrayTypeSymbol);
+                  memberTypeName = MemberTypeState.GetMemberName(memberTypeSettings,
+                                                                 duplicateIndex,
+                                                                 arrayTypeSymbol);
                   break;
                default:
                   Logger.LogError("Type of the member must be a named type or array type", tds);
                   return null;
             }
 
-            var memberTypeState = new MemberTypeState(memberTypeName, typeState, memberTypeSettings);
-            memberTypeStates = memberTypeStates.Add(memberTypeState);
+            memberTypeStates[i] = new MemberTypeState(memberTypeName.Name,
+                                                      memberTypeName.DefaultName,
+                                                      duplicateIndex,
+                                                      typeState,
+                                                      memberTypeSettings);
          }
 
          var unionState = new UnionSourceGenState(type,

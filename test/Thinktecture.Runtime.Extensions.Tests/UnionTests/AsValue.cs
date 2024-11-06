@@ -114,4 +114,38 @@ public class AsValue
       new TestUnion_class_string_int_bool_guid_char('A').Invoking(u => u.AsGuid.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_string_int_bool_guid_char' is not of type 'Guid'.");
       new TestUnion_class_string_int_bool_guid_char('A').AsChar.Should().Be('A');
    }
+
+   [Fact]
+   public void Should_return_correct_value_or_throw_exception_having_5_types_with_duplicates()
+   {
+      TestUnion_class_with_same_types.CreateText("text").AsText.Should().Be("text");
+      TestUnion_class_with_same_types.CreateText("text").Invoking(u => u.AsInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int'.");
+      TestUnion_class_with_same_types.CreateText("text").Invoking(u => u.AsString2.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      TestUnion_class_with_same_types.CreateText("text").Invoking(u => u.AsString3.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string?'.");
+      TestUnion_class_with_same_types.CreateText("text").Invoking(u => u.AsNullableInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int?'.");
+
+      new TestUnion_class_with_same_types(1).Invoking(u => u.AsText.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      new TestUnion_class_with_same_types(1).AsInt32.Should().Be(1);
+      new TestUnion_class_with_same_types(1).Invoking(u => u.AsString2.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      new TestUnion_class_with_same_types(1).Invoking(u => u.AsString3.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string?'.");
+      new TestUnion_class_with_same_types(1).Invoking(u => u.AsNullableInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int?'.");
+
+      TestUnion_class_with_same_types.CreateString2("text").Invoking(u => u.AsText.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      TestUnion_class_with_same_types.CreateString2("text").Invoking(u => u.AsInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int'.");
+      TestUnion_class_with_same_types.CreateString2("text").AsString2.Should().Be("text");
+      TestUnion_class_with_same_types.CreateString2("text").Invoking(u => u.AsString3.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string?'.");
+      TestUnion_class_with_same_types.CreateString2("text").Invoking(u => u.AsNullableInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int?'.");
+
+      TestUnion_class_with_same_types.CreateString3("text").Invoking(u => u.AsText.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      TestUnion_class_with_same_types.CreateString3("text").Invoking(u => u.AsInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int'.");
+      TestUnion_class_with_same_types.CreateString3("text").Invoking(u => u.AsString2.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      TestUnion_class_with_same_types.CreateString3("text").AsString3.Should().Be("text");
+      TestUnion_class_with_same_types.CreateString3("text").Invoking(u => u.AsNullableInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int?'.");
+
+      new TestUnion_class_with_same_types((int?)1).Invoking(u => u.AsText.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      new TestUnion_class_with_same_types((int?)1).Invoking(u => u.AsInt32.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int'.");
+      new TestUnion_class_with_same_types((int?)1).Invoking(u => u.AsString2.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string'.");
+      new TestUnion_class_with_same_types((int?)1).Invoking(u => u.AsString3.Should()).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'string?'.");
+      new TestUnion_class_with_same_types((int?)1).AsNullableInt32.Should().Be(1);
+   }
 }

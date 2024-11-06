@@ -99,6 +99,7 @@ public class IsValue
       new TestUnion_class_string_int_bool_guid_char(true).IsString.Should().BeFalse();
       new TestUnion_class_string_int_bool_guid_char(true).IsInt32.Should().BeFalse();
       new TestUnion_class_string_int_bool_guid_char(true).IsBoolean.Should().BeTrue();
+      new TestUnion_class_string_int_bool_guid_char(true).IsGuid.Should().BeFalse();
       new TestUnion_class_string_int_bool_guid_char(true).IsChar.Should().BeFalse();
 
       new TestUnion_class_string_int_bool_guid_char(new Guid("4161A501-D501-462E-85B5-034960B133D6")).IsString.Should().BeFalse();
@@ -112,5 +113,39 @@ public class IsValue
       new TestUnion_class_string_int_bool_guid_char('A').IsBoolean.Should().BeFalse();
       new TestUnion_class_string_int_bool_guid_char('A').IsGuid.Should().BeFalse();
       new TestUnion_class_string_int_bool_guid_char('A').IsChar.Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_use_correct_index_having_5_types_with_duplicates()
+   {
+      TestUnion_class_with_same_types.CreateText("text").IsText.Should().BeTrue();
+      TestUnion_class_with_same_types.CreateText("text").IsInt32.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateText("text").IsString2.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateText("text").IsString3.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateText("text").IsNullableInt32.Should().BeFalse();
+
+      new TestUnion_class_with_same_types(1).IsText.Should().BeFalse();
+      new TestUnion_class_with_same_types(1).IsInt32.Should().BeTrue();
+      new TestUnion_class_with_same_types(1).IsString2.Should().BeFalse();
+      new TestUnion_class_with_same_types(1).IsString3.Should().BeFalse();
+      new TestUnion_class_with_same_types(1).IsNullableInt32.Should().BeFalse();
+
+      TestUnion_class_with_same_types.CreateString2("text").IsText.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString2("text").IsInt32.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString2("text").IsString2.Should().BeTrue();
+      TestUnion_class_with_same_types.CreateString2("text").IsString3.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString2("text").IsNullableInt32.Should().BeFalse();
+
+      TestUnion_class_with_same_types.CreateString3("text").IsText.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString3("text").IsInt32.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString3("text").IsString2.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString3("text").IsString3.Should().BeTrue();
+      TestUnion_class_with_same_types.CreateString3("text").IsNullableInt32.Should().BeFalse();
+
+      new TestUnion_class_with_same_types((int?)1).IsText.Should().BeFalse();
+      new TestUnion_class_with_same_types((int?)1).IsInt32.Should().BeFalse();
+      new TestUnion_class_with_same_types((int?)1).IsString2.Should().BeFalse();
+      new TestUnion_class_with_same_types((int?)1).IsString3.Should().BeFalse();
+      new TestUnion_class_with_same_types((int?)1).IsNullableInt32.Should().BeTrue();
    }
 }

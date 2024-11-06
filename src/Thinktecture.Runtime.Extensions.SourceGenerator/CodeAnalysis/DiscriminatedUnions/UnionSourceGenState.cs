@@ -13,12 +13,12 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
    public bool IsRefStruct { get; }
    public bool IsEqualWithReferenceEquality => false;
 
-   public ImmutableArray<MemberTypeState> MemberTypes { get; }
+   public IReadOnlyList<MemberTypeState> MemberTypes { get; }
    public UnionSettings Settings { get; }
 
    public UnionSourceGenState(
       INamedTypeSymbol type,
-      ImmutableArray<MemberTypeState> memberTypes,
+      IReadOnlyList<MemberTypeState> memberTypes,
       UnionSettings settings)
    {
       MemberTypes = memberTypes;

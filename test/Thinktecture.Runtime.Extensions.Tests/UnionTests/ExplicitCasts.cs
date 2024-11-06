@@ -97,4 +97,11 @@ public class ExplicitCasts
       FluentActions.Invoking(() => (bool)new TestUnion_class_string_int_bool_guid_char('A')).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_string_int_bool_guid_char' is not of type 'bool'.");
       FluentActions.Invoking(() => (Guid)new TestUnion_class_string_int_bool_guid_char('A')).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_string_int_bool_guid_char' is not of type 'Guid'.");
    }
+
+   [Fact]
+   public void Should_have_explicit_casts_to_value_having_5_types_with_duplicates()
+   {
+      ((int)new TestUnion_class_with_same_types(1)).Should().Be(1);
+      FluentActions.Invoking(() => (int?)new TestUnion_class_with_same_types(1)).Should().Throw<InvalidOperationException>().WithMessage("'TestUnion_class_with_same_types' is not of type 'int?'.");
+   }
 }

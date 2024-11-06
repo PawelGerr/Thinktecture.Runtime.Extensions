@@ -54,4 +54,14 @@ public class Value
       new TestUnion_class_string_int_bool_guid_char(new Guid("04F2DA71-1E0F-4AA4-AD1E-CE56BEDED52B")).Value.Should().Be(new Guid("04F2DA71-1E0F-4AA4-AD1E-CE56BEDED52B"));
       new TestUnion_class_string_int_bool_guid_char('A').Value.Should().Be('A');
    }
+
+   [Fact]
+   public void Should_return_correct_value_having_5_types_with_duplicates()
+   {
+      TestUnion_class_with_same_types.CreateText("text").Value.Should().Be("text");
+      new TestUnion_class_with_same_types(1).Value.Should().Be(1);
+      TestUnion_class_with_same_types.CreateString2("text2").Value.Should().Be("text2");
+      TestUnion_class_with_same_types.CreateString3("text3").Value.Should().Be("text3");
+      new TestUnion_class_with_same_types((int?)2).Value.Should().Be((int?)2);
+   }
 }

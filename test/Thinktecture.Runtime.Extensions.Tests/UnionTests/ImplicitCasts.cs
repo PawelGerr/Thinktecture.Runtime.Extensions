@@ -71,4 +71,14 @@ public class ImplicitCasts
       TestUnion_class_string_int_bool_guid_char charUnion = 'A';
       charUnion.Value.Should().Be('A');
    }
+
+   [Fact]
+   public void Should_have_implicit_casts_from_value_having_5_values_with_duplicates()
+   {
+      TestUnion_class_with_same_types intUnion = 42;
+      intUnion.Value.Should().Be(42);
+
+      TestUnion_class_with_same_types nullableIntUnion = (int?)42;
+      nullableIntUnion.Value.Should().Be(42);
+   }
 }

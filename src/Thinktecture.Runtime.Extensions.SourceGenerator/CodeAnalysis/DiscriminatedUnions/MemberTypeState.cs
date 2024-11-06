@@ -10,16 +10,23 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
    public bool IsNullableStruct { get; }
    public SpecialType SpecialType { get; }
    public bool IsInterface { get; }
+   public int? TypeDuplicateIndex { get; }
 
    public string ArgumentName { get; }
+   public string BackingFieldName { get; }
    public MemberTypeSetting Setting { get; }
 
    public MemberTypeState(
-      string typeName,
+      string name,
+      string defaultName,
+      int? typeDuplicateIndex,
       ITypedMemberState typeState,
       MemberTypeSetting setting)
    {
-      Name = setting.Name ?? typeName;
+      Name = name;
+      ArgumentName = Name.MakeArgumentName();
+      BackingFieldName = typeDuplicateIndex is null ? ArgumentName : defaultName.MakeArgumentName();
+      TypeDuplicateIndex = typeDuplicateIndex;
       TypeFullyQualified = typeState.TypeFullyQualified;
       TypeMinimallyQualified = typeState.TypeMinimallyQualified;
       IsReferenceType = typeState.IsReferenceType;
@@ -27,19 +34,33 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
       IsNullableStruct = typeState.IsNullableStruct;
       SpecialType = typeState.SpecialType;
       IsInterface = typeState.TypeKind == TypeKind.Interface;
-
-      ArgumentName = Name.MakeArgumentName();
       Setting = setting;
    }
 
-   public static string GetMemberTypeName(INamedTypeSymbol type, ITypedMemberState typeState)
+   public static (string Name, string DefaultName) GetMemberName(
+      MemberTypeSetting setting,
+      int? duplicateIndex,
+      INamedTypeSymbol type,
+      ITypedMemberState typeState)
    {
-      return typeState.IsNullableStruct ? $"Nullable{type.TypeArguments[0].Name}" : type.Name;
+      var defaultName = typeState.IsNullableStruct
+                           ? $"Nullable{type.TypeArguments[0].Name}"
+                           : type.Name;
+
+      var name = setting.Name ?? defaultName + duplicateIndex;
+
+      return (name, defaultName);
    }
 
-   public static string GetMemberTypeName(IArrayTypeSymbol type)
+   public static (string Name, string DefaultName) GetMemberName(
+      MemberTypeSetting setting,
+      int? duplicateIndex,
+      IArrayTypeSymbol type)
    {
-      return type.ElementType.Name + "Array";
+      var defaultName = $"{type.ElementType.Name}Array";
+      var name = setting.Name ?? defaultName + duplicateIndex;
+
+      return (name, defaultName);
    }
 
    public override bool Equals(object? obj)
@@ -58,6 +79,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
              && IsReferenceType == other.IsReferenceType
              && SpecialType == other.SpecialType
              && IsInterface == other.IsInterface
+             && TypeDuplicateIndex == other.TypeDuplicateIndex
              && Setting.Equals(other.Setting);
    }
 
@@ -69,6 +91,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
+         hashCode = (hashCode * 397) ^ TypeDuplicateIndex.GetHashCode();
          hashCode = (hashCode * 397) ^ Setting.GetHashCode();
 
          return hashCode;

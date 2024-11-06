@@ -115,6 +115,33 @@ public class Map
 
          calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
       }
+
+      [Theory]
+      [InlineData(1, "text")]
+      [InlineData(2, 42)]
+      [InlineData(3, "text2")]
+      [InlineData(4, "text3")]
+      [InlineData(5, 43)]
+      public void Should_use_correct_arg_having_5_values_with_duplicates(int index, object expected)
+      {
+         var value = index switch
+         {
+            1 => TestUnion_class_with_same_types.CreateText("text"),
+            2 => new TestUnion_class_with_same_types(42),
+            3 => TestUnion_class_with_same_types.CreateString2("text2"),
+            4 => TestUnion_class_with_same_types.CreateString3("text3"),
+            5 => new TestUnion_class_with_same_types((int?)43),
+            _ => throw new Exception()
+         };
+
+         var calledActionOn = value.Map(text: (object)"text",
+                                        int32: 42,
+                                        string2: "text2",
+                                        string3: "text3",
+                                        nullableInt32: 43);
+
+         calledActionOn.Should().Be(expected);
+      }
    }
 
    public class HavingStruct

@@ -73,6 +73,7 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateMemberTypeFieldsAndProps();
       GenerateRawValueGetter();
       GenerateConstructors();
+      GenerateFactoriesForTypeDuplicates();
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -126,7 +127,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       foreach (var memberType in _state.MemberTypes)
       {
-         if (memberType.IsInterface)
+         if (memberType.IsInterface || memberType.TypeDuplicateIndex is not null)
             continue;
 
          _sb.Append(@"
@@ -147,7 +148,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       foreach (var memberType in _state.MemberTypes)
       {
-         if (memberType.IsInterface)
+         if (memberType.IsInterface || memberType.TypeDuplicateIndex is not null)
             continue;
 
          _sb.Append(@"
@@ -218,12 +219,12 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => this._").Append(memberType.ArgumentName);
+            ").Append(i + 1).Append(" => this._").Append(memberType.BackingFieldName);
 
          if (memberType.SpecialType != SpecialType.System_String)
          {
@@ -258,14 +259,14 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, this._").Append(memberType.ArgumentName);
+         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, this._").Append(memberType.BackingFieldName);
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -339,7 +340,7 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -347,9 +348,9 @@ namespace ").Append(_state.Namespace).Append(@"
             ").Append(i + 1).Append(" => ");
 
          if (memberType.IsReferenceType)
-            _sb.Append("this._").Append(memberType.ArgumentName).Append(" is null ? other._").Append(memberType.ArgumentName).Append(" is null : ");
+            _sb.Append("this._").Append(memberType.BackingFieldName).Append(" is null ? other._").Append(memberType.BackingFieldName).Append(" is null : ");
 
-         _sb.Append("this._").Append(memberType.ArgumentName).Append(".Equals(other._").Append(memberType.ArgumentName);
+         _sb.Append("this._").Append(memberType.BackingFieldName).Append(".Equals(other._").Append(memberType.BackingFieldName);
 
          if (memberType.SpecialType == SpecialType.System_String)
             _sb.Append(", global::System.StringComparison.").Append(Enum.GetName(typeof(StringComparison), _state.Settings.DefaultStringComparison));
@@ -383,7 +384,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The action to execute if no value-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -422,7 +423,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("object?>? @default = null,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -468,7 +469,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -489,7 +490,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withContext)
             _sb.Append("context, ");
 
-         _sb.Append("this._").Append(memberType.ArgumentName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
+         _sb.Append("this._").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
                return;");
       }
 
@@ -531,7 +532,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The function to execute if no value-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -570,7 +571,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("object?, TResult> @default,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -618,7 +619,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -639,7 +640,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withContext)
             _sb.Append("context, ");
 
-         _sb.Append("this._").Append(memberType.ArgumentName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
+         _sb.Append("this._").Append(memberType.BackingFieldName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
       }
 
       _sb.Append(@"
@@ -674,7 +675,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The instance to return if no value is provided for the current value.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -699,7 +700,7 @@ namespace ").Append(_state.Namespace).Append(@"
          TResult @default,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          if (i != 0)
             _sb.Append(",");
@@ -743,7 +744,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          _sb.Append(@"
             case ").Append(i + 1).Append(":");
@@ -780,33 +781,99 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateConstructors()
    {
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
+
+         if (memberType.TypeDuplicateIndex > 1)
+            continue;
+
+         var hasDuplicates = memberType.TypeDuplicateIndex is not null;
+         var argName = hasDuplicates ? "value" : memberType.ArgumentName;
+
+         _sb.Append(@"
+");
+
+         if (!hasDuplicates)
+         {
+            _sb.Append(@"
+      /// <summary>
+      /// Initializes new instance with <paramref name=""").Append(argName).Append(@"""/>.
+      /// </summary>
+      /// <param name=""").Append(argName).Append(@""">Value to create a new instance for.</param>");
+         }
+
+         _sb.Append(@"
+      ").AppendAccessModifier(hasDuplicates ? UnionConstructorAccessModifier.Private : _state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(")
+            ;
+
+         if (hasDuplicates)
+         {
+            _sb.AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").Append("@value, int @valueIndex");
+         }
+         else
+         {
+            _sb.AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName);
+         }
+
+         _sb.Append(@")
+      {
+         this._").Append(memberType.BackingFieldName).Append(" = ").AppendEscaped(argName).Append(@";
+         this._valueIndex = ");
+
+         if (hasDuplicates)
+         {
+            _sb.Append("@valueIndex");
+         }
+         else
+         {
+            _sb.Append(i + 1);
+         }
+
+         _sb.Append(@";
+      }");
+      }
+   }
+
+   private void GenerateFactoriesForTypeDuplicates()
+   {
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      {
+         var memberType = _state.MemberTypes[i];
+
+         if (memberType.TypeDuplicateIndex is null)
+            continue;
+
          _sb.Append(@"
 
       /// <summary>
-      /// Initializes new instance with <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.
+      /// Creates new instance with <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.
       /// </summary>
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>
-      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
+      /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>");
+
+         _sb.Append(@"
+      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" static ").Append(_state.Name).Append(" Create").Append(memberType.Name).Append("(")
+            .AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
-         this._").Append(memberType.ArgumentName).Append(" = ").AppendEscaped(memberType.ArgumentName).Append(@";
-         this._valueIndex = ").Append(i + 1).Append(@";
+         return new ").Append(_state.Name).Append("(").AppendEscaped(memberType.ArgumentName).Append(", ").Append(i + 1).Append(@");
       }");
       }
    }
 
    private void GenerateMemberTypeFieldsAndProps()
    {
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
+
+         if (memberType.TypeDuplicateIndex > 1)
+            continue;
+
          _sb.Append(@"
-      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" _").Append(memberType.ArgumentName).Append(";");
+      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" _").Append(memberType.BackingFieldName).Append(";");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
          _sb.Append(@"
@@ -817,7 +884,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(i + 1).Append(";");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
          _sb.Append(@"
@@ -827,7 +894,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeForXmlComment(memberType).Append(@".</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
-            .Append(" ? this._").Append(memberType.ArgumentName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
+            .Append(" ? this._").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
             .Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
       }
    }
@@ -858,12 +925,12 @@ namespace ").Append(_state.Namespace).Append(@"
          0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-         ").Append(i + 1).Append(" => this._").Append(memberType.ArgumentName).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
+         ").Append(i + 1).Append(" => this._").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
       }
 
       _sb.Append(@"

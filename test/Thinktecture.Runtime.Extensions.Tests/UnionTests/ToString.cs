@@ -44,4 +44,14 @@ public class ToString
       new TestUnion_class_string_int_bool_guid_char(new Guid("ED91613B-C9A5-4762-A5A7-A3F615F81CA6")).ToString().Should().Be("ed91613b-c9a5-4762-a5a7-a3f615f81ca6");
       new TestUnion_class_string_int_bool_guid_char('A').ToString().Should().Be("A");
    }
+
+   [Fact]
+   public void Should_return_string_representation_of_the_inner_value_having_5_types_with_duplicates()
+   {
+      TestUnion_class_with_same_types.CreateText("text").ToString().Should().Be("text");
+      new TestUnion_class_with_same_types(42).ToString().Should().Be("42");
+      TestUnion_class_with_same_types.CreateString2("text2").ToString().Should().Be("text2");
+      TestUnion_class_with_same_types.CreateString3("text3").ToString().Should().Be("text3");
+      new TestUnion_class_with_same_types((int?)43).ToString().Should().Be("43");
+   }
 }
