@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
@@ -68,11 +69,14 @@ public class Create
       var obj = ValueObjectWithInitProperties.Create(initExpression: 1, initBody: 2, publicPropertyDefaultInit: 3, privatePropertyDefaultInit: 4);
 
       obj.Should().BeEquivalentTo(new
-                                  {
-                                     InitExpression = 1,
-                                     InitBody = 2,
-                                     PublicPropertyDefaultInit = 3,
-                                     PrivatePropertyDefaultInit = 4
-                                  });
+      {
+         InitExpression = 1,
+         InitBody = 2,
+         PublicPropertyDefaultInit = 3
+      });
+
+      obj.GetType().GetProperty("PrivatePropertyDefaultInit", BindingFlags.Instance | BindingFlags.NonPublic)!
+         .GetValue(obj).Should().BeOfType<int>()
+         .Subject.Should().Be(4);
    }
 }
