@@ -1,17 +1,17 @@
 using System.Text;
 
-namespace Thinktecture.CodeAnalysis.DiscriminatedUnions;
+namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public class UnionCodeGenerator : CodeGeneratorBase
+public class AdHocUnionCodeGenerator : CodeGeneratorBase
 {
-   public override string CodeGeneratorName => "Union-CodeGenerator";
+   public override string CodeGeneratorName => "AdHocUnion-CodeGenerator";
    public override string? FileNameSuffix => null;
 
-   private readonly UnionSourceGenState _state;
+   private readonly AdHocUnionSourceGenState _state;
    private readonly StringBuilder _sb;
 
-   public UnionCodeGenerator(
-      UnionSourceGenState state,
+   public AdHocUnionCodeGenerator(
+      AdHocUnionSourceGenState state,
       StringBuilder sb)
    {
       _state = state;

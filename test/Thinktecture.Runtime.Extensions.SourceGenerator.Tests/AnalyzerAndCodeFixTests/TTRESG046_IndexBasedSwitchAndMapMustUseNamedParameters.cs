@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using Thinktecture.Runtime.Tests.TestAdHocUnions;
 using Thinktecture.Runtime.Tests.TestEnums;
-using Thinktecture.Runtime.Tests.TestUnions;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
@@ -1807,7 +1807,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -1835,7 +1835,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -1865,7 +1865,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -1894,7 +1894,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -1923,7 +1923,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -1954,7 +1954,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -1983,7 +1983,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2014,7 +2014,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2044,7 +2044,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2074,7 +2074,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2106,7 +2106,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2134,7 +2134,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2164,7 +2164,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2193,7 +2193,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2222,7 +2222,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2253,7 +2253,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2282,7 +2282,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2313,7 +2313,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2343,7 +2343,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2373,7 +2373,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2405,7 +2405,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2433,7 +2433,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2463,7 +2463,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2492,7 +2492,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {
@@ -2521,7 +2521,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                        using System;
                        using Thinktecture;
-                       using Thinktecture.Runtime.Tests.TestUnions;
+                       using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                        namespace TestNamespace
                        {

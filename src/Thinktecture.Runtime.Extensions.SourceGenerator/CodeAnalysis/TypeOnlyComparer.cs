@@ -1,4 +1,4 @@
-using Thinktecture.CodeAnalysis.DiscriminatedUnions;
+using Thinktecture.CodeAnalysis.AdHocUnions;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Thinktecture.CodeAnalysis.ValueObjects;
 
@@ -15,7 +15,7 @@ public class TypeOnlyComparer
      IEqualityComparer<SmartEnumDerivedTypes>,
      IEqualityComparer<KeyedValueObjectSourceGeneratorState>,
      IEqualityComparer<ComplexValueObjectSourceGeneratorState>,
-     IEqualityComparer<UnionSourceGenState>
+     IEqualityComparer<AdHocUnionSourceGenState>
 {
    public static readonly TypeOnlyComparer Instance = new();
 
@@ -29,7 +29,7 @@ public class TypeOnlyComparer
    public bool Equals(SmartEnumDerivedTypes x, SmartEnumDerivedTypes y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(KeyedValueObjectSourceGeneratorState x, KeyedValueObjectSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(ComplexValueObjectSourceGeneratorState x, ComplexValueObjectSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
-   public bool Equals(UnionSourceGenState x, UnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
+   public bool Equals(AdHocUnionSourceGenState x, AdHocUnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
 
    public int GetHashCode(FormattableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComparableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
@@ -41,7 +41,7 @@ public class TypeOnlyComparer
    public int GetHashCode(SmartEnumDerivedTypes obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(KeyedValueObjectSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComplexValueObjectSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
-   public int GetHashCode(UnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();
+   public int GetHashCode(AdHocUnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();
 
    private TypeOnlyComparer()
    {

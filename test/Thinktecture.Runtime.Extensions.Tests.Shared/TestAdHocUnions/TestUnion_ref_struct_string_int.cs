@@ -1,6 +1,6 @@
-namespace Thinktecture.Runtime.Tests.TestUnions;
+namespace Thinktecture.Runtime.Tests.TestAdHocUnions;
 
 // ReSharper disable once InconsistentNaming
 [Union<string, int>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                     MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-public partial struct TestUnion_struct_string_int;
+public ref partial struct TestUnion_ref_struct_string_int;

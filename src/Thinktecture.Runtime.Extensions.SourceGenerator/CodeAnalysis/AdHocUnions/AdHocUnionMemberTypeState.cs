@@ -1,6 +1,6 @@
-namespace Thinktecture.CodeAnalysis.DiscriminatedUnions;
+namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInformation, ITypeMinimallyQualified, IHashCodeComputable
+public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeState>, IMemberInformation, ITypeMinimallyQualified, IHashCodeComputable
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
@@ -14,14 +14,14 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
 
    public string ArgumentName { get; }
    public string BackingFieldName { get; }
-   public MemberTypeSetting Setting { get; }
+   public AdHocUnionMemberTypeSetting Setting { get; }
 
-   public MemberTypeState(
+   public AdHocUnionMemberTypeState(
       string name,
       string defaultName,
       int? typeDuplicateIndex,
       ITypedMemberState typeState,
-      MemberTypeSetting setting)
+      AdHocUnionMemberTypeSetting setting)
    {
       Name = name;
       ArgumentName = Name.MakeArgumentName();
@@ -38,7 +38,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
    }
 
    public static (string Name, string DefaultName) GetMemberName(
-      MemberTypeSetting setting,
+      AdHocUnionMemberTypeSetting setting,
       int? duplicateIndex,
       INamedTypeSymbol type,
       ITypedMemberState typeState)
@@ -53,7 +53,7 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
    }
 
    public static (string Name, string DefaultName) GetMemberName(
-      MemberTypeSetting setting,
+      AdHocUnionMemberTypeSetting setting,
       int? duplicateIndex,
       IArrayTypeSymbol type)
    {
@@ -65,10 +65,10 @@ public sealed class MemberTypeState : IEquatable<MemberTypeState>, IMemberInform
 
    public override bool Equals(object? obj)
    {
-      return obj is MemberTypeState other && Equals(other);
+      return obj is AdHocUnionMemberTypeState other && Equals(other);
    }
 
-   public bool Equals(MemberTypeState? other)
+   public bool Equals(AdHocUnionMemberTypeState? other)
    {
       if (other is null)
          return false;

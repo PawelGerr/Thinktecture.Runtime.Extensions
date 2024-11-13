@@ -51,7 +51,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       context.RegisterOperationAction(AnalyzeSmartEnum, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeValueObject, OperationKind.Attribute);
-      context.RegisterOperationAction(AnalyzeUnion, OperationKind.Attribute);
+      context.RegisterOperationAction(AnalyzeAdHocUnion, OperationKind.Attribute);
 
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
       context.RegisterOperationAction(AnalyzeDefaultValueAssignment, OperationKind.DefaultValue);
@@ -67,7 +67,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
           || operation.Arguments.Length > 0)
          return;
 
-      if (operation.Type.IsUnionType(out _)
+      if (operation.Type.IsAddHocUnionType(out _)
           || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
@@ -85,7 +85,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      if (operation.Type.IsUnionType(out _)
+      if (operation.Type.IsAddHocUnionType(out _)
           || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
@@ -150,7 +150,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                               operation,
                               isValidatable);
       }
-      else if (operation.Instance.Type.IsUnionType(out attribute)
+      else if (operation.Instance.Type.IsAddHocUnionType(out attribute)
                && attribute.AttributeClass is not null)
       {
          AnalyzeUnionSwitchMap(context,
@@ -277,7 +277,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void AnalyzeUnion(OperationAnalysisContext context)
+   private static void AnalyzeAdHocUnion(OperationAnalysisContext context)
    {
       if (context.ContainingSymbol.Kind != SymbolKind.NamedType
           || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation }
@@ -290,12 +290,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       try
       {
-         if (!attrCreation.Type.IsUnionAttribute())
+         if (!attrCreation.Type.IsAdHocUnionAttribute())
             return;
 
          var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
 
-         ValidateUnion(context, type, locationOfFirstDeclaration);
+         ValidateAdHocUnion(context, type, locationOfFirstDeclaration);
       }
       catch (Exception ex)
       {
@@ -305,7 +305,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ValidateUnion(
+   private static void ValidateAdHocUnion(
       OperationAnalysisContext context,
       INamedTypeSymbol type,
       Location locationOfFirstDeclaration)

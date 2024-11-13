@@ -1,6 +1,6 @@
 using System;
 
-namespace Thinktecture.Runtime.Tests.TestUnions;
+namespace Thinktecture.Runtime.Tests.TestAdHocUnions;
 
 // ReSharper disable once InconsistentNaming
 [Union<string, int, bool, Guid>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,

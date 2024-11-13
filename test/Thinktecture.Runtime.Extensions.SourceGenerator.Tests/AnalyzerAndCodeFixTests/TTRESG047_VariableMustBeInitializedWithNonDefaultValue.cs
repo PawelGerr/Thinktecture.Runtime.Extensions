@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Thinktecture.Runtime.Tests.TestUnions;
+using Thinktecture.Runtime.Tests.TestAdHocUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
@@ -19,7 +19,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -44,7 +44,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -71,7 +71,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -98,7 +98,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -123,7 +123,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -150,7 +150,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -179,7 +179,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -203,7 +203,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {
@@ -229,7 +229,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
 
                     using System;
                     using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestUnions;
+                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
                     namespace TestNamespace
                     {

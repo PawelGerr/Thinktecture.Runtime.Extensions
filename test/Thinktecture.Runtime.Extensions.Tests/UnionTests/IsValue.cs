@@ -1,6 +1,6 @@
 #nullable enable
 using System;
-using Thinktecture.Runtime.Tests.TestUnions;
+using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
 namespace Thinktecture.Runtime.Tests.UnionTests;
 

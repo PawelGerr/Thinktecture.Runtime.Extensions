@@ -3,6 +3,12 @@ namespace Thinktecture;
 /// <summary>
 /// Marks a type as a discriminated union.
 /// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
+public class UnionAttribute : Attribute;
+
+/// <summary>
+/// Marks a type as an ad hoc discriminated union.
+/// </summary>
 /// <typeparam name="T1">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
@@ -34,7 +40,7 @@ public class UnionAttribute<T1, T2> : UnionAttributeBase
 }
 
 /// <summary>
-/// Marks a type as a discriminated union.
+/// Marks a type as an ad hoc discriminated union.
 /// </summary>
 /// <typeparam name="T1">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>
@@ -80,7 +86,7 @@ public class UnionAttribute<T1, T2, T3> : UnionAttributeBase
 }
 
 /// <summary>
-/// Marks a type as a discriminated union.
+/// Marks a type as an ad hoc discriminated union.
 /// </summary>
 /// <typeparam name="T1">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>
@@ -139,7 +145,7 @@ public class UnionAttribute<T1, T2, T3, T4> : UnionAttributeBase
 }
 
 /// <summary>
-/// Marks a type as a discriminated union.
+/// Marks a type as an ad hoc discriminated union.
 /// </summary>
 /// <typeparam name="T1">One of the types of the discriminated union.</typeparam>
 /// <typeparam name="T2">One of the types of the discriminated union.</typeparam>

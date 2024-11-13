@@ -1,4 +1,4 @@
-namespace Thinktecture.Runtime.Tests.TestUnions;
+namespace Thinktecture.Runtime.Tests.TestAdHocUnions;
 
 public partial class ParentClass
 {

@@ -1,6 +1,6 @@
-namespace Thinktecture.CodeAnalysis.DiscriminatedUnions;
+namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSourceGenState>
+public sealed class AdHocUnionSourceGenState : ITypeInformation, IEquatable<AdHocUnionSourceGenState>
 {
    public string? Namespace { get; }
    public string Name { get; }
@@ -13,13 +13,13 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
    public bool IsRefStruct { get; }
    public bool IsEqualWithReferenceEquality => false;
 
-   public IReadOnlyList<MemberTypeState> MemberTypes { get; }
-   public UnionSettings Settings { get; }
+   public IReadOnlyList<AdHocUnionMemberTypeState> MemberTypes { get; }
+   public AdHocUnionSettings Settings { get; }
 
-   public UnionSourceGenState(
+   public AdHocUnionSourceGenState(
       INamedTypeSymbol type,
-      IReadOnlyList<MemberTypeState> memberTypes,
-      UnionSettings settings)
+      IReadOnlyList<AdHocUnionMemberTypeState> memberTypes,
+      AdHocUnionSettings settings)
    {
       MemberTypes = memberTypes;
       Settings = settings;
@@ -36,10 +36,10 @@ public sealed class UnionSourceGenState : ITypeInformation, IEquatable<UnionSour
 
    public override bool Equals(object? obj)
    {
-      return obj is UnionSourceGenState other && Equals(other);
+      return obj is AdHocUnionSourceGenState other && Equals(other);
    }
 
-   public bool Equals(UnionSourceGenState? other)
+   public bool Equals(AdHocUnionSourceGenState? other)
    {
       if (other is null)
          return false;

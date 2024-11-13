@@ -1,11 +1,11 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Thinktecture.CodeAnalysis.DiscriminatedUnions;
+namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
 [Generator]
-public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
-   public UnionSourceGenerator()
+   public AdHocUnionSourceGenerator()
       : base(15_000)
    {
    }
@@ -44,7 +44,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
 
       var validStates = unionTypeOrError.SelectMany(static (state, _) => state.ValidState is not null
                                                                             ? [state.ValidState]
-                                                                            : ImmutableArray<UnionSourceGenState>.Empty);
+                                                                            : ImmutableArray<AdHocUnionSourceGenState>.Empty);
 
       InitializeUnionTypeGeneration(context, validStates, options);
 
@@ -106,23 +106,23 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             return null;
          }
 
-         var attributetype = context.Attributes[0].AttributeClass;
+         var attributeType = context.Attributes[0].AttributeClass;
 
-         if (attributetype is null)
+         if (attributeType is null)
          {
             Logger.LogDebug("The attribute type is null", tds);
             return null;
          }
 
-         if (attributetype.TypeKind == TypeKind.Error)
+         if (attributeType.TypeKind == TypeKind.Error)
          {
             Logger.LogDebug("The attribute type is erroneous", tds);
             return null;
          }
 
-         if (attributetype.TypeArguments.Length < 2)
+         if (attributeType.TypeArguments.Length < 2)
          {
-            Logger.LogDebug($"Expected the attribute type to have at least 2 type arguments but found {attributetype.TypeArguments.Length.ToString()}", tds);
+            Logger.LogDebug($"Expected the attribute type to have at least 2 type arguments but found {attributeType.TypeArguments.Length.ToString()}", tds);
             return null;
          }
 
@@ -139,12 +139,14 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
 
-         var settings = new AllUnionSettings(context.Attributes[0], attributetype.TypeArguments.Length);
-         var memberTypeStates = new MemberTypeState[attributetype.TypeArguments.Length];
+         var settings = new AdHocUnionSettings(context.Attributes[0],
+                                               attributeType.TypeArguments.Length,
+                                               attributeInfo);
+         var memberTypeStates = new AdHocUnionMemberTypeState[attributeType.TypeArguments.Length];
 
-         for (var i = 0; i < attributetype.TypeArguments.Length; i++)
+         for (var i = 0; i < attributeType.TypeArguments.Length; i++)
          {
-            var memberType = attributetype.TypeArguments[i];
+            var memberType = attributeType.TypeArguments[i];
 
             if (memberType.TypeKind == TypeKind.Error)
             {
@@ -158,7 +160,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
 
             var typeDuplicateIndex = 0;
 
-            for (var j = 0; j < attributetype.TypeArguments.Length; j++)
+            for (var j = 0; j < attributeType.TypeArguments.Length; j++)
             {
                if (j == i)
                {
@@ -168,7 +170,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
                   continue;
                }
 
-               if (!SymbolEqualityComparer.Default.Equals(memberType, attributetype.TypeArguments[j]))
+               if (!SymbolEqualityComparer.Default.Equals(memberType, attributeType.TypeArguments[j]))
                   continue;
 
                if (j > i && typeDuplicateIndex != 0)
@@ -183,13 +185,13 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             switch (memberType)
             {
                case INamedTypeSymbol namedTypeSymbol:
-                  memberTypeName = MemberTypeState.GetMemberName(memberTypeSettings,
+                  memberTypeName = AdHocUnionMemberTypeState.GetMemberName(memberTypeSettings,
                                                                  duplicateIndex,
                                                                  namedTypeSymbol,
                                                                  typeState);
                   break;
                case IArrayTypeSymbol arrayTypeSymbol:
-                  memberTypeName = MemberTypeState.GetMemberName(memberTypeSettings,
+                  memberTypeName = AdHocUnionMemberTypeState.GetMemberName(memberTypeSettings,
                                                                  duplicateIndex,
                                                                  arrayTypeSymbol);
                   break;
@@ -198,16 +200,16 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
                   return null;
             }
 
-            memberTypeStates[i] = new MemberTypeState(memberTypeName.Name,
+            memberTypeStates[i] = new AdHocUnionMemberTypeState(memberTypeName.Name,
                                                       memberTypeName.DefaultName,
                                                       duplicateIndex,
                                                       typeState,
                                                       memberTypeSettings);
          }
 
-         var unionState = new UnionSourceGenState(type,
+         var unionState = new AdHocUnionSourceGenState(type,
                                                   memberTypeStates,
-                                                  new UnionSettings(settings, attributeInfo));
+                                                  settings);
 
          Logger.LogDebug("The type declaration is a valid union", null, unionState);
 
@@ -227,18 +229,18 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
 
    private void InitializeUnionTypeGeneration(
       IncrementalGeneratorInitializationContext context,
-      IncrementalValuesProvider<UnionSourceGenState> validStates,
+      IncrementalValuesProvider<AdHocUnionSourceGenState> validStates,
       IncrementalValueProvider<GeneratorOptions> options)
    {
       var unionTypes = validStates
                        .Collect()
                        .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                        ? ImmutableArray<UnionSourceGenState>.Empty
+                                                        ? ImmutableArray<AdHocUnionSourceGenState>.Empty
                                                         : states.Distinct(TypeOnlyComparer.Instance))
-                       .WithComparer(new SetComparer<UnionSourceGenState>())
+                       .WithComparer(new SetComparer<AdHocUnionSourceGenState>())
                        .SelectMany((states, _) => states);
 
-      context.RegisterSourceOutput(unionTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, UnionCodeGeneratorFactory.Instance));
+      context.RegisterSourceOutput(unionTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, AdHocUnionCodeGeneratorFactory.Instance));
    }
 
    private void InitializeErrorReporting(
@@ -261,9 +263,9 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private readonly record struct SourceGenContext(UnionSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
+   private readonly record struct SourceGenContext(AdHocUnionSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
    {
-      public SourceGenContext(UnionSourceGenState validState)
+      public SourceGenContext(AdHocUnionSourceGenState validState)
          : this(validState, null, null)
       {
       }

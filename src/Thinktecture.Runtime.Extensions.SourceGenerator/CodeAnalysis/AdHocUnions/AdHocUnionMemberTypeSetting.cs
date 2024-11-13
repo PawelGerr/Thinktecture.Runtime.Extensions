@@ -1,11 +1,11 @@
-namespace Thinktecture.CodeAnalysis.DiscriminatedUnions;
+namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public readonly struct MemberTypeSetting : IEquatable<MemberTypeSetting>, IHashCodeComputable
+public readonly struct AdHocUnionMemberTypeSetting : IEquatable<AdHocUnionMemberTypeSetting>, IHashCodeComputable
 {
    public bool IsNullableReferenceType { get; }
    public string? Name { get; }
 
-   public MemberTypeSetting(
+   public AdHocUnionMemberTypeSetting(
       bool isNullableReferenceType,
       string? name)
    {
@@ -15,10 +15,10 @@ public readonly struct MemberTypeSetting : IEquatable<MemberTypeSetting>, IHashC
 
    public override bool Equals(object? obj)
    {
-      return obj is MemberTypeSetting other && Equals(other);
+      return obj is AdHocUnionMemberTypeSetting other && Equals(other);
    }
 
-   public bool Equals(MemberTypeSetting other)
+   public bool Equals(AdHocUnionMemberTypeSetting other)
    {
       return IsNullableReferenceType == other.IsNullableReferenceType
              && Name == other.Name;

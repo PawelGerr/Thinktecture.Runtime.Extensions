@@ -1,4 +1,4 @@
-namespace Thinktecture.Runtime.Tests.TestUnions;
+namespace Thinktecture.Runtime.Tests.TestAdHocUnions;
 
 // ReSharper disable once InconsistentNaming
 [Union<string, int>(SkipImplicitConversionFromValue = true,

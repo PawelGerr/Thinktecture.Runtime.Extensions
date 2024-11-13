@@ -64,15 +64,18 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.SmartEnum.NAME, ContainingNamespace: { Name: Constants.Attributes.SmartEnum.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsUnionAttribute(this ITypeSymbol? attributeType)
+   public static bool IsAdHocUnionAttribute(this ITypeSymbol? attributeType)
    {
-      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+      if (attributeType is null
+          || attributeType.TypeKind == TypeKind.Error
+          || attributeType is not INamedTypeSymbol namedType
+          || namedType.TypeArguments.IsDefaultOrEmpty)
          return false;
 
       return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsUnionType(
+   public static bool IsAddHocUnionType(
       [NotNullWhen(true)] this ITypeSymbol? unionType,
       [NotNullWhen(true)] out AttributeData? unionAttribute)
    {
@@ -82,7 +85,7 @@ public static class TypeSymbolExtensions
          return false;
       }
 
-      unionAttribute = unionType.FindAttribute(static attributeClass => attributeClass.IsUnionAttribute());
+      unionAttribute = unionType.FindAttribute(static attributeClass => attributeClass.IsAdHocUnionAttribute());
 
       return unionAttribute is not null;
    }
