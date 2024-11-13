@@ -78,11 +78,8 @@ public abstract class SourceGeneratorTestsBase
 
    protected static void AssertOutput(string output, string expectedOutput)
    {
-      if (Environment.NewLine == "\n")
-      {
-         output = output?.Replace("\r\n", Environment.NewLine);
-         expectedOutput = expectedOutput?.Replace("\r\n", Environment.NewLine);
-      }
+      output = output?.Replace("\r\n", "\n");
+      expectedOutput = expectedOutput?.Replace("\r\n", "\n");
 
       output.Should().Be(expectedOutput);
    }

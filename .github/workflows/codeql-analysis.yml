@@ -25,13 +25,14 @@ jobs:
 
     steps:
 
-      - name: install .NET Core 7/8 SDKs
+      - name: install .NET Core 7/8/9 SDKs
         uses: actions/setup-dotnet@v2
         with:
           include-prerelease: false
           dotnet-version: |
             7.0.x
             8.0.x
+            9.0.x
 
       - name: checkout repository
         uses: actions/checkout@v3

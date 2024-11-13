@@ -13,7 +13,7 @@
       <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
       <RootNamespace>Thinktecture</RootNamespace>
       <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
-      <LangVersion>12.0</LangVersion>
+      <LangVersion>13.0</LangVersion>
       <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally> 
       <Nullable>enable</Nullable>
       <ImplicitUsings>enable</ImplicitUsings>
