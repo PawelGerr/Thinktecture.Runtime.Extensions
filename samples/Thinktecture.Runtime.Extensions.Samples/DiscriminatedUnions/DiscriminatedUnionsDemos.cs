@@ -6,10 +6,16 @@ public class DiscriminatedUnionsDemos
 {
    public static void Demo(ILogger logger)
    {
+      DemoForAdHocUnions(logger);
+      DemoForUnions(logger);
+   }
+
+   private static void DemoForAdHocUnions(ILogger logger)
+   {
       logger.Information("""
 
 
-                         ==== Demo for Union ====
+                         ==== Demo for Ad Hoc Union ====
 
                          """);
 
@@ -69,5 +75,106 @@ public class DiscriminatedUnionsDemos
       var mapPartiallyResponse = textOrNumberFromString.MapPartially(@default: "[MapPartially] Mapped default",
                                                                      text: "[MapPartially] Mapped string");
       logger.Information("{Response}", mapPartiallyResponse);
+   }
+
+   private static void DemoForUnions(ILogger logger)
+   {
+      DemoForUnionsUsingClass(logger);
+      DemoForUnionsUsingRecord(logger);
+      DemoForUnionsUsingGeneric(logger);
+   }
+
+   private static void DemoForUnionsUsingClass(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Union (class) ====
+
+                         """);
+
+      Animal animal = new Animal.Cat("Luna");
+      Print(animal);
+
+      animal = Animal.Dog.Create("Milo");
+      Print(animal);
+
+      animal = Animal.None.Instance;
+      Print(animal);
+
+      void Print(Animal a)
+      {
+         a.Switch(none: _ => logger.Information("[Switch] None"),
+                  dog: d => logger.Information("[Switch] Dog: {Dog}", d),
+                  cat: c => logger.Information("[Switch] Cat: {Cat}", c));
+
+         a.SwitchPartially(@default: d => logger.Information("[SwitchPartially] Default: {Animal}", d),
+                           none: _ => logger.Information("[SwitchPartially] None"),
+                           cat: c => logger.Information("[SwitchPartially] Cat: {Cat}", c.Name));
+
+         var result = a.Map(dog: "Dog",
+                            none: "None",
+                            cat: "Cat");
+
+         logger.Information("[Map] Result: {Result}", result);
+      }
+   }
+
+   private static void DemoForUnionsUsingRecord(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Union (record) ====
+
+                         """);
+
+      AnimalRecord animal = new AnimalRecord.Cat("Luna");
+      Print(animal);
+
+      animal = new AnimalRecord.Dog("Milo");
+      Print(animal);
+
+      animal = AnimalRecord.None.Instance;
+      Print(animal);
+
+      void Print(AnimalRecord a)
+      {
+         a.Switch(none: _ => logger.Information("[Switch] None"),
+                  dog: d => logger.Information("[Switch] Dog: {Dog}", d),
+                  cat: c => logger.Information("[Switch] Cat: {Cat}", c));
+
+         a.SwitchPartially(@default: d => logger.Information("[SwitchPartially] Default: {Animal}", d),
+                           none: _ => logger.Information("[SwitchPartially] None"),
+                           cat: c => logger.Information("[SwitchPartially] Cat: {Cat}", c.Name));
+
+         var result = a.Map(dog: "Dog",
+                            none: "None",
+                            cat: "Cat");
+
+         logger.Information("[Map] Result: {Result}", result);
+      }
+   }
+
+   private static void DemoForUnionsUsingGeneric(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Union (generics) ====
+
+                         """);
+
+      Result<int> success = 42;
+      Print(success);
+
+      Result<int> error = "Error message";
+      Print(error);
+
+      void Print<T>(Result<T> r)
+      {
+         r.Switch(failure: f => logger.Information("[Switch] Failure: {Failure}", f),
+                  success: s => logger.Information("[Switch] Success: {Success}", s));
+      }
    }
 }

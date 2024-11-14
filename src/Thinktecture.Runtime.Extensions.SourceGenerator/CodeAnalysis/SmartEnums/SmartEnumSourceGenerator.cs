@@ -430,7 +430,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private static IReadOnlyList<string> FindDerivedTypes(INamedTypeSymbol type)
    {
-      var derivedTypes = type.FindDerivedInnerEnums();
+      var derivedTypes = type.FindDerivedInnerTypes();
 
       if (derivedTypes.Count == 0)
          return Array.Empty<string>();

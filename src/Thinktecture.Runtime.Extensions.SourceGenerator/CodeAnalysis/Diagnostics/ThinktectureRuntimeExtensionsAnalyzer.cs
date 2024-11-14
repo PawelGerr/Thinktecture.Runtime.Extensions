@@ -17,7 +17,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial,
                                                                                                               DiagnosticsDescriptors.TypeMustBeClassOrStruct,
                                                                                                               DiagnosticsDescriptors.NonValidatableEnumsMustBeClass,
-                                                                                                              DiagnosticsDescriptors.EnumConstructorsMustBePrivate,
+                                                                                                              DiagnosticsDescriptors.ConstructorsMustBePrivate,
                                                                                                               DiagnosticsDescriptors.EnumerationHasNoItems,
                                                                                                               DiagnosticsDescriptors.EnumItemMustBePublic,
                                                                                                               DiagnosticsDescriptors.FieldMustBeReadOnly,
@@ -29,7 +29,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                                                                               DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
                                                                                                               DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
                                                                                                               DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-                                                                                                              DiagnosticsDescriptors.EnumsValueObjectsAndUnionsMustNotBeGeneric,
+                                                                                                              DiagnosticsDescriptors.EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric,
                                                                                                               DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
                                                                                                               DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
@@ -52,6 +52,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.RegisterOperationAction(AnalyzeSmartEnum, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeValueObject, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeAdHocUnion, OperationKind.Attribute);
+      context.RegisterOperationAction(AnalyzeUnion, OperationKind.Attribute);
 
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
       context.RegisterOperationAction(AnalyzeDefaultValueAssignment, OperationKind.DefaultValue);
@@ -67,7 +68,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
           || operation.Arguments.Length > 0)
          return;
 
-      if (operation.Type.IsAddHocUnionType(out _)
+      if (operation.Type.IsAdHocUnionType(out _)
           || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
@@ -85,7 +86,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      if (operation.Type.IsAddHocUnionType(out _)
+      if (operation.Type.IsAdHocUnionType(out _)
           || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
@@ -150,13 +151,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                               operation,
                               isValidatable);
       }
-      else if (operation.Instance.Type.IsAddHocUnionType(out attribute)
+      else if (operation.Instance.Type.IsAnyUnionType(out attribute)
                && attribute.AttributeClass is not null)
       {
-         AnalyzeUnionSwitchMap(context,
-                               attribute.AttributeClass.TypeArguments,
-                               operation.Arguments,
-                               operation);
+         AnalyzeAnyUnionSwitchMap(context,
+                                  operation.Arguments,
+                                  operation);
       }
    }
 
@@ -174,14 +174,18 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       AnalyzeSwitchMap(context, args, operation, numberOfCallbacks);
    }
 
-   private static void AnalyzeUnionSwitchMap(
+   private static void AnalyzeAnyUnionSwitchMap(
       OperationAnalysisContext context,
-      ImmutableArray<ITypeSymbol> memberTypes,
       ImmutableArray<IArgumentOperation> args,
       IInvocationOperation operation)
    {
-      var numberOfCallbacks = memberTypes.Length
-                              + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
+      var numberOfCallbacks = operation.TargetMethod.Parameters.Length;
+
+      if (operation.TargetMethod.Parameters.Length > 0
+          && operation.TargetMethod.Parameters[0].Name == "state")
+      {
+         numberOfCallbacks--;
+      }
 
       AnalyzeSwitchMap(context, args, operation, numberOfCallbacks);
    }
@@ -305,6 +309,34 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
+   private static void AnalyzeUnion(OperationAnalysisContext context)
+   {
+      if (context.ContainingSymbol.Kind != SymbolKind.NamedType
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation }
+          || context.ContainingSymbol is not INamedTypeSymbol type
+          || type.TypeKind == TypeKind.Error
+          || type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+      {
+         return;
+      }
+
+      try
+      {
+         if (!attrCreation.Type.IsUnionAttribute())
+            return;
+
+         var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
+
+         ValidateUnion(context, type, locationOfFirstDeclaration);
+      }
+      catch (Exception ex)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                    Location.None,
+                                                    type.ToFullyQualifiedDisplayString(), ex.ToString()));
+      }
+   }
+
    private static void ValidateAdHocUnion(
       OperationAnalysisContext context,
       INamedTypeSymbol type,
@@ -319,6 +351,16 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       EnsureNoPrimaryConstructor(context, type);
       TypeMustBePartial(context, type);
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Union");
+   }
+
+   private static void ValidateUnion(
+      OperationAnalysisContext context,
+      INamedTypeSymbol type,
+      Location locationOfFirstDeclaration)
+   {
+      EnsureNoPrimaryConstructor(context, type);
+      ConstructorsMustBePrivate(context, type);
+      TypeMustBePartial(context, type);
    }
 
    private static void ValidateKeyedValueObject(
@@ -582,7 +624,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
    {
       if (!type.TypeParameters.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsValueObjectsAndUnionsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
    }
 
    private static void Check_ItemLike_StaticProperties(
@@ -601,7 +643,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void ValidateDerivedTypes(OperationAnalysisContext context, INamedTypeSymbol enumType)
    {
-      var derivedTypes = enumType.FindDerivedInnerEnums();
+      var derivedTypes = enumType.FindDerivedInnerTypes();
       var typesToLeaveOpen = ImmutableArray.Create<INamedTypeSymbol>();
 
       for (var i = 0; i < derivedTypes.Count; i++)
@@ -720,7 +762,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             case ConstructorDeclarationSyntax constructorDeclarationSyntax:
             {
                var location = constructorDeclarationSyntax.Identifier.GetLocation();
-               ReportDiagnostic(context, DiagnosticsDescriptors.EnumConstructorsMustBePrivate, location, type);
+               ReportDiagnostic(context, DiagnosticsDescriptors.ConstructorsMustBePrivate, location, type);
 
                break;
             }
@@ -749,9 +791,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var ctor = type.Constructors[i];
 
-         // Performance optimization: primary ctor cannot be private unless it is a nested type,
-         // which is not allowed neither with Value Objects nor with Smart Enums.
-         if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
+         // Performance optimization: primary ctor cannot be private unless it is a nested type.
+         if (ctor.IsImplicitlyDeclared || (ctor.ContainingType is null && ctor.DeclaredAccessibility == Accessibility.Private))
             continue;
 
          var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
@@ -767,6 +808,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             case StructDeclarationSyntax structDeclarationSyntax:
             {
                var location = structDeclarationSyntax.Identifier.GetLocation();
+               ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
+               break;
+            }
+            case RecordDeclarationSyntax recordDeclarationSyntax:
+            {
+               var location = recordDeclarationSyntax.Identifier.GetLocation();
                ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
                break;
             }

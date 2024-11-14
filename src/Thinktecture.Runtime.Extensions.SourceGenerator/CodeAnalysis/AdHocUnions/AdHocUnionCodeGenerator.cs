@@ -746,19 +746,21 @@ namespace ").Append(_state.Namespace).Append(@"
 
       for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
+         var memberType = _state.MemberTypes[i];
+
          _sb.Append(@"
             case ").Append(i + 1).Append(":");
 
          if (isPartially)
          {
             _sb.Append(@"
-               if (!").AppendEscaped(_state.MemberTypes[i].ArgumentName).Append(@".IsSet)
+               if (!").AppendEscaped(memberType.ArgumentName).Append(@".IsSet)
                   break;
 ");
          }
 
          _sb.Append(@"
-               return ").AppendEscaped(_state.MemberTypes[i].ArgumentName);
+               return ").AppendEscaped(memberType.ArgumentName);
 
          if (isPartially)
             _sb.Append(".Value");

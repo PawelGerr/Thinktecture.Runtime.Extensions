@@ -75,7 +75,27 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsAddHocUnionType(
+   public static bool IsUnionAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null
+          || attributeType.TypeKind == TypeKind.Error
+          || attributeType is not INamedTypeSymbol namedType
+          || !namedType.TypeArguments.IsDefaultOrEmpty)
+         return false;
+
+      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsAnyUnionAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null
+          || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsAdHocUnionType(
       [NotNullWhen(true)] this ITypeSymbol? unionType,
       [NotNullWhen(true)] out AttributeData? unionAttribute)
    {
@@ -86,6 +106,21 @@ public static class TypeSymbolExtensions
       }
 
       unionAttribute = unionType.FindAttribute(static attributeClass => attributeClass.IsAdHocUnionAttribute());
+
+      return unionAttribute is not null;
+   }
+
+   public static bool IsAnyUnionType(
+      [NotNullWhen(true)] this ITypeSymbol? unionType,
+      [NotNullWhen(true)] out AttributeData? unionAttribute)
+   {
+      if (unionType is null || unionType.SpecialType != SpecialType.None)
+      {
+         unionAttribute = null;
+         return false;
+      }
+
+      unionAttribute = unionType.FindAttribute(static attributeClass => attributeClass.IsAnyUnionAttribute());
 
       return unionAttribute is not null;
    }
@@ -335,20 +370,20 @@ public static class TypeSymbolExtensions
              && @interface.TypeArguments[2].SpecialType == SpecialType.System_Boolean;
    }
 
-   public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerEnums(
-      this ITypeSymbol enumType)
+   public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(
+      this ITypeSymbol baseType)
    {
       List<(INamedTypeSymbol, int Level)>? derivedTypes = null;
 
-      FindDerivedInnerEnums(enumType, 0, enumType, ref derivedTypes);
+      FindDerivedInnerTypes(baseType, 0, baseType, ref derivedTypes);
 
       return derivedTypes ?? (IReadOnlyList<(INamedTypeSymbol Type, int Level)>)Array.Empty<(INamedTypeSymbol Type, int Level)>();
    }
 
-   private static void FindDerivedInnerEnums(
+   private static void FindDerivedInnerTypes(
       ITypeSymbol typeToCheck,
       int currentLevel,
-      ITypeSymbol enumType,
+      ITypeSymbol baseType,
       ref List<(INamedTypeSymbol, int Level)>? derivedTypes)
    {
       currentLevel++;
@@ -362,11 +397,11 @@ public static class TypeSymbolExtensions
       {
          var innerType = types[i];
 
-         // derived enums can be classes only
+         // derived types can be classes only
          if (innerType.TypeKind is not TypeKind.Class)
             continue;
 
-         if (IsDerivedFrom(innerType, enumType))
+         if (IsDerivedFrom(innerType, baseType))
          {
             var derivedType = innerType;
 
@@ -376,7 +411,7 @@ public static class TypeSymbolExtensions
             (derivedTypes ??= new List<(INamedTypeSymbol, int Level)>()).Add((derivedType, currentLevel));
          }
 
-         FindDerivedInnerEnums(innerType, currentLevel, enumType, ref derivedTypes);
+         FindDerivedInnerTypes(innerType, currentLevel, baseType, ref derivedTypes);
       }
    }
 
