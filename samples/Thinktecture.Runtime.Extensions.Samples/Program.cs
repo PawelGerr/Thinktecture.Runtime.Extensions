@@ -1,7 +1,7 @@
 using Serilog;
-using Thinktecture.DiscriminatedUnions;
 using Thinktecture.EmptyClass;
 using Thinktecture.SmartEnums;
+using Thinktecture.Unions;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture;

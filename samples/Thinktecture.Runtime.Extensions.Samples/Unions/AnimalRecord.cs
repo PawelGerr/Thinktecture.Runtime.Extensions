@@ -1,4 +1,4 @@
-namespace Thinktecture.DiscriminatedUnions;
+namespace Thinktecture.Unions;
 
 [Union(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
        MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]

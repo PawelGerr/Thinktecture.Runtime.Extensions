@@ -1,6 +1,6 @@
 using Serilog;
 
-namespace Thinktecture.DiscriminatedUnions;
+namespace Thinktecture.Unions;
 
 public class DiscriminatedUnionsDemos
 {

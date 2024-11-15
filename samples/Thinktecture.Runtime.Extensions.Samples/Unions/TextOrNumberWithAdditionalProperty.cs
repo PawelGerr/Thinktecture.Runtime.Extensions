@@ -1,4 +1,4 @@
-namespace Thinktecture.DiscriminatedUnions;
+namespace Thinktecture.Unions;
 
 [Union<string, int>(T1Name = "Text",
                     T2Name = "Number",

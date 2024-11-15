@@ -1,4 +1,4 @@
-namespace Thinktecture.DiscriminatedUnions;
+namespace Thinktecture.Unions;
 
 [Union<string, int>(T1IsNullableReferenceType = true,
                     T1Name = "Text",

@@ -20,6 +20,8 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 * [Smart Enum](#smart-enums)
 * [Value Objects](#value-objects)
 * [Discriminated Unions](#discriminated-unions) (requires version 8.x.x)
+  * [Ad hoc unions](#ad-hoc-unions)
+  * [Regular unions](#regular-unions)
 
 # Documentation
 
@@ -468,8 +470,12 @@ Install: `Install-Package Thinktecture.Runtime.Extensions` (requires version 8.x
 
 Documentation: [Discriminated Unions](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Discriminated-Unions)
 
+There are 2 types of unions: `ad hoc union` and `"regular" unions`
+
+## Ad hoc unions
+
 Features:
-* Roslyn Analyzers and CodeFixes help the developers to implement the Discriminated Unions correctly
+* Roslyn Analyzers and CodeFixes help the developers to implement the unions correctly
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
 * Switch-Case/Map
 * Renaming of properties
@@ -583,3 +589,102 @@ textOrNumberFromString.Switch(text: s => logger.Information("[Switch] String Act
                               number: i => logger.Information("[Switch] Int Action: {Number}", i));
 ```
     
+## Regular unions
+
+Features:
+* Roslyn Analyzers and CodeFixes help the developers to implement the unions correctly
+* Can be a `class` or `record`
+* Switch-Case/Map
+* Supports generics
+* Derived types can be simple classes or something complex like a [value object](#value-objects).
+
+Simple union using a class and a value object:
+```csharp
+[Union]
+public partial class Animal
+{
+   [ValueObject<string>]
+   public partial class Dog : Animal;
+
+   public sealed class Cat : Animal;
+}
+
+```
+
+Similar example as above but with `records`:
+
+```csharp
+[Union]
+public partial record AnimalRecord
+{
+   public sealed record Dog(string Name) : AnimalRecord;
+
+   public sealed record Cat(string Name) : AnimalRecord;
+}
+```
+
+A union type (i.e. the base class) with a property:
+
+```csharp
+[Union]
+public partial class Animal
+{
+   public string Name { get; }
+
+   private Animal(string name)
+   {
+      Name = name;
+   }
+
+   public sealed class Dog(string Name) : Animal(Name);
+
+   public sealed class Cat(string Name) : Animal(Name);
+}
+```
+
+A `record` with a generic: 
+
+```csharp
+[Union]
+public partial record Result<T>
+{
+   public record Success(T Value) : Result<T>;
+
+   public record Failure(string Error) : Result<T>;
+
+   public static implicit operator Result<T>(T value) => new Success(value);
+   public static implicit operator Result<T>(string error) => new Failure(error);
+}
+```
+
+One of the main purposes for a regular union is their exhaustiveness, i.e. all member types are accounted for in a switch/map:
+
+```csharp
+Animal animal = new Animal.Dog("Milo");
+
+animal.Switch(dog: d => logger.Information("Dog: {Dog}", d),  
+              cat: c => logger.Information("Cat: {Cat}", c));
+
+var result = animal.Map(dog: "Dog",
+                        cat: "Cat");
+```
+
+Use flags `SwitchMethods` and `MapMethods` for generation of `SwitchPartially`/`MapPartially`:
+
+```csharp
+[Union(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+       MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
+public partial record AnimalRecord
+{
+   public sealed record Dog(string Name) : AnimalRecord;
+
+   public sealed record Cat(string Name) : AnimalRecord;
+}
+
+---------------------------
+    
+Animal animal = new Animal.Dog("Milo");
+
+animal.SwitchPartially(@default: a => logger.Information("Default: {Animal}", a),
+                       cat: c => logger.Information("Cat: {Cat}", c.Name));
+```
