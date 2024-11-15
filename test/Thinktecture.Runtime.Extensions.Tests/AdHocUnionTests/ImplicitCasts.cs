@@ -1,7 +1,7 @@
 using System;
 using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-namespace Thinktecture.Runtime.Tests.UnionTests;
+namespace Thinktecture.Runtime.Tests.AdHocUnionTests;
 
 public class ImplicitCasts
 {

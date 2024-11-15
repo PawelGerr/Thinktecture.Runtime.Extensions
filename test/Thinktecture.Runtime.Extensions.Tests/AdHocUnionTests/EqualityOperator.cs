@@ -1,12 +1,12 @@
 using System;
 using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-namespace Thinktecture.Runtime.Tests.UnionTests;
+namespace Thinktecture.Runtime.Tests.AdHocUnionTests;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 // ReSharper disable EqualExpressionComparison
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
-public class InequalityOperator
+public class EqualityOperator
 {
    [Fact]
    public void Should_compare_unions_with_2_types()
@@ -61,12 +61,12 @@ public class InequalityOperator
    {
       var obj = stringFactory("text");
 
-      (obj != null).Should().BeTrue();
-      (obj != obj).Should().BeFalse();
-      (obj != stringFactory("text")).Should().BeFalse();
-      (obj != stringFactory("TEXT")).Should().BeFalse();
-      (caseSensitiveFactory("text") != caseSensitiveFactory("TEXT")).Should().BeTrue();
-      (obj != stringFactory("other text")).Should().BeTrue();
-      (stringFactory("42") != intFactory(42)).Should().BeTrue();
+      (obj == null).Should().BeFalse();
+      (obj == obj).Should().BeTrue();
+      (obj == stringFactory("text")).Should().BeTrue();
+      (obj == stringFactory("TEXT")).Should().BeTrue();
+      (caseSensitiveFactory("text") == caseSensitiveFactory("TEXT")).Should().BeFalse();
+      (obj == stringFactory("other text")).Should().BeFalse();
+      (stringFactory("42") == intFactory(42)).Should().BeFalse();
    }
 }

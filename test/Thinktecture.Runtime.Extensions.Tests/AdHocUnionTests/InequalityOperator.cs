@@ -1,12 +1,12 @@
 using System;
 using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-namespace Thinktecture.Runtime.Tests.UnionTests;
+namespace Thinktecture.Runtime.Tests.AdHocUnionTests;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 // ReSharper disable EqualExpressionComparison
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
-public class Equals
+public class InequalityOperator
 {
    [Fact]
    public void Should_compare_unions_with_2_types()
@@ -56,35 +56,17 @@ public class Equals
       Func<string, T> stringFactory,
       Func<int, T> intFactory,
       Func<string, T2> caseSensitiveFactory)
-      where T : IEquatable<T>
-      where T2 : IEquatable<T2>
+      where T : System.Numerics.IEqualityOperators<T, T, bool>
+      where T2 : System.Numerics.IEqualityOperators<T2, T2, bool>
    {
       var obj = stringFactory("text");
 
-      obj.Equals((TestUnion_class_string_int)null).Should().BeFalse();
-      obj.Equals((object)null).Should().BeFalse();
-
-      obj.Equals(obj).Should().BeTrue();
-      obj.Equals((object)obj).Should().BeTrue();
-
-      obj.Equals(stringFactory("text")).Should().BeTrue();
-      obj.Equals((object)stringFactory("text")).Should().BeTrue();
-
-      obj.Equals(stringFactory("TEXT")).Should().BeTrue();
-      obj.Equals((object)stringFactory("TEXT")).Should().BeTrue();
-
-      caseSensitiveFactory("text").Equals(caseSensitiveFactory("TEXT")).Should().BeFalse();
-      caseSensitiveFactory("text").Equals((object)caseSensitiveFactory("TEXT")).Should().BeFalse();
-
-      obj.Equals(stringFactory("other text")).Should().BeFalse();
-      obj.Equals((object)stringFactory("other text")).Should().BeFalse();
-
-      stringFactory("42").Equals(intFactory(42)).Should().BeFalse();
-      stringFactory("42").Equals((object)intFactory(42)).Should().BeFalse();
-
-      stringFactory("42").Equals((object)"42").Should().BeFalse();
-      stringFactory("42").Equals((object)42).Should().BeFalse();
-      stringFactory("42").Equals(caseSensitiveFactory("42")).Should().BeFalse();
-      stringFactory("42").Equals((object)caseSensitiveFactory("42")).Should().BeFalse();
+      (obj != null).Should().BeTrue();
+      (obj != obj).Should().BeFalse();
+      (obj != stringFactory("text")).Should().BeFalse();
+      (obj != stringFactory("TEXT")).Should().BeFalse();
+      (caseSensitiveFactory("text") != caseSensitiveFactory("TEXT")).Should().BeTrue();
+      (obj != stringFactory("other text")).Should().BeTrue();
+      (stringFactory("42") != intFactory(42)).Should().BeTrue();
    }
 }
