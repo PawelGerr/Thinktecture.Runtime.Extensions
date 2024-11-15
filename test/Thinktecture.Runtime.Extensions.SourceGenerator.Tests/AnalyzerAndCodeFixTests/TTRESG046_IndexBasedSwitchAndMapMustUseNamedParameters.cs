@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Thinktecture.Runtime.Tests.TestAdHocUnions;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestUnions;
 using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktecture.CodeAnalysis.Diagnostics.ThinktectureRuntimeExtensionsAnalyzer, Thinktecture.CodeAnalysis.CodeFixes.ThinktectureRuntimeExtensionsCodeFixProvider>;
 
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
@@ -39,7 +40,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -68,7 +69,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -97,7 +98,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -124,7 +125,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -152,7 +153,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
          }
       }
 
@@ -184,7 +185,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -213,7 +214,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -242,7 +243,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -272,7 +273,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -302,7 +303,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -330,7 +331,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -359,7 +360,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
          }
       }
 
@@ -391,7 +392,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -421,7 +422,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -451,7 +452,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -479,7 +480,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -508,7 +509,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
          }
       }
 
@@ -541,7 +542,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -571,7 +572,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -601,7 +602,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -632,7 +633,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -663,7 +664,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -692,7 +693,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -722,7 +723,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
          }
       }
 
@@ -753,7 +754,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -782,7 +783,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -811,7 +812,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -838,7 +839,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -866,7 +867,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
       }
 
@@ -898,7 +899,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -927,7 +928,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -957,7 +958,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -987,7 +988,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1017,7 +1018,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1045,7 +1046,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -1074,7 +1075,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
       }
 
@@ -1106,7 +1107,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1136,7 +1137,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1166,7 +1167,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1194,7 +1195,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -1223,7 +1224,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
       }
 
@@ -1256,7 +1257,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1286,7 +1287,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1316,7 +1317,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1347,7 +1348,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1378,7 +1379,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1407,7 +1408,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -1437,7 +1438,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
       }
 
@@ -1468,7 +1469,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1497,7 +1498,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1526,7 +1527,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1553,7 +1554,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -1581,7 +1582,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
       }
 
@@ -1613,7 +1614,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1642,7 +1643,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1672,7 +1673,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1702,7 +1703,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1732,7 +1733,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
          }
 
          [Fact]
@@ -1761,7 +1762,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
 
          [Fact]
@@ -1791,12 +1792,12 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
          }
       }
    }
 
-   public class Union
+   public class AdHocUnion
    {
       public class SwitchWithAction
       {
@@ -1825,7 +1826,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -1852,7 +1853,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -1884,7 +1885,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -1913,7 +1914,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -1941,7 +1942,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -1973,7 +1974,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2001,7 +2002,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -2034,7 +2035,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2064,7 +2065,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2093,7 +2094,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -2124,7 +2125,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2151,7 +2152,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -2183,7 +2184,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2212,7 +2213,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2240,7 +2241,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -2272,7 +2273,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2300,7 +2301,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -2333,7 +2334,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2363,7 +2364,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2392,7 +2393,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -2423,7 +2424,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2450,7 +2451,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
          }
       }
 
@@ -2482,7 +2483,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2511,7 +2512,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
          }
 
          [Fact]
@@ -2540,7 +2541,756 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                        }
                        """;
 
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly });
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly]);
+         }
+      }
+   }
+
+   public class Union
+   {
+      public class SwitchWithAction
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.Switch(child1: c => {},
+                                                   c => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                                      {|#0:testUnion.Switch(child1: c => {},
+                                                                         child2: c => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class SwitchPartiallyWithAction
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                 var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.SwitchPartially(@default: item => {},
+                                                   child1: c => {},
+                                                   c => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_without_named_default_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                 var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.SwitchPartially(d => {},
+                                                   child1: c => {},
+                                                   child2: c => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.SwitchPartially(@default: d => {},
+                                                   child1: c => {},
+                                                   child2: c => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class SwitchWithActionAndState
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.Switch(42,
+                                                   child1: (state, c) => {},
+                                                   (state, c) => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.Switch(42,
+                                                   child1: (ctx, c) => {},
+                                                   child2: (ctx, c) => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class SwitchPartiallyWithActionAndState
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.SwitchPartially(42,
+                                                   @default: (ctx, value) => {},
+                                                   child1: (ctx, c) => {},
+                                                   (ctx, c) => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_without_named_default_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.SwitchPartially(42,
+                                                   (ctx, value) => {}, // default
+                                                   child1: (ctx, s) => {},
+                                                   child2: (ctx, i) => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                {|#0:testUnion.SwitchPartially(42,
+                                                   @default: (ctx, value) => {},
+                                                   child1: (ctx, c) => {},
+                                                   child2: (ctx, c) => {})|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class SwitchWithFunc
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.Switch(child1: c => 1,
+                                                   c => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.Switch(child1: c => 1,
+                                                   child2: c => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class SwitchPartiallyWithFunc
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.SwitchPartially(@default: value => 0,
+                                                   child1: c => 1,
+                                                   c => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_without_named_default_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.SwitchPartially(value => 0, // default
+                                                   child1: c => 1,
+                                                   child2: c => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.SwitchPartially(@default: d => 0,
+                                                   child1: c => 1,
+                                                   child2: c => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class SwitchWithFuncAndContext
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.Switch(42,
+                                                   child1: (ctx, c) => 1,
+                                                   (ctx, c) => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.Switch(42,
+                                                   child1: (ctx, s) => 1,
+                                                   child2: (ctx, i) => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class SwitchPartiallyWithFuncAndContext
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.SwitchPartially(42,
+                                                   @default: (ctx, value) => 0,
+                                                   child1: (ctx, c) => 1,
+                                                   (ctx, c) => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_without_named_default_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.SwitchPartially(42,
+                                                   (ctx, value) => 0, // default
+                                                   child1: (ctx, s) => 1,
+                                                   child2: (ctx, i) => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.SwitchPartially(42,
+                                                   @default: (ctx, value) => 0,
+                                                   child1: (ctx, c) => 1,
+                                                   child2: (ctx, c) => 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class Map
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.Map(child1: 1,
+                                                   2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                 var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.Map(child1: 1,
+                                                   child2: 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+      }
+
+      public class MapPartially
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.MapPartially(@default: 0,
+                                                   child1: 1,
+                                                   2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_trigger_without_named_default_arg()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.MapPartially(0, // default
+                                                   child1: 1,
+                                                   child2: 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+                       using System;
+                       using Thinktecture;
+                       using Thinktecture.Runtime.Tests.TestUnions;
+
+                       namespace TestNamespace
+                       {
+                          public class Test
+                          {
+                             public void Do()
+                             {
+                                var testUnion = new TestUnion.Child1("text");
+
+                                var returnValue = {|#0:testUnion.MapPartially(
+                                                   @default: 0,
+                                                   child1: 1,
+                                                   child2: 2)|};
+                             }
+                          }
+                       }
+                       """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
          }
       }
    }

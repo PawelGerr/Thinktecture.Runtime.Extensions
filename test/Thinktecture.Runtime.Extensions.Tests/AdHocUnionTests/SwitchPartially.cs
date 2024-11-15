@@ -1172,7 +1172,7 @@ public class SwitchPartially
       }
    }
 
-   public class HavingStrcut
+   public class HavingStruct
    {
       public class WithAction
       {

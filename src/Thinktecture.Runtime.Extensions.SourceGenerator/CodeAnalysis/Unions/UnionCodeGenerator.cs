@@ -35,8 +35,11 @@ public class UnionCodeGenerator : CodeGeneratorBase
       var typeMembers = new List<TypeMember>();
       var unsortedTypeMembers = new List<UnionTypeMemberState>();
 
-      foreach (var typeMember in _state.TypeMembers)
+      // Reversed for-loop because whole collection will be reversed again by the caller
+      for (var i = _state.TypeMembers.Count - 1; i >= 0; i--)
       {
+         var typeMember = _state.TypeMembers[i];
+
          if (typeMember.BaseTypeFullyQualified == state.TypeFullyQualified)
          {
             typeMembers.Add(MakeTypeMember(typeMember, sb));

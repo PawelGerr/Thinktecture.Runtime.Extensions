@@ -139,11 +139,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      if (operation.Instance.Type.IsEnum(out var attribute))
+      var declaredType = operation.TargetMethod.ContainingType;
+
+      if (declaredType.IsEnum(out var attribute))
       {
          var isValidatable = attribute.FindIsValidatable() ?? false;
-         var nonIgnoredMembers = operation.Instance.Type.GetNonIgnoredMembers();
-         var items = operation.Instance.Type.GetEnumItems(nonIgnoredMembers);
+         var nonIgnoredMembers = declaredType.GetNonIgnoredMembers();
+         var items = declaredType.GetEnumItems(nonIgnoredMembers);
 
          AnalyzeEnumSwitchMap(context,
                               items,
@@ -151,7 +153,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                               operation,
                               isValidatable);
       }
-      else if (operation.Instance.Type.IsAnyUnionType(out attribute)
+      else if (declaredType.IsAnyUnionType(out attribute)
                && attribute.AttributeClass is not null)
       {
          AnalyzeAnyUnionSwitchMap(context,
@@ -196,7 +198,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       IInvocationOperation operation,
       int numberOfCallbacks)
    {
-      if (operation.Instance?.Type is null || args.IsDefaultOrEmpty)
+      if (args.IsDefaultOrEmpty)
          return;
 
       var hasNonNamedParameters = false;
@@ -217,7 +219,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       if (hasNonNamedParameters)
-         ReportDiagnostic(context, DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters, operation.Syntax.GetLocation(), operation.Instance.Type);
+         ReportDiagnostic(context, DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters, operation.Syntax.GetLocation(), operation.TargetMethod.ContainingType);
    }
 
    private static void AnalyzeSmartEnum(OperationAnalysisContext context)
@@ -325,9 +327,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (!attrCreation.Type.IsUnionAttribute())
             return;
 
-         var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
-
-         ValidateUnion(context, type, locationOfFirstDeclaration);
+         ValidateUnion(context, type);
       }
       catch (Exception ex)
       {
@@ -348,18 +348,16 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      EnsureNoPrimaryConstructor(context, type);
+      CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Union");
    }
 
    private static void ValidateUnion(
       OperationAnalysisContext context,
-      INamedTypeSymbol type,
-      Location locationOfFirstDeclaration)
+      INamedTypeSymbol type)
    {
-      EnsureNoPrimaryConstructor(context, type);
-      ConstructorsMustBePrivate(context, type);
+      CheckConstructors(context, type, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
    }
 
@@ -480,7 +478,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return null;
       }
 
-      EnsureNoPrimaryConstructor(context, type);
+      CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
 
@@ -555,7 +553,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      ConstructorsMustBePrivate(context, enumType);
+      CheckConstructors(context, enumType, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, enumType);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
@@ -743,7 +741,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ConstructorsMustBePrivate(OperationAnalysisContext context, INamedTypeSymbol type)
+   private static void CheckConstructors(
+      OperationAnalysisContext context,
+      INamedTypeSymbol type,
+      bool mustBePrivate,
+      bool canHavePrimaryConstructor)
    {
       if (type.Constructors.IsDefaultOrEmpty)
          return;
@@ -752,67 +754,52 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var ctor = type.Constructors[i];
 
-         if (ctor.IsImplicitlyDeclared || ctor.DeclaredAccessibility == Accessibility.Private)
+         if (ctor.IsImplicitlyDeclared)
             continue;
 
          var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
 
          switch (declarationSyntax)
          {
+            // regular ctor
             case ConstructorDeclarationSyntax constructorDeclarationSyntax:
             {
+               if (!mustBePrivate || ctor.DeclaredAccessibility == Accessibility.Private)
+                  continue;
+
                var location = constructorDeclarationSyntax.Identifier.GetLocation();
                ReportDiagnostic(context, DiagnosticsDescriptors.ConstructorsMustBePrivate, location, type);
-
-               break;
+               return;
             }
+
+            // primary ctor
             case ClassDeclarationSyntax classDeclarationSyntax:
             {
+               if (canHavePrimaryConstructor)
+                  continue;
+
                var location = classDeclarationSyntax.Identifier.GetLocation();
                ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
                break;
             }
+
+            // primary ctor
             case StructDeclarationSyntax structDeclarationSyntax:
             {
+               if (canHavePrimaryConstructor)
+                  continue;
+
                var location = structDeclarationSyntax.Identifier.GetLocation();
                ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
                break;
             }
-         }
-      }
-   }
 
-   private static void EnsureNoPrimaryConstructor(OperationAnalysisContext context, INamedTypeSymbol type)
-   {
-      if (type.Constructors.IsDefaultOrEmpty)
-         return;
-
-      for (var i = 0; i < type.Constructors.Length; i++)
-      {
-         var ctor = type.Constructors[i];
-
-         // Performance optimization: primary ctor cannot be private unless it is a nested type.
-         if (ctor.IsImplicitlyDeclared || (ctor.ContainingType is null && ctor.DeclaredAccessibility == Accessibility.Private))
-            continue;
-
-         var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
-
-         switch (declarationSyntax)
-         {
-            case ClassDeclarationSyntax classDeclarationSyntax:
-            {
-               var location = classDeclarationSyntax.Identifier.GetLocation();
-               ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
-               break;
-            }
-            case StructDeclarationSyntax structDeclarationSyntax:
-            {
-               var location = structDeclarationSyntax.Identifier.GetLocation();
-               ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
-               break;
-            }
+            // primary ctor
             case RecordDeclarationSyntax recordDeclarationSyntax:
             {
+               if (canHavePrimaryConstructor)
+                  continue;
+
                var location = recordDeclarationSyntax.Identifier.GetLocation();
                ReportDiagnostic(context, DiagnosticsDescriptors.PrimaryConstructorNotAllowed, location, type);
                break;
