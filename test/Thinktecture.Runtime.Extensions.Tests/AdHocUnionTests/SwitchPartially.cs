@@ -374,7 +374,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_having_2_types(int index, object expected)
+         public void Should_pass_state_having_2_types(int index, object expected)
          {
             var value = index switch
             {
@@ -405,7 +405,7 @@ public class SwitchPartially
          [InlineData(1, "text")]
          [InlineData(2, 42)]
          [InlineData(3, true)]
-         public void Should_pass_context_having_3_types(int index, object expected)
+         public void Should_pass_state_having_3_types(int index, object expected)
          {
             var value = index switch
             {
@@ -443,7 +443,7 @@ public class SwitchPartially
          [InlineData(2, 42)]
          [InlineData(3, true)]
          [InlineData(4, "9FCEBE8E-AEED-4ADE-B597-562AFB9C9733")]
-         public void Should_pass_context_having_5_types(int index, object expected)
+         public void Should_pass_state_having_5_types(int index, object expected)
          {
             var value = index switch
             {
@@ -485,7 +485,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_to_default_having_2_types(int index, object expected)
+         public void Should_pass_state_to_default_having_2_types(int index, object expected)
          {
             var value = index switch
             {
@@ -516,7 +516,7 @@ public class SwitchPartially
          [InlineData(1, "default:text")]
          [InlineData(2, 42)]
          [InlineData(3, true)]
-         public void Should_pass_context_to_default_having_3_types(int index, object expected)
+         public void Should_pass_state_to_default_having_3_types(int index, object expected)
          {
             var value = index switch
             {
@@ -554,7 +554,7 @@ public class SwitchPartially
          [InlineData(2, 42)]
          [InlineData(3, true)]
          [InlineData(4, "81F697B0-5B9B-4441-89EB-2970A85C1069")]
-         public void Should_pass_context_to_default_having_4_types(int index, object expected)
+         public void Should_pass_state_to_default_having_4_types(int index, object expected)
          {
             var value = index switch
             {
@@ -599,7 +599,7 @@ public class SwitchPartially
          [InlineData(3, true)]
          [InlineData(4, "81F697B0-5B9B-4441-89EB-2970A85C1069")]
          [InlineData(5, 'A')]
-         public void Should_pass_context_to_default_having_5_types(int index, object expected)
+         public void Should_pass_state_to_default_having_5_types(int index, object expected)
          {
             var value = index switch
             {
@@ -837,7 +837,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_having_2_types(int index, object expected)
+         public void Should_pass_state_having_2_types(int index, object expected)
          {
             var value = index switch
             {
@@ -872,7 +872,7 @@ public class SwitchPartially
          [InlineData(1, "text")]
          [InlineData(2, 42)]
          [InlineData(3, true)]
-         public void Should_pass_context_having_3_types(int index, object expected)
+         public void Should_pass_state_having_3_types(int index, object expected)
          {
             var value = index switch
             {
@@ -914,7 +914,7 @@ public class SwitchPartially
          [InlineData(2, 42)]
          [InlineData(3, true)]
          [InlineData(4, "10C287C8-4D64-45CC-859E-873024D53DE3")]
-         public void Should_pass_context_having_4_types(int index, object expected)
+         public void Should_pass_state_having_4_types(int index, object expected)
          {
             var value = index switch
             {
@@ -963,7 +963,7 @@ public class SwitchPartially
          [InlineData(3, true)]
          [InlineData(4, "10C287C8-4D64-45CC-859E-873024D53DE3")]
          [InlineData(5, 'A')]
-         public void Should_pass_context_having_5_types(int index, object expected)
+         public void Should_pass_state_having_5_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1015,7 +1015,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_to_default_having_2_types(int index, object expected)
+         public void Should_pass_state_to_default_having_2_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1045,7 +1045,7 @@ public class SwitchPartially
          [InlineData(1, "default:text")]
          [InlineData(2, 42)]
          [InlineData(3, true)]
-         public void Should_pass_context_to_default_having_3_types(int index, object expected)
+         public void Should_pass_state_to_default_having_3_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1082,7 +1082,7 @@ public class SwitchPartially
          [InlineData(2, 42)]
          [InlineData(3, true)]
          [InlineData(4, "1F99EE8B-862C-4068-B5E1-015EA81AA470")]
-         public void Should_pass_context_to_default_having_4_types(int index, object expected)
+         public void Should_pass_state_to_default_having_4_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1126,7 +1126,7 @@ public class SwitchPartially
          [InlineData(3, true)]
          [InlineData(4, "1F99EE8B-862C-4068-B5E1-015EA81AA470")]
          [InlineData(5, 'A')]
-         public void Should_pass_context_to_default_having_5_types(int index, object expected)
+         public void Should_pass_state_to_default_having_5_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1232,7 +1232,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_having_2_types(int index, object expected)
+         public void Should_pass_state_having_2_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1262,7 +1262,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_to_default_having_2_types(int index, object expected)
+         public void Should_pass_state_to_default_having_2_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1335,7 +1335,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_having_2_types(int index, object expected)
+         public void Should_pass_state_having_2_types(int index, object expected)
          {
             var value = index switch
             {
@@ -1369,7 +1369,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:text")]
          [InlineData(2, 42)]
-         public void Should_pass_context_to_default_having_2_types(int index, object expected)
+         public void Should_pass_state_to_default_having_2_types(int index, object expected)
          {
             var value = index switch
             {

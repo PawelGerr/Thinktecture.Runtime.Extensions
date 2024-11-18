@@ -106,7 +106,7 @@ public class Switch
    public class WithActionAndState
    {
       [Fact]
-      public void Should_pass_context()
+      public void Should_pass_state()
       {
          ValidTestEnum calledActionOn = null;
 
@@ -132,7 +132,7 @@ public class Switch
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_validatable_enum(bool useInvalidItem)
+      public void Should_pass_state_having_validatable_enum(bool useInvalidItem)
       {
          TestEnum calledActionOn = null;
 
@@ -165,7 +165,7 @@ public class Switch
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_struct(bool useInvalidItem)
+      public void Should_pass_state_having_struct(bool useInvalidItem)
       {
          TestSmartEnum_Struct_IntBased? calledActionOn = null;
          var obj = new object();
@@ -208,7 +208,7 @@ public class Switch
       }
 
       [Fact]
-      public void Should_pass_context_with_keyless_enum()
+      public void Should_pass_state_with_keyless_enum()
       {
          KeylessTestEnum calledActionOn = null;
 
@@ -283,7 +283,7 @@ public class Switch
    public class WithFuncAndContext
    {
       [Fact]
-      public void Should_pass_context()
+      public void Should_pass_state()
       {
          var obj = new object();
 
@@ -306,7 +306,7 @@ public class Switch
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_validatable_enum(bool useInvalidItem)
+      public void Should_pass_state_having_validatable_enum(bool useInvalidItem)
       {
          var obj = new object();
          var testItem = useInvalidItem ? TestEnum.Get("invalid") : TestEnum.Item1;
@@ -336,7 +336,7 @@ public class Switch
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_struct(bool useInvalidItem)
+      public void Should_pass_state_having_struct(bool useInvalidItem)
       {
          var obj = new object();
 
@@ -377,7 +377,7 @@ public class Switch
       }
 
       [Fact]
-      public void Should_pass_context_with_keyless_enum()
+      public void Should_pass_state_with_keyless_enum()
       {
          var obj = new object();
 

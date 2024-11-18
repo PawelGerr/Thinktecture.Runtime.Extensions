@@ -66,7 +66,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_having_2_types(int index, string expected)
+         public void Should_pass_state_having_2_types(int index, string expected)
          {
             var value = index switch
             {
@@ -96,7 +96,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_to_default_having_2_types(int index, string expected)
+         public void Should_pass_state_to_default_having_2_types(int index, string expected)
          {
             var value = index switch
             {
@@ -169,7 +169,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_having_2_types(int index, string expected)
+         public void Should_pass_state_having_2_types(int index, string expected)
          {
             var value = index switch
             {
@@ -203,7 +203,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_to_default_having_2_types(int index, string expected)
+         public void Should_pass_state_to_default_having_2_types(int index, string expected)
          {
             var value = index switch
             {
@@ -291,7 +291,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_having_2_types(int index, string expected)
+         public void Should_pass_state_having_2_types(int index, string expected)
          {
             var value = index switch
             {
@@ -321,7 +321,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_to_default_having_2_types(int index, string expected)
+         public void Should_pass_state_to_default_having_2_types(int index, string expected)
          {
             var value = index switch
             {
@@ -394,7 +394,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_having_2_types(int index, string expected)
+         public void Should_pass_state_having_2_types(int index, string expected)
          {
             var value = index switch
             {
@@ -428,7 +428,7 @@ public class SwitchPartially
          [Theory]
          [InlineData(1, "default:1")]
          [InlineData(2, "2")]
-         public void Should_pass_context_to_default_having_2_types(int index, string expected)
+         public void Should_pass_state_to_default_having_2_types(int index, string expected)
          {
             var value = index switch
             {

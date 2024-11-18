@@ -193,7 +193,7 @@ public class SwitchPartially
    public class WithActionAndState
    {
       [Fact]
-      public void Should_pass_context()
+      public void Should_pass_state()
       {
          ValidTestEnum calledActionOn = null;
 
@@ -217,7 +217,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_to_default()
+      public void Should_pass_state_to_default()
       {
          ValidTestEnum calledActionOn = null;
 
@@ -243,7 +243,7 @@ public class SwitchPartially
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_validatable_enum(bool useInvalidItem)
+      public void Should_pass_state_having_validatable_enum(bool useInvalidItem)
       {
          TestEnum calledActionOn = null;
 
@@ -276,7 +276,7 @@ public class SwitchPartially
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_to_default_having_validatable_enum(bool useInvalidItem)
+      public void Should_pass_state_to_default_having_validatable_enum(bool useInvalidItem)
       {
          TestEnum calledActionOn = null;
 
@@ -304,7 +304,7 @@ public class SwitchPartially
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_struct(bool useInvalidItem)
+      public void Should_pass_state_having_struct(bool useInvalidItem)
       {
          TestSmartEnum_Struct_IntBased? calledActionOn = null;
          var obj = new object();
@@ -347,7 +347,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_to_default_having_struct()
+      public void Should_pass_state_to_default_having_struct()
       {
          TestSmartEnum_Struct_IntBased? calledActionOn = null;
          var obj = new object();
@@ -388,7 +388,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_with_keyless_enum()
+      public void Should_pass_state_with_keyless_enum()
       {
          KeylessTestEnum calledActionOn = null;
 
@@ -412,7 +412,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_to_default_with_keyless_enum()
+      public void Should_pass_state_to_default_with_keyless_enum()
       {
          KeylessTestEnum calledActionOn = null;
 
@@ -532,7 +532,7 @@ public class SwitchPartially
    public class WithFuncAndContext
    {
       [Fact]
-      public void Should_pass_context()
+      public void Should_pass_state()
       {
          var obj = new object();
 
@@ -559,7 +559,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_to_default()
+      public void Should_pass_state_to_default()
       {
          var obj = new object();
 
@@ -582,7 +582,7 @@ public class SwitchPartially
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_validatable_enum(bool useInvalidItem)
+      public void Should_pass_state_having_validatable_enum(bool useInvalidItem)
       {
          var obj = new object();
          var testItem = useInvalidItem ? TestEnum.Get("invalid") : TestEnum.Item1;
@@ -618,7 +618,7 @@ public class SwitchPartially
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_to_default_having_validatable_enum(bool useInvalidItem)
+      public void Should_pass_state_to_default_having_validatable_enum(bool useInvalidItem)
       {
          var obj = new object();
 
@@ -649,7 +649,7 @@ public class SwitchPartially
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
-      public void Should_pass_context_having_struct(bool useInvalidItem)
+      public void Should_pass_state_having_struct(bool useInvalidItem)
       {
          var obj = new object();
 
@@ -695,7 +695,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_to_default_having_struct()
+      public void Should_pass_state_to_default_having_struct()
       {
          var obj = new object();
 
@@ -734,7 +734,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_with_keyless_enum()
+      public void Should_pass_state_with_keyless_enum()
       {
          var obj = new object();
 
@@ -760,7 +760,7 @@ public class SwitchPartially
       }
 
       [Fact]
-      public void Should_pass_context_to_default_with_keyless_enum()
+      public void Should_pass_state_to_default_with_keyless_enum()
       {
          var obj = new object();
 
