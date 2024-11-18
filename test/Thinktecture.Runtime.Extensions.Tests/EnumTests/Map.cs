@@ -18,6 +18,16 @@ public class Map
                    .Should().Be(2);
    }
 
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_return_ref_struct()
+   {
+      ValidTestEnum.Item1.Map(item1: new TestRefStruct(1),
+                              item2: new TestRefStruct(2))
+                   .Value.Should().Be(1);
+   }
+#endif
+
    [Theory]
    [InlineData(0)]
    [InlineData(1)]

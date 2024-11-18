@@ -401,6 +401,38 @@ public class SwitchPartially
             calledActionOn.Should().Be(expected);
          }
 
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "text")]
+         [InlineData(2, 42)]
+         public void Should_pass_state_having_2_types_and_ref_struct(int index, object expected)
+         {
+            var value = index switch
+            {
+               1 => new TestUnion_class_string_int("text"),
+               2 => new TestUnion_class_string_int(42),
+               _ => throw new Exception()
+            };
+
+            var state = new TestRefStruct(42);
+            object calledActionOn = null;
+
+            value.SwitchPartially(state,
+                                  @string: (s, v) =>
+                                           {
+                                              s.Value.Should().Be(42);
+                                              calledActionOn = v;
+                                           },
+                                  int32: (s, v) =>
+                                         {
+                                            s.Value.Should().Be(42);
+                                            calledActionOn = v;
+                                         });
+
+            calledActionOn.Should().Be(expected);
+         }
+#endif
+
          [Theory]
          [InlineData(1, "text")]
          [InlineData(2, 42)]
@@ -419,19 +451,19 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @string: (ctx, v) =>
+                                  @string: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          },
-                                  boolean: (ctx, v) =>
+                                  boolean: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            });
 
@@ -458,24 +490,24 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @string: (ctx, v) =>
+                                  @string: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          },
-                                  boolean: (ctx, v) =>
+                                  boolean: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            },
-                                  guid: (ctx, v) =>
+                                  guid: (s, v) =>
                                         {
-                                           ctx.Should().Be(state);
+                                           s.Should().Be(state);
                                            calledActionOn = v;
                                         });
 
@@ -498,14 +530,14 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @default: (ctx, v) =>
+                                  @default: (s, v) =>
                                             {
-                                               ctx.Should().Be(state);
+                                               s.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -530,19 +562,19 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @default: (ctx, v) =>
+                                  @default: (s, v) =>
                                             {
-                                               ctx.Should().Be(state);
+                                               s.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          },
-                                  boolean: (ctx, v) =>
+                                  boolean: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            });
 
@@ -569,24 +601,24 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @default: (ctx, v) =>
+                                  @default: (s, v) =>
                                             {
-                                               ctx.Should().Be(state);
+                                               s.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          },
-                                  boolean: (ctx, v) =>
+                                  boolean: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            },
-                                  guid: (ctx, v) =>
+                                  guid: (s, v) =>
                                         {
-                                           ctx.Should().Be(state);
+                                           s.Should().Be(state);
                                            calledActionOn = v;
                                         });
 
@@ -615,29 +647,29 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @default: (ctx, v) =>
+                                  @default: (s, v) =>
                                             {
-                                               ctx.Should().Be(state);
+                                               s.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          },
-                                  boolean: (ctx, v) =>
+                                  boolean: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            },
-                                  guid: (ctx, v) =>
+                                  guid: (s, v) =>
                                         {
-                                           ctx.Should().Be(state);
+                                           s.Should().Be(state);
                                            calledActionOn = v;
                                         },
-                                  @char: (ctx, v) =>
+                                  @char: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -665,6 +697,27 @@ public class SwitchPartially
 
             calledActionOn.Should().Be(expected);
          }
+
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "text")]
+         [InlineData(2, 42)]
+         public void Should_use_correct_arg_having_2_types_returning_ref_struct(int index, object expected)
+         {
+            var value = index switch
+            {
+               1 => new TestUnion_class_string_int("text"),
+               2 => new TestUnion_class_string_int(42),
+               _ => throw new Exception()
+            };
+
+            var calledActionOn = value.SwitchPartially(@default: v => new TestRefStruct($"default:{v}"),
+                                                       @string: v => new TestRefStruct(v),
+                                                       int32: v => new TestRefStruct(v));
+
+            calledActionOn.Value.Should().Be(expected);
+         }
+#endif
 
          [Theory]
          [InlineData(1, "text")]
@@ -849,24 +902,60 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       @string: (ctx, v) =>
+                                                       @string: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               });
 
             calledActionOn.Should().Be(expected);
          }
+
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "text")]
+         [InlineData(2, 42)]
+         public void Should_pass_state_having_2_types_and_ref_struct(int index, object expected)
+         {
+            var value = index switch
+            {
+               1 => new TestUnion_class_string_int("text"),
+               2 => new TestUnion_class_string_int(42),
+               _ => throw new Exception()
+            };
+
+            var state = new TestRefStruct(42);
+
+            var calledActionOn = value.SwitchPartially(state,
+                                                       @default: (s, v) =>
+                                                                 {
+                                                                    s.Value.Should().Be(42);
+                                                                    return new TestRefStruct($"default:{v}");
+                                                                 },
+                                                       @string: (s, v) =>
+                                                                {
+                                                                   s.Value.Should().Be(42);
+                                                                   return new TestRefStruct(v);
+                                                                },
+                                                       int32: (s, v) =>
+                                                              {
+                                                                 s.Value.Should().Be(42);
+                                                                 return new TestRefStruct(v);
+                                                              });
+
+            calledActionOn.Value.Should().Be(expected);
+         }
+#endif
 
          [Theory]
          [InlineData(1, "text")]
@@ -885,24 +974,24 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       @string: (ctx, v) =>
+                                                       @string: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               },
-                                                       boolean: (ctx, v) =>
+                                                       boolean: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 });
 
@@ -928,29 +1017,29 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       @string: (ctx, v) =>
+                                                       @string: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               },
-                                                       boolean: (ctx, v) =>
+                                                       boolean: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       guid: (ctx, v) =>
+                                                       guid: (s, v) =>
                                                              {
-                                                                ctx.Should().Be(state);
+                                                                s.Should().Be(state);
                                                                 return v;
                                                              });
 
@@ -978,34 +1067,34 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       @string: (ctx, v) =>
+                                                       @string: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               },
-                                                       boolean: (ctx, v) =>
+                                                       boolean: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       guid: (ctx, v) =>
+                                                       guid: (s, v) =>
                                                              {
-                                                                ctx.Should().Be(state);
+                                                                s.Should().Be(state);
                                                                 return v;
                                                              },
-                                                       @char: (ctx, v) =>
+                                                       @char: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1027,14 +1116,14 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1058,19 +1147,19 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               },
-                                                       boolean: (ctx, v) =>
+                                                       boolean: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 });
 
@@ -1096,24 +1185,24 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               },
-                                                       boolean: (ctx, v) =>
+                                                       boolean: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       guid: (ctx, v) =>
+                                                       guid: (s, v) =>
                                                              {
-                                                                ctx.Should().Be(state);
+                                                                s.Should().Be(state);
                                                                 return v;
                                                              });
 
@@ -1141,29 +1230,29 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               },
-                                                       boolean: (ctx, v) =>
+                                                       boolean: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       guid: (ctx, v) =>
+                                                       guid: (s, v) =>
                                                              {
-                                                                ctx.Should().Be(state);
+                                                                s.Should().Be(state);
                                                                 return v;
                                                              },
-                                                       @char: (ctx, v) =>
+                                                       @char: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1245,14 +1334,14 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @string: (ctx, v) =>
+                                  @string: (s, v) =>
                                            {
-                                              ctx.Should().Be(state);
+                                              s.Should().Be(state);
                                               calledActionOn = v;
                                            },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -1275,14 +1364,14 @@ public class SwitchPartially
             object calledActionOn = null;
 
             value.SwitchPartially(state,
-                                  @default: (ctx, v) =>
+                                  @default: (s, v) =>
                                             {
-                                               ctx.Should().Be(state);
+                                               s.Should().Be(state);
                                                calledActionOn = $"default:{v}";
                                             },
-                                  int32: (ctx, v) =>
+                                  int32: (s, v) =>
                                          {
-                                            ctx.Should().Be(state);
+                                            s.Should().Be(state);
                                             calledActionOn = v;
                                          });
 
@@ -1347,19 +1436,19 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       @string: (ctx, v) =>
+                                                       @string: (s, v) =>
                                                                 {
-                                                                   ctx.Should().Be(state);
+                                                                   s.Should().Be(state);
                                                                    return v;
                                                                 },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               });
 
@@ -1381,14 +1470,14 @@ public class SwitchPartially
             var state = new object();
 
             var calledActionOn = value.SwitchPartially(state,
-                                                       @default: (ctx, v) =>
+                                                       @default: (s, v) =>
                                                                  {
-                                                                    ctx.Should().Be(state);
+                                                                    s.Should().Be(state);
                                                                     return (object)$"default:{v}";
                                                                  },
-                                                       int32: (ctx, v) =>
+                                                       int32: (s, v) =>
                                                               {
-                                                                 ctx.Should().Be(state);
+                                                                 s.Should().Be(state);
                                                                  return v;
                                                               });
 

@@ -82,6 +82,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          TState state,
                                                          global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Success> @success,
                                                          global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Failure> @failure)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -104,6 +107,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                       public TResult Switch<TResult>(
                                                          global::System.Func<global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
                                                          global::System.Func<global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -126,6 +132,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          TState state,
                                                          global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
                                                          global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -146,6 +156,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                       public TResult Map<TResult>(
                                                          TResult @success,
                                                          TResult @failure)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -230,6 +243,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          TState state,
                                                          global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child1> @child1,
                                                          global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child2> @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -252,6 +268,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                       public TResult Switch<TResult>(
                                                          global::System.Func<global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
                                                          global::System.Func<global::Thinktecture.Tests.TestUnion.Child2, TResult> @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -274,6 +293,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          TState state,
                                                          global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
                                                          global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child2, TResult> @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -294,6 +317,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                       public TResult Map<TResult>(
                                                          TResult @child1,
                                                          TResult @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -374,6 +400,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          TState state,
                                                          global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child1> @child1,
                                                          global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child2> @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -396,6 +425,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                       public TResult Switch<TResult>(
                                                          global::System.Func<global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
                                                          global::System.Func<global::Thinktecture.Tests.TestUnion.Child2, TResult> @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -418,6 +450,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          TState state,
                                                          global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
                                                          global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child2, TResult> @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -438,6 +474,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                       public TResult Map<TResult>(
                                                          TResult @child1,
                                                          TResult @child2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -528,6 +567,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child1> @child1,
                                                          global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child2> @child2,
                                                          global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child2.Child1> @child2Child1)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -555,6 +597,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          global::System.Func<global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
                                                          global::System.Func<global::Thinktecture.Tests.TestUnion.Child2, TResult> @child2,
                                                          global::System.Func<global::Thinktecture.Tests.TestUnion.Child2.Child1, TResult> @child2Child1)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -581,6 +626,10 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
                                                          global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child2, TResult> @child2,
                                                          global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child2.Child1, TResult> @child2Child1)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {
@@ -605,6 +654,9 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          TResult @child1,
                                                          TResult @child2,
                                                          TResult @child2Child1)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TResult : allows ref struct
+                                                   #endif
                                                       {
                                                          switch (this)
                                                          {

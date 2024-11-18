@@ -447,7 +447,17 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(" = null");
       }
 
-      _sb.Append(@")
+      _sb.Append(")");
+
+      if (withState)
+      {
+         _sb.Append(@"
+#if NET9_0_OR_GREATER
+		where TState : allows ref struct
+#endif");
+      }
+
+      _sb.Append(@"
       {");
 
       GenerateIndexBasedActionSwitchBody(withState, isPartially);
@@ -598,6 +608,17 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@")
+#if NET9_0_OR_GREATER
+		   where TResult : allows ref struct");
+
+      if (withState)
+      {
+         _sb.Append(@"
+		   where TState : allows ref struct");
+      }
+
+      _sb.Append(@"
+#endif
       {");
 
       GenerateIndexBasedFuncSwitchBody(withState, isPartially);
@@ -723,6 +744,9 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@")
+#if NET9_0_OR_GREATER
+		   where TResult : allows ref struct
+#endif
       {");
 
       GenerateIndexBasedMapSwitchBody(isPartially);

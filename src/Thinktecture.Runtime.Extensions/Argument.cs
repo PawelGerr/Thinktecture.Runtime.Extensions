@@ -5,6 +5,9 @@ namespace Thinktecture;
 /// </summary>
 /// <typeparam name="T">The type of the parameter.</typeparam>
 public readonly ref struct Argument<T>
+#if NET9_0_OR_GREATER
+   where T : allows ref struct
+#endif
 {
    /// <summary>
    /// Indication whether the argument is set (explicitly).

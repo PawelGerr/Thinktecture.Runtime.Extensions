@@ -68,6 +68,39 @@ public class Switch
 
             calledActionOn.Should().Be(expected);
          }
+
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "1")]
+         [InlineData(2, "2")]
+         public void Should_pass_state_having_2_types_and_ref_struct(int index, string expected)
+         {
+            var value = index switch
+            {
+               1 => (TestUnion)new TestUnion.Child1("1"),
+               2 => new TestUnion.Child1("2"),
+               _ => throw new Exception()
+            };
+
+            var state = new TestRefStruct(42);
+
+            string calledActionOn = null;
+
+            value.Switch(state,
+                         child1: (s, v) =>
+                                 {
+                                    s.Value.Should().Be(42);
+                                    calledActionOn = v.Name;
+                                 },
+                         child2: (s, v) =>
+                                 {
+                                    s.Value.Should().Be(42);
+                                    calledActionOn = v.Name;
+                                 });
+
+            calledActionOn.Should().Be(expected);
+         }
+#endif
       }
 
       public class WithFunc
@@ -89,6 +122,26 @@ public class Switch
 
             result.Should().Be(expected);
          }
+
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "1")]
+         [InlineData(2, "2")]
+         public void Should_call_correct_arg_having_2_types_returning_ref_struct(int index, string expected)
+         {
+            var value = index switch
+            {
+               1 => (TestUnion)new TestUnion.Child1("1"),
+               2 => new TestUnion.Child1("2"),
+               _ => throw new Exception()
+            };
+
+            var result = value.Switch(child1: v => new TestRefStruct(v.Name),
+                                      child2: v => new TestRefStruct(v.Name));
+
+            result.Value.Should().Be(expected);
+         }
+#endif
       }
 
       public class WithFuncAndContext
@@ -107,19 +160,49 @@ public class Switch
 
             var state = new object();
             var calledActionOn = value.Switch(state,
-                                              child1: (ctx, v) =>
+                                              child1: (s, v) =>
                                                       {
-                                                         ctx.Should().Be(state);
+                                                         s.Should().Be(state);
                                                          return v.Name;
                                                       },
-                                              child2: (ctx, v) =>
+                                              child2: (s, v) =>
                                                       {
-                                                         ctx.Should().Be(state);
+                                                         s.Should().Be(state);
                                                          return v.Name;
                                                       });
 
             calledActionOn.Should().Be(expected);
          }
+
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "1")]
+         [InlineData(2, "2")]
+         public void Should_pass_state_having_2_types_and_ref_struct(int index, string expected)
+         {
+            var value = index switch
+            {
+               1 => (TestUnion)new TestUnion.Child1("1"),
+               2 => new TestUnion.Child1("2"),
+               _ => throw new Exception()
+            };
+
+            var state = new TestRefStruct(42);
+            var calledActionOn = value.Switch(state,
+                                              child1: (s, v) =>
+                                                      {
+                                                         s.Value.Should().Be(42);
+                                                         return new TestRefStruct(v.Name);
+                                                      },
+                                              child2: (s, v) =>
+                                                      {
+                                                         s.Value.Should().Be(42);
+                                                         return new TestRefStruct(v.Name);
+                                                      });
+
+            calledActionOn.Value.Should().Be(expected);
+         }
+#endif
       }
    }
 
@@ -224,14 +307,14 @@ public class Switch
 
             var state = new object();
             var calledActionOn = value.Switch(state,
-                                              child1: (ctx, v) =>
+                                              child1: (s, v) =>
                                                       {
-                                                         ctx.Should().Be(state);
+                                                         s.Should().Be(state);
                                                          return v.Name;
                                                       },
-                                              child2: (ctx, v) =>
+                                              child2: (s, v) =>
                                                       {
-                                                         ctx.Should().Be(state);
+                                                         s.Should().Be(state);
                                                          return v.Name;
                                                       });
 

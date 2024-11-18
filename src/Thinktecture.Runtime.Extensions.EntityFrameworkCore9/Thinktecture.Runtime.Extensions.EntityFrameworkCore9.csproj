@@ -4,7 +4,7 @@
         <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
         <PackageTags>common;EntityFrameworkCore</PackageTags>
         <DefineConstants>$(DefineConstants);COMPLEX_TYPES</DefineConstants>
-        <TargetFrameworks>net8.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>

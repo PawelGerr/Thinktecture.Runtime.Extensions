@@ -270,6 +270,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        TState state,
                                                                                        global::System.Action<TState> @item1,
                                                                                        global::System.Action<TState> @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		where TState : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -292,6 +295,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     public TResult Switch<TResult>(
                                                                                        global::System.Func<TResult> @item1,
                                                                                        global::System.Func<TResult> @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		   where TResult : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -314,6 +320,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        TState state,
                                                                                        global::System.Func<TState, TResult> @item1,
                                                                                        global::System.Func<TState, TResult> @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		   where TResult : allows ref struct
+                                                                              		   where TState : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -334,6 +344,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     public TResult Map<TResult>(
                                                                                        TResult @item1,
                                                                                        TResult @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		   where TResult : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -589,6 +602,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        TState state,
                                                                                        global::System.Action<TState> @item1,
                                                                                        global::System.Action<TState> @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		where TState : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -611,6 +627,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     public TResult Switch<TResult>(
                                                                                        global::System.Func<TResult> @item1,
                                                                                        global::System.Func<TResult> @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		   where TResult : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -633,6 +652,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        TState state,
                                                                                        global::System.Func<TState, TResult> @item1,
                                                                                        global::System.Func<TState, TResult> @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		   where TResult : allows ref struct
+                                                                              		   where TState : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -653,6 +676,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     public TResult Map<TResult>(
                                                                                        TResult @item1,
                                                                                        TResult @item2)
+                                                                              #if NET9_0_OR_GREATER
+                                                                              		   where TResult : allows ref struct
+                                                                              #endif
                                                                                     {
                                                                                        switch (_itemIndex.Value)
                                                                                        {
@@ -895,6 +921,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     TState state,
                                                                                     global::System.Action<TState> @item1,
                                                                                     global::System.Action<TState> @item2)
+                                                                           #if NET9_0_OR_GREATER
+                                                                           		where TState : allows ref struct
+                                                                           #endif
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
@@ -917,6 +946,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  public TResult Switch<TResult>(
                                                                                     global::System.Func<TResult> @item1,
                                                                                     global::System.Func<TResult> @item2)
+                                                                           #if NET9_0_OR_GREATER
+                                                                           		   where TResult : allows ref struct
+                                                                           #endif
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
@@ -939,6 +971,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     TState state,
                                                                                     global::System.Func<TState, TResult> @item1,
                                                                                     global::System.Func<TState, TResult> @item2)
+                                                                           #if NET9_0_OR_GREATER
+                                                                           		   where TResult : allows ref struct
+                                                                           		   where TState : allows ref struct
+                                                                           #endif
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
@@ -959,6 +995,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  public TResult Map<TResult>(
                                                                                     TResult @item1,
                                                                                     TResult @item2)
+                                                                           #if NET9_0_OR_GREATER
+                                                                           		   where TResult : allows ref struct
+                                                                           #endif
                                                                                  {
                                                                                     switch (_itemIndex.Value)
                                                                                     {
@@ -1655,6 +1694,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1681,6 +1723,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1711,6 +1756,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1733,6 +1781,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1763,6 +1814,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1787,6 +1842,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1815,6 +1874,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1837,6 +1899,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -1992,6 +2057,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2014,6 +2082,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2036,6 +2107,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2056,6 +2131,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2386,6 +2464,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2412,6 +2493,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2442,6 +2526,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2464,6 +2551,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2494,6 +2584,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2518,6 +2612,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2546,6 +2644,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2568,6 +2669,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2883,6 +2987,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -2905,6 +3012,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3233,6 +3343,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3259,6 +3372,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3289,6 +3405,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3311,6 +3430,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3341,6 +3463,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3365,6 +3491,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3737,6 +3867,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3763,6 +3896,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3793,6 +3929,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3815,6 +3954,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3845,6 +3987,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3869,6 +4015,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3897,6 +4047,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -3919,6 +4072,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4237,6 +4393,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4263,6 +4422,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::TestEnum>? @default = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4293,6 +4455,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4315,6 +4480,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::TestEnum, TResult> @default,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4345,6 +4513,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4369,6 +4541,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::TestEnum, TResult> @default,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4397,6 +4573,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -4419,6 +4598,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5003,6 +5185,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState> @item_decimal_2,
                                                             global::System.Action<TState> @item_derived_1,
                                                             global::System.Action<TState> @item_derived_2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5054,6 +5239,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState>? @item_decimal_2 = null,
                                                             global::System.Action<TState>? @item_derived_1 = null,
                                                             global::System.Action<TState>? @item_derived_2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5124,6 +5312,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TResult> @item_decimal_2,
                                                             global::System.Func<TResult> @item_derived_1,
                                                             global::System.Func<TResult> @item_derived_2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5166,6 +5357,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TResult>? @item_decimal_2 = null,
                                                             global::System.Func<TResult>? @item_derived_1 = null,
                                                             global::System.Func<TResult>? @item_derived_2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5231,6 +5425,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, TResult> @item_decimal_2,
                                                             global::System.Func<TState, TResult> @item_derived_1,
                                                             global::System.Func<TState, TResult> @item_derived_2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5275,6 +5473,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, TResult>? @item_decimal_2 = null,
                                                             global::System.Func<TState, TResult>? @item_derived_1 = null,
                                                             global::System.Func<TState, TResult>? @item_derived_2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5338,6 +5540,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @item_decimal_2,
                                                             TResult @item_derived_1,
                                                             TResult @item_derived_2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5380,6 +5585,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Argument<TResult> @item_decimal_2 = default,
                                                             global::Thinktecture.Argument<TResult> @item_derived_1 = default,
                                                             global::Thinktecture.Argument<TResult> @item_derived_2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -5840,6 +6048,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum> invalid,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5874,6 +6085,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? invalid = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5918,6 +6132,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> invalid,
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5947,6 +6164,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -5987,6 +6207,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> invalid,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6018,6 +6242,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6056,6 +6284,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult invalid,
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid;
@@ -6083,6 +6314,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Argument<TResult> invalid = default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid.IsSet ? invalid.Value : @default;
@@ -6485,6 +6719,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum> invalid,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6519,6 +6756,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? invalid = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6563,6 +6803,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> invalid,
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6592,6 +6835,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6632,6 +6878,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> invalid,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6663,6 +6913,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -6701,6 +6955,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult invalid,
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid;
@@ -6728,6 +6985,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Argument<TResult> invalid = default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid.IsSet ? invalid.Value : @default;
@@ -7307,6 +7567,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum> invalid,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7341,6 +7604,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? invalid = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7385,6 +7651,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> invalid,
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7414,6 +7683,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7454,6 +7726,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> invalid,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7485,6 +7761,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                             {
@@ -7523,6 +7803,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult invalid,
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid;
@@ -7550,6 +7833,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Argument<TResult> invalid = default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             if (!this.IsValid)
                                                                return invalid.IsSet ? invalid.Value : @default;
@@ -8117,6 +8403,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8143,6 +8432,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8173,6 +8465,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8195,6 +8490,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8225,6 +8523,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8249,6 +8551,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8277,6 +8583,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8299,6 +8608,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8617,6 +8929,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8643,6 +8958,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
                                                             global::System.Action<TState>? @item1 = null,
                                                             global::System.Action<TState>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8673,6 +8991,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8695,6 +9016,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TResult>? @item1 = null,
                                                             global::System.Func<TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8725,6 +9049,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8749,6 +9077,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
                                                             global::System.Func<TState, TResult>? @item1 = null,
                                                             global::System.Func<TState, TResult>? @item2 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8777,6 +9109,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -8799,6 +9134,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @item1 = default,
                                                             global::Thinktecture.Argument<TResult> @item2 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -9151,6 +9489,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState> @item1,
                                                             global::System.Action<TState> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -9173,6 +9514,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<TResult> @item1,
                                                             global::System.Func<TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -9195,6 +9539,10 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, TResult> @item1,
                                                             global::System.Func<TState, TResult> @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {
@@ -9215,6 +9563,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @item1,
                                                             TResult @item2)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (_itemIndex.Value)
                                                             {

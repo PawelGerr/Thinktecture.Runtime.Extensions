@@ -133,6 +133,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -155,6 +158,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -177,6 +183,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -197,6 +207,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -451,6 +464,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -476,6 +492,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -501,6 +520,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -524,6 +547,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -772,6 +798,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -797,6 +826,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -822,6 +854,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -845,6 +881,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1088,6 +1127,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1110,6 +1152,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1132,6 +1177,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1152,6 +1201,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1379,6 +1431,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1401,6 +1456,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1423,6 +1481,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1443,6 +1505,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1722,6 +1787,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1748,6 +1816,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, object?>? @default = null,
                                                             global::System.Action<TState, string>? @string = null,
                                                             global::System.Action<TState, int>? @int32 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1778,6 +1849,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1800,6 +1874,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<object?, TResult> @default,
                                                             global::System.Func<string, TResult>? @string = null,
                                                             global::System.Func<int, TResult>? @int32 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1830,6 +1907,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1854,6 +1935,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, object?, TResult> @default,
                                                             global::System.Func<TState, string, TResult>? @string = null,
                                                             global::System.Func<TState, int, TResult>? @int32 = null)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -1882,6 +1967,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2129,6 +2217,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2151,6 +2242,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2173,6 +2267,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2193,6 +2291,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2215,6 +2316,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @default,
                                                             global::Thinktecture.Argument<TResult> @string = default,
                                                             global::Thinktecture.Argument<TResult> @int32 = default)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2470,6 +2574,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2492,6 +2599,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2514,6 +2624,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2737,6 +2851,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -2984,6 +3101,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3006,6 +3126,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3028,6 +3151,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3048,6 +3175,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3284,6 +3414,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @string,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3306,6 +3439,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @string,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3328,6 +3464,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @string,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3348,6 +3488,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3595,6 +3738,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string?> @string,
                                                             global::System.Action<TState, int?> @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3617,6 +3763,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string?, TResult> @string,
                                                             global::System.Func<int?, TResult> @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3639,6 +3788,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string?, TResult> @string,
                                                             global::System.Func<TState, int?, TResult> @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3659,6 +3812,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @string,
                                                             TResult @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3906,6 +4062,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string> @text,
                                                             global::System.Action<TState, int> @number)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3928,6 +4087,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string, TResult> @text,
                                                             global::System.Func<int, TResult> @number)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3950,6 +4112,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string, TResult> @text,
                                                             global::System.Func<TState, int, TResult> @number)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -3970,6 +4136,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @text,
                                                             TResult @number)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4307,6 +4476,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, bool> @boolean,
                                                             global::System.Action<TState, global::System.Guid> @guid,
                                                             global::System.Action<TState, char> @char)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4344,6 +4516,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<bool, TResult> @boolean,
                                                             global::System.Func<global::System.Guid, TResult> @guid,
                                                             global::System.Func<char, TResult> @char)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4378,6 +4553,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, bool, TResult> @boolean,
                                                             global::System.Func<TState, global::System.Guid, TResult> @guid,
                                                             global::System.Func<TState, char, TResult> @char)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4410,6 +4589,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @boolean,
                                                             TResult @guid,
                                                             TResult @char)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4735,6 +4917,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Action<TState, string[]> @stringArray,
                                                             global::System.Action<TState, int> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4757,6 +4942,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Switch<TResult>(
                                                             global::System.Func<string[], TResult> @stringArray,
                                                             global::System.Func<int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4779,6 +4967,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TState state,
                                                             global::System.Func<TState, string[], TResult> @stringArray,
                                                             global::System.Func<TState, int, TResult> @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -4799,6 +4991,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                          public TResult Map<TResult>(
                                                             TResult @stringArray,
                                                             TResult @int32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -5139,6 +5334,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Action<TState, string> @string2,
                                                             global::System.Action<TState, string?> @string3,
                                                             global::System.Action<TState, int?> @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -5176,6 +5374,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<string, TResult> @string2,
                                                             global::System.Func<string?, TResult> @string3,
                                                             global::System.Func<int?, TResult> @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -5210,6 +5411,10 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::System.Func<TState, string, TResult> @string2,
                                                             global::System.Func<TState, string?, TResult> @string3,
                                                             global::System.Func<TState, int?, TResult> @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   		   where TState : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {
@@ -5242,6 +5447,9 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
                                                             TResult @string2,
                                                             TResult @string3,
                                                             TResult @nullableInt32)
+                                                   #if NET9_0_OR_GREATER
+                                                   		   where TResult : allows ref struct
+                                                   #endif
                                                          {
                                                             switch (this._valueIndex)
                                                             {

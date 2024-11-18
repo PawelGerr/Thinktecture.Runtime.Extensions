@@ -13,6 +13,7 @@
         <NoWarn>$(NoWarn);CS1591;CA1707;NU1903;NETSDK1206;NU1904</NoWarn>
         <RootNamespace>Thinktecture.Runtime.Tests</RootNamespace>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <TargetFramework></TargetFramework>
         <TargetFrameworks>net7.0;net8.0;net9.0</TargetFrameworks>
     </PropertyGroup>
 

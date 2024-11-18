@@ -93,6 +93,38 @@ public class SwitchPartially
             calledActionOn.Should().Be(expected);
          }
 
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "1")]
+         [InlineData(2, "2")]
+         public void Should_pass_state_having_2_types_and_ref_struct(int index, string expected)
+         {
+            var value = index switch
+            {
+               1 => (TestUnion)new TestUnion.Child1("1"),
+               2 => new TestUnion.Child2("2"),
+               _ => throw new Exception()
+            };
+
+            var state = new TestRefStruct(42);
+            string calledActionOn = null;
+
+            value.SwitchPartially(state,
+                                  child1: (s, v) =>
+                                          {
+                                             s.Value.Should().Be(42);
+                                             calledActionOn = v.Name;
+                                          },
+                                  child2: (s, v) =>
+                                          {
+                                             s.Value.Should().Be(42);
+                                             calledActionOn = v.Name;
+                                          });
+
+            calledActionOn.Should().Be(expected);
+         }
+#endif
+
          [Theory]
          [InlineData(1, "default:1")]
          [InlineData(2, "2")]
@@ -144,6 +176,27 @@ public class SwitchPartially
 
             calledActionOn.Should().Be(expected);
          }
+
+#if NET9_0_OR_GREATER
+         [Theory]
+         [InlineData(1, "1")]
+         [InlineData(2, "2")]
+         public void Should_use_correct_arg_having_2_types_returning_ref_struct(int index, string expected)
+         {
+            var value = index switch
+            {
+               1 => (TestUnion)new TestUnion.Child1("1"),
+               2 => new TestUnion.Child2("2"),
+               _ => throw new Exception()
+            };
+
+            var calledActionOn = value.SwitchPartially(@default: v => new TestRefStruct($"default:{v.Name}"),
+                                                       child1: v => new TestRefStruct(v.Name),
+                                                       child2: v => new TestRefStruct(v.Name));
+
+            calledActionOn.Value.Should().Be(expected);
+         }
+#endif
 
          [Theory]
          [InlineData(1, "default:1")]

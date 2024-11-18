@@ -129,6 +129,32 @@ public class Switch
          calledActionOn.Should().Be(ValidTestEnum.Item1);
       }
 
+#if NET9_0_OR_GREATER
+      [Fact]
+      public void Should_pass_state_having_ref_struct()
+      {
+         ValidTestEnum calledActionOn = null;
+
+         var obj = new TestRefStruct(42);
+
+         ValidTestEnum.Item1.Switch(obj,
+                                    item1: o =>
+                                           {
+                                              o.Value.Should().Be(42);
+
+                                              calledActionOn = ValidTestEnum.Item1;
+                                           },
+                                    item2: o =>
+                                           {
+                                              o.Value.Should().Be(42);
+
+                                              calledActionOn = ValidTestEnum.Item2;
+                                           });
+
+         calledActionOn.Should().Be(ValidTestEnum.Item1);
+      }
+#endif
+
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
@@ -242,6 +268,16 @@ public class Switch
                       .Should().Be(ValidTestEnum.Item1);
       }
 
+#if NET9_0_OR_GREATER
+      [Fact]
+      public void Should_call_correct_arg_and_return_ref_struct()
+      {
+         ValidTestEnum.Item1.Switch(item1: () => new TestRefStruct(1),
+                                    item2: () => new TestRefStruct(2))
+                      .Value.Should().Be(1);
+      }
+#endif
+
       [Theory]
       [InlineData(true)]
       [InlineData(false)]
@@ -302,6 +338,29 @@ public class Switch
                                            })
                       .Should().Be(ValidTestEnum.Item1);
       }
+
+#if NET9_0_OR_GREATER
+      [Fact]
+      public void Should_pass_state_having_ref_struct()
+      {
+         var obj = new TestRefStruct(42);
+
+         ValidTestEnum.Item1.Switch(obj,
+                                    item1: o =>
+                                           {
+                                              o.Value.Should().Be(42);
+
+                                              return new TestRefStruct(1);
+                                           },
+                                    item2: o =>
+                                           {
+                                              o.Value.Should().Be(42);
+
+                                              return new TestRefStruct(2);
+                                           })
+                      .Value.Should().Be(1);
+      }
+#endif
 
       [Theory]
       [InlineData(true)]

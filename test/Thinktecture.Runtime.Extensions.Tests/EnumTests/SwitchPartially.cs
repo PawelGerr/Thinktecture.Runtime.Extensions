@@ -216,6 +216,32 @@ public class SwitchPartially
          calledActionOn.Should().Be(ValidTestEnum.Item1);
       }
 
+#if NET9_0_OR_GREATER
+      [Fact]
+      public void Should_pass_state_having_ref_struct()
+      {
+         ValidTestEnum calledActionOn = null;
+
+         var obj = new TestRefStruct(42);
+
+         ValidTestEnum.Item1.SwitchPartially(obj,
+                                             item1: o =>
+                                                    {
+                                                       o.Value.Should().Be(42);
+
+                                                       calledActionOn = ValidTestEnum.Item1;
+                                                    },
+                                             item2: o =>
+                                                    {
+                                                       o.Value.Should().Be(42);
+
+                                                       calledActionOn = ValidTestEnum.Item2;
+                                                    });
+
+         calledActionOn.Should().Be(ValidTestEnum.Item1);
+      }
+#endif
+
       [Fact]
       public void Should_pass_state_to_default()
       {
@@ -557,6 +583,35 @@ public class SwitchPartially
                                                     })
                       .Should().Be(ValidTestEnum.Item1);
       }
+
+#if NET9_0_OR_GREATER
+      [Fact]
+      public void Should_pass_state_having_ref_struct()
+      {
+         var obj = new TestRefStruct(42);
+
+         ValidTestEnum.Item1.SwitchPartially(obj,
+                                             @default: (o, item) =>
+                                                       {
+                                                          o.Value.Should().Be(42);
+
+                                                          return new TestRefStruct(-1);
+                                                       },
+                                             item1: o =>
+                                                    {
+                                                       o.Value.Should().Be(42);
+
+                                                       return new TestRefStruct(1);
+                                                    },
+                                             item2: o =>
+                                                    {
+                                                       o.Value.Should().Be(42);
+
+                                                       return new TestRefStruct(2);
+                                                    })
+                      .Value.Should().Be(1);
+      }
+#endif
 
       [Fact]
       public void Should_pass_state_to_default()

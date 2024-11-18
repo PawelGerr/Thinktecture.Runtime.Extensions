@@ -3,6 +3,8 @@
    <PropertyGroup>
       <Description>Provides an easy way to implement Smart Enums and Value Objects.</Description>
       <PackageTags>smart-enum;value-object;</PackageTags>
+      <TargetFramework></TargetFramework> 
+      <TargetFrameworks>net7.0;net9.0;</TargetFrameworks> 
    </PropertyGroup>
 
    <ItemGroup>

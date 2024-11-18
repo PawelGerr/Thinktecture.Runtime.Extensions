@@ -26,6 +26,26 @@ public class Map
          calledActionOn.Should().Be(expected);
       }
 
+#if NET9_0_OR_GREATER
+      [Theory]
+      [InlineData(1, "text")]
+      [InlineData(2, 42)]
+      public void Should_use_correct_arg_having_2_values_returning_ref_struct(int index, object expected)
+      {
+         var value = index switch
+         {
+            1 => new TestUnion_class_string_int("text"),
+            2 => new TestUnion_class_string_int(42),
+            _ => throw new Exception()
+         };
+
+         var calledActionOn = value.Map(@string: new TestRefStruct("text"),
+                                        int32: new TestRefStruct(42));
+
+         calledActionOn.Value.Should().Be(expected);
+      }
+#endif
+
       [Theory]
       [InlineData(1, "text")]
       [InlineData(2, 42)]

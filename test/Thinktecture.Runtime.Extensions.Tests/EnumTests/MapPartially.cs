@@ -31,6 +31,17 @@ public class MapPartially
                    .Should().Be(0);
    }
 
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_return_ref_struct()
+   {
+      ValidTestEnum.Item1.MapPartially(@default: new TestRefStruct(0),
+                                       item1: new TestRefStruct(1),
+                                       item2: new TestRefStruct(2))
+                   .Value.Should().Be(1);
+   }
+#endif
+
    [Theory]
    [InlineData(-1)]
    [InlineData(1)]

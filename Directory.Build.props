@@ -12,7 +12,7 @@
       <RepositoryUrl>https://github.com/PawelGerr/Thinktecture.Runtime.Extensions</RepositoryUrl>
       <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
       <RootNamespace>Thinktecture</RootNamespace>
-      <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+      <TargetFramework>net7.0</TargetFramework>
       <LangVersion>13.0</LangVersion>
       <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally> 
       <Nullable>enable</Nullable>
