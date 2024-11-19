@@ -108,6 +108,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                                 state.State.ValidationError,
                                                                                 state.Settings.SkipIParsable,
                                                                                 state.KeyMember.IsParsable,
+                                                                                true,
                                                                                 state.State.Settings.IsValidatable,
                                                                                 state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
                      });

@@ -14,6 +14,14 @@ public class Parse
       TestSmartEnum_Class_DecimalBased.Parse("1.0", null).Should().Be(TestSmartEnum_Class_DecimalBased.Value1);
    }
 
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_parse_ReadOnlySpanOfChar()
+   {
+      TestEnum.Parse(TestEnum.Item1.Key.AsSpan(), null).Should().Be(TestEnum.Item1);
+   }
+#endif
+
    [Fact]
    public void Should_use_format_provider_parse_valid_value()
    {

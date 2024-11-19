@@ -61,335 +61,409 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
    private const string _MAIN_OUTPUT_STRING_BASED_ABSTRACT_CLASS = _GENERATED_HEADER + """
 
-                                                                              namespace Thinktecture.Tests
-                                                                              {
-                                                                                 [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
-                                                                                 partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
-                                                                                    global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
-                                                                                 {
-                                                                                    [global::System.Runtime.CompilerServices.ModuleInitializer]
-                                                                                    internal static void ModuleInit()
-                                                                                    {
-                                                                                       var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-                                                                                       global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
-
-                                                                                       var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
-                                                                                       global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
-
-                                                                                       var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-                                                                                       var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
-
-                                                                                       global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
-                                                                                    }
-
-                                                                                    private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
-                                                                                                                           = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
-
-                                                                                    private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                                           = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
-
-                                                                                    /// <summary>
-                                                                                    /// Gets all valid items.
-                                                                                    /// </summary>
-                                                                                    public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
-
-                                                                                    /// <summary>
-                                                                                    /// The identifier of this item.
-                                                                                    /// </summary>
-                                                                                    public string Key { get; }
-
-                                                                                    private readonly int _hashCode;
-                                                                                    private readonly global::System.Lazy<int> _itemIndex;
-
-                                                                                    private TestEnum(
-                                                                                       string @key)
-                                                                                    {
-                                                                                       ValidateConstructorArguments(
-                                                                                          ref @key);
-
-                                                                                       if (@key is null)
-                                                                                          throw new global::System.ArgumentNullException(nameof(@key));
-
-                                                                                       this.Key = @key;
-                                                                                       this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
-                                                                                       this._itemIndex = new global::System.Lazy<int>(() =>
-                                                                                                                                      {
-                                                                                                                                         for (var i = 0; i < Items.Count; i++)
-                                                                                                                                         {
-                                                                                                                                            if (this == Items[i])
-                                                                                                                                               return i;
-                                                                                                                                         }
-
-                                                                                                                                         throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
-                                                                                                                                      }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
-                                                                                    }
-
-                                                                                    static partial void ValidateConstructorArguments(
-                                                                                       ref string @key);
-
-                                                                                    /// <summary>
-                                                                                    /// Gets the identifier of the item.
-                                                                                    /// </summary>
-                                                                                    [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                                                                                    string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
-                                                                                    {
-                                                                                       return this.Key;
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Gets an enumeration item for provided <paramref name="key"/>.
-                                                                                    /// </summary>
-                                                                                    /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                                                    /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-                                                                                    /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
-                                                                                    [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                                                    public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
-                                                                                    {
-                                                                                       if (@key is null)
-                                                                                          return default;
-
-                                                                                       if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                                                       namespace Thinktecture.Tests
                                                                                        {
-                                                                                          throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
+                                                                                          [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+                                                                                          partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                             global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                                                       #endif
+                                                                                             global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
+                                                                                          {
+                                                                                             [global::System.Runtime.CompilerServices.ModuleInitializer]
+                                                                                             internal static void ModuleInit()
+                                                                                             {
+                                                                                                var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
+                                                                                                global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @key => global::Thinktecture.Tests.TestEnum.Get(@key);
+
+                                                                                                var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Key);
+                                                                                                global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Key;
+
+                                                                                                var enumType = typeof(global::Thinktecture.Tests.TestEnum);
+                                                                                                var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
+
+                                                                                                global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
+                                                                                             }
+
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                             private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                                                    = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                                                             private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                                                       #else
+                                                                                             private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
+                                                                                                                                    = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                                                             private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                                                       #endif
+                                                                                             private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
+                                                                                                                                    = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                                                             /// <summary>
+                                                                                             /// Gets all valid items.
+                                                                                             /// </summary>
+                                                                                             public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+
+                                                                                             /// <summary>
+                                                                                             /// The identifier of this item.
+                                                                                             /// </summary>
+                                                                                             public string Key { get; }
+
+                                                                                             private readonly int _hashCode;
+                                                                                             private readonly global::System.Lazy<int> _itemIndex;
+
+                                                                                             private TestEnum(
+                                                                                                string @key)
+                                                                                             {
+                                                                                                ValidateConstructorArguments(
+                                                                                                   ref @key);
+
+                                                                                                if (@key is null)
+                                                                                                   throw new global::System.ArgumentNullException(nameof(@key));
+
+                                                                                                this.Key = @key;
+                                                                                                this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
+                                                                                                this._itemIndex = new global::System.Lazy<int>(() =>
+                                                                                                                                               {
+                                                                                                                                                  for (var i = 0; i < Items.Count; i++)
+                                                                                                                                                  {
+                                                                                                                                                     if (this == Items[i])
+                                                                                                                                                        return i;
+                                                                                                                                                  }
+
+                                                                                                                                                  throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
+                                                                                                                                               }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                             }
+
+                                                                                             static partial void ValidateConstructorArguments(
+                                                                                                ref string @key);
+
+                                                                                             /// <summary>
+                                                                                             /// Gets the identifier of the item.
+                                                                                             /// </summary>
+                                                                                             [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                                                                                             string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
+                                                                                             {
+                                                                                                return this.Key;
+                                                                                             }
+
+                                                                                             /// <summary>
+                                                                                             /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                                                             /// </summary>
+                                                                                             /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                             /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                                                             /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                                                             [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+                                                                                             public static global::Thinktecture.Tests.TestEnum? Get(string? @key)
+                                                                                             {
+                                                                                                if (@key is null)
+                                                                                                   return default;
+
+                                                                                                if (!_itemsLookup.TryGetValue(@key, out var item))
+                                                                                                {
+                                                                                                   throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
+                                                                                                }
+
+                                                                                                return item;
+                                                                                             }
+
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                             /// <summary>
+                                                                                             /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                                                             /// </summary>
+                                                                                             /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                             /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                                                             /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                                                             public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                                                             {
+                                                                                                if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                                                                {
+                                                                                                   throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                                                                }
+
+                                                                                                return item;
+                                                                                             }
+                                                                                       #endif
+
+                                                                                             /// <summary>
+                                                                                             /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                                                             /// </summary>
+                                                                                             /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                             /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                                                             /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                                                             public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                                                             {
+                                                                                                if (@key is null)
+                                                                                                {
+                                                                                                   item = default;
+                                                                                                   return false;
+                                                                                                }
+
+                                                                                                return _itemsLookup.TryGetValue(@key, out item);
+                                                                                             }
+
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                             /// <summary>
+                                                                                             /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                                                             /// </summary>
+                                                                                             /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                             /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                                                             /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                                                             public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                                                             {
+                                                                                                return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                                                             }
+                                                                                       #endif
+
+                                                                                             /// <summary>
+                                                                                             /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                                                             /// </summary>
+                                                                                             /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                             /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                                                             /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                                                             /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                                                             public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                                             {
+                                                                                                if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                                                                {
+                                                                                                   return null;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                   return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                                                                }
+                                                                                             }
+
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                             /// <summary>
+                                                                                             /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                                                             /// </summary>
+                                                                                             /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                             /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                                                             /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                                                             /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                                                             public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                                             {
+                                                                                                if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                                                                {
+                                                                                                   return null;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                   return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                                                                }
+                                                                                             }
+                                                                                       #endif
+
+                                                                                             /// <summary>
+                                                                                             /// Implicit conversion to the type <see cref="string"/>.
+                                                                                             /// </summary>
+                                                                                             /// <param name="item">Item to covert.</param>
+                                                                                             /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
+                                                                                             [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
+                                                                                             public static implicit operator string?(global::Thinktecture.Tests.TestEnum? item)
+                                                                                             {
+                                                                                                return item is null ? default : item.Key;
+                                                                                             }
+
+                                                                                             /// <summary>
+                                                                                             /// Explicit conversion from the type <see cref="string"/>.
+                                                                                             /// </summary>
+                                                                                             /// <param name="key">Value to covert.</param>
+                                                                                             /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
+                                                                                             [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
+                                                                                             public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
+                                                                                             {
+                                                                                                return global::Thinktecture.Tests.TestEnum.Get(@key);
+                                                                                             }
+
+                                                                                             /// <inheritdoc />
+                                                                                             public bool Equals(global::Thinktecture.Tests.TestEnum? other)
+                                                                                             {
+                                                                                                return global::System.Object.ReferenceEquals(this, other);
+                                                                                             }
+
+                                                                                             /// <inheritdoc />
+                                                                                             public override bool Equals(object? other)
+                                                                                             {
+                                                                                                return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
+                                                                                             }
+
+                                                                                             /// <inheritdoc />
+                                                                                             public override int GetHashCode()
+                                                                                             {
+                                                                                                return _hashCode;
+                                                                                             }
+
+                                                                                             /// <inheritdoc />
+                                                                                             public override string ToString()
+                                                                                             {
+                                                                                                return this.Key.ToString();
+                                                                                             }
+
+                                                                                             /// <summary>
+                                                                                             /// Executes an action depending on the current item.
+                                                                                             /// </summary>
+                                                                                             /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
+                                                                                             /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+                                                                                             public void Switch(
+                                                                                                global::System.Action @item1,
+                                                                                                global::System.Action @item2)
+                                                                                             {
+                                                                                                switch (_itemIndex.Value)
+                                                                                                {
+                                                                                                   case 0:
+                                                                                                      @item1();
+                                                                                                      return;
+                                                                                                   case 1:
+                                                                                                      @item2();
+                                                                                                      return;
+                                                                                                   default:
+                                                                                                      throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+                                                                                                }
+                                                                                             }
+
+                                                                                             /// <summary>
+                                                                                             /// Executes an action depending on the current item.
+                                                                                             /// </summary>
+                                                                                             /// <param name="state">State to be passed to the callbacks.</param>
+                                                                                             /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
+                                                                                             /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+                                                                                             public void Switch<TState>(
+                                                                                                TState state,
+                                                                                                global::System.Action<TState> @item1,
+                                                                                                global::System.Action<TState> @item2)
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                       		where TState : allows ref struct
+                                                                                       #endif
+                                                                                             {
+                                                                                                switch (_itemIndex.Value)
+                                                                                                {
+                                                                                                   case 0:
+                                                                                                      @item1(state);
+                                                                                                      return;
+                                                                                                   case 1:
+                                                                                                      @item2(state);
+                                                                                                      return;
+                                                                                                   default:
+                                                                                                      throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+                                                                                                }
+                                                                                             }
+
+                                                                                             /// <summary>
+                                                                                             /// Executes a function depending on the current item.
+                                                                                             /// </summary>
+                                                                                             /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
+                                                                                             /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+                                                                                             public TResult Switch<TResult>(
+                                                                                                global::System.Func<TResult> @item1,
+                                                                                                global::System.Func<TResult> @item2)
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                       		   where TResult : allows ref struct
+                                                                                       #endif
+                                                                                             {
+                                                                                                switch (_itemIndex.Value)
+                                                                                                {
+                                                                                                   case 0:
+                                                                                                      return @item1();
+                                                                                                   case 1:
+                                                                                                      return @item2();
+                                                                                                   default:
+                                                                                                      throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+                                                                                                }
+                                                                                             }
+
+                                                                                             /// <summary>
+                                                                                             /// Executes a function depending on the current item.
+                                                                                             /// </summary>
+                                                                                             /// <param name="state">State to be passed to the callbacks.</param>
+                                                                                             /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
+                                                                                             /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+                                                                                             public TResult Switch<TState, TResult>(
+                                                                                                TState state,
+                                                                                                global::System.Func<TState, TResult> @item1,
+                                                                                                global::System.Func<TState, TResult> @item2)
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                       		   where TResult : allows ref struct
+                                                                                       		   where TState : allows ref struct
+                                                                                       #endif
+                                                                                             {
+                                                                                                switch (_itemIndex.Value)
+                                                                                                {
+                                                                                                   case 0:
+                                                                                                      return @item1(state);
+                                                                                                   case 1:
+                                                                                                      return @item2(state);
+                                                                                                   default:
+                                                                                                      throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+                                                                                                }
+                                                                                             }
+
+                                                                                             /// <summary>
+                                                                                             /// Maps an item to an instance of type <typeparamref name="TResult"/>.
+                                                                                             /// </summary>
+                                                                                             /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
+                                                                                             /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+                                                                                             public TResult Map<TResult>(
+                                                                                                TResult @item1,
+                                                                                                TResult @item2)
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                       		   where TResult : allows ref struct
+                                                                                       #endif
+                                                                                             {
+                                                                                                switch (_itemIndex.Value)
+                                                                                                {
+                                                                                                   case 0:
+                                                                                                      return @item1;
+                                                                                                   case 1:
+                                                                                                      return @item2;
+                                                                                                   default:
+                                                                                                      throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+                                                                                                }
+                                                                                             }
+
+                                                                                             private static
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                                (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                                                       #else
+                                                                                                global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                                                       #endif
+                                                                                                 GetLookup()
+                                                                                             {
+                                                                                                var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
+
+                                                                                                void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
+                                                                                                {
+                                                                                                   if (item is null)
+                                                                                                      throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+                                                                                                   if (item.Key is null)
+                                                                                                      throw new global::System.ArgumentException($"The \"Key\" of the item \"{itemName}\" of type \"TestEnum\" must not be null.");
+
+                                                                                                   if (lookup.ContainsKey(item.Key))
+                                                                                                      throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
+
+                                                                                                   lookup.Add(item.Key, item);
+                                                                                                }
+
+                                                                                                AddItem(@Item1, nameof(@Item1));
+                                                                                                AddItem(@Item2, nameof(@Item2));
+
+                                                                                       #if NET8_0_OR_GREATER
+                                                                                                var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                                                       #if NET9_0_OR_GREATER
+                                                                                                return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                                                       #else
+                                                                                                return frozenDictionary;
+                                                                                       #endif
+                                                                                       #else
+                                                                                                return lookup;
+                                                                                       #endif
+                                                                                             }
+                                                                                          }
                                                                                        }
 
-                                                                                       return item;
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
-                                                                                    /// </summary>
-                                                                                    /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                                                    /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
-                                                                                    /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-                                                                                    public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
-                                                                                    {
-                                                                                       if (@key is null)
-                                                                                       {
-                                                                                          item = default;
-                                                                                          return false;
-                                                                                       }
-
-                                                                                       return _itemsLookup.Value.TryGetValue(@key, out item);
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
-                                                                                    /// </summary>
-                                                                                    /// <param name="key">The identifier to return an enumeration item for.</param>
-                                                                                    /// <param name="provider">An object that provides culture-specific formatting information.</param>
-                                                                                    /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
-                                                                                    /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-                                                                                    public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] string @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
-                                                                                    {
-                                                                                       if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
-                                                                                       {
-                                                                                          return null;
-                                                                                       }
-                                                                                       else
-                                                                                       {
-                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
-                                                                                       }
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Implicit conversion to the type <see cref="string"/>.
-                                                                                    /// </summary>
-                                                                                    /// <param name="item">Item to covert.</param>
-                                                                                    /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
-                                                                                    [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
-                                                                                    public static implicit operator string?(global::Thinktecture.Tests.TestEnum? item)
-                                                                                    {
-                                                                                       return item is null ? default : item.Key;
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Explicit conversion from the type <see cref="string"/>.
-                                                                                    /// </summary>
-                                                                                    /// <param name="key">Value to covert.</param>
-                                                                                    /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
-                                                                                    [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-                                                                                    public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
-                                                                                    {
-                                                                                       return global::Thinktecture.Tests.TestEnum.Get(@key);
-                                                                                    }
-
-                                                                                    /// <inheritdoc />
-                                                                                    public bool Equals(global::Thinktecture.Tests.TestEnum? other)
-                                                                                    {
-                                                                                       return global::System.Object.ReferenceEquals(this, other);
-                                                                                    }
-
-                                                                                    /// <inheritdoc />
-                                                                                    public override bool Equals(object? other)
-                                                                                    {
-                                                                                       return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
-                                                                                    }
-
-                                                                                    /// <inheritdoc />
-                                                                                    public override int GetHashCode()
-                                                                                    {
-                                                                                       return _hashCode;
-                                                                                    }
-
-                                                                                    /// <inheritdoc />
-                                                                                    public override string ToString()
-                                                                                    {
-                                                                                       return this.Key.ToString();
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Executes an action depending on the current item.
-                                                                                    /// </summary>
-                                                                                    /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
-                                                                                    /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public void Switch(
-                                                                                       global::System.Action @item1,
-                                                                                       global::System.Action @item2)
-                                                                                    {
-                                                                                       switch (_itemIndex.Value)
-                                                                                       {
-                                                                                          case 0:
-                                                                                             @item1();
-                                                                                             return;
-                                                                                          case 1:
-                                                                                             @item2();
-                                                                                             return;
-                                                                                          default:
-                                                                                             throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
-                                                                                       }
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Executes an action depending on the current item.
-                                                                                    /// </summary>
-                                                                                    /// <param name="state">State to be passed to the callbacks.</param>
-                                                                                    /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
-                                                                                    /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public void Switch<TState>(
-                                                                                       TState state,
-                                                                                       global::System.Action<TState> @item1,
-                                                                                       global::System.Action<TState> @item2)
-                                                                              #if NET9_0_OR_GREATER
-                                                                              		where TState : allows ref struct
-                                                                              #endif
-                                                                                    {
-                                                                                       switch (_itemIndex.Value)
-                                                                                       {
-                                                                                          case 0:
-                                                                                             @item1(state);
-                                                                                             return;
-                                                                                          case 1:
-                                                                                             @item2(state);
-                                                                                             return;
-                                                                                          default:
-                                                                                             throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
-                                                                                       }
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Executes a function depending on the current item.
-                                                                                    /// </summary>
-                                                                                    /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
-                                                                                    /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public TResult Switch<TResult>(
-                                                                                       global::System.Func<TResult> @item1,
-                                                                                       global::System.Func<TResult> @item2)
-                                                                              #if NET9_0_OR_GREATER
-                                                                              		   where TResult : allows ref struct
-                                                                              #endif
-                                                                                    {
-                                                                                       switch (_itemIndex.Value)
-                                                                                       {
-                                                                                          case 0:
-                                                                                             return @item1();
-                                                                                          case 1:
-                                                                                             return @item2();
-                                                                                          default:
-                                                                                             throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
-                                                                                       }
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Executes a function depending on the current item.
-                                                                                    /// </summary>
-                                                                                    /// <param name="state">State to be passed to the callbacks.</param>
-                                                                                    /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
-                                                                                    /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public TResult Switch<TState, TResult>(
-                                                                                       TState state,
-                                                                                       global::System.Func<TState, TResult> @item1,
-                                                                                       global::System.Func<TState, TResult> @item2)
-                                                                              #if NET9_0_OR_GREATER
-                                                                              		   where TResult : allows ref struct
-                                                                              		   where TState : allows ref struct
-                                                                              #endif
-                                                                                    {
-                                                                                       switch (_itemIndex.Value)
-                                                                                       {
-                                                                                          case 0:
-                                                                                             return @item1(state);
-                                                                                          case 1:
-                                                                                             return @item2(state);
-                                                                                          default:
-                                                                                             throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
-                                                                                       }
-                                                                                    }
-
-                                                                                    /// <summary>
-                                                                                    /// Maps an item to an instance of type <typeparamref name="TResult"/>.
-                                                                                    /// </summary>
-                                                                                    /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
-                                                                                    /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
-                                                                                    public TResult Map<TResult>(
-                                                                                       TResult @item1,
-                                                                                       TResult @item2)
-                                                                              #if NET9_0_OR_GREATER
-                                                                              		   where TResult : allows ref struct
-                                                                              #endif
-                                                                                    {
-                                                                                       switch (_itemIndex.Value)
-                                                                                       {
-                                                                                          case 0:
-                                                                                             return @item1;
-                                                                                          case 1:
-                                                                                             return @item2;
-                                                                                          default:
-                                                                                             throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
-                                                                                       }
-                                                                                    }
-
-                                                                                    private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
-                                                                                    {
-                                                                                       var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
-
-                                                                                       void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
-                                                                                       {
-                                                                                          if (item is null)
-                                                                                             throw new global::System.ArgumentNullException($"The item \"{itemName}\" of type \"TestEnum\" must not be null.");
-
-                                                                                          if (item.Key is null)
-                                                                                             throw new global::System.ArgumentException($"The \"Key\" of the item \"{itemName}\" of type \"TestEnum\" must not be null.");
-
-                                                                                          if (lookup.ContainsKey(item.Key))
-                                                                                             throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
-
-                                                                                          lookup.Add(item.Key, item);
-                                                                                       }
-
-                                                                                       AddItem(@Item1, nameof(@Item1));
-                                                                                       AddItem(@Item2, nameof(@Item2));
-
-                                                                              #if NET8_0_OR_GREATER
-                                                                                       return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
-                                                                              #else
-                                                                                       return lookup;
-                                                                              #endif
-                                                                                    }
-                                                                                 }
-                                                                              }
-
-                                                                              """;
+                                                                                       """;
 
    private const string _MAIN_OUTPUT_STRING_BASED_CLASS = _GENERATED_HEADER + """
 
@@ -397,6 +471,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                               {
                                                                                  [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                                                  sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                                              #if NET9_0_OR_GREATER
+                                                                                    global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                                              #endif
                                                                                     global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                                                  {
                                                                                     [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -414,11 +491,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                                                     }
 
-                                                                                    private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                                              #if NET9_0_OR_GREATER
+                                                                                    private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                                           = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                                                    private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                                              #else
+                                                                                    private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                                            = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                                                    private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                                              #endif
                                                                                     private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                                           = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                                           = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                                                     /// <summary>
                                                                                     /// Gets all valid items.
@@ -480,13 +565,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        if (@key is null)
                                                                                           return default;
 
-                                                                                       if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                                                       if (!_itemsLookup.TryGetValue(@key, out var item))
                                                                                        {
                                                                                           throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                                                        }
 
                                                                                        return item;
                                                                                     }
+
+                                                                              #if NET9_0_OR_GREATER
+                                                                                    /// <summary>
+                                                                                    /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                                                    /// </summary>
+                                                                                    /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                    /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                                                    /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                                                    public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                                                    {
+                                                                                       if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                                                       {
+                                                                                          throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                                                       }
+
+                                                                                       return item;
+                                                                                    }
+                                                                              #endif
 
                                                                                     /// <summary>
                                                                                     /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -502,8 +605,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                           return false;
                                                                                        }
 
-                                                                                       return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                                                       return _itemsLookup.TryGetValue(@key, out item);
                                                                                     }
+
+                                                                              #if NET9_0_OR_GREATER
+                                                                                    /// <summary>
+                                                                                    /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                                                    /// </summary>
+                                                                                    /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                    /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                                                    /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                                                    public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                                                    {
+                                                                                       return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                                                    }
+                                                                              #endif
 
                                                                                     /// <summary>
                                                                                     /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -523,6 +639,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                           return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                                                        }
                                                                                     }
+
+                                                                              #if NET9_0_OR_GREATER
+                                                                                    /// <summary>
+                                                                                    /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                                                    /// </summary>
+                                                                                    /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                                                    /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                                                    /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                                                    /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                                                    public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                                                    {
+                                                                                       if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                                                       {
+                                                                                          return null;
+                                                                                       }
+                                                                                       else
+                                                                                       {
+                                                                                          return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                                                       }
+                                                                                    }
+                                                                              #endif
 
                                                                                     /// <summary>
                                                                                     /// Implicit conversion to the type <see cref="string"/>.
@@ -691,7 +828,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        }
                                                                                     }
 
-                                                                                    private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                                                    private static
+                                                                              #if NET9_0_OR_GREATER
+                                                                                       (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                                              #else
+                                                                                       global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                                              #endif
+                                                                                        GetLookup()
                                                                                     {
                                                                                        var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -713,7 +856,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                        AddItem(@Item2, nameof(@Item2));
 
                                                                               #if NET8_0_OR_GREATER
-                                                                                       return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                                                       var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                                              #if NET9_0_OR_GREATER
+                                                                                       return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                                              #else
+                                                                                       return frozenDictionary;
+                                                                              #endif
                                                                               #else
                                                                                        return lookup;
                                                                               #endif
@@ -746,11 +894,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                                                  }
 
-                                                                                 private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                                                 private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                                         = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                                                 private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
                                                                                  private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                                        = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                                        = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                                                  /// <summary>
                                                                                  /// Gets all valid items.
@@ -805,7 +954,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                                                  public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                                                  {
-                                                                                    if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                                                    if (!_itemsLookup.TryGetValue(@key, out var item))
                                                                                     {
                                                                                        throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                                                     }
@@ -821,7 +970,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                  /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
                                                                                  public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                                                  {
-                                                                                    return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                                                    return _itemsLookup.TryGetValue(@key, out item);
                                                                                  }
 
                                                                                  /// <summary>
@@ -1029,7 +1178,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                     AddItem(@Item2, nameof(@Item2));
 
                                                                            #if NET8_0_OR_GREATER
-                                                                                    return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
+                                                                                    var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
+                                                                                    return frozenDictionary;
                                                                            #else
                                                                                     return lookup;
                                                                            #endif
@@ -1109,12 +1259,23 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                   partial class TestEnum :
                                                                                      global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+                                                                                  #if NET9_0_OR_GREATER
+                                                                                     , global::System.ISpanParsable<global::Thinktecture.Tests.TestEnum>
+                                                                                  #endif
                                                                                   {
                                                                                      private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
                                                                                         where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
                                                                                      {
                                                                                         return T.Validate(key, provider, out result);
                                                                                      }
+
+                                                                                  #if NET9_0_OR_GREATER
+                                                                                     private static global::Thinktecture.ValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                        where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
+                                                                                     {
+                                                                                        return T.Validate(key, provider, out result);
+                                                                                     }
+                                                                                  #endif
 
                                                                                      /// <inheritdoc />
                                                                                      public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
@@ -1126,6 +1287,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                         throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
                                                                                      }
+
+                                                                                  #if NET9_0_OR_GREATER
+                                                                                     /// <inheritdoc />
+                                                                                     public static global::Thinktecture.Tests.TestEnum Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+                                                                                     {
+                                                                                        var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+
+                                                                                        if(validationError is null)
+                                                                                           return result!;
+
+                                                                                        throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
+                                                                                     }
+                                                                                  #endif
 
                                                                                      /// <inheritdoc />
                                                                                      public static bool TryParse(
@@ -1142,6 +1316,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                         var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                                                         return validationError is null;
                                                                                      }
+
+                                                                                  #if NET9_0_OR_GREATER
+                                                                                     /// <inheritdoc />
+                                                                                     public static bool TryParse(
+                                                                                        global::System.ReadOnlySpan<char> s,
+                                                                                        global::System.IFormatProvider? provider,
+                                                                                        [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+                                                                                     {
+                                                                                        var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                                                        return validationError is null;
+                                                                                     }
+                                                                                  #endif
                                                                                   }
 
                                                                                   """;
@@ -1336,6 +1522,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                                                               partial class TestEnum :
                                                                                                  global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+                                                                                              #if NET9_0_OR_GREATER
+                                                                                                 , global::System.ISpanParsable<global::Thinktecture.Tests.TestEnum>
+                                                                                              #endif
                                                                                               {
                                                                                                  private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
                                                                                                     where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
@@ -1343,12 +1532,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                     return T.Validate(key, provider, out result);
                                                                                                  }
 
+                                                                                              #if NET9_0_OR_GREATER
+                                                                                                 private static global::Thinktecture.ValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                                                                    where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
+                                                                                                 {
+                                                                                                    return T.Validate(key, provider, out result);
+                                                                                                 }
+                                                                                              #endif
+
                                                                                                  /// <inheritdoc />
                                                                                                  public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                                                                  {
                                                                                                     var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                                                                     return result!;
                                                                                                  }
+
+                                                                                              #if NET9_0_OR_GREATER
+                                                                                                 /// <inheritdoc />
+                                                                                                 public static global::Thinktecture.Tests.TestEnum Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+                                                                                                 {
+                                                                                                    var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+                                                                                                    return result!;
+                                                                                                 }
+                                                                                              #endif
 
                                                                                                  /// <inheritdoc />
                                                                                                  public static bool TryParse(
@@ -1365,6 +1571,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                                                     var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                                                                     return true;
                                                                                                  }
+
+                                                                                              #if NET9_0_OR_GREATER
+                                                                                                 /// <inheritdoc />
+                                                                                                 public static bool TryParse(
+                                                                                                    global::System.ReadOnlySpan<char> s,
+                                                                                                    global::System.IFormatProvider? provider,
+                                                                                                    [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+                                                                                                 {
+                                                                                                    var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                                                                    return true;
+                                                                                                 }
+                                                                                              #endif
                                                                                               }
 
                                                                                               """;
@@ -2227,6 +2445,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.Tests.TestEnumValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnumValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.Tests.TestEnumValidationError>,
+                                                   #endif
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2244,11 +2465,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -2310,13 +2539,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -2332,8 +2579,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -2353,6 +2613,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.Tests.TestEnumValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.Tests.TestEnumValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.Tests.TestEnumValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.Tests.TestEnumValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -2692,7 +2973,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -2714,7 +3001,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -2730,12 +3022,23 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                        partial class TestEnum :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+                                                       #if NET9_0_OR_GREATER
+                                                          , global::System.ISpanParsable<global::Thinktecture.Tests.TestEnum>
+                                                       #endif
                                                        {
                                                           private static global::Thinktecture.Tests.TestEnumValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
                                                              where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.Tests.TestEnumValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          private static global::Thinktecture.Tests.TestEnumValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.Tests.TestEnumValidationError>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+                                                       #endif
 
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
@@ -2747,6 +3050,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                              throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          /// <inheritdoc />
+                                                          public static global::Thinktecture.Tests.TestEnum Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+                                                          {
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+
+                                                             if(validationError is null)
+                                                                return result!;
+
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
+                                                          }
+                                                       #endif
 
                                                           /// <inheritdoc />
                                                           public static bool TryParse(
@@ -2763,6 +3079,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                              var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                              return validationError is null;
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          /// <inheritdoc />
+                                                          public static bool TryParse(
+                                                             global::System.ReadOnlySpan<char> s,
+                                                             global::System.IFormatProvider? provider,
+                                                             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+                                                          {
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                             return validationError is null;
+                                                          }
+                                                       #endif
                                                        }
 
                                                        """);
@@ -2806,6 +3134,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -2823,11 +3154,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -2889,13 +3228,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -2911,8 +3268,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -2932,6 +3302,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -3035,7 +3426,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -3057,7 +3454,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -3106,6 +3508,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3123,11 +3528,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -3189,13 +3602,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -3211,8 +3642,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -3232,6 +3676,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -3515,7 +3980,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default(state, this);
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -3537,7 +4008,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -3596,6 +4072,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -3613,11 +4092,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -3713,13 +4200,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -3735,8 +4240,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -3756,6 +4274,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -4095,7 +4634,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -4117,7 +4662,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -4156,6 +4706,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::System.IEquatable<global::TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -4173,11 +4726,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -4239,13 +4800,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::TestEnum), @key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         public static global::TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::TestEnum), @key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -4261,8 +4840,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::TestEnum item)
+                                                         {
+                                                            return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -4282,6 +4874,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::TestEnum item)
+                                                         {
+                                                            if(global::TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -4621,7 +5234,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -4643,7 +5262,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -4686,12 +5310,23 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                        partial class TestEnum :
                                                           global::System.IParsable<global::TestEnum>
+                                                       #if NET9_0_OR_GREATER
+                                                          , global::System.ISpanParsable<global::TestEnum>
+                                                       #endif
                                                        {
                                                           private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::TestEnum? result)
                                                              where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, string, global::Thinktecture.ValidationError>
                                                           {
                                                              return T.Validate(key, provider, out result);
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+                                                       #endif
 
                                                           /// <inheritdoc />
                                                           public static global::TestEnum Parse(string s, global::System.IFormatProvider? provider)
@@ -4703,6 +5338,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                              throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          /// <inheritdoc />
+                                                          public static global::TestEnum Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+                                                          {
+                                                             var validationError = Validate<global::TestEnum>(s, provider, out var result);
+
+                                                             if(validationError is null)
+                                                                return result!;
+
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
+                                                          }
+                                                       #endif
 
                                                           /// <inheritdoc />
                                                           public static bool TryParse(
@@ -4719,6 +5367,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                              var validationError = Validate<global::TestEnum>(s, provider, out result!);
                                                              return validationError is null;
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          /// <inheritdoc />
+                                                          public static bool TryParse(
+                                                             global::System.ReadOnlySpan<char> s,
+                                                             global::System.IFormatProvider? provider,
+                                                             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::TestEnum result)
+                                                          {
+                                                             var validationError = Validate<global::TestEnum>(s, provider, out result!);
+                                                             return validationError is null;
+                                                          }
+                                                       #endif
                                                        }
 
                                                        """);
@@ -4873,6 +5533,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -4890,11 +5553,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -4956,13 +5627,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -4978,8 +5667,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -4999,6 +5701,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -5633,7 +6356,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(7, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -5660,7 +6389,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item_derived_2, nameof(@Item_derived_2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -5728,6 +6462,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -5746,11 +6483,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -5834,13 +6579,30 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                item = CreateAndCheckInvalidItem(@key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               item = CreateAndCheckInvalidItem(@key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string @key)
                                                          {
@@ -5874,12 +6636,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            if(_itemsLookup.Value.TryGetValue(@key, out item))
+                                                            if(_itemsLookup.TryGetValue(@key, out item))
                                                                return true;
 
                                                             item = CreateAndCheckInvalidItem(@key);
                                                             return false;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(_lookups.Value.Item2.TryGetValue(@key, out item))
+                                                               return true;
+
+                                                            item = CreateAndCheckInvalidItem(@key.ToString());
+                                                            return false;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -5901,6 +6680,28 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               item = CreateAndCheckInvalidItem(@key.ToString());
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -6340,7 +7141,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -6365,7 +7172,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -6412,6 +7224,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                       [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       readonly partial struct TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum>
                                                       {
@@ -6430,11 +7245,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -6517,13 +7340,30 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                item = CreateAndCheckInvalidItem(@key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               item = CreateAndCheckInvalidItem(@key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string @key)
                                                          {
@@ -6554,12 +7394,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            if(_itemsLookup.Value.TryGetValue(@key, out item))
+                                                            if(_itemsLookup.TryGetValue(@key, out item))
                                                                return true;
 
                                                             item = CreateAndCheckInvalidItem(@key);
                                                             return false;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(_lookups.Value.Item2.TryGetValue(@key, out item))
+                                                               return true;
+
+                                                            item = CreateAndCheckInvalidItem(@key.ToString());
+                                                            return false;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -6581,6 +7438,28 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               item = CreateAndCheckInvalidItem(@key.ToString());
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -7011,7 +7890,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -7033,7 +7918,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -7113,6 +8003,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                                                        partial struct TestEnum :
                                                           global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+                                                       #if NET9_0_OR_GREATER
+                                                          , global::System.ISpanParsable<global::Thinktecture.Tests.TestEnum>
+                                                       #endif
                                                        {
                                                           private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum result)
                                                              where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
@@ -7120,12 +8013,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                              return T.Validate(key, provider, out result);
                                                           }
 
+                                                       #if NET9_0_OR_GREATER
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+                                                       #endif
+
                                                           /// <inheritdoc />
                                                           public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
                                                           {
                                                              var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
                                                              return result!;
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          /// <inheritdoc />
+                                                          public static global::Thinktecture.Tests.TestEnum Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+                                                          {
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+                                                             return result!;
+                                                          }
+                                                       #endif
 
                                                           /// <inheritdoc />
                                                           public static bool TryParse(
@@ -7142,6 +8052,18 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                              var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
                                                              return true;
                                                           }
+
+                                                       #if NET9_0_OR_GREATER
+                                                          /// <inheritdoc />
+                                                          public static bool TryParse(
+                                                             global::System.ReadOnlySpan<char> s,
+                                                             global::System.IFormatProvider? provider,
+                                                             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+                                                          {
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                             return true;
+                                                          }
+                                                       #endif
                                                        }
 
                                                        """);
@@ -7219,6 +8141,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::Thinktecture.IValidatableEnum,
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
@@ -7237,11 +8162,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -7355,13 +8288,30 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@name is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@name, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@name, out var item))
                                                             {
                                                                item = CreateAndCheckInvalidItem(@name);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="name"/>.
+                                                         /// </summary>
+                                                         /// <param name="name">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="name"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @name)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@name, out var item))
+                                                            {
+                                                               item = CreateAndCheckInvalidItem(@name.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          private static global::Thinktecture.Tests.TestEnum CreateAndCheckInvalidItem(string @name)
                                                          {
@@ -7373,7 +8323,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (item.IsValid)
                                                                throw new global::System.Exception("The implementation of method 'CreateInvalidItem' must return an instance with property 'IsValid' equals to 'false'.");
 
-                                                            if (_itemsLookup.Value.ContainsKey(item.Name))
+                                                            if (_itemsLookup.ContainsKey(item.Name))
                                                                throw new global::System.Exception("The implementation of method 'CreateInvalidItem' must not return an instance with property 'Name' equals to one of a valid item.");
 
                                                             return item;
@@ -7393,12 +8343,29 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            if(_itemsLookup.Value.TryGetValue(@name, out item))
+                                                            if(_itemsLookup.TryGetValue(@name, out item))
                                                                return true;
 
                                                             item = CreateAndCheckInvalidItem(@name);
                                                             return false;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="name"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="name">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="name"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @name, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(_lookups.Value.Item2.TryGetValue(@name, out item))
+                                                               return true;
+
+                                                            item = CreateAndCheckInvalidItem(@name.ToString());
+                                                            return false;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="name"/> and returns a valid enumeration item if found.
@@ -7420,6 +8387,28 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@name}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="name"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="name">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="name"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @name, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@name, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               item = CreateAndCheckInvalidItem(@name.ToString());
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@name}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -7859,7 +8848,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             return @default;
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
 
@@ -7884,7 +8879,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -8168,7 +9168,48 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       AssertOutput(formattable, _FORMATTABLE_OUTPUT_CLASS);
       AssertOutput(comparableOutput, _COMPARABLE_OUTPUT_CLASS_INT_BASED);
-      AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED); // string-based due to [ValueObjectFactory<string>]
+      AssertOutput(parsableOutput, _GENERATED_HEADER + """
+
+                                                       namespace Thinktecture.Tests;
+
+                                                       partial class TestEnum :
+                                                          global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+                                                       {
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
+                                                          /// <inheritdoc />
+                                                          public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
+                                                          {
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+
+                                                             if(validationError is null)
+                                                                return result!;
+
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
+                                                          }
+
+                                                          /// <inheritdoc />
+                                                          public static bool TryParse(
+                                                             string? s,
+                                                             global::System.IFormatProvider? provider,
+                                                             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+                                                          {
+                                                             if(s is null)
+                                                             {
+                                                                result = default;
+                                                                return false;
+                                                             }
+
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                             return validationError is null;
+                                                          }
+                                                       }
+
+                                                       """);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT_BASED);
 
@@ -8196,11 +9237,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -8255,7 +9297,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                          {
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
@@ -8271,7 +9313,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
                                                          public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -8650,7 +9692,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
+                                                            return frozenDictionary;
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -8693,7 +9736,48 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       AssertOutput(formattable, _FORMATTABLE_OUTPUT_CLASS);
       AssertOutput(comparableOutput, _COMPARABLE_OUTPUT_CLASS_INT_BASED);
-      AssertOutput(parsableOutput, _PARSABLE_OUTPUT_CLASS_STRING_BASED); // string-based due to [ValueObjectFactory<string>]
+      AssertOutput(parsableOutput, _GENERATED_HEADER + """
+
+                                                       namespace Thinktecture.Tests;
+
+                                                       partial class TestEnum :
+                                                          global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+                                                       {
+                                                          private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
+                                                             where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
+                                                          {
+                                                             return T.Validate(key, provider, out result);
+                                                          }
+
+                                                          /// <inheritdoc />
+                                                          public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
+                                                          {
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
+
+                                                             if(validationError is null)
+                                                                return result!;
+
+                                                             throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
+                                                          }
+
+                                                          /// <inheritdoc />
+                                                          public static bool TryParse(
+                                                             string? s,
+                                                             global::System.IFormatProvider? provider,
+                                                             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+                                                          {
+                                                             if(s is null)
+                                                             {
+                                                                result = default;
+                                                                return false;
+                                                             }
+
+                                                             var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
+                                                             return validationError is null;
+                                                          }
+                                                       }
+
+                                                       """);
       AssertOutput(equalityComparisonOperators, _EQUALITY_COMPARABLE_OPERATORS_CLASS);
       AssertOutput(comparisonOperatorsOutput, _COMPARISON_OPERATORS_INT_BASED);
 
@@ -8722,11 +9806,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -8781,7 +9866,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
                                                          public static global::Thinktecture.Tests.TestEnum Get(int @key)
                                                          {
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
@@ -8797,7 +9882,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                          /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
                                                          public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
                                                          {
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
 
                                                          /// <summary>
@@ -9176,7 +10261,8 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
+                                                            return frozenDictionary;
                                                    #else
                                                             return lookup;
                                                    #endif
@@ -9280,6 +10366,9 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                    {
                                                       [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
                                                       sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+                                                   #if NET9_0_OR_GREATER
+                                                         global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+                                                   #endif
                                                          global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
                                                       {
                                                          [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -9297,11 +10386,19 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
                                                          }
 
-                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _itemsLookup
+                                                   #if NET9_0_OR_GREATER
+                                                         private static readonly global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)> _lookups
+                                                                                                = new global::System.Lazy<(global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value.Item1;
+                                                   #else
+                                                         private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>> _lookups
                                                                                                 = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
+                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
+                                                   #endif
                                                          private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Value.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                                                                                = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
                                                          /// <summary>
                                                          /// Gets all valid items.
@@ -9367,13 +10464,31 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             if (@key is null)
                                                                return default;
 
-                                                            if (!_itemsLookup.Value.TryGetValue(@key, out var item))
+                                                            if (!_itemsLookup.TryGetValue(@key, out var item))
                                                             {
                                                                throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
                                                             }
 
                                                             return item;
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets an enumeration item for provided <paramref name="key"/>.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+                                                         /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
+                                                         public static global::Thinktecture.Tests.TestEnum Get(global::System.ReadOnlySpan<char> @key)
+                                                         {
+                                                            if (!_lookups.Value.Item2.TryGetValue(@key, out var item))
+                                                            {
+                                                               throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key.ToString());
+                                                            }
+
+                                                            return item;
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
@@ -9389,8 +10504,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return false;
                                                             }
 
-                                                            return _itemsLookup.Value.TryGetValue(@key, out item);
+                                                            return _itemsLookup.TryGetValue(@key, out item);
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Gets a valid enumeration item for provided <paramref name="key"/> if a valid item exists.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
+                                                         public static bool TryGet(global::System.ReadOnlySpan<char> @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            return _lookups.Value.Item2.TryGetValue(@key, out item);
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
@@ -9410,6 +10538,27 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
                                                             }
                                                          }
+
+                                                   #if NET9_0_OR_GREATER
+                                                         /// <summary>
+                                                         /// Validates the provided <paramref name="key"/> and returns a valid enumeration item if found.
+                                                         /// </summary>
+                                                         /// <param name="key">The identifier to return an enumeration item for.</param>
+                                                         /// <param name="provider">An object that provides culture-specific formatting information.</param>
+                                                         /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
+                                                         /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+                                                         public static global::Thinktecture.ValidationError? Validate(global::System.ReadOnlySpan<char> @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
+                                                         {
+                                                            if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
+                                                            {
+                                                               return null;
+                                                            }
+                                                            else
+                                                            {
+                                                               return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type 'TestEnum' with the identifier '{@key}'.");
+                                                            }
+                                                         }
+                                                   #endif
 
                                                          /// <summary>
                                                          /// Implicit conversion to the type <see cref="string"/>.
@@ -9578,7 +10727,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             }
                                                          }
 
-                                                         private static global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum> GetLookup()
+                                                         private static
+                                                   #if NET9_0_OR_GREATER
+                                                            (global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>, global::System.Collections.Frozen.FrozenDictionary<string, global::Thinktecture.Tests.TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>>)
+                                                   #else
+                                                            global::System.Collections.Generic.IReadOnlyDictionary<string, global::Thinktecture.Tests.TestEnum>
+                                                   #endif
+                                                             GetLookup()
                                                          {
                                                             var lookup = new global::System.Collections.Generic.Dictionary<string, global::Thinktecture.Tests.TestEnum>(2, global::System.StringComparer.OrdinalIgnoreCase);
 
@@ -9600,7 +10755,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                             AddItem(@Item2, nameof(@Item2));
 
                                                    #if NET8_0_OR_GREATER
-                                                            return global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                            var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup, global::System.StringComparer.OrdinalIgnoreCase);
+                                                   #if NET9_0_OR_GREATER
+                                                            return (frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>());
+                                                   #else
+                                                            return frozenDictionary;
+                                                   #endif
                                                    #else
                                                             return lookup;
                                                    #endif

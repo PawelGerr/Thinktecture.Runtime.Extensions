@@ -1,3 +1,4 @@
+using System;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTests;
@@ -36,6 +37,15 @@ public class TryGet
       item!.IsValid.Should().BeFalse();
       item!.Key.Should().Be("unknown");
    }
+
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_return_item_having_ReadOnlySpanOfChar()
+   {
+      TestEnum.TryGet(TestEnum.Item1.Key.AsSpan(), out var item).Should().BeTrue();
+      item.Should().Be(TestEnum.Item1);
+   }
+#endif
 
    [Fact]
    public void Should_return_true_if_item_with_provided_key_exists()

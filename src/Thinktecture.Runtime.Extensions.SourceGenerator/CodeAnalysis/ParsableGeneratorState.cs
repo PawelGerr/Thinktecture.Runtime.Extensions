@@ -7,6 +7,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    public ValidationErrorState ValidationError { get; }
    public bool SkipIParsable { get; }
    public bool IsKeyMemberParsable { get; }
+   public bool IsEnum { get; }
    public bool IsValidatableEnum { get; }
    public bool HasStringBasedValidateMethod { get; }
 
@@ -16,6 +17,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
       ValidationErrorState validationError,
       bool skipIParsable,
       bool isKeyMemberParsable,
+      bool isEnum,
       bool isValidatableEnum,
       bool hasStringBasedValidateMethod)
    {
@@ -24,6 +26,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
       ValidationError = validationError;
       SkipIParsable = skipIParsable;
       IsKeyMemberParsable = isKeyMemberParsable;
+      IsEnum = isEnum;
       IsValidatableEnum = isValidatableEnum;
       HasStringBasedValidateMethod = hasStringBasedValidateMethod;
    }
@@ -35,6 +38,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
              && ValidationError.Equals(other.ValidationError)
              && SkipIParsable == other.SkipIParsable
              && IsKeyMemberParsable == other.IsKeyMemberParsable
+             && IsEnum == other.IsEnum
              && IsValidatableEnum == other.IsValidatableEnum
              && HasStringBasedValidateMethod == other.HasStringBasedValidateMethod;
    }
@@ -53,6 +57,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsEnum.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValidatableEnum.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStringBasedValidateMethod.GetHashCode();
 

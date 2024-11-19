@@ -26,7 +26,7 @@ public class Get
    public void Should_return_invalid_item_via_reflection_if_enum_doesnt_have_any_items()
    {
       // ReSharper disable once PossibleNullReferenceException
-      var item = (EmptyEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+      var item = (EmptyEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy, [typeof(string)])
                                              .Invoke(null, new object[] { "unknown" });
 
       item.Should().NotBeNull();
@@ -41,6 +41,16 @@ public class Get
       item.IsValid.Should().BeFalse();
       item.Key.Should().Be("unknown");
    }
+
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_return_item_having_ReadOnlySpanOfChar()
+   {
+      var item = TestEnum.Get(TestEnum.Item1.Key.AsSpan());
+      item.IsValid.Should().BeTrue();
+      item.Key.Should().Be(TestEnum.Item1.Key);
+   }
+#endif
 
    [Fact]
    public void Should_throw_if_CreateInvalidItem_uses_key_of_valid_item()

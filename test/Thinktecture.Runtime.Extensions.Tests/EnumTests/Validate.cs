@@ -34,6 +34,17 @@ public class Validate
       item.Key.Should().Be("unknown");
    }
 
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_return_item_having_ReadOnlySpanOfChar()
+   {
+      var validationError = TestEnum.Validate(TestEnum.Item1.Key.AsSpan(), null, out var item);
+
+      validationError.Should().BeNull();
+      item.Should().Be(TestEnum.Item1);
+   }
+#endif
+
    [Fact]
    public void Should_return_invalid_item_if_enum_doesnt_have_item_with_provided_key()
    {

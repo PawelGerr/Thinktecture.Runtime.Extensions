@@ -9,6 +9,9 @@ namespace Thinktecture;
 // ReSharper disable once UnusedTypeParameter
 public interface IValueObjectFactory<TValue>
    where TValue : notnull
+#if NET9_0_OR_GREATER
+               , allows ref struct
+#endif
 // ReSharper disable once RedundantTypeDeclarationBody
 {
 }
@@ -24,6 +27,9 @@ public interface IValueObjectFactory<TValue>
 /// </remarks>
 public interface IValueObjectFactory<T, TValue, out TValidationError> : IValueObjectFactory<TValue>
    where TValue : notnull
+#if NET9_0_OR_GREATER
+               , allows ref struct
+#endif
    where TValidationError : class, IValidationError<TValidationError>
 {
    /// <summary>

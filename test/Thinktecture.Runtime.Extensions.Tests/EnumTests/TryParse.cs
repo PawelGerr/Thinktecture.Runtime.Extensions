@@ -19,6 +19,15 @@ public class TryParse
       caseSensitiveItem.Should().Be(TestEnumCaseSensitive.LowerCased);
    }
 
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_parse_ReadOnlySpanOfChar()
+   {
+      TestEnum.TryParse(TestEnum.Item1.Key.AsSpan(), null, out var item).Should().BeTrue();
+      item.Should().Be(TestEnum.Item1);
+   }
+#endif
+
    [Fact]
    public void Should_use_format_provider_parse_valid_value()
    {
