@@ -48,10 +48,13 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       IEnumerable<Assembly> additionalReferences,
       params DiagnosticResult[] expected)
    {
-      if (Environment.NewLine == "\n")
+      source = source.Replace("\r\n", "\n");
+      fixedSource = fixedSource.Replace("\r\n", "\n");
+
+      if (Environment.NewLine == "\r\n")
       {
-         source = source.Replace("\r\n", Environment.NewLine);
-         fixedSource = fixedSource.Replace("\r\n", Environment.NewLine);
+         source = source.Replace("\n", "\r\n");
+         fixedSource = fixedSource.Replace("\n", "\r\n");
       }
 
       var test = new CodeFixTest(source, fixedSource, additionalReferences, expected);

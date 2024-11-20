@@ -37,7 +37,7 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
                          	public abstract partial class TestEnum
                          	{
                                public static readonly TestEnum Item1 = default;
-                         
+
                                  private static TestEnum CreateInvalidItem(string key)
                                  {
                                      throw new global::System.NotImplementedException();
@@ -64,7 +64,7 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
                  	public abstract partial class {|#0:TestEnum|}
                  	{
                        public static readonly TestEnum Item1 = default;
-                 
+
                        private static TestEnum CreateInvalidItem(string key)
                        {
                           throw new System.NotImplementedException();

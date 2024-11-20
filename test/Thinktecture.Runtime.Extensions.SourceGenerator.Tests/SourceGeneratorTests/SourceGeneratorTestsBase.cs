@@ -123,12 +123,4 @@ public abstract class SourceGeneratorTestsBase
                               .Skip(1)
                               .ToDictionary(t => t.FilePath, t => t.ToString());
    }
-
-   protected static void AssertOutput(string output, string expectedOutput)
-   {
-      output = output?.Replace("\r\n", "\n");
-      expectedOutput = expectedOutput?.Replace("\r\n", "\n");
-
-      output.Should().Be(expectedOutput);
-   }
 }
