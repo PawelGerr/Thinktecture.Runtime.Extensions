@@ -13,6 +13,7 @@
         <NoWarn>$(NoWarn);CS1591;CA1707;NU1903;NETSDK1206;NU1904</NoWarn>
         <RootNamespace>Thinktecture.Runtime.Tests</RootNamespace>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TargetFramework></TargetFramework>
         <TargetFrameworks>net7.0;net8.0;net9.0</TargetFrameworks>
     </PropertyGroup>
@@ -22,6 +23,7 @@
         <PackageReference Include="FluentAssertions"/>
         <PackageReference Include="NSubstitute"/>
         <PackageReference Include="NSubstitute.Analyzers.CSharp"/>
+        <PackageReference Include="Verify.Xunit" />
         <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all"/>
     </ItemGroup>

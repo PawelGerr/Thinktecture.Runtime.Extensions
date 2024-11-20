@@ -7,3 +7,7 @@
 
 *\.sln\.DotSettings\.user
 *\.csproj\.user
+
+# Verify
+test/**/*.received.*
+test/**/*.received/

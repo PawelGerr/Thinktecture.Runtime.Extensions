@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using VerifyTests;
+using VerifyXunit;
 using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
@@ -12,11 +15,56 @@ public abstract class SourceGeneratorTestsBase
 {
    private const string _GENERATION_ERROR = "CS8785";
 
+   protected static readonly VerifySettings Settings;
+
+   static SourceGeneratorTestsBase()
+   {
+      Settings = new VerifySettings();
+      Settings.UseDirectory("Snapshots");
+   }
+
    private readonly ITestOutputHelper _output;
 
    protected SourceGeneratorTestsBase(ITestOutputHelper output)
    {
       _output = output ?? throw new ArgumentNullException(nameof(output));
+   }
+
+   protected async Task VerifyAsync(
+      IReadOnlyDictionary<string, string> outputs,
+      params string[] fileNames)
+   {
+      outputs.Should().HaveCount(fileNames.Length);
+
+      var verifyTasks = fileNames.Select((fileName, i) =>
+                                         {
+                                            string content;
+
+                                            try
+                                            {
+                                               content = outputs.Single(kvp => kvp.Key.Contains(fileName)).Value;
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                               throw new Exception($"Output file '{fileName}' not found. Available files: {String.Join(", ", outputs.Keys)}", ex);
+                                            }
+
+                                            var verify = Verifier.Verify(content, "cs", Settings);
+
+                                            if (fileNames.Length > 1)
+                                               verify = verify.UseTextForParameters(i.ToString());
+
+                                            return verify.ToTask();
+                                         })
+                                 .ToList();
+
+      await Task.WhenAll(verifyTasks);
+   }
+
+   protected async Task VerifyAsync(
+      string output)
+   {
+      await Verifier.Verify(output, "cs", Settings);
    }
 
    protected string GetGeneratedOutput<T>(
@@ -47,9 +95,9 @@ public abstract class SourceGeneratorTestsBase
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
       var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName?.Contains("Thinktecture") != true))
-                       {
-                          typeof(T).Assembly
-                       };
+      {
+         typeof(T).Assembly
+      };
 
       foreach (var furtherAssembly in furtherAssemblies)
       {
