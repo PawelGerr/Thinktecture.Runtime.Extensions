@@ -9,6 +9,7 @@ public static class SourceProductionContextExtensions
       string? typeNamespace,
       IReadOnlyList<ContainingTypeState> containingTypes,
       string typeName,
+      int numberOfGenerics,
       string? generatedCode,
       string? fileNameSuffix)
    {
@@ -16,7 +17,7 @@ public static class SourceProductionContextExtensions
          return;
 
       var containingTypeNames = containingTypes.Count == 0 ? null : String.Join(".", containingTypes.Select(t => t.Name)) + ".";
-      var hintName = $"{(typeNamespace is null ? null : $"{typeNamespace}.")}{containingTypeNames}{typeName}{fileNameSuffix}.g.cs";
+      var hintName = $"{(typeNamespace is null ? null : $"{typeNamespace}.")}{containingTypeNames}{typeName}{(numberOfGenerics > 0 ? $"`{numberOfGenerics}" : null)}{fileNameSuffix}.g.cs";
       context.AddSource(hintName, generatedCode!);
    }
 

@@ -6,6 +6,7 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
+   public IReadOnlyList<string> GenericsFullyQualified => [];
 
    public string? Namespace { get; }
    public string Name { get; }

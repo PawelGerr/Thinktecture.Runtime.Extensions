@@ -8,6 +8,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
+   public IReadOnlyList<string> GenericsFullyQualified => [];
 
    public KeyMemberState? KeyMember { get; }
    public ValidationErrorState ValidationError { get; }

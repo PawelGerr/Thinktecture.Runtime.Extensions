@@ -5,6 +5,7 @@ public sealed class AdHocUnionSourceGenState : ITypeInformation, IEquatable<AdHo
    public string? Namespace { get; }
    public string Name { get; }
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
+
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsReferenceType { get; }
@@ -14,6 +15,7 @@ public sealed class AdHocUnionSourceGenState : ITypeInformation, IEquatable<AdHo
    public bool IsEqualWithReferenceEquality => false;
 
    public IReadOnlyList<AdHocUnionMemberTypeState> MemberTypes { get; }
+   public IReadOnlyList<string> GenericsFullyQualified => [];
    public AdHocUnionSettings Settings { get; }
 
    public AdHocUnionSourceGenState(

@@ -40,6 +40,39 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_record_with_and_without_generic()
+   {
+      var source = """
+                   using System;
+                   using Thinktecture;
+
+                   namespace Thinktecture.Tests
+                   {
+                      [Union]
+                      public partial record Result<T>
+                      {
+                         public partial record Success(T Value) : Result<T>;
+
+                         public partial record Failure(string Error) : Result<T>;
+                      }
+
+                      [Union]
+                      public partial record Result
+                      {
+                         public partial record Success : Result;
+
+                         public partial record Failure(string Error) : Result;
+                      }
+                   }
+                   """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.g.cs",
                         "Thinktecture.Tests.Result.g.cs");
    }
 
