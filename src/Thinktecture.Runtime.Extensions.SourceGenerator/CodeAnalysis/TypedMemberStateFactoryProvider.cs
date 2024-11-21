@@ -7,12 +7,15 @@ public class TypedMemberStateFactoryProvider
 {
    private static readonly object _lock7 = new();
    private static readonly object _lock8 = new();
+   private static readonly object _lock9 = new();
 
    private static readonly Version _version7 = new(7, 0, 0, 0);
    private static readonly Version _version8 = new(8, 0, 0, 0);
+   private static readonly Version _version9 = new(9, 0, 0, 0);
 
    private static TypedMemberStateFactory? _dotnet7;
    private static TypedMemberStateFactory? _dotnet8;
+   private static TypedMemberStateFactory? _dotnet9;
 
    private static readonly ConcurrentDictionary<Version, TypedMemberStateFactory> _factoriesByVersion = new();
 
@@ -31,40 +34,13 @@ public class TypedMemberStateFactoryProvider
          version = dotnetVersion;
 
       if (version == _version7)
-      {
-         var factory = _dotnet7;
-
-         if (factory is not null)
-            return factory;
-
-         lock (_lock7)
-         {
-            if (_dotnet7 is not null)
-               return _dotnet7;
-
-            logger.LogDebug("Create TypedMemberStateFactory for .NET 7");
-
-            return _dotnet7 = TypedMemberStateFactory.Create(compilation);
-         }
-      }
+         return GetFactory(compilation, logger, _version7, _lock7, ref _dotnet7);
 
       if (version == _version8)
-      {
-         var factory = _dotnet8;
+         return GetFactory(compilation, logger, _version8, _lock8, ref _dotnet8);
 
-         if (factory is not null)
-            return factory;
-
-         lock (_lock8)
-         {
-            if (_dotnet8 is not null)
-               return _dotnet8;
-
-            logger.LogDebug("Create TypedMemberStateFactory for .NET 8");
-
-            return _dotnet8 = TypedMemberStateFactory.Create(compilation);
-         }
-      }
+      if (version == _version9)
+         return GetFactory(compilation, logger, _version9, _lock9, ref _dotnet9);
 
       if (version is null)
       {
@@ -79,5 +55,28 @@ public class TypedMemberStateFactoryProvider
 
                                                       return TypedMemberStateFactory.Create(compilation);
                                                    });
+   }
+
+   private static TypedMemberStateFactory GetFactory(
+      Compilation compilation,
+      ILogger logger,
+      Version dotnetVersion,
+      object lockObj,
+      ref TypedMemberStateFactory? cachedFactory)
+   {
+      var factory = cachedFactory;
+
+      if (factory is not null)
+         return factory;
+
+      lock (lockObj)
+      {
+         if (cachedFactory is not null)
+            return cachedFactory;
+
+         logger.LogDebug($"Create TypedMemberStateFactory for .NET {dotnetVersion}");
+
+         return cachedFactory = TypedMemberStateFactory.Create(compilation);
+      }
    }
 }
