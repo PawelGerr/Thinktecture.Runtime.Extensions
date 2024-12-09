@@ -1,22 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-      <Description>Source generators for Thinktecture.Runtime.Extensions.</Description>
-      <TargetFramework>netstandard2.0</TargetFramework>
-      <PackageTags>sourcegenerator</PackageTags>
-      <NoWarn>$(NoWarn);CS1591;RS2008;NU5128</NoWarn>
-      <IncludeBuildOutput>false</IncludeBuildOutput>
-      <IncludeSymbols>false</IncludeSymbols>
-      <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-   </PropertyGroup>
-   <ItemGroup>
-      <Using Include="Microsoft.CodeAnalysis" />
-      <Using Include="System.Collections.Immutable" />
-   </ItemGroup>
-   <ItemGroup>
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" PrivateAssets="all" />
-   </ItemGroup>
-   <ItemGroup>
-      <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-      <None Include="$(OutputPath)\$(AssemblyName).xml" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-   </ItemGroup>
+
+  <PropertyGroup>
+    <Description>Source generators for Thinktecture.Runtime.Extensions.</Description>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageTags>sourcegenerator</PackageTags>
+    <NoWarn>$(NoWarn);CS1591;RS2008;NU5128</NoWarn>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.CodeAnalysis" />
+    <Using Include="System.Collections.Immutable" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\$(AssemblyName).xml" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
 </Project>

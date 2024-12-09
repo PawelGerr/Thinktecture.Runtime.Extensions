@@ -2,7 +2,6 @@
 ![TestResults](https://gist.githubusercontent.com/PawelGerr/043909cfb348b36187d02222da1f372e/raw/badge.svg)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/Thinktecture.Runtime.Extensions)
 
-
 [![Thinktecture.Runtime.Extensions](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.svg?maxAge=60&label=Thinktecture.Runtime.Extensions)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore6](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore6.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore6)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore6/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore7](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore7)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore7/)  
@@ -20,8 +19,8 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 * [Smart Enum](#smart-enums)
 * [Value Objects](#value-objects)
 * [Discriminated Unions](#discriminated-unions) (requires version 8.x.x)
-  * [Ad hoc unions](#ad-hoc-unions)
-  * [Regular unions](#regular-unions)
+    * [Ad hoc unions](#ad-hoc-unions)
+    * [Regular unions](#regular-unions)
 
 # Documentation
 
@@ -30,22 +29,25 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 ## **[Ideas and real-world use cases](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#real-world-use-cases-and-ideas)**
 
 Smart Enums:
+
 * [CSV-Importer-Type](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#csv-importer-type)
 
 Value objects:
+
 * [Open-ended End Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#open-ended-end-date)
 * [(Always-positive) Amount](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#always-positive-amount)
 
 # Requirements
 
 * Version 8:
-  * C# 11 (or higher) for generated code
-  * SDK 8.0.400 (or higher) for building projects
+    * C# 11 (or higher) for generated code
+    * SDK 8.0.400 (or higher) for building projects
 * Version 7:
-  * C# 11 (or higher) for generated code
-  * SDK 7.0.401 (or higher) for building projects
+    * C# 11 (or higher) for generated code
+    * SDK 7.0.401 (or higher) for building projects
 
 # Migrations
+
 * [Migration from v7 to v8](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v7-to-v8)
 * [Migration from v6 to v7](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v6-to-v7)
 
@@ -56,6 +58,7 @@ Install: `Install-Package Thinktecture.Runtime.Extensions`
 Documentation: [Smart Enums](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums)
 
 Features:
+
 * Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
 * [Allows iteration over all items](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#what-is-implemented-for-you)
 * [Allows custom properties and methods](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-fields-properties-and-methods)
@@ -259,6 +262,7 @@ Install: `Install-Package Thinktecture.Runtime.Extensions`
 Documentation: [Value Objects](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects)
 
 Features:
+
 * Roslyn Analyzers and CodeFixes help the developers to implement the Value Objects correctly
 * Choice between [Simple Value Objects](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#simple-value-objects) and [Complex Value Objects](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#complex-value-objects)
 * Allows custom fields, properties and methods
@@ -475,6 +479,7 @@ There are 2 types of unions: `ad hoc union` and `"regular" unions`
 ## Ad hoc unions
 
 Features:
+
 * Roslyn Analyzers and CodeFixes help the developers to implement the unions correctly
 * Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
 * Switch-Case/Map
@@ -588,10 +593,11 @@ int number = textOrNumberFromInt.AsNumber;
 textOrNumberFromString.Switch(text: s => logger.Information("[Switch] String Action: {Text}", s),
                               number: i => logger.Information("[Switch] Int Action: {Number}", i));
 ```
-    
+
 ## Regular unions
 
 Features:
+
 * Roslyn Analyzers and CodeFixes help the developers to implement the unions correctly
 * Can be a `class` or `record`
 * Switch-Case/Map
@@ -599,6 +605,7 @@ Features:
 * Derived types can be simple classes or something complex like a [value object](#value-objects).
 
 Simple union using a class and a value object:
+
 ```csharp
 [Union]
 public partial class Animal
@@ -642,7 +649,7 @@ public partial class Animal
 }
 ```
 
-A `record` with a generic: 
+A `record` with a generic:
 
 ```csharp
 [Union]

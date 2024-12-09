@@ -13,18 +13,18 @@ public class TTRESG010_NonValidatableEnumsMustBeClass
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial struct {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial struct {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -35,18 +35,18 @@ public class TTRESG010_NonValidatableEnumsMustBeClass
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

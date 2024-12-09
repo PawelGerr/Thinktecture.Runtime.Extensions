@@ -15,18 +15,18 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>]
-                       public partial class {|#0:TestEnum|}()
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>]
+               public partial class {|#0:TestEnum|}()
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
@@ -37,18 +37,18 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                       public partial struct {|#0:TestEnum|}()
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+               public partial struct {|#0:TestEnum|}()
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
@@ -62,17 +62,17 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                       public partial class {|#0:ValueObject|}()
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+               public partial class {|#0:ValueObject|}()
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
@@ -83,17 +83,17 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                       public partial struct {|#0:ValueObject|}()
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+               public partial struct {|#0:ValueObject|}()
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
@@ -107,17 +107,17 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                       public partial class {|#0:ValueObject|}()
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class {|#0:ValueObject|}()
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
@@ -128,17 +128,17 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                       public partial struct {|#0:ValueObject|}()
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial struct {|#0:ValueObject|}()
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
@@ -152,15 +152,15 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public partial class {|#0:TestUnion|}();
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public partial class {|#0:TestUnion|}();
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly], expected);
@@ -171,15 +171,15 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public partial struct {|#0:TestUnion|}();
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public partial struct {|#0:TestUnion|}();
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly], expected);
@@ -190,15 +190,15 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public ref partial struct {|#0:TestUnion|}();
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public ref partial struct {|#0:TestUnion|}();
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly], expected);
@@ -212,15 +212,15 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                       public partial class {|#0:TestUnion|}();
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+               public partial class {|#0:TestUnion|}();
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly], expected);
@@ -231,15 +231,15 @@ public class TTRESG043_PrimaryConstructorNotAllowed
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                       public partial record {|#0:TestUnion|}();
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+               public partial record {|#0:TestUnion|}();
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly], expected);

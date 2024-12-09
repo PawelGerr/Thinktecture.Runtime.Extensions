@@ -15,35 +15,35 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static TestEnum {|#0:Item1|} = default;
-                          public static readonly TestEnum Item2 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static TestEnum {|#0:Item1|} = default;
+                  public static readonly TestEnum Item2 = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [SmartEnum<string>(IsValidatable = true)]
-                            	public partial class TestEnum
-                            	{
-                                  public static readonly TestEnum Item1 = default;
-                                  public static readonly TestEnum Item2 = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+                  public static readonly TestEnum Item2 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -54,37 +54,37 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public static object {|#0:SomeStaticField|} = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static object {|#0:SomeStaticField|} = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [SmartEnum<string>(IsValidatable = true)]
-                            	public partial class TestEnum
-                            	{
-                                  public static readonly TestEnum Item1 = default;
-
-                                  public static readonly object {|#0:SomeStaticField|} = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static readonly object {|#0:SomeStaticField|} = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("SomeStaticField", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -95,37 +95,37 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public int {|#0:InstanceField|};
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public int {|#0:InstanceField|};
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [SmartEnum<string>(IsValidatable = true)]
-                            	public partial class TestEnum
-                            	{
-                                  public static readonly TestEnum Item1 = default;
-
-                                  public readonly int InstanceField;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public readonly int InstanceField;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceField", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -136,20 +136,20 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public readonly int {|#0:InstanceField|};
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public readonly int {|#0:InstanceField|};
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -162,33 +162,33 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          public static object {|#0:Field|} = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public static object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class TestValueObject
-                            	{
-                                  public static readonly object {|#0:Field|} = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public static readonly object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -199,33 +199,33 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          public object {|#0:Field|} = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class TestValueObject
-                            	{
-                                  public readonly object {|#0:Field|} = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public readonly object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -239,33 +239,33 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          public static object {|#0:Field|} = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public static object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class TestValueObject
-                            	{
-                                  public static readonly object {|#0:Field|} = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public static readonly object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -276,33 +276,33 @@ public class TTRESG001_FieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          public object {|#0:Field|} = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class TestValueObject
-                            	{
-                                  public readonly object {|#0:Field|} = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public readonly object {|#0:Field|} = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);

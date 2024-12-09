@@ -16,18 +16,18 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [ValueObject<string>]
-                   	public partial class TestValueObject
-                   	{
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+         	public partial class TestValueObject
+         	{
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -40,15 +40,15 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   [ValueObject<string>]
-                   public partial class TestValueObject
-                   {
-                   }
+         [ValueObject<string>]
+         public partial class TestValueObject
+         {
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -61,18 +61,18 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [ValueObject<string>]
-                   	public partial struct TestValueObject
-                   	{
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -85,21 +85,21 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                         public readonly string ReferenceField;
-                         public int StructProperty { get; }
-                         public decimal? NullableStructProperty { get; }
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public readonly string ReferenceField;
+               public int StructProperty { get; }
+               public decimal? NullableStructProperty { get; }
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -112,21 +112,21 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [ComplexValueObject]
-                   	public partial struct TestValueObject
-                   	{
-                         public readonly string ReferenceField;
-                         public int StructProperty { get; }
-                         public decimal? NullableStructProperty { get; }
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial struct TestValueObject
+         	{
+               public readonly string ReferenceField;
+               public int StructProperty { get; }
+               public decimal? NullableStructProperty { get; }
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -139,21 +139,21 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [ComplexValueObject]
-                   	public partial struct TestValueObject
-                   	{
-                         public readonly string ReferenceField;
-                         public int StructProperty { get; }
-                         public decimal? NullableStructProperty { get; }
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial struct TestValueObject
+         	{
+               public readonly string ReferenceField;
+               public int StructProperty { get; }
+               public decimal? NullableStructProperty { get; }
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -166,18 +166,18 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   [ComplexValueObject]
-                   public partial struct TestValueObject
-                   {
-                      public readonly string ReferenceField;
-                      public int StructProperty { get; }
-                      public decimal? NullableStructProperty { get; }
-                   }
+         [ComplexValueObject]
+         public partial struct TestValueObject
+         {
+            public readonly string ReferenceField;
+            public int StructProperty { get; }
+            public decimal? NullableStructProperty { get; }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);

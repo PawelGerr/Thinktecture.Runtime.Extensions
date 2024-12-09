@@ -13,18 +13,18 @@ public class TTRESG012_EnumKeyPropertyNameNotAllowed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Item"|})]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Item"|})]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -35,18 +35,18 @@ public class TTRESG012_EnumKeyPropertyNameNotAllowed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Foo"|})]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Foo"|})]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

@@ -15,17 +15,17 @@ public class TTRESG044_CustomKeyMemberImplementationNotFound
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>(SkipKeyMember = true)]
-                       public partial class {|#0:ValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>(SkipKeyMember = true)]
+               public partial class {|#0:ValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -36,18 +36,18 @@ public class TTRESG044_CustomKeyMemberImplementationNotFound
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>(SkipKeyMember = true)]
-                       public partial class {|#0:ValueObject|}
-                    	{
-                          private readonly string _value;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>(SkipKeyMember = true)]
+               public partial class {|#0:ValueObject|}
+            	{
+                  private readonly string _value;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }

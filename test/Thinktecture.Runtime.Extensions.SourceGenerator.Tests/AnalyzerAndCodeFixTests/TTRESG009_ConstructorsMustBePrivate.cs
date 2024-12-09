@@ -15,22 +15,22 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          protected {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  protected {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -41,22 +41,22 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          private protected {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  private protected {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -67,22 +67,22 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          private {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  private {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -95,20 +95,20 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                    	public partial class TestEnum
-                    	{
-                          protected {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+            	public partial class TestEnum
+            	{
+                  protected {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly }, expected);
@@ -119,20 +119,20 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                    	public partial class TestEnum
-                    	{
-                          private protected {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+            	public partial class TestEnum
+            	{
+                  private protected {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly }, expected);
@@ -143,20 +143,20 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                    	public partial class TestEnum
-                    	{
-                          private {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+            	public partial class TestEnum
+            	{
+                  private {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly });
       }
@@ -169,20 +169,20 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                    	public partial record TestEnum
-                    	{
-                          protected {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+            	public partial record TestEnum
+            	{
+                  protected {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly }, expected);
@@ -193,20 +193,20 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                    	public partial record TestEnum
-                    	{
-                          private protected {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+            	public partial record TestEnum
+            	{
+                  private protected {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly }, expected);
@@ -217,20 +217,20 @@ public class TTRESG009_ConstructorsMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                    	public partial record TestEnum
-                    	{
-                          private {|#0:TestEnum|}()
-                          {
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+            	public partial record TestEnum
+            	{
+                  private {|#0:TestEnum|}()
+                  {
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly });
       }

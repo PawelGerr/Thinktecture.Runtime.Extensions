@@ -24,13 +24,13 @@ public class Switch
             string calledActionOn = null;
 
             value.Switch(child1: v =>
-                                 {
-                                    calledActionOn = v.Name;
-                                 },
+                         {
+                            calledActionOn = v.Name;
+                         },
                          child2: v =>
-                                 {
-                                    calledActionOn = v.Name;
-                                 });
+                         {
+                            calledActionOn = v.Name;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -56,15 +56,15 @@ public class Switch
 
             value.Switch(state,
                          child1: (s, v) =>
-                                 {
-                                    s.Should().Be(s);
-                                    calledActionOn = v.Name;
-                                 },
+                         {
+                            s.Should().Be(s);
+                            calledActionOn = v.Name;
+                         },
                          child2: (s, v) =>
-                                 {
-                                    s.Should().Be(state);
-                                    calledActionOn = v.Name;
-                                 });
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v.Name;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -161,15 +161,15 @@ public class Switch
             var state = new object();
             var calledActionOn = value.Switch(state,
                                               child1: (s, v) =>
-                                                      {
-                                                         s.Should().Be(state);
-                                                         return v.Name;
-                                                      },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v.Name;
+                                              },
                                               child2: (s, v) =>
-                                                      {
-                                                         s.Should().Be(state);
-                                                         return v.Name;
-                                                      });
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v.Name;
+                                              });
 
             calledActionOn.Should().Be(expected);
          }
@@ -224,13 +224,13 @@ public class Switch
             string calledActionOn = null;
 
             value.Switch(child1: v =>
-                                 {
-                                    calledActionOn = v.Name;
-                                 },
+                         {
+                            calledActionOn = v.Name;
+                         },
                          child2: v =>
-                                 {
-                                    calledActionOn = v.Name;
-                                 });
+                         {
+                            calledActionOn = v.Name;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -256,15 +256,15 @@ public class Switch
 
             value.Switch(state,
                          child1: (s, v) =>
-                                 {
-                                    s.Should().Be(s);
-                                    calledActionOn = v.Name;
-                                 },
+                         {
+                            s.Should().Be(s);
+                            calledActionOn = v.Name;
+                         },
                          child2: (s, v) =>
-                                 {
-                                    s.Should().Be(state);
-                                    calledActionOn = v.Name;
-                                 });
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v.Name;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -308,15 +308,15 @@ public class Switch
             var state = new object();
             var calledActionOn = value.Switch(state,
                                               child1: (s, v) =>
-                                                      {
-                                                         s.Should().Be(state);
-                                                         return v.Name;
-                                                      },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v.Name;
+                                              },
                                               child2: (s, v) =>
-                                                      {
-                                                         s.Should().Be(state);
-                                                         return v.Name;
-                                                      });
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v.Name;
+                                              });
 
             calledActionOn.Should().Be(expected);
          }

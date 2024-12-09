@@ -186,14 +186,14 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             {
                case INamedTypeSymbol namedTypeSymbol:
                   memberTypeName = AdHocUnionMemberTypeState.GetMemberName(memberTypeSettings,
-                                                                 duplicateIndex,
-                                                                 namedTypeSymbol,
-                                                                 typeState);
+                                                                           duplicateIndex,
+                                                                           namedTypeSymbol,
+                                                                           typeState);
                   break;
                case IArrayTypeSymbol arrayTypeSymbol:
                   memberTypeName = AdHocUnionMemberTypeState.GetMemberName(memberTypeSettings,
-                                                                 duplicateIndex,
-                                                                 arrayTypeSymbol);
+                                                                           duplicateIndex,
+                                                                           arrayTypeSymbol);
                   break;
                default:
                   Logger.LogError("Type of the member must be a named type or array type", tds);
@@ -201,15 +201,15 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             }
 
             memberTypeStates[i] = new AdHocUnionMemberTypeState(memberTypeName.Name,
-                                                      memberTypeName.DefaultName,
-                                                      duplicateIndex,
-                                                      typeState,
-                                                      memberTypeSettings);
+                                                                memberTypeName.DefaultName,
+                                                                duplicateIndex,
+                                                                typeState,
+                                                                memberTypeSettings);
          }
 
          var unionState = new AdHocUnionSourceGenState(type,
-                                                  memberTypeStates,
-                                                  settings);
+                                                       memberTypeStates,
+                                                       settings);
 
          Logger.LogDebug("The type declaration is a valid union", null, unionState);
 

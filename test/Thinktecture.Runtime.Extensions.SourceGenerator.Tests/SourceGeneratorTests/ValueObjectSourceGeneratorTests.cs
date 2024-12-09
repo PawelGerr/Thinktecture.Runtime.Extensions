@@ -16,24 +16,24 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                         public string? Prop1 { get; }
-                         public Func<string?, Task<string?>?>? Prop2 { get; }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public string? Prop1 { get; }
+               public Func<string?, Task<string?>?>? Prop2 { get; }
+         
+               static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string? prop1, ref Func<string?, Task<string?>?>? prop2)
+               {
+               }
+           }
+         }
 
-                         static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string? prop1, ref Func<string?, Task<string?>?>? prop2)
-                         {
-                         }
-                     }
-                   }
-
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -44,22 +44,22 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                         static partial int ValidateFactoryArguments(ref ValidationError? validationError)
-                         {
-                            return 42;
-                         }
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               static partial int ValidateFactoryArguments(ref ValidationError? validationError)
+               {
+                  return 42;
+               }
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -70,24 +70,24 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   #nullable enable
+         #nullable enable
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                         static partial string? ValidateFactoryArguments(ref ValidationError? validationError)
-                         {
-                            return String.Empty;
-                         }
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               static partial string? ValidateFactoryArguments(ref ValidationError? validationError)
+               {
+                  return String.Empty;
+               }
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -98,18 +98,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<int>]
-                   	public partial class TestValueObject<T>
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>]
+         	public partial class TestValueObject<T>
+         	{
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
       output.Should().BeNull();
    }
@@ -119,18 +119,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial class TestValueObject<T>
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial class TestValueObject<T>
+         	{
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
       output.Should().BeNull();
    }
@@ -140,15 +140,15 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   [ComplexValueObject]
-                   public partial class TestValueObject
-                   {
-                   }
+         [ComplexValueObject]
+         public partial class TestValueObject
+         {
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -159,18 +159,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -181,18 +181,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<int>(SkipFactoryMethods = true)]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(SkipFactoryMethods = true)]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -208,18 +208,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial struct TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial struct TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -230,19 +230,19 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject(DefaultInstancePropertyName = "Null",
-                                         AllowDefaultStructs = true)]
-                   	public partial struct TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject(DefaultInstancePropertyName = "Null",
+                               AllowDefaultStructs = true)]
+         	public partial struct TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -253,18 +253,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>]
-                   	public partial struct TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>]
+         	public partial struct TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -280,18 +280,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<int>]
-                   	public partial struct TestValueObject
-                   	{
-                   	}
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>]
+         	public partial struct TestValueObject
+         	{
+         	}
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -312,19 +312,19 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<int>(DefaultInstancePropertyName = "Null",
-                                       AllowDefaultStructs = true)]
-                   	public partial struct TestValueObject
-                   	{
-                   	}
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(DefaultInstancePropertyName = "Null",
+                             AllowDefaultStructs = true)]
+         	public partial struct TestValueObject
+         	{
+         	}
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -345,19 +345,19 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<int>(SkipKeyMember = true)]
-                   	public partial struct TestValueObject
-                   	{
-                         public readonly int _value { get; private init; }
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(SkipKeyMember = true)]
+         	public partial struct TestValueObject
+         	{
+               public readonly int _value { get; private init; }
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -378,18 +378,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
-                   	public partial struct TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
+         	public partial struct TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -405,18 +405,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
-                   	public partial struct TestValueObject
-                   	{
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -432,18 +432,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -459,18 +459,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<int>]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -491,18 +491,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<DateOnly>(KeyMemberName = "_value")]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<DateOnly>(KeyMemberName = "_value")]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -519,18 +519,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<DateOnly>(EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<DateOnly>(EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -547,22 +547,22 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<int>(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
-                                AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
-                                SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
-                                MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
-                                DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                      AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                      SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                      MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                      DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -583,18 +583,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
-                   	public partial class TestValueObject
-                   	{
-                   	}
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
+         	public partial class TestValueObject
+         	{
+         	}
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -610,18 +610,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
-                   	public partial class TestValueObject
-                   	{
-                   	}
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
+         	public partial class TestValueObject
+         	{
+         	}
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -637,19 +637,19 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>]
-                   	public partial class TestValueObject
-                   	{
-                         public readonly string OtherField;
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>]
+         	public partial class TestValueObject
+         	{
+               public readonly string OtherField;
+            }
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -665,20 +665,20 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>]
-                     [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-                     [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
-                   	public partial class TestValueObject
-                   	{
-                   	}
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>]
+           [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+           [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
+         	public partial class TestValueObject
+         	{
+         	}
+         }
 
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -694,23 +694,23 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<Foo>]
-                     [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<Foo>, Foo>]
-                   	public partial class TestValueObject
-                   	{
-                     }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<Foo>]
+           [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<Foo>, Foo>]
+         	public partial class TestValueObject
+         	{
+           }
+         
+           public class Foo
+           {
+           }
+         }
 
-                     public class Foo
-                     {
-                     }
-                   }
-
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -723,45 +723,45 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                         [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-                         public readonly string _stringValue;
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               public readonly string _stringValue;
+         
+               [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               public readonly int _intValue;
+         
+               public string ReferenceProperty { get; }
+               public string? NullableReferenceProperty { get; }
+               public int StructProperty { get; }
+               public int? NullableStructProperty { get; }
+         
+               public int ExpressionBodyProperty => 42;
+         
+               public int GetterExpressionProperty
+               {
+                  get => 42;
+               }
+         
+               public int GetterBodyProperty
+               {
+                  get { return 42; }
+               }
+         
+               public int SetterProperty
+               {
+                  set { }
+               }
+            }
+         }
 
-                         [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                         public readonly int _intValue;
-
-                         public string ReferenceProperty { get; }
-                         public string? NullableReferenceProperty { get; }
-                         public int StructProperty { get; }
-                         public int? NullableStructProperty { get; }
-
-                         public int ExpressionBodyProperty => 42;
-
-                         public int GetterExpressionProperty
-                         {
-                            get => 42;
-                         }
-
-                         public int GetterBodyProperty
-                         {
-                            get { return 42; }
-                         }
-
-                         public int SetterProperty
-                         {
-                            set { }
-                         }
-                      }
-                   }
-
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
@@ -772,46 +772,46 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                     [ValueObjectFactory<string>]
-                   	public partial class TestValueObject
-                   	{
-                         [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-                         public readonly string _stringValue;
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+           [ValueObjectFactory<string>]
+         	public partial class TestValueObject
+         	{
+               [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               public readonly string _stringValue;
+         
+               [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               public readonly int _intValue;
+         
+               public string ReferenceProperty { get; }
+               public string? NullableReferenceProperty { get; }
+               public int StructProperty { get; }
+               public int? NullableStructProperty { get; }
+         
+               public int ExpressionBodyProperty => 42;
+         
+               public int GetterExpressionProperty
+               {
+                  get => 42;
+               }
+         
+               public int GetterBodyProperty
+               {
+                  get { return 42; }
+               }
+         
+               public int SetterProperty
+               {
+                  set { }
+               }
+            }
+         }
 
-                         [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                         public readonly int _intValue;
-
-                         public string ReferenceProperty { get; }
-                         public string? NullableReferenceProperty { get; }
-                         public int StructProperty { get; }
-                         public int? NullableStructProperty { get; }
-
-                         public int ExpressionBodyProperty => 42;
-
-                         public int GetterExpressionProperty
-                         {
-                            get => 42;
-                         }
-
-                         public int GetterBodyProperty
-                         {
-                            get { return 42; }
-                         }
-
-                         public int SetterProperty
-                         {
-                            set { }
-                         }
-                      }
-                   }
-
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -824,46 +824,46 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                     [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-                   	public partial class TestValueObject
-                   	{
-                         [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-                         public readonly string _stringValue;
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+           [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+         	public partial class TestValueObject
+         	{
+               [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               public readonly string _stringValue;
+         
+               [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               public readonly int _intValue;
+         
+               public string ReferenceProperty { get; }
+               public string? NullableReferenceProperty { get; }
+               public int StructProperty { get; }
+               public int? NullableStructProperty { get; }
+         
+               public int ExpressionBodyProperty => 42;
+         
+               public int GetterExpressionProperty
+               {
+                  get => 42;
+               }
+         
+               public int GetterBodyProperty
+               {
+                  get { return 42; }
+               }
+         
+               public int SetterProperty
+               {
+                  set { }
+               }
+            }
+         }
 
-                         [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                         public readonly int _intValue;
-
-                         public string ReferenceProperty { get; }
-                         public string? NullableReferenceProperty { get; }
-                         public int StructProperty { get; }
-                         public int? NullableStructProperty { get; }
-
-                         public int ExpressionBodyProperty => 42;
-
-                         public int GetterExpressionProperty
-                         {
-                            get => 42;
-                         }
-
-                         public int GetterBodyProperty
-                         {
-                            get { return 42; }
-                         }
-
-                         public int SetterProperty
-                         {
-                            set { }
-                         }
-                      }
-                   }
-
-                   """;
+         """;
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
@@ -876,27 +876,27 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                         public readonly string _value1;
-                         public readonly string _value2;
-                         public readonly string _value3;
-                         public readonly string _value4;
-                         public readonly string _value5;
-                         public readonly string _value6;
-                         public readonly string _value7;
-                         public readonly string _value8;
-                         public readonly string _value9;
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public readonly string _value1;
+               public readonly string _value2;
+               public readonly string _value3;
+               public readonly string _value4;
+               public readonly string _value5;
+               public readonly string _value6;
+               public readonly string _value7;
+               public readonly string _value8;
+               public readonly string _value9;
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);

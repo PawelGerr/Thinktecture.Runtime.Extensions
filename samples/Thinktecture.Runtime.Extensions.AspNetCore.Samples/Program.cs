@@ -54,9 +54,9 @@ public class Program
       await DoRequestAsync(logger, client, "productType/groceries");
       await DoRequestAsync(logger, client, "productType?productType=groceries");
       await DoRequestAsync(logger, client, "productType", "groceries");
-      await DoRequestAsync(logger, client, "productType/invalid"); // invalid
-      await DoRequestAsync(logger, client, "boundaryWithFactories/1:2");        // uses custom factory "[ValueObjectFactory<string>]"
-      await DoRequestAsync(logger, client, "boundaryWithFactories/invalid");    // invalid
+      await DoRequestAsync(logger, client, "productType/invalid");           // invalid
+      await DoRequestAsync(logger, client, "boundaryWithFactories/1:2");     // uses custom factory "[ValueObjectFactory<string>]"
+      await DoRequestAsync(logger, client, "boundaryWithFactories/invalid"); // invalid
 
       if (forMinimalWebApi)
          await DoRequestAsync(logger, client, "productTypeWithFilter?productType=invalid"); // invalid
@@ -116,23 +116,20 @@ public class Program
    {
       var webHost = new HostBuilder()
                     .ConfigureWebHostDefaults(builder =>
-                                              {
-                                                 builder.UseKestrel()
-                                                        .Configure(app =>
-                                                                   {
-                                                                      app.UseRouting();
-                                                                      app.UseEndpoints(endpoints => endpoints.MapControllers());
-                                                                   });
-                                              })
+                    {
+                       builder.UseKestrel()
+                              .Configure(app =>
+                              {
+                                 app.UseRouting();
+                                 app.UseEndpoints(endpoints => endpoints.MapControllers());
+                              });
+                    })
                     .ConfigureServices(collection =>
-                                       {
-                                          collection.AddSingleton(loggerFactory);
-                                          collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
-                                                    .AddJsonOptions(options =>
-                                                                    {
-                                                                       options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
-                                                                    });
-                                       })
+                    {
+                       collection.AddSingleton(loggerFactory);
+                       collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
+                                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory()));
+                    })
                     .Build();
 
       return webHost.StartAsync();
@@ -144,9 +141,9 @@ public class Program
       builder.Services
              .AddSingleton(loggerFactory)
              .ConfigureHttpJsonOptions(options =>
-                                       {
-                                          options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
-                                       });
+             {
+                options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
+             });
 
       var app = builder.Build();
 
@@ -160,14 +157,14 @@ public class Program
       routeGroup.MapGet("productType", (ProductType productType) => productType);
       routeGroup.MapGet("productTypeWithFilter", (BoundValueObject<ProductType, ProductTypeValidationError> productType) => ValueTask.FromResult(productType.Value))
                 .AddEndpointFilter((context, next) =>
-                                   {
-                                      var value = context.GetArgument<IBoundParam>(0);
+                {
+                   var value = context.GetArgument<IBoundParam>(0);
 
-                                      if (value.Error is not null)
-                                         return new ValueTask<object?>(Results.BadRequest(value.Error));
+                   if (value.Error is not null)
+                      return new ValueTask<object?>(Results.BadRequest(value.Error));
 
-                                      return next(context);
-                                   });
+                   return next(context);
+                });
       routeGroup.MapGet("boundaryWithFactories/{boundary}", (BoundaryWithFactories boundary) => boundary);
       routeGroup.MapPost("productType", ([FromBody] ProductType productType) => productType);
       routeGroup.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);

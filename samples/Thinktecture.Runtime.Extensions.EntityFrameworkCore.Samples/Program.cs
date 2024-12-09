@@ -99,35 +99,35 @@ public class Program
    {
       return new ServiceCollection()
              .AddLogging(builder =>
-                         {
-                            var serilogLogger = new LoggerConfiguration()
-                                                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
-                                                .Destructure.AsScalar<ProductCategory>()
-                                                .Destructure.AsScalar<ProductName>()
-                                                .MinimumLevel.ControlledBy(loggingLevelSwitch)
-                                                .CreateLogger();
+             {
+                var serilogLogger = new LoggerConfiguration()
+                                    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
+                                    .Destructure.AsScalar<ProductCategory>()
+                                    .Destructure.AsScalar<ProductName>()
+                                    .MinimumLevel.ControlledBy(loggingLevelSwitch)
+                                    .CreateLogger();
 
-                            builder.AddSerilog(serilogLogger);
-                         })
+                builder.AddSerilog(serilogLogger);
+             })
              .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true;TrustServerCertificate=true")
                                                                 .EnableSensitiveDataLogging()
                                                                 .UseValueObjectValueConverter(configureEnumsAndKeyedValueObjects: property =>
-                                                                                                                                  {
-                                                                                                                                     if (property.ClrType == typeof(ProductType))
-                                                                                                                                     {
-                                                                                                                                        var maxLength = ProductType.Items.Max(i => i.Key.Length);
-                                                                                                                                        property.SetMaxLength(RoundUp(maxLength));
-                                                                                                                                     }
-                                                                                                                                     else if (property.ClrType == typeof(ProductCategory))
-                                                                                                                                     {
-                                                                                                                                        var maxLength = ProductCategory.Items.Max(i => i.Name.Length);
-                                                                                                                                        property.SetMaxLength(RoundUp(maxLength));
-                                                                                                                                     }
-                                                                                                                                     else if (property.ClrType == typeof(ProductName))
-                                                                                                                                     {
-                                                                                                                                        property.SetMaxLength(200);
-                                                                                                                                     }
-                                                                                                                                  }))
+                                                                {
+                                                                   if (property.ClrType == typeof(ProductType))
+                                                                   {
+                                                                      var maxLength = ProductType.Items.Max(i => i.Key.Length);
+                                                                      property.SetMaxLength(RoundUp(maxLength));
+                                                                   }
+                                                                   else if (property.ClrType == typeof(ProductCategory))
+                                                                   {
+                                                                      var maxLength = ProductCategory.Items.Max(i => i.Name.Length);
+                                                                      property.SetMaxLength(RoundUp(maxLength));
+                                                                   }
+                                                                   else if (property.ClrType == typeof(ProductName))
+                                                                   {
+                                                                      property.SetMaxLength(200);
+                                                                   }
+                                                                }))
              .BuildServiceProvider();
    }
 

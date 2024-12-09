@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using System.Text.Json.</Description>
-        <PackageTags>common;json</PackageTags>
-    </PropertyGroup>
+  <PropertyGroup>
+    <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using System.Text.Json.</Description>
+    <PackageTags>common;json</PackageTags>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+  </ItemGroup>
 
 </Project>

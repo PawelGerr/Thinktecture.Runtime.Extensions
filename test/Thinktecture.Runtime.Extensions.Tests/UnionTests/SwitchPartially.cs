@@ -24,13 +24,13 @@ public class SwitchPartially
             string calledActionOn = null;
 
             value.SwitchPartially(child1: v =>
-                                          {
-                                             calledActionOn = v.Name;
-                                          },
+                                  {
+                                     calledActionOn = v.Name;
+                                  },
                                   child2: v =>
-                                          {
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -49,13 +49,13 @@ public class SwitchPartially
             string calledActionOn = null;
 
             value.SwitchPartially(@default: v =>
-                                            {
-                                               calledActionOn = $"default:{v.Name}";
-                                            },
+                                  {
+                                     calledActionOn = $"default:{v.Name}";
+                                  },
                                   child2: v =>
-                                          {
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -80,15 +80,15 @@ public class SwitchPartially
 
             value.SwitchPartially(state,
                                   child1: (s, v) =>
-                                          {
-                                             s.Should().Be(state);
-                                             calledActionOn = v.Name;
-                                          },
+                                  {
+                                     s.Should().Be(state);
+                                     calledActionOn = v.Name;
+                                  },
                                   child2: (s, v) =>
-                                          {
-                                             s.Should().Be(state);
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     s.Should().Be(state);
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -142,15 +142,15 @@ public class SwitchPartially
 
             value.SwitchPartially(state,
                                   @default: (ctx, v) =>
-                                            {
-                                               ctx.Should().Be(state);
-                                               calledActionOn = $"default:{v.Name}";
-                                            },
+                                  {
+                                     ctx.Should().Be(state);
+                                     calledActionOn = $"default:{v.Name}";
+                                  },
                                   child2: (ctx, v) =>
-                                          {
-                                             ctx.Should().Be(state);
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     ctx.Should().Be(state);
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -235,20 +235,20 @@ public class SwitchPartially
 
             var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
-                                                                 {
-                                                                    ctx.Should().Be(state);
-                                                                    return $"default:{v.Name}";
-                                                                 },
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return $"default:{v.Name}";
+                                                       },
                                                        child1: (ctx, v) =>
-                                                               {
-                                                                  ctx.Should().Be(state);
-                                                                  return v.Name;
-                                                               },
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return v.Name;
+                                                       },
                                                        child2: (ctx, v) =>
-                                                               {
-                                                                  ctx.Should().Be(state);
-                                                                  return v.Name;
-                                                               });
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return v.Name;
+                                                       });
 
             calledActionOn.Should().Be(expected);
          }
@@ -269,15 +269,15 @@ public class SwitchPartially
 
             var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
-                                                                 {
-                                                                    ctx.Should().Be(state);
-                                                                    return $"default:{v.Name}";
-                                                                 },
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return $"default:{v.Name}";
+                                                       },
                                                        child2: (ctx, v) =>
-                                                               {
-                                                                  ctx.Should().Be(state);
-                                                                  return v.Name;
-                                                               });
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return v.Name;
+                                                       });
 
             calledActionOn.Should().Be(expected);
          }
@@ -302,13 +302,13 @@ public class SwitchPartially
             string calledActionOn = null;
 
             value.SwitchPartially(child1: v =>
-                                          {
-                                             calledActionOn = v.Name;
-                                          },
+                                  {
+                                     calledActionOn = v.Name;
+                                  },
                                   child2: v =>
-                                          {
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -327,13 +327,13 @@ public class SwitchPartially
             string calledActionOn = null;
 
             value.SwitchPartially(@default: v =>
-                                            {
-                                               calledActionOn = $"default:{v.Name}";
-                                            },
+                                  {
+                                     calledActionOn = $"default:{v.Name}";
+                                  },
                                   child2: v =>
-                                          {
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -358,15 +358,15 @@ public class SwitchPartially
 
             value.SwitchPartially(state,
                                   child1: (s, v) =>
-                                          {
-                                             s.Should().Be(state);
-                                             calledActionOn = v.Name;
-                                          },
+                                  {
+                                     s.Should().Be(state);
+                                     calledActionOn = v.Name;
+                                  },
                                   child2: (s, v) =>
-                                          {
-                                             s.Should().Be(state);
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     s.Should().Be(state);
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -388,15 +388,15 @@ public class SwitchPartially
 
             value.SwitchPartially(state,
                                   @default: (ctx, v) =>
-                                            {
-                                               ctx.Should().Be(state);
-                                               calledActionOn = $"default:{v.Name}";
-                                            },
+                                  {
+                                     ctx.Should().Be(state);
+                                     calledActionOn = $"default:{v.Name}";
+                                  },
                                   child2: (ctx, v) =>
-                                          {
-                                             ctx.Should().Be(state);
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     ctx.Should().Be(state);
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -460,20 +460,20 @@ public class SwitchPartially
 
             var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
-                                                                 {
-                                                                    ctx.Should().Be(state);
-                                                                    return $"default:{v.Name}";
-                                                                 },
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return $"default:{v.Name}";
+                                                       },
                                                        child1: (ctx, v) =>
-                                                               {
-                                                                  ctx.Should().Be(state);
-                                                                  return v.Name;
-                                                               },
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return v.Name;
+                                                       },
                                                        child2: (ctx, v) =>
-                                                               {
-                                                                  ctx.Should().Be(state);
-                                                                  return v.Name;
-                                                               });
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return v.Name;
+                                                       });
 
             calledActionOn.Should().Be(expected);
          }
@@ -494,15 +494,15 @@ public class SwitchPartially
 
             var calledActionOn = value.SwitchPartially(state,
                                                        @default: (ctx, v) =>
-                                                                 {
-                                                                    ctx.Should().Be(state);
-                                                                    return $"default:{v.Name}";
-                                                                 },
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return $"default:{v.Name}";
+                                                       },
                                                        child2: (ctx, v) =>
-                                                               {
-                                                                  ctx.Should().Be(state);
-                                                                  return v.Name;
-                                                               });
+                                                       {
+                                                          ctx.Should().Be(state);
+                                                          return v.Name;
+                                                       });
 
             calledActionOn.Should().Be(expected);
          }

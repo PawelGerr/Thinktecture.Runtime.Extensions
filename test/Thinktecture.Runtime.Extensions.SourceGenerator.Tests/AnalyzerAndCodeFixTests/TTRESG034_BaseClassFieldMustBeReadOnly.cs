@@ -16,23 +16,23 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public static object Field = default;
-                       }
-
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClass
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public static object Field = default;
+               }
+            
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClass
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -43,23 +43,23 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public static readonly object Field = default;
-                       }
-
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClass
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public static readonly object Field = default;
+               }
+            
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClass
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -69,23 +69,23 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public object Field = default;
-                       }
-
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClass
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public object Field = default;
+               }
+            
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClass
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -96,23 +96,23 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public readonly object Field = default;
-                       }
-
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClass
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public readonly object Field = default;
+               }
+            
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClass
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -125,19 +125,19 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClassWithStaticField
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClassWithStaticField
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
@@ -148,19 +148,19 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClassWithStaticReadonlyField
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClassWithStaticReadonlyField
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
       }
@@ -170,19 +170,19 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClassWithInstanceField
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClassWithInstanceField
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
@@ -193,19 +193,19 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|} : BaseClassWithInstanceReadonlyField
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|} : BaseClassWithInstanceReadonlyField
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
       }
@@ -218,22 +218,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public static object Field = default;
-                       }
-
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public static object Field = default;
+               }
+            
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -244,22 +244,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public static readonly object Field = default;
-                       }
-
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public static readonly object Field = default;
+               }
+            
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -269,22 +269,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public object Field = default;
-                       }
-
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public object Field = default;
+               }
+            
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -295,22 +295,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public readonly object Field = default;
-                       }
-
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public readonly object Field = default;
+               }
+            
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -323,22 +323,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public static object Field = default;
-                       }
-
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public static object Field = default;
+               }
+            
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -349,22 +349,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public static readonly object Field = default;
-                       }
-
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public static readonly object Field = default;
+               }
+            
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -374,22 +374,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public object Field = default;
-                       }
-
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public object Field = default;
+               }
+            
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -400,22 +400,22 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public class BaseClass
-                       {
-                          public readonly object Field = default;
-                       }
-
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClass
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class BaseClass
+               {
+                  public readonly object Field = default;
+               }
+            
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClass
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -428,18 +428,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithStaticField
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
@@ -450,18 +450,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticReadonlyField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithStaticReadonlyField
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
       }
@@ -471,18 +471,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceField
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
@@ -493,18 +493,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceReadonlyField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceReadonlyField
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
       }
@@ -517,18 +517,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithStaticField
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
@@ -539,18 +539,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithStaticReadonlyField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithStaticReadonlyField
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
       }
@@ -560,18 +560,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceField
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
@@ -582,18 +582,18 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.BaseClasses;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.BaseClasses;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceReadonlyField
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceReadonlyField
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
       }

@@ -13,38 +13,38 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public abstract partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public abstract partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expectedCode = """
 
-                         using System;
-                         using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>(IsValidatable = true)]
-                         	public abstract partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-
-                                 private static TestEnum CreateInvalidItem(string key)
-                                 {
-                                     throw new global::System.NotImplementedException();
-                                 }
-                             }
-                         }
-                         """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+                 private static TestEnum CreateInvalidItem(string key)
+                 {
+                     throw new global::System.NotImplementedException();
+                 }
+             }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -55,23 +55,23 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public abstract partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private static TestEnum CreateInvalidItem(string key)
-                       {
-                          throw new System.NotImplementedException();
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public abstract partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private static TestEnum CreateInvalidItem(string key)
+               {
+                  throw new System.NotImplementedException();
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

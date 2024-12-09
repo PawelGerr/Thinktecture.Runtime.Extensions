@@ -72,12 +72,12 @@ public class Serialize
    }
 
    public static IEnumerable<object[]> DataForValueObject => new[]
-   {
-      new object[] { new ClassWithIntBasedEnum(IntegerEnum.Item1) },
-      new object[] { new ClassWithStringBasedEnum(TestEnum.Item1) },
-      new object[] { TestEnum.Item1 },
-      new object[] { IntegerEnum.Item1 }
-   };
+                                                             {
+                                                                new object[] { new ClassWithIntBasedEnum(IntegerEnum.Item1) },
+                                                                new object[] { new ClassWithStringBasedEnum(TestEnum.Item1) },
+                                                                new object[] { TestEnum.Item1 },
+                                                                new object[] { IntegerEnum.Item1 }
+                                                             };
 
    [Theory]
    [MemberData(nameof(DataForValueObject))]
@@ -95,15 +95,15 @@ public class Serialize
    }
 
    public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties => new[]
-   {
-      new object[] { null },
-      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
-      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
-      new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty) },
-      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
-      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
-      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") }
-   };
+                                                                                   {
+                                                                                      new object[] { null },
+                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
+                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
+                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty) },
+                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
+                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
+                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") }
+                                                                                   };
 
    [Theory]
    [MemberData(nameof(DataForValueObjectWithMultipleProperties))]

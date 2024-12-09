@@ -15,20 +15,20 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                 #pragma warning disable CS8632
-                    [SmartEnum<int?>(IsValidatable = true)]
-                 	public partial class {|#0:TestEnum|}
-                 #pragma warning restore CS8632
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+         #pragma warning disable CS8632
+            [SmartEnum<int?>(IsValidatable = true)]
+         	public partial class {|#0:TestEnum|}
+         #pragma warning restore CS8632
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -39,20 +39,20 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                 #pragma warning disable CS8632
-                    [SmartEnum<int?>]
-                 	public partial class {|#0:TestEnum|}
-                 #pragma warning restore CS8632
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+         #pragma warning disable CS8632
+            [SmartEnum<int?>]
+         	public partial class {|#0:TestEnum|}
+         #pragma warning restore CS8632
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -63,18 +63,18 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -84,18 +84,18 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -105,18 +105,18 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<int?>(IsValidatable = true)]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<int?>(IsValidatable = true)]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -127,18 +127,18 @@ public class TTRESG036_EnumKeyShouldNotBeNullable
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<int>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<int>]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

@@ -15,17 +15,17 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial record {|#0:TestEnum|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial record {|#0:TestEnum|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
@@ -36,18 +36,18 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
@@ -57,18 +57,18 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial struct TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial struct TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
@@ -81,17 +81,17 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                    	[ValueObject<string>]
-                        public partial record {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+            	[ValueObject<string>]
+                public partial record {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
@@ -102,17 +102,17 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                    	[ValueObject<string>]
-                       public partial class TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+            	[ValueObject<string>]
+               public partial class TestValueObject
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
@@ -122,17 +122,17 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                    	[ValueObject<string>]
-                    	public partial struct TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+            	[ValueObject<string>]
+            	public partial struct TestValueObject
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
@@ -145,17 +145,17 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                    	[ComplexValueObject]
-                       public partial record {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+            	[ComplexValueObject]
+               public partial record {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
@@ -166,17 +166,17 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                    	[ComplexValueObject]
-                       public partial class TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+            	[ComplexValueObject]
+               public partial class TestValueObject
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
@@ -186,17 +186,17 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                    	[ComplexValueObject]
-                    	public partial struct TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+            	[ComplexValueObject]
+            	public partial struct TestValueObject
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
@@ -209,15 +209,15 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public partial record {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public partial record {|#0:TestUnion|};
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly], expected);
@@ -228,15 +228,15 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public partial class {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public partial class {|#0:TestUnion|};
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly]);
       }
@@ -246,15 +246,15 @@ public class TTRESG004_TypeMustBeClassOrStruct
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public partial struct {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public partial struct {|#0:TestUnion|};
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly]);
       }

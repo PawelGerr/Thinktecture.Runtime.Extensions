@@ -24,13 +24,13 @@ public class Switch
             object calledActionOn = null;
 
             value.Switch(@string: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          int32: v =>
-                                {
-                                   calledActionOn = v;
-                                });
+                         {
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -51,17 +51,17 @@ public class Switch
             object calledActionOn = null;
 
             value.Switch(@string: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          int32: v =>
-                                {
-                                   calledActionOn = v;
-                                },
+                         {
+                            calledActionOn = v;
+                         },
                          boolean: v =>
-                                  {
-                                     calledActionOn = v;
-                                  });
+                         {
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -84,21 +84,21 @@ public class Switch
             object calledActionOn = null;
 
             value.Switch(@string: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          int32: v =>
-                                {
-                                   calledActionOn = v;
-                                },
+                         {
+                            calledActionOn = v;
+                         },
                          boolean: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          guid: v =>
-                               {
-                                  calledActionOn = v;
-                               });
+                         {
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
          }
@@ -123,25 +123,25 @@ public class Switch
             object calledActionOn = null;
 
             value.Switch(@string: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          int32: v =>
-                                {
-                                   calledActionOn = v;
-                                },
+                         {
+                            calledActionOn = v;
+                         },
                          boolean: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          guid: v =>
-                               {
-                                  calledActionOn = v;
-                               },
+                         {
+                            calledActionOn = v;
+                         },
                          @char: v =>
-                                {
-                                   calledActionOn = v;
-                                });
+                         {
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
          }
@@ -166,25 +166,25 @@ public class Switch
             object calledActionOn = null;
 
             value.Switch(text: v =>
-                               {
-                                  calledActionOn = v;
-                               },
+                         {
+                            calledActionOn = v;
+                         },
                          int32: v =>
-                                {
-                                   calledActionOn = v;
-                                },
+                         {
+                            calledActionOn = v;
+                         },
                          string2: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          string3: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          nullableInt32: v =>
-                                        {
-                                           calledActionOn = v;
-                                        });
+                         {
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -210,15 +210,15 @@ public class Switch
 
             value.Switch(state,
                          @string: (s, v) =>
-                                  {
-                                     s.Should().Be(s);
-                                     calledActionOn = v;
-                                  },
+                         {
+                            s.Should().Be(s);
+                            calledActionOn = v;
+                         },
                          int32: (s, v) =>
-                                {
-                                   s.Should().Be(state);
-                                   calledActionOn = v;
-                                });
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -276,20 +276,20 @@ public class Switch
 
             value.Switch(state,
                          @string: (s, v) =>
-                                  {
-                                     s.Should().Be(state);
-                                     calledActionOn = v;
-                                  },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          int32: (s, v) =>
-                                {
-                                   s.Should().Be(state);
-                                   calledActionOn = v;
-                                },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          boolean: (s, v) =>
-                                  {
-                                     s.Should().Be(state);
-                                     calledActionOn = v;
-                                  });
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -316,25 +316,25 @@ public class Switch
 
             value.Switch(state,
                          @string: (s, v) =>
-                                  {
-                                     s.Should().Be(state);
-                                     calledActionOn = v;
-                                  },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          int32: (s, v) =>
-                                {
-                                   s.Should().Be(state);
-                                   calledActionOn = v;
-                                },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          boolean: (s, v) =>
-                                  {
-                                     s.Should().Be(state);
-                                     calledActionOn = v;
-                                  },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          guid: (s, v) =>
-                               {
-                                  s.Should().Be(state);
-                                  calledActionOn = v;
-                               });
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
          }
@@ -363,30 +363,30 @@ public class Switch
 
             value.Switch(state,
                          @string: (s, v) =>
-                                  {
-                                     s.Should().Be(state);
-                                     calledActionOn = v;
-                                  },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          int32: (s, v) =>
-                                {
-                                   s.Should().Be(state);
-                                   calledActionOn = v;
-                                },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          boolean: (s, v) =>
-                                  {
-                                     s.Should().Be(state);
-                                     calledActionOn = v;
-                                  },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          guid: (s, v) =>
-                               {
-                                  s.Should().Be(state);
-                                  calledActionOn = v;
-                               },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          @char: (s, v) =>
-                                {
-                                   s.Should().Be(state);
-                                   calledActionOn = v;
-                                });
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
          }
@@ -522,15 +522,15 @@ public class Switch
             var state = new object();
             var calledActionOn = value.Switch(state,
                                               @string: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return (object)v;
-                                                       },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return (object)v;
+                                              },
                                               int32: (s, v) =>
-                                                     {
-                                                        s.Should().Be(state);
-                                                        return v;
-                                                     });
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              });
 
             calledActionOn.Should().Be(expected);
          }
@@ -583,20 +583,20 @@ public class Switch
             var state = new object();
             var calledActionOn = value.Switch(state,
                                               @string: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return (object)v;
-                                                       },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return (object)v;
+                                              },
                                               int32: (s, v) =>
-                                                     {
-                                                        s.Should().Be(state);
-                                                        return v;
-                                                     },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              },
                                               boolean: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return v;
-                                                       });
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              });
 
             calledActionOn.Should().Be(expected);
          }
@@ -620,25 +620,25 @@ public class Switch
             var state = new object();
             var calledActionOn = value.Switch(state,
                                               @string: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return (object)v;
-                                                       },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return (object)v;
+                                              },
                                               int32: (s, v) =>
-                                                     {
-                                                        s.Should().Be(state);
-                                                        return v;
-                                                     },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              },
                                               boolean: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return v;
-                                                       },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              },
                                               guid: (s, v) =>
-                                                    {
-                                                       s.Should().Be(state);
-                                                       return v;
-                                                    });
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              });
 
             calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
          }
@@ -664,30 +664,30 @@ public class Switch
             var state = new object();
             var calledActionOn = value.Switch(state,
                                               @string: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return (object)v;
-                                                       },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return (object)v;
+                                              },
                                               int32: (s, v) =>
-                                                     {
-                                                        s.Should().Be(state);
-                                                        return v;
-                                                     },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              },
                                               boolean: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return v;
-                                                       },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              },
                                               guid: (s, v) =>
-                                                    {
-                                                       s.Should().Be(state);
-                                                       return v;
-                                                    },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              },
                                               @char: (s, v) =>
-                                                     {
-                                                        s.Should().Be(state);
-                                                        return v;
-                                                     });
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              });
 
             calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
          }
@@ -712,13 +712,13 @@ public class Switch
             object calledActionOn = null;
 
             value.Switch(@string: v =>
-                                  {
-                                     calledActionOn = v;
-                                  },
+                         {
+                            calledActionOn = v;
+                         },
                          int32: v =>
-                                {
-                                   calledActionOn = v;
-                                });
+                         {
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -744,15 +744,15 @@ public class Switch
 
             value.Switch(state,
                          @string: (s, v) =>
-                                  {
-                                     s.Should().Be(state);
-                                     calledActionOn = v;
-                                  },
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         },
                          int32: (s, v) =>
-                                {
-                                   s.Should().Be(state);
-                                   calledActionOn = v;
-                                });
+                         {
+                            s.Should().Be(state);
+                            calledActionOn = v;
+                         });
 
             calledActionOn.Should().Be(expected);
          }
@@ -796,15 +796,15 @@ public class Switch
             var state = new object();
             var calledActionOn = value.Switch(state,
                                               @string: (s, v) =>
-                                                       {
-                                                          s.Should().Be(state);
-                                                          return (object)v;
-                                                       },
+                                              {
+                                                 s.Should().Be(state);
+                                                 return (object)v;
+                                              },
                                               int32: (s, v) =>
-                                                     {
-                                                        s.Should().Be(state);
-                                                        return v;
-                                                     });
+                                              {
+                                                 s.Should().Be(state);
+                                                 return v;
+                                              });
 
             calledActionOn.Should().Be(expected);
          }

@@ -32,7 +32,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       for (var i = 0; i < numberOfMemberTypes; i++)
       {
          memberTypeSettings[i] = new AdHocUnionMemberTypeSetting(attribute.FindTxIsNullableReferenceType(i + 1),
-                                                       attribute.FindTxName(i + 1));
+                                                                 attribute.FindTxName(i + 1));
       }
    }
 

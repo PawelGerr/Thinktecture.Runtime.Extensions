@@ -15,33 +15,33 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public class {|#0:TestEnum|}
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public class {|#0:TestEnum|}
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [SmartEnum<string>(IsValidatable = true)]
-                            	public partial class {|#0:TestEnum|}
-                            	{
-                                  public static readonly TestEnum Item1 = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|}
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -52,33 +52,33 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public struct {|#0:TestEnum|}
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public struct {|#0:TestEnum|}
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [SmartEnum<string>(IsValidatable = true)]
-                            	public partial struct {|#0:TestEnum|}
-                            	{
-                                  public static readonly TestEnum Item1 = default;
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial struct {|#0:TestEnum|}
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -89,18 +89,18 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class {|#0:TestEnum|}
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class {|#0:TestEnum|}
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -110,18 +110,18 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial struct {|#0:TestEnum|}
-                    	{
-                          public static readonly TestEnum Item1 = default;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial struct {|#0:TestEnum|}
+            	{
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -134,31 +134,31 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public class {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class {|#0:TestValueObject|}
-                            	{
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -169,31 +169,31 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public struct {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public struct {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial struct {|#0:TestValueObject|}
-                            	{
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial struct {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -204,17 +204,17 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -224,17 +224,17 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial struct {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial struct {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -247,31 +247,31 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public class {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class {|#0:TestValueObject|}
-                            	{
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -282,31 +282,31 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public struct {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public struct {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial struct {|#0:TestValueObject|}
-                            	{
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial struct {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -317,17 +317,17 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -337,17 +337,17 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial struct {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial struct {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -359,26 +359,26 @@ public class TTRESG006_TypeMustBePartial
       public async Task Should_trigger_on_non_partial_class()
       {
          var code = """
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                        [Union<string, int>]
-                    	   public class {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+                [Union<string, int>]
+            	   public class {|#0:TestUnion|};
+            }
+            """;
 
          var expectedCode = """
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                                [Union<string, int>]
-                            	   public partial class {|#0:TestUnion|};
-                            }
-                            """;
+            namespace TestNamespace
+            {
+                [Union<string, int>]
+            	   public partial class {|#0:TestUnion|};
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute<,>).Assembly }, expected);
@@ -389,15 +389,15 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public partial class {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public partial class {|#0:TestUnion|};
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly });
       }
@@ -406,26 +406,26 @@ public class TTRESG006_TypeMustBePartial
       public async Task Should_trigger_on_non_partial_struct()
       {
          var code = """
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                        [Union<string, int>]
-                    	   public struct {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+                [Union<string, int>]
+            	   public struct {|#0:TestUnion|};
+            }
+            """;
 
          var expectedCode = """
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                                [Union<string, int>]
-                            	   public partial struct {|#0:TestUnion|};
-                            }
-                            """;
+            namespace TestNamespace
+            {
+                [Union<string, int>]
+            	   public partial struct {|#0:TestUnion|};
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute<,>).Assembly }, expected);
@@ -436,15 +436,15 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public partial struct {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public partial struct {|#0:TestUnion|};
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly });
       }
@@ -453,26 +453,26 @@ public class TTRESG006_TypeMustBePartial
       public async Task Should_trigger_on_non_partial_ref_struct()
       {
          var code = """
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                        [Union<string, int>]
-                    	   public ref struct {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+                [Union<string, int>]
+            	   public ref struct {|#0:TestUnion|};
+            }
+            """;
 
          var expectedCode = """
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                                [Union<string, int>]
-                            	   public ref partial struct {|#0:TestUnion|};
-                            }
-                            """;
+            namespace TestNamespace
+            {
+                [Union<string, int>]
+            	   public ref partial struct {|#0:TestUnion|};
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute<,>).Assembly }, expected);
@@ -483,15 +483,15 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union<string, int>]
-                       public ref partial struct {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union<string, int>]
+               public ref partial struct {|#0:TestUnion|};
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly });
       }
@@ -503,26 +503,26 @@ public class TTRESG006_TypeMustBePartial
       public async Task Should_trigger_on_non_partial_class()
       {
          var code = """
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                        [Union]
-                    	   public class {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+                [Union]
+            	   public class {|#0:TestUnion|};
+            }
+            """;
 
          var expectedCode = """
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                                [Union]
-                            	   public partial class {|#0:TestUnion|};
-                            }
-                            """;
+            namespace TestNamespace
+            {
+                [Union]
+            	   public partial class {|#0:TestUnion|};
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute).Assembly }, expected);
@@ -533,15 +533,15 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                       public partial class {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+               public partial class {|#0:TestUnion|};
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly });
       }
@@ -550,26 +550,26 @@ public class TTRESG006_TypeMustBePartial
       public async Task Should_trigger_on_non_partial_struct()
       {
          var code = """
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                        [Union]
-                    	   public record {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+                [Union]
+            	   public record {|#0:TestUnion|};
+            }
+            """;
 
          var expectedCode = """
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                                [Union]
-                            	   public partial record {|#0:TestUnion|};
-                            }
-                            """;
+            namespace TestNamespace
+            {
+                [Union]
+            	   public partial record {|#0:TestUnion|};
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute).Assembly }, expected);
@@ -580,15 +580,15 @@ public class TTRESG006_TypeMustBePartial
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [Union]
-                       public partial record {|#0:TestUnion|};
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [Union]
+               public partial record {|#0:TestUnion|};
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly });
       }

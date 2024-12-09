@@ -118,8 +118,7 @@ SET
                             && e.IntBasedStructValueObject == deci
                             && e.TestSmartEnum_Struct_IntBased == deci
                             && e.IntBasedStructValueObject == nullableDecimal
-                            && e.TestSmartEnum_Struct_IntBased == nullableDecimal
-                      )
+                            && e.TestSmartEnum_Struct_IntBased == nullableDecimal)
                 .ToListAsync();
    }
 

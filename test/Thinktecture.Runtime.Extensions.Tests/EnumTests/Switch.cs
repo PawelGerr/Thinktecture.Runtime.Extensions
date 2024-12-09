@@ -13,13 +13,13 @@ public class Switch
          ValidTestEnum calledActionOn = null;
 
          ValidTestEnum.Item1.Switch(item1: () =>
-                                           {
-                                              calledActionOn = ValidTestEnum.Item1;
-                                           },
+                                    {
+                                       calledActionOn = ValidTestEnum.Item1;
+                                    },
                                     item2: () =>
-                                           {
-                                              calledActionOn = ValidTestEnum.Item2;
-                                           });
+                                    {
+                                       calledActionOn = ValidTestEnum.Item2;
+                                    });
 
          calledActionOn.Should().Be(ValidTestEnum.Item1);
       }
@@ -33,17 +33,17 @@ public class Switch
          var testItem = useInvalidItem ? TestEnum.Get("invalid item") : TestEnum.Item1;
 
          testItem.Switch(invalid: item =>
-                                  {
-                                     calledActionOn = item;
-                                  },
+                         {
+                            calledActionOn = item;
+                         },
                          item1: () =>
-                                {
-                                   calledActionOn = TestEnum.Item1;
-                                },
+                         {
+                            calledActionOn = TestEnum.Item1;
+                         },
                          item2: () =>
-                                {
-                                   calledActionOn = TestEnum.Item2;
-                                });
+                         {
+                            calledActionOn = TestEnum.Item2;
+                         });
 
          calledActionOn.Should().Be(testItem);
       }
@@ -58,29 +58,29 @@ public class Switch
          var testItem = useInvalidItem ? (TestSmartEnum_Struct_IntBased)42 : TestSmartEnum_Struct_IntBased.Value3;
 
          testItem.Switch(invalid: item =>
-                                  {
-                                     calledActionOn = item;
-                                  },
+                         {
+                            calledActionOn = item;
+                         },
                          value1: () =>
-                                 {
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
-                                 },
+                         {
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
+                         },
                          value2: () =>
-                                 {
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
-                                 },
+                         {
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                         },
                          value3: () =>
-                                 {
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
-                                 },
+                         {
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
+                         },
                          value4: () =>
-                                 {
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
-                                 },
+                         {
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                         },
                          value5: () =>
-                                 {
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
-                                 });
+                         {
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                         });
 
          calledActionOn.Should().Be(testItem);
       }
@@ -91,13 +91,13 @@ public class Switch
          KeylessTestEnum calledActionOn = null;
 
          KeylessTestEnum.Item1.Switch(item1: () =>
-                                             {
-                                                calledActionOn = KeylessTestEnum.Item1;
-                                             },
+                                      {
+                                         calledActionOn = KeylessTestEnum.Item1;
+                                      },
                                       item2: () =>
-                                             {
-                                                calledActionOn = KeylessTestEnum.Item2;
-                                             });
+                                      {
+                                         calledActionOn = KeylessTestEnum.Item2;
+                                      });
 
          calledActionOn.Should().Be(KeylessTestEnum.Item1);
       }
@@ -114,17 +114,17 @@ public class Switch
 
          ValidTestEnum.Item1.Switch(obj,
                                     item1: o =>
-                                           {
-                                              o.Should().Be(obj);
+                                    {
+                                       o.Should().Be(obj);
 
-                                              calledActionOn = ValidTestEnum.Item1;
-                                           },
+                                       calledActionOn = ValidTestEnum.Item1;
+                                    },
                                     item2: o =>
-                                           {
-                                              o.Should().Be(obj);
+                                    {
+                                       o.Should().Be(obj);
 
-                                              calledActionOn = ValidTestEnum.Item2;
-                                           });
+                                       calledActionOn = ValidTestEnum.Item2;
+                                    });
 
          calledActionOn.Should().Be(ValidTestEnum.Item1);
       }
@@ -167,23 +167,23 @@ public class Switch
 
          testItem.Switch(obj,
                          invalid: (o, item) =>
-                                  {
-                                     o.Should().Be(obj);
+                         {
+                            o.Should().Be(obj);
 
-                                     calledActionOn = item;
-                                  },
+                            calledActionOn = item;
+                         },
                          item1: o =>
-                                {
-                                   o.Should().Be(obj);
+                         {
+                            o.Should().Be(obj);
 
-                                   calledActionOn = TestEnum.Item1;
-                                },
+                            calledActionOn = TestEnum.Item1;
+                         },
                          item2: o =>
-                                {
-                                   o.Should().Be(obj);
+                         {
+                            o.Should().Be(obj);
 
-                                   calledActionOn = TestEnum.Item2;
-                                });
+                            calledActionOn = TestEnum.Item2;
+                         });
 
          calledActionOn.Should().Be(testItem);
       }
@@ -200,35 +200,35 @@ public class Switch
 
          testItem.Switch(obj,
                          invalid: (o, item) =>
-                                  {
-                                     o.Should().Be(obj);
-                                     calledActionOn = item;
-                                  },
+                         {
+                            o.Should().Be(obj);
+                            calledActionOn = item;
+                         },
                          value1: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
+                         },
                          value2: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                         },
                          value3: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
+                         },
                          value4: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                         },
                          value5: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
-                                 });
+                         {
+                            o.Should().Be(obj);
+                            calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                         });
 
          calledActionOn.Should().Be(testItem);
       }
@@ -242,17 +242,17 @@ public class Switch
 
          KeylessTestEnum.Item1.Switch(obj,
                                       item1: o =>
-                                             {
-                                                o.Should().Be(obj);
+                                      {
+                                         o.Should().Be(obj);
 
-                                                calledActionOn = KeylessTestEnum.Item1;
-                                             },
+                                         calledActionOn = KeylessTestEnum.Item1;
+                                      },
                                       item2: o =>
-                                             {
-                                                o.Should().Be(obj);
+                                      {
+                                         o.Should().Be(obj);
 
-                                                calledActionOn = KeylessTestEnum.Item2;
-                                             });
+                                         calledActionOn = KeylessTestEnum.Item2;
+                                      });
 
          calledActionOn.Should().Be(KeylessTestEnum.Item1);
       }
@@ -325,17 +325,17 @@ public class Switch
 
          ValidTestEnum.Item1.Switch(obj,
                                     item1: o =>
-                                           {
-                                              o.Should().Be(obj);
+                                    {
+                                       o.Should().Be(obj);
 
-                                              return ValidTestEnum.Item1;
-                                           },
+                                       return ValidTestEnum.Item1;
+                                    },
                                     item2: o =>
-                                           {
-                                              o.Should().Be(obj);
+                                    {
+                                       o.Should().Be(obj);
 
-                                              return ValidTestEnum.Item2;
-                                           })
+                                       return ValidTestEnum.Item2;
+                                    })
                       .Should().Be(ValidTestEnum.Item1);
       }
 
@@ -372,23 +372,23 @@ public class Switch
 
          testItem.Switch(obj,
                          invalid: (o, item) =>
-                                  {
-                                     o.Should().Be(obj);
+                         {
+                            o.Should().Be(obj);
 
-                                     return item;
-                                  },
+                            return item;
+                         },
                          item1: o =>
-                                {
-                                   o.Should().Be(obj);
+                         {
+                            o.Should().Be(obj);
 
-                                   return TestEnum.Item1;
-                                },
+                            return TestEnum.Item1;
+                         },
                          item2: o =>
-                                {
-                                   o.Should().Be(obj);
+                         {
+                            o.Should().Be(obj);
 
-                                   return TestEnum.Item2;
-                                })
+                            return TestEnum.Item2;
+                         })
                  .Should().Be(testItem);
       }
 
@@ -403,35 +403,35 @@ public class Switch
 
          testItem.Switch(obj,
                          invalid: (o, item) =>
-                                  {
-                                     o.Should().Be(obj);
-                                     return item;
-                                  },
+                         {
+                            o.Should().Be(obj);
+                            return item;
+                         },
                          value1: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    return TestSmartEnum_Struct_IntBased.Value1;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            return TestSmartEnum_Struct_IntBased.Value1;
+                         },
                          value2: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    return TestSmartEnum_Struct_IntBased.Value2;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            return TestSmartEnum_Struct_IntBased.Value2;
+                         },
                          value3: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    return TestSmartEnum_Struct_IntBased.Value3;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            return TestSmartEnum_Struct_IntBased.Value3;
+                         },
                          value4: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    return TestSmartEnum_Struct_IntBased.Value4;
-                                 },
+                         {
+                            o.Should().Be(obj);
+                            return TestSmartEnum_Struct_IntBased.Value4;
+                         },
                          value5: o =>
-                                 {
-                                    o.Should().Be(obj);
-                                    return TestSmartEnum_Struct_IntBased.Value5;
-                                 })
+                         {
+                            o.Should().Be(obj);
+                            return TestSmartEnum_Struct_IntBased.Value5;
+                         })
                  .Should().Be(testItem);
       }
 
@@ -442,17 +442,17 @@ public class Switch
 
          KeylessTestEnum.Item1.Switch(obj,
                                       item1: o =>
-                                             {
-                                                o.Should().Be(obj);
+                                      {
+                                         o.Should().Be(obj);
 
-                                                return KeylessTestEnum.Item1;
-                                             },
+                                         return KeylessTestEnum.Item1;
+                                      },
                                       item2: o =>
-                                             {
-                                                o.Should().Be(obj);
+                                      {
+                                         o.Should().Be(obj);
 
-                                                return KeylessTestEnum.Item2;
-                                             })
+                                         return KeylessTestEnum.Item2;
+                                      })
                         .Should().Be(KeylessTestEnum.Item1);
       }
    }

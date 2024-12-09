@@ -81,20 +81,20 @@ public class Program
    {
       var webHost = new HostBuilder()
                     .ConfigureWebHostDefaults(builder =>
-                                              {
-                                                 builder.UseKestrel()
-                                                        .Configure(app =>
-                                                                   {
-                                                                      app.UseRouting();
-                                                                      app.UseEndpoints(endpoints => endpoints.MapControllers());
-                                                                   });
-                                              })
+                    {
+                       builder.UseKestrel()
+                              .Configure(app =>
+                              {
+                                 app.UseRouting();
+                                 app.UseEndpoints(endpoints => endpoints.MapControllers());
+                              });
+                    })
                     .ConfigureServices(collection =>
-                                       {
-                                          collection.AddSingleton(loggerFactory);
-                                          collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
-                                                    .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new ValueObjectNewtonsoftJsonConverter()));
-                                       })
+                    {
+                       collection.AddSingleton(loggerFactory);
+                       collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
+                                 .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new ValueObjectNewtonsoftJsonConverter()));
+                    })
                     .Build();
 
       return webHost.RunAsync();

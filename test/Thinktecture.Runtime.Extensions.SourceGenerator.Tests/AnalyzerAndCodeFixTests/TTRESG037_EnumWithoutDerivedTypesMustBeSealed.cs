@@ -13,63 +13,63 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private class Type_1 : TestEnum
-                       {
-                          public class {|#0:Type_3|} : Type_1
-                          {
-                          }
-
-                          public sealed class Type_4 : Type_2
-                          {
-                          }
-                       }
-
-                       private class Type_2 : Type_1
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private class Type_1 : TestEnum
+               {
+                  public class {|#0:Type_3|} : Type_1
+                  {
+                  }
+         
+                  public sealed class Type_4 : Type_2
+                  {
+                  }
+               }
+         
+               private class Type_2 : Type_1
+               {
+               }
+            }
+         }
+         """;
 
       var expectedCode = """
 
-                         using System;
-                         using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>]
-                         	public partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-
-                               private class Type_1 : TestEnum
-                               {
-                                  public sealed class Type_3 : Type_1
-                                  {
-                                  }
-
-                                  public sealed class Type_4 : Type_2
-                                  {
-                                  }
-                               }
-
-                               private class Type_2 : Type_1
-                               {
-                               }
-                            }
-                         }
-                         """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private class Type_1 : TestEnum
+               {
+                  public sealed class Type_3 : Type_1
+                  {
+                  }
+         
+                  public sealed class Type_4 : Type_2
+                  {
+                  }
+               }
+         
+               private class Type_2 : Type_1
+               {
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_3");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -80,63 +80,63 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private class Type_1 : TestEnum
-                       {
-                          public sealed class Type_3 : Type_1
-                          {
-                          }
-
-                          public class {|#0:Type_4|} : Type_2
-                          {
-                          }
-                       }
-
-                       private class Type_2 : Type_1
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private class Type_1 : TestEnum
+               {
+                  public sealed class Type_3 : Type_1
+                  {
+                  }
+         
+                  public class {|#0:Type_4|} : Type_2
+                  {
+                  }
+               }
+         
+               private class Type_2 : Type_1
+               {
+               }
+            }
+         }
+         """;
 
       var expectedCode = """
 
-                         using System;
-                         using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>]
-                         	public partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-
-                               private class Type_1 : TestEnum
-                               {
-                                  public sealed class Type_3 : Type_1
-                                  {
-                                  }
-
-                                  public sealed class Type_4 : Type_2
-                                  {
-                                  }
-                               }
-
-                               private class Type_2 : Type_1
-                               {
-                               }
-                            }
-                         }
-                         """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private class Type_1 : TestEnum
+               {
+                  public sealed class Type_3 : Type_1
+                  {
+                  }
+         
+                  public sealed class Type_4 : Type_2
+                  {
+                  }
+               }
+         
+               private class Type_2 : Type_1
+               {
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_4");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -147,22 +147,22 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private sealed class DerivedType : TestEnum
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private sealed class DerivedType : TestEnum
+               {
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -172,22 +172,22 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private sealed class DerivedType : TestEnum
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private sealed class DerivedType : TestEnum
+               {
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -197,22 +197,22 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private sealed class DerivedType<T> : TestEnum
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private sealed class DerivedType<T> : TestEnum
+               {
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -222,22 +222,22 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private sealed class DerivedType<T> : TestEnum
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private sealed class DerivedType<T> : TestEnum
+               {
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -247,33 +247,33 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private class Type_1 : TestEnum
-                       {
-                          public sealed class Type_3 : Type_1
-                          {
-                          }
-
-                          public sealed class Type_4 : Type_2
-                          {
-                          }
-                       }
-
-                       private class Type_2 : Type_1
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private class Type_1 : TestEnum
+               {
+                  public sealed class Type_3 : Type_1
+                  {
+                  }
+         
+                  public sealed class Type_4 : Type_2
+                  {
+                  }
+               }
+         
+               private class Type_2 : Type_1
+               {
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -283,18 +283,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public abstract partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public abstract partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -304,22 +304,22 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>]
-                 	public partial class {|#0:TestEnum|}
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private abstract class Type_1 : TestEnum
-                       {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>]
+         	public partial class {|#0:TestEnum|}
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private abstract class Type_1 : TestEnum
+               {
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

@@ -16,16 +16,16 @@ public class ProductsDbContext : DbContext
       base.OnModelCreating(modelBuilder);
 
       modelBuilder.Entity<Product>(builder =>
-                                   {
-                                      builder.HasKey(p => p.Id);
+      {
+         builder.HasKey(p => p.Id);
 
-                                      builder.ComplexProperty(p => p.Boundary,
-                                                              boundaryBuilder =>
-                                                              {
-                                                                 boundaryBuilder.Property(b => b.Lower).HasColumnName("Lower").HasPrecision(18, 2);
-                                                                 boundaryBuilder.Property(b => b.Upper).HasColumnName("Upper").HasPrecision(18, 2);
-                                                              });
-                                   });
+         builder.ComplexProperty(p => p.Boundary,
+                                 boundaryBuilder =>
+                                 {
+                                    boundaryBuilder.Property(b => b.Lower).HasColumnName("Lower").HasPrecision(18, 2);
+                                    boundaryBuilder.Property(b => b.Upper).HasColumnName("Upper").HasPrecision(18, 2);
+                                 });
+      });
 
       // Alternative way to apply ValueConverters to Smart Enums and Value Objects
       // modelBuilder.AddValueObjectConverters(validateOnWrite: true,

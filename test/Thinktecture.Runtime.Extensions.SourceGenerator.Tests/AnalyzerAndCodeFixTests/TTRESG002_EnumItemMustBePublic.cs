@@ -13,33 +13,33 @@ public class TTRESG002_EnumItemMustBePublic
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       internal static readonly TestEnum {|#0:Item1|} = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               internal static readonly TestEnum {|#0:Item1|} = default;
+            }
+         }
+         """;
 
       var expectedCode = """
 
-                         using System;
-                         using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>(IsValidatable = true)]
-                         	public partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-                            }
-                         }
-                         """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -50,33 +50,33 @@ public class TTRESG002_EnumItemMustBePublic
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       static private readonly TestEnum {|#0:Item1|} = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               static private readonly TestEnum {|#0:Item1|} = default;
+            }
+         }
+         """;
 
       var expectedCode = """
 
-                         using System;
-                         using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>(IsValidatable = true)]
-                         	public partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-                            }
-                         }
-                         """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -87,33 +87,33 @@ public class TTRESG002_EnumItemMustBePublic
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       static readonly TestEnum {|#0:Item1|} = default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               static readonly TestEnum {|#0:Item1|} = default;
+            }
+         }
+         """;
 
       var expectedCode = """
 
-                         using System;
-                         using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>(IsValidatable = true)]
-                         	public partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-                            }
-                         }
-                         """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);

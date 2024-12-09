@@ -1540,25 +1540,25 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var baseCtorArgs = _state.BaseType.Constructors
                                .Select(ctor =>
-                                       {
-                                          if (ctor.Arguments.Length == 0)
-                                             return (IReadOnlyList<ConstructorArgument>)Array.Empty<ConstructorArgument>();
+                               {
+                                  if (ctor.Arguments.Length == 0)
+                                     return (IReadOnlyList<ConstructorArgument>)Array.Empty<ConstructorArgument>();
 
-                                          return ctor.Arguments
-                                                     .Select(a =>
-                                                             {
-                                                                var argName = a.ArgumentName;
-                                                                var counter = 0;
+                                  return ctor.Arguments
+                                             .Select(a =>
+                                             {
+                                                var argName = a.ArgumentName;
+                                                var counter = 0;
 
-                                                                while (_state.KeyMember?.ArgumentName == argName || ContainsArgument(ownCtorArgs, argName))
-                                                                {
-                                                                   counter++;
-                                                                   argName = $"{a.ArgumentName}{counter.ToString()}"; // rename the argument name if it collides with another argument
-                                                                }
+                                                while (_state.KeyMember?.ArgumentName == argName || ContainsArgument(ownCtorArgs, argName))
+                                                {
+                                                   counter++;
+                                                   argName = $"{a.ArgumentName}{counter.ToString()}"; // rename the argument name if it collides with another argument
+                                                }
 
-                                                                return new ConstructorArgument(a.TypeFullyQualified, argName);
-                                                             }).ToList();
-                                       })
+                                                return new ConstructorArgument(a.TypeFullyQualified, argName);
+                                             }).ToList();
+                               })
                                .Distinct(ConstructorArgumentsComparer.Instance)
                                .ToList();
 

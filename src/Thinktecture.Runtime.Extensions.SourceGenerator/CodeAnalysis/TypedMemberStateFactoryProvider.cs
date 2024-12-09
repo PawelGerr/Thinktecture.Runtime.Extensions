@@ -50,11 +50,11 @@ public class TypedMemberStateFactoryProvider
       }
 
       return _factoriesByVersion.GetOrAdd(version, _ =>
-                                                   {
-                                                      logger.LogError($"Unexpected .NET version '{version}'");
+      {
+         logger.LogError($"Unexpected .NET version '{version}'");
 
-                                                      return TypedMemberStateFactory.Create(compilation);
-                                                   });
+         return TypedMemberStateFactory.Create(compilation);
+      });
    }
 
    private static TypedMemberStateFactory GetFactory(

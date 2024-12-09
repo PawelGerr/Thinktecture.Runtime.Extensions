@@ -15,37 +15,37 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public int {|#0:InstanceProperty|} { get; set; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [SmartEnum<string>(IsValidatable = true)]
-                            	public partial class TestEnum
-                            	{
-                                  public static readonly TestEnum Item1 = default;
-
-                                  public int InstanceProperty { get; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public int InstanceProperty { get; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -56,37 +56,37 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public static int {|#0:InstanceProperty|} { get; set; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [SmartEnum<string>(IsValidatable = true)]
-                            	public partial class TestEnum
-                            	{
-                                  public static readonly TestEnum Item1 = default;
-
-                                  public static int InstanceProperty { get; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static int InstanceProperty { get; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestEnum");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -97,24 +97,24 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             get => 42;
-                             set { }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get => 42;
+                     set { }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -124,24 +124,24 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public static int {|#0:InstanceProperty|}
-                          {
-                             get => 42;
-                             set { }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     get => 42;
+                     set { }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -151,24 +151,24 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             get { return 42; }
-                             set { }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get { return 42; }
+                     set { }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -178,24 +178,24 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public static int {|#0:InstanceProperty|}
-                          {
-                             get { return 42; }
-                             set { }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     get { return 42; }
+                     set { }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -205,28 +205,28 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public static class Helper
-                       {
-                          public static int Property { get; set; }
-                       }
-
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             set => Helper.Property = value;
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public static class Helper
+               {
+                  public static int Property { get; set; }
+               }
+            
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     set => Helper.Property = value;
+                  }
+               }
+            }
+            """;
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
 
@@ -235,28 +235,28 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       public static class Helper
-                       {
-                          public static int Property { get; set; }
-                       }
-
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public static int {|#0:InstanceProperty|}
-                          {
-                             set => Helper.Property = value;
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public static class Helper
+               {
+                  public static int Property { get; set; }
+               }
+            
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     set => Helper.Property = value;
+                  }
+               }
+            }
+            """;
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
 
@@ -265,23 +265,23 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             set { }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     set { }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -291,23 +291,23 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<string>(IsValidatable = true)]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default;
-
-                          public static int {|#0:InstanceProperty|}
-                          {
-                             set { }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<string>(IsValidatable = true)]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+            
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     set { }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }
@@ -320,33 +320,33 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          public int {|#0:InstanceProperty|} { get; set; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class TestValueObject
-                            	{
-                                  public int InstanceProperty { get; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public int InstanceProperty { get; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -357,33 +357,33 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          public static int {|#0:InstanceProperty|} { get; set; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public static int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class TestValueObject
-                            	{
-                                  public static int InstanceProperty { get; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public static int InstanceProperty { get; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -397,33 +397,33 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          public int {|#0:InstanceProperty|} { get; set; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class TestValueObject
-                            	{
-                                  public int InstanceProperty { get; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public int InstanceProperty { get; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -434,33 +434,33 @@ public class TTRESG003_PropertyMustBeReadOnly
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          public static int {|#0:InstanceProperty|} { get; set; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public static int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class TestValueObject
-                            	{
-                                  public static int InstanceProperty { get; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public static int InstanceProperty { get; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);

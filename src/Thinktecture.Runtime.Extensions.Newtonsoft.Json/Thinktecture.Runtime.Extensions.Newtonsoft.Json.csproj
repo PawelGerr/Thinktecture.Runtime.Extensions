@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using Newtonsoft.Json.</Description>
-        <PackageTags>common;json</PackageTags>
-    </PropertyGroup>
+  <PropertyGroup>
+    <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using Newtonsoft.Json.</Description>
+    <PackageTags>common;json</PackageTags>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json"/>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"/>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
+  </ItemGroup>
 
 </Project>

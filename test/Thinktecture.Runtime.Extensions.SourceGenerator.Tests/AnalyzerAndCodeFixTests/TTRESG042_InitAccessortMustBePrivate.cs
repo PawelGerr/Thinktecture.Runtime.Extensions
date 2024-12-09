@@ -15,33 +15,33 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          public int {|#0:InstanceProperty|} { get; init; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public int {|#0:InstanceProperty|} { get; init; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class TestValueObject
-                            	{
-                                  public int InstanceProperty { get; private init; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  public int InstanceProperty { get; private init; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -52,47 +52,47 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             get => _instanceProperty;
-                             init => _instanceProperty = value;
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get => _instanceProperty;
+                     init => _instanceProperty = value;
+                  }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class TestValueObject
-                            	{
-                                  [ValueObjectMemberIgnore]
-                                  private readonly int _instanceProperty;
-
-                                  public int {|#0:InstanceProperty|}
-                                  {
-                                     get => _instanceProperty;
-                                     private init => _instanceProperty = value;
-                                  }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get => _instanceProperty;
+                     private init => _instanceProperty = value;
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -103,47 +103,47 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             get { return _instanceProperty; }
-                             init { _instanceProperty = value; }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get { return _instanceProperty; }
+                     init { _instanceProperty = value; }
+                  }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ValueObject<string>]
-                            	public partial class TestValueObject
-                            	{
-                                  [ValueObjectMemberIgnore]
-                                  private readonly int _instanceProperty;
-
-                                  public int {|#0:InstanceProperty|}
-                                  {
-                                     get { return _instanceProperty; }
-                                     private init { _instanceProperty = value; }
-                                  }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get { return _instanceProperty; }
+                     private init { _instanceProperty = value; }
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -154,18 +154,18 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          private int {|#0:InstanceProperty|} { get; init; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  private int {|#0:InstanceProperty|} { get; init; }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -175,25 +175,25 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          private int {|#0:InstanceProperty|}
-                          {
-                             get => _instanceProperty;
-                             init => _instanceProperty = value;
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  private int {|#0:InstanceProperty|}
+                  {
+                     get => _instanceProperty;
+                     init => _instanceProperty = value;
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -203,25 +203,25 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          private int {|#0:InstanceProperty|}
-                          {
-                             get { return _instanceProperty; }
-                             init { _instanceProperty = value; }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  private int {|#0:InstanceProperty|}
+                  {
+                     get { return _instanceProperty; }
+                     init { _instanceProperty = value; }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -234,33 +234,33 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          public int {|#0:InstanceProperty|} { get; init; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public int {|#0:InstanceProperty|} { get; init; }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class TestValueObject
-                            	{
-                                  public int InstanceProperty { get; private init; }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  public int InstanceProperty { get; private init; }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -271,47 +271,47 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             get => _instanceProperty;
-                             init => _instanceProperty = value;
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get => _instanceProperty;
+                     init => _instanceProperty = value;
+                  }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class TestValueObject
-                            	{
-                                  [ValueObjectMemberIgnore]
-                                  private readonly int _instanceProperty;
-
-                                  public int {|#0:InstanceProperty|}
-                                  {
-                                     get => _instanceProperty;
-                                     private init => _instanceProperty = value;
-                                  }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get => _instanceProperty;
+                     private init => _instanceProperty = value;
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -322,47 +322,47 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          public int {|#0:InstanceProperty|}
-                          {
-                             get { return _instanceProperty; }
-                             init { _instanceProperty = value; }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get { return _instanceProperty; }
+                     init { _instanceProperty = value; }
+                  }
+               }
+            }
+            """;
 
          var expectedCode = """
 
-                            using System;
-                            using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                            namespace TestNamespace
-                            {
-                               [ComplexValueObject]
-                            	public partial class TestValueObject
-                            	{
-                                  [ValueObjectMemberIgnore]
-                                  private readonly int _instanceProperty;
-
-                                  public int {|#0:InstanceProperty|}
-                                  {
-                                     get { return _instanceProperty; }
-                                     private init { _instanceProperty = value; }
-                                  }
-                               }
-                            }
-                            """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get { return _instanceProperty; }
+                     private init { _instanceProperty = value; }
+                  }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestValueObject");
          await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -373,18 +373,18 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          private int {|#0:InstanceProperty|} { get; init; }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  private int {|#0:InstanceProperty|} { get; init; }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -394,25 +394,25 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          private int {|#0:InstanceProperty|}
-                          {
-                             get => _instanceProperty;
-                             init => _instanceProperty = value;
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  private int {|#0:InstanceProperty|}
+                  {
+                     get => _instanceProperty;
+                     init => _instanceProperty = value;
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -422,25 +422,25 @@ public class TTRESG042_InitAccessorMustBePrivate
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ComplexValueObject]
-                    	public partial class TestValueObject
-                    	{
-                          [ValueObjectMemberIgnore]
-                          private readonly int _instanceProperty;
-
-                          private int {|#0:InstanceProperty|}
-                          {
-                             get { return _instanceProperty; }
-                             init { _instanceProperty = value; }
-                          }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject
+            	{
+                  [ValueObjectMemberIgnore]
+                  private readonly int _instanceProperty;
+            
+                  private int {|#0:InstanceProperty|}
+                  {
+                     get { return _instanceProperty; }
+                     init { _instanceProperty = value; }
+                  }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }

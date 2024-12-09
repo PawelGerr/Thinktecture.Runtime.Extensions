@@ -18,18 +18,18 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>]
-                   	public partial class TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>]
+         	public partial class TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -42,15 +42,15 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   [ValueObject<string>]
-                   public partial class TestValueObject
-                   {
-                   }
+         [ValueObject<string>]
+         public partial class TestValueObject
+         {
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -63,18 +63,18 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ValueObject<string>]
-                   	public partial struct TestValueObject
-                   	{
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>]
+         	public partial struct TestValueObject
+         	{
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -87,21 +87,21 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial class TestValueObject
-                   	{
-                         public readonly string ReferenceField;
-                         public int StructProperty { get; }
-                         public decimal? NullableStructProperty { get; }
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public readonly string ReferenceField;
+               public int StructProperty { get; }
+               public decimal? NullableStructProperty { get; }
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -114,18 +114,18 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   [ComplexValueObject]
-                   public partial class TestValueObject
-                   {
-                      public readonly string ReferenceField;
-                      public int StructProperty { get; }
-                      public decimal? NullableStructProperty { get; }
-                   }
+         [ComplexValueObject]
+         public partial class TestValueObject
+         {
+            public readonly string ReferenceField;
+            public int StructProperty { get; }
+            public decimal? NullableStructProperty { get; }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -138,21 +138,21 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   namespace Thinktecture.Tests
-                   {
-                     [ComplexValueObject]
-                   	public partial struct TestValueObject
-                   	{
-                         public readonly string ReferenceField;
-                         public int StructProperty { get; }
-                         public decimal? NullableStructProperty { get; }
-                     }
-                   }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject]
+         	public partial struct TestValueObject
+         	{
+               public readonly string ReferenceField;
+               public int StructProperty { get; }
+               public decimal? NullableStructProperty { get; }
+           }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);

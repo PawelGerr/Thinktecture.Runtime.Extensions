@@ -13,20 +13,20 @@ public class TTRESG101_StaticPropertiesAreNotConsideredItems
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       public static TestEnum {|#0:Item2|} => default;
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               public static TestEnum {|#0:Item2|} => default;
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item2");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);

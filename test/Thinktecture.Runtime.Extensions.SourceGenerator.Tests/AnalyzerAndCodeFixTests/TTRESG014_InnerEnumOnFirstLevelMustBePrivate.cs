@@ -13,41 +13,41 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       public sealed class {|#0:InnerTestEnum|} : TestEnum
-                 	   {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               public sealed class {|#0:InnerTestEnum|} : TestEnum
+         	   {
+               }
+            }
+         }
+         """;
 
       var expectedCode = """
 
-                         using System;
-                         using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                         namespace TestNamespace
-                         {
-                            [SmartEnum<string>(IsValidatable = true)]
-                         	public partial class TestEnum
-                         	{
-                               public static readonly TestEnum Item1 = default;
-
-                               private sealed class {|#0:InnerTestEnum|} : TestEnum
-                         	   {
-                               }
-                            }
-                         }
-                         """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private sealed class {|#0:InnerTestEnum|} : TestEnum
+         	   {
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InnerTestEnum");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -58,22 +58,22 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private sealed class {|#0:InnerTestEnum|} : TestEnum
-                 	   {
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private sealed class {|#0:InnerTestEnum|} : TestEnum
+         	   {
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }
@@ -83,25 +83,25 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private sealed class InnerTestEnum : TestEnum
-                 	   {
-                          public sealed class {|#0:MostInnerTestEnum|} : TestEnum
-                 	      {
-                          }
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private sealed class InnerTestEnum : TestEnum
+         	   {
+                  public sealed class {|#0:MostInnerTestEnum|} : TestEnum
+         	      {
+                  }
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

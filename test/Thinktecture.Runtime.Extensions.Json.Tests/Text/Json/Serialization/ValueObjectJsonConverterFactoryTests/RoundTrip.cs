@@ -200,10 +200,10 @@ public class RoundTrip : JsonTestsBase
    public void Should_roundtrip_serialize_dictionary_with_string_based_enum_key()
    {
       var dictionary = new Dictionary<TestSmartEnum_Class_StringBased, int>
-      {
-         { TestSmartEnum_Class_StringBased.Value1, 1 },
-         { TestSmartEnum_Class_StringBased.Value2, 2 }
-      };
+                       {
+                          { TestSmartEnum_Class_StringBased.Value1, 1 },
+                          { TestSmartEnum_Class_StringBased.Value2, 2 }
+                       };
 
       var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
 

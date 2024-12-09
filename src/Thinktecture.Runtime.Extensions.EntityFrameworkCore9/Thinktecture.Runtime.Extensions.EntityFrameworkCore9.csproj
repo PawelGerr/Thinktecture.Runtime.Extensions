@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
-        <PackageTags>common;EntityFrameworkCore</PackageTags>
-        <DefineConstants>$(DefineConstants);COMPLEX_TYPES</DefineConstants>
-        <TargetFramework>net8.0</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
+    <PackageTags>common;EntityFrameworkCore</PackageTags>
+    <DefineConstants>$(DefineConstants);COMPLEX_TYPES</DefineConstants>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"/>
+  <ItemGroup>
+    <ProjectReference Include="..\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
 
-        <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Sources\**\*.cs"/>
-    </ItemGroup>
+    <Compile Include="..\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Sources\**\*.cs" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+  </ItemGroup>
 
 </Project>

@@ -15,18 +15,18 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>(SkipKeyMember = true)]
-                       public partial class ValueObject
-                    	{
-                          private readonly int {|#0:_value|};
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>(SkipKeyMember = true)]
+               public partial class ValueObject
+            	{
+                  private readonly int {|#0:_value|};
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "int", "string");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -37,20 +37,20 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>(SkipKeyMember = true)]
-                       public partial class ValueObject
-                    	{
-                          private readonly string? {|#0:_value|};
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>(SkipKeyMember = true)]
+               public partial class ValueObject
+            	{
+                  private readonly string? {|#0:_value|};
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "string?", "string");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -61,20 +61,20 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<int>(SkipKeyMember = true)]
-                       public partial class ValueObject
-                    	{
-                          private readonly int? {|#0:_value|};
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<int>(SkipKeyMember = true)]
+               public partial class ValueObject
+            	{
+                  private readonly int? {|#0:_value|};
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "int?", "int");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -85,18 +85,18 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>(SkipKeyMember = true)]
-                       public partial class {|#0:ValueObject|}
-                    	{
-                          private readonly string _value;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>(SkipKeyMember = true)]
+               public partial class {|#0:ValueObject|}
+            	{
+                  private readonly string _value;
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
       }

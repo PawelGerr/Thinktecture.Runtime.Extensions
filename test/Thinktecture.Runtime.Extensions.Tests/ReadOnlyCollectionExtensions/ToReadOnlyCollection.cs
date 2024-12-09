@@ -1,10 +1,10 @@
-// ReSharper disable once CheckNamespace
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 #nullable enable
 
+// ReSharper disable once CheckNamespace
 namespace Thinktecture.Runtime.Tests.ReadOnlyCollectionExtensions;
 
 public class ToReadOnlyCollection

@@ -69,17 +69,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    {
       var comparables = validStates
          .SelectMany((state, _) =>
-                     {
-                        if (state.KeyMember is null)
-                           return ImmutableArray<ComparisonOperatorsGeneratorState>.Empty;
+         {
+            if (state.KeyMember is null)
+               return ImmutableArray<ComparisonOperatorsGeneratorState>.Empty;
 
-                        return ImmutableArray.Create(new ComparisonOperatorsGeneratorState(state.State,
-                                                                                           state.KeyMember,
-                                                                                           Constants.Methods.GET,
-                                                                                           state.Settings.ComparisonOperators,
-                                                                                           state.KeyMember.ComparisonOperators,
-                                                                                           state.AttributeInfo.KeyMemberComparerAccessor));
-                     });
+            return ImmutableArray.Create(new ComparisonOperatorsGeneratorState(state.State,
+                                                                               state.KeyMember,
+                                                                               Constants.Methods.GET,
+                                                                               state.Settings.ComparisonOperators,
+                                                                               state.KeyMember.ComparisonOperators,
+                                                                               state.AttributeInfo.KeyMemberComparerAccessor));
+         });
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
    }
@@ -99,19 +99,19 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    {
       var parsables = validStates
          .SelectMany((state, _) =>
-                     {
-                        if (state.KeyMember is null)
-                           return ImmutableArray<ParsableGeneratorState>.Empty;
+         {
+            if (state.KeyMember is null)
+               return ImmutableArray<ParsableGeneratorState>.Empty;
 
-                        return ImmutableArray.Create(new ParsableGeneratorState(state.State,
-                                                                                state.KeyMember,
-                                                                                state.State.ValidationError,
-                                                                                state.Settings.SkipIParsable,
-                                                                                state.KeyMember.IsParsable,
-                                                                                true,
-                                                                                state.State.Settings.IsValidatable,
-                                                                                state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
-                     });
+            return ImmutableArray.Create(new ParsableGeneratorState(state.State,
+                                                                    state.KeyMember,
+                                                                    state.State.ValidationError,
+                                                                    state.Settings.SkipIParsable,
+                                                                    state.KeyMember.IsParsable,
+                                                                    true,
+                                                                    state.State.Settings.IsValidatable,
+                                                                    state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
+         });
       InitializeParsableCodeGenerator(context, parsables, options);
    }
 
@@ -119,17 +119,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    {
       var comparables = validStates
          .SelectMany((state, _) =>
-                     {
-                        if (state.KeyMember is null)
-                           return ImmutableArray<ComparableGeneratorState>.Empty;
+         {
+            if (state.KeyMember is null)
+               return ImmutableArray<ComparableGeneratorState>.Empty;
 
-                        return ImmutableArray.Create(new ComparableGeneratorState(state.State,
-                                                                                  state.KeyMember,
-                                                                                  Constants.Methods.GET,
-                                                                                  state.Settings.SkipIComparable,
-                                                                                  state.KeyMember.IsComparable,
-                                                                                  state.AttributeInfo.KeyMemberComparerAccessor));
-                     });
+            return ImmutableArray.Create(new ComparableGeneratorState(state.State,
+                                                                      state.KeyMember,
+                                                                      Constants.Methods.GET,
+                                                                      state.Settings.SkipIComparable,
+                                                                      state.KeyMember.IsComparable,
+                                                                      state.AttributeInfo.KeyMemberComparerAccessor));
+         });
 
       InitializeComparableCodeGenerator(context, comparables, options);
    }
@@ -138,16 +138,16 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    {
       var formattables = validStates
          .SelectMany((state, _) =>
-                     {
-                        if (state.KeyMember is null)
-                           return ImmutableArray<FormattableGeneratorState>.Empty;
+         {
+            if (state.KeyMember is null)
+               return ImmutableArray<FormattableGeneratorState>.Empty;
 
-                        return ImmutableArray.Create(new FormattableGeneratorState(state.State,
-                                                                                   state.KeyMember,
-                                                                                   Constants.Methods.GET,
-                                                                                   state.Settings.SkipIFormattable,
-                                                                                   state.KeyMember.IsFormattable));
-                     });
+            return ImmutableArray.Create(new FormattableGeneratorState(state.State,
+                                                                       state.KeyMember,
+                                                                       Constants.Methods.GET,
+                                                                       state.Settings.SkipIFormattable,
+                                                                       state.KeyMember.IsFormattable));
+         });
 
       InitializeFormattableCodeGenerator(context, formattables, options);
    }
@@ -183,16 +183,16 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                  .Combine(serializerGeneratorFactories)
                                                  .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                  .Where(tuple =>
-                                                        {
-                                                           if (tuple.Factory.MustGenerateCode(tuple.State))
-                                                           {
-                                                              Logger.LogDebug("Code generator must generate code.", null, tuple.State, factory: tuple.Factory);
-                                                              return true;
-                                                           }
+                                                 {
+                                                    if (tuple.Factory.MustGenerateCode(tuple.State))
+                                                    {
+                                                       Logger.LogDebug("Code generator must generate code.", null, tuple.State, factory: tuple.Factory);
+                                                       return true;
+                                                    }
 
-                                                           Logger.LogInformation("Code generator must not generate code.", null, tuple.State, factory: tuple.Factory);
-                                                           return false;
-                                                        });
+                                                    Logger.LogInformation("Code generator must not generate code.", null, tuple.State, factory: tuple.Factory);
+                                                    return false;
+                                                 });
 
       context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
    }

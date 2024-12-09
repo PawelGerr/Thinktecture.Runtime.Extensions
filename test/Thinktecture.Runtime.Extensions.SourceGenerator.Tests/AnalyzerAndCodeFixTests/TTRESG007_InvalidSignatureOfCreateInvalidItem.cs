@@ -13,23 +13,23 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       public static TestEnum {|#0:CreateInvalidItem|}(string key)
-                       {
-                          return null;
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               public static TestEnum {|#0:CreateInvalidItem|}(string key)
+               {
+                  return null;
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -40,23 +40,23 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private TestEnum {|#0:CreateInvalidItem|}(string key)
-                       {
-                          return null;
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private TestEnum {|#0:CreateInvalidItem|}(string key)
+               {
+                  return null;
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -67,23 +67,23 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private static string {|#0:CreateInvalidItem|}(string key)
-                       {
-                          return null;
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private static string {|#0:CreateInvalidItem|}(string key)
+               {
+                  return null;
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -94,23 +94,23 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private static TestEnum {|#0:CreateInvalidItem|}(int key)
-                       {
-                          return null;
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private static TestEnum {|#0:CreateInvalidItem|}(int key)
+               {
+                  return null;
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -121,23 +121,23 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private static TestEnum {|#0:CreateInvalidItem|}(string key, string other)
-                       {
-                          return null;
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private static TestEnum {|#0:CreateInvalidItem|}(string key, string other)
+               {
+                  return null;
+               }
+            }
+         }
+         """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
@@ -148,23 +148,23 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
    {
       var code = """
 
-                 using System;
-                 using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                 namespace TestNamespace
-                 {
-                    [SmartEnum<string>(IsValidatable = true)]
-                 	public partial class TestEnum
-                 	{
-                       public static readonly TestEnum Item1 = default;
-
-                       private static TestEnum {|#0:CreateInvalidItem|}(string key)
-                       {
-                          return null;
-                       }
-                    }
-                 }
-                 """;
+         namespace TestNamespace
+         {
+            [SmartEnum<string>(IsValidatable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default;
+         
+               private static TestEnum {|#0:CreateInvalidItem|}(string key)
+               {
+                  return null;
+               }
+            }
+         }
+         """;
 
       await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
    }

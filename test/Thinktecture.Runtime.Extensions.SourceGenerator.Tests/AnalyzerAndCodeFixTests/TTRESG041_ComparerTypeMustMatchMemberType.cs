@@ -17,22 +17,22 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using System.Collections.Generic;
-                    using Thinktecture;
+            using System;
+            using System.Collections.Generic;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<int>]
-                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default!;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<int>]
+               [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default!;
+               }
+            }
+            """;
 
          var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Default<string>", "int");
          await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -43,22 +43,22 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using System.Collections.Generic;
-                    using Thinktecture;
+            using System;
+            using System.Collections.Generic;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [SmartEnum<int>]
-                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
-                    	public partial class TestEnum
-                    	{
-                          public static readonly TestEnum Item1 = default!;
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [SmartEnum<int>]
+               [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default!;
+               }
+            }
+            """;
 
          await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -71,21 +71,21 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using System.Collections.Generic;
-                    using Thinktecture;
+            using System;
+            using System.Collections.Generic;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<int>]
-                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
-                    	public partial class TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<int>]
+               [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
+            	public partial class TestValueObject
+            	{
+               }
+            }
+            """;
 
          var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Default<string>", "int");
          await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -96,21 +96,21 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using System.Collections.Generic;
-                    using Thinktecture;
+            using System;
+            using System.Collections.Generic;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<int>]
-                       [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
-                    	public partial class TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<int>]
+               [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
+            	public partial class TestValueObject
+            	{
+               }
+            }
+            """;
 
          await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }

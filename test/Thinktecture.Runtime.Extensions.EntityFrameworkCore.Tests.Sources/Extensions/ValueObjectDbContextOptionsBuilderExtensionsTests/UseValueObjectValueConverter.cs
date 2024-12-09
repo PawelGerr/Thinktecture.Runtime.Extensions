@@ -113,7 +113,7 @@ public class UseValueObjectValueConverter : IDisposable
 #if COMPLEX_TYPES
       ITypeBase
 #else
-         IEntityType
+      IEntityType
 #endif
          entityType,
       string propertyName,

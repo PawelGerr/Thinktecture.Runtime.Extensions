@@ -17,21 +17,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              TestUnion_struct_string_int testStruct = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      TestUnion_struct_string_int testStruct = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -42,23 +42,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           private TestUnion_struct_string_int _field;
-
-                           public void TestMethod()
-                           {
-                              _field = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   private TestUnion_struct_string_int _field;
+            
+                   public void TestMethod()
+                   {
+                      _field = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -69,23 +69,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public TestUnion_struct_string_int Property { get; set; }
-
-                           public void TestMethod()
-                           {
-                              Property = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public TestUnion_struct_string_int Property { get; set; }
+            
+                   public void TestMethod()
+                   {
+                      Property = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -96,21 +96,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              (_, TestUnion_struct_string_int value) = (42, {|#0:default(TestUnion_struct_string_int)|});
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      (_, TestUnion_struct_string_int value) = (42, {|#0:default(TestUnion_struct_string_int)|});
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -121,23 +121,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public TestUnion_struct_string_int? Property { get; set; }
-
-                           public void TestMethod()
-                           {
-                              Property ??= {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public TestUnion_struct_string_int? Property { get; set; }
+            
+                   public void TestMethod()
+                   {
+                      Property ??= {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -148,25 +148,25 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              OtherMethod({|#0:default(TestUnion_struct_string_int)|});
-                           }
-
-                           public void OtherMethod(TestUnion_struct_string_int value)
-                           {
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      OtherMethod({|#0:default(TestUnion_struct_string_int)|});
+                   }
+            
+                   public void OtherMethod(TestUnion_struct_string_int value)
+                   {
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -177,20 +177,20 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod(TestUnion_struct_string_int value = {|#0:default(TestUnion_struct_string_int)|})
-                           {
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod(TestUnion_struct_string_int value = {|#0:default(TestUnion_struct_string_int)|})
+                   {
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -201,23 +201,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              if(default(TestUnion_struct_string_int) == default)
-                              {
-                              }
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      if(default(TestUnion_struct_string_int) == default)
+                      {
+                      }
+                   }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
@@ -227,21 +227,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestAdHocUnions;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              TestUnion_struct_string_int testStruct = {|#0:new()|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      TestUnion_struct_string_int testStruct = {|#0:new()|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -255,21 +255,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              IntBasedStructValueObjectWithAllowDefaultStructs testStruct = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      IntBasedStructValueObjectWithAllowDefaultStructs testStruct = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IntBasedStructValueObjectWithAllowDefaultStructs).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
@@ -279,21 +279,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              StructValueObject testStruct = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject testStruct = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -304,23 +304,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           private StructValueObject _field;
-
-                           public void TestMethod()
-                           {
-                              _field = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   private StructValueObject _field;
+            
+                   public void TestMethod()
+                   {
+                      _field = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -331,23 +331,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public StructValueObject Property { get; set; }
-
-                           public void TestMethod()
-                           {
-                              Property = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public StructValueObject Property { get; set; }
+            
+                   public void TestMethod()
+                   {
+                      Property = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -358,21 +358,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              (_, StructValueObject value) = (42, {|#0:default(StructValueObject)|});
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      (_, StructValueObject value) = (42, {|#0:default(StructValueObject)|});
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -383,23 +383,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public StructValueObject? Property { get; set; }
-
-                           public void TestMethod()
-                           {
-                              Property ??= {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public StructValueObject? Property { get; set; }
+            
+                   public void TestMethod()
+                   {
+                      Property ??= {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -410,25 +410,25 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              OtherMethod({|#0:default(StructValueObject)|});
-                           }
-
-                           public void OtherMethod(StructValueObject value)
-                           {
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      OtherMethod({|#0:default(StructValueObject)|});
+                   }
+            
+                   public void OtherMethod(StructValueObject value)
+                   {
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -439,20 +439,20 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod(StructValueObject value = {|#0:default(StructValueObject)|})
-                           {
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod(StructValueObject value = {|#0:default(StructValueObject)|})
+                   {
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -463,23 +463,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              if(default(StructValueObject) == default)
-                              {
-                              }
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      if(default(StructValueObject) == default)
+                      {
+                      }
+                   }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
@@ -489,21 +489,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              StructValueObject testStruct = {|#0:new()|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject testStruct = {|#0:new()|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -514,21 +514,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              IntBasedStructValueObjectWithAllowDefaultStructs testStruct = {|#0:new()|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      IntBasedStructValueObjectWithAllowDefaultStructs testStruct = {|#0:new()|};
+                   }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IntBasedStructValueObjectWithAllowDefaultStructs).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
@@ -541,21 +541,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              BoundaryStructWithAllowDefaultStructs testStruct = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      BoundaryStructWithAllowDefaultStructs testStruct = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
@@ -565,21 +565,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              BoundaryStruct testStruct = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      BoundaryStruct testStruct = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -590,23 +590,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           private BoundaryStruct _field;
-
-                           public void TestMethod()
-                           {
-                              _field = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   private BoundaryStruct _field;
+            
+                   public void TestMethod()
+                   {
+                      _field = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -617,23 +617,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public BoundaryStruct Property { get; set; }
-
-                           public void TestMethod()
-                           {
-                              Property = {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public BoundaryStruct Property { get; set; }
+            
+                   public void TestMethod()
+                   {
+                      Property = {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -644,21 +644,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              (_, BoundaryStruct value) = (42, {|#0:default(BoundaryStruct)|});
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      (_, BoundaryStruct value) = (42, {|#0:default(BoundaryStruct)|});
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -669,23 +669,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public BoundaryStruct? Property { get; set; }
-
-                           public void TestMethod()
-                           {
-                              Property ??= {|#0:default|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public BoundaryStruct? Property { get; set; }
+            
+                   public void TestMethod()
+                   {
+                      Property ??= {|#0:default|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -696,25 +696,25 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              OtherMethod({|#0:default(BoundaryStruct)|});
-                           }
-
-                           public void OtherMethod(BoundaryStruct value)
-                           {
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      OtherMethod({|#0:default(BoundaryStruct)|});
+                   }
+            
+                   public void OtherMethod(BoundaryStruct value)
+                   {
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -725,20 +725,20 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod(BoundaryStruct value = {|#0:default(BoundaryStruct)|})
-                           {
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod(BoundaryStruct value = {|#0:default(BoundaryStruct)|})
+                   {
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -749,23 +749,23 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              if(default(BoundaryStruct) == default)
-                              {
-                              }
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      if(default(BoundaryStruct) == default)
+                      {
+                      }
+                   }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
@@ -775,21 +775,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              BoundaryStruct testStruct = {|#0:new()|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      BoundaryStruct testStruct = {|#0:new()|};
+                   }
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
@@ -800,21 +800,21 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
-                    using Thinktecture.Runtime.Tests.TestValueObjects;
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
 
-                    namespace TestNamespace
-                    {
-                       public class TestClass
-                       {
-                           public void TestMethod()
-                           {
-                              BoundaryStructWithAllowDefaultStructs testStruct = {|#0:new()|};
-                           }
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      BoundaryStructWithAllowDefaultStructs testStruct = {|#0:new()|};
+                   }
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }

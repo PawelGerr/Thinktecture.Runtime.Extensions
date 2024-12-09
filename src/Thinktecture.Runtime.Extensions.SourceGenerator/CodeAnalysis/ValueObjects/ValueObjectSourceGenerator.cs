@@ -122,24 +122,24 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
 
       var keyedSerializerGeneratorStates = validStates.SelectMany((state, _) =>
-                                                                  {
-                                                                     var serializerState = new KeyedSerializerGeneratorState(state.State, state.State.KeyMember, state.AttributeInfo);
+                                                      {
+                                                         var serializerState = new KeyedSerializerGeneratorState(state.State, state.State.KeyMember, state.AttributeInfo);
 
-                                                                     return ImmutableArray.Create(serializerState);
-                                                                  })
+                                                         return ImmutableArray.Create(serializerState);
+                                                      })
                                                       .Combine(serializerGeneratorFactories)
                                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                       .Where(tuple =>
-                                                             {
-                                                                if (tuple.Factory.MustGenerateCode(tuple.State))
-                                                                {
-                                                                   Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
-                                                                   return true;
-                                                                }
+                                                      {
+                                                         if (tuple.Factory.MustGenerateCode(tuple.State))
+                                                         {
+                                                            Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
+                                                            return true;
+                                                         }
 
-                                                                Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
-                                                                return false;
-                                                             });
+                                                         Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
+                                                         return false;
+                                                      });
 
       context.RegisterImplementationSourceOutput(keyedSerializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
    }
@@ -153,47 +153,47 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
 
       var keyedSerializerGeneratorStates = validStates.SelectMany((state, _) =>
-                                                                  {
-                                                                     if (state.AttributeInfo.DesiredFactories.All(f => f.UseForSerialization == SerializationFrameworks.None))
-                                                                        return ImmutableArray<KeyedSerializerGeneratorState>.Empty;
+                                                      {
+                                                         if (state.AttributeInfo.DesiredFactories.All(f => f.UseForSerialization == SerializationFrameworks.None))
+                                                            return ImmutableArray<KeyedSerializerGeneratorState>.Empty;
 
-                                                                     var serializerState = new KeyedSerializerGeneratorState(state.State, null, state.AttributeInfo);
+                                                         var serializerState = new KeyedSerializerGeneratorState(state.State, null, state.AttributeInfo);
 
-                                                                     return ImmutableArray.Create(serializerState);
-                                                                  })
+                                                         return ImmutableArray.Create(serializerState);
+                                                      })
                                                       .Combine(serializerGeneratorFactories)
                                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                       .Where(tuple =>
-                                                             {
-                                                                if (tuple.Factory.MustGenerateCode(tuple.State))
-                                                                {
-                                                                   Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
-                                                                   return true;
-                                                                }
+                                                      {
+                                                         if (tuple.Factory.MustGenerateCode(tuple.State))
+                                                         {
+                                                            Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
+                                                            return true;
+                                                         }
 
-                                                                Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
-                                                                return false;
-                                                             });
+                                                         Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
+                                                         return false;
+                                                      });
 
       var complexSerializerGeneratorStates = validStates.SelectMany((state, _) =>
-                                                                    {
-                                                                       var serializerState = new ComplexSerializerGeneratorState(state.State, state.State.AssignableInstanceFieldsAndProperties, state.AttributeInfo);
+                                                        {
+                                                           var serializerState = new ComplexSerializerGeneratorState(state.State, state.State.AssignableInstanceFieldsAndProperties, state.AttributeInfo);
 
-                                                                       return ImmutableArray.Create(serializerState);
-                                                                    })
+                                                           return ImmutableArray.Create(serializerState);
+                                                        })
                                                         .Combine(serializerGeneratorFactories)
                                                         .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                         .Where(tuple =>
-                                                               {
-                                                                  if (tuple.Factory.MustGenerateCode(tuple.State))
-                                                                  {
-                                                                     Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
-                                                                     return true;
-                                                                  }
+                                                        {
+                                                           if (tuple.Factory.MustGenerateCode(tuple.State))
+                                                           {
+                                                              Logger.LogDebug("Code generator must generate code.", null, tuple.State, tuple.Factory);
+                                                              return true;
+                                                           }
 
-                                                                  Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
-                                                                  return false;
-                                                               });
+                                                           Logger.LogInformation("Code generator must not generate code.", null, tuple.State, tuple.Factory);
+                                                           return false;
+                                                        });
 
       context.RegisterImplementationSourceOutput(keyedSerializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
       context.RegisterImplementationSourceOutput(complexSerializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));

@@ -35,10 +35,10 @@ public class TestEntity_with_Enum_and_ValueObjects
    public static void Configure(ModelBuilder modelBuilder)
    {
       modelBuilder.Entity<TestEntity_with_Enum_and_ValueObjects>(builder =>
-                                                                 {
-                                                                    builder.OwnsOne(e => e.Boundary);
-                                                                    builder.OwnsOne(e => e.BoundaryWithCustomError);
-                                                                    builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames);
-                                                                 });
+      {
+         builder.OwnsOne(e => e.Boundary);
+         builder.OwnsOne(e => e.BoundaryWithCustomError);
+         builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames);
+      });
    }
 }

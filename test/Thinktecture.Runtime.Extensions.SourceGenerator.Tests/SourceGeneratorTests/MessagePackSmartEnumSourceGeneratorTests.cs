@@ -18,19 +18,19 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
+         using System;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [SmartEnum<string>]
-                   	public partial class TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<string>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
                                                                 typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -43,17 +43,17 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   [SmartEnum<string>]
-                   public partial class TestEnum
-                   {
-                      public static readonly TestEnum Item1 = new("Item1");
-                      public static readonly TestEnum Item2 = new("Item2");
-                   }
+         [SmartEnum<string>]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
                                                                 typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -66,19 +66,19 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
+         using System;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [SmartEnum<string>]
-                   	public partial struct TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<string>]
+         	public partial struct TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
                                                                 typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -91,29 +91,29 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using MessagePack;
+         using System;
+         using MessagePack;
 
-                   namespace Thinktecture.Tests
-                   {
-                      public class TestEnumMessagePackFormatter : Thinktecture.Formatters.EnumMessagePackFormatter<TestEnum, string>
-                      {
-                         public TestEnumMessagePackFormatter()
-                            : base(TestEnum.Get)
-                         {
-                         }
-                      }
+         namespace Thinktecture.Tests
+         {
+            public class TestEnumMessagePackFormatter : Thinktecture.Formatters.EnumMessagePackFormatter<TestEnum, string>
+            {
+               public TestEnumMessagePackFormatter()
+                  : base(TestEnum.Get)
+               {
+               }
+            }
+         
+            [SmartEnum<string>]
+            [MessagePackFormatter(typeof(TestEnumMessagePackFormatter))]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                      [SmartEnum<string>]
-                      [MessagePackFormatter(typeof(TestEnumMessagePackFormatter))]
-                   	public partial class TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
-
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
                                                                 typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
@@ -126,19 +126,19 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
+         using System;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [SmartEnum]
-                   	public partial class TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
                                                                 typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);

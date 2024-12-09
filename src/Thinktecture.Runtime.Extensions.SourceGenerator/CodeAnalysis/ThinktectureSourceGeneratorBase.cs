@@ -30,14 +30,14 @@ public abstract class ThinktectureSourceGeneratorBase
    protected IncrementalValueProvider<GeneratorOptions> GetGeneratorOptions(IncrementalGeneratorInitializationContext context)
    {
       return context.AnalyzerConfigOptionsProvider.Select((options, _) =>
-                                                          {
-                                                             var counterEnabled = options.GlobalOptions.TryGetValue(Constants.Configuration.COUNTER, out var counterEnabledValue)
-                                                                                  && IsFeatureEnable(counterEnabledValue);
+      {
+         var counterEnabled = options.GlobalOptions.TryGetValue(Constants.Configuration.COUNTER, out var counterEnabledValue)
+                              && IsFeatureEnable(counterEnabledValue);
 
-                                                             var loggingOptions = GetLoggingOptions(options);
+         var loggingOptions = GetLoggingOptions(options);
 
-                                                             return new GeneratorOptions(counterEnabled, loggingOptions);
-                                                          });
+         return new GeneratorOptions(counterEnabled, loggingOptions);
+      });
    }
 
    protected void SetupLogger(
@@ -47,23 +47,23 @@ public abstract class ThinktectureSourceGeneratorBase
       var logging = optionsProvider
                     .Select((options, _) => options.Logging)
                     .Select((options, _) =>
-                            {
-                               var logger = Logger;
-                               var source = GetType().Name;
+                    {
+                       var logger = Logger;
+                       var source = GetType().Name;
 
-                               Logger = options is null
-                                           ? new SelfLogErrorLogger(source)
-                                           : _loggerFactory.CreateLogger(options.Value.Level, options.Value.FilePath, options.Value.FilePathMustBeUnique, options.Value.InitialBufferSize, source);
+                       Logger = options is null
+                                   ? new SelfLogErrorLogger(source)
+                                   : _loggerFactory.CreateLogger(options.Value.Level, options.Value.FilePath, options.Value.FilePathMustBeUnique, options.Value.InitialBufferSize, source);
 
-                               logger.Dispose();
+                       logger.Dispose();
 
-                               return options;
-                            })
+                       return options;
+                    })
                     .SelectMany((_, _) => ImmutableArray<int>.Empty); // don't emit anything
 
       context.RegisterSourceOutput(logging, static (_, _) =>
-                                            {
-                                            });
+      {
+      });
    }
 
    private static LoggingOptions? GetLoggingOptions(AnalyzerConfigOptionsProvider options)
@@ -226,27 +226,27 @@ public abstract class ThinktectureSourceGeneratorBase
                       .WithComparer(new SetComparer<ComparisonOperatorsGeneratorState>())
                       .SelectMany((states, _) => states)
                       .SelectMany((state, _) =>
-                                  {
-                                     if (ComparisonOperatorsCodeGenerator.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, state.ComparerAccessor, out var codeGenerator))
-                                        return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+                      {
+                         if (ComparisonOperatorsCodeGenerator.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, state.ComparerAccessor, out var codeGenerator))
+                            return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
 
-                                     return ImmutableArray<(ComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
-                                  });
+                         return ImmutableArray<(ComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
+                      });
 
       context.RegisterSourceOutput(operators.Combine(options), (ctx, tuple) =>
-                                                               {
-                                                                  var state = tuple.Left.State;
-                                                                  var generator = tuple.Left.CodeGenerator;
+      {
+         var state = tuple.Left.State;
+         var generator = tuple.Left.CodeGenerator;
 
-                                                                  GenerateCode(ctx,
-                                                                               state.Type.Namespace,
-                                                                               state.Type.ContainingTypes,
-                                                                               state.Type.Name,
-                                                                               state.Type.GenericsFullyQualified.Count,
-                                                                               new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
-                                                                               tuple.Right,
-                                                                               InterfaceCodeGeneratorFactory.Create(generator));
-                                                               });
+         GenerateCode(ctx,
+                      state.Type.Namespace,
+                      state.Type.ContainingTypes,
+                      state.Type.Name,
+                      state.Type.GenericsFullyQualified.Count,
+                      new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
+                      tuple.Right,
+                      InterfaceCodeGeneratorFactory.Create(generator));
+      });
    }
 
    protected void InitializeEqualityComparisonOperatorsCodeGenerator(
@@ -264,17 +264,17 @@ public abstract class ThinktectureSourceGeneratorBase
                       .SelectMany((states, _) => states);
 
       context.RegisterSourceOutput(operators.Combine(options), (ctx, tuple) =>
-                                                               {
-                                                                  if (InterfaceCodeGeneratorFactory.EqualityComparison(tuple.Left.OperatorsGeneration, tuple.Left.EqualityComparer, out var generator))
-                                                                     GenerateCode(ctx,
-                                                                                  tuple.Left.Type.Namespace,
-                                                                                  tuple.Left.Type.ContainingTypes,
-                                                                                  tuple.Left.Type.Name,
-                                                                                  tuple.Left.Type.GenericsFullyQualified.Count,
-                                                                                  tuple.Left,
-                                                                                  tuple.Right,
-                                                                                  generator);
-                                                               });
+      {
+         if (InterfaceCodeGeneratorFactory.EqualityComparison(tuple.Left.OperatorsGeneration, tuple.Left.EqualityComparer, out var generator))
+            GenerateCode(ctx,
+                         tuple.Left.Type.Namespace,
+                         tuple.Left.Type.ContainingTypes,
+                         tuple.Left.Type.Name,
+                         tuple.Left.Type.GenericsFullyQualified.Count,
+                         tuple.Left,
+                         tuple.Right,
+                         generator);
+      });
    }
 
    protected void InitializeOperatorsCodeGenerator(
@@ -291,12 +291,12 @@ public abstract class ThinktectureSourceGeneratorBase
                                    .WithComparer(new SetComparer<OperatorsGeneratorState>())
                                    .SelectMany((states, _) => states)
                                    .SelectMany((state, _) =>
-                                               {
-                                                  if (state.GeneratorProvider.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, out var codeGenerator))
-                                                     return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+                                   {
+                                      if (state.GeneratorProvider.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, out var codeGenerator))
+                                         return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
 
-                                                  return ImmutableArray<(OperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
-                                               });
+                                      return ImmutableArray<(OperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
+                                   });
 
       context.RegisterSourceOutput(operatorsWithGenerator.Combine(options),
                                    (ctx, tuple) =>

@@ -16,19 +16,19 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
+         using System;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [SmartEnum<string>]
-                   	public partial class TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<string>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".Json",
                                                                 typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -41,17 +41,17 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using Thinktecture;
+         using System;
+         using Thinktecture;
 
-                   [SmartEnum<string>]
-                   public partial class TestEnum
-                   {
-                      public static readonly TestEnum Item1 = new("Item1");
-                      public static readonly TestEnum Item2 = new("Item2");
-                   }
+         [SmartEnum<string>]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".Json",
                                                                 typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -64,19 +64,19 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
+         using System;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [SmartEnum<string>]
-                   	public partial struct TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<string>]
+         	public partial struct TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".Json",
                                                                 typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -89,35 +89,35 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
-                   using System.Text.Json.Serialization;
+         using System;
+         using System.Text.Json.Serialization;
 
-                   namespace Thinktecture.Tests
-                   {
-                      public class TestEnumJsonConverter : Thinktecture.Text.Json.Serialization.EnumJsonConverter<TestEnum, string>
-                      {
-                         public TestEnum_EnumJsonConverter()
-                            : this(null)
-                         {
-                         }
+         namespace Thinktecture.Tests
+         {
+            public class TestEnumJsonConverter : Thinktecture.Text.Json.Serialization.EnumJsonConverter<TestEnum, string>
+            {
+               public TestEnum_EnumJsonConverter()
+                  : this(null)
+               {
+               }
+         
+               public TestEnum_EnumJsonConverter(
+                  JsonConverter<string>? keyConverter)
+                  : base(TestEnum.Get, keyConverter)
+               {
+               }
+            }
+         
+            [SmartEnum<string>]
+            [JsonConverter(typeof(TestEnumJsonConverter))]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                         public TestEnum_EnumJsonConverter(
-                            JsonConverter<string>? keyConverter)
-                            : base(TestEnum.Get, keyConverter)
-                         {
-                         }
-                      }
-
-                      [SmartEnum<string>]
-                      [JsonConverter(typeof(TestEnumJsonConverter))]
-                   	public partial class TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
-
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".Json",
                                                                 typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
@@ -130,19 +130,19 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    {
       var source = """
 
-                   using System;
+         using System;
 
-                   namespace Thinktecture.Tests
-                   {
-                      [SmartEnum]
-                   	public partial class TestEnum
-                   	{
-                         public static readonly TestEnum Item1 = new("Item1");
-                         public static readonly TestEnum Item2 = new("Item2");
-                      }
-                   }
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = new("Item1");
+               public static readonly TestEnum Item2 = new("Item2");
+            }
+         }
 
-                   """;
+         """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".Json",
                                                                 typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);

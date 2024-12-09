@@ -15,19 +15,19 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [{|#0:ValueObject<string?>|}]
-                    	public partial class TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [{|#0:ValueObject<string?>|}]
+            	public partial class TestValueObject
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly },
@@ -41,19 +41,19 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -63,17 +63,17 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<string>]
-                    	public partial class {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<string>]
+            	public partial class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }
@@ -83,19 +83,19 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [{|#0:ValueObject<int?>|}]
-                    	public partial class TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [{|#0:ValueObject<int?>|}]
+            	public partial class TestValueObject
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly },
@@ -108,17 +108,17 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       {
          var code = """
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [{|#0:ValueObject<int?>|}]
-                    	public partial class TestValueObject
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [{|#0:ValueObject<int?>|}]
+            	public partial class TestValueObject
+            	{
+               }
+            }
+            """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
@@ -129,19 +129,19 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       {
          var code = """
 
-                    #nullable enable
+            #nullable enable
 
-                    using System;
-                    using Thinktecture;
+            using System;
+            using Thinktecture;
 
-                    namespace TestNamespace
-                    {
-                       [ValueObject<int>]
-                    	public partial class {|#0:TestValueObject|}
-                    	{
-                       }
-                    }
-                    """;
+            namespace TestNamespace
+            {
+               [ValueObject<int>]
+            	public partial class {|#0:TestValueObject|}
+            	{
+               }
+            }
+            """;
 
          await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
       }

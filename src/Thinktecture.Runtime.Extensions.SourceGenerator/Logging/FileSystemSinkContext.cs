@@ -49,16 +49,16 @@ public class FileSystemSinkContext
          var isRemovedOnce = false;
 
          _owners.RemoveAll(r =>
-                           {
-                              if (!r.TryGetTarget(out var generator))
-                                 return true;
+         {
+            if (!r.TryGetTarget(out var generator))
+               return true;
 
-                              if (isRemovedOnce || generator != owner)
-                                 return false;
+            if (isRemovedOnce || generator != owner)
+               return false;
 
-                              isRemovedOnce = true;
-                              return true;
-                           });
+            isRemovedOnce = true;
+            return true;
+         });
       }
    }
 

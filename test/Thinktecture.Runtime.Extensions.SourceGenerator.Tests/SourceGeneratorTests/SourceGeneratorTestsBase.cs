@@ -37,25 +37,25 @@ public abstract class SourceGeneratorTestsBase
       outputs.Should().HaveCount(fileNames.Length);
 
       var verifyTasks = fileNames.Select((fileName, i) =>
-                                         {
-                                            string content;
+                                 {
+                                    string content;
 
-                                            try
-                                            {
-                                               content = outputs.Single(kvp => kvp.Key.Contains(fileName)).Value;
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                               throw new Exception($"Output file '{fileName}' not found. Available files: {String.Join(", ", outputs.Keys)}", ex);
-                                            }
+                                    try
+                                    {
+                                       content = outputs.Single(kvp => kvp.Key.Contains(fileName)).Value;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                       throw new Exception($"Output file '{fileName}' not found. Available files: {String.Join(", ", outputs.Keys)}", ex);
+                                    }
 
-                                            var verify = Verifier.Verify(content, "cs", Settings);
+                                    var verify = Verifier.Verify(content, "cs", Settings);
 
-                                            if (fileNames.Length > 1)
-                                               verify = verify.UseTextForParameters(i.ToString());
+                                    if (fileNames.Length > 1)
+                                       verify = verify.UseTextForParameters(i.ToString());
 
-                                            return verify.ToTask();
-                                         })
+                                    return verify.ToTask();
+                                 })
                                  .ToList();
 
       await Task.WhenAll(verifyTasks);
@@ -95,9 +95,9 @@ public abstract class SourceGeneratorTestsBase
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
       var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName?.Contains("Thinktecture") != true))
-      {
-         typeof(T).Assembly
-      };
+                       {
+                          typeof(T).Assembly
+                       };
 
       foreach (var furtherAssembly in furtherAssemblies)
       {

@@ -308,14 +308,14 @@ public class SmartEnumDemos
 
       var with_3_columns = true;
       var csvWith3Columns = """
-                            volume,datetime,id
-                            123.45,20230426 11:50,2
-                            """;
+         volume,datetime,id
+         123.45,20230426 11:50,2
+         """;
 
       var csvWith4Columns = """
-                            volume,quantity,id,datetime
-                            123.45,42,2,2023-04-25
-                            """;
+         volume,quantity,id,datetime
+         123.45,42,2,2023-04-25
+         """;
 
       var type = SalesCsvImporterType.Monthly;
       var csv = with_3_columns ? csvWith3Columns : csvWith4Columns;
