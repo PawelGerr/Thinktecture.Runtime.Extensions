@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
-    <PackageTags>common;EntityFrameworkCore</PackageTags>
+    <PackageTags>smart-enum;value-object;discriminated-union;EntityFrameworkCore</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

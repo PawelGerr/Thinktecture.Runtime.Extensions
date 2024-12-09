@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Description>Adds better validation support to components from Thinktecture.Runtime.Extensions when using them along with ASP.NET Core.</Description>
+    <PackageTags>smart-enum;value-object;discriminated-union;EntityFrameworkCore</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

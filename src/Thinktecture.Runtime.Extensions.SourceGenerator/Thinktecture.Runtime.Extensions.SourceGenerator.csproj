@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Source generators for Thinktecture.Runtime.Extensions.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageTags>sourcegenerator</PackageTags>
+    <PackageTags>smart-enum;value-object;discriminated-union;sourcegenerator</PackageTags>
     <NoWarn>$(NoWarn);CS1591;RS2008;NU5128</NoWarn>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSymbols>false</IncludeSymbols>
