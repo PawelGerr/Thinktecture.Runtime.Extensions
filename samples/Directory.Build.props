@@ -12,6 +12,7 @@
     <IsPackable>false</IsPackable>
     <ImplicitUsings>disable</ImplicitUsings>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <ReportAnalyzer>true</ReportAnalyzer>
     <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePathMustBeUnique>false</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePathMustBeUnique>
     <ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>C:\temp\ttre_samples_logs.txt</ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath>
   </PropertyGroup>

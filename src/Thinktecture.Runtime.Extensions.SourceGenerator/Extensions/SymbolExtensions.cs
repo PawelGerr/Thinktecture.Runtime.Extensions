@@ -5,9 +5,9 @@ namespace Thinktecture;
 
 public static class SymbolExtensions
 {
-   public static AttributeData? FindAttribute(this ISymbol type, Func<INamedTypeSymbol, bool> predicate)
+   public static AttributeData? FindAttribute(this ISymbol symbol, Func<INamedTypeSymbol, bool> predicate)
    {
-      var attributes = type.GetAttributes();
+      var attributes = symbol.GetAttributes();
 
       if (attributes.IsDefaultOrEmpty)
          return null;
@@ -28,9 +28,14 @@ public static class SymbolExtensions
       return symbol.FindAttribute(predicate) is not null;
    }
 
-   public static bool IsIgnored(this ISymbol member)
+   public static bool IsIgnored(this IFieldSymbol field)
    {
-      return member.HasAttribute(static attrType => attrType.IsValueObjectMemberIgnoreAttribute());
+      return field.HasAttribute(static attrType => attrType.IsValueObjectMemberIgnoreAttribute());
+   }
+
+   public static bool IsIgnored(this IPropertySymbol property)
+   {
+      return property.HasAttribute(static attrType => attrType.IsValueObjectMemberIgnoreAttribute());
    }
 
    public static bool IsValidateFactoryArgumentsImplementation(

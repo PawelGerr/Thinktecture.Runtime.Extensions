@@ -350,9 +350,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                return null;
             }
 
-            if (attributetype.TypeArguments.Length != 1)
+            if (attributetype.Arity != 1)
             {
-               Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.TypeArguments.Length.ToString()}", tds);
+               Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.Arity.ToString()}", tds);
                return null;
             }
 
@@ -393,15 +393,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             keyMember = settings.CreateKeyMember(keyTypedMemberState);
          }
 
-         var nonIgnoredMembers = type.GetNonIgnoredMembers();
-         var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyMemberType, cancellationToken);
+         var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
 
          var derivedTypeNames = FindDerivedTypes(type);
          var enumState = new EnumSourceGeneratorState(factory,
                                                       type,
                                                       keyMember,
                                                       attributeInfo.ValidationError,
-                                                      nonIgnoredMembers,
                                                       new EnumSettings(settings, attributeInfo),
                                                       hasCreateInvalidItemImplementation,
                                                       derivedTypeNames.Count > 0,

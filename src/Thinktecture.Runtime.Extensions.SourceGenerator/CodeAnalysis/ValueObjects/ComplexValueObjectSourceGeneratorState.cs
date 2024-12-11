@@ -40,13 +40,10 @@ public sealed class ComplexValueObjectSourceGeneratorState : ITypeInformation, I
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
-      var nonIgnoredMembers = type.GetNonIgnoredMembers();
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, true, true, cancellationToken).ToList();
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, true, cancellationToken).ToList();
       EqualityMembers = GetEqualityMembers();
 
-      var factoryValidationReturnType = nonIgnoredMembers.IsDefaultOrEmpty
-                                           ? null
-                                           : (nonIgnoredMembers.FirstOrDefault(m => m.IsStatic && m.Name == Constants.Methods.VALIDATE_FACTORY_ARGUMENTS && m is IMethodSymbol method && method.ReturnType.SpecialType != SpecialType.System_Void) as IMethodSymbol)?.ReturnType;
+      var factoryValidationReturnType = (type.GetMembers().FirstOrDefault(m => m.IsStatic && m.Name == Constants.Methods.VALIDATE_FACTORY_ARGUMENTS && m is IMethodSymbol method && method.ReturnType.SpecialType != SpecialType.System_Void) as IMethodSymbol)?.ReturnType;
 
       if (factoryValidationReturnType is not null)
          FactoryValidationReturnType = factoryValidationReturnType.ToFullyQualifiedDisplayString();

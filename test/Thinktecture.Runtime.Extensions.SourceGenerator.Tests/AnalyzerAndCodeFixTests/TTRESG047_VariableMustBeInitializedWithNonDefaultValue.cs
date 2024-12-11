@@ -38,7 +38,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       }
 
       [Fact]
-      public async Task eyedValueObjectShould_trigger_on_field_assignment_with_default()
+      public async Task Should_trigger_on_field_assignment_with_default()
       {
          var code = """
 

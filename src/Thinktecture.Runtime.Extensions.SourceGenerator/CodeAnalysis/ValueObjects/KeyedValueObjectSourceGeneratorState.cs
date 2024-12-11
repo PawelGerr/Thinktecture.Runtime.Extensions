@@ -38,11 +38,11 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
-      var nonIgnoredMembers = type.GetNonIgnoredMembers();
+      var members = type.GetMembers();
 
-      for (var i = 0; i < nonIgnoredMembers.Length; i++)
+      for (var i = 0; i < members.Length; i++)
       {
-         var member = nonIgnoredMembers[i];
+         var member = members[i];
 
          if (member.IsValidateFactoryArgumentsImplementation(out var method) && method.ReturnType.SpecialType != SpecialType.System_Void)
             FactoryValidationReturnType = method.ReturnType.ToFullyQualifiedDisplayString();

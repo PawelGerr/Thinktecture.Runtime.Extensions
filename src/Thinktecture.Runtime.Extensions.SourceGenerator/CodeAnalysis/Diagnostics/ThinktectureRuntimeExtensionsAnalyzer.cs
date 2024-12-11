@@ -144,8 +144,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (declaredType.IsEnum(out var attribute))
       {
          var isValidatable = attribute.FindIsValidatable() ?? false;
-         var nonIgnoredMembers = declaredType.GetNonIgnoredMembers();
-         var items = declaredType.GetEnumItems(nonIgnoredMembers);
+         var items = declaredType.GetEnumItems();
 
          AnalyzeEnumSwitchMap(context,
                               items,
@@ -482,8 +481,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, type);
       TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
 
-      var nonIgnoredItems = type.GetNonIgnoredMembers();
-      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredItems, factory, false, true, context.CancellationToken, context)
+      var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context)
                                   .Where(m => !m.IsStatic)
                                   .ToList();
 
@@ -491,7 +489,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(baseClass.GetNonIgnoredMembers(), false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -557,22 +555,21 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, enumType);
       TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
 
-      var nonIgnoredMembers = enumType.GetNonIgnoredMembers();
-      var items = enumType.GetEnumItems(nonIgnoredMembers);
+      var items = enumType.GetEnumItems();
 
       if (items.Length == 0)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumerationHasNoItems, locationOfFirstDeclaration, enumType);
 
-      Check_ItemLike_StaticProperties(context, enumType, nonIgnoredMembers);
+      Check_ItemLike_StaticProperties(context, enumType);
       EnumItemsMustBePublic(context, enumType, items);
 
-      _ = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, false, false, context.CancellationToken, context).ToList();
+      _ = enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, false, context.CancellationToken, context).ToList();
 
       var baseClass = enumType.BaseType;
 
       while (!baseClass.IsNullOrObject())
       {
-         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(baseClass.GetNonIgnoredMembers(), false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
+         baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
          baseClass = baseClass.BaseType;
       }
@@ -581,14 +578,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       EnumKeyMemberNameMustNotBeItem(context, attribute, locationOfFirstDeclaration);
 
-      ValidateKeyedSmartEnum(context, enumType, attribute, nonIgnoredMembers, locationOfFirstDeclaration);
+      ValidateKeyedSmartEnum(context, enumType, attribute, locationOfFirstDeclaration);
    }
 
    private static void ValidateKeyedSmartEnum(
       OperationAnalysisContext context,
       INamedTypeSymbol enumType,
       IObjectCreationOperation attribute,
-      ImmutableArray<ISymbol> nonIgnoredMembers,
       Location locationOfFirstDeclaration)
    {
       var keyType = (attribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
@@ -609,7 +605,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (isValidatable)
       {
-         ValidateCreateInvalidItem(context, enumType, keyType, nonIgnoredMembers, locationOfFirstDeclaration);
+         ValidateCreateInvalidItem(context, enumType, keyType, locationOfFirstDeclaration);
       }
       else if (enumType.IsValueType)
       {
@@ -627,14 +623,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void Check_ItemLike_StaticProperties(
       OperationAnalysisContext context,
-      INamedTypeSymbol enumType,
-      ImmutableArray<ISymbol> nonIgnoredMembers)
+      INamedTypeSymbol enumType)
    {
-      for (var i = 0; i < nonIgnoredMembers.Length; i++)
-      {
-         var member = nonIgnoredMembers[i];
+      var members = enumType.GetMembers();
 
-         if (member.IsStatic && member is IPropertySymbol property && SymbolEqualityComparer.Default.Equals(property.Type, enumType))
+      for (var i = 0; i < members.Length; i++)
+      {
+         var member = members[i];
+
+         if (member.IsStatic && member is IPropertySymbol property && SymbolEqualityComparer.Default.Equals(property.Type, enumType) && !property.IsIgnored())
             ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier(context.CancellationToken)?.GetLocation() ?? Location.None, property.Name);
       }
    }
@@ -680,10 +677,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       OperationAnalysisContext context,
       INamedTypeSymbol enumType,
       ITypeSymbol keyType,
-      ImmutableArray<ISymbol> nonIgnoredMembers,
       Location location)
    {
-      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(nonIgnoredMembers, keyType, context.CancellationToken, context);
+      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(keyType, context.CancellationToken, context);
 
       if (!hasCreateInvalidItemImplementation && enumType.IsAbstract)
       {

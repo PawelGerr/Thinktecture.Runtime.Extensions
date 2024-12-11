@@ -30,7 +30,6 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       INamedTypeSymbol type,
       KeyMemberState? keyMember,
       ValidationErrorState validationError,
-      ImmutableArray<ISymbol> nonIgnoredMembers,
       EnumSettings settings,
       bool hasCreateInvalidItemImplementation,
       bool hasDerivedTypes,
@@ -53,8 +52,8 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       IsAbstract = type.IsAbstract;
 
       BaseType = type.GetBaseType(factory);
-      Items = new EnumItems(type.GetEnumItems(nonIgnoredMembers));
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredMembers, factory, true, false, cancellationToken).ToList();
+      Items = new EnumItems(type.GetEnumItems());
+      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, false, cancellationToken).ToList();
    }
 
    public override bool Equals(object? obj)

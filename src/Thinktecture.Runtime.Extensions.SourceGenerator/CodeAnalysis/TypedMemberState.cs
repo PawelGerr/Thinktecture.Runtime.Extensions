@@ -143,13 +143,13 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 
    private static bool IsToStringNullable(ITypeSymbol type)
    {
-      var array = type.GetMembers();
+      var array = type.GetMembers("ToString");
 
       for (var i = 0; i < array.Length; i++)
       {
          var member = array[i];
 
-         if (member is not IMethodSymbol { Name: "ToString" } toString)
+         if (member is not IMethodSymbol toString)
             continue;
 
          return toString.ReturnNullableAnnotation == NullableAnnotation.Annotated;

@@ -69,7 +69,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null
           || attributeType.TypeKind == TypeKind.Error
           || attributeType is not INamedTypeSymbol namedType
-          || namedType.TypeArguments.IsDefaultOrEmpty)
+          || namedType.Arity == 0)
          return false;
 
       return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
@@ -80,7 +80,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null
           || attributeType.TypeKind == TypeKind.Error
           || attributeType is not INamedTypeSymbol namedType
-          || !namedType.TypeArguments.IsDefaultOrEmpty)
+          || namedType.Arity != 0)
          return false;
 
       return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
@@ -256,26 +256,27 @@ public static class TypeSymbolExtensions
       };
    }
 
-   public static ImmutableArray<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType, ImmutableArray<ISymbol> nonIgnoredMembers)
+   public static ImmutableArray<IFieldSymbol> GetEnumItems(this ITypeSymbol enumType)
    {
-      return nonIgnoredMembers
-         .SelectWhere(static (ISymbol m, ITypeSymbol type, [MaybeNullWhen(false)] out IFieldSymbol result) =>
-         {
-            if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField())
-            {
-               result = null;
-               return false;
-            }
+      return enumType.GetMembers()
+                     .SelectWhere(static (ISymbol m, ITypeSymbol type, [MaybeNullWhen(false)] out IFieldSymbol result) =>
+                     {
+                        if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField())
+                        {
+                           result = null;
+                           return false;
+                        }
 
-            if (SymbolEqualityComparer.Default.Equals(field.Type, type))
-            {
-               result = field;
-               return true;
-            }
+                        if (SymbolEqualityComparer.Default.Equals(field.Type, type)
+                            && !field.IsIgnored())
+                        {
+                           result = field;
+                           return true;
+                        }
 
-            result = null;
-            return false;
-         }, enumType);
+                        result = null;
+                        return false;
+                     }, enumType);
    }
 
    public static bool IsFormattableInterface(this INamedTypeSymbol @interface)
@@ -438,15 +439,8 @@ public static class TypeSymbolExtensions
       return false;
    }
 
-   public static ImmutableArray<ISymbol> GetNonIgnoredMembers(this ITypeSymbol type, string? name = null)
-   {
-      return (name is not null ? type.GetMembers(name) : type.GetMembers())
-         .Where(static m => !m.IsIgnored());
-   }
-
    public static IEnumerable<InstanceMemberInfo> GetAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
-      ImmutableArray<ISymbol> nonIgnoredItems,
       TypedMemberStateFactory factory,
       bool instanceMembersOnly,
       bool populateValueObjectMemberSettings,
@@ -455,7 +449,7 @@ public static class TypeSymbolExtensions
    {
       var allowedCaptureSymbols = reportDiagnostic is not null;
 
-      return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(nonIgnoredItems, instanceMembersOnly, cancellationToken, null, reportDiagnostic)
+      return type.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(instanceMembersOnly, cancellationToken, null, reportDiagnostic)
                  .Select(tuple =>
                  {
                     return tuple switch
@@ -470,7 +464,6 @@ public static class TypeSymbolExtensions
 
    public static IEnumerable<(IFieldSymbol? Field, IPropertySymbol? Property)> IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(
       this ITypeSymbol type,
-      ImmutableArray<ISymbol> nonIgnoredMembers,
       bool instanceMembersOnly,
       CancellationToken cancellationToken,
       Location? locationOfDerivedType = null,
@@ -531,7 +524,7 @@ public static class TypeSymbolExtensions
          reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
       }
 
-      return nonIgnoredMembers
+      return type.GetMembers()
              .Select(member =>
              {
                 if ((instanceMembersOnly && member.IsStatic) || !member.CanBeReferencedByName)
@@ -541,6 +534,9 @@ public static class TypeSymbolExtensions
                 {
                    case IFieldSymbol field:
                    {
+                      if (field.IsIgnored())
+                         return null;
+
                       if (!field.IsReadOnly && !field.IsConst)
                          ReportField(field);
 
@@ -549,6 +545,9 @@ public static class TypeSymbolExtensions
 
                    case IPropertySymbol property:
                    {
+                      if (property.IsIgnored())
+                         return null;
+
                       // other assembly
                       if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
                       {
@@ -635,12 +634,13 @@ public static class TypeSymbolExtensions
 
    public static bool HasCreateInvalidItemImplementation(
       this ITypeSymbol enumType,
-      ImmutableArray<ISymbol> nonIgnoredMembers,
       ITypeSymbol keyType,
       CancellationToken cancellationToken,
       OperationAnalysisContext? reportDiagnostic = null)
    {
-      foreach (var member in nonIgnoredMembers)
+      var members = enumType.GetMembers(Constants.Methods.CREATE_INVALID_ITEM);
+
+      foreach (var member in members)
       {
          if (member is not IMethodSymbol { Name: Constants.Methods.CREATE_INVALID_ITEM } method)
             continue;

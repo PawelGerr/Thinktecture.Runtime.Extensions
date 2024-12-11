@@ -22,7 +22,7 @@ public class UnionSourceGenState : IEquatable<UnionSourceGenState>, ITypeFullyQu
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       HasNonDefaultConstructor = !type.Constructors.IsDefaultOrEmpty && type.Constructors.Any(c => !c.IsImplicitlyDeclared);
       ContainingTypes = type.GetContainingTypes();
-      GenericsFullyQualified = type.TypeArguments.Length == 0
+      GenericsFullyQualified = type.Arity == 0
                                   ? []
                                   : type.TypeArguments.Select(t => t.ToFullyQualifiedDisplayString()).ToList();
 

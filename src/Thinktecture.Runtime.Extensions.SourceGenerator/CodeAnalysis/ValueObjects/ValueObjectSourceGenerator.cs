@@ -438,9 +438,9 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
-         if (attributeType.TypeArguments.Length != 1)
+         if (attributeType.Arity != 1)
          {
-            Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributeType.TypeArguments.Length.ToString()}", tds);
+            Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributeType.Arity.ToString()}", tds);
             return null;
          }
 

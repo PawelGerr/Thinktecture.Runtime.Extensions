@@ -89,9 +89,9 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             return null;
          }
 
-         if (attributeType.TypeArguments.Length != 0)
+         if (attributeType.Arity != 0)
          {
-            Logger.LogDebug($"Expected the union attribute type to have no type arguments but found {attributeType.TypeArguments.Length.ToString()}", tds);
+            Logger.LogDebug($"Expected the union attribute type to have no type arguments but found {attributeType.Arity.ToString()}", tds);
             return null;
          }
 

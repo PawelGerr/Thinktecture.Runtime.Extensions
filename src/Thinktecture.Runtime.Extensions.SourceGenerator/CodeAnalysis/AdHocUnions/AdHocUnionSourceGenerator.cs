@@ -120,9 +120,9 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             return null;
          }
 
-         if (attributeType.TypeArguments.Length < 2)
+         if (attributeType.Arity < 2)
          {
-            Logger.LogDebug($"Expected the attribute type to have at least 2 type arguments but found {attributeType.TypeArguments.Length.ToString()}", tds);
+            Logger.LogDebug($"Expected the attribute type to have at least 2 type arguments but found {attributeType.Arity.ToString()}", tds);
             return null;
          }
 
@@ -140,9 +140,9 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
 
          var settings = new AdHocUnionSettings(context.Attributes[0],
-                                               attributeType.TypeArguments.Length,
+                                               attributeType.Arity,
                                                attributeInfo);
-         var memberTypeStates = new AdHocUnionMemberTypeState[attributeType.TypeArguments.Length];
+         var memberTypeStates = attributeType.Arity == 0 ? [] : new AdHocUnionMemberTypeState[attributeType.Arity];
 
          for (var i = 0; i < attributeType.TypeArguments.Length; i++)
          {
