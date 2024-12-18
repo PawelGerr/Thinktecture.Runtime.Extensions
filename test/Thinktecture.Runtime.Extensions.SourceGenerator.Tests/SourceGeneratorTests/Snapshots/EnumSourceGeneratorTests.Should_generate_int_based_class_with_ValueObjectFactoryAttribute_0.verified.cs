@@ -23,17 +23,12 @@ namespace Thinktecture.Tests
          global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
       }
 
-      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>> _lookups
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum>>(GetLookup, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
-
-      private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> _itemsLookup => _lookups.Value;
-      private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(() => global::System.Linq.Enumerable.ToList(_itemsLookup.Values).AsReadOnly(), global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+      private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
+      public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _lookups.Value.List;
 
       /// <summary>
       /// The identifier of this item.
@@ -83,7 +78,7 @@ namespace Thinktecture.Tests
       /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
       public static global::Thinktecture.Tests.TestEnum Get(int @key)
       {
-         if (!_itemsLookup.TryGetValue(@key, out var item))
+         if (!_lookups.Value.Lookup.TryGetValue(@key, out var item))
          {
             throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests.TestEnum), @key);
          }
@@ -99,7 +94,7 @@ namespace Thinktecture.Tests
       /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
       public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
       {
-         return _itemsLookup.TryGetValue(@key, out item);
+         return _lookups.Value.Lookup.TryGetValue(@key, out item);
       }
 
       /// <summary>
@@ -459,9 +454,10 @@ namespace Thinktecture.Tests
          return @default;
       }
 
-      private static global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> GetLookup()
+      private static Lookups GetLookups()
       {
          var lookup = new global::System.Collections.Generic.Dictionary<int, global::Thinktecture.Tests.TestEnum>(2);
+         var list = new global::System.Collections.Generic.List<global::Thinktecture.Tests.TestEnum>(2);
 
          void AddItem(global::Thinktecture.Tests.TestEnum item, string itemName)
          {
@@ -472,6 +468,7 @@ namespace Thinktecture.Tests
                throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
 
             lookup.Add(item.Key, item);
+            list.Add(item);
          }
 
          AddItem(@Item1, nameof(@Item1));
@@ -479,10 +476,14 @@ namespace Thinktecture.Tests
 
 #if NET8_0_OR_GREATER
          var frozenDictionary = global::System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(lookup);
-         return frozenDictionary;
+         return new Lookups(frozenDictionary, list.AsReadOnly());
 #else
-         return lookup;
+         return new Lookups(lookup, list.AsReadOnly());
 #endif
       }
+
+      private record struct Lookups(
+         global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> Lookup,
+         global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> List);
    }
 }
