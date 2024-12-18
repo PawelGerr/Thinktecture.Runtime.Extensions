@@ -482,7 +482,7 @@ namespace Thinktecture.Tests
 #endif
       }
 
-      private record struct Lookups(
+      private readonly record struct Lookups(
          global::System.Collections.Generic.IReadOnlyDictionary<int, global::Thinktecture.Tests.TestEnum> Lookup,
          global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> List);
    }

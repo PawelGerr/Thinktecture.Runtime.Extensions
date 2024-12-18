@@ -1219,7 +1219,7 @@ namespace ").Append(_state.Namespace).Append(@"
 #endif
       }
 
-      private record struct Lookups(
+      private readonly record struct Lookups(
          global::System.Collections.Generic.IReadOnlyDictionary<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state).Append("> Lookup,");
 
       if (keyMember.IsString())

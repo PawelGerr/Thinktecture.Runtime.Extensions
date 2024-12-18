@@ -554,7 +554,7 @@
 #endif
       }
 
-      private record struct Lookups(
+      private readonly record struct Lookups(
          global::System.Collections.Generic.IReadOnlyDictionary<string, global::TestEnum> Lookup,
 #if NET9_0_OR_GREATER
          global::System.Collections.Frozen.FrozenDictionary<string, global::TestEnum>.AlternateLookup<global::System.ReadOnlySpan<char>> AlternateLookup,
