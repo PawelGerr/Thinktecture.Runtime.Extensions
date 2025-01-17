@@ -248,7 +248,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Explicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
-      /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
+      /// <exception cref=""System.NullReferenceException"">If <paramref name=""obj""/> is <c>null</c>.</exception>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
       public static explicit operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {

@@ -54,7 +54,8 @@ namespace Thinktecture.Tests
       /// Explicit conversion to the type <see cref="int"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
-      /// <returns>The <see cref="_value"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
+      /// <returns>The <see cref="_value"/> of provided <paramref name="obj"/>.</returns>
+      /// <exception cref="System.NullReferenceException">If <paramref name="obj"/> is <c>null</c>.</exception>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
       public static explicit operator int(global::Thinktecture.Tests.TestValueObject obj)
       {
