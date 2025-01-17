@@ -2,7 +2,7 @@ using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTests;
 
-public class ImplicitConversionToKey
+public class ConversionToKey
 {
    [Fact]
    public void Should_return_null_if_item_is_null()
@@ -10,6 +10,14 @@ public class ImplicitConversionToKey
       string key = (TestEnum)null;
 
       key.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_be_explicit_if_configured()
+   {
+      int key = (int)TestEnumWithCustomConversionOperators.Item;
+
+      key.Should().Be(TestEnumWithCustomConversionOperators.Item.Key);
    }
 
    [Fact]

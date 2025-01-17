@@ -133,6 +133,18 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public SwitchMapMethodsGeneration MapMethods { get; set; }
 
    /// <summary>
+   /// Indication whether and how the generator should generate the conversion operators from enum type to <see cref="KeyMemberType"/>.
+   /// Default is <see cref="ConversionOperatorsGeneration.Implicit"/>.
+   /// </summary>
+   public ConversionOperatorsGeneration ConversionToKeyMemberType { get; set; }
+
+   /// <summary>
+   /// Indication whether and how the generator should generate the conversion operators from <see cref="KeyMemberType"/> to enum type.
+   /// Default is <see cref="ConversionOperatorsGeneration.Explicit"/>.
+   /// </summary>
+   public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; set; }
+
+   /// <summary>
    /// Initializes new instance of <see cref="SmartEnumAttribute{TKey}"/>.
    /// </summary>
    public SmartEnumAttribute()
@@ -140,5 +152,7 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
       KeyMemberType = typeof(TKey);
       KeyMemberAccessModifier = ValueObjectAccessModifier.Public;
       KeyMemberKind = ValueObjectMemberKind.Property;
+      ConversionToKeyMemberType = ConversionOperatorsGeneration.Implicit;
+      ConversionFromKeyMemberType = ConversionOperatorsGeneration.Explicit;
    }
 }

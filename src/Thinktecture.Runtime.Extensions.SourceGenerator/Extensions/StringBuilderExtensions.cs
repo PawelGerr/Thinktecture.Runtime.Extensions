@@ -14,6 +14,25 @@ public static class StringBuilderExtensions
       }
    }
 
+   public static StringBuilder AppendConversionOperator(
+      this StringBuilder sb,
+      ConversionOperatorsGeneration operatorsGeneration)
+   {
+      switch (operatorsGeneration)
+      {
+         case ConversionOperatorsGeneration.None:
+            break;
+         case ConversionOperatorsGeneration.Implicit:
+            sb.Append("implicit");
+            break;
+         case ConversionOperatorsGeneration.Explicit:
+            sb.Append("explicit");
+            break;
+      }
+
+      return sb;
+   }
+
    public static StringBuilder RenderAccessModifier(
       this StringBuilder sb,
       ValueObjectAccessModifier accessModifier)

@@ -14,6 +14,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
    public bool SkipToString { get; }
    public SwitchMapMethodsGeneration SwitchMethods { get; }
    public SwitchMapMethodsGeneration MapMethods { get; }
+   public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; }
+   public ConversionOperatorsGeneration ConversionToKeyMemberType { get; }
 
    public AllEnumSettings(AttributeData attribute)
    {
@@ -29,6 +31,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
       SkipToString = attribute.FindSkipToString() ?? false;
       SwitchMethods = attribute.FindSwitchMethods();
       MapMethods = attribute.FindMapMethods();
+      ConversionToKeyMemberType = attribute.FindConversionToKeyMemberType() ?? ConversionOperatorsGeneration.Implicit;
+      ConversionFromKeyMemberType = attribute.FindConversionFromKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -58,7 +62,9 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
              && SkipIFormattable == other.SkipIFormattable
              && SkipToString == other.SkipToString
              && SwitchMethods == other.SwitchMethods
-             && MapMethods == other.MapMethods;
+             && MapMethods == other.MapMethods
+             && ConversionToKeyMemberType == other.ConversionToKeyMemberType
+             && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType;
    }
 
    public override int GetHashCode()
@@ -77,6 +83,8 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ SwitchMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ ConversionToKeyMemberType.GetHashCode();
+         hashCode = (hashCode * 397) ^ ConversionFromKeyMemberType.GetHashCode();
 
          return hashCode;
       }

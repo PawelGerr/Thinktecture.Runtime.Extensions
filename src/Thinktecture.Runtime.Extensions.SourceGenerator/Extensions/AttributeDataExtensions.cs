@@ -139,6 +139,16 @@ public static class AttributeDataExtensions
       return GetSwitchMapGeneration(attributeData, "MapMethods");
    }
 
+   public static ConversionOperatorsGeneration? FindConversionToKeyMemberType(this AttributeData attributeData)
+   {
+      return GetConversionOperatorsGeneration(attributeData, "ConversionToKeyMemberType");
+   }
+
+   public static ConversionOperatorsGeneration? FindConversionFromKeyMemberType(this AttributeData attributeData)
+   {
+      return GetConversionOperatorsGeneration(attributeData, "ConversionFromKeyMemberType");
+   }
+
    public static SerializationFrameworks FindUseForSerialization(this AttributeData attributeData)
    {
       var frameworks = (SerializationFrameworks?)GetIntegerParameterValue(attributeData, "UseForSerialization");
@@ -227,6 +237,16 @@ public static class AttributeDataExtensions
 
       if (generation is null || !generation.Value.IsValid())
          return SwitchMapMethodsGeneration.Default;
+
+      return generation.Value;
+   }
+
+   private static ConversionOperatorsGeneration? GetConversionOperatorsGeneration(AttributeData attributeData, string name)
+   {
+      var generation = (ConversionOperatorsGeneration?)GetIntegerParameterValue(attributeData, name);
+
+      if (generation is null || !generation.Value.IsValid())
+         return null;
 
       return generation.Value;
    }

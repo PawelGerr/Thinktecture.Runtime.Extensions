@@ -184,8 +184,8 @@ namespace ").Append(_state.Namespace).Append(@"
          if (_state.KeyMember.IsString())
             GenerateValidateForReadOnlySpanOfChar(_state.KeyMember);
 
-         GenerateImplicitConversion(_state.KeyMember);
-         GenerateExplicitConversion(_state.KeyMember);
+         GenerateConversionToKeyType(_state.KeyMember);
+         GenerateConversionFromKeyType(_state.KeyMember);
       }
 
       GenerateEquals();
@@ -1002,20 +1002,20 @@ namespace ").Append(_state.Namespace).Append(@"
 #endif");
    }
 
-   private void GenerateImplicitConversion(KeyMemberState keyProperty)
+   private void GenerateConversionToKeyType(KeyMemberState keyProperty)
    {
-      if (keyProperty.IsInterface)
+      if (keyProperty.IsInterface || _state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type ").AppendTypeForXmlComment(keyProperty).Append(@".
+      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
       /// <param name=""item"">Item to covert.</param>
       /// <returns>The ").AppendTypeForXmlComment(_state, (keyProperty.Name, ".")).Append(@" of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
-      public static implicit operator ").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append("(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" item)
+      public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append("(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" item)
       {");
 
       if (_state.IsReferenceType)
@@ -1033,20 +1033,20 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateExplicitConversion(KeyMemberState keyProperty)
+   private void GenerateConversionFromKeyType(KeyMemberState keyProperty)
    {
-      if (keyProperty.IsInterface)
+      if (keyProperty.IsInterface || _state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion from the type ").AppendTypeForXmlComment(keyProperty).Append(@".
+      /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">Value to covert.</param>
       /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum""/>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName).Append(@""")]
-      public static explicit operator ").AppendTypeFullyQualifiedNullAnnotated(_state).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
+      public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(_state).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
          return ").AppendTypeFullyQualified(_state).Append(".").Append(Constants.Methods.GET).Append("(").AppendEscaped(keyProperty.ArgumentName).Append(@");
       }");

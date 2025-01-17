@@ -30,7 +30,15 @@ public abstract class SourceGeneratorTestsBase
       _output = output ?? throw new ArgumentNullException(nameof(output));
    }
 
+   protected Task VerifyAsync(
+      IReadOnlyDictionary<string, string> outputs,
+      params string[] fileNames)
+   {
+      return VerifyAsync(null, outputs, fileNames);
+   }
+
    protected async Task VerifyAsync(
+      string parameterText,
       IReadOnlyDictionary<string, string> outputs,
       params string[] fileNames)
    {
@@ -50,9 +58,13 @@ public abstract class SourceGeneratorTestsBase
                                     }
 
                                     var verify = Verifier.Verify(content, "cs", Settings);
+                                    var paramText = parameterText;
 
                                     if (fileNames.Length > 1)
-                                       verify = verify.UseTextForParameters(i.ToString());
+                                       paramText += i.ToString();
+
+                                    if (!string.IsNullOrWhiteSpace(paramText))
+                                       verify = verify.UseTextForParameters(paramText);
 
                                     return verify.ToTask();
                                  })

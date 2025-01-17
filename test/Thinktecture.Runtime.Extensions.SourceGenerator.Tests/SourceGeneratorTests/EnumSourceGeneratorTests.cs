@@ -144,21 +144,21 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                public static readonly TestEnum Item1 = new("Item1");
                public static readonly TestEnum Item2 = new("Item2");
             }
-         
+
             public class TestEnumValidationError : IValidationError<TestEnumValidationError>
             {
                public string Message { get; }
-         
+
                public TestEnumValidationError(string message)
                {
                   Message = message;
                }
-         
+
                public static TestEnumValidationError Create(string message)
                {
                   return new TestEnumValidationError(message);
                }
-         
+
                public override string ToString()
                {
                   return Message;
@@ -245,12 +245,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                protected BaseClass(int value)
                {
                }
-         
+
                protected BaseClass(string key)
                {
                }
             }
-         
+
            [SmartEnum<string>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                               MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
          	public partial class TestEnum : BaseClass
@@ -314,7 +314,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                public static readonly TestEnum Item_decimal_2 = new GenericEnum<decimal>("GenericEnum<decimal> 2");
                public static readonly TestEnum Item_derived_1 = new DerivedEnum("DerivedEnum 1");
                public static readonly TestEnum Item_derived_2 = new DerivedEnum("DerivedEnum 2");
-         
+
                private class GenericEnum<T> : TestEnum
                {
                   public DerivedEnum(string key)
@@ -322,7 +322,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                   {
                   }
                }
-         
+
                private class UnusedGenericEnum<T> : TestEnum
                {
                   public UnusedGenericEnum(string key)
@@ -330,7 +330,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                   {
                   }
                }
-         
+
                private class DerivedEnum : TestEnum
                {
                   public DerivedEnum(string key)
@@ -338,7 +338,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                   {
                   }
                }
-         
+
                private class UnusedDerivedEnum : TestEnum
                {
                   public UnusedDerivedEnum(string key)
@@ -346,7 +346,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                   {
                   }
                }
-         
+
             }
          }
 
@@ -437,14 +437,14 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
          	{
          		 public static readonly TestEnum Item1 = new("Item1", 1, -1, "ReferenceProperty1", "NullableReferenceProperty1", 11, "ReferenceField1");
                public static readonly TestEnum Item2 = new DerivedEnum("Item2", 2, 2, "ReferenceProperty2", "NullableReferenceProperty2", 22, "ReferenceField2");
-         
+
                public int StructProperty { get; }
                public int? NullableStructProperty { get; }
                public string ReferenceProperty { get; }
                public string? NullableReferenceProperty { get; }
                public readonly int StructField;
                public readonly string ReferenceField;
-         
+
                static partial void ValidateConstructorArguments(
                   int name, bool isValid,
                   int structProperty, int? nullableStructProperty,
@@ -452,12 +452,12 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                   int structField, string referenceField)
                {
                }
-         
+
                private static ProductCategory CreateInvalidItem(string name)
                {
                   return new(name, false, 0, null, String.Empty, null, 0, null);
                }
-         
+
                private class DerivedEnum : EnumWithDerivedType
                {
                   public DerivedEnum(
@@ -612,13 +612,13 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
-         
+
                public abstract int Value { get; }
-         
+
                private sealed class ConcreteEnum : TestEnum
                {
                   public override int Value => 100;
-         
+
                   public ConcreteEnum(int key)
                      : base(key)
                   {
@@ -651,7 +651,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
-         
+
                public Func<string?, Task<string?>?>? Prop1 { get; }
             }
          }
@@ -659,6 +659,36 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
 
       await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Theory]
+   [InlineData(ConversionOperatorsGeneration.None)]
+   [InlineData(ConversionOperatorsGeneration.Implicit)]
+   [InlineData(ConversionOperatorsGeneration.Explicit)]
+   public async Task Should_change_conversion_from_key(
+      ConversionOperatorsGeneration operatorsGeneration)
+   {
+      var source = $$"""
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>(ConversionToKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(operatorsGeneration.ToString(),
+                        outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
