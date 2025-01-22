@@ -7,6 +7,20 @@ using Thinktecture.Database;
 
 namespace Thinktecture.Benchmarks;
 
+/*
+
+22.01.2025
+
+.NET 9.0.1
+
+| Method                         | Mean     | Error   | StdDev   | Median   | Gen0      | Gen1      | Allocated |
+|------------------------------- |---------:|--------:|---------:|---------:|----------:|----------:|----------:|
+| Entity_with_ValueObjects       | 178.4 ms | 7.83 ms | 22.73 ms | 172.4 ms | 4000.0000 | 3000.0000 |  89.13 MB |
+| Entity_without_ValueObjects    | 175.6 ms | 8.77 ms | 25.84 ms | 166.2 ms | 4000.0000 | 3000.0000 |  84.55 MB |
+| Entity_with_StructValueObjects | 164.7 ms | 8.33 ms | 24.30 ms | 157.5 ms | 4000.0000 | 3000.0000 |  92.61 MB |
+
+ */
+
 // ReSharper disable InconsistentNaming
 public class LoadingValueObjects
 {

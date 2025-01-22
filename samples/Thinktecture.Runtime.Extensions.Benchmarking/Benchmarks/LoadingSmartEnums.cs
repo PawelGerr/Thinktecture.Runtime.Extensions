@@ -8,6 +8,23 @@ using Thinktecture.Database;
 
 namespace Thinktecture.Benchmarks;
 
+/*
+
+22.01.2025
+
+.NET 9.0.1
+
+| Method                       | Mean      | Error     | StdDev    | Median    | Allocated |
+|----------------------------- |----------:|----------:|----------:|----------:|----------:|
+| Real_Enum_StringConverter    | 15.722 ms | 3.4459 ms | 10.106 ms | 10.545 ms |   7.16 MB |
+| SmartEnum_Struct_StringBased | 12.430 ms | 2.6370 ms |  7.307 ms | 10.046 ms |   8.51 MB |
+| SmartEnum_Class_StringBased  |  9.328 ms | 1.1271 ms |  3.008 ms |  8.682 ms |   8.21 MB |
+| Real_Enum_IntBased           |  6.801 ms | 1.0520 ms |  2.826 ms |  5.830 ms |   6.67 MB |
+| SmartEnum_Struct_IntBased    |  7.341 ms | 0.8959 ms |  2.482 ms |  6.327 ms |   8.03 MB |
+| SmartEnum_Class_IntBased     |  7.453 ms | 0.8701 ms |  2.352 ms |  6.643 ms |   7.72 MB |
+
+ */
+
 // ReSharper disable InconsistentNaming
 public class LoadingSmartEnums
 {

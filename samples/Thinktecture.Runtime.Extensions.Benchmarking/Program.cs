@@ -7,10 +7,11 @@ using Thinktecture.Benchmarks;
 
 var config = ManualConfig.CreateMinimumViable()
                          .AddDiagnoser(new MemoryDiagnoser(new MemoryDiagnoserConfig()))
-                         .AddJob(Job.Default.WithRuntime(CoreRuntime.Core70));
+                         .AddJob(Job.Default.WithRuntime(CoreRuntime.Core90));
 
 // BenchmarkRunner.Run<LoadingSmartEnums>(config);
 // BenchmarkRunner.Run<LoadingValueObjects>(config);
 // BenchmarkRunner.Run<SingleItemCollectionBenchmarks>(config);
 // BenchmarkRunner.Run<SingleItemSetBenchmarks>(config);
-BenchmarkRunner.Run<ItemSearch>(config);
+// BenchmarkRunner.Run<ItemSearch>(config);
+BenchmarkRunner.Run<TypedIdBenchmarks>(config);
