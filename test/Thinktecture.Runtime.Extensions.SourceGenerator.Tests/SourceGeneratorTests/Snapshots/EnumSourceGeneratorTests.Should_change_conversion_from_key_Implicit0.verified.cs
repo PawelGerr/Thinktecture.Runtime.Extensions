@@ -195,12 +195,12 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Explicit conversion from the type <see cref="string"/>.
+      /// Implicit conversion from the type <see cref="string"/>.
       /// </summary>
       /// <param name="key">Value to covert.</param>
       /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item or implements <see cref="Thinktecture.IValidatableEnum"/>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("key")]
-      public static explicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
+      public static implicit operator global::Thinktecture.Tests.TestEnum?(string? @key)
       {
          return global::Thinktecture.Tests.TestEnum.Get(@key);
       }

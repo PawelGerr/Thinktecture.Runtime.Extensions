@@ -162,11 +162,33 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    public bool SkipIFormattable { get; set; }
 
    /// <summary>
+   /// Indication whether and how the generator should generate the conversion operators from value object to <see cref="KeyMemberType"/>.
+   /// Default is <see cref="ConversionOperatorsGeneration.Implicit"/>.
+   /// </summary>
+   public ConversionOperatorsGeneration ConversionToKeyMemberType { get; set; }
+
+   /// <summary>
+   /// Indication whether and how the generator should generate "unsafe" conversion operators from value object to <see cref="KeyMemberType"/>.
+   /// Conversion is considered unsafe if it can throw an <see cref="Exception"/>.
+   /// Default is <see cref="ConversionOperatorsGeneration.Explicit"/>.
+   /// </summary>
+   public ConversionOperatorsGeneration UnsafeConversionToKeyMemberType { get; set; }
+
+   /// <summary>
+   /// Indication whether and how the generator should generate the conversion operators from <see cref="KeyMemberType"/> to enum type.
+   /// Default is <see cref="ConversionOperatorsGeneration.Explicit"/>.
+   /// </summary>
+   public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; set; }
+
+   /// <summary>
    /// Initializes new instance of <see cref="ValueObjectAttribute{TKey}"/>.
    /// </summary>
    public ValueObjectAttribute()
    {
       KeyMemberType = typeof(TKey);
       KeyMemberAccessModifier = ValueObjectAccessModifier.Private;
+      ConversionToKeyMemberType = ConversionOperatorsGeneration.Implicit;
+      UnsafeConversionToKeyMemberType = ConversionOperatorsGeneration.Explicit;
+      ConversionFromKeyMemberType = ConversionOperatorsGeneration.Explicit;
    }
 }

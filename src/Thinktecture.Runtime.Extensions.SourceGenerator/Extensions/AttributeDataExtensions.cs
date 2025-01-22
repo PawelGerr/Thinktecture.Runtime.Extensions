@@ -144,6 +144,11 @@ public static class AttributeDataExtensions
       return GetConversionOperatorsGeneration(attributeData, "ConversionToKeyMemberType");
    }
 
+   public static ConversionOperatorsGeneration? FindUnsafeConversionToKeyMemberType(this AttributeData attributeData)
+   {
+      return GetConversionOperatorsGeneration(attributeData, "UnsafeConversionToKeyMemberType");
+   }
+
    public static ConversionOperatorsGeneration? FindConversionFromKeyMemberType(this AttributeData attributeData)
    {
       return GetConversionOperatorsGeneration(attributeData, "ConversionFromKeyMemberType");

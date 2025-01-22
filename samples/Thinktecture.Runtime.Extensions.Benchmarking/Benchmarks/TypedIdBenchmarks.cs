@@ -31,7 +31,7 @@ public class TypedIdBenchmarks
    }
 }
 
-[ValueObject<Guid>]
+[ValueObject<Guid>(ConversionToKeyMemberType = ConversionOperatorsGeneration.Explicit)]
 public partial struct CustomerId
 {
    public static CustomerId NewId() => new(Guid.NewGuid());

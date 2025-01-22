@@ -26,7 +26,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          	{
                public string? Prop1 { get; }
                public Func<string?, Task<string?>?>? Prop2 { get; }
-         
+
                static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string? prop1, ref Func<string?, Task<string?>?>? prop2)
                {
                }
@@ -704,7 +704,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          	public partial class TestValueObject
          	{
            }
-         
+
            public class Foo
            {
            }
@@ -716,6 +716,101 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Theory]
+   [InlineData(ConversionOperatorsGeneration.None)]
+   [InlineData(ConversionOperatorsGeneration.Implicit)]
+   [InlineData(ConversionOperatorsGeneration.Explicit)]
+   public async Task Should_change_conversion_from_key(
+      ConversionOperatorsGeneration operatorsGeneration)
+   {
+      var source = $$"""
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>(ConversionFromKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
+         	public partial class TestValueObject
+         	{
+         	}
+         }
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(operatorsGeneration.ToString(),
+                        outputs,
+                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Theory]
+   [InlineData(ConversionOperatorsGeneration.None)]
+   [InlineData(ConversionOperatorsGeneration.Implicit)]
+   [InlineData(ConversionOperatorsGeneration.Explicit)]
+   public async Task Should_change_conversion_to_key(
+      ConversionOperatorsGeneration operatorsGeneration)
+   {
+      var source = $$"""
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>(ConversionToKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
+         	public partial class TestValueObject
+         	{
+         	}
+         }
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(operatorsGeneration.ToString(),
+                        outputs,
+                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Theory]
+   [InlineData(ConversionOperatorsGeneration.None)]
+   [InlineData(ConversionOperatorsGeneration.Implicit)]
+   [InlineData(ConversionOperatorsGeneration.Explicit)]
+   public async Task Should_change_unsafe_conversion_to_key(
+      ConversionOperatorsGeneration operatorsGeneration)
+   {
+      var source = $$"""
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(UnsafeConversionToKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
+         	public partial class TestValueObject
+         	{
+         	}
+         }
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(operatorsGeneration.ToString(),
+                        outputs,
+                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
    }
 
    [Fact]
@@ -733,27 +828,27 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          	{
                [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
-         
+
                [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                public readonly int _intValue;
-         
+
                public string ReferenceProperty { get; }
                public string? NullableReferenceProperty { get; }
                public int StructProperty { get; }
                public int? NullableStructProperty { get; }
-         
+
                public int ExpressionBodyProperty => 42;
-         
+
                public int GetterExpressionProperty
                {
                   get => 42;
                }
-         
+
                public int GetterBodyProperty
                {
                   get { return 42; }
                }
-         
+
                public int SetterProperty
                {
                   set { }
@@ -783,27 +878,27 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          	{
                [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
-         
+
                [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                public readonly int _intValue;
-         
+
                public string ReferenceProperty { get; }
                public string? NullableReferenceProperty { get; }
                public int StructProperty { get; }
                public int? NullableStructProperty { get; }
-         
+
                public int ExpressionBodyProperty => 42;
-         
+
                public int GetterExpressionProperty
                {
                   get => 42;
                }
-         
+
                public int GetterBodyProperty
                {
                   get { return 42; }
                }
-         
+
                public int SetterProperty
                {
                   set { }
@@ -835,27 +930,27 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          	{
                [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public readonly string _stringValue;
-         
+
                [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                public readonly int _intValue;
-         
+
                public string ReferenceProperty { get; }
                public string? NullableReferenceProperty { get; }
                public int StructProperty { get; }
                public int? NullableStructProperty { get; }
-         
+
                public int ExpressionBodyProperty => 42;
-         
+
                public int GetterExpressionProperty
                {
                   get => 42;
                }
-         
+
                public int GetterBodyProperty
                {
                   get { return 42; }
                }
-         
+
                public int SetterProperty
                {
                   set { }

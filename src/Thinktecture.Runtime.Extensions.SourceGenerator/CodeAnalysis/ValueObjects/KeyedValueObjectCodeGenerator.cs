@@ -119,11 +119,11 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       GenerateToValue();
-      GenerateImplicitConversionToKey();
-      GenerateExplicitConversionToKey();
+      GenerateSafeConversionToKey();
+      GenerateUnsafeConversionToKey();
 
       if (!_state.Settings.SkipFactoryMethods)
-         GenerateExplicitConversion(emptyStringYieldsNull);
+         GenerateConversionFromKey(emptyStringYieldsNull);
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -197,22 +197,22 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
    }
 
-   private void GenerateImplicitConversionToKey()
+   private void GenerateSafeConversionToKey()
    {
       var keyMember = _state.KeyMember;
 
-      if (keyMember.IsInterface)
+      if (_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.None || keyMember.IsInterface)
          return;
 
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
-      public static implicit operator ").AppendTypeFullyQualifiedNullable(keyMember).Append("(").AppendTypeFullyQualifiedNullable(_state).Append(@" obj)
+      public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullable(keyMember).Append("(").AppendTypeFullyQualifiedNullable(_state).Append(@" obj)
       {
          return obj?.").Append(keyMember.Name).Append(@";
       }");
@@ -225,33 +225,33 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
-      public static implicit operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
+      public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          return obj.").Append(keyMember.Name).Append(@";
       }");
    }
 
-   private void GenerateExplicitConversionToKey()
+   private void GenerateUnsafeConversionToKey()
    {
       var keyMember = _state.KeyMember;
 
-      if (keyMember.IsInterface || keyMember.IsReferenceType || !_state.IsReferenceType)
+      if (_state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.None || keyMember.IsInterface || keyMember.IsReferenceType || !_state.IsReferenceType)
          return;
 
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
       /// <exception cref=""System.NullReferenceException"">If <paramref name=""obj""/> is <c>null</c>.</exception>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
-      public static explicit operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
+      public static ").AppendConversionOperator(_state.Settings.UnsafeConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          if(obj is null)
             throw new global::System.NullReferenceException();
@@ -260,11 +260,11 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateExplicitConversion(bool emptyStringYieldsNull)
+   private void GenerateConversionFromKey(bool emptyStringYieldsNull)
    {
       var keyMember = _state.KeyMember;
 
-      if (keyMember.IsInterface)
+      if (_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None || keyMember.IsInterface)
          return;
 
       var bothAreReferenceTypes = _state.IsReferenceType && keyMember.IsReferenceType;
@@ -273,10 +273,10 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Explicit conversion from the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""").Append(keyMember.ArgumentName).Append(@""">Value to covert.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@".</returns>");
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(".</returns>");
 
       if (bothAreReferenceTypes && !emptyStringYieldsNull)
       {
@@ -285,7 +285,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      public static explicit operator ").AppendTypeFullyQualified(_state).Append(nullableQuestionMark).Append("(").AppendTypeFullyQualified(keyMember).Append(nullableQuestionMark).Append(" ").AppendEscaped(keyMember.ArgumentName).Append(@")
+      public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualified(_state).Append(nullableQuestionMark).Append("(").AppendTypeFullyQualified(keyMember).Append(nullableQuestionMark).Append(" ").AppendEscaped(keyMember.ArgumentName).Append(@")
       {");
 
       if (bothAreReferenceTypes)

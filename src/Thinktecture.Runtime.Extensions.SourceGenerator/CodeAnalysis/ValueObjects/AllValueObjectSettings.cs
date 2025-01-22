@@ -24,6 +24,9 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public OperatorsGeneration EqualityComparisonOperators { get; }
    public string DefaultInstancePropertyName { get; }
    public bool AllowDefaultStructs { get; }
+   public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; }
+   public ConversionOperatorsGeneration UnsafeConversionToKeyMemberType { get; }
+   public ConversionOperatorsGeneration ConversionToKeyMemberType { get; }
 
    public AllValueObjectSettings(AttributeData valueObjectAttribute)
    {
@@ -49,6 +52,9 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       ComparisonOperators = valueObjectAttribute.FindComparisonOperators();
       DefaultInstancePropertyName = valueObjectAttribute.FindDefaultInstancePropertyName() ?? "Empty";
       AllowDefaultStructs = valueObjectAttribute.FindAllowDefaultStructs();
+      ConversionToKeyMemberType = valueObjectAttribute.FindConversionToKeyMemberType() ?? ConversionOperatorsGeneration.Implicit;
+      UnsafeConversionToKeyMemberType = valueObjectAttribute.FindUnsafeConversionToKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
+      ConversionFromKeyMemberType = valueObjectAttribute.FindConversionFromKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -88,7 +94,10 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
              && ComparisonOperators == other.ComparisonOperators
              && EqualityComparisonOperators == other.EqualityComparisonOperators
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName
-             && AllowDefaultStructs == other.AllowDefaultStructs;
+             && AllowDefaultStructs == other.AllowDefaultStructs
+             && ConversionToKeyMemberType == other.ConversionToKeyMemberType
+             && UnsafeConversionToKeyMemberType == other.UnsafeConversionToKeyMemberType
+             && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType;
    }
 
    public override int GetHashCode()
@@ -117,6 +126,9 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
          hashCode = (hashCode * 397) ^ (int)EqualityComparisonOperators;
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
          hashCode = (hashCode * 397) ^ AllowDefaultStructs.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)ConversionToKeyMemberType;
+         hashCode = (hashCode * 397) ^ (int)UnsafeConversionToKeyMemberType;
+         hashCode = (hashCode * 397) ^ (int)ConversionFromKeyMemberType;
 
          return hashCode;
       }

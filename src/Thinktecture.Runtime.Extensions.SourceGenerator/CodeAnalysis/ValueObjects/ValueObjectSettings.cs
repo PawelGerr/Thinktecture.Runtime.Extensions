@@ -15,6 +15,9 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool NullInFactoryMethodsYieldsNull => _allSettings.NullInFactoryMethodsYieldsNull;
    public string DefaultInstancePropertyName => _allSettings.DefaultInstancePropertyName;
    public bool AllowDefaultStructs => _allSettings.AllowDefaultStructs;
+   public ConversionOperatorsGeneration ConversionToKeyMemberType => _allSettings.ConversionToKeyMemberType;
+   public ConversionOperatorsGeneration UnsafeConversionToKeyMemberType => _allSettings.UnsafeConversionToKeyMemberType;
+   public ConversionOperatorsGeneration ConversionFromKeyMemberType => _allSettings.ConversionFromKeyMemberType;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
    public string? KeyMemberEqualityComparerAccessor => _attributeInfo.KeyMemberEqualityComparerAccessor;
    public ImmutableArray<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
@@ -39,6 +42,9 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && DefaultInstancePropertyName == other.DefaultInstancePropertyName
              && AllowDefaultStructs == other.AllowDefaultStructs
+             && ConversionToKeyMemberType == other.ConversionToKeyMemberType
+             && UnsafeConversionToKeyMemberType == other.UnsafeConversionToKeyMemberType
+             && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor
              && DesiredFactories.SequenceEqual(other.DesiredFactories);
@@ -63,6 +69,9 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ DefaultInstancePropertyName.GetHashCode();
          hashCode = (hashCode * 397) ^ AllowDefaultStructs.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)ConversionToKeyMemberType;
+         hashCode = (hashCode * 397) ^ (int)UnsafeConversionToKeyMemberType;
+         hashCode = (hashCode * 397) ^ (int)ConversionFromKeyMemberType;
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();

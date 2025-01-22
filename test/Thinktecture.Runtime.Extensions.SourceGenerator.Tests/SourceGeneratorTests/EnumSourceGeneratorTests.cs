@@ -678,6 +678,36 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
+         	[SmartEnum<string>(ConversionFromKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(operatorsGeneration.ToString(),
+                        outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Theory]
+   [InlineData(ConversionOperatorsGeneration.None)]
+   [InlineData(ConversionOperatorsGeneration.Implicit)]
+   [InlineData(ConversionOperatorsGeneration.Explicit)]
+   public async Task Should_change_conversion_to_key(
+      ConversionOperatorsGeneration operatorsGeneration)
+   {
+      var source = $$"""
+         using System;
+
+         namespace Thinktecture.Tests
+         {
          	[SmartEnum<string>(ConversionToKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
          	public abstract partial class TestEnum
          	{

@@ -2,7 +2,7 @@ using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
 
-public class ImplicitConversion
+public class ConversionToKey
 {
    [Fact]
    public void Should_return_nullable_key_if_value_object_is_reference_type_and_key_is_struct()

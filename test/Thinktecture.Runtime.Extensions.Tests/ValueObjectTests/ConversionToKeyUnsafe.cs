@@ -3,7 +3,7 @@ using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
 
-public class ExplicitConversionToKey
+public class ConversionToKeyUnsafe
 {
    [Fact]
    public void Should_throw_trying_convert_null_to_struct_key()
