@@ -1,0 +1,3 @@
+[submodule "Thinktecture.Runtime.Extensions.wiki"]
+	path = docs
+	url = https://github.com/PawelGerr/Thinktecture.Runtime.Extensions.wiki.git
