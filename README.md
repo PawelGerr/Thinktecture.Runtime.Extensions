@@ -18,7 +18,7 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 * [Migrations](#migrations)
 * [Smart Enum](#smart-enums)
 * [Value Objects](#value-objects)
-* [Discriminated Unions](#discriminated-unions) (requires version 8.x.x)
+* [Discriminated Unions](#discriminated-unions)
     * [Ad hoc unions](#ad-hoc-unions)
     * [Regular unions](#regular-unions)
 
@@ -449,7 +449,7 @@ string value = boundary.ToString(); // "{ Lower = 1, Upper = 2 }"
 
 # Discriminated Unions
 
-Install: `Install-Package Thinktecture.Runtime.Extensions` (requires version 8.x.x)
+Install: `Install-Package Thinktecture.Runtime.Extensions`
 
 Documentation: [Discriminated Unions](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Discriminated-Unions)
 
