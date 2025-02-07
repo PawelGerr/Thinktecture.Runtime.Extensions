@@ -26,16 +26,6 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
-## **[Ideas and real-world use cases](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#real-world-use-cases-and-ideas)**
-
-Smart Enums:
-
-* [CSV-Importer-Type](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#csv-importer-type)
-
-Value objects:
-
-* [Open-ended End Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#open-ended-end-date)
-* [(Always-positive) Amount](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#always-positive-amount)
 
 # Requirements
 
@@ -51,208 +41,197 @@ Value objects:
 * [Migration from v7 to v8](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v7-to-v8)
 * [Migration from v6 to v7](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v6-to-v7)
 
+# Ideas and real-world use cases
+
+Smart Enums:
+
+* [Shipping Method](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#shipping-method)
+* [CSV-Importer-Type](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#csv-importer-type)
+
+Value objects:
+
+* [Open-ended End Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#open-ended-end-date)
+* [(Always-positive) Amount](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#always-positive-amount)
+
 # Smart Enums
+
+Smart Enums provide a powerful alternative to traditional C# enums, offering type-safety, extensibility, and rich behavior.
+Unlike regular C# enums which are limited to numeric values and lack extensibility, Smart Enums can:
+* Use any type as the underlying type (e.g., strings, integers) or none at all
+* Include additional fields, properties and behavior
+* Use polymorphism to define custom behavior for each value
+* Prevent creation of invalid values
+* Integrate seamlessly with JSON serializers, MessagePack, Entity Framework Core and ASP.NET Core
 
 Install: `Install-Package Thinktecture.Runtime.Extensions`
 
 Documentation: [Smart Enums](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums)
 
-Features:
+Some of the Key Features are:
 
-* Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
-* [Allows iteration over all items](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#what-is-implemented-for-you)
-* [Allows custom properties and methods](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-fields-properties-and-methods)
-* [Switch-case/Map](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#switch-casemap)
+* Choice between always-valid and maybe-valid Smart Enum
+* Reflection-free iteration over all items
+* Fast lookup/conversion from underlying type to Smart Enum and vice versa
+* Allows custom properties and methods
+* Exhaustive pattern matching with `Switch`/`Map` methods
 * Provides appropriate constructor, based on the specified properties/fields
-* Provides means for lookup, cast and type conversion from key-type to Smart Enum and vice versa
-* Provides proper implementation of `Equals`, `GetHashCode`, `ToString` and equality comparison via `==` and `!=`
+* Proper implementation of `Equals`, `GetHashCode`, `ToString` and equality operators
 * Provides implementation of `IComparable`, `IComparable<T>`, `IFormattable`, `IParsable<T>` and comparison operators `<`, `<=`, `>`, `>=` (if applicable to the underlying type)
-* [Choice between always-valid and maybe-valid Smart Enum](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#always-valid-vs-maybe-valid-smart-enum)
-* Smart Enum can also be keyless, i.e. without a key member
-* [Makes use of abstract static members](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#make-use-of-abstract-static-members)
-* [Derived types can be generic](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#generic-derived-types)
-* [Allows custom validation of constructor arguments](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#validation-of-the-constructor-arguments)
-* [Allows changing the key member name, kind and access modifier](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#key-member-generation), which holds the underlying value - thanks to [Roslyn Source Generator](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)
-* Allows [custom key equality comparer](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-equality-comparer) and [custom comparer](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#custom-comparer)
-* [JSON support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#json-serialization) (`System.Text.Json` and `Newtonsoft.Json`)
-* [Support for Minimal Api Parameter Binding and ASP.NET Core Model Binding](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#support-for-minimal-api-parameter-binding-and-aspnet-core-model-binding)
-* [Entity Framework Core support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#support-for-entity-framework-core) (`ValueConverter`)
-* [MessagePack support](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#messagepack-serialization) (`IMessagePackFormatter`)
-* [Logging for debugging or getting insights](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#logging-v610-or-higher)
+* Custom comparer and equality comparer
 
-Definition of a 2 Smart Enums without any custom properties and methods. All other features mentioned above are generated by the [Roslyn Source Generators](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview) in the background.
+Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
+
+Provides support for:
+* JSON (System.Text.Json and Newtonsoft)
+* Minimal Api Parameter Binding and ASP.NET Core Model Binding
+* Entity Framework Core
+* MessagePack
+
+Definition of a Smart Enum with custom properties and methods.
 
 ```C#
-// Smart Enum with a string as the underlying type
 [SmartEnum<string>]
-public sealed partial class ProductType
+public partial class ShippingMethod
 {
-   public static readonly ProductType Groceries = new("Groceries");
-   public static readonly ProductType Housewares = new("Housewares");
-}
+   public static readonly ShippingMethod Standard = new(
+      "STANDARD",
+      basePrice: 5.99m,
+      weightMultiplier: 0.5m,
+      estimatedDays: 5,
+      requiresSignature: false);
 
-// Smart Enum with an int as the underlying type
-[SmartEnum<int>]
-public sealed partial class ProductGroup
-{
-   public static readonly ProductGroup Apple = new(1);
-   public static readonly ProductGroup Orange = new(2);
-}
+   public static readonly ShippingMethod Express = new(
+      "EXPRESS",
+      basePrice: 15.99m,
+      weightMultiplier: 0.75m,
+      estimatedDays: 2,
+      requiresSignature: true);
 
-// Smart Enum without identifier (keyless)
-[SmartEnum]
-public sealed partial class SalesCsvImporterType
-{
-   public static readonly SalesCsvImporterType Daily = new(articleIdIndex: 0, volumeIndex: 2);
-   public static readonly SalesCsvImporterType Monthly = new(articleIdIndex: 2, volumeIndex: 0);
+   public static readonly ShippingMethod NextDay = new(
+      "NEXT_DAY",
+      basePrice: 29.99m,
+      weightMultiplier: 1.0m,
+      estimatedDays: 1,
+      requiresSignature: true);
 
-   public int ArticleIdIndex { get; }
-   public int VolumeIndex { get; }
+   private readonly decimal _basePrice;
+   private readonly decimal _weightMultiplier;
+   private readonly int _estimatedDays;
+
+   public bool RequiresSignature { get; }
+
+   public decimal CalculatePrice(decimal orderWeight)
+   {
+      return _basePrice + (orderWeight * _weightMultiplier);
+   }
+
+   public DateTime GetEstimatedDeliveryDate()
+   {
+      return DateTime.Today.AddDays(_estimatedDays);
+   }
 }
 ```
 
 Behind the scenes a Roslyn Source Generator generates additional code. Some of the features that are now available are ...
 
-```C#
-// A private constructor which takes the key "Groceries" and additional members (if we had any)
-[SmartEnum<string>]
-public sealed partial class ProductType
-{
-   public static readonly ProductType Groceries = new("Groceries");
-   ...
-
-------------
-
-// A property for iteration over all items
-IReadOnlyList<ProductType> allTypes = ProductType.Items;
-
-------------
-
-// Getting the item with specific name, i.e. its key.
-// Throws UnknownEnumIdentifierException if the provided key doesn't belong to any item
-ProductType productType = ProductType.Get("Groceries");
-
-// Alternatively, using an explicit cast (behaves the same as "Get")
-ProductType productType = (ProductType)"Groceries";
-
-------------
-
-// the same as above but returns a bool instead of throwing an exception (dictionary-style)
-bool found = ProductType.TryGet("Groceries", out ProductType? productType);
-
-------------
-
-// similar to TryGet but accepts `IFormatProvider` and returns a ValidationError instead of a boolean.
-ValidationError? validationError = ProductType.Validate("Groceries", null, out ProductType? productType);
-
-if (validationError is null)
-{
-    logger.Information("Product type {Type} found with Validate", productType);
-}
-else
-{
-    logger.Warning("Failed to fetch the product type with Validate. Validation error: {validationError}", validationError.ToString());
-}
-
-------------
-
-// implicit conversion to the type of the key
-string key = ProductType.Groceries; // "Groceries"
-
-------------
-
-// Equality comparison
-bool equal = ProductType.Groceries.Equals(ProductType.Groceries);
-
-------------
-
-// Equality comparison with '==' and '!='
-bool equal = ProductType.Groceries == ProductType.Groceries;
-bool notEqual = ProductType.Groceries != ProductType.Groceries;
-
-------------
-
-// Hash code
-int hashCode = ProductType.Groceries.GetHashCode();
-
-------------
-
-// 'ToString' implementation
-string key = ProductType.Groceries.ToString(); // "Groceries"
-
-------------
-
-ILogger logger = ...;
-
-// Switch-case (with "Action")
-productType.Switch(groceries: () => logger.Information("Switch with Action: Groceries"),
-                   housewares: () => logger.Information("Switch with Action: Housewares"));
-                   
-// Switch-case with parameter (Action<TParam>) to prevent closures
-productType.Switch(logger,
-                   groceries: static l => l.Information("Switch with Action: Groceries"),
-                   housewares: static l => l.Information("Switch with Action: Housewares"));
-
-// Switch case returning a value (Func<TResult>)
-var returnValue = productType.Switch(groceries: static () => "Switch with Func<T>: Groceries",
-                                     housewares: static () => "Switch with Func<T>: Housewares");
-
-// Switch case with parameter returning a value (Func<TParam, TResult>) to prevent closures
-var returnValue = productType.Switch(logger,
-                                     groceries: static l => "Switch with Func<T>: Groceries",
-                                     housewares: static l => "Switch with Func<T>: Housewares");
-
-// Map an item to another instance
-returnValue = productType.Map(groceries: "Map: Groceries",
-                              housewares: "Map: Housewares");
-------------
-
-// Implements IParsable<T> which is especially helpful with minimal apis.
-bool parsed = ProductType.TryParse("Groceries", null, out ProductType? parsedProductType);
-
-------------
-
-// Implements IFormattable if the underlyng type (like int) is an IFormattable itself.
-var formatted = ProductGroup.Fruits.ToString("000", CultureInfo.InvariantCulture); // 001
-
-------------
-
-// Implements IComparable and IComparable<T> if the key member type (like int) is an IComparable itself.
-var comparison = ProductGroup.Fruits.CompareTo(ProductGroup.Vegetables); // -1
-
-// Implements comparison operators (<,<=,>,>=) if the underlyng type (like int) has comparison operators itself.
-var isBigger = ProductGroup.Fruits > ProductGroup.Vegetables;       
-```
-
-Definition of a new Smart Enum with 1 custom property `RequiresFoodVendorLicense` and 1 method `Do` with different behaviors for different enum items.
+### Basic Operations
 
 ```C#
 [SmartEnum<string>]
 public partial class ProductType
 {
-   public static readonly ProductType Groceries = new("Groceries",  requiresFoodVendorLicense: true);
-   public static readonly ProductType Housewares = new HousewaresProductType();
-
-   public bool RequiresFoodVendorLicense { get; }
-
-   public virtual void Do()
-   {
-      // do default stuff
-   }
-
-   private sealed class HousewaresProductType : ProductType
-   {
-      public HousewaresProductType()
-         : base("Housewares", requiresFoodVendorLicense: false)
-      {
-      }
-
-      public override void Do()
-      {
-         // do special stuff
-      }
-   }
+    // The source generator creates a private constructor
+    public static readonly ProductType Groceries = new("Groceries");
 }
+
+// Enumeration over all defined items
+IReadOnlyList<ProductType> allTypes = ProductType.Items;
+
+// Value retrieval
+ProductType productType = ProductType.Get("Groceries");        // Get by key (throws if not found)
+ProductType productType = (ProductType)"Groceries";            // Same as above but by using a cast
+bool found = ProductType.TryGet("Groceries", out var productType);  // Safe retrieval (returns false if not found)
+
+// Validation with detailed error information
+ValidationError? error = ProductType.Validate("Groceries", null, out ProductType? productType);
+
+// IParsable<T> (useful for Minimal APIs)
+bool parsed = ProductType.TryParse("Groceries", null, out ProductType? parsedType);
+
+// IFormattable (e.g. for numeric keys)
+string formatted = ProductGroup.Fruits.ToString("000", CultureInfo.InvariantCulture);  // "001"
+
+// IComparable
+int comparison = ProductGroup.Fruits.CompareTo(ProductGroup.Vegetables);
+bool isGreater = ProductGroup.Fruits > ProductGroup.Vegetables;  // Comparison operators
+```
+
+### Type Conversion and Equality
+
+```C#
+// Implicit conversion to key type
+string key = ProductType.Groceries;  // Returns "Groceries"
+
+// Equality comparison
+bool equal = ProductType.Groceries.Equals(ProductType.Groceries);
+bool equal = ProductType.Groceries == ProductType.Groceries;  // Operator overloading
+bool notEqual = ProductType.Groceries != ProductType.Housewares;
+
+// Methods inherited from Object
+int hashCode = ProductType.Groceries.GetHashCode();
+string key = ProductType.Groceries.ToString();  // Returns "Groceries"
+
+// TypeConverter
+var converter = TypeDescriptor.GetConverter(typeof(ProductType));
+string? keyStr = (string?)converter.ConvertTo(ProductType.Groceries, typeof(string));
+ProductType? converted = (ProductType?)converter.ConvertFrom("Groceries");
+```
+
+### Pattern Matching with Switch/Map
+
+All `Switch`/`Map` methods are exhaustive by default ensuring all cases are handled correctly.
+
+```C#
+ProductType productType = ProductType.Groceries;
+
+// Execute different actions based on the enum value (void return)
+productType.Switch(
+    groceries: () => Console.WriteLine("Processing groceries order"),
+    housewares: () => Console.WriteLine("Processing housewares order")
+);
+
+// Transform enum values into different types
+string department = productType.Switch(
+    groceries: () => "Food and Beverages",
+    housewares: () => "Home and Kitchen"
+);
+
+// Direct mapping to values
+// Direct mapping to values - clean and concise
+decimal discount = productType.Map(
+    groceries: 0.05m,    // 5% off groceries
+    housewares: 0.10m    // 10% off housewares
+);
+```
+
+For optimal performance Smart Enums provide overloads that prevent closures.
+
+```csharp
+ILogger logger = ...;
+
+// Prevent closures by passing the parameter as first method argument
+productType.Switch(logger,
+    groceries: static l => l.LogInformation("Processing groceries order"),
+    housewares: static l => l.LogInformation("Processing housewares order")
+);
+
+// Use a tuple to pass multiple values
+var context = (Logger: logger, OrderId: "123");
+
+productType.Switch(context,
+    groceries: static ctx => ctx.Logger.LogInformation("Processing groceries order {OrderId}", ctx.OrderId),
+    housewares: static ctx => ctx.Logger.LogInformation("Processing housewares order {OrderId}", ctx.OrderId)
+);
 ```
 
 # Value Objects
