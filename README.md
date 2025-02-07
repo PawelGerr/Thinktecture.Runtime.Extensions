@@ -1,4 +1,4 @@
-![Build](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/workflows/CI/badge.svg?branch=master)
+![Build](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/workflows/CI/badge.svg)
 ![TestResults](https://gist.githubusercontent.com/PawelGerr/043909cfb348b36187d02222da1f372e/raw/badge.svg)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/Thinktecture.Runtime.Extensions)
 
