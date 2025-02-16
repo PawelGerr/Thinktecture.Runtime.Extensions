@@ -26,7 +26,9 @@ public class TestEntity_with_OwnedTypes
    public OwnedEntity_Owns_SeparateOne SeparateOne_SeparateOne { get; set; }
    public OwnedEntity_Owns_SeparateMany SeparateOne_SeparateMany { get; set; }
 
-   public static void Configure(ModelBuilder modelBuilder)
+   public static void Configure(
+      ModelBuilder modelBuilder,
+      bool registerValueConverters)
    {
       modelBuilder.Entity<TestEntity_with_OwnedTypes>(builder =>
       {
@@ -88,6 +90,9 @@ public class TestEntity_with_OwnedTypes
                             navigationBuilder.OwnsMany(e => e.SeparateEntities,
                                                        innerBuilder => innerBuilder.ToTable("SeparateEntitiesOne_SeparateMany_Inner"));
                          });
+
+         if (registerValueConverters)
+            builder.AddValueObjectConverters(true);
       });
    }
 }

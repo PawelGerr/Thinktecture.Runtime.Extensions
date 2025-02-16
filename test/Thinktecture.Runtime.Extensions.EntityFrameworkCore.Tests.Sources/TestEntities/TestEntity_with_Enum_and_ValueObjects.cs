@@ -32,13 +32,18 @@ public class TestEntity_with_Enum_and_ValueObjects
    public BoundaryWithCustomFactoryNames? BoundaryWithCustomFactoryNames { get; set; }
    public IntBasedReferenceValueObjectWithCustomFactoryNames? IntBasedReferenceValueObjectWitCustomFactoryName { get; set; }
 
-   public static void Configure(ModelBuilder modelBuilder)
+   public static void Configure(
+      ModelBuilder modelBuilder,
+      bool registerValueConverters)
    {
       modelBuilder.Entity<TestEntity_with_Enum_and_ValueObjects>(builder =>
       {
-         builder.OwnsOne(e => e.Boundary);
-         builder.OwnsOne(e => e.BoundaryWithCustomError);
-         builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames);
+         builder.OwnsOne(e => e.Boundary, navigationBuilder => navigationBuilder.AddValueObjectConverters(true));
+         builder.OwnsOne(e => e.BoundaryWithCustomError, navigationBuilder => navigationBuilder.AddValueObjectConverters(true));
+         builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames, navigationBuilder => navigationBuilder.AddValueObjectConverters(true));
+
+         if (registerValueConverters)
+            builder.AddValueObjectConverters(true);
       });
    }
 }

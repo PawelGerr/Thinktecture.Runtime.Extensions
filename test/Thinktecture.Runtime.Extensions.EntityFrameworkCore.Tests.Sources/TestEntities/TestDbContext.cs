@@ -5,7 +5,8 @@ namespace Thinktecture.Runtime.Tests.TestEntities;
 // ReSharper disable InconsistentNaming
 public class TestDbContext : DbContext
 {
-   private readonly bool _registerConverters;
+   private readonly ValueConverterRegistration _valueConverterRegistration;
+
    public DbSet<TestEntity_with_OwnedTypes> TestEntities_with_OwnedTypes { get; set; }
    public DbSet<TestEntity_with_Enum_and_ValueObjects> TestEntities_with_Enum_and_ValueObjects { get; set; }
 
@@ -13,10 +14,12 @@ public class TestDbContext : DbContext
    public DbSet<TestEntityWithComplexType> TestEntities_with_ComplexType { get; set; }
 #endif
 
-   public TestDbContext(DbContextOptions<TestDbContext> options, bool registerConverters = false)
+   public TestDbContext(
+      DbContextOptions<TestDbContext> options,
+      ValueConverterRegistration valueConverterRegistration = ValueConverterRegistration.None)
       : base(options)
    {
-      _registerConverters = registerConverters;
+      _valueConverterRegistration = valueConverterRegistration;
    }
 
    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,14 +33,20 @@ public class TestDbContext : DbContext
    {
       base.OnModelCreating(modelBuilder);
 
-      TestEntity_with_OwnedTypes.Configure(modelBuilder);
-      TestEntity_with_Enum_and_ValueObjects.Configure(modelBuilder);
+      TestEntity_with_OwnedTypes.Configure(
+         modelBuilder,
+         _valueConverterRegistration == ValueConverterRegistration.EntityConfiguration);
+      TestEntity_with_Enum_and_ValueObjects.Configure(
+         modelBuilder,
+         _valueConverterRegistration == ValueConverterRegistration.EntityConfiguration);
 
 #if COMPLEX_TYPES
-      TestEntityWithComplexType.Configure(modelBuilder);
+      TestEntityWithComplexType.Configure(
+         modelBuilder,
+         _valueConverterRegistration == ValueConverterRegistration.EntityConfiguration);
 #endif
 
-      if (_registerConverters)
+      if (_valueConverterRegistration == ValueConverterRegistration.OnModelCreating)
          modelBuilder.AddValueObjectConverters(true);
    }
 }

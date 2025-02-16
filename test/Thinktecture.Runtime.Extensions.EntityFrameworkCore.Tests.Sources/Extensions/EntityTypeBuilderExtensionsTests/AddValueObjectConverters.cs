@@ -8,7 +8,7 @@ using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 // ReSharper disable InconsistentNaming
-namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
+namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
 {
    public class AddValueObjectConverters : IDisposable
    {
@@ -21,7 +21,7 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
                                                                                             .Single(t => t.Name.StartsWith("ValueObjectValueConverter", StringComparison.Ordinal));
 
       private readonly TestDbContext _ctx = new(new DbContextOptionsBuilder<TestDbContext>().UseSqlite("DataSource=:memory:").Options,
-                                                ValueConverterRegistration.OnModelCreating);
+                                                ValueConverterRegistration.EntityConfiguration);
 
       [Fact]
       public void Should_add_converters_for_structs_and_classes()

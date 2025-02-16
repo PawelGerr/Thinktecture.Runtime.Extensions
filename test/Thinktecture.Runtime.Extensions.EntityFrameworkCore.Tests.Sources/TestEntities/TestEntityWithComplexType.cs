@@ -9,7 +9,9 @@ public class TestEntityWithComplexType
    public Guid Id { get; set; }
    public TestComplexType TestComplexType { get; set; }
 
-   public static void Configure(ModelBuilder modelBuilder)
+   public static void Configure(
+      ModelBuilder modelBuilder,
+      bool registerValueConverters)
    {
       modelBuilder.Entity<TestEntityWithComplexType>(builder =>
       {
@@ -19,6 +21,9 @@ public class TestEntityWithComplexType
                                     b.IsRequired();
                                     b.Property(t => t.TestEnum);
                                  });
+
+         if (registerValueConverters)
+            builder.AddValueObjectConverters(true);
       });
    }
 }

@@ -114,7 +114,7 @@ public sealed class ValueObjectValueConverterFactory
          ConvertToProvider = o => o switch
          {
             null => null,
-            TKey key => key, // useful for comparisons of value objects with its key types
+            TKey key => key, // useful for comparisons of value objects with its key types in LINQ queries
             T obj => obj.ToValue(),
             _ => Convert<TKey>(o)
          };
@@ -135,14 +135,14 @@ public sealed class ValueObjectValueConverterFactory
                                 ? o => o switch
                                 {
                                    null => null,
-                                   TKey key => key, // useful for comparisons of value objects with its key types
+                                   TKey key => key, // useful for comparisons of value objects with its key types in LINQ queries
                                    TEnum obj => GetKeyIfValid(obj),
                                    _ => Convert<TKey>(o)
                                 }
                                 : o => o switch
                                 {
                                    null => null,
-                                   TKey key => key, // useful for comparisons of value objects with its key types
+                                   TKey key => key, // useful for comparisons of value objects with its key types in LINQ queries
                                    TEnum obj => obj.ToValue(),
                                    _ => Convert<TKey>(o)
                                 };
