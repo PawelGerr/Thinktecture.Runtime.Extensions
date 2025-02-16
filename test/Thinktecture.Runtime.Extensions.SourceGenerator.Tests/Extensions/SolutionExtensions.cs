@@ -20,7 +20,7 @@ public static class SolutionExtensions
 
    private static IReadOnlyDictionary<string, ReportDiagnostic> GetNullableWarningsFromCompiler()
    {
-      string[] args = { "/warnaserror:nullable" };
+      string[] args = ["/warnaserror:nullable"];
       var commandLineArguments = CSharpCommandLineParser.Default.Parse(args, Environment.CurrentDirectory, Environment.CurrentDirectory);
       var nullableWarnings = commandLineArguments.CompilationOptions.SpecificDiagnosticOptions;
 

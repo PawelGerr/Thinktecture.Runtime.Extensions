@@ -42,7 +42,7 @@ public static class ImmutableArrayExtensions
             }
             else if (!all)
             {
-               newArray = ImmutableArray.Create(item);
+               newArray = [item];
             }
          }
       }
@@ -95,7 +95,7 @@ public static class ImmutableArrayExtensions
             }
             else if (!all)
             {
-               newArray = ImmutableArray.Create(item);
+               newArray = [item];
             }
          }
          else

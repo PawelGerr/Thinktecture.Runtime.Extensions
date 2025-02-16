@@ -5,17 +5,17 @@ namespace Thinktecture.Runtime.Tests.Json.ValueObjectNewtonsoftJsonConverterTest
 
 public class JsonTestsBase
 {
-   public static IEnumerable<object[]> DataForStringBasedEnumTest => new[]
-                                                                     {
-                                                                        new object[] { null, "null" },
-                                                                        new object[] { TestEnum.Item1, "\"item1\"" },
-                                                                        new object[] { TestEnum.Item2, "\"item2\"" }
-                                                                     };
+   public static IEnumerable<object[]> DataForStringBasedEnumTest =>
+   [
+      [null, "null"],
+      [TestEnum.Item1, "\"item1\""],
+      [TestEnum.Item2, "\"item2\""]
+   ];
 
-   public static IEnumerable<object[]> DataForIntBasedEnumTest => new[]
-                                                                  {
-                                                                     new object[] { null, "null" },
-                                                                     new object[] { IntegerEnum.Item1, "1" },
-                                                                     new object[] { IntegerEnum.Item2, "2" }
-                                                                  };
+   public static IEnumerable<object[]> DataForIntBasedEnumTest =>
+   [
+      [null, "null"],
+      [IntegerEnum.Item1, "1"],
+      [IntegerEnum.Item2, "2"]
+   ];
 }

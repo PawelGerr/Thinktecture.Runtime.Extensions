@@ -29,6 +29,6 @@ public class TTRESG101_StaticPropertiesAreNotConsideredItems
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item2");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
    }
 }

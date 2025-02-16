@@ -10,8 +10,8 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
       private IReadOnlySet<object> SUT => Empty.Set<object>();
 
       // ReSharper disable once CollectionNeverUpdated.Local
-      private readonly HashSet<object> _realEmptySet = new();
-      private readonly HashSet<object> _realNonEmptySet = new() { 1 };
+      private readonly HashSet<object> _realEmptySet = [];
+      private readonly HashSet<object> _realNonEmptySet = [1];
 
       [Fact]
       public void Should_not_be_null()

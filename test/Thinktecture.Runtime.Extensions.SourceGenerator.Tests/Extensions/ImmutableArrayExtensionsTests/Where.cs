@@ -26,7 +26,7 @@ public class Where
    [Fact]
    public void Should_return_empty_array_if_all_items_are_removed()
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
 
       array.Where((i, arg) => false, 42)
            .IsEmpty.Should().BeTrue();
@@ -35,10 +35,10 @@ public class Where
    [Fact]
    public void Should_return_same_array_if_no_items_are_removed()
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
 
       array.Where((i, arg) => true, 42)
-           .Should().BeEquivalentTo(new[] { 1, 2, 3 });
+           .Should().BeEquivalentTo([1, 2, 3]);
    }
 
    [Theory]
@@ -47,7 +47,7 @@ public class Where
    [InlineData(3)]
    public void Should_return_array_without_excluded_value(int valueToExclude)
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
       var expected = new[] { 1, 2, 3 }.Where(i => i != valueToExclude);
 
       array.Where((i, arg) => i != valueToExclude && arg == 42, 42)
@@ -57,12 +57,12 @@ public class Where
    [Fact]
    public void Should_return_array_without_excluded_values()
    {
-      ImmutableArray.CreateRange(new[] { 1, 2, 1, 3 })
+      ImmutableArray.CreateRange([1, 2, 1, 3])
                     .Where(i => i != 1)
-                    .Should().BeEquivalentTo(new[] { 2, 3 });
+                    .Should().BeEquivalentTo([2, 3]);
 
-      ImmutableArray.CreateRange(new[] { 2, 1, 3, 1, 2 })
+      ImmutableArray.CreateRange([2, 1, 3, 1, 2])
                     .Where(i => i != 1)
-                    .Should().BeEquivalentTo(new[] { 2, 3, 2 });
+                    .Should().BeEquivalentTo([2, 3, 2]);
    }
 }

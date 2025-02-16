@@ -49,11 +49,11 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                  predicate,
                                                                  (ctx, token) => GetSourceGenContextOrNull(ctx, isKeyed, token))
                                    .SelectMany(static (state, _) => state.HasValue
-                                                                       ? ImmutableArray.Create(state.Value)
+                                                                       ? [state.Value]
                                                                        : ImmutableArray<SourceGenContext>.Empty);
 
       var validStates = enumTypeOrError.SelectMany(static (state, _) => state.ValidState is not null
-                                                                           ? ImmutableArray.Create(state.ValidState.Value)
+                                                                           ? [state.ValidState.Value]
                                                                            : ImmutableArray<ValidSourceGenState>.Empty);
 
       InitializeEnumTypeGeneration(context, validStates, options);
@@ -73,12 +73,15 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             if (state.KeyMember is null)
                return ImmutableArray<ComparisonOperatorsGeneratorState>.Empty;
 
-            return ImmutableArray.Create(new ComparisonOperatorsGeneratorState(state.State,
-                                                                               state.KeyMember,
-                                                                               Constants.Methods.GET,
-                                                                               state.Settings.ComparisonOperators,
-                                                                               state.KeyMember.ComparisonOperators,
-                                                                               state.AttributeInfo.KeyMemberComparerAccessor));
+            return
+            [
+               new ComparisonOperatorsGeneratorState(state.State,
+                                                     state.KeyMember,
+                                                     Constants.Methods.GET,
+                                                     state.Settings.ComparisonOperators,
+                                                     state.KeyMember.ComparisonOperators,
+                                                     state.AttributeInfo.KeyMemberComparerAccessor)
+            ];
          });
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
@@ -103,14 +106,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             if (state.KeyMember is null)
                return ImmutableArray<ParsableGeneratorState>.Empty;
 
-            return ImmutableArray.Create(new ParsableGeneratorState(state.State,
-                                                                    state.KeyMember,
-                                                                    state.State.ValidationError,
-                                                                    state.Settings.SkipIParsable,
-                                                                    state.KeyMember.IsParsable,
-                                                                    true,
-                                                                    state.State.Settings.IsValidatable,
-                                                                    state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
+            return
+            [
+               new ParsableGeneratorState(state.State,
+                                          state.KeyMember,
+                                          state.State.ValidationError,
+                                          state.Settings.SkipIParsable,
+                                          state.KeyMember.IsParsable,
+                                          true,
+                                          state.State.Settings.IsValidatable,
+                                          state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String))
+            ];
          });
       InitializeParsableCodeGenerator(context, parsables, options);
    }
@@ -123,12 +129,15 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             if (state.KeyMember is null)
                return ImmutableArray<ComparableGeneratorState>.Empty;
 
-            return ImmutableArray.Create(new ComparableGeneratorState(state.State,
-                                                                      state.KeyMember,
-                                                                      Constants.Methods.GET,
-                                                                      state.Settings.SkipIComparable,
-                                                                      state.KeyMember.IsComparable,
-                                                                      state.AttributeInfo.KeyMemberComparerAccessor));
+            return
+            [
+               new ComparableGeneratorState(state.State,
+                                            state.KeyMember,
+                                            Constants.Methods.GET,
+                                            state.Settings.SkipIComparable,
+                                            state.KeyMember.IsComparable,
+                                            state.AttributeInfo.KeyMemberComparerAccessor)
+            ];
          });
 
       InitializeComparableCodeGenerator(context, comparables, options);
@@ -142,11 +151,14 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             if (state.KeyMember is null)
                return ImmutableArray<FormattableGeneratorState>.Empty;
 
-            return ImmutableArray.Create(new FormattableGeneratorState(state.State,
-                                                                       state.KeyMember,
-                                                                       Constants.Methods.GET,
-                                                                       state.Settings.SkipIFormattable,
-                                                                       state.KeyMember.IsFormattable));
+            return
+            [
+               new FormattableGeneratorState(state.State,
+                                             state.KeyMember,
+                                             Constants.Methods.GET,
+                                             state.Settings.SkipIFormattable,
+                                             state.KeyMember.IsFormattable)
+            ];
          });
 
       InitializeFormattableCodeGenerator(context, formattables, options);
@@ -215,7 +227,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private void InitializeErrorReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
    {
       var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Error is not null
-                                                                              ? ImmutableArray.Create(state.Error.Value)
+                                                                              ? [state.Error.Value]
                                                                               : ImmutableArray<SourceGenError>.Empty);
       context.RegisterSourceOutput(exceptions, ReportError);
    }
@@ -223,7 +235,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    private void InitializeExceptionReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
    {
       var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Exception is not null
-                                                                              ? ImmutableArray.Create(state.Exception.Value)
+                                                                              ? [state.Exception.Value]
                                                                               : ImmutableArray<SourceGenException>.Empty);
       context.RegisterSourceOutput(exceptions, ReportException);
    }

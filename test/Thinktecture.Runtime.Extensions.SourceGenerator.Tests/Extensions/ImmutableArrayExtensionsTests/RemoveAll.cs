@@ -26,7 +26,7 @@ public class RemoveAll
    [Fact]
    public void Should_return_empty_array_if_all_items_are_removed()
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
 
       array.RemoveAll((i, arg) => true, 42)
            .IsEmpty.Should().BeTrue();
@@ -35,10 +35,10 @@ public class RemoveAll
    [Fact]
    public void Should_return_same_array_if_no_items_are_removed()
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
 
       array.RemoveAll((i, arg) => false, 42)
-           .Should().BeEquivalentTo(new[] { 1, 2, 3 });
+           .Should().BeEquivalentTo([1, 2, 3]);
    }
 
    [Theory]
@@ -47,7 +47,7 @@ public class RemoveAll
    [InlineData(3)]
    public void Should_return_array_without_excluded_value(int valueToExclude)
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
       var expected = new[] { 1, 2, 3 }.Where(i => i != valueToExclude);
 
       array.RemoveAll((i, arg) => i == valueToExclude && arg == 42, 42)

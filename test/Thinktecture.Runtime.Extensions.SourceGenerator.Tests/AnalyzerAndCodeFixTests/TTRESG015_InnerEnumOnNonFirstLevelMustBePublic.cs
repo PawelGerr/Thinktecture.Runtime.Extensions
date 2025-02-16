@@ -56,7 +56,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("MostInnerTestEnum");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -84,6 +84,6 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 }

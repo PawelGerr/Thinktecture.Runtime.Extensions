@@ -72,7 +72,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_3");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -139,7 +139,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_4");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -164,7 +164,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 
    [Fact]
@@ -189,7 +189,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 
    [Fact]
@@ -214,7 +214,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 
    [Fact]
@@ -239,7 +239,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 
    [Fact]
@@ -275,7 +275,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 
    [Fact]
@@ -296,7 +296,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 
    [Fact]
@@ -321,6 +321,6 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 }

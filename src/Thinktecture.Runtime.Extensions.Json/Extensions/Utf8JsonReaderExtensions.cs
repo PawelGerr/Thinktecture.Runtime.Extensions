@@ -34,7 +34,7 @@ public static class Utf8JsonReaderExtensions
 
    private static Read<T> GetReadMethod<T>(string methodName)
    {
-      var method = typeof(Utf8JsonReader).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic, Array.Empty<Type>())
+      var method = typeof(Utf8JsonReader).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic, [])
                    ?? throw new Exception($"Method '{methodName}' not found");
       var readerParam = Expression.Parameter(typeof(Utf8JsonReader).MakeByRefType());
 
@@ -43,7 +43,7 @@ public static class Utf8JsonReaderExtensions
 
    private static Write<T> GetWriteMethod<T>(string methodName)
    {
-      var method = typeof(Utf8JsonWriter).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic, new[] { typeof(T) })
+      var method = typeof(Utf8JsonWriter).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic, [typeof(T)])
                    ?? throw new Exception($"Method '{methodName}' not found");
       var writeParam = Expression.Parameter(typeof(Utf8JsonWriter));
       var valueParam = Expression.Parameter(typeof(T));

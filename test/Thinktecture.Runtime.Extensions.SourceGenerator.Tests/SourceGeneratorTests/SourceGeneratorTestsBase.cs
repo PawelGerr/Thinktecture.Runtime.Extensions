@@ -121,7 +121,7 @@ public abstract class SourceGeneratorTestsBase
                                  .Cast<MetadataReference>();
 
       var compilation = CSharpCompilation.Create("SourceGeneratorTests",
-                                                 new[] { syntaxTree },
+                                                 [syntaxTree],
                                                  references,
                                                  new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
 

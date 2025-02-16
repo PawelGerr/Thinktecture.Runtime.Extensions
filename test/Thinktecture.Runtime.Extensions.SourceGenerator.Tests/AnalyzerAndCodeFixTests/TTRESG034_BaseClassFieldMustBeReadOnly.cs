@@ -35,7 +35,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -61,7 +61,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -88,7 +88,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -114,7 +114,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
    }
 
@@ -140,7 +140,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticField).Assembly], expected);
       }
 
       [Fact]
@@ -162,7 +162,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly]);
       }
 
       [Fact]
@@ -185,7 +185,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceField).Assembly], expected);
       }
 
       [Fact]
@@ -207,7 +207,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly]);
       }
    }
 
@@ -236,7 +236,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -261,7 +261,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -287,7 +287,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -312,7 +312,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
 
@@ -341,7 +341,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -366,7 +366,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -392,7 +392,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -417,7 +417,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
 
@@ -442,7 +442,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly], expected);
       }
 
       [Fact]
@@ -463,7 +463,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly]);
       }
 
       [Fact]
@@ -485,7 +485,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly], expected);
       }
 
       [Fact]
@@ -506,7 +506,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly]);
       }
    }
 
@@ -531,7 +531,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticField).Assembly], expected);
       }
 
       [Fact]
@@ -552,7 +552,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly]);
       }
 
       [Fact]
@@ -574,7 +574,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceField).Assembly], expected);
       }
 
       [Fact]
@@ -595,7 +595,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly]);
       }
    }
 }

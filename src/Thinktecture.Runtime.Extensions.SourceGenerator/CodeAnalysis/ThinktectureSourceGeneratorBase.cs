@@ -228,7 +228,7 @@ public abstract class ThinktectureSourceGeneratorBase
                       .SelectMany((state, _) =>
                       {
                          if (ComparisonOperatorsCodeGenerator.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, state.ComparerAccessor, out var codeGenerator))
-                            return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+                            return [(State: state, CodeGenerator: codeGenerator)];
 
                          return ImmutableArray<(ComparisonOperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
                       });
@@ -293,7 +293,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                    .SelectMany((state, _) =>
                                    {
                                       if (state.GeneratorProvider.TryGet(state.KeyMemberOperators, state.OperatorsGeneration, out var codeGenerator))
-                                         return ImmutableArray.Create((State: state, CodeGenerator: codeGenerator));
+                                         return [(State: state, CodeGenerator: codeGenerator)];
 
                                       return ImmutableArray<(OperatorsGeneratorState State, IInterfaceCodeGenerator CodeGenerator)>.Empty;
                                    });

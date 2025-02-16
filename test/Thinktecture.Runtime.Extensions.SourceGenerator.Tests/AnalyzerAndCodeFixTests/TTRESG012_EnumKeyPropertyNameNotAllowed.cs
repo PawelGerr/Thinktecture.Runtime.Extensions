@@ -27,7 +27,7 @@ public class TTRESG012_EnumKeyPropertyNameNotAllowed
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -48,6 +48,6 @@ public class TTRESG012_EnumKeyPropertyNameNotAllowed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 }

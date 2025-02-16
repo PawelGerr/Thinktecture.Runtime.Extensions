@@ -21,7 +21,7 @@ public class FileSystemSinkContext
       FilePathIsUnique = filePathIsUnique;
       Sink = sink;
       _lock = new object();
-      _owners = new List<WeakReference<ThinktectureSourceGeneratorBase>> { new(owner) };
+      _owners = [new(owner)];
    }
 
    public bool HasOwners()

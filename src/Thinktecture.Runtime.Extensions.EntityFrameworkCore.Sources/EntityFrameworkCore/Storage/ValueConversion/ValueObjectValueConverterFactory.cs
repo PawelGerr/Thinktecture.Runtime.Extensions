@@ -69,12 +69,12 @@ public sealed class ValueObjectValueConverterFactory
       if (metadata.IsValidatableEnum)
       {
          var enumConverterType = typeof(ValidatableEnumValueConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-         converter = Activator.CreateInstance(enumConverterType, new object[] { validateOnWrite }) ?? throw new Exception($"Could not create an instance of '{enumConverterType.Name}'.");
+         converter = Activator.CreateInstance(enumConverterType, [validateOnWrite]) ?? throw new Exception($"Could not create an instance of '{enumConverterType.Name}'.");
       }
       else
       {
          var converterType = typeof(ValueObjectValueConverter<,>).MakeGenericType(metadata.Type, metadata.KeyType);
-         converter = Activator.CreateInstance(converterType, new object[] { useConstructorForRead }) ?? throw new Exception($"Could not create an instance of '{converterType.Name}'.");
+         converter = Activator.CreateInstance(converterType, [useConstructorForRead]) ?? throw new Exception($"Could not create an instance of '{converterType.Name}'.");
       }
 
       return (ValueConverter)converter;

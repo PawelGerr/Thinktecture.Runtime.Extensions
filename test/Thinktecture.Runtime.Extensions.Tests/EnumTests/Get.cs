@@ -27,7 +27,7 @@ public class Get
    {
       // ReSharper disable once PossibleNullReferenceException
       var item = (EmptyEnum)typeof(EmptyEnum).GetMethod("Get", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy, [typeof(string)])
-                                             .Invoke(null, new object[] { "unknown" });
+                                             .Invoke(null, ["unknown"]);
 
       item.Should().NotBeNull();
       item!.IsValid.Should().BeFalse();

@@ -409,7 +409,7 @@ public static class TypeSymbolExtensions
             if (derivedType is { IsGenericType: true, IsUnboundGenericType: false })
                derivedType = derivedType.ConstructUnboundGenericType();
 
-            (derivedTypes ??= new List<(INamedTypeSymbol, int Level)>()).Add((derivedType, currentLevel));
+            (derivedTypes ??= []).Add((derivedType, currentLevel));
          }
 
          FindDerivedInnerTypes(innerType, currentLevel, baseType, ref derivedTypes);
@@ -510,7 +510,7 @@ public static class TypeSymbolExtensions
             location = locationOfDerivedType;
          }
 
-         reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: severity ?? descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
+         reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: severity ?? descriptor.DefaultSeverity, null, null, messageArgs: [property.Name, type.Name]));
       }
 
       void ReportPropertyInitAccessorMustBePrivate(IPropertySymbol property)
@@ -521,7 +521,7 @@ public static class TypeSymbolExtensions
          var descriptor = DiagnosticsDescriptors.InitAccessorMustBePrivate;
          var location = property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
 
-         reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: new object?[] { property.Name, type.Name }));
+         reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: [property.Name, type.Name]));
       }
 
       return type.GetMembers()

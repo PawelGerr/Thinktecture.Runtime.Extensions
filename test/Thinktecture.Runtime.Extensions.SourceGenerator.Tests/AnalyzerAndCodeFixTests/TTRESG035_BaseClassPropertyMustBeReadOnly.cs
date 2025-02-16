@@ -36,7 +36,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -62,7 +62,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -89,7 +89,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -115,7 +115,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -145,7 +145,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -175,7 +175,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -205,7 +205,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -235,7 +235,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -269,7 +269,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -303,7 +303,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -332,7 +332,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -361,7 +361,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
    }
 
@@ -387,7 +387,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithInstanceProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceProperty).Assembly], expected);
       }
 
       [Fact]
@@ -409,7 +409,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly]);
       }
 
       [Fact]
@@ -432,7 +432,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticProperty).Assembly], expected);
       }
 
       [Fact]
@@ -454,7 +454,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly]);
       }
 
       [Fact]
@@ -476,7 +476,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetExpressionProperty).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithSetExpressionProperty).Assembly]);
       }
 
       [Fact]
@@ -498,7 +498,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetExpressionStaticProperty).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithSetExpressionStaticProperty).Assembly]);
       }
 
       [Fact]
@@ -520,7 +520,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetBodyProperty).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithSetBodyProperty).Assembly]);
       }
 
       [Fact]
@@ -542,7 +542,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithSetBodyStaticProperty).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithSetBodyStaticProperty).Assembly]);
       }
 
       public class Technically_not_possible_to_enforce
@@ -567,7 +567,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetExpressionProperty").WithSeverity(DiagnosticSeverity.Warning);
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetExpressionProperty).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithGetExpressionProperty).Assembly], expected);
          }
 
          [Fact]
@@ -590,7 +590,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetExpressionStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetExpressionStaticProperty).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithGetExpressionStaticProperty).Assembly], expected);
          }
 
          [Fact]
@@ -613,7 +613,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetBodyProperty").WithSeverity(DiagnosticSeverity.Warning);
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetBodyProperty).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithGetBodyProperty).Assembly], expected);
          }
 
          [Fact]
@@ -636,7 +636,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                """;
 
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithGetBodyStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
-            await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly, typeof(BaseClassWithGetBodyStaticProperty).Assembly }, expected);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithGetBodyStaticProperty).Assembly], expected);
          }
       }
    }
@@ -666,7 +666,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -691,7 +691,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -717,7 +717,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -742,7 +742,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
 
@@ -771,7 +771,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -796,7 +796,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -822,7 +822,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -847,7 +847,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
 
@@ -872,7 +872,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithInstanceProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceProperty).Assembly], expected);
       }
 
       [Fact]
@@ -893,7 +893,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly]);
       }
 
       [Fact]
@@ -915,7 +915,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticProperty).Assembly], expected);
       }
 
       [Fact]
@@ -936,7 +936,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly]);
       }
    }
 
@@ -961,7 +961,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithInstanceProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstanceProperty).Assembly], expected);
       }
 
       [Fact]
@@ -982,7 +982,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithInstancePropertyWithGetterOnly).Assembly]);
       }
 
       [Fact]
@@ -1004,7 +1004,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Property", "BaseClassWithStaticProperty").WithSeverity(DiagnosticSeverity.Warning);
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticProperty).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticProperty).Assembly], expected);
       }
 
       [Fact]
@@ -1025,7 +1025,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(BaseClassWithStaticPropertyWithGetterOnly).Assembly]);
       }
    }
 }

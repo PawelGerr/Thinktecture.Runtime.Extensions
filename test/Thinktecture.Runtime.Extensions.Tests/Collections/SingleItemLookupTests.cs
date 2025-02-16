@@ -4,7 +4,7 @@ namespace Thinktecture.Runtime.Tests.Collections;
 
 public class SingleItemLookupTests
 {
-   private readonly ILookup<int, int> _sut = SingleItem.Lookup(42, new[] { 43, 44 });
+   private readonly ILookup<int, int> _sut = SingleItem.Lookup(42, [43, 44]);
 
    [Fact]
    public void Should_have_count_of_1()
@@ -18,7 +18,7 @@ public class SingleItemLookupTests
       _sut[-1].Should().BeEmpty();
       _sut[1].Should().BeEmpty();
 
-      _sut[42].Should().BeEquivalentTo(new[] { 43, 44 });
+      _sut[42].Should().BeEquivalentTo([43, 44]);
    }
 
    [Fact]
@@ -38,7 +38,7 @@ public class SingleItemLookupTests
 
       enumerator.MoveNext().Should().BeTrue();
       enumerator.Current!.Key.Should().Be(42);
-      enumerator.Current.Should().BeEquivalentTo(new[] { 43, 44 });
+      enumerator.Current.Should().BeEquivalentTo([43, 44]);
 
       enumerator.MoveNext().Should().BeFalse();
       enumerator.Current.Should().BeNull();
@@ -52,7 +52,7 @@ public class SingleItemLookupTests
 
       enumerator.MoveNext().Should().BeTrue();
       enumerator.Current!.Key.Should().Be(42);
-      enumerator.Current.Should().BeEquivalentTo(new[] { 43, 44 });
+      enumerator.Current.Should().BeEquivalentTo([43, 44]);
 
       enumerator.MoveNext().Should().BeFalse();
       enumerator.Current.Should().BeNull();

@@ -63,7 +63,7 @@ public class BindModelAsync
       var ctx = await BindAsync<IntegerEnum, int>("item1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("The value 'item1' is not valid.")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -73,7 +73,7 @@ public class BindModelAsync
       var ctx = await BindAsync<ValidIntegerEnum, int>("42");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("There is no item of type 'ValidIntegerEnum' with the identifier '42'.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("There is no item of type 'ValidIntegerEnum' with the identifier '42'.")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -83,7 +83,7 @@ public class BindModelAsync
       var ctx = await BindAsync<ValidIntegerEnum, int>("item1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("The value 'item1' is not valid.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("The value 'item1' is not valid.")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -192,7 +192,7 @@ public class BindModelAsync
       var ctx = await BindAsync<StringBasedReferenceValueObject, string>("A");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Property cannot be 1 character long.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("Property cannot be 1 character long.")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -212,7 +212,7 @@ public class BindModelAsync
       var ctx = await BindAsync<BoundaryWithFactories, string>("1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Invalid format.") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("Invalid format.")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -232,7 +232,7 @@ public class BindModelAsync
       var ctx = await BindAsync<EnumWithFactory, string>("A");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Unknown item 'A'") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("Unknown item 'A'")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
@@ -252,7 +252,7 @@ public class BindModelAsync
       var ctx = await BindAsync<KeylessTestEnumWithFactory, string>("A");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo(new[] { new ModelError("Unknown item 'A'") });
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("Unknown item 'A'")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 

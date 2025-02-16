@@ -44,7 +44,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -81,7 +81,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(IEnum<>).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -102,7 +102,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
 
       [Fact]
@@ -123,7 +123,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
    }
 
@@ -161,7 +161,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -196,7 +196,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -216,7 +216,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -236,7 +236,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
 
@@ -274,7 +274,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -309,7 +309,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -329,7 +329,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -349,7 +349,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
 
@@ -381,7 +381,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute<,>).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(UnionAttribute<,>).Assembly], expected);
       }
 
       [Fact]
@@ -399,7 +399,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly]);
       }
 
       [Fact]
@@ -428,7 +428,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute<,>).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(UnionAttribute<,>).Assembly], expected);
       }
 
       [Fact]
@@ -446,7 +446,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly]);
       }
 
       [Fact]
@@ -475,7 +475,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute<,>).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(UnionAttribute<,>).Assembly], expected);
       }
 
       [Fact]
@@ -493,7 +493,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute<,>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly]);
       }
    }
 
@@ -525,7 +525,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(UnionAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -543,7 +543,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly]);
       }
 
       [Fact]
@@ -572,7 +572,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, new[] { typeof(UnionAttribute).Assembly }, expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(UnionAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -590,7 +590,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(UnionAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly]);
       }
    }
 }

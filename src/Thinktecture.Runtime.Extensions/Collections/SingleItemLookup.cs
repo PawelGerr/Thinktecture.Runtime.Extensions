@@ -10,7 +10,7 @@ internal sealed class SingleItemLookup<TKey, TElement> : ILookup<TKey, TElement>
 
    public int Count => 1;
 
-   public IEnumerable<TElement> this[TKey key] => _equalityComparer.Equals(_key, key) ? _elements : Enumerable.Empty<TElement>();
+   public IEnumerable<TElement> this[TKey key] => _equalityComparer.Equals(_key, key) ? _elements : [];
 
    public SingleItemLookup(TKey key, IEnumerable<TElement> elements, IEqualityComparer<TKey>? equalityComparer = null)
    {

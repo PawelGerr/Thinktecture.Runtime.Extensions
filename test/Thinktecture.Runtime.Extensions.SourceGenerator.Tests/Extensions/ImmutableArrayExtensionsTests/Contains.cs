@@ -16,7 +16,7 @@ public class Contains
    [Fact]
    public void Should_return_false_if_array_doesnt_contain_item()
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2 });
+      var array = ImmutableArray.CreateRange([1, 2]);
 
       array.Contains(0, EqualityComparer<int>.Default).Should().BeFalse();
    }

@@ -28,7 +28,7 @@ public class TTRESG044_CustomKeyMemberImplementationNotFound
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -49,7 +49,7 @@ public class TTRESG044_CustomKeyMemberImplementationNotFound
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
       }
    }
 }

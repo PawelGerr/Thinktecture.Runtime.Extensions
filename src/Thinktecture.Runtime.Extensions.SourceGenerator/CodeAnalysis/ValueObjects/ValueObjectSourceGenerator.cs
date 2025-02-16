@@ -89,11 +89,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                         IsCandidate,
                                                                         transform)
                                           .SelectMany(static (state, _) => state.HasValue
-                                                                              ? ImmutableArray.Create(state.Value)
+                                                                              ? [state.Value]
                                                                               : ImmutableArray<SourceGenContext<TState>>.Empty);
 
       var validValueObjects = valueObjectOrException.SelectMany(static (state, _) => state.ValidState is not null
-                                                                                        ? ImmutableArray.Create(state.ValidState.Value)
+                                                                                        ? [state.ValidState.Value]
                                                                                         : ImmutableArray<TState>.Empty);
 
       var sourceGenStates = validValueObjects
@@ -159,7 +159,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
                                                          var serializerState = new KeyedSerializerGeneratorState(state.State, null, state.AttributeInfo);
 
-                                                         return ImmutableArray.Create(serializerState);
+                                                         return [serializerState];
                                                       })
                                                       .Combine(serializerGeneratorFactories)
                                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
@@ -334,7 +334,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       where T : struct, ISourceGenContext
    {
       var exceptions = valueObjectOrException.SelectMany(static (state, _) => state.Error is not null
-                                                                                 ? ImmutableArray.Create(state.Error.Value)
+                                                                                 ? [state.Error.Value]
                                                                                  : ImmutableArray<SourceGenError>.Empty);
       context.RegisterSourceOutput(exceptions, ReportError);
    }
@@ -343,7 +343,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       where T : struct, ISourceGenContext
    {
       var exceptions = valueObjectOrException.SelectMany(static (state, _) => state.Exception is not null
-                                                                                 ? ImmutableArray.Create(state.Exception.Value)
+                                                                                 ? [state.Exception.Value]
                                                                                  : ImmutableArray<SourceGenException>.Empty);
       context.RegisterSourceOutput(exceptions, ReportException);
    }

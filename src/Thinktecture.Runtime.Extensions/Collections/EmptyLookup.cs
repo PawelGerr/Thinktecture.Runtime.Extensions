@@ -7,7 +7,7 @@ internal sealed class EmptyLookup<TKey, TValue> : ILookup<TKey, TValue>
    public static readonly ILookup<TKey, TValue> Instance = new EmptyLookup<TKey, TValue>();
 
    public int Count => 0;
-   public IEnumerable<TValue> this[TKey key] => Enumerable.Empty<TValue>();
+   public IEnumerable<TValue> this[TKey key] => [];
 
    public bool Contains(TKey key)
    {

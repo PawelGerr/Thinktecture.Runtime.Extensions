@@ -23,9 +23,9 @@ public class Distinct
    [Fact]
    public void Should_return_same_array_if_it_contains_no_duplicates()
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
 
-      array.Distinct().Should().BeEquivalentTo(new[] { 1, 2, 3 });
+      array.Distinct().Should().BeEquivalentTo([1, 2, 3]);
    }
 
    [Theory]

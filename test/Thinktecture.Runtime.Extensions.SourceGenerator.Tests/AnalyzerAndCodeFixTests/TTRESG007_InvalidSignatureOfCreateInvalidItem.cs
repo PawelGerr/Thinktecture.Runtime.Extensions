@@ -32,7 +32,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -59,7 +59,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -86,7 +86,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -113,7 +113,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -140,7 +140,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly }, expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -166,6 +166,6 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(IEnum<>).Assembly });
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
    }
 }

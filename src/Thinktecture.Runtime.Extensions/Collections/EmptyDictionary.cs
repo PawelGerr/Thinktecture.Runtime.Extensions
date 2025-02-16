@@ -10,8 +10,8 @@ internal sealed class EmptyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, 
 
    public int Count => 0;
    public TValue this[TKey key] => throw new KeyNotFoundException();
-   public IEnumerable<TKey> Keys => Enumerable.Empty<TKey>();
-   public IEnumerable<TValue> Values => Enumerable.Empty<TValue>();
+   public IEnumerable<TKey> Keys => [];
+   public IEnumerable<TValue> Values => [];
 
    public bool ContainsKey(TKey key)
    {

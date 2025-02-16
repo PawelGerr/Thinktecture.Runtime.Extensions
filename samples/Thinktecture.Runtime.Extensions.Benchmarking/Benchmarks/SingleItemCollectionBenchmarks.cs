@@ -7,7 +7,7 @@ public class SingleItemCollectionBenchmarks
 {
    private readonly IReadOnlyList<int> _singleItemCollection = SingleItem.Collection(42);
    private readonly IReadOnlyList<int> _list = new List<int> { 42 };
-   private readonly IReadOnlyList<int> _array = new[] { 42 };
+   private readonly IReadOnlyList<int> _array = [42];
 
    [Benchmark]
    public void ForeachSingleItemCollection()

@@ -25,7 +25,7 @@ public class FirstOrDefault
    [Fact]
    public void Should_return_default_value_if_no_match()
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
 
       array.FirstOrDefault((i, arg) => false, 42)
            .Should().Be(0);
@@ -37,7 +37,7 @@ public class FirstOrDefault
    [InlineData(3)]
    public void Should_return_default_value_matched_value(int matchedValue)
    {
-      var array = ImmutableArray.CreateRange(new[] { 1, 2, 3 });
+      var array = ImmutableArray.CreateRange([1, 2, 3]);
 
       array.FirstOrDefault((i, arg) => i == matchedValue && arg == 42, 42)
            .Should().Be(matchedValue);

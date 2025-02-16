@@ -71,19 +71,19 @@ public class Serialize
       value.Should().Be(IntBasedEnumWithFormatter.Value1);
    }
 
-   public static IEnumerable<object[]> DataForValueObject => new[]
-                                                             {
-                                                                new object[] { new ClassWithIntBasedEnum(IntegerEnum.Item1) },
-                                                                new object[] { new ClassWithStringBasedEnum(TestEnum.Item1) },
-                                                                new object[] { TestEnum.Item1 },
-                                                                new object[] { IntegerEnum.Item1 }
-                                                             };
+   public static IEnumerable<object[]> DataForValueObject =>
+   [
+      [new ClassWithIntBasedEnum(IntegerEnum.Item1)],
+      [new ClassWithStringBasedEnum(TestEnum.Item1)],
+      [TestEnum.Item1],
+      [IntegerEnum.Item1]
+   ];
 
    [Theory]
    [MemberData(nameof(DataForValueObject))]
    public void Should_roundtrip_serialize(object value)
    {
-      _serializeRoundTripMethodInfo.MakeGenericMethod(value.GetType()).Invoke(this, new[] { value });
+      _serializeRoundTripMethodInfo.MakeGenericMethod(value.GetType()).Invoke(this, [value]);
    }
 
    private void RoundTripSerializeWithCustomOptions<T>(T value)
@@ -94,16 +94,16 @@ public class Serialize
       deserializedValue.Should().Be(value);
    }
 
-   public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties => new[]
-                                                                                   {
-                                                                                      new object[] { null },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, null, null!) },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(0, 0, String.Empty) },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") },
-                                                                                      new object[] { ValueObjectWithMultipleProperties.Create(1, 42, "Value") }
-                                                                                   };
+   public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties =>
+   [
+      [null],
+      [ValueObjectWithMultipleProperties.Create(0, null, null!)],
+      [ValueObjectWithMultipleProperties.Create(0, null, null!)],
+      [ValueObjectWithMultipleProperties.Create(0, 0, String.Empty)],
+      [ValueObjectWithMultipleProperties.Create(1, 42, "Value")],
+      [ValueObjectWithMultipleProperties.Create(1, 42, "Value")],
+      [ValueObjectWithMultipleProperties.Create(1, 42, "Value")]
+   ];
 
    [Theory]
    [MemberData(nameof(DataForValueObjectWithMultipleProperties))]

@@ -19,15 +19,18 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _SEAL_CLASS = "Seal class";
 
    /// <inheritdoc />
-   public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(DiagnosticsDescriptors.TypeMustBePartial.Id,
-                                                                                                DiagnosticsDescriptors.EnumItemMustBePublic.Id,
-                                                                                                DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
-                                                                                                DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
-                                                                                                DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id,
-                                                                                                DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
-                                                                                                DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
-                                                                                                DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
-                                                                                                DiagnosticsDescriptors.InitAccessorMustBePrivate.Id);
+   public override ImmutableArray<string> FixableDiagnosticIds { get; } =
+   [
+      DiagnosticsDescriptors.TypeMustBePartial.Id,
+      DiagnosticsDescriptors.EnumItemMustBePublic.Id,
+      DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
+      DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
+      DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id,
+      DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
+      DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
+      DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
+      DiagnosticsDescriptors.InitAccessorMustBePrivate.Id
+   ];
 
    /// <inheritdoc />
    public override FixAllProvider GetFixAllProvider()

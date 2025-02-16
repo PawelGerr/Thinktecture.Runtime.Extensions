@@ -30,7 +30,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly },
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly],
                                             Verifier.Diagnostic("CS8970", "Type 'string' cannot be used in this context because it cannot be represented in metadata.").WithSpan(9, 5, 9, 25),
                                             Verifier.Diagnostic("CS8714", "The type 'string?' cannot be used as type parameter 'TKey' in the generic type or method 'ValueObjectAttribute<TKey>'. Nullability of type argument 'string?' doesn't match 'notnull' constraint.").WithSpan(9, 17, 9, 24).WithArguments("Thinktecture.ValueObjectAttribute<TKey>", "TKey", "string"),
                                             expected);
@@ -55,7 +55,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -75,7 +75,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
 
       [Fact]
@@ -98,7 +98,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly },
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly],
                                             Verifier.Diagnostic("CS8714", "The type 'int?' cannot be used as type parameter 'TKey' in the generic type or method 'ValueObjectAttribute<TKey>'. Nullability of type argument 'int?' doesn't match 'notnull' constraint.").WithSpan(9, 17, 9, 21).WithArguments("Thinktecture.ValueObjectAttribute<TKey>", "TKey", "int?"),
                                             expected);
       }
@@ -121,7 +121,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field");
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly }, expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
       }
 
       [Fact]
@@ -143,7 +143,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, new[] { typeof(ComplexValueObjectAttribute).Assembly });
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
 }
