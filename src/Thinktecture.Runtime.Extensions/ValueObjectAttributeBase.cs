@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace Thinktecture;
 
 /// <summary>
@@ -39,11 +37,6 @@ public abstract class ValueObjectAttributeBase : Attribute
       get => _tryCreateFactoryMethodName ?? "TryCreate";
       set => _tryCreateFactoryMethodName = String.IsNullOrWhiteSpace(value) ? null : value.Trim();
    }
-
-   /// <summary>
-   /// Indication whether and how the generator should generate the implementation of <see cref="IEqualityOperators{TSelf,TOther,TResult}"/>.
-   /// </summary>
-   public abstract OperatorsGeneration EqualityComparisonOperators { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of the method <see cref="object.ToString"/> or not.

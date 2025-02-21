@@ -147,7 +147,7 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// This setting has no effect:
    /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Equality</c>, <c>op_Inequality</c>).
    /// </summary>
-   public override OperatorsGeneration EqualityComparisonOperators
+   public OperatorsGeneration EqualityComparisonOperators
    {
       get => ComparisonOperators > _equalityComparisonOperators ? ComparisonOperators : _equalityComparisonOperators;
       set => _equalityComparisonOperators = value;
