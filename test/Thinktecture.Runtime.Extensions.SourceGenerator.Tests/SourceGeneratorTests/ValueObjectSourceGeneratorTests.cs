@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.CodeAnalysis.ValueObjects;
 using Xunit.Abstractions;
@@ -995,5 +998,33 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(output);
+   }
+
+   public static readonly IEnumerable<object[]> StringComparisons = Enum.GetValues<StringComparison>()
+                                                                        .Cast<object>()
+                                                                        .Select(v => new[] { v });
+
+   [Theory]
+   [MemberData(nameof(StringComparisons))]
+   public async Task Should_generate_complex_class_with_string_member(StringComparison stringComparison)
+   {
+      var source = $$"""
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(DefaultStringComparison = StringComparison.{{stringComparison}})]
+         	public partial class TestValueObject
+         	{
+               public string Property { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(stringComparison.ToString(), output);
    }
 }

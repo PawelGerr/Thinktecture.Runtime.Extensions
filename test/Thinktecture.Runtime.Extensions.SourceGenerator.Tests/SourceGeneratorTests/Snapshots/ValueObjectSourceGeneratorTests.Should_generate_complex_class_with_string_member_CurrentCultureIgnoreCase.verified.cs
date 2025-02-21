@@ -12,8 +12,7 @@ namespace Thinktecture.Tests
       {
          global::System.Linq.Expressions.Expression<global::System.Func<TestValueObject, object>> action = o => new
                                                                                                             {
-                                                                                                               o.Prop1,
-                                                                                                               o.Prop2
+                                                                                                               o.Property
                                                                                                             };
 
          var members = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>();
@@ -32,21 +31,18 @@ namespace Thinktecture.Tests
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
       public static global::Thinktecture.ValidationError? Validate(
-         string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2,
+         string @property,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
          global::Thinktecture.ValidationError? validationError = null;
          ValidateFactoryArguments(
             ref validationError,
-            ref @prop1,
-            ref @prop2);
+            ref @property);
 
          if (validationError is null)
          {
             obj = new global::Thinktecture.Tests.TestValueObject(
-               @prop1,
-               @prop2);
+               @property);
             obj.FactoryPostInit();
          }
          else
@@ -58,12 +54,10 @@ namespace Thinktecture.Tests
       }
 
       public static global::Thinktecture.Tests.TestValueObject Create(
-         string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2)
+         string @property)
       {
          var validationError = Validate(
-            @prop1,
-            @prop2,
+            @property,
             out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationError is not null)
@@ -73,26 +67,22 @@ namespace Thinktecture.Tests
       }
 
       public static bool TryCreate(
-         string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2,
+         string @property,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
          return TryCreate(
-            @prop1,
-            @prop2,
+            @property,
             out obj,
             out _);
       }
 
       public static bool TryCreate(
-         string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2,
+         string @property,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
       {
          validationError = Validate(
-            @prop1,
-            @prop2,
+            @property,
             out obj);
 
          return validationError is null;
@@ -100,26 +90,21 @@ namespace Thinktecture.Tests
 
       static partial void ValidateFactoryArguments(
          ref global::Thinktecture.ValidationError? validationError,
-         ref string? @prop1,
-         ref global::System.Func<string?, Task<string?>?>? @prop2);
+         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @property);
 
       partial void FactoryPostInit();
 
       private TestValueObject(
-         string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2)
+         string @property)
       {
          ValidateConstructorArguments(
-            ref @prop1,
-            ref @prop2);
+            ref @property);
 
-         this.Prop1 = @prop1;
-         this.Prop2 = @prop2;
+         this.Property = @property;
       }
 
       static partial void ValidateConstructorArguments(
-         ref string? @prop1,
-         ref global::System.Func<string?, Task<string?>?>? @prop2);
+         ref string @property);
 
       /// <summary>
       /// Compares two instances of <see cref="TestValueObject"/>.
@@ -161,8 +146,7 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return global::System.StringComparer.OrdinalIgnoreCase.Equals(this.Prop1, other.Prop1)
-             && (this.Prop2 is null ? other.Prop2 is null : this.Prop2.Equals(other.Prop2));
+         return global::System.StringComparer.CurrentCultureIgnoreCase.Equals(this.Property, other.Property);
       }
 
       /// <inheritdoc />
@@ -170,15 +154,14 @@ namespace Thinktecture.Tests
       {
          var hashCode = new global::System.HashCode();
          hashCode.Add(_typeHashCode);
-         hashCode.Add(this.Prop1, global::System.StringComparer.OrdinalIgnoreCase!);
-         hashCode.Add(this.Prop2);
+         hashCode.Add(this.Property, global::System.StringComparer.CurrentCultureIgnoreCase);
          return hashCode.ToHashCode();
       }
 
       /// <inheritdoc />
       public override string ToString()
       {
-         return $"{{ Prop1 = {this.Prop1}, Prop2 = {this.Prop2} }}";
+         return $"{{ Property = {this.Property} }}";
       }
    }
 }

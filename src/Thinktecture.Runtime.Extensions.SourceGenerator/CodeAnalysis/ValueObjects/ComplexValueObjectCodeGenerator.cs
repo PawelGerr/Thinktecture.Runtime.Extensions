@@ -454,7 +454,7 @@ namespace ").Append(_state.Namespace).Append(@"
             }
             else if (member.IsString())
             {
-               _sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(this.").Append(member.Name).Append(", other.").Append(member.Name).Append(")");
+               _sb.Append("global::System.StringComparer.").Append(GetDefaultStringComparer()).Append(".Equals(this.").Append(member.Name).Append(", other.").Append(member.Name).Append(")");
             }
             else
             {
@@ -481,6 +481,21 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
+   private string GetDefaultStringComparer()
+   {
+      var comparer = _state.Settings.DefaultStringComparison switch
+      {
+         StringComparison.Ordinal => "Ordinal",
+         StringComparison.OrdinalIgnoreCase => "OrdinalIgnoreCase",
+         StringComparison.CurrentCulture => "CurrentCulture",
+         StringComparison.CurrentCultureIgnoreCase => "CurrentCultureIgnoreCase",
+         StringComparison.InvariantCulture => "InvariantCulture",
+         StringComparison.InvariantCultureIgnoreCase => "InvariantCultureIgnoreCase",
+         _ => "OrdinalIgnoreCase"
+      };
+      return comparer;
+   }
+
    private void GenerateGetHashCode()
    {
       _sb.Append(@"
@@ -491,7 +506,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.EqualityMembers.Count > 0)
       {
-         var useShortForm = _state.EqualityMembers.Count < 8 && _state.EqualityMembers.All(m => m.EqualityComparerAccessor == null);
+         var useShortForm = _state.EqualityMembers.Count < 8 && _state.EqualityMembers.All(m => m.EqualityComparerAccessor == null && !m.Member.IsString());
 
          if (useShortForm)
          {
@@ -529,7 +544,7 @@ namespace ").Append(_state.Namespace).Append(@"
                }
                else if (member.IsString())
                {
-                  _sb.Append(", global::System.StringComparer.OrdinalIgnoreCase");
+                  _sb.Append(", global::System.StringComparer.").Append(GetDefaultStringComparer());
 
                   if (member is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.Annotated })
                      _sb.Append("!");

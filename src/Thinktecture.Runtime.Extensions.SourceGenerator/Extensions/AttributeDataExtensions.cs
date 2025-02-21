@@ -166,12 +166,12 @@ public static class AttributeDataExtensions
 
    public static StringComparison FindDefaultStringComparison(this AttributeData attributeData)
    {
-      var frameworks = (StringComparison?)GetIntegerParameterValue(attributeData, "DefaultStringComparison");
+      var defaultStringComparison = (StringComparison?)GetIntegerParameterValue(attributeData, "DefaultStringComparison");
 
-      if (frameworks is null || !frameworks.Value.IsValid())
+      if (defaultStringComparison is null || !defaultStringComparison.Value.IsValid())
          return StringComparison.OrdinalIgnoreCase;
 
-      return frameworks.Value;
+      return defaultStringComparison.Value;
    }
 
    public static bool FindTxIsNullableReferenceType(this AttributeData attributeData, int index)

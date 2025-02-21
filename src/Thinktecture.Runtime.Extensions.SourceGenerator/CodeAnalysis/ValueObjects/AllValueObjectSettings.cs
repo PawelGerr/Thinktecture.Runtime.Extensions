@@ -27,6 +27,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; }
    public ConversionOperatorsGeneration UnsafeConversionToKeyMemberType { get; }
    public ConversionOperatorsGeneration ConversionToKeyMemberType { get; }
+   public StringComparison DefaultStringComparison { get; }
 
    public AllValueObjectSettings(AttributeData valueObjectAttribute)
    {
@@ -55,6 +56,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       ConversionToKeyMemberType = valueObjectAttribute.FindConversionToKeyMemberType() ?? ConversionOperatorsGeneration.Implicit;
       UnsafeConversionToKeyMemberType = valueObjectAttribute.FindUnsafeConversionToKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
       ConversionFromKeyMemberType = valueObjectAttribute.FindConversionFromKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
+      DefaultStringComparison = valueObjectAttribute.FindDefaultStringComparison();
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -97,7 +99,8 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
              && AllowDefaultStructs == other.AllowDefaultStructs
              && ConversionToKeyMemberType == other.ConversionToKeyMemberType
              && UnsafeConversionToKeyMemberType == other.UnsafeConversionToKeyMemberType
-             && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType;
+             && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType
+             && DefaultStringComparison == other.DefaultStringComparison;
    }
 
    public override int GetHashCode()
@@ -129,6 +132,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
          hashCode = (hashCode * 397) ^ (int)ConversionToKeyMemberType;
          hashCode = (hashCode * 397) ^ (int)UnsafeConversionToKeyMemberType;
          hashCode = (hashCode * 397) ^ (int)ConversionFromKeyMemberType;
+         hashCode = (hashCode * 397) ^ (int)DefaultStringComparison;
 
          return hashCode;
       }

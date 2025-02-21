@@ -74,6 +74,14 @@ public abstract class SourceGeneratorTestsBase
    }
 
    protected async Task VerifyAsync(
+      string parameterText,
+      string output)
+   {
+      await Verifier.Verify(output, "cs", Settings)
+                    .UseTextForParameters(parameterText);
+   }
+
+   protected async Task VerifyAsync(
       string output)
    {
       await Verifier.Verify(output, "cs", Settings);
