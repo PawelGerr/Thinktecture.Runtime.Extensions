@@ -1,7 +1,9 @@
+using System;
+
 namespace Thinktecture.Runtime.Tests.Formatters.EnumMessagePackFormatterTests.TestClasses;
 
 // ReSharper disable InconsistentNaming
-[ComplexValueObject]
+[ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
 public partial class TestValueObject_Complex_Class_WithFormatter
 {
    public string Property1 { get; }

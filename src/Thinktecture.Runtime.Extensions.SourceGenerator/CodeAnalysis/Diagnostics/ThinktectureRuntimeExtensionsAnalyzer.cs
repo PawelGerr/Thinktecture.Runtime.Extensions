@@ -44,7 +44,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch,
       DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters,
       DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue,
-      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer
+      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer,
+      DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer
    ];
 
    /// <inheritdoc />
@@ -276,7 +277,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             ValidateKeyedValueObject(context, assignableMembers, type, attrCreation, locationOfFirstDeclaration);
 
          if (isComplex && assignableMembers is not null)
-            ValidateComplexValueObject(context, assignableMembers);
+            ValidateComplexValueObject(context, assignableMembers, attrCreation, locationOfFirstDeclaration);
       }
       catch (Exception ex)
       {
@@ -523,21 +524,44 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       return assignableMembers;
    }
 
-   private static void ValidateComplexValueObject(OperationAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)
+   private static void ValidateComplexValueObject(
+      OperationAnalysisContext context,
+      IReadOnlyList<InstanceMemberInfo> assignableMembers,
+      IObjectCreationOperation attribute,
+      Location locationOfFirstDeclaration)
    {
-      CheckAssignableMembers(context, assignableMembers);
+      CheckAssignableMembers(context, assignableMembers, attribute, locationOfFirstDeclaration);
    }
 
-   private static void CheckAssignableMembers(OperationAnalysisContext context, IReadOnlyList<InstanceMemberInfo> assignableMembers)
+   private static void CheckAssignableMembers(
+      OperationAnalysisContext context,
+      IReadOnlyList<InstanceMemberInfo> assignableMembers,
+      IObjectCreationOperation attribute,
+      Location locationOfFirstDeclaration)
    {
+      var hasStringMembersWithoutComparer = false;
+
       for (var i = 0; i < assignableMembers.Count; i++)
       {
          var assignableMember = assignableMembers[i];
+         var isString = assignableMember.SpecialType == SpecialType.System_String;
 
          if (!assignableMember.ValueObjectMemberSettings.IsExplicitlyDeclared)
+         {
+            hasStringMembersWithoutComparer |= isString;
             continue;
+         }
+
+         hasStringMembersWithoutComparer |= isString && assignableMember.ValueObjectMemberSettings.EqualityComparerAccessor is null;
 
          CheckComparerTypes(context, assignableMember);
+      }
+
+      if (hasStringMembersWithoutComparer && !attribute.HasDefaultStringComparison())
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer,
+                          locationOfFirstDeclaration);
       }
    }
 

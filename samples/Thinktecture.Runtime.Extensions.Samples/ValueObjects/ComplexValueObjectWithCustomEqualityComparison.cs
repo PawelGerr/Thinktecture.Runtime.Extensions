@@ -1,6 +1,8 @@
+using System;
+
 namespace Thinktecture.ValueObjects;
 
-[ComplexValueObject(SkipToString = true)]
+[ComplexValueObject(SkipToString = true, DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
 public partial class ComplexValueObjectWithCustomEqualityComparison
 {
    [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]

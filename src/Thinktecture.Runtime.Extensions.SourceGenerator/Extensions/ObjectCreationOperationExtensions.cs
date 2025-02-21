@@ -40,6 +40,12 @@ public static class ObjectCreationOperationExtensions
       return kind.Value;
    }
 
+   public static bool HasDefaultStringComparison(this IObjectCreationOperation operation)
+   {
+      return operation.Initializer is not null
+             && HasInitialization(operation.Initializer.Initializers, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON);
+   }
+
    private static bool? GetBooleanParameterValue(IObjectOrCollectionInitializerOperation? initializer, string name)
    {
       return (bool?)initializer?.Initializers.FindInitialization(name);
@@ -76,5 +82,26 @@ public static class ObjectCreationOperationExtensions
       }
 
       return null;
+   }
+
+   private static bool HasInitialization(this ImmutableArray<IOperation> initializations, string name)
+   {
+      for (var i = 0; i < initializations.Length; i++)
+      {
+         var init = initializations[i];
+
+         if (init.Kind != OperationKind.SimpleAssignment || init is not ISimpleAssignmentOperation simpleAssignment)
+            continue;
+
+         if (simpleAssignment.Target.Kind != OperationKind.PropertyReference || simpleAssignment.Target is not IPropertyReferenceOperation propRef)
+            continue;
+
+         if (propRef.Property.Name != name)
+            continue;
+
+         return true;
+      }
+
+      return false;
    }
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ComplexValueObject]
+[ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
 public sealed partial class BoundaryWithNullableMembers
 {
    public string? Prop1 { get; }

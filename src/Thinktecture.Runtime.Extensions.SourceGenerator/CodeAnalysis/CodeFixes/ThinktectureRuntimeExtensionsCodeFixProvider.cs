@@ -31,7 +31,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
       DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
       DiagnosticsDescriptors.InitAccessorMustBePrivate.Id,
-      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer.Id
+      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer.Id,
+      DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id
    ];
 
    /// <inheritdoc />
@@ -91,7 +92,11 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer.Id)
          {
-            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddValueObjectKeyMemberEqualityComparerAttribute(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddValueObjectKeyMemberEqualityComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddDefaultStringComparisonAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
          }
       }
    }
@@ -252,7 +257,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return newDoc;
    }
 
-   private static async Task<Document> AddValueObjectKeyMemberEqualityComparerAttribute(
+   private static async Task<Document> AddValueObjectKeyMemberEqualityComparerAttributeAsync(
       Document document,
       SyntaxNode root,
       TypeDeclarationSyntax? declaration,
@@ -269,7 +274,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       var valueObjectType = model.GetDeclaredSymbol(declaration);
 
       if (!valueObjectType.IsValueObjectType(out var valueObjectAttribute)
-          || valueObjectAttribute.AttributeClass?.TypeArguments.Length != 1)
+          || valueObjectAttribute.AttributeClass?.IsKeyedValueObjectAttribute() != true)
       {
          return document;
       }
@@ -291,6 +296,47 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       var comparerAttribute = SyntaxFactory.Attribute(comparerAttributeType);
 
       var newDeclaration = declaration.AddAttributeLists(SyntaxFactory.AttributeList([comparerAttribute]));
+      var newRoot = root.ReplaceNode(declaration, newDeclaration);
+      var newDoc = document.WithSyntaxRoot(newRoot);
+
+      return newDoc;
+   }
+
+   private static async Task<Document> AddDefaultStringComparisonAsync(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? declaration,
+      CancellationToken cancellationToken)
+   {
+      if (declaration is null)
+         return document;
+
+      var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+      if (model is null)
+         return document;
+
+      var valueObjectType = model.GetDeclaredSymbol(declaration);
+
+      if (!valueObjectType.IsValueObjectType(out var valueObjectAttribute)
+          || valueObjectAttribute.ApplicationSyntaxReference is null
+          || valueObjectAttribute.AttributeClass?.IsComplexValueObjectAttribute() != true)
+      {
+         return document;
+      }
+
+      var attributeSyntax = await valueObjectAttribute.ApplicationSyntaxReference.GetSyntaxAsync(cancellationToken) as AttributeSyntax;
+
+      if (attributeSyntax is null)
+      {
+         return document;
+      }
+
+      var newAttribute = attributeSyntax.AddArgumentListArguments(
+         SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression("StringComparison.OrdinalIgnoreCase"))
+                      .WithNameEquals(SyntaxFactory.NameEquals("DefaultStringComparison")));
+
+      var newDeclaration = declaration.ReplaceNode(attributeSyntax, newAttribute);
       var newRoot = root.ReplaceNode(declaration, newDeclaration);
       var newDoc = document.WithSyntaxRoot(newRoot);
 

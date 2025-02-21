@@ -1,6 +1,8 @@
+using System;
+
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ComplexValueObject]
+[ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
 public partial class BoundaryWithStrings
 {
    public string Lower { get; }

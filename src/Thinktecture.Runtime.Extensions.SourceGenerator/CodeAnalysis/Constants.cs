@@ -52,6 +52,7 @@ public static class Constants
          public const string KEY_MEMBER_ACCESS_MODIFIER = "KeyMemberAccessModifier";
          public const string KEY_MEMBER_KIND = "KeyMemberKind";
          public const string CONSTRUCTOR_ACCESS_MODIFIER = "ConstructorAccessModifier";
+         public const string DEFAULT_STRING_COMPARISON = "DefaultStringComparison";
       }
 
       public static class ValueObject
