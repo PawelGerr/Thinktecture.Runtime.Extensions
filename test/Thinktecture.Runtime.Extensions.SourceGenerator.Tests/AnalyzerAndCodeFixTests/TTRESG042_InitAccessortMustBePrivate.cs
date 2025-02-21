@@ -21,6 +21,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   public int {|#0:InstanceProperty|} { get; init; }
@@ -36,6 +37,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   public int InstanceProperty { get; private init; }
@@ -58,6 +60,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   [ValueObjectMemberIgnore]
@@ -80,6 +83,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   [ValueObjectMemberIgnore]
@@ -109,6 +113,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   [ValueObjectMemberIgnore]
@@ -131,6 +136,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   [ValueObjectMemberIgnore]
@@ -160,6 +166,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   private int {|#0:InstanceProperty|} { get; init; }
@@ -181,6 +188,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   [ValueObjectMemberIgnore]
@@ -209,6 +217,7 @@ public class TTRESG042_InitAccessorMustBePrivate
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   [ValueObjectMemberIgnore]

@@ -43,7 +43,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.CustomKeyMemberImplementationNotFound,
       DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch,
       DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters,
-      DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue
+      DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue,
+      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer
    ];
 
    /// <inheritdoc />
@@ -387,10 +388,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (attribute.FindSkipKeyMember() == true)
          ValidateValueObjectCustomKeyMemberImplementation(context, keyType, assignableMembers, attribute, locationOfFirstDeclaration);
 
-      ValidateKeyMemberComparers(context, type, keyType);
+      ValidateKeyMemberComparers(context, type, keyType, locationOfFirstDeclaration, true);
    }
 
-   private static void ValidateKeyMemberComparers(OperationAnalysisContext context, INamedTypeSymbol type, ITypeSymbol keyType)
+   private static void ValidateKeyMemberComparers(
+      OperationAnalysisContext context,
+      INamedTypeSymbol type,
+      ITypeSymbol keyType,
+      Location locationOfFirstDeclaration,
+      bool stringBasedRequiresEqualityComparer)
    {
       AttributeData? keyMemberComparerAttr = null;
       AttributeData? keyMemberEqualityComparerAttr = null;
@@ -409,6 +415,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       ValidateComparer(context, keyType, keyMemberComparerAttr);
       ValidateComparer(context, keyType, keyMemberEqualityComparerAttr);
+
+      if (stringBasedRequiresEqualityComparer
+          && keyType.SpecialType == SpecialType.System_String
+          && keyMemberEqualityComparerAttr is null)
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer,
+                          locationOfFirstDeclaration);
+      }
    }
 
    private static void ValidateComparer(OperationAnalysisContext context, ITypeSymbol keyType, AttributeData? keyMemberComparerAttr)
@@ -455,7 +470,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       if (!keyMember.IsOfType(keyType))
-         ReportDiagnostic(context, DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch, keyMember.GetIdentifierLocation(context.CancellationToken) ?? locationOfFirstDeclaration, keyMemberName, keyMember.TypeMinimallyQualified, BuildTypeName(keyType));
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch,
+            keyMember.GetIdentifierLocation(context.CancellationToken) ?? locationOfFirstDeclaration,
+            keyMemberName,
+            keyMember.TypeMinimallyQualified,
+            BuildTypeName(keyType));
+      }
    }
 
    private static IReadOnlyList<InstanceMemberInfo>? ValidateSharedValueObject(
@@ -615,7 +638,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType);
       }
 
-      ValidateKeyMemberComparers(context, enumType, keyType);
+      ValidateKeyMemberComparers(context, enumType, keyType, locationOfFirstDeclaration, false);
    }
 
    private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)

@@ -19,6 +19,7 @@ public partial class Animal
    }
 
    [ValueObject<string>]
+   [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    public partial class Dog : Animal;
 
    public sealed class Cat : Animal

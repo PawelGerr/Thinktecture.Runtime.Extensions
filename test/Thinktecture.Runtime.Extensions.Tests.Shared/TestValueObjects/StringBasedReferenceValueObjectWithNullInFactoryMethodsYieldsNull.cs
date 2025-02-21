@@ -6,6 +6,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                      KeyMemberName = "Property",
                      KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
                      NullInFactoryMethodsYieldsNull = true)]
+[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string property)

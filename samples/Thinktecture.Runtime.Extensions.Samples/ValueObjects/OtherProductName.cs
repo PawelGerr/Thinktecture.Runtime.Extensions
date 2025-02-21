@@ -3,6 +3,7 @@ using System;
 namespace Thinktecture.ValueObjects;
 
 [ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
+[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class OtherProductName
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)

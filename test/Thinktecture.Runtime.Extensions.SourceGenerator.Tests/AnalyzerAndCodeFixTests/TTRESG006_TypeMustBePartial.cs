@@ -140,6 +140,7 @@ public class TTRESG006_TypeMustBePartial
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public class {|#0:TestValueObject|}
             	{
                }
@@ -154,6 +155,7 @@ public class TTRESG006_TypeMustBePartial
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -175,6 +177,7 @@ public class TTRESG006_TypeMustBePartial
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public struct {|#0:TestValueObject|}
             	{
                }
@@ -189,6 +192,7 @@ public class TTRESG006_TypeMustBePartial
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial struct {|#0:TestValueObject|}
             	{
                }
@@ -210,6 +214,7 @@ public class TTRESG006_TypeMustBePartial
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -230,6 +235,7 @@ public class TTRESG006_TypeMustBePartial
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial struct {|#0:TestValueObject|}
             	{
                }

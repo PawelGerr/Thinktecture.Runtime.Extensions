@@ -3,6 +3,7 @@ using System;
 namespace Thinktecture.ValueObjects;
 
 [ValueObject<string>(DefaultInstancePropertyName = "None")]
+[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial struct ProductNameStruct
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)

@@ -17,6 +17,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _MAKE_TYPE_PRIVATE = "Make type private";
    private const string _MAKE_TYPE_PUBLIC = "Make type public";
    private const string _SEAL_CLASS = "Seal class";
+   private const string _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER = "Define Value Object equality comparer";
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
@@ -29,7 +30,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
       DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
       DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
-      DiagnosticsDescriptors.InitAccessorMustBePrivate.Id
+      DiagnosticsDescriptors.InitAccessorMustBePrivate.Id,
+      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer.Id
    ];
 
    /// <inheritdoc />
@@ -86,6 +88,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddValueObjectKeyMemberEqualityComparerAttribute(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
          }
       }
    }
@@ -240,6 +246,51 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
                                 .WithBody(SyntaxFactory.Block(BuildThrowNotImplementedException()));
 
       var newDeclaration = declaration.AddMembers(method);
+      var newRoot = root.ReplaceNode(declaration, newDeclaration);
+      var newDoc = document.WithSyntaxRoot(newRoot);
+
+      return newDoc;
+   }
+
+   private static async Task<Document> AddValueObjectKeyMemberEqualityComparerAttribute(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? declaration,
+      CancellationToken cancellationToken)
+   {
+      if (declaration is null)
+         return document;
+
+      var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+      if (model is null)
+         return document;
+
+      var valueObjectType = model.GetDeclaredSymbol(declaration);
+
+      if (!valueObjectType.IsValueObjectType(out var valueObjectAttribute)
+          || valueObjectAttribute.AttributeClass?.TypeArguments.Length != 1)
+      {
+         return document;
+      }
+
+      var keyType = valueObjectAttribute.AttributeClass?.TypeArguments[0];
+
+      if (keyType is null)
+         return document;
+
+      var genericParameters = new SyntaxNodeOrToken[]
+                              {
+                                 SyntaxFactory.ParseTypeName("ComparerAccessors.StringOrdinalIgnoreCase"),
+                                 SyntaxFactory.Token(SyntaxKind.CommaToken),
+                                 SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start))
+                              };
+
+      var comparerAttributeType = SyntaxFactory.GenericName("ValueObjectKeyMemberEqualityComparer")
+                                               .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(SyntaxFactory.SeparatedList<TypeSyntax>(genericParameters)));
+      var comparerAttribute = SyntaxFactory.Attribute(comparerAttributeType);
+
+      var newDeclaration = declaration.AddAttributeLists(SyntaxFactory.AttributeList([comparerAttribute]));
       var newRoot = root.ReplaceNode(declaration, newDeclaration);
       var newDoc = document.WithSyntaxRoot(newRoot);
 

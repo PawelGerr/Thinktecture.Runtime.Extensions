@@ -49,6 +49,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -69,6 +70,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }

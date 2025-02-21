@@ -68,6 +68,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public partial class {|#0:ValueObject|}()
             	{
                }
@@ -89,6 +90,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public partial struct {|#0:ValueObject|}()
             	{
                }

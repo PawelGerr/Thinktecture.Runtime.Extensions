@@ -659,6 +659,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                }
             
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{
                }
@@ -685,6 +686,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                }
             
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{
                }
@@ -710,6 +712,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                }
             
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{
                }
@@ -736,6 +739,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                }
             
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{
                }
@@ -865,6 +869,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClassWithInstanceProperty
             	{
                }
@@ -887,6 +892,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClassWithInstancePropertyWithGetterOnly
             	{
                }
@@ -908,6 +914,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClassWithStaticProperty
             	{
                }
@@ -930,6 +937,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|} : BaseClassWithStaticPropertyWithGetterOnly
             	{
                }

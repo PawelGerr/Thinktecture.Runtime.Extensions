@@ -168,6 +168,7 @@ public class TTRESG001_FieldMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   public static object {|#0:Field|} = default;
@@ -183,6 +184,7 @@ public class TTRESG001_FieldMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   public static readonly object {|#0:Field|} = default;
@@ -205,6 +207,7 @@ public class TTRESG001_FieldMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   public object {|#0:Field|} = default;
@@ -220,6 +223,7 @@ public class TTRESG001_FieldMustBeReadOnly
             namespace TestNamespace
             {
                [ValueObject<string>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class TestValueObject
             	{
                   public readonly object {|#0:Field|} = default;

@@ -4,6 +4,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                      KeyMemberName = "Property",
                      KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
                      AllowDefaultStructs = true)]
+[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial struct StringBasedStructValueObject
 {
 }

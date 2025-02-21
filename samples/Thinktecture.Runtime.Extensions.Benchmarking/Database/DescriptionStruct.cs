@@ -3,6 +3,7 @@ using System;
 namespace Thinktecture.Database;
 
 [ValueObject<string>]
+[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial struct DescriptionStruct
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)
