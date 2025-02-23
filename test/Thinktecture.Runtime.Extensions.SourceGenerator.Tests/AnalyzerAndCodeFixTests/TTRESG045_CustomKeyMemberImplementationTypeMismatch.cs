@@ -20,16 +20,15 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
 
             namespace TestNamespace
             {
-               [ValueObject<string>(SkipKeyMember = true)]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>(SkipKeyMember = true)]
                public partial class ValueObject
             	{
-                  private readonly int {|#0:_value|};
+                  private readonly string {|#0:_value|};
                }
             }
             """;
 
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "int", "string");
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "string", "int");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
       }
 
@@ -47,6 +46,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
             {
                [ValueObject<string>(SkipKeyMember = true)]
                [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public partial class ValueObject
             	{
                   private readonly string? {|#0:_value|};
@@ -92,11 +92,10 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
 
             namespace TestNamespace
             {
-               [ValueObject<string>(SkipKeyMember = true)]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>(SkipKeyMember = true)]
                public partial class {|#0:ValueObject|}
             	{
-                  private readonly string _value;
+                  private readonly int _value;
                }
             }
             """;

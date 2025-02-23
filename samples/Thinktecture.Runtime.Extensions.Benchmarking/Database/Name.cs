@@ -4,6 +4,7 @@ namespace Thinktecture.Database;
 
 [ValueObject<string>]
 [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+[ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class Name
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)

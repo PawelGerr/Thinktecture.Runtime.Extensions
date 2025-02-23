@@ -86,8 +86,7 @@ public class TTRESG004_TypeMustBeClassOrStruct
 
             namespace TestNamespace
             {
-            	[ValueObject<string>]
-            	[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+            	[ValueObject<int>]
                 public partial record {|#0:TestValueObject|}
             	{
                }
@@ -108,8 +107,7 @@ public class TTRESG004_TypeMustBeClassOrStruct
 
             namespace TestNamespace
             {
-            	[ValueObject<string>]
-            	[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+            	[ValueObject<int>]
                public partial class TestValueObject
             	{
                }
@@ -129,8 +127,7 @@ public class TTRESG004_TypeMustBeClassOrStruct
 
             namespace TestNamespace
             {
-            	[ValueObject<string>]
-            	[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+            	[ValueObject<int>]
             	public partial struct TestValueObject
             	{
                }

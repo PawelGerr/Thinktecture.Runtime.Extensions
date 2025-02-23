@@ -7,7 +7,12 @@ public static class ObjectCreationOperationExtensions
 {
    public static bool? FindIsValidatable(this IObjectCreationOperation operation)
    {
-      return GetBooleanParameterValue(operation.Initializer, "IsValidatable");
+      return GetBooleanParameterValue(operation.Initializer,  Constants.Attributes.Properties.IS_VALIDATABLE);
+   }
+
+   public static bool? FindSkipIComparable(this IObjectCreationOperation operation)
+   {
+      return GetBooleanParameterValue(operation.Initializer,  Constants.Attributes.Properties.SKIP_ICOMPARABLE);
    }
 
    public static string? FindKeyMemberName(this IObjectCreationOperation operation)

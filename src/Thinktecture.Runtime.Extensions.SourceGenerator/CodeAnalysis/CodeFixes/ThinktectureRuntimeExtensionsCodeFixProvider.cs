@@ -18,6 +18,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _MAKE_TYPE_PUBLIC = "Make type public";
    private const string _SEAL_CLASS = "Seal class";
    private const string _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER = "Define Value Object equality comparer";
+   private const string _DEFINE_VALUE_OBJECT_COMPARER = "Define Value Object comparer";
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
@@ -31,8 +32,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
       DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
       DiagnosticsDescriptors.InitAccessorMustBePrivate.Id,
-      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer.Id,
-      DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id
+      DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer.Id,
+      DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id,
+      DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer.Id,
+      DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer.Id,
    ];
 
    /// <inheritdoc />
@@ -90,13 +93,21 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          {
             context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddValueObjectKeyMemberEqualityComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddDefaultStringComparisonAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddValueObjectKeyMemberEqualityComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_COMPARER, t => AddValueObjectKeyMemberComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_COMPARER), diagnostic);
          }
       }
    }
@@ -263,6 +274,35 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       TypeDeclarationSyntax? declaration,
       CancellationToken cancellationToken)
    {
+      return await AddValueObjectKeyMemberComparerAsync(
+                document,
+                root,
+                declaration,
+                "ValueObjectKeyMemberEqualityComparer",
+                cancellationToken);
+   }
+
+   private static async Task<Document> AddValueObjectKeyMemberComparerAttributeAsync(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? declaration,
+      CancellationToken cancellationToken)
+   {
+      return await AddValueObjectKeyMemberComparerAsync(
+                document,
+                root,
+                declaration,
+                "ValueObjectKeyMemberComparer",
+                cancellationToken);
+   }
+
+   private static async Task<Document> AddValueObjectKeyMemberComparerAsync(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? declaration,
+      string comparerAttributeName,
+      CancellationToken cancellationToken)
+   {
       if (declaration is null)
          return document;
 
@@ -273,25 +313,32 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       var valueObjectType = model.GetDeclaredSymbol(declaration);
 
-      if (!valueObjectType.IsValueObjectType(out var valueObjectAttribute)
-          || valueObjectAttribute.AttributeClass?.IsKeyedValueObjectAttribute() != true)
+      if ((!valueObjectType.IsValueObjectType(out var keyedAttribute)
+           || keyedAttribute.AttributeClass?.IsKeyedValueObjectAttribute() != true)
+          && !valueObjectType.IsEnum(out keyedAttribute))
       {
          return document;
       }
 
-      var keyType = valueObjectAttribute.AttributeClass?.TypeArguments[0];
+      var keyType = keyedAttribute.AttributeClass?.TypeArguments[0];
 
       if (keyType is null)
          return document;
 
+      var keyTypeName = SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
+
+      var accessorType = keyType.SpecialType == SpecialType.System_String
+                            ? SyntaxFactory.ParseTypeName("ComparerAccessors.StringOrdinalIgnoreCase")
+                            : SyntaxFactory.ParseTypeName($"ComparerAccessors.Default<{keyTypeName}>");
+
       var genericParameters = new SyntaxNodeOrToken[]
                               {
-                                 SyntaxFactory.ParseTypeName("ComparerAccessors.StringOrdinalIgnoreCase"),
+                                 accessorType,
                                  SyntaxFactory.Token(SyntaxKind.CommaToken),
-                                 SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start))
+                                 keyTypeName
                               };
 
-      var comparerAttributeType = SyntaxFactory.GenericName("ValueObjectKeyMemberEqualityComparer")
+      var comparerAttributeType = SyntaxFactory.GenericName(comparerAttributeName)
                                                .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(SyntaxFactory.SeparatedList<TypeSyntax>(genericParameters)));
       var comparerAttribute = SyntaxFactory.Attribute(comparerAttributeType);
 

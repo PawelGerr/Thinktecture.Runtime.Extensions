@@ -325,8 +325,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial class TestValueObject
             	{
                   public int {|#0:InstanceProperty|} { get; set; }
@@ -341,8 +340,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial class TestValueObject
             	{
                   public int InstanceProperty { get; }
@@ -364,8 +362,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial class TestValueObject
             	{
                   public static int {|#0:InstanceProperty|} { get; set; }
@@ -380,8 +377,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial class TestValueObject
             	{
                   public static int InstanceProperty { get; }

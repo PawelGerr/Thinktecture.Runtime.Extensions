@@ -139,8 +139,7 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public class {|#0:TestValueObject|}
             	{
                }
@@ -154,8 +153,7 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -176,8 +174,7 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public struct {|#0:TestValueObject|}
             	{
                }
@@ -191,8 +188,7 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial struct {|#0:TestValueObject|}
             	{
                }
@@ -213,8 +209,7 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -234,8 +229,7 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial struct {|#0:TestValueObject|}
             	{
                }

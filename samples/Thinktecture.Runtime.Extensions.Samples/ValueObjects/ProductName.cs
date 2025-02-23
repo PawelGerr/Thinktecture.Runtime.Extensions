@@ -4,6 +4,7 @@ namespace Thinktecture.ValueObjects;
 
 [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
 [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+[ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class ProductName
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string value)

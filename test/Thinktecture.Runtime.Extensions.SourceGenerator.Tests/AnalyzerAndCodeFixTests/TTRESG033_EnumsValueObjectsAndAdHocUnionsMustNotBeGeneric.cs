@@ -69,8 +69,7 @@ public class TTRESG033_EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial class {|#0:TestValueObject|}<T>
             	{
                }
@@ -91,8 +90,7 @@ public class TTRESG033_EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
 
             namespace TestNamespace
             {
-               [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObject<int>]
             	public partial struct {|#0:TestValueObject|}<T>
             	{
                }

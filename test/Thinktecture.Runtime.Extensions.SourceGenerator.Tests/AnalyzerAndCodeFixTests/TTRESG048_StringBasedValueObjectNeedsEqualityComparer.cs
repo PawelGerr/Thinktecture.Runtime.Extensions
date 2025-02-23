@@ -4,12 +4,12 @@ using Verifier = Thinktecture.Runtime.Tests.Verifiers.CodeFixVerifier<Thinktectu
 namespace Thinktecture.Runtime.Tests.AnalyzerAndCodeFixTests;
 
 // ReSharper disable InconsistentNaming
-public class TTRESG048_StringBaseValueObjectNeedsEqualityComparer
+public class TTRESG048_StringBasedValueObjectNeedsEqualityComparer
 {
    private const string _DIAGNOSTIC_ID = "TTRESG048";
 
    [Fact]
-   public async Task Should_trigger_on_string_based_value_object_without_comparer()
+   public async Task Should_trigger_on_string_based_value_object_without_equality_comparer()
    {
       var code = """
 
@@ -34,6 +34,7 @@ public class TTRESG048_StringBaseValueObjectNeedsEqualityComparer
          {
             [ValueObject<string>]
              [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+             [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
              public partial class TestValueObject
          	{
             }
@@ -41,11 +42,18 @@ public class TTRESG048_StringBaseValueObjectNeedsEqualityComparer
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ValueObjectAttribute<>).Assembly], expected);
+
+      // Number of fixes is 2: TTRESG048 (needs equality comparer) + TTRESG103 (missing comparer)
+      await Verifier.VerifyCodeFixAsync(
+         code,
+         expectedCode,
+         [typeof(ValueObjectAttribute<>).Assembly],
+         numberOfFixes: 2,
+         expected);
    }
 
    [Fact]
-   public async Task Should_not_trigger_on_string_based_value_object_with_comparer()
+   public async Task Should_not_trigger_on_string_based_value_object_with_equality_comparer()
    {
       var code = """
 
@@ -56,6 +64,7 @@ public class TTRESG048_StringBaseValueObjectNeedsEqualityComparer
          {
             [ValueObject<string>]
             [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+            [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
          	public partial class {|#0:TestValueObject|}
          	{
             }

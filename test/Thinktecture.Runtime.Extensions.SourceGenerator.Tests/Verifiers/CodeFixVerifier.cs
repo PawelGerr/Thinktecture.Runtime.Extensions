@@ -33,19 +33,38 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       return CSharpCodeFixVerifier<TAnalyzer, TCodeFix, DefaultVerifier>.Diagnostic(diagnosticDescriptor);
    }
 
-   public static async Task VerifyAnalyzerAsync(
+   public static Task VerifyAnalyzerAsync(
       string source,
       IEnumerable<Assembly> additionalReferences,
       params DiagnosticResult[] expected)
    {
-      var test = new CodeFixTest(source, null, additionalReferences, expected);
+      return VerifyAnalyzerAsync(source, additionalReferences, null, expected);
+   }
+
+   public static async Task VerifyAnalyzerAsync(
+      string source,
+      IEnumerable<Assembly> additionalReferences,
+      int? numberOfFixes,
+      params DiagnosticResult[] expected)
+   {
+      var test = new CodeFixTest(source, null, additionalReferences, numberOfFixes, expected);
       await test.RunAsync(CancellationToken.None);
+   }
+
+   public static Task VerifyCodeFixAsync(
+      string source,
+      string fixedSource,
+      IEnumerable<Assembly> additionalReferences,
+      params DiagnosticResult[] expected)
+   {
+      return VerifyCodeFixAsync(source, fixedSource, additionalReferences, null, expected);
    }
 
    public static async Task VerifyCodeFixAsync(
       string source,
       string fixedSource,
       IEnumerable<Assembly> additionalReferences,
+      int? numberOfFixes,
       params DiagnosticResult[] expected)
    {
       source = source.Replace("\r\n", "\n");
@@ -57,7 +76,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          fixedSource = fixedSource.Replace("\n", "\r\n");
       }
 
-      var test = new CodeFixTest(source, fixedSource, additionalReferences, expected);
+      var test = new CodeFixTest(source, fixedSource, additionalReferences, numberOfFixes, expected);
       await test.RunAsync(CancellationToken.None);
    }
 
@@ -67,11 +86,15 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          string source,
          string fixedSource,
          IEnumerable<Assembly> additionalReferences,
+         int? numberOfFixes,
          params DiagnosticResult[] expected)
       {
          TestCode = source;
          FixedCode = fixedSource;
          ExpectedDiagnostics.AddRange(expected);
+         NumberOfIncrementalIterations = numberOfFixes;
+         NumberOfFixAllIterations = numberOfFixes;
+
 #if NET7
          ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
 #elif NET8_0

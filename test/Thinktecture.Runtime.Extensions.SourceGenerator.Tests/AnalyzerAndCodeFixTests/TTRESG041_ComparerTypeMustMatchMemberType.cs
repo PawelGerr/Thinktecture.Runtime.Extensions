@@ -26,6 +26,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
             namespace TestNamespace
             {
                [SmartEnum<int>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
             	public partial class TestEnum
             	{
@@ -52,6 +53,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
             namespace TestNamespace
             {
                [SmartEnum<int>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
             	public partial class TestEnum
             	{
@@ -80,6 +82,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
             namespace TestNamespace
             {
                [ValueObject<int>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<string>, string>|}]
             	public partial class TestValueObject
             	{
@@ -105,6 +108,7 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
             namespace TestNamespace
             {
                [ValueObject<int>]
+               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                [{|#0:ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>|}]
             	public partial class TestValueObject
             	{

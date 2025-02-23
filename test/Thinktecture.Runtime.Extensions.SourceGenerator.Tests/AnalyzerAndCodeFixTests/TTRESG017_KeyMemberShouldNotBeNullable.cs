@@ -50,6 +50,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             {
                [ValueObject<string>]
                [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -64,6 +65,8 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       {
          var code = """
 
+            #nullable disable
+
             using System;
             using Thinktecture;
 
@@ -71,6 +74,7 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
             {
                [ValueObject<string>]
                [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -109,6 +113,8 @@ public class TTRESG017_KeyMemberShouldNotBeNullable
       public async Task Should_trigger_if_key_member_is_nullable_struct_even_if_nullability_is_not_active()
       {
          var code = """
+
+            #nullable disable
 
             using System;
             using Thinktecture;

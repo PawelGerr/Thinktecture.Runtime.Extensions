@@ -76,12 +76,12 @@ public static class AttributeDataExtensions
 
    public static bool? FindIsValidatable(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "IsValidatable");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.IS_VALIDATABLE);
    }
 
    public static bool? FindSkipIComparable(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipIComparable");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_ICOMPARABLE);
    }
 
    public static bool? FindSkipIParsable(this AttributeData attributeData)

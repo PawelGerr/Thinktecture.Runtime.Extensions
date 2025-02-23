@@ -7,6 +7,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                      KeyMemberAccessModifier = ValueObjectAccessModifier.Public)]
 [ValueObjectValidationError<StringBasedReferenceValueObjectValidationError>]
 [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+[ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class StringBasedReferenceValueObjectWithCustomError
 {
    static partial void ValidateFactoryArguments(ref StringBasedReferenceValueObjectValidationError? validationError, ref string property)

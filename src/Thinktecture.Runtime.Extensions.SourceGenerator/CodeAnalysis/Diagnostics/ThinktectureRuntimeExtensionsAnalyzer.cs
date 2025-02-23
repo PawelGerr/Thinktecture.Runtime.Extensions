@@ -44,8 +44,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.CustomKeyMemberImplementationTypeMismatch,
       DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters,
       DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue,
-      DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer,
-      DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer
+      DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer,
+      DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer,
+      DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer,
+      DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer
    ];
 
    /// <inheritdoc />
@@ -271,10 +273,22 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             return;
 
          var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
-         var assignableMembers = ValidateSharedValueObject(context, type, locationOfFirstDeclaration);
+
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
+
+         if (factory is null)
+         {
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                       locationOfFirstDeclaration,
+                                                       type.ToFullyQualifiedDisplayString(),
+                                                       "Could not fetch type information for analysis of the value object."));
+            return;
+         }
+
+         var assignableMembers = ValidateSharedValueObject(context, type, locationOfFirstDeclaration, factory);
 
          if (isKeyed)
-            ValidateKeyedValueObject(context, assignableMembers, type, attrCreation, locationOfFirstDeclaration);
+            ValidateKeyedValueObject(context, assignableMembers, type, attrCreation, locationOfFirstDeclaration, factory);
 
          if (isComplex && assignableMembers is not null)
             ValidateComplexValueObject(context, assignableMembers, attrCreation, locationOfFirstDeclaration);
@@ -370,7 +384,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       IReadOnlyList<InstanceMemberInfo>? assignableMembers,
       INamedTypeSymbol type,
       IObjectCreationOperation attribute,
-      Location locationOfFirstDeclaration)
+      Location locationOfFirstDeclaration,
+      TypedMemberStateFactory factory)
    {
       var keyType = (attribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
 
@@ -389,14 +404,16 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (attribute.FindSkipKeyMember() == true)
          ValidateValueObjectCustomKeyMemberImplementation(context, keyType, assignableMembers, attribute, locationOfFirstDeclaration);
 
-      ValidateKeyMemberComparers(context, type, keyType, locationOfFirstDeclaration, true);
+      ValidateKeyMemberComparers(context, type, keyType, attribute, locationOfFirstDeclaration, factory, true);
    }
 
    private static void ValidateKeyMemberComparers(
       OperationAnalysisContext context,
       INamedTypeSymbol type,
       ITypeSymbol keyType,
+      IObjectCreationOperation attibute,
       Location locationOfFirstDeclaration,
+      TypedMemberStateFactory factory,
       bool stringBasedRequiresEqualityComparer)
    {
       AttributeData? keyMemberComparerAttr = null;
@@ -417,13 +434,31 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ValidateComparer(context, keyType, keyMemberComparerAttr);
       ValidateComparer(context, keyType, keyMemberEqualityComparerAttr);
 
-      if (stringBasedRequiresEqualityComparer
-          && keyType.SpecialType == SpecialType.System_String
-          && keyMemberEqualityComparerAttr is null)
+      if (keyMemberComparerAttr is not null && keyMemberEqualityComparerAttr is null)
       {
          ReportDiagnostic(context,
-                          DiagnosticsDescriptors.StringBaseValueObjectNeedsEqualityComparer,
+                          DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer,
+                          locationOfFirstDeclaration,
+                          BuildTypeName(type));
+      }
+      else if (stringBasedRequiresEqualityComparer
+               && keyType.SpecialType == SpecialType.System_String
+               && keyMemberEqualityComparerAttr is null)
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer,
                           locationOfFirstDeclaration);
+      }
+
+      if (keyMemberEqualityComparerAttr is not null
+          && keyMemberComparerAttr is null
+          && attibute.FindSkipIComparable() != true
+          && factory.Create(keyType).IsComparable)
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer,
+                          locationOfFirstDeclaration,
+                          BuildTypeName(type));
       }
    }
 
@@ -485,22 +520,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static IReadOnlyList<InstanceMemberInfo>? ValidateSharedValueObject(
       OperationAnalysisContext context,
       INamedTypeSymbol type,
-      Location locationOfFirstDeclaration)
+      Location locationOfFirstDeclaration,
+      TypedMemberStateFactory factory)
    {
       if (type.IsRecord || type.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustBeClassOrStruct, locationOfFirstDeclaration, type);
-         return null;
-      }
-
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
-
-      if (factory is null)
-      {
-         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
-                                                    locationOfFirstDeclaration,
-                                                    type.ToFullyQualifiedDisplayString(),
-                                                    "Could not fetch type information for analysis of the value object."));
          return null;
       }
 
@@ -628,14 +653,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       EnumKeyMemberNameMustNotBeItem(context, attribute, locationOfFirstDeclaration);
 
-      ValidateKeyedSmartEnum(context, enumType, attribute, locationOfFirstDeclaration);
+      ValidateKeyedSmartEnum(context, enumType, attribute, locationOfFirstDeclaration, factory);
    }
 
    private static void ValidateKeyedSmartEnum(
       OperationAnalysisContext context,
       INamedTypeSymbol enumType,
       IObjectCreationOperation attribute,
-      Location locationOfFirstDeclaration)
+      Location locationOfFirstDeclaration,
+      TypedMemberStateFactory factory)
    {
       var keyType = (attribute.Type as INamedTypeSymbol)?.TypeArguments.FirstOrDefault();
 
@@ -662,7 +688,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context, DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType);
       }
 
-      ValidateKeyMemberComparers(context, enumType, keyType, locationOfFirstDeclaration, false);
+      ValidateKeyMemberComparers(context, enumType, keyType, attribute, locationOfFirstDeclaration, factory, false);
    }
 
    private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)

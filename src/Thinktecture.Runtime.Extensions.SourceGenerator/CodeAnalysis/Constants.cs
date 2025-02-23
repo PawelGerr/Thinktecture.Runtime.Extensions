@@ -53,6 +53,8 @@ public static class Constants
          public const string KEY_MEMBER_KIND = "KeyMemberKind";
          public const string CONSTRUCTOR_ACCESS_MODIFIER = "ConstructorAccessModifier";
          public const string DEFAULT_STRING_COMPARISON = "DefaultStringComparison";
+         public const string SKIP_ICOMPARABLE = "SkipIComparable";
+         public const string IS_VALIDATABLE = "IsValidatable";
       }
 
       public static class ValueObject
