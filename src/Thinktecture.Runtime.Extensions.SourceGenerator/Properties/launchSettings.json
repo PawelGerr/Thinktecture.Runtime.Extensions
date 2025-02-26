@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Source Generator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../../samples/Thinktecture.Runtime.Extensions.Samples/Thinktecture.Runtime.Extensions.Samples.csproj"
+    }
+  }
+}
