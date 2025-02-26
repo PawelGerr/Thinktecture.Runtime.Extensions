@@ -82,6 +82,32 @@ public static class StringBuilderExtensions
       return sb;
    }
 
+   public static StringBuilder AppendAccessibility(
+      this StringBuilder sb,
+      Accessibility accessibility)
+   {
+      switch (accessibility)
+      {
+         case Accessibility.Private:
+            sb.Append("private");
+            break;
+         case Accessibility.ProtectedAndInternal:
+            sb.Append("protected internal");
+            break;
+         case Accessibility.Protected:
+            sb.Append("protected");
+            break;
+         case Accessibility.Internal:
+            sb.Append("internal");
+            break;
+         case Accessibility.Public:
+            sb.Append("public");
+            break;
+      }
+
+      return sb;
+   }
+
    public static StringBuilder RenderArguments(
       this StringBuilder sb,
       IReadOnlyList<InstanceMemberInfo> members,
@@ -297,5 +323,43 @@ partial ").Append(typeKind).Append(containingType.Name).Append(@"
       }
 
       return sb;
+   }
+
+   public static StringBuilder AppendDelegateType(
+      this StringBuilder sb,
+      DelegateMethodState method)
+   {
+      var isFunc = method.ReturnType is not null;
+
+      if (isFunc)
+      {
+         sb.Append("global::System.Func");
+      }
+      else
+      {
+         sb.Append("global::System.Action");
+      }
+
+      if (method.Parameters.Count == 0)
+      {
+         return isFunc
+                   ? sb.Append("<").Append(method.ReturnType).Append(">")
+                   : sb;
+      }
+
+      sb.Append("<");
+
+      for (var i = 0; i < method.Parameters.Count; i++)
+      {
+         if (i > 0)
+            sb.Append(", ");
+
+         sb.Append(method.Parameters[i].Type);
+      }
+
+      if (isFunc)
+         sb.Append(", ").Append(method.ReturnType);
+
+      return sb.Append(">");
    }
 }

@@ -12,9 +12,8 @@ public partial class SalesCsvImporterType
    public int ArticleIdIndex { get; }
    public int VolumeIndex { get; }
 
-   private readonly Func<CsvReader, DateTime> _getDateTime;
-
-   public DateTime GetDateTime(CsvReader csvReader) => _getDateTime(csvReader);
+   [GenerateDelegate]
+   public partial DateTime GetDateTime(CsvReader csvReader);
 
    private static DateTime GetDateTimeForDaily(CsvReader csvReader)
    {

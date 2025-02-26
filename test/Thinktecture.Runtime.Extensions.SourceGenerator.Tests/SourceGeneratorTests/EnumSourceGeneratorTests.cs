@@ -725,4 +725,120 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_delegate_of_type_func()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [GenerateDelegate]
+               public partial Task<string?>? Method1(string? arg1);
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_delegate_of_type_func_without_args()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [GenerateDelegate]
+               protected partial int Method1();
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_delegate_of_type_action()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [GenerateDelegate]
+               partial void Method1(string arg1, int arg2);
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_delegate_of_type_action_without_args()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [GenerateDelegate]
+               internal partial void Method1();
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
 }

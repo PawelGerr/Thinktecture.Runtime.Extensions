@@ -24,6 +24,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
 
    public EnumItems Items { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
+   public IReadOnlyList<DelegateMethodState> DelegateMethods { get; }
 
    public EnumSourceGeneratorState(
       TypedMemberStateFactory factory,
@@ -54,6 +55,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
       BaseType = type.GetBaseType(factory);
       Items = new EnumItems(type.GetEnumItems());
       AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, false, cancellationToken).ToList();
+      DelegateMethods = type.GetDelegateMethods();
    }
 
    public override bool Equals(object? obj)
@@ -80,7 +82,8 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
              && Equals(BaseType, other.BaseType)
              && Items.Equals(other.Items)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
-             && ContainingTypes.SequenceEqual(other.ContainingTypes);
+             && ContainingTypes.SequenceEqual(other.ContainingTypes)
+             && DelegateMethods.SequenceEqual(other.DelegateMethods);
    }
 
    public override int GetHashCode()
@@ -100,6 +103,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
          hashCode = (hashCode * 397) ^ Items.GetHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ DelegateMethods.ComputeHashCode();
 
          return hashCode;
       }

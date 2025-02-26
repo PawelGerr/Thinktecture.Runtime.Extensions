@@ -141,6 +141,14 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: "ValueObjectMemberIgnoreAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsGenerateDelegateAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: "GenerateDelegateAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
    public static bool IsEnum(
       [NotNullWhen(true)] this ITypeSymbol? enumType)
    {
@@ -667,5 +675,45 @@ public static class TypeSymbolExtensions
       }
 
       return false;
+   }
+
+   public static IReadOnlyList<DelegateMethodState> GetDelegateMethods(
+      this INamedTypeSymbol typeSymbol)
+   {
+      List<DelegateMethodState>? methodStates = null;
+
+      foreach (var member in typeSymbol.GetMembers())
+      {
+         if (member is not IMethodSymbol methodSymbol)
+            continue;
+
+         if (!methodSymbol.IsPartialDefinition)
+            continue;
+
+         var generateDelegateAttribute = methodSymbol.FindAttribute(a => a.IsGenerateDelegateAttribute());
+         ;
+
+         if (generateDelegateAttribute == null)
+            continue;
+
+         var methodName = methodSymbol.Name;
+         var returnType = methodSymbol.ReturnType.SpecialType == SpecialType.System_Void
+                             ? null
+                             : methodSymbol.ReturnType.ToFullyQualifiedDisplayString();
+
+         var parameters = methodSymbol.Parameters.Length == 0
+                             ? (IReadOnlyList<DelegateMethodState.ParameterState>) []
+                             : methodSymbol.Parameters
+                                           .Select(p => new DelegateMethodState.ParameterState(
+                                                      p.Name,
+                                                      p.Type.ToFullyQualifiedDisplayString()))
+                                           .ToList();
+
+         var methodState = new DelegateMethodState(methodSymbol.DeclaredAccessibility, methodName, returnType, parameters);
+
+         (methodStates ??= []).Add(methodState);
+      }
+
+      return methodStates ?? (IReadOnlyList<DelegateMethodState>) [];
    }
 }

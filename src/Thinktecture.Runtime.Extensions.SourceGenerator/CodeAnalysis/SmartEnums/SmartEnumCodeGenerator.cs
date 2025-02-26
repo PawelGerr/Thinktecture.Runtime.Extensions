@@ -156,6 +156,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       cancellationToken.ThrowIfCancellationRequested();
 
+      if (_state.DelegateMethods.Count > 0)
+      {
+         foreach (var method in _state.DelegateMethods)
+         {
+            _sb.Append(@"
+      private readonly ").AppendDelegateType(method).Append(" _").Append(method.ArgumentName).Append(";");
+         }
+      }
+
       GenerateConstructors();
 
       if (_state.KeyMember is not null)
@@ -209,6 +218,8 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null && !_state.Settings.SkipToString)
          GenerateToString(_state.KeyMember);
 
+      GenerateDelegateMethods();
+
       var hasSaneNumberOfItems = _state.Items.Count < 1000;
 
       if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None && generateIndexBasedSwitchMap && hasSaneNumberOfItems)
@@ -253,6 +264,40 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    }");
+   }
+
+   private void GenerateDelegateMethods()
+   {
+      foreach (var method in _state.DelegateMethods)
+      {
+         _sb.Append(@"
+
+      ").AppendAccessibility(method.Accessibility).Append(" partial ").Append(method.ReturnType ?? "void").Append(" ").Append(method.MethodName).Append("(");
+
+         for (var i = 0; i < method.Parameters.Count; i++)
+         {
+            if (i > 0)
+               _sb.Append(", ");
+
+            var param = method.Parameters[i];
+            _sb.Append(param.Type).Append(" ").Append(param.Name);
+         }
+
+         _sb.Append(@")
+      {
+         return _").Append(method.ArgumentName).Append("(");
+
+         for (var i = 0; i < method.Parameters.Count; i++)
+         {
+            if (i > 0)
+               _sb.Append(", ");
+
+            _sb.Append(method.Parameters[i].Name);
+         }
+
+         _sb.Append(@");
+      }");
+      }
    }
 
    private void GenerateToString(KeyMemberState keyProperty)
@@ -1555,6 +1600,16 @@ namespace ").Append(_state.Namespace).Append(@"
          ").AppendTypeFullyQualified(member).Append(" ").AppendEscaped(member.ArgumentName);
          }
 
+         if (_state.DelegateMethods.Count > 0)
+         {
+            foreach (var method in _state.DelegateMethods)
+            {
+               _sb.Append(",");
+               _sb.Append(@"
+         ").AppendDelegateType(method).Append(" ").AppendEscaped(method.ArgumentName);
+            }
+         }
+
          _sb.Append(@")
          : this(");
 
@@ -1570,6 +1625,14 @@ namespace ").Append(_state.Namespace).Append(@"
          for (var i = 0; i < ctorArgs.Count; i++)
          {
             _sb.Append(", ").AppendEscaped(ctorArgs[i].ArgumentName);
+         }
+
+         if (_state.DelegateMethods.Count > 0)
+         {
+            foreach (var method in _state.DelegateMethods)
+            {
+               _sb.Append(", ").AppendEscaped(method.ArgumentName);
+            }
          }
 
          _sb.Append(@")
@@ -1609,6 +1672,16 @@ namespace ").Append(_state.Namespace).Append(@"
          var member = ctorArgs[i];
          _sb.Append(@"
          ").AppendTypeFullyQualified(member).Append(" ").AppendEscaped(member.ArgumentName);
+      }
+
+      if (_state.DelegateMethods.Count > 0)
+      {
+         foreach (var method in _state.DelegateMethods)
+         {
+            _sb.Append(",");
+            _sb.Append(@"
+         ").AppendDelegateType(method).Append(" ").AppendEscaped(method.ArgumentName);
+         }
       }
 
       _sb.Append(")");
@@ -1687,6 +1760,15 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
          this.").Append(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
+      }
+
+      if (_state.DelegateMethods.Count > 0)
+      {
+         foreach (var method in _state.DelegateMethods)
+         {
+            _sb.Append(@"
+         this._").Append(method.ArgumentName).Append(" = ").AppendEscaped(method.ArgumentName).Append(";");
+         }
       }
 
       if (_state.KeyMember is not null)
