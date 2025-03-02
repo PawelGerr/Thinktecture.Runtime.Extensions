@@ -47,7 +47,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer,
       DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer,
       DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer,
-      DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer
+      DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer,
+      DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial
    ];
 
    /// <inheritdoc />
@@ -60,10 +61,48 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.RegisterOperationAction(AnalyzeValueObject, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeAdHocUnion, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeUnion, OperationKind.Attribute);
+      context.RegisterOperationAction(AnalyzeMethodWithUseDelegateFromConstructor, OperationKind.Attribute);
 
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
       context.RegisterOperationAction(AnalyzeDefaultValueAssignment, OperationKind.DefaultValue);
       context.RegisterOperationAction(AnalyzeObjectCreation, OperationKind.ObjectCreation);
+   }
+
+   private static void AnalyzeMethodWithUseDelegateFromConstructor(OperationAnalysisContext context)
+   {
+      if (context.ContainingSymbol.Kind != SymbolKind.Method
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation }
+          || !attrCreation.Type.IsUseDelegateFromConstructorAttribute()
+          || context.ContainingSymbol is not IMethodSymbol method)
+      {
+         return;
+      }
+
+      try
+      {
+         if (method.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+            return;
+
+         var syntaxRef = method.DeclaringSyntaxReferences.Single();
+
+         if (syntaxRef.GetSyntax(context.CancellationToken) is not MethodDeclarationSyntax mds)
+            return;
+
+         if (!mds.IsPartial())
+         {
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial,
+               mds.Identifier.GetLocation(),
+               method.Name);
+         }
+      }
+      catch (Exception ex)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                    Location.None,
+                                                    method.ToDisplayString(), ex.ToString()));
+      }
    }
 
    private void AnalyzeObjectCreation(OperationAnalysisContext context)
@@ -231,7 +270,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void AnalyzeSmartEnum(OperationAnalysisContext context)
    {
       if (context.ContainingSymbol.Kind != SymbolKind.NamedType
-          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation } || !attrCreation.Type.IsSmartEnumAttribute()
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation }
+          || !attrCreation.Type.IsSmartEnumAttribute()
           || context.ContainingSymbol is not INamedTypeSymbol type
           || type.TypeKind == TypeKind.Error)
       {

@@ -9,6 +9,7 @@ namespace Thinktecture.CodeAnalysis.CodeFixes;
 public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvider
 {
    private const string _MAKE_PARTIAL = "Make the type partial";
+   private const string _MAKE_METHOD_PARTIAL = "Make the method partial";
    private const string _MAKE_MEMBER_PUBLIC = "Make the member public";
    private const string _MAKE_FIELD_READONLY = "Make the field read-only";
    private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
@@ -36,6 +37,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id,
       DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer.Id,
       DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer.Id,
+      DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial.Id,
    ];
 
    /// <inheritdoc />
@@ -108,6 +110,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          else if (diagnostic.Id == DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_COMPARER, t => AddValueObjectKeyMemberComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_COMPARER), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_MAKE_METHOD_PARTIAL, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().MethodDeclaration, SyntaxKind.PartialKeyword), _MAKE_METHOD_PARTIAL), diagnostic);
          }
       }
    }
@@ -411,6 +417,9 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       private PropertyDeclarationSyntax? _propertyDeclaration;
       public PropertyDeclarationSyntax? PropertyDeclaration => _propertyDeclaration ??= GetDeclaration<PropertyDeclarationSyntax>();
+
+      private MethodDeclarationSyntax? _methodDeclaration;
+      public MethodDeclarationSyntax? MethodDeclaration => _methodDeclaration ??= GetDeclaration<MethodDeclarationSyntax>();
 
       public CodeFixesContext(Diagnostic diagnostic, SyntaxNode root)
       {
