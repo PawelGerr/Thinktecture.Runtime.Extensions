@@ -141,12 +141,12 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: "ValueObjectMemberIgnoreAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsGenerateDelegateAttribute(this ITypeSymbol? attributeType)
+   public static bool IsUseDelegateFromConstructorAttribute(this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: "GenerateDelegateAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: "UseDelegateFromConstructorAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsEnum(
@@ -690,10 +690,9 @@ public static class TypeSymbolExtensions
          if (!methodSymbol.IsPartialDefinition)
             continue;
 
-         var generateDelegateAttribute = methodSymbol.FindAttribute(a => a.IsGenerateDelegateAttribute());
-         ;
+         var useDelegateFromConstructorAttribute = methodSymbol.FindAttribute(a => a.IsUseDelegateFromConstructorAttribute());
 
-         if (generateDelegateAttribute == null)
+         if (useDelegateFromConstructorAttribute == null)
             continue;
 
          var methodName = methodSymbol.Name;

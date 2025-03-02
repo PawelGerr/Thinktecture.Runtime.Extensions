@@ -12,7 +12,7 @@ public partial class SalesCsvImporterType
    public int ArticleIdIndex { get; }
    public int VolumeIndex { get; }
 
-   [GenerateDelegate]
+   [UseDelegateFromConstructor]
    public partial DateTime GetDateTime(CsvReader csvReader);
 
    private static DateTime GetDateTimeForDaily(CsvReader csvReader)

@@ -218,7 +218,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null && !_state.Settings.SkipToString)
          GenerateToString(_state.KeyMember);
 
-      GenerateDelegateMethods();
+      GenerateDelegatedMethods();
 
       var hasSaneNumberOfItems = _state.Items.Count < 1000;
 
@@ -266,7 +266,7 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
-   private void GenerateDelegateMethods()
+   private void GenerateDelegatedMethods()
    {
       foreach (var method in _state.DelegateMethods)
       {

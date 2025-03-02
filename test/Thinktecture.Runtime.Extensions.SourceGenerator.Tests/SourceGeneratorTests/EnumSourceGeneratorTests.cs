@@ -740,7 +740,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
 
-               [GenerateDelegate]
+               [UseDelegateFromConstructor]
                public partial Task<string?>? Method1(string? arg1);
             }
          }
@@ -769,7 +769,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
 
-               [GenerateDelegate]
+               [UseDelegateFromConstructor]
                protected partial int Method1();
             }
          }
@@ -798,7 +798,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
 
-               [GenerateDelegate]
+               [UseDelegateFromConstructor]
                partial void Method1(string arg1, int arg2);
             }
          }
@@ -827,7 +827,7 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
 
-               [GenerateDelegate]
+               [UseDelegateFromConstructor]
                internal partial void Method1();
             }
          }

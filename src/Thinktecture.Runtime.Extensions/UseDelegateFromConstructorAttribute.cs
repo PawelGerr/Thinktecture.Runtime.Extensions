@@ -1,7 +1,7 @@
 namespace Thinktecture;
 
 /// <summary>
-/// Marks a partial method in of a Smart Enum or keyed Value Object to be implemented through a delegate.
+/// Marks a partial method of a Smart Enum to be implemented through a delegate.
 /// The source generator will automatically generate a private delegate field and wire it up through the constructor.
 /// </summary>
 /// <example>
@@ -11,12 +11,12 @@ namespace Thinktecture;
 /// {
 ///     public static readonly ImporterType Default = new(ProcessDefault);
 ///
-///     [GenerateDelegate]
-///     public partial string Process(object input);
+///     [UseDelegateFromConstructor]
+///     public partial string Process(int input);
 ///
-///     private static string ProcessDefault(object input) => input.ToString();
+///     private static string ProcessDefault(int input) => input.ToString();
 /// }
 /// </code>
 /// </example>
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class GenerateDelegateAttribute : Attribute;
+public sealed class UseDelegateFromConstructorAttribute : Attribute;
