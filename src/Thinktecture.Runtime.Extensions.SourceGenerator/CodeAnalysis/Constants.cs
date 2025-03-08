@@ -74,6 +74,11 @@ public static class Constants
          public const string KEYLESS_FULL_NAME = "Thinktecture.SmartEnumAttribute";
       }
 
+      public static class UseDelegateFromConstructorAttribute
+      {
+         public const string NAME = "UseDelegateFromConstructorAttribute";
+      }
+
       public static class Union
       {
          public const string NAMESPACE = "Thinktecture";

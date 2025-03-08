@@ -48,7 +48,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer,
       DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer,
       DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer,
-      DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial
+      DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial,
+      DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustNotHaveGenerics
    ];
 
    /// <inheritdoc />
@@ -93,6 +94,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             ReportDiagnostic(
                context,
                DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial,
+               mds.Identifier.GetLocation(),
+               method.Name);
+         }
+
+         if (!method.TypeParameters.IsDefaultOrEmpty)
+         {
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustNotHaveGenerics,
                mds.Identifier.GetLocation(),
                method.Name);
          }

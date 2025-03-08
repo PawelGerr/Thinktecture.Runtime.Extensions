@@ -1,11 +1,11 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum<int>]
-public partial class TestEnumWithDelegateGeneration
+public partial class TestEnumWithUseDelegateFromConstructor
 {
-   public static readonly TestEnumWithDelegateGeneration Item1 = new(1, i => $"{i} + 1", i => {}, s => {}, b => {}, Mixed1);
+   public static readonly TestEnumWithUseDelegateFromConstructor Item1 = new(1, i => $"{i} + 1", i => {}, s => {}, b => {}, Mixed1);
 
-   public static readonly TestEnumWithDelegateGeneration Item2 = new(2, i => $"{i} + 2", i => {}, s => {}, b => {}, Mixed2);
+   public static readonly TestEnumWithUseDelegateFromConstructor Item2 = new(2, i => $"{i} + 2", i => {}, s => {}, b => {}, Mixed2);
 
    [UseDelegateFromConstructor]
    public partial string FooFunc(int bar);

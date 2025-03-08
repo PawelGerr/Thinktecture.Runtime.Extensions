@@ -146,7 +146,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: "UseDelegateFromConstructorAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.UseDelegateFromConstructorAttribute.NAME, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsEnum(
