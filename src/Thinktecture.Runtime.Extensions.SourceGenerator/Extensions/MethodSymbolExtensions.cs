@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture;
 
@@ -24,5 +25,25 @@ public static class MethodSymbolExtensions
              && method.Parameters.Length == 2
              && SymbolEqualityComparer.IncludeNullability.Equals(method.Parameters[0].Type, type)
              && SymbolEqualityComparer.IncludeNullability.Equals(method.Parameters[1].Type, type);
+   }
+
+   public static IReadOnlyList<GenericTypeParameterState> GetGenericTypeParameters(this IMethodSymbol method)
+   {
+      if (method.TypeParameters.Length <= 0)
+         return [];
+
+      var genericTypeParameters = new List<GenericTypeParameterState>(method.TypeParameters.Length);
+
+      for (var i = 0; i < method.TypeParameters.Length; i++)
+      {
+         var typeParam = method.TypeParameters[i];
+         var constraints = typeParam.GetConstraints();
+
+         genericTypeParameters.Add(new GenericTypeParameterState(
+                                      typeParam.Name,
+                                      constraints));
+      }
+
+      return genericTypeParameters ?? [];
    }
 }

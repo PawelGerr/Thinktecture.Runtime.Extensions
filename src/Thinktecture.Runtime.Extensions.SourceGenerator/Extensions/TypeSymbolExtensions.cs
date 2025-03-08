@@ -533,103 +533,103 @@ public static class TypeSymbolExtensions
       }
 
       return type.GetMembers()
-             .Select(member =>
-             {
-                if ((instanceMembersOnly && member.IsStatic) || !member.CanBeReferencedByName)
-                   return ((IFieldSymbol?, IPropertySymbol?)?)null;
+                 .Select(member =>
+                 {
+                    if ((instanceMembersOnly && member.IsStatic) || !member.CanBeReferencedByName)
+                       return ((IFieldSymbol?, IPropertySymbol?)?)null;
 
-                switch (member)
-                {
-                   case IFieldSymbol field:
-                   {
-                      if (field.IsIgnored())
-                         return null;
+                    switch (member)
+                    {
+                       case IFieldSymbol field:
+                       {
+                          if (field.IsIgnored())
+                             return null;
 
-                      if (!field.IsReadOnly && !field.IsConst)
-                         ReportField(field);
+                          if (!field.IsReadOnly && !field.IsConst)
+                             ReportField(field);
 
-                      return (field, null);
-                   }
+                          return (field, null);
+                       }
 
-                   case IPropertySymbol property:
-                   {
-                      if (property.IsIgnored())
-                         return null;
+                       case IPropertySymbol property:
+                       {
+                          if (property.IsIgnored())
+                             return null;
 
-                      // other assembly
-                      if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
-                      {
-                         if (property is { IsReadOnly: false, IsWriteOnly: false })
-                            ReportPropertyMustBeReadOnly(property, DiagnosticSeverity.Warning);
-                      }
-                      // same assembly
-                      else
-                      {
-                         var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
+                          // other assembly
+                          if (property.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+                          {
+                             if (property is { IsReadOnly: false, IsWriteOnly: false })
+                                ReportPropertyMustBeReadOnly(property, DiagnosticSeverity.Warning);
+                          }
+                          // same assembly
+                          else
+                          {
+                             var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
 
-                         if (syntax.ExpressionBody is not null) // public int Foo => 42;
-                            return null;
+                             if (syntax.ExpressionBody is not null) // public int Foo => 42;
+                                return null;
 
-                         if (syntax.AccessorList is null)
-                            return null;
+                             if (syntax.AccessorList is null)
+                                return null;
 
-                         AccessorDeclarationSyntax? getter = null;
-                         AccessorDeclarationSyntax? setter = null;
-                         AccessorDeclarationSyntax? init = null;
+                             AccessorDeclarationSyntax? getter = null;
+                             AccessorDeclarationSyntax? setter = null;
+                             AccessorDeclarationSyntax? init = null;
 
-                         foreach (var accessor in syntax.AccessorList.Accessors)
-                         {
-                            switch ((SyntaxKind)accessor.RawKind)
-                            {
-                               case SyntaxKind.GetAccessorDeclaration:
-                                  getter = accessor;
-                                  break;
-                               case SyntaxKind.SetAccessorDeclaration:
-                                  setter = accessor;
-                                  break;
-                               case SyntaxKind.InitAccessorDeclaration:
-                                  init = accessor;
-                                  break;
-                            }
-                         }
+                             foreach (var accessor in syntax.AccessorList.Accessors)
+                             {
+                                switch ((SyntaxKind)accessor.RawKind)
+                                {
+                                   case SyntaxKind.GetAccessorDeclaration:
+                                      getter = accessor;
+                                      break;
+                                   case SyntaxKind.SetAccessorDeclaration:
+                                      setter = accessor;
+                                      break;
+                                   case SyntaxKind.InitAccessorDeclaration:
+                                      init = accessor;
+                                      break;
+                                }
+                             }
 
-                         // public int Foo { get { return 42; } }
-                         // public int Foo { get => 42; }
-                         // public int Foo { get => _foo; }
-                         // If we have 'init' then continue checks
-                         if (!IsDefaultImplementation(getter) && init is null)
-                            return null;
+                             // public int Foo { get { return 42; } }
+                             // public int Foo { get => 42; }
+                             // public int Foo { get => _foo; }
+                             // If we have 'init' then continue checks
+                             if (!IsDefaultImplementation(getter) && init is null)
+                                return null;
 
-                         if (property.SetMethod is not null)
-                         {
-                            // there can be init, setter or none of them
-                            if (init is not null)
-                            {
-                               if (property.DeclaredAccessibility != Accessibility.Private
-                                   && property.SetMethod.DeclaredAccessibility != Accessibility.Private)
-                               {
-                                  ReportPropertyInitAccessorMustBePrivate(property);
-                               }
-                            }
-                            else if (setter is not null)
-                            {
-                               if (!IsDefaultImplementation(setter))
-                                  return null;
+                             if (property.SetMethod is not null)
+                             {
+                                // there can be init, setter or none of them
+                                if (init is not null)
+                                {
+                                   if (property.DeclaredAccessibility != Accessibility.Private
+                                       && property.SetMethod.DeclaredAccessibility != Accessibility.Private)
+                                   {
+                                      ReportPropertyInitAccessorMustBePrivate(property);
+                                   }
+                                }
+                                else if (setter is not null)
+                                {
+                                   if (!IsDefaultImplementation(setter))
+                                      return null;
 
-                               ReportPropertyMustBeReadOnly(property);
-                            }
-                         }
-                      }
+                                   ReportPropertyMustBeReadOnly(property);
+                                }
+                             }
+                          }
 
-                      return (null, property);
-                   }
+                          return (null, property);
+                       }
 
-                   default:
-                      return null;
-                }
-             })
-             .Where(m => m is not null)
-             .Select(m => m!.Value);
+                       default:
+                          return null;
+                    }
+                 })
+                 .Where(m => m is not null)
+                 .Select(m => m!.Value);
    }
 
    private static bool IsDefaultImplementation(AccessorDeclarationSyntax? accessor)
@@ -690,6 +690,9 @@ public static class TypeSymbolExtensions
          if (!methodSymbol.IsPartialDefinition)
             continue;
 
+         if (!methodSymbol.TypeParameters.IsDefaultOrEmpty)
+            continue;
+
          var useDelegateFromConstructorAttribute = methodSymbol.FindAttribute(a => a.IsUseDelegateFromConstructorAttribute());
 
          if (useDelegateFromConstructorAttribute == null)
@@ -701,9 +704,9 @@ public static class TypeSymbolExtensions
                              : methodSymbol.ReturnType.ToFullyQualifiedDisplayString();
 
          var parameters = methodSymbol.Parameters.Length == 0
-                             ? (IReadOnlyList<DelegateMethodState.ParameterState>) []
+                             ? (IReadOnlyList<ParameterState>) []
                              : methodSymbol.Parameters
-                                           .Select(p => new DelegateMethodState.ParameterState(
+                                           .Select(p => new ParameterState(
                                                       p.Name,
                                                       p.Type.ToFullyQualifiedDisplayString(),
                                                       p.RefKind))

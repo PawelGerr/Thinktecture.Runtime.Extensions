@@ -402,4 +402,42 @@ partial ").Append(typeKind).Append(containingType.Name).Append(@"
 
       return sb.Append(">");
    }
+
+   public static StringBuilder AppendGenericTypeParameters(
+      this StringBuilder sb,
+      IReadOnlyList<GenericTypeParameterState> typeParameters)
+   {
+      if (typeParameters.Count <= 0)
+         return sb;
+
+      sb.Append("<");
+
+      for (var i = 0; i < typeParameters.Count; i++)
+      {
+         if (i > 0)
+            sb.Append(", ");
+
+         sb.Append(typeParameters[i].Name);
+      }
+
+      return sb.Append(">");
+   }
+
+   public static StringBuilder AppendGenericConstraints(
+      this StringBuilder sb,
+      IReadOnlyList<string> constraints)
+   {
+      if (constraints.Count <= 0)
+         return sb;
+
+      for (var i = 0; i < constraints.Count; i++)
+      {
+         if (i > 0)
+            sb.Append(", ");
+
+         sb.Append(constraints[i]);
+      }
+
+      return sb;
+   }
 }
