@@ -19,4 +19,11 @@ namespace Thinktecture;
 /// </code>
 /// </example>
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class UseDelegateFromConstructorAttribute : Attribute;
+public sealed class UseDelegateFromConstructorAttribute : Attribute
+{
+    /// <summary>
+    /// Gets or sets the custom name for the delegate type.
+    /// If provided, a custom delegate type will always be generated regardless of parameter ref-kinds.
+    /// </summary>
+    public string? DelegateName { get; set; }
+}

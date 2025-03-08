@@ -7,18 +7,21 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
    public string? ReturnType { get; }
    public IReadOnlyList<ParameterState> Parameters { get; }
    public string ArgumentName { get; }
+   public string? DelegateName { get; }
 
    public DelegateMethodState(
       Accessibility accessibility,
       string methodName,
       string? returnType,
-      IReadOnlyList<ParameterState> parameters)
+      IReadOnlyList<ParameterState> parameters,
+      string? delegateName)
    {
       Accessibility = accessibility;
       MethodName = methodName;
       ReturnType = returnType;
       Parameters = parameters;
-      ArgumentName = methodName.MakeArgumentName();
+      DelegateName = delegateName;
+      ArgumentName = (delegateName ?? methodName).MakeArgumentName();
    }
 
    public bool Equals(DelegateMethodState? other)
@@ -31,7 +34,8 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
       return Accessibility == other.Accessibility
              && MethodName == other.MethodName
              && ReturnType == other.ReturnType
-             && Parameters.SequenceEqual(other.Parameters);
+             && Parameters.SequenceEqual(other.Parameters)
+             && DelegateName == other.DelegateName;
    }
 
    public override bool Equals(object? obj)
@@ -47,6 +51,7 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
          hashCode = (hashCode * 397) ^ MethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ ReturnType?.GetHashCode() ?? 0;
          hashCode = (hashCode * 397) ^ Parameters.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ DelegateName?.GetHashCode() ?? 0;
          return hashCode;
       }
    }

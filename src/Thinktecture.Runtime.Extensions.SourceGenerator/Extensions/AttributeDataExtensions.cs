@@ -9,6 +9,11 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, "DefaultInstancePropertyName");
    }
 
+   public static string? FindDelegateName(this AttributeData attributeData)
+   {
+      return GetStringParameterValue(attributeData, "DelegateName");
+   }
+
    public static bool? FindSkipKeyMember(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_KEY_MEMBER);

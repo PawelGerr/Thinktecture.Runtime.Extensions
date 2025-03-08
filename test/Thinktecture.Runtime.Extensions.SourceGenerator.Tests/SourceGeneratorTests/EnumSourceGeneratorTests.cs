@@ -1015,4 +1015,127 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_delegate_with_custom_name()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [UseDelegateFromConstructor(DelegateName = "CustomProcessDelegate")]
+               public partial string Process(int value);
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_multiple_delegates_with_custom_names()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [UseDelegateFromConstructor(DelegateName = "StringProcessDelegate")]
+               public partial string Process(string value);
+
+               [UseDelegateFromConstructor(DelegateName = "IntProcessDelegate")]
+               public partial int Process(int value);
+
+               [UseDelegateFromConstructor(DelegateName = "BoolProcessDelegate")]
+               public partial void Process(bool value);
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_delegate_with_custom_name_and_complex_parameters()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [UseDelegateFromConstructor(DelegateName = "ComplexProcessDelegate")]
+               public partial Dictionary<string, List<int>>? Process(Dictionary<int, string>? input, ref List<string>? refList, in HashSet<int> inSet, out Dictionary<string, object?>? outDict);
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_delegate_with_custom_name_and_nullable_value_types()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+         	public abstract partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = null!;
+               public static readonly TestEnum Item2 = null!;
+
+               [UseDelegateFromConstructor(DelegateName = "NullableValueTypeDelegate")]
+               public partial int? Process(DateTime? dateTime, ref Guid? refGuid, in decimal? inDecimal, out bool? outBool);
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
 }

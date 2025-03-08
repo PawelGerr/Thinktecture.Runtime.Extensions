@@ -709,7 +709,14 @@ public static class TypeSymbolExtensions
                                                       p.RefKind))
                                            .ToList();
 
-         var methodState = new DelegateMethodState(methodSymbol.DeclaredAccessibility, methodName, returnType, parameters);
+         var customDelegateName = useDelegateFromConstructorAttribute.FindDelegateName();
+
+         var methodState = new DelegateMethodState(
+            methodSymbol.DeclaredAccessibility,
+            methodName,
+            returnType,
+            parameters,
+            customDelegateName);
 
          (methodStates ??= []).Add(methodState);
       }

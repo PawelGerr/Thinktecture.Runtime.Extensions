@@ -362,7 +362,11 @@ partial ").Append(typeKind).Append(containingType.Name).Append(@"
       DelegateMethodState method)
    {
       if (method.NeedsCustomDelegate())
-         return sb.Append(method.MethodName).Append("Delegate");
+      {
+         return method.DelegateName is not null
+                   ? sb.Append(method.DelegateName)
+                   : sb.Append(method.MethodName).Append("Delegate");
+      }
 
       // Use standard delegates if no reference parameters
       var isFunc = method.ReturnType is not null;
