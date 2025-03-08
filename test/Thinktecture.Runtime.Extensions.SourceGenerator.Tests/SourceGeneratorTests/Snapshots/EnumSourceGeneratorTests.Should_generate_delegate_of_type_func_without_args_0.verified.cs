@@ -10,6 +10,7 @@ namespace Thinktecture.Tests
 #endif
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
+
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {

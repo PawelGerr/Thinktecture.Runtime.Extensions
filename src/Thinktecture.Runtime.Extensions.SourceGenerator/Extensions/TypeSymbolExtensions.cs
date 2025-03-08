@@ -705,7 +705,8 @@ public static class TypeSymbolExtensions
                              : methodSymbol.Parameters
                                            .Select(p => new DelegateMethodState.ParameterState(
                                                       p.Name,
-                                                      p.Type.ToFullyQualifiedDisplayString()))
+                                                      p.Type.ToFullyQualifiedDisplayString(),
+                                                      p.RefKind))
                                            .ToList();
 
          var methodState = new DelegateMethodState(methodSymbol.DeclaredAccessibility, methodName, returnType, parameters);

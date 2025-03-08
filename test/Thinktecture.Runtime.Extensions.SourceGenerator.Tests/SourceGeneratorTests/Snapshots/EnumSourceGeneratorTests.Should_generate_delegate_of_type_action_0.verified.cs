@@ -10,6 +10,7 @@ namespace Thinktecture.Tests
 #endif
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
+
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
       {
@@ -234,7 +235,7 @@ namespace Thinktecture.Tests
 
       private partial void Method1(string arg1, int arg2)
       {
-         return _method1(arg1, arg2);
+         _method1(arg1, arg2);
       }
 
       /// <summary>

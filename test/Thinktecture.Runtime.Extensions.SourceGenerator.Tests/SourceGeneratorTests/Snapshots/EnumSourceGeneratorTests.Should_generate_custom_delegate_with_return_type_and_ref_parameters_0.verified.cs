@@ -10,6 +10,7 @@ namespace Thinktecture.Tests
 #endif
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
+      private delegate int Method1Delegate(ref string value);
 
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()
@@ -40,11 +41,11 @@ namespace Thinktecture.Tests
 
       private readonly int _hashCode;
       private readonly global::System.Lazy<int> _itemIndex;
-      private readonly global::System.Action _method1;
+      private readonly Method1Delegate _method1;
 
       private TestEnum(
          string @key,
-         global::System.Action @method1)
+         Method1Delegate @method1)
       {
          ValidateConstructorArguments(
             ref @key);
@@ -233,9 +234,9 @@ namespace Thinktecture.Tests
          return this.Key.ToString();
       }
 
-      internal partial void Method1()
+      public partial int Method1(ref string value)
       {
-         _method1();
+         return _method1(ref value);
       }
 
       /// <summary>

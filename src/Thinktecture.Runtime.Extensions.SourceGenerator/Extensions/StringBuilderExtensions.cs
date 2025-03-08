@@ -325,10 +325,46 @@ partial ").Append(typeKind).Append(containingType.Name).Append(@"
       return sb;
    }
 
+   public static StringBuilder AppendRefKindParameterPrefix(
+      this StringBuilder sb,
+      RefKind refKind)
+   {
+      var kind = refKind switch
+      {
+         RefKind.Out => "out ",
+         RefKind.Ref => "ref ",
+         RefKind.In => "in ",
+         RefKind.RefReadOnlyParameter => "ref readonly ",
+         _ => null
+      };
+
+      return sb.Append(kind);
+   }
+
+   public static StringBuilder AppendRefKindArgumentPrefix(
+      this StringBuilder sb,
+      RefKind refKind)
+   {
+      var kind = refKind switch
+      {
+         RefKind.Out => "out ",
+         RefKind.Ref => "ref ",
+         RefKind.In => "in ",
+         RefKind.RefReadOnlyParameter => "in ",
+         _ => null
+      };
+
+      return sb.Append(kind);
+   }
+
    public static StringBuilder AppendDelegateType(
       this StringBuilder sb,
       DelegateMethodState method)
    {
+      if (method.NeedsCustomDelegate())
+         return sb.Append(method.MethodName).Append("Delegate");
+
+      // Use standard delegates if no reference parameters
       var isFunc = method.ReturnType is not null;
 
       if (isFunc)

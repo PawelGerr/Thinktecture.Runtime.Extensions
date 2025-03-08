@@ -104,6 +104,8 @@ namespace ").Append(_state.Namespace).Append(@"
       global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">
    {");
 
+      GenerateCustomDelegateTypes();
+
       if (_state.KeyMember is not null)
       {
          GenerateModuleInitializer(_state.KeyMember);
@@ -156,13 +158,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      if (_state.DelegateMethods.Count > 0)
+      foreach (var method in _state.DelegateMethods)
       {
-         foreach (var method in _state.DelegateMethods)
-         {
-            _sb.Append(@"
+         _sb.Append(@"
       private readonly ").AppendDelegateType(method).Append(" _").Append(method.ArgumentName).Append(";");
-         }
       }
 
       GenerateConstructors();
@@ -266,6 +265,35 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
+   private void GenerateCustomDelegateTypes()
+   {
+      for (var i = 0; i < _state.DelegateMethods.Count; i++)
+      {
+         var method = _state.DelegateMethods[i];
+
+         if (!method.NeedsCustomDelegate())
+            continue;
+
+         _sb.Append(@"
+      private delegate ").Append(method.ReturnType ?? "void").Append(" ").AppendDelegateType(method).Append("(");
+
+         for (var j = 0; j < method.Parameters.Count; j++)
+         {
+            if (j > 0)
+               _sb.Append(", ");
+
+            var param = method.Parameters[j];
+
+            _sb.AppendRefKindParameterPrefix(param.RefKind).Append(param.Type).Append(" ").Append(param.Name);
+         }
+
+         _sb.Append(");");
+      }
+
+      if (_state.DelegateMethods.Count > 0)
+         _sb.AppendLine();
+   }
+
    private void GenerateDelegatedMethods()
    {
       foreach (var method in _state.DelegateMethods)
@@ -280,19 +308,25 @@ namespace ").Append(_state.Namespace).Append(@"
                _sb.Append(", ");
 
             var param = method.Parameters[i];
-            _sb.Append(param.Type).Append(" ").Append(param.Name);
+            _sb.AppendRefKindParameterPrefix(param.RefKind).Append(param.Type).Append(" ").Append(param.Name);
          }
 
          _sb.Append(@")
       {
-         return _").Append(method.ArgumentName).Append("(");
+         ");
+
+         if (method.ReturnType != null)
+            _sb.Append("return ");
+
+         _sb.Append("_").Append(method.ArgumentName).Append("(");
 
          for (var i = 0; i < method.Parameters.Count; i++)
          {
             if (i > 0)
                _sb.Append(", ");
 
-            _sb.Append(method.Parameters[i].Name);
+            var param = method.Parameters[i];
+            _sb.AppendRefKindArgumentPrefix(param.RefKind).Append(param.Name);
          }
 
          _sb.Append(@");

@@ -55,11 +55,16 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
    {
       public string Name { get; }
       public string Type { get; }
+      public RefKind RefKind { get; }
 
-      public ParameterState(string name, string type)
+      public ParameterState(
+         string name,
+         string type,
+         RefKind refKind)
       {
          Name = name;
          Type = type;
+         RefKind = refKind;
       }
 
       public override bool Equals(object? obj)
@@ -76,14 +81,18 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
             return true;
 
          return Name == other.Name
-                && Type == other.Type;
+                && Type == other.Type
+                && RefKind == other.RefKind;
       }
 
       public override int GetHashCode()
       {
          unchecked
          {
-            return (Name.GetHashCode() * 397) ^ Type.GetHashCode();
+            var hashCode = Name.GetHashCode();
+            hashCode = (hashCode * 397) ^ Type.GetHashCode();
+            hashCode = (hashCode * 397) ^ (int)RefKind;
+            return hashCode;
          }
       }
    }
