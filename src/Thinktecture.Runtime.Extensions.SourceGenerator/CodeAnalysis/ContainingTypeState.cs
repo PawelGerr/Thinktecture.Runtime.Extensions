@@ -38,7 +38,11 @@ public sealed class ContainingTypeState : IEquatable<ContainingTypeState>, IHash
    {
       unchecked
       {
-         return (Name.GetHashCode() * 397) ^ IsReferenceType.GetHashCode();
+         var hashCode = Name.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsRecord.GetHashCode();
+
+         return hashCode;
       }
    }
 }

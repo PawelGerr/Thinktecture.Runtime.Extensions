@@ -49,9 +49,9 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
       {
          var hashCode = (int)Accessibility;
          hashCode = (hashCode * 397) ^ MethodName.GetHashCode();
-         hashCode = (hashCode * 397) ^ ReturnType?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ (ReturnType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ Parameters.ComputeHashCode();
-         hashCode = (hashCode * 397) ^ DelegateName?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ (DelegateName?.GetHashCode() ?? 0);
          return hashCode;
       }
    }

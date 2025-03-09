@@ -49,7 +49,7 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
          hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
          hashCode = (hashCode * 397) ^ (int)KeyMemberOperators;
-         hashCode = (hashCode * 397) ^ ComparerAccessor?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ (ComparerAccessor?.GetHashCode() ?? 0);
 
          return hashCode;
       }

@@ -76,7 +76,7 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ FactoryValidationReturnType?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ (FactoryValidationReturnType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ KeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();

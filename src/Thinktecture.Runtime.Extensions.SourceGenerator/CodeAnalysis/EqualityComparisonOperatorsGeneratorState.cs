@@ -39,7 +39,7 @@ public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<Eq
          var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
          hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
-         hashCode = (hashCode * 397) ^ EqualityComparer?.GetHashCode() ?? 0;
+         hashCode = (hashCode * 397) ^ (EqualityComparer?.GetHashCode() ?? 0);
 
          return hashCode;
       }
