@@ -64,6 +64,15 @@ public class UseValueObjectValueConverter : IDisposable
 
       ValidateConverter(complexProperty.ComplexType, nameof(TestComplexType.TestEnum));
    }
+
+   [Fact]
+   public void Should_add_converters_for_complex_value_object_as_complex_type()
+   {
+      var entityType = _ctx.Model.FindEntityType(typeof(TestEntityWithComplexValueObjectAsComplexType)) ?? throw new Exception("Entity not found");
+      var complexProperty = entityType.FindComplexProperty(nameof(TestEntityWithComplexValueObjectAsComplexType.TestComplexType)) ?? throw new Exception("Complex type property not found");
+
+      ValidateConverter(complexProperty.ComplexType, nameof(TestComplexValueObject.TestEnum));
+   }
 #endif
 
    [Fact]

@@ -254,8 +254,13 @@ public static class EntityTypeBuilderExtensions
          return;
 
 #if COMPLEX_TYPES
+#if USE_FIND_COMPLEX_PROPERTY_FIX
+      var complexProperty = entity.FindComplexPropertyFix(propertyInfo);
+#else
+      var complexProperty = entity.FindComplexProperty(propertyInfo);
+#endif
       // wil be handled by AddConverterForScalarProperties
-      if (entity.FindComplexProperty(propertyInfo) is not null)
+      if (complexProperty is not null)
          return;
 #endif
 
@@ -286,8 +291,11 @@ public static class EntityTypeBuilderExtensions
       foreach (var memberName in members)
       {
 #if COMPLEX_TYPES
+#if USE_FIND_COMPLEX_PROPERTY_FIX
+         var complexProperty = entity.FindComplexPropertyFix(memberName);
+#else
          var complexProperty = entity.FindComplexProperty(memberName);
-
+#endif
          if (complexProperty is not null)
             continue;
 #endif
