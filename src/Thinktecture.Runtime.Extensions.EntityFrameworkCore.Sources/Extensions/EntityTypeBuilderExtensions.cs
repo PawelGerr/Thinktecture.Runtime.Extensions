@@ -129,6 +129,60 @@ public static class EntityTypeBuilderExtensions
       return entityTypeBuilder;
    }
 
+#if COMPLEX_TYPES
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static ComplexPropertyBuilder<TComplex> AddValueObjectConverters<TComplex>(
+      this ComplexPropertyBuilder<TComplex> complexPropertyBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+      where TComplex : class
+   {
+      ((ComplexPropertyBuilder)complexPropertyBuilder).AddValueObjectConverters(
+         validateOnWrite,
+         useConstructorForRead,
+         configureEnumsAndKeyedValueObjects);
+
+      return complexPropertyBuilder;
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static ComplexPropertyBuilder AddValueObjectConverters(
+      this ComplexPropertyBuilder complexPropertyBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+   {
+      configureEnumsAndKeyedValueObjects ??= Empty.Action;
+
+      AddConvertersForComplexProperty(
+         complexPropertyBuilder.Metadata,
+         validateOnWrite,
+         useConstructorForRead,
+         null, // Cache for a single entity will be more of a drawback
+         configureEnumsAndKeyedValueObjects);
+
+      return complexPropertyBuilder;
+   }
+#endif
+
    internal static void AddConvertersToEntity(
       this IMutableEntityType entity,
       bool validateOnWrite,
@@ -330,12 +384,22 @@ public static class EntityTypeBuilderExtensions
    {
       foreach (var complexProperty in entity.GetComplexProperties())
       {
-         AddSmartEnumAndKeyedValueObjects(complexProperty.ComplexType, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
-         AddNonKeyedValueObjectMembers(complexProperty.ComplexType);
-
-         AddConverterForScalarProperties(complexProperty.ComplexType, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
-         AddConverterForComplexProperties(complexProperty.ComplexType, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
+         AddConvertersForComplexProperty(complexProperty, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
       }
+   }
+
+   private static void AddConvertersForComplexProperty(
+      IMutableComplexProperty complexProperty,
+      bool validateOnWrite,
+      bool useConstructorForRead,
+      Dictionary<Type, ValueConverter>? converterLookup,
+      Action<IMutableProperty> configureEnumsAndKeyedValueObjects)
+   {
+      AddSmartEnumAndKeyedValueObjects(complexProperty.ComplexType, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
+      AddNonKeyedValueObjectMembers(complexProperty.ComplexType);
+
+      AddConverterForScalarProperties(complexProperty.ComplexType, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
+      AddConverterForComplexProperties(complexProperty.ComplexType, validateOnWrite, useConstructorForRead, converterLookup, configureEnumsAndKeyedValueObjects);
    }
 #endif
 

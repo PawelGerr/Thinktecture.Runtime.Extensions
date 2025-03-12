@@ -4,5 +4,6 @@ public enum ValueConverterRegistration
 {
    None,
    OnModelCreating,
-   EntityConfiguration
+   EntityConfiguration,
+   ComplexTypeConfiguration
 }

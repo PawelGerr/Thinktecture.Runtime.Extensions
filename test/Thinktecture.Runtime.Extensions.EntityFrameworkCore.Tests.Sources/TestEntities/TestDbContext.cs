@@ -33,17 +33,13 @@ public class TestDbContext : DbContext
    {
       base.OnModelCreating(modelBuilder);
 
-      TestEntity_with_OwnedTypes.Configure(
-         modelBuilder,
-         _valueConverterRegistration == ValueConverterRegistration.EntityConfiguration);
-      TestEntity_with_Enum_and_ValueObjects.Configure(
-         modelBuilder,
-         _valueConverterRegistration == ValueConverterRegistration.EntityConfiguration);
+      var configureOnEntityTypeLevel = _valueConverterRegistration is ValueConverterRegistration.EntityConfiguration or ValueConverterRegistration.ComplexTypeConfiguration;
+
+      TestEntity_with_OwnedTypes.Configure(modelBuilder, configureOnEntityTypeLevel);
+      TestEntity_with_Enum_and_ValueObjects.Configure(modelBuilder, configureOnEntityTypeLevel);
 
 #if COMPLEX_TYPES
-      TestEntityWithComplexType.Configure(
-         modelBuilder,
-         _valueConverterRegistration == ValueConverterRegistration.EntityConfiguration);
+      TestEntityWithComplexType.Configure(modelBuilder, _valueConverterRegistration);
 #endif
 
       if (_valueConverterRegistration == ValueConverterRegistration.OnModelCreating)

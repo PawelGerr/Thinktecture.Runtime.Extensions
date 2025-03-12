@@ -46,6 +46,19 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
 
          ValidateConverter(complexProperty.ComplexType, nameof(TestComplexType.TestEnum));
       }
+
+      [Fact]
+      public void Should_add_converters_for_complex_types_inside_complex_type_configuration()
+      {
+         using var ctx = new TestDbContext(
+            new DbContextOptionsBuilder<TestDbContext>().UseSqlite("DataSource=:memory:").Options,
+            ValueConverterRegistration.ComplexTypeConfiguration);
+
+         var entityType = ctx.Model.FindEntityType(typeof(TestEntityWithComplexType)) ?? throw new Exception("Entity not found");
+         var complexProperty = entityType.FindComplexProperty(nameof(TestEntityWithComplexType.TestComplexType)) ?? throw new Exception("Complex type property not found");
+
+         ValidateConverter(complexProperty.ComplexType, nameof(TestComplexType.TestEnum));
+      }
 #endif
 
       [Fact]

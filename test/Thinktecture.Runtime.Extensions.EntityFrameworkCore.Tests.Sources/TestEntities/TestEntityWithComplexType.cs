@@ -11,7 +11,7 @@ public class TestEntityWithComplexType
 
    public static void Configure(
       ModelBuilder modelBuilder,
-      bool registerValueConverters)
+      ValueConverterRegistration valueConverterRegistration)
    {
       modelBuilder.Entity<TestEntityWithComplexType>(builder =>
       {
@@ -20,9 +20,12 @@ public class TestEntityWithComplexType
                                  {
                                     b.IsRequired();
                                     b.Property(t => t.TestEnum);
+
+                                    if (valueConverterRegistration == ValueConverterRegistration.ComplexTypeConfiguration)
+                                       b.AddValueObjectConverters(true);
                                  });
 
-         if (registerValueConverters)
+         if (valueConverterRegistration == ValueConverterRegistration.EntityConfiguration)
             builder.AddValueObjectConverters(true);
       });
    }
