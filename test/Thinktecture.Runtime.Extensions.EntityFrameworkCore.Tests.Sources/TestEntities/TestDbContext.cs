@@ -12,6 +12,7 @@ public class TestDbContext : DbContext
 
 #if COMPLEX_TYPES
    public DbSet<TestEntityWithComplexType> TestEntities_with_ComplexType { get; set; }
+   public DbSet<ComplexValueObjectWithComplexType> ComplexValueObject_with_ComplexType { get; set; }
 #endif
 
    public TestDbContext(
@@ -40,6 +41,7 @@ public class TestDbContext : DbContext
 
 #if COMPLEX_TYPES
       TestEntityWithComplexType.Configure(modelBuilder, _valueConverterRegistration);
+      ComplexValueObjectWithComplexType.Configure(modelBuilder, _valueConverterRegistration);
 #endif
 
       if (_valueConverterRegistration == ValueConverterRegistration.OnModelCreating)

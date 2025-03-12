@@ -122,6 +122,25 @@ SET
                 .ToListAsync();
    }
 
+#if COMPLEX_TYPES
+   [Fact]
+   public async Task Should_roundtrip_complex_value_object_with_complex_property()
+   {
+      var entity = ComplexValueObjectWithComplexType.Create(
+         new Guid("00B7B411-A95E-41F7-91C8-29384431E21A"),
+         new TestComplexType { TestEnum = TestEnum.Item1 });
+
+      _ctx.Add(entity);
+      await _ctx.SaveChangesAsync();
+
+      _ctx.ChangeTracker.Clear();
+
+      var loadedEntity = await _ctx.ComplexValueObject_with_ComplexType.SingleAsync();
+      loadedEntity.Id.Should().Be(entity.Id);
+      loadedEntity.TestComplexType.Should().BeEquivalentTo(entity.TestComplexType);
+   }
+#endif
+
    public void Dispose()
    {
       _ctx.Dispose();

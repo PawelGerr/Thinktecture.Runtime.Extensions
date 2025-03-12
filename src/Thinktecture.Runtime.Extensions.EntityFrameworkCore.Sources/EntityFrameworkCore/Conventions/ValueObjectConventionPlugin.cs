@@ -75,6 +75,13 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
 
       foreach (var memberName in members)
       {
+#if COMPLEX_TYPES
+         var complexProperty = entity.FindComplexProperty(memberName);
+
+         if (complexProperty is not null)
+            continue;
+#endif
+
          var property = entity.FindProperty(memberName);
 
          if (property is null)
