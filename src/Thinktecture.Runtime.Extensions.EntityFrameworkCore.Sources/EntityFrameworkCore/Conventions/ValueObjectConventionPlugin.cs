@@ -35,6 +35,9 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
 
       foreach (var propertyInfo in entity.ClrType.GetRuntimeProperties())
       {
+         if (entity.IsIgnored(propertyInfo.Name))
+            continue;
+
          var navigation = entity.FindNavigation(propertyInfo);
 
          if (navigation is not null)
@@ -73,19 +76,22 @@ internal sealed class ValueObjectConventionPlugin : INavigationAddedConvention, 
       if (!entity.ClrType.TryGetAssignableMembers(out var members) || members.Count == 0)
          return;
 
-      foreach (var memberName in members)
+      foreach (var member in members)
       {
+         if (entity.IsIgnored(member.Name))
+            continue;
+
 #if COMPLEX_TYPES
-         var complexProperty = entity.FindComplexProperty(memberName);
+         var complexProperty = entity.FindComplexProperty(member);
 
          if (complexProperty is not null)
             continue;
 #endif
 
-         var property = entity.FindProperty(memberName);
+         var property = entity.FindProperty(member);
 
          if (property is null)
-            entity.AddProperty(memberName);
+            entity.AddProperty(member);
       }
    }
 

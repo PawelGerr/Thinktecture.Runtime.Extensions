@@ -249,6 +249,9 @@ public static class EntityTypeBuilderExtensions
       Dictionary<Type, ValueConverter>? converterLookup,
       Action<IMutableProperty> configure)
    {
+      if (entity.IsIgnored(propertyInfo.Name))
+         return;
+
       // wil be handled by AddConverterForScalarProperties
       if (entity.FindProperty(propertyInfo) is not null)
          return;
@@ -288,11 +291,14 @@ public static class EntityTypeBuilderExtensions
       if (!entity.ClrType.TryGetAssignableMembers(out var members))
          return;
 
-      foreach (var memberName in members)
+      foreach (var member in members)
       {
+         if (entity.IsIgnored(member.Name))
+            continue;
+
 #if COMPLEX_TYPES
 #if USE_FIND_COMPLEX_PROPERTY_FIX
-         var complexProperty = entity.FindComplexPropertyFix(memberName);
+         var complexProperty = entity.FindComplexPropertyFix(member);
 #else
          var complexProperty = entity.FindComplexProperty(memberName);
 #endif
@@ -300,10 +306,10 @@ public static class EntityTypeBuilderExtensions
             continue;
 #endif
 
-         var property = entity.FindProperty(memberName);
+         var property = entity.FindProperty(member);
 
          if (property is null)
-            entity.AddProperty(memberName);
+            entity.AddProperty(member);
       }
    }
 
