@@ -458,6 +458,12 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
+         if (type.IsNestedInGenericClass())
+         {
+            Logger.LogDebug("Type must not be inside a generic class", tds);
+            return null;
+         }
+
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
 
          if (factory is null)
@@ -502,6 +508,12 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       {
          if (!TryGetType(context, tds, out var type))
             return null;
+
+         if (type.IsNestedInGenericClass())
+         {
+            Logger.LogDebug("Type must not be inside a generic class", tds);
+            return null;
+         }
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
 

@@ -344,6 +344,12 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             return null;
          }
 
+         if (type.IsNestedInGenericClass())
+         {
+            Logger.LogDebug("Type must not be inside a generic class", tds);
+            return null;
+         }
+
          ITypeSymbol? keyMemberType = null;
 
          if (isKeyed)

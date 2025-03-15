@@ -99,6 +99,12 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
                                 .Select(i => new UnionTypeMemberState(i.Type))
                                 .ToList();
 
+         if (derivedTypes.Count == 0)
+         {
+            Logger.LogDebug("Union has no derived types", tds);
+            return null;
+         }
+
          var settings = new UnionSettings(context.Attributes[0]);
 
          var unionState = new UnionSourceGenState(type,

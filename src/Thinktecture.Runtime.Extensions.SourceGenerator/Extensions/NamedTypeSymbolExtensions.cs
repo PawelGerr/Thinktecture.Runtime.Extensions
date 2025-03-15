@@ -53,6 +53,11 @@ public static class NamedTypeSymbolExtensions
       return ctorStates ?? (IReadOnlyList<ConstructorState>)Array.Empty<ConstructorState>();
    }
 
+   public static IReadOnlyList<GenericTypeParameterState> GetGenericTypeParameters(this INamedTypeSymbol type)
+   {
+      return type.TypeParameters.GetGenericTypeParameters();
+   }
+
    public static IReadOnlyList<ContainingTypeState> GetContainingTypes(
       this INamedTypeSymbol type)
    {
@@ -64,12 +69,32 @@ public static class NamedTypeSymbolExtensions
 
       while (containingType != null)
       {
-         types.Add(new ContainingTypeState(containingType.Name, containingType.IsReferenceType, containingType.IsRecord));
+         var typeState = new ContainingTypeState(
+            containingType.Name,
+            containingType.IsReferenceType,
+            containingType.IsRecord,
+            containingType.GetGenericTypeParameters());
+         types.Add(typeState);
          containingType = containingType.ContainingType;
       }
 
       types.Reverse();
 
       return types;
+   }
+
+   public static bool IsNestedInGenericClass(this INamedTypeSymbol type)
+   {
+      var containingType = type.ContainingType;
+
+      while (containingType != null)
+      {
+         if (!containingType.TypeParameters.IsDefaultOrEmpty)
+            return true;
+
+         containingType = containingType.ContainingType;
+      }
+
+      return false;
    }
 }

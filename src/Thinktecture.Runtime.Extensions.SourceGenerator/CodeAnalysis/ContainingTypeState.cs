@@ -5,15 +5,18 @@ public sealed class ContainingTypeState : IEquatable<ContainingTypeState>, IHash
    public string Name { get; }
    public bool IsReferenceType { get; }
    public bool IsRecord { get; }
+   public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
 
    public ContainingTypeState(
       string name,
       bool isReferenceType,
-      bool isRecord)
+      bool isRecord,
+      IReadOnlyList<GenericTypeParameterState> genericParameters)
    {
       Name = name;
       IsReferenceType = isReferenceType;
       IsRecord = isRecord;
+      GenericParameters = genericParameters;
    }
 
    public bool Equals(ContainingTypeState? other)
@@ -26,7 +29,8 @@ public sealed class ContainingTypeState : IEquatable<ContainingTypeState>, IHash
 
       return Name == other.Name
              && IsReferenceType == other.IsReferenceType
-             && IsRecord == other.IsRecord;
+             && IsRecord == other.IsRecord
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override bool Equals(object? obj)
@@ -41,6 +45,7 @@ public sealed class ContainingTypeState : IEquatable<ContainingTypeState>, IHash
          var hashCode = Name.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsRecord.GetHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }

@@ -49,7 +49,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer,
       DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial,
-      DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustNotHaveGenerics
+      DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustNotHaveGenerics,
+      DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
    ];
 
    /// <inheritdoc />
@@ -418,7 +419,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
-      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Union");
+      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration);
    }
 
    private static void ValidateUnion(
@@ -581,7 +582,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
-      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration, "Value Object");
+      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration);
+      TypeMustNotBeInsideGenericType(context, type, locationOfFirstDeclaration);
 
       var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context)
                                   .Where(m => !m.IsStatic)
@@ -678,7 +680,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, enumType, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, enumType);
-      TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration, "Enumeration");
+      TypeMustNotBeGeneric(context, enumType, locationOfFirstDeclaration);
+      TypeMustNotBeInsideGenericType(context, enumType, locationOfFirstDeclaration);
 
       var items = enumType.GetEnumItems();
 
@@ -741,10 +744,16 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ValidateKeyMemberComparers(context, enumType, keyType, attribute, locationOfFirstDeclaration, factory, false);
    }
 
-   private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration, string typeKind)
+   private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration)
    {
       if (!type.TypeParameters.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric, locationOfFirstDeclaration, typeKind, BuildTypeName(type));
+         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric, locationOfFirstDeclaration, BuildTypeName(type));
+   }
+
+   private static void TypeMustNotBeInsideGenericType(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration)
+   {
+      if (type.IsNestedInGenericClass())
+         ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustNotBeInsideGenericType, locationOfFirstDeclaration, BuildTypeName(type));
    }
 
    private static void Check_ItemLike_StaticProperties(

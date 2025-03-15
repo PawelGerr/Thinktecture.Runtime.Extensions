@@ -305,7 +305,7 @@ public static class StringBuilderExtensions
                            : containingType.IsReferenceType ? "class " : "struct ";
 
          sb.Append(@"
-partial ").Append(typeKind).Append(containingType.Name).Append(@"
+partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParameters(containingType.GenericParameters).Append(@"
 {");
       }
 

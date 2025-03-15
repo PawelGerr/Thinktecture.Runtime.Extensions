@@ -29,21 +29,6 @@ public static class MethodSymbolExtensions
 
    public static IReadOnlyList<GenericTypeParameterState> GetGenericTypeParameters(this IMethodSymbol method)
    {
-      if (method.TypeParameters.Length <= 0)
-         return [];
-
-      var genericTypeParameters = new List<GenericTypeParameterState>(method.TypeParameters.Length);
-
-      for (var i = 0; i < method.TypeParameters.Length; i++)
-      {
-         var typeParam = method.TypeParameters[i];
-         var constraints = typeParam.GetConstraints();
-
-         genericTypeParameters.Add(new GenericTypeParameterState(
-                                      typeParam.Name,
-                                      constraints));
-      }
-
-      return genericTypeParameters ?? [];
+      return method.TypeParameters.GetGenericTypeParameters();
    }
 }
