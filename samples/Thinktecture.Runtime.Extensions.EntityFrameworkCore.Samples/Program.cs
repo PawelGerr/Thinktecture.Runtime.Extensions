@@ -43,7 +43,7 @@ public class Program
       var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
       var ctx = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
 
-      var today = (EndDate)DateOnly.FromDateTime(DateTime.Today);
+      var today = OpenEndDate.Create(DateTime.Today);
 
       await InsertProductAsync(ctx, new Product(Guid.NewGuid(), ProductName.Create("Apple"), ProductCategory.Fruits, ProductType.Groceries, Boundary.Create(1, 2), today));
 
@@ -75,7 +75,7 @@ public class Program
       logger.LogInformation("Products with End Data > Today: {@Products}", products);
 
       var product = ctx.Products.Single();
-      product.EndDate = EndDate.Infinite;
+      product.EndDate = OpenEndDate.Infinite;
       await ctx.SaveChangesAsync();
 
       // same query as the previous one but now "EndDate" equals "infinite" and (infinite > today) evaluates to true

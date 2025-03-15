@@ -1,3 +1,6 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using Serilog;
 
 namespace Thinktecture.Unions;
@@ -8,6 +11,7 @@ public class DiscriminatedUnionsDemos
    {
       DemoForAdHocUnions(logger);
       DemoForUnions(logger);
+      DemoForJurisdiction(logger);
    }
 
    private static void DemoForAdHocUnions(ILogger logger)
@@ -176,5 +180,48 @@ public class DiscriminatedUnionsDemos
          r.Switch(failure: f => logger.Information("[Switch] Failure: {Failure}", f),
                   success: s => logger.Information("[Switch] Success: {Success}", s));
       }
+   }
+
+   private static void DemoForJurisdiction(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Jurisdiction ====
+
+                         """);
+
+      // Creating different jurisdictions
+      var district = Jurisdiction.District.Create("District 42");
+      var country = Jurisdiction.Country.Create("DE");
+      var unknown = Jurisdiction.Unknown.Instance;
+
+      // Comparing jurisdictions
+      var district42 = Jurisdiction.District.Create("DISTRICT 42");
+      logger.Information("district == district42: {IsEqual}", district == district42); // true
+
+      var district43 = Jurisdiction.District.Create("District 43");
+      logger.Information("district == district43: {IsEqual}", district == district43); // false
+
+      logger.Information("unknown == Jurisdiction.Unknown.Instance: {IsEqual}", unknown == Jurisdiction.Unknown.Instance); // true
+
+      // Validation examples
+      try
+      {
+         var invalidJuristiction = Jurisdiction.Country.Create("DEU"); // Throws ValidationException
+      }
+      catch (ValidationException ex)
+      {
+         logger.Information(ex.Message); // "ISO code must be exactly 2 characters long."
+      }
+
+      var description = district.Switch(
+         country: c => $"Country: {c}",
+         federalState: s => $"Federal state: {s}",
+         district: d => $"District: {d}",
+         unknown: _ => "Unknown"
+      );
+
+      logger.Information(description);
    }
 }

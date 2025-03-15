@@ -12,6 +12,7 @@ public class ValueObjectDemos
       DemoForSimpleValueObjects(logger);
       DemoForSimpleValueObjectWithCustomComparer(logger);
       DemoForEndDate(logger);
+      DemoForPeriod(logger);
       DemosForAmount(logger);
 
       DemoForComplexValueObjects(logger);
@@ -146,27 +147,63 @@ public class ValueObjectDemos
       logger.Information("""
 
 
-                         ==== Demo for End Date ====
+                         ==== Demo for Open-End Date ====
 
                          """);
 
-      DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-      EndDate endDate = (EndDate)today;
-      // EndDate endDate = EndDate.Create(today);
-
-      var defaultEndDate = default(EndDate);
-      var infiniteEndDate = EndDate.Infinite;
+      var endDate = OpenEndDate.Create(DateTime.Today);
+      var defaultEndDate = default(OpenEndDate);
+      var infiniteEndDate = OpenEndDate.Infinite;
 
       logger.Information("EndDate.Infinite and default(EndDate) are equal: {AreEqual}", infiniteEndDate == defaultEndDate);
 
-      logger.Information("EndDate.Infinite is bigger than today: {AreEqual}", EndDate.Infinite > endDate);
+      logger.Information("EndDate.Infinite is bigger than today: {AreEqual}", OpenEndDate.Infinite > endDate);
 
       DateOnly dateOfDefaultDate = defaultEndDate;
       DateOnly dateOfInfiniteDate = infiniteEndDate;
 
-      logger.Information("DateOnly of EndDate.Infinite and default(EndDate) are equal: {AreEqual}", EndDate.Infinite == dateOfDefaultDate);
+      logger.Information("DateOnly of EndDate.Infinite and default(EndDate) are equal: {AreEqual}", OpenEndDate.Infinite == dateOfDefaultDate);
 
       logger.Information("EndDate.Infinite and DateOnly.MaxValue are equal: {AreEqual}", infiniteEndDate == DateOnly.MaxValue);
+   }
+
+   private static void DemoForPeriod(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Period ====
+
+                         """);
+
+      // Creating Period instances
+      var startDate = new DateOnly(2023, 1, 1);
+      var endDate = OpenEndDate.Create(2023, 12, 31);
+      var period = Period.Create(startDate, endDate);
+
+      // Validation examples
+      try
+      {
+         var invalidPeriod = Period.Create(
+            new DateOnly(2023, 12, 31),
+            OpenEndDate.Create(2023, 1, 1)
+         ); // Throws ValidationException
+      }
+      catch (ValidationException ex)
+      {
+         Console.WriteLine(ex.Message); // "From must be earlier than Until"
+      }
+
+      // Equality comparison
+      var samePeriod = Period.Create(startDate, endDate);
+      var areEqual = period == samePeriod; // True
+      logger.Information("period == samePeriod: {AreEqual}", areEqual);
+
+      // Checking if period intersects with another period
+      var otherPeriod = Period.Create(new DateOnly(2023, 6, 1),
+                                      OpenEndDate.Create(2024, 6, 1));
+      var intersects = period.IntersectsWith(otherPeriod); // true
+      logger.Information("period.IntersectsWith(otherPeriod): {Intersects}", intersects);
    }
 
    private static void DemoForComplexValueObjects(ILogger logger)

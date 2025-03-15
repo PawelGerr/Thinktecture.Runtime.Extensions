@@ -137,7 +137,7 @@ public class DemoController : Controller
    }
 
    [HttpGet("enddate/{endDate}")]
-   public IActionResult RoundTripGet(EndDate endDate)
+   public IActionResult RoundTripGet(OpenEndDate endDate)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -148,7 +148,7 @@ public class DemoController : Controller
    }
 
    [HttpPost("enddate")]
-   public IActionResult RoundTripPost([FromBody] EndDate endDate)
+   public IActionResult RoundTripPost([FromBody] OpenEndDate endDate)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);

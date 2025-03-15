@@ -175,8 +175,8 @@ public class Program
       routeGroup.MapPost("otherProductName", ([FromBody] OtherProductName name) => name);
       routeGroup.MapPost("boundary", ([FromBody] BoundaryWithJsonConverter boundary) => boundary);
 
-      routeGroup.MapGet("enddate/{date}", (EndDate date) => date);
-      routeGroup.MapPost("enddate", ([FromBody] EndDate date) => date);
+      routeGroup.MapGet("enddate/{date}", (OpenEndDate date) => date);
+      routeGroup.MapPost("enddate", ([FromBody] OpenEndDate date) => date);
 
       return app.StartAsync();
    }
