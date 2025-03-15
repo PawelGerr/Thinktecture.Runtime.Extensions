@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using Serilog;
@@ -223,5 +222,14 @@ public class DiscriminatedUnionsDemos
       );
 
       logger.Information(description);
+
+      // Json serialization
+      var json = JsonSerializer.Serialize<Jurisdiction>(district);
+      logger.Information(json); //  {"$type":"District","value":"District 42"}
+
+      var deserializedJurisdiction = JsonSerializer.Deserialize<Jurisdiction>(json);
+      logger.Information("Deserialized jurisdiction: {Jurisdiction} ({Type})",
+                         deserializedJurisdiction,
+                         deserializedJurisdiction?.GetType().Name);
    }
 }

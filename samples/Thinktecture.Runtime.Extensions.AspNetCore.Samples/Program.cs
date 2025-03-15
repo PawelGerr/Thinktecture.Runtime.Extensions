@@ -45,12 +45,9 @@ public class Program
       using var client = new HttpClient();
 
       await DoRequestAsync(logger, client, "category/fruits");
-      await DoRequestAsync(logger, client, "categoryWithConverter/fruits");
       await DoRequestAsync(logger, client, "group/1");
       await DoRequestAsync(logger, client, "group/42");      // invalid
       await DoRequestAsync(logger, client, "group/invalid"); // invalid
-      await DoRequestAsync(logger, client, "groupWithConverter/1");
-      await DoRequestAsync(logger, client, "groupWithConverter/42"); // invalid
       await DoRequestAsync(logger, client, "productType/groceries");
       await DoRequestAsync(logger, client, "productType?productType=groceries");
       await DoRequestAsync(logger, client, "productType", "groceries");
@@ -63,8 +60,6 @@ public class Program
 
       await DoRequestAsync(logger, client, "productType", "invalid");                              // invalid
       await DoRequestAsync(logger, client, "productTypeWrapper", new { ProductType = "invalid" }); // invalid
-      await DoRequestAsync(logger, client, "productTypeWithJsonConverter/groceries");
-      await DoRequestAsync(logger, client, "productTypeWithJsonConverter/invalid"); // invalid
 
       await DoRequestAsync(logger, client, "productName/bread");
       await DoRequestAsync(logger, client, "productName/a");   // invalid (Product name cannot be 1 character long.)
@@ -79,7 +74,7 @@ public class Program
       await DoRequestAsync(logger, client, "otherProductName", "bread");
       await DoRequestAsync(logger, client, "otherProductName", "a"); // invalid (Product name cannot be 1 character long.)
 
-      await DoRequestAsync(logger, client, "boundary", BoundaryWithJsonConverter.Create(1, 2));
+      await DoRequestAsync(logger, client, "boundary", Boundary.Create(1, 2));
       await DoRequestAsync(logger, client, "boundary", jsonBody: "{ \"lower\": 2, \"upper\": 1 }");
 
       await DoRequestAsync(logger, client, $"enddate/{DateOnly.FromDateTime(DateTime.Now):O}");
@@ -150,9 +145,7 @@ public class Program
       var routeGroup = app.MapGroup("/api");
 
       routeGroup.MapGet("category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });
-      routeGroup.MapGet("categoryWithConverter/{category}", (ProductCategoryWithJsonConverter category) => new { Value = category, category.IsValid });
       routeGroup.MapGet("group/{group}", (ProductGroup group) => new { Value = group, group.IsValid });
-      routeGroup.MapGet("groupWithConverter/{group}", (ProductGroupWithJsonConverter group) => new { Value = group, group.IsValid });
       routeGroup.MapGet("productType/{productType}", (ProductType productType) => productType);
       routeGroup.MapGet("productType", (ProductType productType) => productType);
       routeGroup.MapGet("productTypeWithFilter", (BoundValueObject<ProductType, ProductTypeValidationError> productType) => ValueTask.FromResult(productType.Value))
@@ -168,12 +161,11 @@ public class Program
       routeGroup.MapGet("boundaryWithFactories/{boundary}", (BoundaryWithFactories boundary) => boundary);
       routeGroup.MapPost("productType", ([FromBody] ProductType productType) => productType);
       routeGroup.MapPost("productTypeWrapper", ([FromBody] ProductTypeWrapper productType) => productType);
-      routeGroup.MapGet("productTypeWithJsonConverter/{productType}", (ProductTypeWithJsonConverter productType) => productType);
       routeGroup.MapGet("productName/{name}", (ProductName name) => name);
       routeGroup.MapPost("productName", ([FromBody] ProductName name) => name);
       routeGroup.MapGet("otherProductName/{name}", (OtherProductName? name) => name);
       routeGroup.MapPost("otherProductName", ([FromBody] OtherProductName name) => name);
-      routeGroup.MapPost("boundary", ([FromBody] BoundaryWithJsonConverter boundary) => boundary);
+      routeGroup.MapPost("boundary", ([FromBody] Boundary boundary) => boundary);
 
       routeGroup.MapGet("enddate/{date}", (OpenEndDate date) => date);
       routeGroup.MapPost("enddate", ([FromBody] OpenEndDate date) => date);

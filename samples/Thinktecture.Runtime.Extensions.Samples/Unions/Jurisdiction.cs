@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace Thinktecture.Unions;
 
 [Union]
+[JsonConverter(typeof(JurisdictionJsonConverter))]
 public abstract partial class Jurisdiction
 {
    [ValueObject<string>(KeyMemberName = "IsoCode")]

@@ -4,8 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace Thinktecture.Unions;
 
-
-
 public partial class JurisdictionJsonConverter : JsonConverter<Jurisdiction>
 {
    public override Jurisdiction? Read(
