@@ -1,7 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text.Json;
 using Serilog;
+using Thinktecture.SmartEnums;
 
 namespace Thinktecture.ValueObjects;
 
@@ -14,9 +16,12 @@ public class ValueObjectDemos
       DemoForEndDate(logger);
       DemoForPeriod(logger);
       DemosForAmount(logger);
+      DemosForMoney(logger);
+      DemosForYearMonth(logger);
 
       DemoForComplexValueObjects(logger);
       DemoForComplexValueObjectWithCustomComparison(logger);
+      DemoForFileUrn(logger);
    }
 
    private static void DemoForSimpleValueObjects(ILogger logger)
@@ -140,6 +145,69 @@ public class ValueObjectDemos
 
       // Comparison with key-member type due to [ValueObject(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
       logger.Information("{Amount} > {Other} = {Result}", amount, 42, amount > 42); // 1 > 42 = False
+   }
+
+   private static void DemosForMoney(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Money ====
+
+                         """);
+
+      // Creating monetary amounts
+      var price = Money.Create(19.999m, MoneyRoundingStrategy.Down);   // 19.99 (rounds down)
+      var roundedUp = Money.Create(19.991m, MoneyRoundingStrategy.Up); // 20.00 (rounds up)
+      var zero = Money.Zero;                                           // 0.00
+
+      // Arithmetic operations
+      Money sum = price + roundedUp; // 39.99
+      logger.Information("price + roundedUp: {Result}", sum);
+
+      Money difference = roundedUp - price; // 0.01
+      logger.Information("roundedUp - price: {Result}", difference);
+
+      Money doubled = price * 2; // 39.98 (multiplication with int)
+      logger.Information("price * 2: {Result}", doubled);
+
+      Money tripled = 3 * price; // 59.97 (multiplication with int)
+      logger.Information("3 * price: {Result}", tripled);
+
+      // Division or multiplication with decimal need special handling
+      var multiplicationResult = Money.Create(price * 1.234m); // 24.66766 => 24.67
+      logger.Information("[Decimal] price * 1.234m: {Result}", price * 1.234m);
+      logger.Information("[Money] Money.Create(price * 1.234m): {Result}", multiplicationResult);
+
+      // Comparison
+      logger.Information("roundedUp > price: {IsGreater}", roundedUp > price); // true
+   }
+
+   private static void DemosForYearMonth(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Year-Month ====
+
+                         """);
+
+      // Creating DayMonth instances
+      var birthday = DayMonth.Create(5, 15); // May 15th
+      var leapDay = DayMonth.Create(2, 29);  // February 29th (works because we use leap year 2000)
+
+      // Accessing components
+      var day = birthday.Day;     // 15
+      var month = birthday.Month; // 5
+
+      var date = new DateOnly(2020, 5, 15);
+      DayMonth dayMonthFromDate = date;
+      logger.Information("DayMonth from DateOnly: {DayMonth}", dayMonthFromDate); // May 15th
+
+      // Comparing dates
+      var sameDay = DayMonth.Create(5, 15);
+      logger.Information("birthday == sameDay: {IsEqual}", birthday == sameDay);                            // true
+      logger.Information("birthday < DayMonth.Create(6, 1): {IsBefore}", birthday < DayMonth.Create(6, 1)); // true
    }
 
    private static void DemoForEndDate(ILogger logger)
@@ -278,5 +346,41 @@ public class ValueObjectDemos
 
       logger.Information("{Item1} == {Item2}: {Result}", item1, item2, item1 == item2);
       logger.Information("{Item1} == {Item3}: {Result}", item1, item3, item1 == item3);
+   }
+
+   private static void DemoForFileUrn(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for File URN ====
+
+                         """);
+
+      // Creating a FileUrn from its components
+      var documentLocation = FileUrn.Create("blob storage", "containers/documents/contract.pdf");
+      var imageLocation = FileUrn.Create("local file system", "images/profile/user123.jpg");
+
+      // Parsing from string
+      var parsed = FileUrn.Parse("blob storage:containers/documents/contract.pdf", null);       // IParsable.Parse
+      logger.Information("parsed file urn: {Parsed}", parsed);                                  // { FileStore = blob storage, Urn = containers/documents/contract.pdf }
+      logger.Information("documentLocation == parsed: {AreEqual}", documentLocation == parsed); // true
+
+      // Validation
+      try
+      {
+         var invalid = FileUrn.Parse("invalid-format", null);
+      }
+      catch (FormatException ex)
+      {
+         logger.Information(ex.Message); // "Invalid FileUrn format. Expected 'fileStore:urn'"
+      }
+
+      // Serialization
+      var json = JsonSerializer.Serialize(documentLocation);
+      logger.Information("Serialized JSON: {Json}", json); // "blob storage:containers/documents/contract.pdf"
+
+      var deserialized = JsonSerializer.Deserialize<FileUrn>(json);
+      logger.Information("Deserialized FileUrn: {Deserialized}", deserialized); // blob storage:containers/documents/contract.pdf
    }
 }

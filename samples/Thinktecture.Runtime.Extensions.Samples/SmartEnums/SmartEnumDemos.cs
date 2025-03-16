@@ -21,7 +21,12 @@ public class SmartEnumDemos
 
    private static void DemoForSmartEnum(ILogger logger)
    {
-      logger.Information("==== Demo for SmartEnum<T> ====");
+      logger.Information("""
+
+
+                         ==== Demo for SmartEnum<T> ====
+
+                         """);
 
       // Iteration over all items
       logger.Information("Product types: {Types}", ProductType.Items);

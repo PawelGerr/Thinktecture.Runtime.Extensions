@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Thinktecture.SmartEnums;
@@ -149,5 +151,25 @@ public class DemoController : Controller
       _logger.LogInformation("Round trip test with {Type}: {Value}", value.GetType().Name, value);
 
       return Json(value);
+   }
+
+   [HttpGet("notification/channels")]
+   public IActionResult GetAvailableChannels()
+   {
+      // Return all available notification channels
+      var channels = NotificationChannelTypeDto.Items.Select(c => c.Name);
+      return Ok(channels);
+   }
+
+   [HttpPost("notification/channels/{type}")]
+   public async Task<IActionResult> SendNotificationAsync(
+      NotificationChannelTypeDto type,
+      [FromBody] string message,
+      [FromServices] IServiceProvider serviceProvider)
+   {
+      var notificationSender = type.GetNotificationSender(serviceProvider);
+      await notificationSender.SendAsync(message);
+
+      return Ok();
    }
 }

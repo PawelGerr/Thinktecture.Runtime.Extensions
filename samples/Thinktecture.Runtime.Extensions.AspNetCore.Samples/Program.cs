@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Thinktecture.AspNetCore.ModelBinding;
+using Thinktecture.Helpers;
 using Thinktecture.SmartEnums;
 using Thinktecture.Text.Json.Serialization;
 using Thinktecture.Validation;
@@ -79,6 +81,9 @@ public class Program
 
       await DoRequestAsync(logger, client, $"enddate/{DateOnly.FromDateTime(DateTime.Now):O}");
       await DoRequestAsync(logger, client, "enddate", DateOnly.FromDateTime(DateTime.Now));
+
+      await DoRequestAsync(logger, client, "notification/channels");
+      await DoRequestAsync(logger, client, "notification/channels/email", "Test email");
    }
 
    private static async Task DoRequestAsync(ILogger logger, HttpClient client, string url, object? body = null, string? jsonBody = null)
@@ -121,7 +126,9 @@ public class Program
                     })
                     .ConfigureServices(collection =>
                     {
-                       collection.AddSingleton(loggerFactory);
+                       collection.AddSingleton(loggerFactory)
+                                 .AddSingleton<EmailNotificationSender>()
+                                 .AddSingleton<SmsNotificationSender>();
                        collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
                                  .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory()));
                     })
@@ -135,6 +142,8 @@ public class Program
       var builder = WebApplication.CreateBuilder();
       builder.Services
              .AddSingleton(loggerFactory)
+             .AddSingleton<EmailNotificationSender>()
+             .AddSingleton<SmsNotificationSender>()
              .ConfigureHttpJsonOptions(options =>
              {
                 options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
@@ -169,6 +178,21 @@ public class Program
 
       routeGroup.MapGet("enddate/{date}", (OpenEndDate date) => date);
       routeGroup.MapPost("enddate", ([FromBody] OpenEndDate date) => date);
+
+      routeGroup.MapGet("notification/channels", () =>
+      {
+         var channels = NotificationChannelTypeDto.Items.Select(c => c.Name);
+         return Results.Ok(channels);
+      });
+      routeGroup.MapPost("notification/channels/{type}",
+                         async (
+                            NotificationChannelTypeDto type,
+                            [FromBody] string message,
+                            [FromServices] IServiceProvider serviceProvider) =>
+                         {
+                            var notificationSender = type.GetNotificationSender(serviceProvider);
+                            await notificationSender.SendAsync(message);
+                         });
 
       return app.StartAsync();
    }

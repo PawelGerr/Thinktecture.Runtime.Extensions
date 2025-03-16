@@ -1605,7 +1605,7 @@ namespace ").Append(_state.Namespace).Append(@"
       IReadOnlyList<ConstructorArgument> ctorArgs,
       IReadOnlyList<ConstructorArgument> baseCtorArgs)
    {
-      bool hasKeyMember;
+      bool hasArguments;
 
       if (_state.Settings.IsValidatable)
       {
@@ -1615,30 +1615,38 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (_state.KeyMember is not null)
          {
-            hasKeyMember = true;
+            hasArguments = true;
             _sb.Append(@"
          ").AppendTypeFullyQualified(_state.KeyMember).Append(" ").AppendEscaped(_state.KeyMember.ArgumentName);
          }
          else
          {
-            hasKeyMember = false;
+            hasArguments = false;
          }
 
          for (var i = 0; i < ctorArgs.Count; i++)
          {
-            if (hasKeyMember || i != 0)
+            if (hasArguments || i != 0)
                _sb.Append(",");
 
+            hasArguments = true;
             var member = ctorArgs[i];
+
             _sb.Append(@"
          ").AppendTypeFullyQualified(member).Append(" ").AppendEscaped(member.ArgumentName);
          }
 
          if (_state.DelegateMethods.Count > 0)
          {
-            foreach (var method in _state.DelegateMethods)
+            for (var i = 0; i < _state.DelegateMethods.Count; i++)
             {
-               _sb.Append(",");
+               var method = _state.DelegateMethods[i];
+
+               if (hasArguments || i != 0)
+                  _sb.Append(",");
+
+               hasArguments = true;
+
                _sb.Append(@"
          ").AppendDelegateType(method).Append(" ").AppendEscaped(method.ArgumentName);
             }
@@ -1680,18 +1688,18 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.KeyMember is not null)
       {
-         hasKeyMember = true;
+         hasArguments = true;
          _sb.Append(@"
          ").AppendTypeFullyQualified(_state.KeyMember).Append(" ").AppendEscaped(_state.KeyMember.ArgumentName);
       }
       else
       {
-         hasKeyMember = false;
+         hasArguments = false;
       }
 
       if (_state.Settings.IsValidatable)
       {
-         if (hasKeyMember)
+         if (hasArguments)
             _sb.Append(",");
 
          _sb.Append(@"
@@ -1700,19 +1708,25 @@ namespace ").Append(_state.Namespace).Append(@"
 
       for (var i = 0; i < ctorArgs.Count; i++)
       {
-         if (i != 0 || hasKeyMember || _state.Settings.IsValidatable)
+         if (hasArguments || i != 0 || _state.Settings.IsValidatable)
             _sb.Append(",");
 
          var member = ctorArgs[i];
+         hasArguments = true;
+
          _sb.Append(@"
          ").AppendTypeFullyQualified(member).Append(" ").AppendEscaped(member.ArgumentName);
       }
 
       if (_state.DelegateMethods.Count > 0)
       {
-         foreach (var method in _state.DelegateMethods)
+         for (var i = 0; i < _state.DelegateMethods.Count; i++)
          {
-            _sb.Append(",");
+            var method = _state.DelegateMethods[i];
+
+            if (hasArguments || i != 0)
+               _sb.Append(",");
+
             _sb.Append(@"
          ").AppendDelegateType(method).Append(" ").AppendEscaped(method.ArgumentName);
          }
@@ -1744,14 +1758,21 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.KeyMember is not null)
       {
+         hasArguments = true;
          _sb.Append(@"
             ref ").AppendEscaped(_state.KeyMember.ArgumentName);
+      }
+      else
+      {
+         hasArguments = false;
       }
 
       if (_state.Settings.IsValidatable)
       {
-         if (hasKeyMember)
+         if (hasArguments)
             _sb.Append(",");
+
+         hasArguments = true;
 
          _sb.Append(@"
             isValid");
@@ -1759,10 +1780,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
       for (var i = 0; i < ctorArgs.Count; i++)
       {
-         if (i != 0 || hasKeyMember || _state.Settings.IsValidatable)
+         if (hasArguments || i != 0 || _state.Settings.IsValidatable)
             _sb.Append(",");
 
          var members = ctorArgs[i];
+         hasArguments = true;
+
          _sb.Append(@"
             ref ").AppendEscaped(members.ArgumentName);
       }
@@ -1886,13 +1909,18 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.KeyMember is not null)
       {
+         hasArguments = true;
          _sb.Append(@"
          ref ").AppendTypeFullyQualified(_state.KeyMember).Append(" ").AppendEscaped(_state.KeyMember.ArgumentName);
+      }
+      else
+      {
+         hasArguments = false;
       }
 
       if (_state.Settings.IsValidatable)
       {
-         if (hasKeyMember)
+         if (hasArguments)
             _sb.Append(",");
 
          _sb.Append(@"
@@ -1901,10 +1929,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
       for (var i = 0; i < ctorArgs.Count; i++)
       {
-         if (i != 0 || hasKeyMember || _state.Settings.IsValidatable)
+         if (hasArguments || i != 0 || _state.Settings.IsValidatable)
             _sb.Append(",");
 
          var members = ctorArgs[i];
+         hasArguments = true;
+
          _sb.Append(@"
          ref ").AppendTypeFullyQualified(members).Append(" ").AppendEscaped(members.ArgumentName);
       }

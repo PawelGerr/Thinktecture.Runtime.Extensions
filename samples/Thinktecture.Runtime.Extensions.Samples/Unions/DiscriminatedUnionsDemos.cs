@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using Serilog;
@@ -11,6 +12,7 @@ public class DiscriminatedUnionsDemos
       DemoForAdHocUnions(logger);
       DemoForUnions(logger);
       DemoForJurisdiction(logger);
+      DemoForPartiallyKnownDate(logger);
    }
 
    private static void DemoForAdHocUnions(ILogger logger)
@@ -18,7 +20,7 @@ public class DiscriminatedUnionsDemos
       logger.Information("""
 
 
-                         ==== Demo for Ad Hoc Union ====
+                         ==== Demo for Ad Hoc Unions ====
 
                          """);
 
@@ -231,5 +233,49 @@ public class DiscriminatedUnionsDemos
       logger.Information("Deserialized jurisdiction: {Jurisdiction} ({Type})",
                          deserializedJurisdiction,
                          deserializedJurisdiction?.GetType().Name);
+   }
+
+   private static void DemoForPartiallyKnownDate(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Partially-Known Date ====
+
+                         """);
+      // Date with only year known
+      var historicalEvent = new PartiallyKnownDate.YearOnly(1776);
+
+      // Date with year and month known
+      var approximateBirthdate = new PartiallyKnownDate.YearMonth(1980, 6);
+
+      // Fully known date
+      var preciseDate = new PartiallyKnownDate.Date(2023, 12, 31);
+
+      // Implicit conversion from DateOnly to PartiallyKnownDate
+      PartiallyKnownDate fullDate = new DateOnly(2024, 3, 15);  // Date(2024, 3, 15)
+
+      static string FormatDate(PartiallyKnownDate? date)
+      {
+         if (date is null)
+            return "<<null>>";
+
+         return date.Switch(
+            yearOnly: y => y.Year.ToString(),
+            yearMonth: ym => $"{ym.Year}-{ym.Month:D2}",
+            date: ymd => $"{ymd.Year}-{ymd.Month:D2}-{ymd.Day:D2}"
+         );
+      }
+
+      logger.Information("Historical event: {Date}", FormatDate(historicalEvent));           // "1776"
+      logger.Information("Approximate birthdate: {Date}", FormatDate(approximateBirthdate)); // "1980-06"
+      logger.Information("Precise date: {Date}", FormatDate(preciseDate));                   // "2023-12-31"
+
+      // Json serialization
+      var json = JsonSerializer.Serialize<PartiallyKnownDate>(preciseDate);
+      logger.Information(json); // {"$type":"Date","Month":12,"Day":31,"Year":2023}
+
+      var deserializedDate = JsonSerializer.Deserialize<PartiallyKnownDate>(json);
+      logger.Information("Deserialized date: {Date}", FormatDate(deserializedDate)); // "2023-12-31"
    }
 }

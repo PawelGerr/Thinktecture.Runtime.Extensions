@@ -15,6 +15,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public bool IsErroneous { get; }
    public bool IsAbstract { get; }
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
+   public SymbolKind Kind { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
@@ -31,7 +32,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       (IFieldSymbol?, IPropertySymbol?) symbol,
       bool isStatic,
       bool isErroneous,
-      bool isAbstract)
+      bool isAbstract,
+      SymbolKind kind)
    {
       _typedMemberState = typedMemberState;
       _symbol = symbol;
@@ -40,6 +42,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       IsStatic = isStatic;
       IsErroneous = isErroneous;
       IsAbstract = isAbstract;
+      Kind = kind;
       ValueObjectMemberSettings = settings;
    }
 
@@ -55,7 +58,15 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       var symbol = allowedCaptureSymbols ? field : null;
       var settings = populateValueObjectMemberSettings ? ValueObjectMemberSettings.Create(field, field.Type, allowedCaptureSymbols) : ValueObjectMemberSettings.None;
 
-      return new(factory.Create(field.Type), settings, field.Name, (symbol, null), field.IsStatic, field.Type.TypeKind == TypeKind.Error, field.IsAbstract);
+      return new(
+         factory.Create(field.Type),
+         settings,
+         field.Name,
+         (symbol, null),
+         field.IsStatic,
+         field.Type.TypeKind == TypeKind.Error,
+         field.IsAbstract,
+         field.Kind);
    }
 
    public static InstanceMemberInfo? CreateOrNull(
@@ -70,7 +81,15 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       var symbol = allowedCaptureSymbols ? property : null;
       var settings = populateValueObjectMemberSettings ? ValueObjectMemberSettings.Create(property, property.Type, allowedCaptureSymbols) : ValueObjectMemberSettings.None;
 
-      return new(factory.Create(property.Type), settings, property.Name, (null, symbol), property.IsStatic, property.Type.TypeKind == TypeKind.Error, property.IsAbstract);
+      return new(
+         factory.Create(property.Type),
+         settings,
+         property.Name,
+         (null, symbol),
+         property.IsStatic,
+         property.Type.TypeKind == TypeKind.Error,
+         property.IsAbstract,
+         property.Kind);
    }
 
    public Location? GetIdentifierLocation(CancellationToken cancellationToken)
@@ -111,6 +130,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
              && IsStatic == other.IsStatic
              && IsErroneous == other.IsErroneous
              && IsAbstract == other.IsAbstract
+             && Kind == other.Kind
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -123,6 +143,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          hashCode = (hashCode * 397) ^ IsStatic.GetHashCode();
          hashCode = (hashCode * 397) ^ IsErroneous.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)Kind;
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;

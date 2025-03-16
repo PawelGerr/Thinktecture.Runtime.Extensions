@@ -5,6 +5,7 @@ namespace Thinktecture;
 public class ProductsDbContext : DbContext
 {
    public DbSet<Product> Products => Set<Product>();
+   public DbSet<Message> Messages => Set<Message>();
 
    public ProductsDbContext(DbContextOptions<ProductsDbContext> options)
       : base(options)
@@ -34,5 +35,7 @@ public class ProductsDbContext : DbContext
       //                                                                              if (property.ClrType == typeof(ProductType))
       //                                                                                 property.SetMaxLength(20);
       //                                                                           });
+
+      modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductsDbContext).Assembly);
    }
 }
