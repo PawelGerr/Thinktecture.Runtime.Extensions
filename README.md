@@ -47,11 +47,25 @@ Smart Enums:
 
 * [Shipping Method](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#shipping-method)
 * [CSV-Importer-Type](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#csv-importer-type)
+* [Discriminator in a JSON Converter](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#discriminator-in-a-json-converter)
+* [Dispatcher in a Web API](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums#dispatcher-in-a-web-api)
 
 Value objects:
 
+* [ISBN](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#isbn-international-standard-book-number)
 * [Open-ended End Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#open-ended-end-date)
+* [Recurring Dates (Day-Month)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#recurring-dates-day-month)
+* [Period](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#period)
 * [(Always-positive) Amount](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#always-positive-amount)
+* [Monetary Amount with Specific Rounding](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#monetary-amount-with-specific-rounding)
+* [FileUrn - Composite Identifier with String Serialization](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#fileurn---composite-identifier-with-string-serialization)
+* [Jurisdiction (combination of value objects and union types)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects#jurisdiction)
+
+Discriminated Unions:
+
+* [Partially Known Date](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Discriminated-Unions#partially-known-date)
+* [Jurisdiction (combination of value objects and union types)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Discriminated-Unions#jurisdiction)
+* [Message Processing State Management](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Discriminated-Unions#message-processing-state-management)
 
 # Smart Enums
 
