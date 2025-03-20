@@ -16,7 +16,7 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 
 * [Requirements](#requirements)
 * [Migrations](#migrations)
-* [Smart Enum](#smart-enums)
+* [Smart Enums](#smart-enums)
 * [Value Objects](#value-objects)
 * [Discriminated Unions](#discriminated-unions)
     * [Ad hoc unions](#ad-hoc-unions)
