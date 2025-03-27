@@ -413,21 +413,21 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
          var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
 
-         var derivedTypeNames = FindDerivedTypes(type);
+         var derivedTypeDefinitionNames = FindDerivedTypes(type);
          var enumState = new EnumSourceGeneratorState(factory,
                                                       type,
                                                       keyMember,
                                                       attributeInfo.ValidationError,
                                                       new EnumSettings(settings, attributeInfo),
                                                       hasCreateInvalidItemImplementation,
-                                                      derivedTypeNames.Count > 0,
+                                                      derivedTypeDefinitionNames.Count > 0,
                                                       cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace,
                                                       enumState.Name,
                                                       enumState.TypeFullyQualified,
                                                       enumState.IsReferenceType,
                                                       enumState.ContainingTypes,
-                                                      derivedTypeNames);
+                                                      derivedTypeDefinitionNames);
 
          Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);
 
@@ -453,7 +453,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          return Array.Empty<string>();
 
       return derivedTypes
-             .Select(t => t.Type.ToFullyQualifiedDisplayString())
+             .Select(t => t.TypeDef.ToFullyQualifiedDisplayString())
              .Distinct()
              .ToList();
    }

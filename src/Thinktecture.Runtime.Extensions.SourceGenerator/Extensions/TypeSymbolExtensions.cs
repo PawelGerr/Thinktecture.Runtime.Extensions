@@ -379,21 +379,33 @@ public static class TypeSymbolExtensions
              && @interface.TypeArguments[2].SpecialType == SpecialType.System_Boolean;
    }
 
-   public static IReadOnlyList<(INamedTypeSymbol Type, int Level)> FindDerivedInnerTypes(
-      this ITypeSymbol baseType)
+   public static INamedTypeSymbol GetGenericTypeDefinition(
+      this INamedTypeSymbol type)
    {
-      List<(INamedTypeSymbol, int Level)>? derivedTypes = null;
+      return type is { IsGenericType: true, IsUnboundGenericType: false }
+                ? type.ConstructUnboundGenericType()
+                : type;
+   }
 
-      FindDerivedInnerTypes(baseType, 0, baseType, ref derivedTypes);
+   public static IReadOnlyList<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)> FindDerivedInnerTypes(
+      this INamedTypeSymbol baseType)
+   {
+      List<(INamedTypeSymbol, INamedTypeSymbol, int Level)>? derivedTypes = null;
 
-      return derivedTypes ?? (IReadOnlyList<(INamedTypeSymbol Type, int Level)>)Array.Empty<(INamedTypeSymbol Type, int Level)>();
+      FindDerivedInnerTypes(
+         baseType,
+         0,
+         (baseType, baseType.GetGenericTypeDefinition()),
+         ref derivedTypes);
+
+      return derivedTypes ?? (IReadOnlyList<(INamedTypeSymbol, INamedTypeSymbol, int)>)Array.Empty<(INamedTypeSymbol, INamedTypeSymbol, int)>();
    }
 
    private static void FindDerivedInnerTypes(
-      ITypeSymbol typeToCheck,
+      INamedTypeSymbol typeToCheck,
       int currentLevel,
-      ITypeSymbol baseType,
-      ref List<(INamedTypeSymbol, int Level)>? derivedTypes)
+      (INamedTypeSymbol Type, INamedTypeSymbol TypeDef) baseType,
+      ref List<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)>? derivedTypes)
    {
       currentLevel++;
 
@@ -412,31 +424,28 @@ public static class TypeSymbolExtensions
 
          if (IsDerivedFrom(innerType, baseType))
          {
-            var derivedType = innerType;
-
-            if (derivedType is { IsGenericType: true, IsUnboundGenericType: false })
-               derivedType = derivedType.ConstructUnboundGenericType();
-
-            (derivedTypes ??= []).Add((derivedType, currentLevel));
+            (derivedTypes ??= []).Add((innerType, innerType.GetGenericTypeDefinition(), currentLevel));
          }
 
          FindDerivedInnerTypes(innerType, currentLevel, baseType, ref derivedTypes);
       }
    }
 
-   private static bool IsDerivedFrom(this ITypeSymbol? type, ITypeSymbol baseType)
+   private static bool IsDerivedFrom(
+      this ITypeSymbol? type,
+      (INamedTypeSymbol Type, INamedTypeSymbol TypeDef) baseType)
    {
       while (!type.IsNullOrObject())
       {
-         if (baseType.TypeKind == TypeKind.Interface)
+         if (baseType.Type.TypeKind == TypeKind.Interface)
          {
             foreach (var @interface in type.Interfaces)
             {
-               if (SymbolEqualityComparer.Default.Equals(@interface, baseType))
+               if (SymbolEqualityComparer.Default.Equals(@interface, baseType.Type))
                   return true;
             }
          }
-         else if (SymbolEqualityComparer.Default.Equals(type.BaseType, baseType))
+         else if (SymbolEqualityComparer.Default.Equals(type.BaseType?.GetGenericTypeDefinition(), baseType.TypeDef))
          {
             return true;
          }

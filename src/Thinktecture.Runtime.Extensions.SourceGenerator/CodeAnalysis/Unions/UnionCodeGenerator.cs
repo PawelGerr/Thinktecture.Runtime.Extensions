@@ -40,7 +40,7 @@ public class UnionCodeGenerator : CodeGeneratorBase
       {
          var typeMember = _state.TypeMembers[i];
 
-         if (typeMember.BaseTypeFullyQualified == state.TypeFullyQualified)
+         if (typeMember.BaseTypeDefinitionFullyQualified == state.TypeDefinitionFullyQualified)
          {
             typeMembers.Add(MakeTypeMember(typeMember, sb));
          }
@@ -60,7 +60,7 @@ public class UnionCodeGenerator : CodeGeneratorBase
 
             for (var j = typeMembers.Count - 1; j >= 0; j--)
             {
-               if (typeMembers[j].State.TypeFullyQualified != unsortedTypeMember.BaseTypeFullyQualified)
+               if (typeMembers[j].State.TypeDefinitionFullyQualified != unsortedTypeMember.BaseTypeDefinitionFullyQualified)
                   continue;
 
                typeMembers.Add(MakeTypeMember(unsortedTypeMember, sb));

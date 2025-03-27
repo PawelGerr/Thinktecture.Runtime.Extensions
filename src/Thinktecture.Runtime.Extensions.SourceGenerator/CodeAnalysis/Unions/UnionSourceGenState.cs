@@ -5,6 +5,7 @@ public class UnionSourceGenState : IEquatable<UnionSourceGenState>, ITypeFullyQu
    public string? Namespace { get; }
    public string Name { get; }
    public string TypeFullyQualified { get; }
+   public string TypeDefinitionFullyQualified { get; }
    public bool IsRecord { get; }
    public bool HasNonDefaultConstructor { get; }
 
@@ -20,20 +21,13 @@ public class UnionSourceGenState : IEquatable<UnionSourceGenState>, ITypeFullyQu
    {
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
+      TypeFullyQualified = type.ToFullyQualifiedDisplayString();
+      TypeDefinitionFullyQualified = type.GetGenericTypeDefinition().ToFullyQualifiedDisplayString();
       HasNonDefaultConstructor = !type.Constructors.IsDefaultOrEmpty && type.Constructors.Any(c => !c.IsImplicitlyDeclared);
       ContainingTypes = type.GetContainingTypes();
       GenericsFullyQualified = type.Arity == 0
                                   ? []
                                   : type.TypeArguments.Select(t => t.ToFullyQualifiedDisplayString()).ToList();
-
-      if (type is { IsGenericType: true, IsUnboundGenericType: true })
-      {
-         TypeFullyQualified = type.OriginalDefinition.ToFullyQualifiedDisplayString();
-      }
-      else
-      {
-         TypeFullyQualified = type.ToFullyQualifiedDisplayString();
-      }
 
       IsRecord = type.IsRecord;
       TypeMembers = typeMembers;

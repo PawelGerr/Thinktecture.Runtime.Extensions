@@ -50,7 +50,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustNotHaveGenerics,
-      DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
+      DiagnosticsDescriptors.TypeMustNotBeInsideGenericType,
+      DiagnosticsDescriptors.NonAbstractUnionDerivedTypesMustNotBeGeneric
    ];
 
    /// <inheritdoc />
@@ -428,6 +429,20 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       CheckConstructors(context, type, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
+      NonAbstractDerivedTypesMustNotBeGeneric(context, type);
+   }
+
+   private static void NonAbstractDerivedTypesMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol unionType)
+   {
+      var derivedTypes = unionType.FindDerivedInnerTypes();
+
+      for (var i = 0; i < derivedTypes.Count; i++)
+      {
+         var (type, _, _) = derivedTypes[i];
+
+         if (!type.IsAbstract && type.Arity != 0)
+            ReportDiagnostic(context, DiagnosticsDescriptors.NonAbstractUnionDerivedTypesMustNotBeGeneric, GetDerivedTypeLocation(context, type), type);
+      }
    }
 
    private static void ValidateKeyedValueObject(
@@ -778,7 +793,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       for (var i = 0; i < derivedTypes.Count; i++)
       {
-         var (type, level) = derivedTypes[i];
+         var (type, _, level) = derivedTypes[i];
 
          if (level == 1)
          {

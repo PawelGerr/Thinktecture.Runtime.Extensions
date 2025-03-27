@@ -95,14 +95,25 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             return null;
          }
 
-         var derivedTypes = type.FindDerivedInnerTypes()
-                                .Select(i => new UnionTypeMemberState(i.Type))
-                                .ToList();
+         var derivedTypeInfos = type.FindDerivedInnerTypes();
 
-         if (derivedTypes.Count == 0)
+         if (derivedTypeInfos.Count == 0)
          {
             Logger.LogDebug("Union has no derived types", tds);
             return null;
+         }
+
+         var derivedTypes = new List<UnionTypeMemberState>(derivedTypeInfos.Count);
+
+         foreach (var derivedTypeInfo in derivedTypeInfos)
+         {
+            if (!derivedTypeInfo.Type.IsAbstract && derivedTypeInfo.Type.Arity != 0)
+            {
+               Logger.LogDebug("Derived type of a union must not have generic parameters, unless it is abstract", tds);
+               return null;
+            }
+
+            derivedTypes.Add(new UnionTypeMemberState(derivedTypeInfo.Type, derivedTypeInfo.TypeDef));
          }
 
          var settings = new UnionSettings(context.Attributes[0]);
