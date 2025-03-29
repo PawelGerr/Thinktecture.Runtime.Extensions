@@ -17,9 +17,4 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="SourceGeneratorTests/Snapshots/*.*" />
-    <Content Include="SourceGeneratorTests/Snapshots/*.*" />
-  </ItemGroup>
-
 </Project>

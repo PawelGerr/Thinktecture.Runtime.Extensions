@@ -15,14 +15,6 @@ public abstract class SourceGeneratorTestsBase
 {
    private const string _GENERATION_ERROR = "CS8785";
 
-   protected static readonly VerifySettings Settings;
-
-   static SourceGeneratorTestsBase()
-   {
-      Settings = new VerifySettings();
-      Settings.UseDirectory("Snapshots");
-   }
-
    private readonly ITestOutputHelper _output;
 
    protected SourceGeneratorTestsBase(ITestOutputHelper output)
@@ -57,7 +49,7 @@ public abstract class SourceGeneratorTestsBase
                                        throw new Exception($"Output file '{fileName}' not found. Available files: {String.Join(", ", outputs.Keys)}", ex);
                                     }
 
-                                    var verify = Verifier.Verify(content, "cs", Settings);
+                                    var verify = Verifier.Verify(content);
                                     var paramText = parameterText;
 
                                     if (fileNames.Length > 1)
@@ -77,14 +69,14 @@ public abstract class SourceGeneratorTestsBase
       string parameterText,
       string output)
    {
-      await Verifier.Verify(output, "cs", Settings)
+      await Verifier.Verify(output)
                     .UseTextForParameters(parameterText);
    }
 
    protected async Task VerifyAsync(
       string output)
    {
-      await Verifier.Verify(output, "cs", Settings);
+      await Verifier.Verify(output);
    }
 
    protected string GetGeneratedOutput<T>(
