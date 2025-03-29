@@ -168,8 +168,39 @@ abstract partial ").Append(_state.IsRecord ? "record" : "class").Append(" ").App
             GenerateMap(true);
       }
 
+      if (!_state.Settings.SkipImplicitConversionFromValue)
+         GenerateImplicitConversions();
+
       _sb.Append(@"
 }");
+   }
+
+   private void GenerateImplicitConversions()
+   {
+      for (var i = 0; i < _state.TypeMembers.Count; i++)
+      {
+         var memberType = _state.TypeMembers[i];
+
+         if (memberType.IsInterface || memberType.IsAbstract)
+            continue;
+
+         for (var j = 0; j < memberType.UniqueSingleArgumentConstructors.Count; j++)
+         {
+            var ctorArg = memberType.UniqueSingleArgumentConstructors[j];
+
+            _sb.Append(@"
+
+   /// <summary>
+   /// Implicit conversion from type ").AppendTypeForXmlComment(ctorArg).Append(@".
+   /// </summary>
+   /// <param name=""").Append(ctorArg.ArgumentName).Append(@""">Value to covert from.</param>
+   /// <returns>A new instance of ").AppendTypeForXmlComment(memberType).Append(@" converted from <paramref name=""").Append(ctorArg.ArgumentName).Append(@"""/>.</returns>
+   public static implicit operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(ctorArg).Append(" ").AppendEscaped(ctorArg.ArgumentName).Append(@")
+   {
+      return new ").AppendTypeFullyQualified(memberType).Append("(").AppendEscaped(ctorArg.ArgumentName).Append(@");
+   }");
+         }
+      }
    }
 
    private void GenerateSwitchForAction(bool withState, bool isPartially)

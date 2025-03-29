@@ -15,4 +15,9 @@ public class UnionAttribute : Attribute
    /// Indication whether and how the generator should generate the methods <c>Map</c>.
    /// </summary>
    public SwitchMapMethodsGeneration MapMethods { get; set; }
+
+   /// <summary>
+   /// Indication whether the generator should skip the implementation of implicit conversions from value to union type.
+   /// </summary>
+   public bool SkipImplicitConversionFromValue { get; set; }
 }

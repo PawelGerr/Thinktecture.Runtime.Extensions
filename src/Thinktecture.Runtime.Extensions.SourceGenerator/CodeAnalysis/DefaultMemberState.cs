@@ -8,6 +8,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public string ArgumentName { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
+   public bool IsTypeParameter => _typedMemberState.TypeKind == TypeKind.TypeParameter;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;

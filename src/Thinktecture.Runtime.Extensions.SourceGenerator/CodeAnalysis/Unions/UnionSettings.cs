@@ -4,11 +4,13 @@ public sealed class UnionSettings : IEquatable<UnionSettings>, IHashCodeComputab
 {
    public SwitchMapMethodsGeneration SwitchMethods { get; }
    public SwitchMapMethodsGeneration MapMethods { get; }
+   public bool SkipImplicitConversionFromValue { get; }
 
    public UnionSettings(AttributeData attribute)
    {
       SwitchMethods = attribute.FindSwitchMethods();
       MapMethods = attribute.FindMapMethods();
+      SkipImplicitConversionFromValue = attribute.FindSkipImplicitConversionFromValue();
    }
 
    public override bool Equals(object? obj)
@@ -25,7 +27,8 @@ public sealed class UnionSettings : IEquatable<UnionSettings>, IHashCodeComputab
          return true;
 
       return SwitchMethods == other.SwitchMethods
-             && MapMethods == other.MapMethods;
+             && MapMethods == other.MapMethods
+             && SkipImplicitConversionFromValue == other.SkipImplicitConversionFromValue;
    }
 
    public override int GetHashCode()
@@ -34,6 +37,7 @@ public sealed class UnionSettings : IEquatable<UnionSettings>, IHashCodeComputab
       {
          var hashCode = SwitchMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipImplicitConversionFromValue.GetHashCode();
 
          return hashCode;
       }

@@ -196,10 +196,21 @@ public static class StringBuilderExtensions
 
    public static StringBuilder AppendTypeForXmlComment(
       this StringBuilder sb,
+      IMemberState member,
+      (string Text, string? Separator)? suffix = null)
+   {
+      return sb.AppendTypeForXmlComment(member.TypeFullyQualified,
+                                        member.IsTypeParameter,
+                                        suffix);
+   }
+
+   public static StringBuilder AppendTypeForXmlComment(
+      this StringBuilder sb,
       ITypeInformation type,
       (string Text, string? Separator)? suffix = null)
    {
       return sb.AppendTypeForXmlComment(type.TypeMinimallyQualified,
+                                        false,
                                         suffix);
    }
 
@@ -208,14 +219,21 @@ public static class StringBuilderExtensions
       ITypeFullyQualified type,
       (string Text, string? Separator)? suffix = null)
    {
-      return sb.AppendTypeForXmlComment(type.TypeFullyQualified, suffix);
+      return sb.AppendTypeForXmlComment(type.TypeFullyQualified, false, suffix);
    }
 
    private static StringBuilder AppendTypeForXmlComment(
       this StringBuilder sb,
       string qualifiedTypeName,
+      bool isGenericTypeParameter,
       (string Text, string? Separator)? suffix)
    {
+      if (isGenericTypeParameter)
+      {
+         sb.Append("<typeparamref name=\"").Append(qualifiedTypeName).Append("\"/>");
+         return sb;
+      }
+
       var hasProblematicCharsForXmlDocs = qualifiedTypeName.IndexOfAny(['<', '[', '?']) > -1;
 
       if (hasProblematicCharsForXmlDocs)

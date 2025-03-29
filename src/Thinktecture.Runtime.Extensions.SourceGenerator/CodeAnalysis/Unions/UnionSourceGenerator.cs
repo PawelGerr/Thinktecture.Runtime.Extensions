@@ -103,17 +103,25 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
             return null;
          }
 
-         var derivedTypes = new List<UnionTypeMemberState>(derivedTypeInfos.Count);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
 
-         foreach (var derivedTypeInfo in derivedTypeInfos)
+         if (factory is null)
+            return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
+
+         var derivedTypes = new List<UnionTypeMemberState>(derivedTypeInfos.Count);
+         var singleArgCtorsPerType = GetSingleArgumentConstructors(factory, derivedTypeInfos);
+
+         for (var i = 0; i < derivedTypeInfos.Count; i++)
          {
+            var derivedTypeInfo = derivedTypeInfos[i];
+
             if (!derivedTypeInfo.Type.IsAbstract && derivedTypeInfo.Type.Arity != 0)
             {
                Logger.LogDebug("Derived type of a union must not have generic parameters, unless it is abstract", tds);
                return null;
             }
 
-            derivedTypes.Add(new UnionTypeMemberState(derivedTypeInfo.Type, derivedTypeInfo.TypeDef));
+            derivedTypes.Add(new UnionTypeMemberState(derivedTypeInfo.Type, derivedTypeInfo.TypeDef, singleArgCtorsPerType[i]));
          }
 
          var settings = new UnionSettings(context.Attributes[0]);
@@ -136,6 +144,99 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
 
          return new SourceGenContext(new SourceGenException(ex, tds));
       }
+   }
+
+   private static IReadOnlyList<IReadOnlyList<DefaultMemberState>> GetSingleArgumentConstructors(
+      TypedMemberStateFactory factory,
+      IReadOnlyList<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)> derivedTypeInfos)
+   {
+      var (typeInfoCtors, foundArgTypes) = GetTypeInfoCtors(derivedTypeInfos);
+
+      // Remove duplicates
+      var statesPerTypeInfo = new List<IReadOnlyList<DefaultMemberState>>(typeInfoCtors.Count);
+
+      for (var i = 0; i < typeInfoCtors.Count; i++)
+      {
+         var paramPerCtors = typeInfoCtors[i];
+
+         List<DefaultMemberState>? states = null;
+
+         for (var j = 0; j < paramPerCtors.Count; j++)
+         {
+            var ctorParam = paramPerCtors[j];
+            var foundParam = foundArgTypes.First(p => SymbolEqualityComparer.Default.Equals(p.Type, ctorParam.Type));
+
+            if (foundParam.Counter != 1)
+               continue;
+
+            var parameterState = new DefaultMemberState(factory.Create(ctorParam.Type), ctorParam.Name, ctorParam.Name.MakeArgumentName());
+
+            (states ??= []).Add(parameterState);
+         }
+
+         statesPerTypeInfo.Add(states ?? (IReadOnlyList<DefaultMemberState>) []);
+      }
+
+      return statesPerTypeInfo;
+   }
+
+   private static (IReadOnlyList<IReadOnlyList<IParameterSymbol>> TypeInfoCtors, IReadOnlyList<(ITypeSymbol Type, int Counter)> ArgTypes) GetTypeInfoCtors(
+      IReadOnlyList<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)> derivedTypeInfos)
+   {
+      var typeInfoCtors = new List<IReadOnlyList<IParameterSymbol>>(derivedTypeInfos.Count);
+      var argTypes = new List<(ITypeSymbol Type, int Counter)>();
+
+      for (var i = 0; i < derivedTypeInfos.Count; i++)
+      {
+         var parameters = GetSingleArgumentConstructors(derivedTypeInfos[i]);
+         typeInfoCtors.Add(parameters);
+
+         for (var j = 0; j < parameters.Count; j++)
+         {
+            var parameter = parameters[j];
+            var foundParamIndex = argTypes.FindIndex(p => SymbolEqualityComparer.Default.Equals(p.Type, parameter.Type));
+
+            if (foundParamIndex < 0)
+            {
+               argTypes.Add((parameter.Type, 1));
+            }
+            else
+            {
+               var foundParam = argTypes[foundParamIndex];
+               argTypes[foundParamIndex] = (foundParam.Type, foundParam.Counter + 1);
+            }
+         }
+      }
+
+      return (typeInfoCtors, argTypes);
+   }
+
+   private static IReadOnlyList<IParameterSymbol> GetSingleArgumentConstructors(
+      (INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level) derivedTypeInfo)
+   {
+      if (derivedTypeInfo.Type.Constructors.IsDefaultOrEmpty)
+         return [];
+
+      List<IParameterSymbol>? parameters = null;
+
+      foreach (var ctor in derivedTypeInfo.Type.Constructors)
+      {
+         if (ctor.DeclaredAccessibility != Accessibility.Public || ctor.Parameters.IsDefaultOrEmpty)
+            continue;
+
+         if (ctor.Parameters.Length > 1)
+            continue;
+
+         var parameterCandidate = ctor.Parameters[0];
+
+         // Ignore copy constructor
+         if (SymbolEqualityComparer.Default.Equals(parameterCandidate.Type, derivedTypeInfo.Type))
+            continue;
+
+         (parameters ??= []).Add(parameterCandidate);
+      }
+
+      return parameters ?? (IReadOnlyList<IParameterSymbol>) [];
    }
 
    private void InitializeUnionTypeGeneration(

@@ -129,4 +129,14 @@ abstract partial record Result
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
+
+   /// <summary>
+   /// Implicit conversion from type <see cref="string"/>.
+   /// </summary>
+   /// <param name="error">Value to covert from.</param>
+   /// <returns>A new instance of <see cref="global::Thinktecture.Tests.Result.Failure"/> converted from <paramref name="error"/>.</returns>
+   public static implicit operator global::Thinktecture.Tests.Result(string @error)
+   {
+      return new global::Thinktecture.Tests.Result.Failure(@error);
+   }
 }

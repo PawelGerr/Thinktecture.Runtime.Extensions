@@ -13,15 +13,20 @@ abstract partial record Result<T>
    /// Executes an action depending on the current type.
    /// </summary>
    /// <param name="success">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
+   /// <param name="success2">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
    public void Switch(
       global::System.Action<global::Thinktecture.Tests.Result<T>.Success> @success,
+      global::System.Action<global::Thinktecture.Tests.Result<T>.Success2> @success2,
       global::System.Action<global::Thinktecture.Tests.Result<T>.Failure> @failure)
    {
       switch (this)
       {
          case global::Thinktecture.Tests.Result<T>.Success value:
             @success(value);
+            return;
+         case global::Thinktecture.Tests.Result<T>.Success2 value:
+            @success2(value);
             return;
          case global::Thinktecture.Tests.Result<T>.Failure value:
             @failure(value);
@@ -36,10 +41,12 @@ abstract partial record Result<T>
    /// </summary>
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
+   /// <param name="success2">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
    public void Switch<TState>(
       TState state,
       global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Success> @success,
+      global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Success2> @success2,
       global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Failure> @failure)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
@@ -49,6 +56,9 @@ abstract partial record Result<T>
       {
          case global::Thinktecture.Tests.Result<T>.Success value:
             @success(state, value);
+            return;
+         case global::Thinktecture.Tests.Result<T>.Success2 value:
+            @success2(state, value);
             return;
          case global::Thinktecture.Tests.Result<T>.Failure value:
             @failure(state, value);
@@ -62,9 +72,11 @@ abstract partial record Result<T>
    /// Executes a function depending on the current type.
    /// </summary>
    /// <param name="success">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
+   /// <param name="success2">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
    public TResult Switch<TResult>(
       global::System.Func<global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
+      global::System.Func<global::Thinktecture.Tests.Result<T>.Success2, TResult> @success2,
       global::System.Func<global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
@@ -74,6 +86,8 @@ abstract partial record Result<T>
       {
          case global::Thinktecture.Tests.Result<T>.Success value:
             return @success(value);
+         case global::Thinktecture.Tests.Result<T>.Success2 value:
+            return @success2(value);
          case global::Thinktecture.Tests.Result<T>.Failure value:
             return @failure(value);
          default:
@@ -86,10 +100,12 @@ abstract partial record Result<T>
    /// </summary>
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
+   /// <param name="success2">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
    public TResult Switch<TState, TResult>(
       TState state,
       global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
+      global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Success2, TResult> @success2,
       global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
@@ -100,6 +116,8 @@ abstract partial record Result<T>
       {
          case global::Thinktecture.Tests.Result<T>.Success value:
             return @success(state, value);
+         case global::Thinktecture.Tests.Result<T>.Success2 value:
+            return @success2(state, value);
          case global::Thinktecture.Tests.Result<T>.Failure value:
             return @failure(state, value);
          default:
@@ -111,9 +129,11 @@ abstract partial record Result<T>
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
    /// <param name="success">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
+   /// <param name="success2">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
    public TResult Map<TResult>(
       TResult @success,
+      TResult @success2,
       TResult @failure)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
@@ -123,21 +143,13 @@ abstract partial record Result<T>
       {
          case global::Thinktecture.Tests.Result<T>.Success value:
                return @success;
+         case global::Thinktecture.Tests.Result<T>.Success2 value:
+               return @success2;
          case global::Thinktecture.Tests.Result<T>.Failure value:
                return @failure;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
-   }
-
-   /// <summary>
-   /// Implicit conversion from type <typeparamref name="T"/>.
-   /// </summary>
-   /// <param name="value">Value to covert from.</param>
-   /// <returns>A new instance of <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c> converted from <paramref name="value"/>.</returns>
-   public static implicit operator global::Thinktecture.Tests.Result<T>(T @value)
-   {
-      return new global::Thinktecture.Tests.Result<T>.Success(@value);
    }
 
    /// <summary>

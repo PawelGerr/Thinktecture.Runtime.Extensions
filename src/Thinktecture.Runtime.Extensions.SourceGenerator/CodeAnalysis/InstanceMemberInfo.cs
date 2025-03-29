@@ -18,6 +18,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public SymbolKind Kind { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
+   public bool IsTypeParameter => _typedMemberState.TypeKind == TypeKind.TypeParameter;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public string TypeMinimallyQualified => _typedMemberState.TypeMinimallyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;

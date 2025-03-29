@@ -139,14 +139,4 @@ abstract partial record Result<T>
    {
       return new global::Thinktecture.Tests.Result<T>.Success(@value);
    }
-
-   /// <summary>
-   /// Implicit conversion from type <see cref="string"/>.
-   /// </summary>
-   /// <param name="error">Value to covert from.</param>
-   /// <returns>A new instance of <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c> converted from <paramref name="error"/>.</returns>
-   public static implicit operator global::Thinktecture.Tests.Result<T>(string @error)
-   {
-      return new global::Thinktecture.Tests.Result<T>.Failure(@error);
-   }
 }

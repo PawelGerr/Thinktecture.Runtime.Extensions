@@ -14,9 +14,11 @@ abstract partial record Result<T>
    /// </summary>
    /// <param name="success">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="failure">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   /// <param name="failure2">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure2</c>.</param>
    public void Switch(
       global::System.Action<global::Thinktecture.Tests.Result<T>.Success> @success,
-      global::System.Action<global::Thinktecture.Tests.Result<T>.Failure> @failure)
+      global::System.Action<global::Thinktecture.Tests.Result<T>.Failure> @failure,
+      global::System.Action<global::Thinktecture.Tests.Result<T>.Failure2> @failure2)
    {
       switch (this)
       {
@@ -25,6 +27,9 @@ abstract partial record Result<T>
             return;
          case global::Thinktecture.Tests.Result<T>.Failure value:
             @failure(value);
+            return;
+         case global::Thinktecture.Tests.Result<T>.Failure2 value:
+            @failure2(value);
             return;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
@@ -37,10 +42,12 @@ abstract partial record Result<T>
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="failure">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   /// <param name="failure2">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure2</c>.</param>
    public void Switch<TState>(
       TState state,
       global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Success> @success,
-      global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Failure> @failure)
+      global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Failure> @failure,
+      global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Failure2> @failure2)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -53,6 +60,9 @@ abstract partial record Result<T>
          case global::Thinktecture.Tests.Result<T>.Failure value:
             @failure(state, value);
             return;
+         case global::Thinktecture.Tests.Result<T>.Failure2 value:
+            @failure2(state, value);
+            return;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -63,9 +73,11 @@ abstract partial record Result<T>
    /// </summary>
    /// <param name="success">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="failure">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   /// <param name="failure2">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure2</c>.</param>
    public TResult Switch<TResult>(
       global::System.Func<global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
-      global::System.Func<global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure)
+      global::System.Func<global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure,
+      global::System.Func<global::Thinktecture.Tests.Result<T>.Failure2, TResult> @failure2)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -76,6 +88,8 @@ abstract partial record Result<T>
             return @success(value);
          case global::Thinktecture.Tests.Result<T>.Failure value:
             return @failure(value);
+         case global::Thinktecture.Tests.Result<T>.Failure2 value:
+            return @failure2(value);
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -87,10 +101,12 @@ abstract partial record Result<T>
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="failure">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   /// <param name="failure2">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure2</c>.</param>
    public TResult Switch<TState, TResult>(
       TState state,
       global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
-      global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure)
+      global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Failure, TResult> @failure,
+      global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Failure2, TResult> @failure2)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct
@@ -102,6 +118,8 @@ abstract partial record Result<T>
             return @success(state, value);
          case global::Thinktecture.Tests.Result<T>.Failure value:
             return @failure(state, value);
+         case global::Thinktecture.Tests.Result<T>.Failure2 value:
+            return @failure2(state, value);
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -112,9 +130,11 @@ abstract partial record Result<T>
    /// </summary>
    /// <param name="success">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="failure">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   /// <param name="failure2">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure2</c>.</param>
    public TResult Map<TResult>(
       TResult @success,
-      TResult @failure)
+      TResult @failure,
+      TResult @failure2)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -125,6 +145,8 @@ abstract partial record Result<T>
                return @success;
          case global::Thinktecture.Tests.Result<T>.Failure value:
                return @failure;
+         case global::Thinktecture.Tests.Result<T>.Failure2 value:
+               return @failure2;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
@@ -138,15 +160,5 @@ abstract partial record Result<T>
    public static implicit operator global::Thinktecture.Tests.Result<T>(T @value)
    {
       return new global::Thinktecture.Tests.Result<T>.Success(@value);
-   }
-
-   /// <summary>
-   /// Implicit conversion from type <see cref="string"/>.
-   /// </summary>
-   /// <param name="error">Value to covert from.</param>
-   /// <returns>A new instance of <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c> converted from <paramref name="error"/>.</returns>
-   public static implicit operator global::Thinktecture.Tests.Result<T>(string @error)
-   {
-      return new global::Thinktecture.Tests.Result<T>.Failure(@error);
    }
 }
