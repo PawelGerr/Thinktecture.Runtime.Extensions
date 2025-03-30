@@ -38,6 +38,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer.Id,
       DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer.Id,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial.Id,
+      DiagnosticsDescriptors.UnionRecordMustBeSealed.Id,
    ];
 
    /// <inheritdoc />
@@ -93,7 +94,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id)
          {
-            context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
+            context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => ReplaceOrAddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.AbstractKeyword, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer.Id)
          {
@@ -115,6 +116,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_METHOD_PARTIAL, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().MethodDeclaration, SyntaxKind.PartialKeyword), _MAKE_METHOD_PARTIAL), diagnostic);
          }
+         else if (diagnostic.Id == DiagnosticsDescriptors.UnionRecordMustBeSealed.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => ReplaceOrAddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.AbstractKeyword, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
+         }
       }
    }
 
@@ -130,6 +135,38 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       var newModifier = SyntaxFactory.Token(modifier);
       var indexOfPartialKeyword = declaration.Modifiers.IndexOf(SyntaxKind.PartialKeyword);
       var newDeclaration = indexOfPartialKeyword < 0 ? declaration.AddModifiers(newModifier) : declaration.WithModifiers(declaration.Modifiers.Insert(indexOfPartialKeyword, newModifier));
+      var newRoot = root.ReplaceNode(declaration, newDeclaration);
+      var newDoc = document.WithSyntaxRoot(newRoot);
+
+      return Task.FromResult(newDoc);
+   }
+
+   private static Task<Document> ReplaceOrAddTypeModifierAsync(
+      Document document,
+      SyntaxNode root,
+      MemberDeclarationSyntax? declaration,
+      SyntaxKind oldModifier,
+      SyntaxKind newModifier)
+   {
+      if (declaration is null)
+         return Task.FromResult(document);
+
+      var newModifierToken = SyntaxFactory.Token(newModifier);
+      var indexOfOldModifier = declaration.Modifiers.IndexOf(oldModifier);
+
+      MemberDeclarationSyntax newDeclaration;
+
+      if (indexOfOldModifier >= 0)
+      {
+         var oldToken = declaration.Modifiers[indexOfOldModifier];
+         newDeclaration = declaration.ReplaceToken(oldToken, newModifierToken);
+      }
+      else
+      {
+         var indexOfPartialKeyword = declaration.Modifiers.IndexOf(SyntaxKind.PartialKeyword);
+         newDeclaration = indexOfPartialKeyword < 0 ? declaration.AddModifiers(newModifierToken) : declaration.WithModifiers(declaration.Modifiers.Insert(indexOfPartialKeyword, newModifierToken));
+      }
+
       var newRoot = root.ReplaceNode(declaration, newDeclaration);
       var newDoc = document.WithSyntaxRoot(newRoot);
 

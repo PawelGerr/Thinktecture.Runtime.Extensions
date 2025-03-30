@@ -16,17 +16,23 @@ public partial class PlaceId
    [ValueObject<int>]
    public partial class CountryId : PlaceId;
 
-   public abstract class AbstractRegionId : PlaceId;
+   public abstract class AbstractRegionId : PlaceId
+   {
+      private AbstractRegionId()
+      {
+      }
+
+      public sealed class SpecialRegionId : AbstractRegionId;
+   }
 
    public class RegionId : PlaceId
    {
-      // ReSharper disable once MemberHidesStaticFromOuterClass
-      public new class InnerRegionId : PlaceId;
+      private RegionId()
+      {
+      }
+
+      public sealed class InnerRegionId : PlaceId;
 
       public class InnerRegionId2 : object;
    }
-
-   public class InnerRegionId : RegionId;
-
-   public class SpecialRegionId : AbstractRegionId;
 }

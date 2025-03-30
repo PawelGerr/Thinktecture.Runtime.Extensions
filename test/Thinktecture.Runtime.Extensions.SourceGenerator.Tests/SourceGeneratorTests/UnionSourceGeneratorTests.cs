@@ -232,34 +232,6 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_record_with_inner_abstract_generic()
-   {
-      var source = """
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [Union]
-            public partial record TestUnion<T>
-               where T : IFormattable
-            {
-               public record First(T Value) : TestUnion<T>;
-
-               public abstract record Second<TOther>(TOther Value) : TestUnion<TOther>
-                  where TOther : T, IFormattable;
-
-               public record Third(T Value) : Second<T>(Value);
-            }
-         }
-         """;
-      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
-
-      await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestUnion`1.g.cs");
-   }
-
-   [Fact]
    public async Task Should_generate_record_with_non_default_ctor()
    {
       var source = """

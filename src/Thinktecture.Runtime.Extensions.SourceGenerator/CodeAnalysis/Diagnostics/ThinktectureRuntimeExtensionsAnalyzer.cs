@@ -51,7 +51,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustNotHaveGenerics,
       DiagnosticsDescriptors.TypeMustNotBeInsideGenericType,
-      DiagnosticsDescriptors.NonAbstractUnionDerivedTypesMustNotBeGeneric
+      DiagnosticsDescriptors.UnionDerivedTypesMustNotBeGeneric,
+      DiagnosticsDescriptors.UnionMustBeSealedOrHavePrivateConstructorsOnly,
+      DiagnosticsDescriptors.UnionRecordMustBeSealed,
+      DiagnosticsDescriptors.NonAbstractDerivedUnionIsLessAccessibleThanBaseUnion,
    ];
 
    /// <inheritdoc />
@@ -429,20 +432,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       CheckConstructors(context, type, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
-      NonAbstractDerivedTypesMustNotBeGeneric(context, type);
-   }
-
-   private static void NonAbstractDerivedTypesMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol unionType)
-   {
-      var derivedTypes = unionType.FindDerivedInnerTypes();
-
-      for (var i = 0; i < derivedTypes.Count; i++)
-      {
-         var (type, _, _) = derivedTypes[i];
-
-         if (!type.IsAbstract && type.Arity != 0)
-            ReportDiagnostic(context, DiagnosticsDescriptors.NonAbstractUnionDerivedTypesMustNotBeGeneric, GetDerivedTypeLocation(context, type), type);
-      }
+      ValidateUnionDerivedTypes(context, type);
    }
 
    private static void ValidateKeyedValueObject(
@@ -717,7 +707,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          baseClass = baseClass.BaseType;
       }
 
-      ValidateDerivedTypes(context, enumType);
+      ValidateEnumDerivedTypes(context, enumType);
 
       EnumKeyMemberNameMustNotBeItem(context, attribute, locationOfFirstDeclaration);
 
@@ -786,27 +776,27 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ValidateDerivedTypes(OperationAnalysisContext context, INamedTypeSymbol enumType)
+   private static void ValidateEnumDerivedTypes(OperationAnalysisContext context, INamedTypeSymbol type)
    {
-      var derivedTypes = enumType.FindDerivedInnerTypes();
+      var derivedTypes = type.FindDerivedInnerTypes();
       var typesToLeaveOpen = ImmutableArray.Create<INamedTypeSymbol>();
 
       for (var i = 0; i < derivedTypes.Count; i++)
       {
-         var (type, _, level) = derivedTypes[i];
+         var (derivedType, _, level) = derivedTypes[i];
 
          if (level == 1)
          {
-            if (type.DeclaredAccessibility != Accessibility.Private)
-               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate, GetDerivedTypeLocation(context, type), type);
+            if (derivedType.DeclaredAccessibility != Accessibility.Private)
+               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate, GetDerivedTypeLocation(context, derivedType), derivedType);
          }
-         else if (type.DeclaredAccessibility != Accessibility.Public)
+         else if (derivedType.DeclaredAccessibility != Accessibility.Public)
          {
-            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(context, type), type);
+            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(context, derivedType), derivedType);
          }
 
-         if (!type.BaseType.IsNullOrObject())
-            typesToLeaveOpen = typesToLeaveOpen.Add(type.BaseType);
+         if (!derivedType.BaseType.IsNullOrObject())
+            typesToLeaveOpen = typesToLeaveOpen.Add(derivedType.BaseType);
       }
 
       for (var i = 0; i < derivedTypes.Count; i++)
@@ -815,6 +805,34 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          if (!derivedType.Type.IsSealed && !derivedType.Type.IsAbstract && !typesToLeaveOpen.Contains(derivedType.Type, SymbolEqualityComparer.Default))
             ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(context, derivedType.Type), derivedType.Type);
+      }
+   }
+
+   private static void ValidateUnionDerivedTypes(OperationAnalysisContext context, INamedTypeSymbol type)
+   {
+      var derivedTypes = type.FindDerivedInnerTypes();
+
+      for (var i = 0; i < derivedTypes.Count; i++)
+      {
+         var (derivedType, _, _) = derivedTypes[i];
+
+         if (derivedType.Arity != 0)
+            ReportDiagnostic(context, DiagnosticsDescriptors.UnionDerivedTypesMustNotBeGeneric, GetDerivedTypeLocation(context, derivedType), derivedType);
+
+         if (!derivedType.IsAbstract && derivedType.HasLowerAccessibility(type.DeclaredAccessibility, type))
+            ReportDiagnostic(context, DiagnosticsDescriptors.NonAbstractDerivedUnionIsLessAccessibleThanBaseUnion, GetDerivedTypeLocation(context, derivedType), derivedType, type);
+
+         if (!derivedType.IsSealed)
+         {
+            if (derivedType.IsRecord)
+            {
+               ReportDiagnostic(context, DiagnosticsDescriptors.UnionRecordMustBeSealed, GetDerivedTypeLocation(context, derivedType), derivedType);
+            }
+            else if (derivedType.Constructors.Any(ctor => ctor.DeclaredAccessibility != Accessibility.Private))
+            {
+               ReportDiagnostic(context, DiagnosticsDescriptors.UnionMustBeSealedOrHavePrivateConstructorsOnly, GetDerivedTypeLocation(context, derivedType), derivedType);
+            }
+         }
       }
    }
 

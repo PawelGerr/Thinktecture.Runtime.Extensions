@@ -115,9 +115,9 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
          {
             var derivedTypeInfo = derivedTypeInfos[i];
 
-            if (!derivedTypeInfo.Type.IsAbstract && derivedTypeInfo.Type.Arity != 0)
+            if (derivedTypeInfo.Type.Arity != 0)
             {
-               Logger.LogDebug("Derived type of a union must not have generic parameters, unless it is abstract", tds);
+               Logger.LogDebug("Derived type of a union must not have generic parameters", tds);
                return null;
             }
 

@@ -87,9 +87,28 @@ public static class NamedTypeSymbolExtensions
    {
       var containingType = type.ContainingType;
 
-      while (containingType != null)
+      while (containingType is not null)
       {
          if (!containingType.TypeParameters.IsDefaultOrEmpty)
+            return true;
+
+         containingType = containingType.ContainingType;
+      }
+
+      return false;
+   }
+
+   public static bool HasLowerAccessibility(
+      this INamedTypeSymbol type,
+      Accessibility accessibility,
+      INamedTypeSymbol stopType)
+   {
+      var containingType = type;
+
+      while (containingType is not null
+             && !SymbolEqualityComparer.Default.Equals(containingType, stopType))
+      {
+         if (containingType.DeclaredAccessibility < accessibility)
             return true;
 
          containingType = containingType.ContainingType;

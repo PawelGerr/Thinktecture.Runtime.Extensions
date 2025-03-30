@@ -10,10 +10,12 @@ public class TTRESG053_NonAbstractUnionDerivedTypesMustNotBeGeneric
 
    public class Non_abstract_unions_must_not_be_generic
    {
-      [Fact]
-      public async Task Should_trigger_on_generic_class()
+      [Theory]
+      [InlineData("class")]
+      [InlineData("record")]
+      public async Task Should_trigger_on_generic_class(string type)
       {
-         var code = """
+         var code = $$"""
 
             using System;
             using Thinktecture;
@@ -21,9 +23,9 @@ public class TTRESG053_NonAbstractUnionDerivedTypesMustNotBeGeneric
             namespace TestNamespace
             {
                [Union]
-               public partial class TestUnion<T>
+               public partial {{type}} TestUnion<T>
                {
-                  public class {|#0:First|}<T>(T Value) : TestUnion<T>;
+                  public sealed {{type}} {|#0:First|}<T>(T Value) : TestUnion<T>;
                }
             }
             """;
@@ -33,7 +35,7 @@ public class TTRESG053_NonAbstractUnionDerivedTypesMustNotBeGeneric
       }
 
       [Fact]
-      public async Task Should_not_trigger_on_non_generic_class()
+      public async Task Should_trigger_on_generic_abstract_class()
       {
          var code = """
 
@@ -45,7 +47,36 @@ public class TTRESG053_NonAbstractUnionDerivedTypesMustNotBeGeneric
                [Union]
                public partial class TestUnion<T>
                {
-                  public class {|#0:First|}(T Value) : TestUnion<T>;
+                  public abstract class {|#0:First|}<T> : TestUnion<T>
+                  {
+                     private First(T Value)
+                     {
+                     }
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("First<T>");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly], expected);
+      }
+
+      [Theory]
+      [InlineData("class")]
+      [InlineData("record")]
+      public async Task Should_not_trigger_on_non_generic_class(string type)
+      {
+         var code = $$"""
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [Union]
+               public partial {{type}} TestUnion<T>
+               {
+                  public sealed {{type}} {|#0:First|}(T Value) : TestUnion<T>;
                }
             }
             """;
